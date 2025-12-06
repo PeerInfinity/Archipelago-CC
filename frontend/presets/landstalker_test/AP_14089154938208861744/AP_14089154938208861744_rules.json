@@ -5958,12 +5958,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 59
+        "max_count": 59,
+        "classification": "progression"
       },
       "Magic Sword": {
         "name": "Magic Sword",
@@ -5971,12 +5969,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Sword of Ice": {
         "name": "Sword of Ice",
@@ -5984,12 +5980,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Thunder Sword": {
         "name": "Thunder Sword",
@@ -5997,12 +5991,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Sword of Gaia": {
         "name": "Sword of Gaia",
@@ -6010,12 +6002,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Fireproof": {
         "name": "Fireproof",
@@ -6023,12 +6013,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Iron Boots": {
         "name": "Iron Boots",
@@ -6036,12 +6024,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Healing Boots": {
         "name": "Healing Boots",
@@ -6049,12 +6035,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Snow Spikes": {
         "name": "Snow Spikes",
@@ -6062,12 +6046,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Steel Breast": {
         "name": "Steel Breast",
@@ -6075,12 +6057,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Chrome Breast": {
         "name": "Chrome Breast",
@@ -6088,12 +6068,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Shell Breast": {
         "name": "Shell Breast",
@@ -6101,12 +6079,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Hyper Breast": {
         "name": "Hyper Breast",
@@ -6114,12 +6090,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Mars Stone": {
         "name": "Mars Stone",
@@ -6127,12 +6101,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Moon Stone": {
         "name": "Moon Stone",
@@ -6140,12 +6112,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Saturn Stone": {
         "name": "Saturn Stone",
@@ -6153,12 +6123,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Venus Stone": {
         "name": "Venus Stone",
@@ -6166,12 +6134,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Detox Grass": {
         "name": "Detox Grass",
@@ -6179,12 +6145,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 9
+        "max_count": 9,
+        "classification": "filler"
       },
       "Statue of Gaia": {
         "name": "Statue of Gaia",
@@ -6192,12 +6156,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 12,
+        "classification": "filler"
       },
       "Golden Statue": {
         "name": "Golden Statue",
@@ -6205,12 +6167,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 10,
+        "classification": "filler"
       },
       "Mind Repair": {
         "name": "Mind Repair",
@@ -6218,12 +6178,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 7
+        "max_count": 7,
+        "classification": "filler"
       },
       "Casino Ticket": {
         "name": "Casino Ticket",
@@ -6231,12 +6189,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Axe Magic": {
         "name": "Axe Magic",
@@ -6244,12 +6200,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Blue Ribbon": {
         "name": "Blue Ribbon",
@@ -6257,12 +6211,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Buyer Card": {
         "name": "Buyer Card",
@@ -6270,12 +6222,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Lantern": {
         "name": "Lantern",
@@ -6283,12 +6233,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Garlic": {
         "name": "Garlic",
@@ -6296,12 +6244,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "progression"
       },
       "Anti Paralyze": {
         "name": "Anti Paralyze",
@@ -6309,12 +6255,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 7
+        "max_count": 7,
+        "classification": "filler"
       },
       "Statue of Jypta": {
         "name": "Statue of Jypta",
@@ -6322,12 +6266,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Sun Stone": {
         "name": "Sun Stone",
@@ -6335,12 +6277,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Armlet": {
         "name": "Armlet",
@@ -6348,12 +6288,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Einstein Whistle": {
         "name": "Einstein Whistle",
@@ -6361,12 +6299,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Blue Jewel": {
         "name": "Blue Jewel",
@@ -6374,12 +6310,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Yellow Jewel": {
         "name": "Yellow Jewel",
@@ -6387,12 +6321,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Lithograph": {
         "name": "Lithograph",
@@ -6400,12 +6332,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Red Jewel": {
         "name": "Red Jewel",
@@ -6413,12 +6343,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Pawn Ticket": {
         "name": "Pawn Ticket",
@@ -6426,12 +6354,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "useful"
       },
       "Purple Jewel": {
         "name": "Purple Jewel",
@@ -6439,12 +6365,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Gola's Eye": {
         "name": "Gola's Eye",
@@ -6452,12 +6376,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Death Statue": {
         "name": "Death Statue",
@@ -6465,12 +6387,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Dahl": {
         "name": "Dahl",
@@ -6478,12 +6398,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 18
+        "max_count": 18,
+        "classification": "filler"
       },
       "Restoration": {
         "name": "Restoration",
@@ -6491,12 +6409,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 9
+        "max_count": 9,
+        "classification": "filler"
       },
       "Logs": {
         "name": "Logs",
@@ -6504,12 +6420,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "progression"
       },
       "Oracle Stone": {
         "name": "Oracle Stone",
@@ -6517,12 +6431,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Idol Stone": {
         "name": "Idol Stone",
@@ -6530,12 +6442,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key": {
         "name": "Key",
@@ -6543,12 +6453,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Safety Pass": {
         "name": "Safety Pass",
@@ -6556,12 +6464,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Green Jewel": {
         "name": "Green Jewel",
@@ -6569,12 +6475,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Bell": {
         "name": "Bell",
@@ -6582,12 +6486,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Short Cake": {
         "name": "Short Cake",
@@ -6595,12 +6497,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Gola's Nail": {
         "name": "Gola's Nail",
@@ -6608,12 +6508,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Gola's Horn": {
         "name": "Gola's Horn",
@@ -6621,12 +6519,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Gola's Fang": {
         "name": "Gola's Fang",
@@ -6634,12 +6530,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Life Stock": {
         "name": "Life Stock",
@@ -6647,12 +6541,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 80
+        "max_count": 80,
+        "classification": "progression"
       },
       "No Item": {
         "name": "No Item",
@@ -6660,12 +6552,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "1 Gold": {
         "name": "1 Gold",
@@ -6673,12 +6563,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "20 Golds": {
         "name": "20 Golds",
@@ -6686,12 +6574,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 15
+        "max_count": 15,
+        "classification": "filler"
       },
       "50 Golds": {
         "name": "50 Golds",
@@ -6699,12 +6585,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 7
+        "max_count": 7,
+        "classification": "filler"
       },
       "100 Golds": {
         "name": "100 Golds",
@@ -6712,12 +6596,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 5
+        "max_count": 5,
+        "classification": "filler"
       },
       "200 Golds": {
         "name": "200 Golds",
@@ -6725,12 +6607,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "useful"
       },
       "Progressive Armor": {
         "name": "Progressive Armor",
@@ -6738,12 +6618,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "useful"
       },
       "Kazalt Jewel": {
         "name": "Kazalt Jewel",
@@ -6751,12 +6629,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "King Nole's Treasure": {
         "name": "King Nole's Treasure",
@@ -6764,90 +6640,82 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "event_visited_king_nole_labyrinth_raft_entrance": {
         "name": "event_visited_king_nole_labyrinth_raft_entrance",
+        "hint_text": "event visited king nole labyrinth raft entrance",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "event_visited_massan": {
         "name": "event_visited_massan",
+        "hint_text": "event visited massan",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "event_visited_ryuma_lighthouse_repaired": {
         "name": "event_visited_ryuma_lighthouse_repaired",
+        "hint_text": "event visited ryuma lighthouse repaired",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "event_visited_swamp_shrine": {
         "name": "event_visited_swamp_shrine",
+        "hint_text": "event visited swamp shrine",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "event_visited_thieves_hideout_post_key": {
         "name": "event_visited_thieves_hideout_post_key",
+        "hint_text": "event visited thieves hideout post key",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "event_visited_verla_mines": {
         "name": "event_visited_verla_mines",
+        "hint_text": "event visited verla mines",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -6934,7 +6802,7 @@
     "1": {
       "game": "Landstalker - The Treasures of King Nole Test",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": true
     }
   },
   "game_info": {
@@ -6944,5 +6812,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

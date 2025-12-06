@@ -51,7 +51,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Verse Cave right area, bulb in the path right of the skeleton room",
@@ -65,7 +66,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Verse Cave right area, Big Seed",
@@ -79,7 +81,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -116,7 +119,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Verse Cave left area, bulb in the center part",
@@ -130,7 +134,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Verse Cave left area, bulb in the right part",
@@ -144,7 +149,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Verse Cave left area, bulb under the rock at the end of the path",
@@ -158,7 +164,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -254,7 +261,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Home Waters, bulb in the little room above the grouper fish",
@@ -268,7 +276,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Home Waters, bulb in the end of the path close to the Verse Cave",
@@ -282,7 +291,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Home Waters, bulb in the top left path",
@@ -296,7 +306,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Home Waters, bulb close to Naija's Home",
@@ -310,7 +321,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Home Waters, bulb under the rock in the left path from the Verse Cave",
@@ -324,7 +336,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -371,7 +384,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beating Nautilus Prime",
@@ -385,7 +399,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -478,7 +493,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -525,7 +541,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Naija's Home, bulb under the rock at the right of the main path",
@@ -539,7 +556,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -568,7 +586,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Song Cave, bulb in the top right part",
@@ -582,7 +601,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Song Cave, bulb in the big anemone room",
@@ -596,7 +616,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Song Cave, bulb in the path to the singing statues",
@@ -610,7 +631,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Song Cave, bulb under the rock in the path to the singing statues",
@@ -624,7 +646,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Song Cave, bulb under the rock close to the song door",
@@ -638,7 +661,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Song Cave, Verse Egg",
@@ -652,7 +676,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Song Cave, Jelly Beacon",
@@ -666,7 +691,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Song Cave, Anemone Seed",
@@ -680,7 +706,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -733,7 +760,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Energy Temple first area, bulb in the bottom room blocked by a rock",
@@ -747,7 +775,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -784,7 +813,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -848,7 +878,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -930,7 +961,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beating Fallen God",
@@ -944,7 +976,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -964,7 +997,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beating Blaster Peg Prime",
@@ -978,7 +1012,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1034,7 +1069,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1087,7 +1123,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Open Waters top left area, bulb under the rock in the left path",
@@ -1101,7 +1138,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Open Waters top left area, bulb to the right of the save crystal",
@@ -1115,7 +1153,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1232,7 +1271,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Open Waters top right area, bulb in the path from the left entrance",
@@ -1246,7 +1286,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Open Waters top right area, bulb in the clearing close to the bottom exit",
@@ -1260,7 +1301,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Open Waters top right area, bulb in the big clearing close to the save crystal",
@@ -1274,7 +1316,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Open Waters top right area, bulb in the big clearing to the top exit",
@@ -1288,7 +1331,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1381,7 +1425,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Open Waters top right area, Transturtle",
@@ -1395,7 +1440,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1457,7 +1503,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Open Waters bottom left area, bulb inside the lowest fish pass",
@@ -1471,7 +1518,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1555,7 +1603,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Open Waters skeleton path, bulb behind the chomper fish",
@@ -1569,7 +1618,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1598,7 +1648,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1635,7 +1686,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arnassi Ruins, bulb in the left part",
@@ -1649,7 +1701,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arnassi Ruins, bulb in the center part",
@@ -1663,7 +1716,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arnassi Ruins, Song Plant Spore",
@@ -1686,7 +1740,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arnassi Ruins, Arnassi Armor",
@@ -1727,7 +1782,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1817,7 +1873,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1910,7 +1967,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1939,7 +1997,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beating Crabbius Maximus",
@@ -1953,7 +2012,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2038,7 +2098,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Simon Says area, Transturtle",
@@ -2052,7 +2113,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2136,7 +2198,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City, second bulb in the left city part",
@@ -2150,7 +2213,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City, bulb in the right part",
@@ -2164,7 +2228,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City, bulb at the top of the city",
@@ -2178,7 +2243,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City, first bulb in a broken home",
@@ -2192,7 +2258,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City, second bulb in a broken home",
@@ -2206,7 +2273,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City, bulb in the bottom left part",
@@ -2220,7 +2288,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City, first bulb in one of the homes",
@@ -2234,7 +2303,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City, second bulb in one of the homes",
@@ -2248,7 +2318,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Second Secret",
@@ -2262,7 +2333,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2326,7 +2398,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City, second bulb at the end of the top path",
@@ -2340,7 +2413,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City, bulb in the top path",
@@ -2354,7 +2428,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City, Mithalas Pot",
@@ -2368,7 +2443,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City, urn in the Castle flower tube entrance",
@@ -2396,7 +2472,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2425,7 +2502,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City, urn inside a home fish pass",
@@ -2453,7 +2531,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2536,7 +2615,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City Castle, Blue Banner",
@@ -2550,7 +2630,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2595,7 +2676,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beating Mithalan priests",
@@ -2609,7 +2691,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2638,7 +2721,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2707,7 +2791,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, Mithalan Dress",
@@ -2721,7 +2806,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2741,7 +2827,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, second urn in the top right room",
@@ -2755,7 +2842,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, third urn in the top right room",
@@ -2769,7 +2857,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, urn behind the flesh vein",
@@ -2783,7 +2872,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, urn in the top left eyes boss room",
@@ -2797,7 +2887,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, first urn in the path behind the flesh vein",
@@ -2811,7 +2902,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, second urn in the path behind the flesh vein",
@@ -2825,7 +2917,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, third urn in the path behind the flesh vein",
@@ -2839,7 +2932,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, fourth urn in the top right room",
@@ -2853,7 +2947,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, urn below the left entrance",
@@ -2867,7 +2962,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2940,7 +3036,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas Cathedral, second urn in the bottom right path",
@@ -2954,7 +3051,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3022,7 +3120,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cathedral Underground, first bulb in the top left part",
@@ -3036,7 +3135,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cathedral Underground, second bulb in the top left part",
@@ -3050,7 +3150,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cathedral Underground, third bulb in the top left part",
@@ -3064,7 +3165,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cathedral Underground, bulb close to the save crystal",
@@ -3078,7 +3180,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cathedral Underground, bulb in the bottom right path",
@@ -3092,7 +3195,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3129,7 +3233,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beating Mithalan God",
@@ -3143,7 +3248,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3280,7 +3386,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kelp Forest top left area, bulb in the path down from the top left clearing",
@@ -3294,7 +3401,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kelp Forest top left area, bulb in the top left clearing",
@@ -3308,7 +3416,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kelp Forest top left area, Jelly Egg",
@@ -3322,7 +3431,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3351,7 +3461,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kelp Forest top left area, Verse Egg",
@@ -3365,7 +3476,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3418,7 +3530,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kelp Forest top right area, bulb at the left of the center clearing",
@@ -3432,7 +3545,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kelp Forest top right area, bulb in the left path's big room",
@@ -3446,7 +3560,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kelp Forest top right area, bulb in the left path's small room",
@@ -3460,7 +3575,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kelp Forest top right area, bulb at the top of the center clearing",
@@ -3474,7 +3590,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kelp Forest top right area, Black Pearl",
@@ -3497,7 +3614,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3534,7 +3652,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3686,7 +3805,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3715,7 +3835,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kelp Forest bottom left area, Walker Baby",
@@ -3729,7 +3850,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3791,7 +3913,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3820,7 +3943,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beating Drunian God",
@@ -3834,7 +3958,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3897,7 +4022,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3934,7 +4060,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3963,7 +4090,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kelp Forest sprite cave, Seed Bag",
@@ -3977,7 +4105,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4041,7 +4170,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4097,7 +4227,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beating Mergog",
@@ -4111,7 +4242,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4140,7 +4272,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4257,7 +4390,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Veil top left area, bulb under the rock in the top right path",
@@ -4280,7 +4414,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Veil top left area, bulb hidden behind the blocking rock",
@@ -4294,7 +4429,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Veil top left area, Transturtle",
@@ -4308,7 +4444,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4337,7 +4474,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4456,7 +4594,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Veil top right area, Transturtle",
@@ -4470,7 +4609,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4577,7 +4717,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Veil top right area, Golden Starfish",
@@ -4591,7 +4732,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4653,7 +4795,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4690,7 +4833,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4728,7 +4872,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4773,7 +4918,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4802,7 +4948,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beating Octopus Prime",
@@ -4816,7 +4963,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4845,7 +4993,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4882,7 +5031,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4911,7 +5061,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Turtle cave, Urchin Costume",
@@ -4934,7 +5085,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4971,7 +5123,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sun Temple, bulb in the top right part",
@@ -4985,7 +5138,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sun Temple, bulb at the top of the high dark room",
@@ -4999,7 +5153,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sun Temple, Golden Gear",
@@ -5013,7 +5168,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Third Secret",
@@ -5027,7 +5183,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5148,7 +5305,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sun Temple, bulb on the right part",
@@ -5162,7 +5320,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sun Temple, bulb in the hidden room of the right part",
@@ -5176,7 +5335,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sun Temple, Sun Key",
@@ -5190,7 +5350,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sun Crystal",
@@ -5204,7 +5365,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5286,7 +5448,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sun Temple boss path, second path bulb",
@@ -5300,7 +5463,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sun Temple boss path, first cliff bulb",
@@ -5350,7 +5514,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sun Temple boss path, second cliff bulb",
@@ -5400,7 +5565,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5455,7 +5621,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beating Lumerean God",
@@ -5469,7 +5636,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5549,7 +5717,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Abyss left area, bulb in the right part",
@@ -5563,7 +5732,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Abyss left area, Glowing Seed",
@@ -5577,7 +5747,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Abyss left area, Glowing Plant",
@@ -5591,7 +5762,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5636,7 +5808,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5749,7 +5922,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Abyss right area, bulb behind the rock in the middle path",
@@ -5763,7 +5937,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Abyss right area, bulb in the left green room",
@@ -5777,7 +5952,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5823,7 +5999,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5925,7 +6102,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5962,7 +6140,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ice Cavern, first bulb in the top exit room",
@@ -5976,7 +6155,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ice Cavern, second bulb in the top exit room",
@@ -5990,7 +6170,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ice Cavern, third bulb in the top exit room",
@@ -6004,7 +6185,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ice Cavern, bulb in the left room",
@@ -6018,7 +6200,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6064,7 +6247,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bubble Cave, bulb in the right cave wall (behind the ice crystal)",
@@ -6078,7 +6262,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6107,7 +6292,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beating Mantis Shrimp Prime",
@@ -6121,7 +6307,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6150,7 +6337,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "King Jellyfish Cave, Jellyfish Costume",
@@ -6164,7 +6352,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beating King Jellyfish God Prime",
@@ -6178,7 +6367,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6207,7 +6397,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6410,7 +6601,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beating the Golem",
@@ -6424,7 +6616,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Sunken City cleared",
@@ -6438,7 +6631,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6467,7 +6661,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6546,7 +6741,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Body center area, bulb on the main path blocking tube",
@@ -6560,7 +6756,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6589,7 +6786,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Body left area, second bulb in the top face room",
@@ -6603,7 +6801,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Body left area, bulb below the water stream",
@@ -6617,7 +6816,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Body left area, bulb in the top path to the top face room",
@@ -6631,7 +6831,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Body left area, bulb in the bottom face room",
@@ -6645,7 +6846,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6674,7 +6876,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6703,7 +6906,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Body right area, bulb in the bottom face room",
@@ -6717,7 +6921,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6772,7 +6977,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Body bottom area, bulb in the nautilus room",
@@ -6786,7 +6992,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Body bottom area, Mutant Costume",
@@ -6800,7 +7007,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6958,7 +7166,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Final Boss area, second bulb in the turtle room",
@@ -6972,7 +7181,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Final Boss area, third bulb in the turtle room",
@@ -6986,7 +7196,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Final Boss area, Transturtle",
@@ -7000,7 +7211,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -7029,7 +7241,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7049,7 +7262,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -7113,7 +7327,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ],
         "dynamically_added": true
@@ -7178,7 +7393,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "dynamically_added": true
@@ -7306,6 +7522,7 @@
       },
       "Sunken City left area crates": {
         "name": "Sunken City left area crates",
+        "hint_text": "Sunken City left area",
         "exits": [],
         "locations": [
           {
@@ -7320,7 +7537,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sunken City left area, crate close to the save crystal",
@@ -7334,7 +7552,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sunken City left area, crate before the bedroom",
@@ -7348,7 +7567,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "dynamically_added": true
@@ -7369,7 +7589,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sunken City right area, crate in the left bottom room",
@@ -7383,7 +7604,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "dynamically_added": true
@@ -7482,7 +7704,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Home Waters, bulb in the bottom left room",
@@ -7496,7 +7719,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "dynamically_added": true
@@ -7517,7 +7741,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Open Waters top right area, second urn in the Mithalas exit",
@@ -7531,7 +7756,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Open Waters top right area, third urn in the Mithalas exit",
@@ -7545,7 +7771,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "dynamically_added": true
@@ -7566,7 +7793,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City, second urn in one of the homes",
@@ -7580,7 +7808,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City, first urn in the city reserve",
@@ -7594,7 +7823,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City, second urn in the city reserve",
@@ -7608,7 +7838,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City, third urn in the city reserve",
@@ -7622,7 +7853,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "dynamically_added": true
@@ -7643,7 +7875,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City Castle, first urn of the single lamp path",
@@ -7657,7 +7890,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City Castle, second urn of the single lamp path",
@@ -7671,7 +7905,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City Castle, urn in the bottom room",
@@ -7685,7 +7920,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City Castle, first urn on the entrance path",
@@ -7699,7 +7935,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mithalas City Castle, second urn on the entrance path",
@@ -7713,7 +7950,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ],
         "dynamically_added": true
@@ -7736,12 +7974,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Blaster Peg Prime beated": {
         "name": "Blaster Peg Prime beated",
@@ -7749,12 +7985,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mergog beated": {
         "name": "Mergog beated",
@@ -7762,12 +7996,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mithalan priests beated": {
         "name": "Mithalan priests beated",
@@ -7775,12 +8007,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Octopus Prime beated": {
         "name": "Octopus Prime beated",
@@ -7788,12 +8018,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Crabbius Maximus beated": {
         "name": "Crabbius Maximus beated",
@@ -7801,12 +8029,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mantis Shrimp Prime beated": {
         "name": "Mantis Shrimp Prime beated",
@@ -7814,12 +8040,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "King Jellyfish God Prime beated": {
         "name": "King Jellyfish God Prime beated",
@@ -7827,12 +8051,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Fallen God beated": {
         "name": "Fallen God beated",
@@ -7840,12 +8062,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mithalan God beated": {
         "name": "Mithalan God beated",
@@ -7853,12 +8073,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Drunian God beated": {
         "name": "Drunian God beated",
@@ -7866,12 +8084,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Lumerean God beated": {
         "name": "Lumerean God beated",
@@ -7879,12 +8095,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "The Golem beated": {
         "name": "The Golem beated",
@@ -7892,12 +8106,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "First Secret obtained": {
         "name": "First Secret obtained",
@@ -7905,12 +8117,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Second Secret obtained": {
         "name": "Second Secret obtained",
@@ -7918,12 +8128,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Third Secret obtained": {
         "name": "Third Secret obtained",
@@ -7931,12 +8139,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Body Tongue cleared": {
         "name": "Body Tongue cleared",
@@ -7944,12 +8150,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Has Sun Crystal": {
         "name": "Has Sun Crystal",
@@ -7957,12 +8161,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Victory": {
         "name": "Victory",
@@ -7970,12 +8172,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Anemone": {
         "name": "Anemone",
@@ -7983,12 +8183,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Arnassi Statue": {
         "name": "Arnassi Statue",
@@ -7996,12 +8194,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Big Seed": {
         "name": "Big Seed",
@@ -8009,12 +8205,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Glowing Seed": {
         "name": "Glowing Seed",
@@ -8022,12 +8216,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Black Pearl": {
         "name": "Black Pearl",
@@ -8035,12 +8227,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Baby Blaster": {
         "name": "Baby Blaster",
@@ -8049,12 +8239,10 @@
           "Damage",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Crab Armor": {
         "name": "Crab Armor",
@@ -8062,12 +8250,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Baby Dumbo": {
         "name": "Baby Dumbo",
@@ -8076,12 +8262,10 @@
           "Everything",
           "Light"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Tooth": {
         "name": "Tooth",
@@ -8089,12 +8273,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Energy Statue": {
         "name": "Energy Statue",
@@ -8102,12 +8284,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Krotite Armor": {
         "name": "Krotite Armor",
@@ -8115,12 +8295,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Golden Starfish": {
         "name": "Golden Starfish",
@@ -8128,12 +8306,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Golden Gear": {
         "name": "Golden Gear",
@@ -8141,12 +8317,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Jelly Beacon": {
         "name": "Jelly Beacon",
@@ -8154,12 +8328,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Jelly Costume": {
         "name": "Jelly Costume",
@@ -8167,12 +8339,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Jelly Plant": {
         "name": "Jelly Plant",
@@ -8180,12 +8350,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Mithalas Doll": {
         "name": "Mithalas Doll",
@@ -8193,12 +8361,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Mithalan Dress": {
         "name": "Mithalan Dress",
@@ -8206,12 +8372,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Mithalas Banner": {
         "name": "Mithalas Banner",
@@ -8219,12 +8383,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Mithalas Pot": {
         "name": "Mithalas Pot",
@@ -8232,12 +8394,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Mutant Costume": {
         "name": "Mutant Costume",
@@ -8245,12 +8405,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Baby Nautilus": {
         "name": "Baby Nautilus",
@@ -8259,12 +8417,10 @@
           "Damage",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Baby Piranha": {
         "name": "Baby Piranha",
@@ -8273,12 +8429,10 @@
           "Damage",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Arnassi Armor": {
         "name": "Arnassi Armor",
@@ -8286,12 +8440,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Seed Bag": {
         "name": "Seed Bag",
@@ -8299,12 +8451,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "King's Skull": {
         "name": "King's Skull",
@@ -8312,12 +8462,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Song Plant Spore": {
         "name": "Song Plant Spore",
@@ -8325,12 +8473,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Stone Head": {
         "name": "Stone Head",
@@ -8338,12 +8484,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Sun Key": {
         "name": "Sun Key",
@@ -8351,12 +8495,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Girl Costume": {
         "name": "Girl Costume",
@@ -8364,12 +8506,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Odd Container": {
         "name": "Odd Container",
@@ -8377,12 +8517,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Trident": {
         "name": "Trident",
@@ -8390,12 +8528,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Turtle Egg": {
         "name": "Turtle Egg",
@@ -8403,12 +8539,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Jelly Egg": {
         "name": "Jelly Egg",
@@ -8416,12 +8550,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Urchin Costume": {
         "name": "Urchin Costume",
@@ -8429,12 +8561,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Baby Walker": {
         "name": "Baby Walker",
@@ -8442,25 +8572,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Vedha's Cure-All": {
         "name": "Vedha's Cure-All",
+        "hint_text": "Vedha's Cure All",
         "id": 698036,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Zuuna's Perogi": {
         "name": "Zuuna's Perogi",
@@ -8468,12 +8595,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Arcane Poultice": {
         "name": "Arcane Poultice",
@@ -8481,12 +8606,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7
       },
       "Berry Ice Cream": {
         "name": "Berry Ice Cream",
@@ -8494,12 +8617,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Buttery Sea Loaf": {
         "name": "Buttery Sea Loaf",
@@ -8507,12 +8628,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Cold Borscht": {
         "name": "Cold Borscht",
@@ -8520,12 +8639,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Cold Soup": {
         "name": "Cold Soup",
@@ -8533,12 +8650,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Crab Cake": {
         "name": "Crab Cake",
@@ -8546,12 +8661,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Divine Soup": {
         "name": "Divine Soup",
@@ -8559,12 +8672,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Dumbo Ice Cream": {
         "name": "Dumbo Ice Cream",
@@ -8572,12 +8683,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3
       },
       "Fish Oil": {
         "name": "Fish Oil",
@@ -8585,12 +8694,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Glowing Egg": {
         "name": "Glowing Egg",
@@ -8598,12 +8705,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Hand Roll": {
         "name": "Hand Roll",
@@ -8611,12 +8716,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5
       },
       "Healing Poultice": {
         "name": "Healing Poultice",
@@ -8624,12 +8727,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4
       },
       "Hearty Soup": {
         "name": "Hearty Soup",
@@ -8637,12 +8738,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5
       },
       "Hot Borscht": {
         "name": "Hot Borscht",
@@ -8650,12 +8749,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Hot Soup": {
         "name": "Hot Soup",
@@ -8663,12 +8760,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3
       },
       "Ice Cream": {
         "name": "Ice Cream",
@@ -8676,12 +8771,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Leadership Roll": {
         "name": "Leadership Roll",
@@ -8689,12 +8782,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Leaf Poultice": {
         "name": "Leaf Poultice",
@@ -8702,12 +8793,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5
       },
       "Leeching Poultice": {
         "name": "Leeching Poultice",
@@ -8715,12 +8804,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4
       },
       "Legendary Cake": {
         "name": "Legendary Cake",
@@ -8728,12 +8815,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Loaf of Life": {
         "name": "Loaf of Life",
@@ -8741,12 +8826,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Long Life Soup": {
         "name": "Long Life Soup",
@@ -8754,12 +8837,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Magic Soup": {
         "name": "Magic Soup",
@@ -8767,12 +8848,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Mushroom x 2": {
         "name": "Mushroom x 2",
@@ -8780,12 +8859,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Perogi": {
         "name": "Perogi",
@@ -8793,12 +8870,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Plant Leaf": {
         "name": "Plant Leaf",
@@ -8806,12 +8881,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3
       },
       "Plump Perogi": {
         "name": "Plump Perogi",
@@ -8819,12 +8892,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Poison Loaf": {
         "name": "Poison Loaf",
@@ -8832,12 +8903,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Poison Soup": {
         "name": "Poison Soup",
@@ -8845,12 +8914,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Rainbow Mushroom": {
         "name": "Rainbow Mushroom",
@@ -8858,12 +8925,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4
       },
       "Rainbow Soup": {
         "name": "Rainbow Soup",
@@ -8871,12 +8936,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Red Berry": {
         "name": "Red Berry",
@@ -8884,12 +8947,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Red Bulb x 2": {
         "name": "Red Bulb x 2",
@@ -8897,12 +8958,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3
       },
       "Rotten Cake": {
         "name": "Rotten Cake",
@@ -8910,12 +8969,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Rotten Loaf x 8": {
         "name": "Rotten Loaf x 8",
@@ -8923,12 +8980,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Rotten Meat": {
         "name": "Rotten Meat",
@@ -8936,12 +8991,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5
       },
       "Royal Soup": {
         "name": "Royal Soup",
@@ -8949,12 +9002,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Sea Cake": {
         "name": "Sea Cake",
@@ -8962,12 +9013,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4
       },
       "Sea Loaf": {
         "name": "Sea Loaf",
@@ -8975,12 +9024,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Shark Fin Soup": {
         "name": "Shark Fin Soup",
@@ -8988,12 +9035,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Sight Poultice": {
         "name": "Sight Poultice",
@@ -9001,12 +9046,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Small Bone x 2": {
         "name": "Small Bone x 2",
@@ -9014,12 +9057,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Small Egg": {
         "name": "Small Egg",
@@ -9027,12 +9068,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Small Tentacle x 2": {
         "name": "Small Tentacle x 2",
@@ -9040,12 +9079,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Special Bulb": {
         "name": "Special Bulb",
@@ -9053,12 +9090,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5
       },
       "Special Cake": {
         "name": "Special Cake",
@@ -9066,12 +9101,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Spicy Meat x 2": {
         "name": "Spicy Meat x 2",
@@ -9079,12 +9112,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3
       },
       "Spicy Roll": {
         "name": "Spicy Roll",
@@ -9092,12 +9123,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 22
+        "max_count": 11
       },
       "Spicy Soup": {
         "name": "Spicy Soup",
@@ -9105,12 +9134,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Spider Roll": {
         "name": "Spider Roll",
@@ -9118,12 +9145,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Swamp Cake": {
         "name": "Swamp Cake",
@@ -9131,12 +9156,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3
       },
       "Tasty Cake": {
         "name": "Tasty Cake",
@@ -9144,12 +9167,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Tasty Roll": {
         "name": "Tasty Roll",
@@ -9157,12 +9178,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Tough Cake": {
         "name": "Tough Cake",
@@ -9170,12 +9189,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Turtle Soup": {
         "name": "Turtle Soup",
@@ -9183,12 +9200,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Vedha Sea Crisp": {
         "name": "Vedha Sea Crisp",
@@ -9196,12 +9211,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Veggie Cake": {
         "name": "Veggie Cake",
@@ -9209,12 +9222,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Veggie Ice Cream": {
         "name": "Veggie Ice Cream",
@@ -9222,12 +9233,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Veggie Soup": {
         "name": "Veggie Soup",
@@ -9235,12 +9244,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Volcano Roll": {
         "name": "Volcano Roll",
@@ -9248,12 +9255,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Health Upgrade": {
         "name": "Health Upgrade",
@@ -9261,12 +9266,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5
       },
       "Wok": {
         "name": "Wok",
@@ -9274,12 +9277,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Eel Oil x 2": {
         "name": "Eel Oil x 2",
@@ -9287,12 +9288,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Fish Meat x 2": {
         "name": "Fish Meat x 2",
@@ -9300,12 +9299,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Fish Oil x 3": {
         "name": "Fish Oil x 3",
@@ -9313,12 +9310,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Glowing Egg x 2": {
         "name": "Glowing Egg x 2",
@@ -9326,12 +9321,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Healing Poultice x 2": {
         "name": "Healing Poultice x 2",
@@ -9339,12 +9332,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Hot Soup x 2": {
         "name": "Hot Soup x 2",
@@ -9352,12 +9343,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Leadership Roll x 2": {
         "name": "Leadership Roll x 2",
@@ -9365,12 +9354,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Leaf Poultice x 3": {
         "name": "Leaf Poultice x 3",
@@ -9378,12 +9365,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Plant Leaf x 2": {
         "name": "Plant Leaf x 2",
@@ -9391,12 +9376,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Plant Leaf x 3": {
         "name": "Plant Leaf x 3",
@@ -9404,12 +9387,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4
       },
       "Rotten Meat x 2": {
         "name": "Rotten Meat x 2",
@@ -9417,12 +9398,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Rotten Meat x 8": {
         "name": "Rotten Meat x 8",
@@ -9430,12 +9409,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Sea Loaf x 2": {
         "name": "Sea Loaf x 2",
@@ -9443,12 +9420,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Small Bone x 3": {
         "name": "Small Bone x 3",
@@ -9456,12 +9431,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3
       },
       "Small Egg x 2": {
         "name": "Small Egg x 2",
@@ -9469,12 +9442,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Li and Li Song": {
         "name": "Li and Li Song",
@@ -9483,12 +9454,10 @@
           "Damage",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Shield Song": {
         "name": "Shield Song",
@@ -9496,12 +9465,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Beast Form": {
         "name": "Beast Form",
@@ -9510,12 +9477,10 @@
           "Damage",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Sun Form": {
         "name": "Sun Form",
@@ -9524,12 +9489,10 @@
           "Everything",
           "Light"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Nature Form": {
         "name": "Nature Form",
@@ -9538,12 +9501,10 @@
           "Damage",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Energy Form": {
         "name": "Energy Form",
@@ -9552,12 +9513,10 @@
           "Damage",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Bind Song": {
         "name": "Bind Song",
@@ -9565,12 +9524,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Fish Form": {
         "name": "Fish Form",
@@ -9578,12 +9535,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Spirit Form": {
         "name": "Spirit Form",
@@ -9591,12 +9546,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Dual Form": {
         "name": "Dual Form",
@@ -9604,12 +9557,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Transturtle Veil top left": {
         "name": "Transturtle Veil top left",
@@ -9617,12 +9568,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Transturtle Veil top right": {
         "name": "Transturtle Veil top right",
@@ -9630,12 +9579,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Transturtle Open Waters top right": {
         "name": "Transturtle Open Waters top right",
@@ -9643,12 +9590,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Transturtle Kelp Forest bottom left": {
         "name": "Transturtle Kelp Forest bottom left",
@@ -9656,12 +9601,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Transturtle Home Waters": {
         "name": "Transturtle Home Waters",
@@ -9669,12 +9612,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Transturtle Abyss right": {
         "name": "Transturtle Abyss right",
@@ -9682,12 +9623,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Transturtle Final Boss": {
         "name": "Transturtle Final Boss",
@@ -9695,9 +9634,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
+        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -9708,12 +9645,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Transturtle Arnassi Ruins": {
         "name": "Transturtle Arnassi Ruins",
@@ -9721,12 +9656,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       }
     }
   },
@@ -9739,159 +9672,159 @@
   },
   "itempool_counts": {
     "1": {
-      "Anemone": 2,
-      "Arcane Poultice": 14,
-      "Arnassi Armor": 2,
-      "Arnassi Statue": 2,
-      "Baby Blaster": 2,
-      "Baby Dumbo": 2,
-      "Baby Nautilus": 2,
-      "Baby Piranha": 2,
-      "Baby Walker": 2,
-      "Beast Form": 2,
-      "Berry Ice Cream": 2,
-      "Big Seed": 2,
-      "Bind Song": 2,
-      "Black Pearl": 2,
+      "Anemone": 1,
+      "Arcane Poultice": 7,
+      "Arnassi Armor": 1,
+      "Arnassi Statue": 1,
+      "Baby Blaster": 1,
+      "Baby Dumbo": 1,
+      "Baby Nautilus": 1,
+      "Baby Piranha": 1,
+      "Baby Walker": 1,
+      "Beast Form": 1,
+      "Berry Ice Cream": 1,
+      "Big Seed": 1,
+      "Bind Song": 1,
+      "Black Pearl": 1,
       "Blaster Peg Prime beated": 1,
       "Body Tongue cleared": 1,
-      "Buttery Sea Loaf": 2,
-      "Cold Borscht": 4,
-      "Cold Soup": 2,
-      "Crab Armor": 2,
-      "Crab Cake": 2,
+      "Buttery Sea Loaf": 1,
+      "Cold Borscht": 2,
+      "Cold Soup": 1,
+      "Crab Armor": 1,
+      "Crab Cake": 1,
       "Crabbius Maximus beated": 1,
-      "Divine Soup": 2,
+      "Divine Soup": 1,
       "Drunian God beated": 1,
-      "Dual Form": 2,
-      "Dumbo Ice Cream": 6,
-      "Eel Oil x 2": 2,
-      "Energy Form": 2,
-      "Energy Statue": 2,
+      "Dual Form": 1,
+      "Dumbo Ice Cream": 3,
+      "Eel Oil x 2": 1,
+      "Energy Form": 1,
+      "Energy Statue": 1,
       "Fallen God beated": 1,
       "First Secret obtained": 1,
-      "Fish Form": 2,
-      "Fish Meat x 2": 2,
-      "Fish Oil": 4,
-      "Fish Oil x 3": 2,
-      "Girl Costume": 2,
-      "Glowing Egg": 2,
-      "Glowing Egg x 2": 2,
-      "Glowing Seed": 2,
-      "Golden Gear": 2,
-      "Golden Starfish": 2,
-      "Hand Roll": 10,
+      "Fish Form": 1,
+      "Fish Meat x 2": 1,
+      "Fish Oil": 2,
+      "Fish Oil x 3": 1,
+      "Girl Costume": 1,
+      "Glowing Egg": 1,
+      "Glowing Egg x 2": 1,
+      "Glowing Seed": 1,
+      "Golden Gear": 1,
+      "Golden Starfish": 1,
+      "Hand Roll": 5,
       "Has Sun Crystal": 1,
-      "Healing Poultice": 8,
-      "Healing Poultice x 2": 4,
-      "Health Upgrade": 10,
-      "Hearty Soup": 10,
-      "Hot Borscht": 2,
-      "Hot Soup": 6,
-      "Hot Soup x 2": 2,
-      "Ice Cream": 4,
-      "Jelly Beacon": 2,
-      "Jelly Costume": 2,
-      "Jelly Egg": 2,
-      "Jelly Plant": 2,
+      "Healing Poultice": 4,
+      "Healing Poultice x 2": 2,
+      "Health Upgrade": 5,
+      "Hearty Soup": 5,
+      "Hot Borscht": 1,
+      "Hot Soup": 3,
+      "Hot Soup x 2": 1,
+      "Ice Cream": 2,
+      "Jelly Beacon": 1,
+      "Jelly Costume": 1,
+      "Jelly Egg": 1,
+      "Jelly Plant": 1,
       "King Jellyfish God Prime beated": 1,
-      "King's Skull": 2,
-      "Krotite Armor": 2,
-      "Leadership Roll": 2,
-      "Leadership Roll x 2": 2,
-      "Leaf Poultice": 10,
-      "Leaf Poultice x 3": 4,
-      "Leeching Poultice": 8,
-      "Legendary Cake": 2,
-      "Li and Li Song": 2,
-      "Loaf of Life": 2,
-      "Long Life Soup": 4,
+      "King's Skull": 1,
+      "Krotite Armor": 1,
+      "Leadership Roll": 1,
+      "Leadership Roll x 2": 1,
+      "Leaf Poultice": 5,
+      "Leaf Poultice x 3": 2,
+      "Leeching Poultice": 4,
+      "Legendary Cake": 1,
+      "Li and Li Song": 1,
+      "Loaf of Life": 1,
+      "Long Life Soup": 2,
       "Lumerean God beated": 1,
-      "Magic Soup": 2,
+      "Magic Soup": 1,
       "Mantis Shrimp Prime beated": 1,
       "Mergog beated": 1,
-      "Mithalan Dress": 2,
+      "Mithalan Dress": 1,
       "Mithalan God beated": 1,
       "Mithalan priests beated": 1,
-      "Mithalas Banner": 2,
-      "Mithalas Doll": 2,
-      "Mithalas Pot": 2,
-      "Mushroom x 2": 2,
-      "Mutant Costume": 2,
-      "Nature Form": 2,
+      "Mithalas Banner": 1,
+      "Mithalas Doll": 1,
+      "Mithalas Pot": 1,
+      "Mushroom x 2": 1,
+      "Mutant Costume": 1,
+      "Nature Form": 1,
       "Nautilus Prime beated": 1,
       "Octopus Prime beated": 1,
-      "Odd Container": 2,
-      "Perogi": 2,
-      "Plant Leaf": 6,
-      "Plant Leaf x 2": 4,
-      "Plant Leaf x 3": 8,
-      "Plump Perogi": 2,
-      "Poison Loaf": 2,
-      "Poison Soup": 2,
-      "Rainbow Mushroom": 8,
-      "Rainbow Soup": 2,
-      "Red Berry": 2,
-      "Red Bulb x 2": 6,
-      "Rotten Cake": 2,
-      "Rotten Loaf x 8": 2,
-      "Rotten Meat": 10,
-      "Rotten Meat x 2": 2,
-      "Rotten Meat x 8": 2,
-      "Royal Soup": 2,
-      "Sea Cake": 8,
-      "Sea Loaf": 2,
-      "Sea Loaf x 2": 2,
+      "Odd Container": 1,
+      "Perogi": 1,
+      "Plant Leaf": 3,
+      "Plant Leaf x 2": 2,
+      "Plant Leaf x 3": 4,
+      "Plump Perogi": 1,
+      "Poison Loaf": 1,
+      "Poison Soup": 1,
+      "Rainbow Mushroom": 4,
+      "Rainbow Soup": 1,
+      "Red Berry": 1,
+      "Red Bulb x 2": 3,
+      "Rotten Cake": 1,
+      "Rotten Loaf x 8": 1,
+      "Rotten Meat": 5,
+      "Rotten Meat x 2": 1,
+      "Rotten Meat x 8": 1,
+      "Royal Soup": 1,
+      "Sea Cake": 4,
+      "Sea Loaf": 1,
+      "Sea Loaf x 2": 1,
       "Second Secret obtained": 1,
-      "Seed Bag": 2,
-      "Shark Fin Soup": 4,
-      "Shield Song": 2,
-      "Sight Poultice": 4,
-      "Small Bone x 2": 2,
-      "Small Bone x 3": 6,
-      "Small Egg": 2,
-      "Small Egg x 2": 2,
-      "Small Tentacle x 2": 2,
-      "Song Plant Spore": 2,
-      "Special Bulb": 10,
-      "Special Cake": 4,
-      "Spicy Meat x 2": 6,
-      "Spicy Roll": 22,
-      "Spicy Soup": 2,
-      "Spider Roll": 4,
-      "Spirit Form": 2,
-      "Stone Head": 2,
-      "Sun Form": 2,
-      "Sun Key": 2,
-      "Swamp Cake": 6,
-      "Tasty Cake": 2,
-      "Tasty Roll": 4,
+      "Seed Bag": 1,
+      "Shark Fin Soup": 2,
+      "Shield Song": 1,
+      "Sight Poultice": 2,
+      "Small Bone x 2": 1,
+      "Small Bone x 3": 3,
+      "Small Egg": 1,
+      "Small Egg x 2": 1,
+      "Small Tentacle x 2": 1,
+      "Song Plant Spore": 1,
+      "Special Bulb": 5,
+      "Special Cake": 2,
+      "Spicy Meat x 2": 3,
+      "Spicy Roll": 11,
+      "Spicy Soup": 1,
+      "Spider Roll": 2,
+      "Spirit Form": 1,
+      "Stone Head": 1,
+      "Sun Form": 1,
+      "Sun Key": 1,
+      "Swamp Cake": 3,
+      "Tasty Cake": 1,
+      "Tasty Roll": 2,
       "The Golem beated": 1,
       "Third Secret obtained": 1,
-      "Tooth": 2,
-      "Tough Cake": 2,
-      "Transturtle Abyss right": 2,
-      "Transturtle Arnassi Ruins": 2,
+      "Tooth": 1,
+      "Tough Cake": 1,
+      "Transturtle Abyss right": 1,
+      "Transturtle Arnassi Ruins": 1,
       "Transturtle Final Boss": 1,
-      "Transturtle Home Waters": 2,
-      "Transturtle Kelp Forest bottom left": 2,
-      "Transturtle Open Waters top right": 2,
-      "Transturtle Simon Says": 2,
-      "Transturtle Veil top left": 2,
-      "Transturtle Veil top right": 2,
-      "Trident": 2,
-      "Turtle Egg": 2,
-      "Turtle Soup": 4,
-      "Urchin Costume": 2,
-      "Vedha Sea Crisp": 4,
-      "Vedha's Cure-All": 2,
-      "Veggie Cake": 2,
-      "Veggie Ice Cream": 2,
-      "Veggie Soup": 4,
+      "Transturtle Home Waters": 1,
+      "Transturtle Kelp Forest bottom left": 1,
+      "Transturtle Open Waters top right": 1,
+      "Transturtle Simon Says": 1,
+      "Transturtle Veil top left": 1,
+      "Transturtle Veil top right": 1,
+      "Trident": 1,
+      "Turtle Egg": 1,
+      "Turtle Soup": 2,
+      "Urchin Costume": 1,
+      "Vedha Sea Crisp": 2,
+      "Vedha's Cure-All": 1,
+      "Veggie Cake": 1,
+      "Veggie Ice Cream": 1,
+      "Veggie Soup": 2,
       "Victory": 1,
-      "Volcano Roll": 2,
-      "Wok": 2,
-      "Zuuna's Perogi": 2
+      "Volcano Roll": 1,
+      "Wok": 1,
+      "Zuuna's Perogi": 1
     }
   },
   "progression_mapping": {
@@ -9914,5 +9847,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

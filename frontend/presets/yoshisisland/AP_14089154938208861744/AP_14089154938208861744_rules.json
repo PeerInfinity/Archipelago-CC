@@ -534,7 +534,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Make Eggs, Throw Eggs: Flowers",
@@ -557,7 +558,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Make Eggs, Throw Eggs: Stars",
@@ -581,7 +583,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Make Eggs, Throw Eggs: Level Clear",
@@ -595,7 +598,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -624,7 +628,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Watch Out Below!: Flowers",
@@ -647,7 +652,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Watch Out Below!: Stars",
@@ -671,7 +677,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Watch Out Below!: Level Clear",
@@ -685,7 +692,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -705,7 +713,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Cave Of Chomp Rock: Flowers",
@@ -719,7 +728,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Cave Of Chomp Rock: Stars",
@@ -733,7 +743,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Cave Of Chomp Rock: Level Clear",
@@ -747,7 +758,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -777,7 +789,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Burt The Bashful's Fort: Flowers",
@@ -823,7 +836,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Burt The Bashful's Fort: Stars",
@@ -856,7 +870,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Burt The Bashful's Fort: Level Clear",
@@ -871,7 +886,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -892,7 +908,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -912,7 +929,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hop! Hop! Donut Lifts: Flowers",
@@ -926,7 +944,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hop! Hop! Donut Lifts: Stars",
@@ -951,7 +970,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hop! Hop! Donut Lifts: Level Clear",
@@ -965,7 +985,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -996,7 +1017,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Shy-Guys On Stilts: Flowers",
@@ -1010,7 +1032,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Shy-Guys On Stilts: Stars",
@@ -1062,7 +1085,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Shy-Guys On Stilts: Level Clear",
@@ -1085,7 +1109,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1116,7 +1141,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Touch Fuzzy Get Dizzy: Flowers",
@@ -1130,7 +1156,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Touch Fuzzy Get Dizzy: Stars",
@@ -1174,7 +1201,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Touch Fuzzy Get Dizzy: Level Clear",
@@ -1188,7 +1216,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Touch Fuzzy Get Dizzy: Gather Coins",
@@ -1203,7 +1232,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1233,7 +1263,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Salvo The Slime's Castle: Flowers",
@@ -1247,7 +1278,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Salvo The Slime's Castle: Stars",
@@ -1289,7 +1321,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Salvo The Slime's Castle: Level Clear",
@@ -1304,7 +1337,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1325,7 +1359,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1355,7 +1390,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Visit Koopa And Para-Koopa: Flowers",
@@ -1378,7 +1414,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Visit Koopa And Para-Koopa: Stars",
@@ -1402,7 +1439,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Visit Koopa And Para-Koopa: Level Clear",
@@ -1416,7 +1454,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1448,7 +1487,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Baseball Boys: Flowers",
@@ -1474,7 +1514,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Baseball Boys: Stars",
@@ -1518,7 +1559,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Baseball Boys: Level Clear",
@@ -1543,7 +1585,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1563,7 +1606,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "What's Gusty Taste Like?: Flowers",
@@ -1586,7 +1630,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "What's Gusty Taste Like?: Stars",
@@ -1600,7 +1645,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "What's Gusty Taste Like?: Level Clear",
@@ -1623,7 +1669,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1663,7 +1710,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bigger Boo's Fort: Flowers",
@@ -1687,7 +1735,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bigger Boo's Fort: Stars",
@@ -1721,7 +1770,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bigger Boo's Fort: Level Clear",
@@ -1736,7 +1786,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1757,7 +1808,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1777,7 +1829,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Watch Out For Lakitu: Flowers",
@@ -1801,7 +1854,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Watch Out For Lakitu: Stars",
@@ -1815,7 +1869,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Watch Out For Lakitu: Level Clear",
@@ -1829,7 +1884,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1849,7 +1905,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Cave Of The Mystery Maze: Flowers",
@@ -1872,7 +1929,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Cave Of The Mystery Maze: Stars",
@@ -1896,7 +1954,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Cave Of The Mystery Maze: Level Clear",
@@ -1910,7 +1969,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Cave Of the Mystery Maze: Seed Spitting Contest",
@@ -1925,7 +1985,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1973,7 +2034,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lakitu's Wall: Flowers",
@@ -2015,7 +2077,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lakitu's Wall: Stars",
@@ -2039,7 +2102,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lakitu's Wall: Level Clear",
@@ -2062,7 +2126,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lakitu's Wall: Gather Coins",
@@ -2077,7 +2142,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2129,7 +2195,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Potted Ghost's Castle: Flowers",
@@ -2166,7 +2233,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Potted Ghost's Castle: Stars",
@@ -2207,7 +2275,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Potted Ghost's Castle: Level Clear",
@@ -2222,7 +2291,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2243,7 +2313,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2263,7 +2334,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Welcome To Monkey World!: Flowers",
@@ -2277,7 +2349,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Welcome To Monkey World!: Stars",
@@ -2292,7 +2365,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Welcome To Monkey World!: Level Clear",
@@ -2306,7 +2380,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2335,7 +2410,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Jungle Rhythm...: Flowers",
@@ -2358,7 +2434,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Jungle Rhythm...: Stars",
@@ -2382,7 +2459,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Jungle Rhythm...: Level Clear",
@@ -2405,7 +2483,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2434,7 +2513,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Nep-Enuts' Domain: Flowers",
@@ -2457,7 +2537,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Nep-Enuts' Domain: Stars",
@@ -2490,7 +2571,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Nep-Enuts' Domain: Level Clear",
@@ -2513,7 +2595,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2543,7 +2626,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Prince Froggy's Fort: Flowers",
@@ -2580,7 +2664,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Prince Froggy's Fort: Stars",
@@ -2595,7 +2680,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Prince Froggy's Fort: Level Clear",
@@ -2610,7 +2696,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2631,7 +2718,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2651,7 +2739,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Jammin' Through The Trees: Flowers",
@@ -2675,7 +2764,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Jammin' Through The Trees: Stars",
@@ -2728,7 +2818,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Jammin' Through The Trees: Level Clear",
@@ -2742,7 +2833,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2773,7 +2865,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Cave Of Harry Hedgehog: Flowers",
@@ -2799,7 +2892,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Cave Of Harry Hedgehog: Stars",
@@ -2836,7 +2930,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Cave Of Harry Hedgehog: Level Clear",
@@ -2860,7 +2955,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2891,7 +2987,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Monkeys' Favorite Lake: Flowers",
@@ -2914,7 +3011,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Monkeys' Favorite Lake: Stars",
@@ -2928,7 +3026,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Monkeys' Favorite Lake: Level Clear",
@@ -2942,7 +3041,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2986,7 +3086,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Naval Piranha's Castle: Flowers",
@@ -3014,7 +3115,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Naval Piranha's Castle: Stars",
@@ -3038,7 +3140,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Naval Piranha's Castle: Level Clear",
@@ -3053,7 +3156,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3074,7 +3178,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3094,7 +3199,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "GO! GO! MARIO!!: Flowers",
@@ -3108,7 +3214,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "GO! GO! MARIO!!: Stars",
@@ -3142,7 +3249,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "GO! GO! MARIO!!: Level Clear",
@@ -3156,7 +3264,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3186,7 +3295,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Cave Of The Lakitus: Flowers",
@@ -3209,7 +3319,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Cave Of The Lakitus: Stars",
@@ -3232,7 +3343,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Cave Of The Lakitus: Level Clear",
@@ -3246,7 +3358,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3276,7 +3389,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Don't Look Back!: Flowers",
@@ -3299,7 +3413,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Don't Look Back!: Stars",
@@ -3332,7 +3447,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Don't Look Back!: Level Clear",
@@ -3346,7 +3462,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3411,7 +3528,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Marching Milde's Fort: Flowers",
@@ -3459,7 +3577,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Marching Milde's Fort: Stars",
@@ -3497,7 +3616,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Marching Milde's Fort: Level Clear",
@@ -3512,7 +3632,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3533,7 +3654,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3562,7 +3684,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chomp Rock Zone: Flowers",
@@ -3587,7 +3710,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chomp Rock Zone: Stars",
@@ -3612,7 +3736,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chomp Rock Zone: Level Clear",
@@ -3626,7 +3751,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3674,7 +3800,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lake Shore Paradise: Flowers",
@@ -3716,7 +3843,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lake Shore Paradise: Stars",
@@ -3769,7 +3897,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lake Shore Paradise: Level Clear",
@@ -3793,7 +3922,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3813,7 +3943,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ride Like The Wind: Flowers",
@@ -3827,7 +3958,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ride Like The Wind: Stars",
@@ -3860,7 +3992,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ride Like The Wind: Level Clear",
@@ -3874,7 +4007,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ride Like The Wind: Gather Coins",
@@ -3889,7 +4023,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3929,7 +4064,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hookbill The Koopa's Castle: Flowers",
@@ -3953,7 +4089,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hookbill The Koopa's Castle: Stars",
@@ -3986,7 +4123,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hookbill The Koopa's Castle: Level Clear",
@@ -4001,7 +4139,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4022,7 +4161,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4051,7 +4191,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "BLIZZARD!!!: Flowers",
@@ -4065,7 +4206,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "BLIZZARD!!!: Stars",
@@ -4108,7 +4250,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "BLIZZARD!!!: Level Clear",
@@ -4122,7 +4265,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4142,7 +4286,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ride The Ski Lifts: Flowers",
@@ -4156,7 +4301,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ride The Ski Lifts: Stars",
@@ -4180,7 +4326,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ride The Ski Lifts: Level Clear",
@@ -4194,7 +4341,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4245,7 +4393,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Danger - Icy Conditions Ahead: Flowers",
@@ -4288,7 +4437,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Danger - Icy Conditions Ahead: Stars",
@@ -4331,7 +4481,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Danger - Icy Conditions Ahead: Level Clear",
@@ -4355,7 +4506,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4395,7 +4547,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sluggy The Unshaven's Fort: Flowers",
@@ -4419,7 +4572,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sluggy The Unshaven's Fort: Stars",
@@ -4475,7 +4629,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sluggy The Unshaven's Fort: Level Clear",
@@ -4490,7 +4645,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4511,7 +4667,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4540,7 +4697,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Goonie Rides!: Flowers",
@@ -4563,7 +4721,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Goonie Rides!: Stars",
@@ -4578,7 +4737,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Goonie Rides!: Level Clear",
@@ -4601,7 +4761,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4621,7 +4782,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Welcome To Cloud World: Flowers",
@@ -4635,7 +4797,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Welcome To Cloud World: Stars",
@@ -4659,7 +4822,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Welcome To Cloud World: Level Clear",
@@ -4673,7 +4837,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4707,7 +4872,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Shifting Platforms Ahead: Flowers",
@@ -4735,7 +4901,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Shifting Platforms Ahead: Stars",
@@ -4750,7 +4917,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Shifting Platforms Ahead: Level Clear",
@@ -4764,7 +4932,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4803,7 +4972,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Raphael The Raven's Castle: Flowers",
@@ -4826,7 +4996,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Raphael The Raven's Castle: Stars",
@@ -4850,7 +5021,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Raphael The Raven's Castle: Level Clear",
@@ -4865,7 +5037,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4886,7 +5059,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4915,7 +5089,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Scary Skeleton Goonies!: Flowers",
@@ -4938,7 +5113,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Scary Skeleton Goonies!: Stars",
@@ -4962,7 +5138,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Scary Skeleton Goonies!: Level Clear",
@@ -4985,7 +5162,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5005,7 +5183,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Cave Of The Bandits: Flowers",
@@ -5019,7 +5198,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Cave Of The Bandits: Stars",
@@ -5044,7 +5224,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Cave Of The Bandits: Level Clear",
@@ -5058,7 +5239,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5078,7 +5260,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beware The Spinning Logs: Flowers",
@@ -5092,7 +5275,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beware The Spinning Logs: Stars",
@@ -5106,7 +5290,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Beware The Spinning Logs: Level Clear",
@@ -5120,7 +5305,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5184,7 +5370,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tap-Tap The Red Nose's Fort: Flowers",
@@ -5232,7 +5419,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tap-Tap The Red Nose's Fort: Stars",
@@ -5267,7 +5455,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tap-Tap The Red Nose's Fort: Level Clear",
@@ -5282,7 +5471,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5303,7 +5493,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5346,7 +5537,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Very Loooooong Cave: Flowers",
@@ -5383,7 +5575,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Very Loooooong Cave: Stars",
@@ -5425,7 +5618,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Very Loooooong Cave: Level Clear",
@@ -5439,7 +5633,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5469,7 +5664,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Deep, Underground Maze: Flowers",
@@ -5493,7 +5689,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Deep, Underground Maze: Stars",
@@ -5546,7 +5743,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Deep, Underground Maze: Level Clear",
@@ -5571,7 +5769,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5605,7 +5804,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "KEEP MOVING!!!!: Flowers",
@@ -5619,7 +5819,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "KEEP MOVING!!!!: Stars",
@@ -5634,7 +5835,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "KEEP MOVING!!!!: Level Clear",
@@ -5648,7 +5850,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5697,7 +5900,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "King Bowser's Castle: Flowers",
@@ -5730,7 +5934,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "King Bowser's Castle: Stars",
@@ -5763,7 +5968,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5784,7 +5990,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       }
@@ -5807,12 +6014,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Dashed Platform": {
         "name": "Dashed Platform",
@@ -5821,12 +6026,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Dashed Stairs": {
         "name": "Dashed Stairs",
@@ -5835,12 +6038,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Beanstalk": {
         "name": "Beanstalk",
@@ -5849,12 +6050,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Helicopter Morph": {
         "name": "Helicopter Morph",
@@ -5863,12 +6062,10 @@
           "Everything",
           "Morphs"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Spring Ball": {
         "name": "Spring Ball",
@@ -5877,12 +6074,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Large Spring Ball": {
         "name": "Large Spring Ball",
@@ -5891,12 +6086,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Arrow Wheel": {
         "name": "Arrow Wheel",
@@ -5905,12 +6098,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Vanishing Arrow Wheel": {
         "name": "Vanishing Arrow Wheel",
@@ -5919,12 +6110,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mole Tank Morph": {
         "name": "Mole Tank Morph",
@@ -5933,12 +6122,10 @@
           "Everything",
           "Morphs"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Watermelon": {
         "name": "Watermelon",
@@ -5947,12 +6134,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ice Melon": {
         "name": "Ice Melon",
@@ -5961,12 +6146,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Fire Melon": {
         "name": "Fire Melon",
@@ -5975,12 +6158,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Super Star": {
         "name": "Super Star",
@@ -5989,12 +6170,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Car Morph": {
         "name": "Car Morph",
@@ -6003,12 +6182,10 @@
           "Everything",
           "Morphs"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Flashing Eggs": {
         "name": "Flashing Eggs",
@@ -6017,12 +6194,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Giant Eggs": {
         "name": "Giant Eggs",
@@ -6031,12 +6206,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Egg Launcher": {
         "name": "Egg Launcher",
@@ -6045,12 +6218,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Egg Plant": {
         "name": "Egg Plant",
@@ -6059,12 +6230,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Submarine Morph": {
         "name": "Submarine Morph",
@@ -6073,12 +6242,10 @@
           "Everything",
           "Morphs"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Chomp Rock": {
         "name": "Chomp Rock",
@@ -6087,12 +6254,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Poochy": {
         "name": "Poochy",
@@ -6101,12 +6266,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Platform Ghost": {
         "name": "Platform Ghost",
@@ -6115,12 +6278,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Skis": {
         "name": "Skis",
@@ -6129,12 +6290,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Train Morph": {
         "name": "Train Morph",
@@ -6143,12 +6302,10 @@
           "Everything",
           "Morphs"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key": {
         "name": "Key",
@@ -6157,12 +6314,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Middle Ring": {
         "name": "Middle Ring",
@@ -6171,12 +6326,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bucket": {
         "name": "Bucket",
@@ -6185,12 +6338,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Tulip": {
         "name": "Tulip",
@@ -6199,12 +6350,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Egg Capacity Upgrade": {
         "name": "Egg Capacity Upgrade",
@@ -6213,12 +6362,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5,
+        "classification": "progression"
       },
       "World 1 Gate": {
         "name": "World 1 Gate",
@@ -6227,12 +6374,10 @@
           "Everything",
           "Gates"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "World 2 Gate": {
         "name": "World 2 Gate",
@@ -6241,12 +6386,10 @@
           "Everything",
           "Gates"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "World 3 Gate": {
         "name": "World 3 Gate",
@@ -6255,12 +6398,10 @@
           "Everything",
           "Gates"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "World 4 Gate": {
         "name": "World 4 Gate",
@@ -6269,12 +6410,10 @@
           "Everything",
           "Gates"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "World 5 Gate": {
         "name": "World 5 Gate",
@@ -6283,12 +6422,10 @@
           "Everything",
           "Gates"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "World 6 Gate": {
         "name": "World 6 Gate",
@@ -6297,12 +6434,10 @@
           "Everything",
           "Gates"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Extra 1": {
         "name": "Extra 1",
@@ -6311,12 +6446,10 @@
           "Everything",
           "Panels"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Extra 2": {
         "name": "Extra 2",
@@ -6325,12 +6458,10 @@
           "Everything",
           "Panels"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Extra 3": {
         "name": "Extra 3",
@@ -6339,12 +6470,10 @@
           "Everything",
           "Panels"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Extra 4": {
         "name": "Extra 4",
@@ -6353,12 +6482,10 @@
           "Everything",
           "Panels"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Extra 5": {
         "name": "Extra 5",
@@ -6367,12 +6494,10 @@
           "Everything",
           "Panels"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Extra 6": {
         "name": "Extra 6",
@@ -6381,12 +6506,10 @@
           "Everything",
           "Panels"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Extra Panels": {
         "name": "Extra Panels",
@@ -6395,12 +6518,10 @@
           "Everything",
           "Panels"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bonus 1": {
         "name": "Bonus 1",
@@ -6409,12 +6530,10 @@
           "Everything",
           "Panels"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bonus 2": {
         "name": "Bonus 2",
@@ -6423,12 +6542,10 @@
           "Everything",
           "Panels"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bonus 3": {
         "name": "Bonus 3",
@@ -6437,12 +6554,10 @@
           "Everything",
           "Panels"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bonus 4": {
         "name": "Bonus 4",
@@ -6451,12 +6566,10 @@
           "Everything",
           "Panels"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bonus 5": {
         "name": "Bonus 5",
@@ -6465,12 +6578,10 @@
           "Everything",
           "Panels"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bonus 6": {
         "name": "Bonus 6",
@@ -6479,12 +6590,10 @@
           "Everything",
           "Panels"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Secret Lens": {
         "name": "Secret Lens",
@@ -6493,12 +6602,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bonus Panels": {
         "name": "Bonus Panels",
@@ -6507,12 +6614,10 @@
           "Everything",
           "Panels"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Anytime Egg": {
         "name": "Anytime Egg",
@@ -6521,12 +6626,10 @@
           "Consumable",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 22
+        "max_count": 11,
+        "classification": "useful"
       },
       "Anywhere Pow": {
         "name": "Anywhere Pow",
@@ -6535,12 +6638,10 @@
           "Consumable",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 22
+        "max_count": 11,
+        "classification": "filler"
       },
       "Winged Cloud Maker": {
         "name": "Winged Cloud Maker",
@@ -6549,12 +6650,10 @@
           "Consumable",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 28
+        "max_count": 14,
+        "classification": "filler"
       },
       "Pocket Melon": {
         "name": "Pocket Melon",
@@ -6563,12 +6662,10 @@
           "Consumable",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 30
+        "max_count": 15,
+        "classification": "filler"
       },
       "Pocket Fire Melon": {
         "name": "Pocket Fire Melon",
@@ -6577,12 +6674,10 @@
           "Consumable",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 22
+        "max_count": 11,
+        "classification": "filler"
       },
       "Pocket Ice Melon": {
         "name": "Pocket Ice Melon",
@@ -6591,12 +6686,10 @@
           "Consumable",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 28
+        "max_count": 14,
+        "classification": "filler"
       },
       "Magnifying Glass": {
         "name": "Magnifying Glass",
@@ -6605,12 +6698,10 @@
           "Consumable",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 22
+        "max_count": 11,
+        "classification": "filler"
       },
       "+10 Stars": {
         "name": "+10 Stars",
@@ -6619,12 +6710,10 @@
           "Consumable",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 26
+        "max_count": 13,
+        "classification": "useful"
       },
       "+20 Stars": {
         "name": "+20 Stars",
@@ -6633,68 +6722,62 @@
           "Consumable",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 26
+        "max_count": 13,
+        "classification": "useful"
       },
       "1-Up": {
         "name": "1-Up",
+        "hint_text": "1 Up",
         "id": 3154060,
         "groups": [
           "Everything",
           "Lives"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 20
+        "max_count": 10,
+        "classification": "filler"
       },
       "2-Up": {
         "name": "2-Up",
+        "hint_text": "2 Up",
         "id": 3154061,
         "groups": [
           "Everything",
           "Lives"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 22
+        "max_count": 11,
+        "classification": "filler"
       },
       "3-Up": {
         "name": "3-Up",
+        "hint_text": "3 Up",
         "id": 3154062,
         "groups": [
           "Everything",
           "Lives"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 26
+        "max_count": 13,
+        "classification": "filler"
       },
       "10-Up": {
         "name": "10-Up",
+        "hint_text": "10 Up",
         "id": 3154063,
         "groups": [
           "Everything",
           "Lives"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5,
+        "classification": "useful"
       },
       "Fuzzy Trap": {
         "name": "Fuzzy Trap",
@@ -6703,12 +6786,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Reversal Trap": {
         "name": "Reversal Trap",
@@ -6717,12 +6798,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Darkness Trap": {
         "name": "Darkness Trap",
@@ -6731,12 +6810,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Freeze Trap": {
         "name": "Freeze Trap",
@@ -6745,12 +6822,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Piece of Luigi": {
         "name": "Piece of Luigi",
@@ -6759,12 +6834,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Boss Clear": {
         "name": "Boss Clear",
@@ -6772,12 +6845,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 11
+        "max_count": 11,
+        "classification": "progression"
       },
       "Bandit Consumables": {
         "name": "Bandit Consumables",
@@ -6785,12 +6856,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 3
+        "max_count": 3,
+        "classification": "progression"
       },
       "Bandit Watermelons": {
         "name": "Bandit Watermelons",
@@ -6798,12 +6867,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Saved Baby Luigi": {
         "name": "Saved Baby Luigi",
@@ -6811,12 +6878,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -6834,58 +6899,58 @@
   },
   "itempool_counts": {
     "1": {
-      "! Switch": 2,
-      "+10 Stars": 26,
-      "+20 Stars": 26,
-      "1-Up": 20,
-      "10-Up": 10,
-      "2-Up": 22,
-      "3-Up": 26,
-      "Anytime Egg": 22,
-      "Anywhere Pow": 22,
-      "Arrow Wheel": 2,
+      "! Switch": 1,
+      "+10 Stars": 13,
+      "+20 Stars": 13,
+      "1-Up": 10,
+      "10-Up": 5,
+      "2-Up": 11,
+      "3-Up": 13,
+      "Anytime Egg": 11,
+      "Anywhere Pow": 11,
+      "Arrow Wheel": 1,
       "Bandit Consumables": 3,
       "Bandit Watermelons": 1,
-      "Beanstalk": 2,
-      "Bonus Panels": 2,
+      "Beanstalk": 1,
+      "Bonus Panels": 1,
       "Boss Clear": 11,
-      "Bucket": 2,
-      "Car Morph": 2,
-      "Chomp Rock": 2,
-      "Dashed Platform": 2,
-      "Dashed Stairs": 2,
-      "Egg Capacity Upgrade": 10,
-      "Egg Launcher": 2,
-      "Egg Plant": 2,
-      "Fire Melon": 2,
-      "Flashing Eggs": 2,
-      "Giant Eggs": 2,
-      "Helicopter Morph": 2,
-      "Ice Melon": 2,
-      "Key": 2,
-      "Large Spring Ball": 2,
-      "Magnifying Glass": 22,
-      "Mole Tank Morph": 2,
-      "Platform Ghost": 2,
-      "Pocket Fire Melon": 22,
-      "Pocket Ice Melon": 28,
-      "Pocket Melon": 30,
-      "Poochy": 2,
+      "Bucket": 1,
+      "Car Morph": 1,
+      "Chomp Rock": 1,
+      "Dashed Platform": 1,
+      "Dashed Stairs": 1,
+      "Egg Capacity Upgrade": 5,
+      "Egg Launcher": 1,
+      "Egg Plant": 1,
+      "Fire Melon": 1,
+      "Flashing Eggs": 1,
+      "Giant Eggs": 1,
+      "Helicopter Morph": 1,
+      "Ice Melon": 1,
+      "Key": 1,
+      "Large Spring Ball": 1,
+      "Magnifying Glass": 11,
+      "Mole Tank Morph": 1,
+      "Platform Ghost": 1,
+      "Pocket Fire Melon": 11,
+      "Pocket Ice Melon": 14,
+      "Pocket Melon": 15,
+      "Poochy": 1,
       "Saved Baby Luigi": 1,
-      "Skis": 2,
-      "Spring Ball": 2,
-      "Submarine Morph": 2,
-      "Super Star": 2,
-      "Train Morph": 2,
-      "Tulip": 2,
-      "Vanishing Arrow Wheel": 2,
-      "Watermelon": 2,
-      "Winged Cloud Maker": 28,
-      "World 2 Gate": 2,
-      "World 3 Gate": 2,
-      "World 4 Gate": 2,
-      "World 5 Gate": 2,
-      "World 6 Gate": 2
+      "Skis": 1,
+      "Spring Ball": 1,
+      "Submarine Morph": 1,
+      "Super Star": 1,
+      "Train Morph": 1,
+      "Tulip": 1,
+      "Vanishing Arrow Wheel": 1,
+      "Watermelon": 1,
+      "Winged Cloud Maker": 14,
+      "World 2 Gate": 1,
+      "World 3 Gate": 1,
+      "World 4 Gate": 1,
+      "World 5 Gate": 1,
+      "World 6 Gate": 1
     }
   },
   "progression_mapping": {
@@ -6915,5 +6980,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

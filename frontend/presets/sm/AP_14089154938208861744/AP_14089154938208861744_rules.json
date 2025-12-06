@@ -5622,7 +5622,8 @@
               "player": 1,
               "advancement": true,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5745,7 +5746,8 @@
               "player": 1,
               "advancement": true,
               "type": "Spazer"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5831,7 +5833,8 @@
               "player": 1,
               "advancement": true,
               "type": "Reserve"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5944,7 +5947,8 @@
               "player": 1,
               "advancement": true,
               "type": "Charge"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6005,7 +6009,8 @@
               "player": 1,
               "advancement": true,
               "type": "Ice"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6046,7 +6051,8 @@
               "player": 1,
               "advancement": true,
               "type": "Morph"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6180,7 +6186,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6221,7 +6228,8 @@
               "player": 1,
               "advancement": true,
               "type": "ETank"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6329,7 +6337,8 @@
               "player": 1,
               "advancement": true,
               "type": "ETank"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6469,7 +6478,8 @@
               "player": 1,
               "advancement": true,
               "type": "Grapple"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6688,7 +6698,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6791,7 +6802,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6868,7 +6880,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6929,7 +6942,8 @@
               "player": 1,
               "advancement": true,
               "type": "Kraid"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6995,7 +7009,8 @@
               "player": 1,
               "advancement": false,
               "type": "PowerBomb"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7154,7 +7169,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7268,7 +7284,8 @@
               "player": 1,
               "advancement": true,
               "type": "Reserve"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7400,7 +7417,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7707,7 +7725,8 @@
               "player": 1,
               "advancement": true,
               "type": "Reserve"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7817,7 +7836,8 @@
               "player": 1,
               "advancement": true,
               "type": "SpringBall"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7904,7 +7924,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7995,7 +8016,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8080,7 +8102,8 @@
               "player": 1,
               "advancement": true,
               "type": "Ridley"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -8170,7 +8193,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8241,7 +8265,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8399,7 +8424,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8481,7 +8507,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8567,7 +8594,8 @@
               "player": 1,
               "advancement": true,
               "type": "ScrewAttack"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8628,7 +8656,8 @@
               "player": 1,
               "advancement": true,
               "type": "Phantoon"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -8689,7 +8718,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8761,7 +8791,8 @@
               "player": 1,
               "advancement": true,
               "type": "XRayScope"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8986,7 +9017,8 @@
               "player": 1,
               "advancement": true,
               "type": "Gravity"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9225,7 +9257,8 @@
               "player": 1,
               "advancement": true,
               "type": "ETank"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9281,7 +9314,8 @@
               "player": 1,
               "advancement": true,
               "type": "ETank"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9447,7 +9481,8 @@
               "player": 1,
               "advancement": true,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9508,7 +9543,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9549,7 +9585,8 @@
               "player": 1,
               "advancement": true,
               "type": "Draygon"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -9625,7 +9662,8 @@
               "player": 1,
               "advancement": true,
               "type": "ETank"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9691,7 +9729,8 @@
               "player": 1,
               "advancement": true,
               "type": "MotherBrain"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -9768,7 +9807,8 @@
               "player": 1,
               "advancement": true,
               "type": "SporeSpawn"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -9824,7 +9864,8 @@
               "player": 1,
               "advancement": true,
               "type": "Botwoon"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -9885,7 +9926,8 @@
               "player": 1,
               "advancement": true,
               "type": "Crocomire"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -9946,7 +9988,8 @@
               "player": 1,
               "advancement": true,
               "type": "GoldenTorizo"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -10039,7 +10082,8 @@
               "player": 1,
               "advancement": true,
               "type": "Varia"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10135,7 +10179,8 @@
               "player": 1,
               "advancement": true,
               "type": "HiJump"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10201,7 +10246,8 @@
               "player": 1,
               "advancement": true,
               "type": "SpeedBooster"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10293,7 +10339,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10334,7 +10381,8 @@
               "player": 1,
               "advancement": false,
               "type": "PowerBomb"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10422,7 +10470,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10510,7 +10559,8 @@
               "player": 1,
               "advancement": true,
               "type": "Wave"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10598,7 +10648,8 @@
               "player": 1,
               "advancement": true,
               "type": "PowerBomb"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10804,7 +10855,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10865,7 +10917,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10942,7 +10995,8 @@
               "player": 1,
               "advancement": false,
               "type": "PowerBomb"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11087,7 +11141,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11178,7 +11233,8 @@
               "player": 1,
               "advancement": true,
               "type": "ETank"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11265,7 +11321,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11410,7 +11467,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11523,7 +11581,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11564,7 +11623,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11605,7 +11665,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11682,7 +11743,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11748,7 +11810,8 @@
               "player": 1,
               "advancement": true,
               "type": "SpaceJump"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11836,7 +11899,8 @@
               "player": 1,
               "advancement": false,
               "type": "PowerBomb"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11938,7 +12002,8 @@
               "player": 1,
               "advancement": true,
               "type": "Bomb"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11979,7 +12044,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12045,7 +12111,8 @@
               "player": 1,
               "advancement": true,
               "type": "ETank"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12106,7 +12173,8 @@
               "player": 1,
               "advancement": true,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12167,7 +12235,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12244,7 +12313,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12310,7 +12380,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12387,7 +12458,8 @@
               "player": 1,
               "advancement": false,
               "type": "PowerBomb"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12448,7 +12520,8 @@
               "player": 1,
               "advancement": true,
               "type": "ETank"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12514,7 +12587,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12685,7 +12759,8 @@
               "player": 1,
               "advancement": false,
               "type": "PowerBomb"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12726,7 +12801,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12858,7 +12934,8 @@
               "player": 1,
               "advancement": true,
               "type": "ETank"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12909,7 +12986,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -13097,7 +13175,8 @@
               "player": 1,
               "advancement": true,
               "type": "ETank"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -13189,7 +13268,8 @@
               "player": 1,
               "advancement": true,
               "type": "PowerBomb"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -13441,7 +13521,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -13551,7 +13632,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -13645,7 +13727,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -13686,7 +13769,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -13787,7 +13871,8 @@
               "player": 1,
               "advancement": true,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -13823,7 +13908,8 @@
               "player": 1,
               "advancement": true,
               "type": "Reserve"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -13927,7 +14013,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14018,7 +14105,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14098,7 +14186,8 @@
               "player": 1,
               "advancement": true,
               "type": "ETank"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14147,7 +14236,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14188,7 +14278,8 @@
               "player": 1,
               "advancement": true,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14224,7 +14315,8 @@
               "player": 1,
               "advancement": true,
               "type": "PowerBomb"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14319,7 +14411,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14380,7 +14473,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14452,7 +14546,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14518,7 +14613,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14584,7 +14680,8 @@
               "player": 1,
               "advancement": false,
               "type": "PowerBomb"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14727,7 +14824,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14788,7 +14886,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14880,7 +14979,8 @@
               "player": 1,
               "advancement": true,
               "type": "Plasma"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14921,7 +15021,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14962,7 +15063,8 @@
               "player": 1,
               "advancement": true,
               "type": "ETank"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15003,7 +15105,8 @@
               "player": 1,
               "advancement": false,
               "type": "PowerBomb"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15059,7 +15162,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15152,7 +15256,8 @@
               "player": 1,
               "advancement": true,
               "type": "ETank"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15250,7 +15355,8 @@
               "player": 1,
               "advancement": true,
               "type": "ETank"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15291,7 +15397,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15332,7 +15439,8 @@
               "player": 1,
               "advancement": false,
               "type": "Super"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15373,7 +15481,8 @@
               "player": 1,
               "advancement": false,
               "type": "Missile"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15409,12 +15518,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "ETank",
-        "max_count": 28
+        "max_count": 14,
+        "classification": "progression"
       },
       "Missile": {
         "name": "Missile",
@@ -15422,12 +15529,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Missile",
-        "max_count": 60
+        "max_count": 30,
+        "classification": "progression"
       },
       "Super Missile": {
         "name": "Super Missile",
@@ -15435,12 +15540,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Super",
-        "max_count": 50
+        "max_count": 25,
+        "classification": "progression"
       },
       "Power Bomb": {
         "name": "Power Bomb",
@@ -15448,12 +15551,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "PowerBomb",
-        "max_count": 22
+        "max_count": 11,
+        "classification": "progression"
       },
       "Bomb": {
         "name": "Bomb",
@@ -15461,12 +15562,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Bomb",
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Charge Beam": {
         "name": "Charge Beam",
@@ -15474,12 +15573,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Charge",
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ice Beam": {
         "name": "Ice Beam",
@@ -15487,25 +15584,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Ice",
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Hi-Jump Boots": {
         "name": "Hi-Jump Boots",
+        "hint_text": "Hi Jump Boots",
         "id": 83007,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "HiJump",
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Speed Booster": {
         "name": "Speed Booster",
@@ -15513,12 +15607,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "SpeedBooster",
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Wave Beam": {
         "name": "Wave Beam",
@@ -15526,12 +15618,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Wave",
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Spazer": {
         "name": "Spazer",
@@ -15539,12 +15629,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Spazer",
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Spring Ball": {
         "name": "Spring Ball",
@@ -15552,12 +15640,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "SpringBall",
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Varia Suit": {
         "name": "Varia Suit",
@@ -15565,12 +15651,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Varia",
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Gravity Suit": {
         "name": "Gravity Suit",
@@ -15578,25 +15662,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Gravity",
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "X-Ray Scope": {
         "name": "X-Ray Scope",
+        "hint_text": "X Ray Scope",
         "id": 83014,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "XRayScope",
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Plasma Beam": {
         "name": "Plasma Beam",
@@ -15604,12 +15685,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Plasma",
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Grappling Beam": {
         "name": "Grappling Beam",
@@ -15617,12 +15696,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Grapple",
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Space Jump": {
         "name": "Space Jump",
@@ -15630,12 +15707,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "SpaceJump",
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Screw Attack": {
         "name": "Screw Attack",
@@ -15643,12 +15718,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "ScrewAttack",
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Morph Ball": {
         "name": "Morph Ball",
@@ -15656,12 +15729,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Morph",
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Reserve Tank": {
         "name": "Reserve Tank",
@@ -15669,12 +15740,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Reserve",
-        "max_count": 8
+        "max_count": 4,
+        "classification": "progression"
       },
       "Generic": {
         "name": "Generic",
@@ -15682,12 +15751,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "ArchipelagoItem",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Nothing": {
         "name": "Nothing",
@@ -15695,12 +15762,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "Nothing",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "No Energy": {
         "name": "No Energy",
@@ -15708,12 +15773,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": "NoEnergy",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Kraid": {
         "name": "Kraid",
@@ -15721,12 +15784,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Kraid",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ridley": {
         "name": "Ridley",
@@ -15734,12 +15795,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Ridley",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Phantoon": {
         "name": "Phantoon",
@@ -15747,12 +15806,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Phantoon",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Draygon": {
         "name": "Draygon",
@@ -15760,12 +15817,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Draygon",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mother Brain": {
         "name": "Mother Brain",
@@ -15773,12 +15828,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "MotherBrain",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Spore Spawn": {
         "name": "Spore Spawn",
@@ -15786,12 +15839,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "SporeSpawn",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Botwoon": {
         "name": "Botwoon",
@@ -15799,12 +15850,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Botwoon",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Crocomire": {
         "name": "Crocomire",
@@ -15812,12 +15861,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Crocomire",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Golden Torizo": {
         "name": "Golden Torizo",
@@ -15825,12 +15872,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "GoldenTorizo",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -15841,36 +15886,36 @@
   },
   "itempool_counts": {
     "1": {
-      "Bomb": 2,
+      "Bomb": 1,
       "Botwoon": 1,
-      "Charge Beam": 2,
+      "Charge Beam": 1,
       "Crocomire": 1,
       "Draygon": 1,
-      "Energy Tank": 28,
+      "Energy Tank": 14,
       "Golden Torizo": 1,
-      "Grappling Beam": 2,
-      "Gravity Suit": 2,
-      "Hi-Jump Boots": 2,
-      "Ice Beam": 2,
+      "Grappling Beam": 1,
+      "Gravity Suit": 1,
+      "Hi-Jump Boots": 1,
+      "Ice Beam": 1,
       "Kraid": 1,
-      "Missile": 60,
-      "Morph Ball": 2,
+      "Missile": 30,
+      "Morph Ball": 1,
       "Mother Brain": 1,
       "Phantoon": 1,
-      "Plasma Beam": 2,
-      "Power Bomb": 22,
-      "Reserve Tank": 8,
+      "Plasma Beam": 1,
+      "Power Bomb": 11,
+      "Reserve Tank": 4,
       "Ridley": 1,
-      "Screw Attack": 2,
-      "Space Jump": 2,
-      "Spazer": 2,
-      "Speed Booster": 2,
+      "Screw Attack": 1,
+      "Space Jump": 1,
+      "Spazer": 1,
+      "Speed Booster": 1,
       "Spore Spawn": 1,
-      "Spring Ball": 2,
-      "Super Missile": 50,
-      "Varia Suit": 2,
-      "Wave Beam": 2,
-      "X-Ray Scope": 2
+      "Spring Ball": 1,
+      "Super Missile": 25,
+      "Varia Suit": 1,
+      "Wave Beam": 1,
+      "X-Ray Scope": 1
     }
   },
   "progression_mapping": {
@@ -16407,5 +16452,6 @@
         "GreenBrinstarMissileRefill": "red"
       }
     }
-  }
+  },
+  "helpers": {}
 }

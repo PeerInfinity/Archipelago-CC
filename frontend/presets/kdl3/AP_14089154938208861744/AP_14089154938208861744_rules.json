@@ -57,7 +57,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 1 - Enemy 2 (Sir Kibble)",
@@ -71,7 +73,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 1 - Enemy 3 (Cappy)",
@@ -85,7 +89,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -120,7 +126,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 1 - Enemy 5 (Bronto Burt)",
@@ -134,7 +142,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 1 - Enemy 6 (Sasuke)",
@@ -148,7 +158,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -183,7 +195,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 1 - Animal 2",
@@ -197,7 +211,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -232,7 +248,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -267,7 +285,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -287,7 +306,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grass Land 1 - Stage Completion",
@@ -301,7 +321,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -336,7 +358,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 2 - Enemy 2 (KeKe)",
@@ -350,7 +374,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 2 - Enemy 3 (Bobo)",
@@ -364,7 +390,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 2 - Enemy 4 (Poppy Bros Jr.)",
@@ -378,7 +406,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -413,7 +443,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 2 - Animal 2",
@@ -427,7 +459,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -476,7 +510,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 2 - Enemy 6 (Popon Ball)",
@@ -490,7 +526,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 2 - Enemy 7 (Bouncy)",
@@ -504,7 +542,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -559,7 +599,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 2 - Enemy 9 (Bronto Burt)",
@@ -573,7 +615,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 2 - Enemy 10 (Nruff)",
@@ -587,7 +631,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -623,7 +669,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -643,7 +690,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grass Land 2 - Stage Completion",
@@ -657,7 +705,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -706,7 +756,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 3 - Enemy 2 (Rocky)",
@@ -720,7 +772,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 3 - Enemy 3 (Nruff)",
@@ -734,7 +788,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -829,7 +885,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 3 - Animal 2",
@@ -843,7 +901,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -898,7 +958,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grass Land 3 - Enemy 4 (Bouncy)",
@@ -912,7 +973,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -932,7 +995,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grass Land 3 - Stage Completion",
@@ -946,7 +1010,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -981,7 +1047,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 4 - Enemy 2 (Babut)",
@@ -995,7 +1063,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 4 - Enemy 3 (Rocky)",
@@ -1009,7 +1079,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1058,7 +1130,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1113,7 +1187,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 4 - Enemy 6 (Oro)",
@@ -1127,7 +1203,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1199,7 +1277,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1254,7 +1334,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1290,7 +1372,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1325,7 +1408,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 4 - Animal 2",
@@ -1339,7 +1424,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1359,7 +1446,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grass Land 4 - Stage Completion",
@@ -1373,7 +1461,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1408,7 +1498,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 5 - Enemy 2 (Broom Hatter)",
@@ -1422,7 +1514,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 5 - Enemy 3 (Bouncy)",
@@ -1436,7 +1530,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1499,7 +1595,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1534,7 +1632,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 5 - Enemy 6 (Sasuke)",
@@ -1548,7 +1648,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 5 - Enemy 7 (Nruff)",
@@ -1562,7 +1664,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1597,7 +1701,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 5 - Animal 2",
@@ -1611,7 +1717,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1646,7 +1754,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 5 - Animal 4",
@@ -1660,7 +1770,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1696,7 +1808,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1716,7 +1829,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grass Land 5 - Stage Completion",
@@ -1730,7 +1844,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1765,7 +1881,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1814,7 +1932,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 6 - Enemy 2 (Togezo)",
@@ -1828,7 +1948,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 6 - Enemy 3 (Bronto Burt)",
@@ -1842,7 +1964,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 6 - Enemy 4 (Cappy)",
@@ -1856,7 +1980,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1891,7 +2017,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 6 - Enemy 6 (Mariel)",
@@ -1905,7 +2033,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1954,7 +2084,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 6 - Enemy 8 (Broom Hatter)",
@@ -1968,7 +2100,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2003,7 +2137,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 6 - Enemy 10 (Sasuke)",
@@ -2017,7 +2153,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2052,7 +2190,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2087,7 +2227,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2122,7 +2263,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 6 - Animal 2",
@@ -2136,7 +2279,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2171,7 +2316,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Grass Land 6 - Animal 4",
@@ -2185,7 +2332,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2205,7 +2354,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grass Land 6 - Stage Completion",
@@ -2219,7 +2369,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2316,7 +2468,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 Boss - Defeated",
@@ -2334,7 +2487,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Level 1 Boss - Purified",
@@ -2425,7 +2580,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2460,7 +2617,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 1 - Enemy 2 (Glunk)",
@@ -2474,7 +2633,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 1 - Enemy 3 (Broom Hatter)",
@@ -2488,7 +2649,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 1 - Enemy 4 (Cappy)",
@@ -2502,7 +2665,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2579,7 +2744,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 1 - Enemy 6 (Rocky)",
@@ -2593,7 +2760,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 1 - Enemy 7 (Poppy Bros Jr.)",
@@ -2607,7 +2776,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2642,7 +2813,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 1 - Animal 2",
@@ -2656,7 +2829,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2691,7 +2866,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2737,7 +2914,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2817,7 +2995,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ripple Field 1 - Stage Completion",
@@ -2831,7 +3010,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2866,7 +3047,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 2 - Enemy 2 (Coconut)",
@@ -2880,7 +3063,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 2 - Enemy 3 (Blipper)",
@@ -2905,7 +3090,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 2 - Enemy 4 (Sasuke)",
@@ -2919,7 +3106,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -2954,7 +3143,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 2 - Animal 2",
@@ -2968,7 +3159,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3031,7 +3224,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3066,7 +3261,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3121,7 +3318,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 2 - Animal 4",
@@ -3135,7 +3334,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3181,7 +3382,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3201,7 +3403,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ripple Field 2 - Stage Completion",
@@ -3215,7 +3418,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3250,7 +3455,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 3 - Enemy 2 (Kapar)",
@@ -3264,7 +3471,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 3 - Enemy 3 (Blipper)",
@@ -3278,7 +3487,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3313,7 +3524,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 3 - Enemy 5 (Glunk)",
@@ -3327,7 +3540,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 3 - Enemy 6 (Joe)",
@@ -3352,7 +3567,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3387,7 +3604,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3422,7 +3641,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 3 - Animal 2",
@@ -3436,7 +3657,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3471,7 +3694,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3511,7 +3735,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ripple Field 3 - Stage Completion",
@@ -3525,7 +3750,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3594,7 +3821,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 4 - Enemy 2 (Bukiset (Needle))",
@@ -3608,7 +3837,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 4 - Enemy 3 (Bukiset (Clean))",
@@ -3622,7 +3853,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 4 - Enemy 4 (Bukiset (Parasol))",
@@ -3636,7 +3869,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 4 - Enemy 5 (Mony)",
@@ -3661,7 +3896,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3696,7 +3933,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3731,7 +3970,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3767,7 +4008,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3787,7 +4029,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ripple Field 4 - Stage Completion",
@@ -3801,7 +4044,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3850,7 +4095,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 4 - Animal 2",
@@ -3864,7 +4111,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 4 - Animal 3",
@@ -3878,7 +4127,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3938,7 +4189,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 4 - Enemy 8 (Blipper)",
@@ -3963,7 +4216,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4060,7 +4315,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 4 - Enemy 10 (Oro)",
@@ -4074,7 +4331,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4109,7 +4368,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4164,7 +4425,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 4 - Enemy 13 (Kapar)",
@@ -4178,7 +4441,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 4 - Enemy 14 (Squishy)",
@@ -4192,7 +4457,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4241,7 +4508,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4347,7 +4616,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 5 - Enemy 2 (Joe)",
@@ -4372,7 +4643,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4435,7 +4708,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 5 - Enemy 4 (Mony)",
@@ -4460,7 +4735,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 5 - Enemy 5 (Squishy)",
@@ -4474,7 +4751,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4509,7 +4788,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4581,7 +4862,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 5 - Enemy 7 (Broom Hatter)",
@@ -4595,7 +4878,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 5 - Enemy 8 (Bouncy)",
@@ -4609,7 +4894,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4658,7 +4945,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 5 - Enemy 10 (Rocky)",
@@ -4672,7 +4961,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 5 - Enemy 11 (Babut)",
@@ -4686,7 +4977,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4721,7 +5014,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4777,7 +5072,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4812,7 +5108,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4833,7 +5131,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ripple Field 5 - Stage Completion",
@@ -4847,7 +5146,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4882,7 +5183,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4917,7 +5220,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 6 - Animal 2",
@@ -4931,7 +5236,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 6 - Animal 3",
@@ -4945,7 +5252,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -5122,7 +5431,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 6 - Enemy 3 (Kapar)",
@@ -5136,7 +5447,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 6 - Enemy 4 (Rocky)",
@@ -5150,7 +5463,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 6 - Enemy 5 (Poppy Bros Jr.)",
@@ -5164,7 +5479,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -5213,7 +5530,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 6 - Enemy 7 (Coconut)",
@@ -5227,7 +5546,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 6 - Enemy 8 (Sasuke)",
@@ -5241,7 +5562,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Ripple Field 6 - Enemy 9 (Nruff)",
@@ -5255,7 +5578,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -5290,7 +5615,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -5325,7 +5652,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5345,7 +5673,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ripple Field 6 - Stage Completion",
@@ -5359,7 +5688,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -5456,7 +5787,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 Boss - Defeated",
@@ -5474,7 +5806,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Level 2 Boss - Purified",
@@ -5565,7 +5899,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -5600,7 +5936,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 1 - Enemy 2 (Galbo)",
@@ -5614,7 +5952,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -5649,7 +5989,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 1 - Animal 2",
@@ -5663,7 +6005,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -5698,7 +6042,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -5733,7 +6079,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 1 - Enemy 5 (Propeller)",
@@ -5747,7 +6095,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 1 - Enemy 6 (Gansan)",
@@ -5761,7 +6111,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 1 - Enemy 7 (Babut)",
@@ -5775,7 +6127,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -5810,7 +6164,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 1 - Enemy 9 (Dogon)",
@@ -5824,7 +6180,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 1 - Enemy 10 (Bouncy)",
@@ -5838,7 +6196,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 1 - Enemy 11 (Pteran)",
@@ -5852,7 +6212,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -5901,7 +6263,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -5956,7 +6320,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5976,7 +6341,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sand Canyon 1 - Stage Completion",
@@ -5990,7 +6356,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -6039,7 +6407,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 2 - Enemy 2 (Doka)",
@@ -6053,7 +6423,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 2 - Enemy 3 (Boten)",
@@ -6067,7 +6439,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -6102,7 +6476,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 2 - Animal 2",
@@ -6116,7 +6492,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -6151,7 +6529,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -6200,7 +6580,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 2 - Enemy 6 (Sparky)",
@@ -6214,7 +6596,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 2 - Enemy 7 (Sasuke)",
@@ -6228,7 +6612,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 2 - Enemy 8 (Como)",
@@ -6242,7 +6628,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -6339,7 +6727,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 2 - Enemy 10 (Bukiset (Needle))",
@@ -6353,7 +6743,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 2 - Enemy 11 (Bukiset (Clean))",
@@ -6367,7 +6759,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 2 - Enemy 12 (Bukiset (Parasol))",
@@ -6381,7 +6775,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 2 - Enemy 13 (Bukiset (Spark))",
@@ -6395,7 +6791,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 2 - Enemy 14 (Bukiset (Cutter))",
@@ -6409,7 +6807,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -6444,7 +6844,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -6499,7 +6901,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -6534,7 +6938,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 2 - Enemy 18 (Wapod)",
@@ -6548,7 +6954,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 2 - Enemy 19 (Squishy)",
@@ -6562,7 +6970,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 2 - Enemy 20 (Pteran)",
@@ -6576,7 +6986,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -6612,7 +7024,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6632,7 +7045,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sand Canyon 2 - Stage Completion",
@@ -6646,7 +7060,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -6695,7 +7111,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 3 - Enemy 2 (Broom Hatter)",
@@ -6709,7 +7127,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 3 - Enemy 3 (Rocky)",
@@ -6723,7 +7143,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 3 - Enemy 4 (Gabon)",
@@ -6737,7 +7159,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -6772,7 +7196,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 3 - Animal 2",
@@ -6786,7 +7212,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 3 - Animal 3",
@@ -6800,7 +7228,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -6835,7 +7265,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -6870,7 +7302,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -6905,7 +7339,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 3 - Enemy 8 (Sasuke)",
@@ -6919,7 +7355,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -6954,7 +7392,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -6989,7 +7428,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 3 - Enemy 10 (Bobo)",
@@ -7003,7 +7444,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 3 - Enemy 11 (Babut)",
@@ -7017,7 +7460,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 3 - Enemy 12 (Magoo)",
@@ -7031,7 +7476,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -7051,7 +7498,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sand Canyon 3 - Stage Completion",
@@ -7065,7 +7513,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -7134,7 +7584,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 4 - Enemy 2 (Mariel)",
@@ -7148,7 +7600,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 4 - Enemy 3 (Chilly)",
@@ -7162,7 +7616,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -7197,7 +7653,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 4 - Animal 2",
@@ -7211,7 +7669,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 4 - Animal 3",
@@ -7225,7 +7685,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -7260,7 +7722,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 4 - Enemy 5 (Bronto Burt)",
@@ -7274,7 +7738,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 4 - Enemy 6 (Babut)",
@@ -7288,7 +7754,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -7348,7 +7816,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 4 - Enemy 8 (Joe)",
@@ -7373,7 +7843,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 4 - Enemy 9 (Mony)",
@@ -7398,7 +7870,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 4 - Enemy 10 (Blipper)",
@@ -7423,7 +7897,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -7478,7 +7954,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -7533,7 +8011,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 4 - Enemy 12 (Rocky)",
@@ -7547,7 +8027,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 4 - Enemy 13 (Bobo)",
@@ -7561,7 +8043,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -7596,7 +8080,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7616,7 +8101,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sand Canyon 4 - Stage Completion",
@@ -7630,7 +8116,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -7679,7 +8167,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 5 - Enemy 2 (Dogon)",
@@ -7693,7 +8183,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 5 - Enemy 3 (Tick)",
@@ -7707,7 +8199,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -7742,7 +8236,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 5 - Enemy 5 (Bobo)",
@@ -7756,7 +8252,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 5 - Enemy 6 (Chilly)",
@@ -7770,7 +8268,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 5 - Enemy 7 (Sparky)",
@@ -7784,7 +8284,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 5 - Enemy 8 (Togezo)",
@@ -7798,7 +8300,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -7833,7 +8337,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -7868,7 +8374,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 5 - Enemy 10 (Sasuke)",
@@ -7882,7 +8390,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -7931,7 +8441,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 5 - Enemy 12 (Galbo)",
@@ -7945,7 +8457,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 5 - Enemy 13 (Nidoo)",
@@ -7959,7 +8473,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -7994,7 +8510,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -8029,7 +8547,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -8075,7 +8595,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8096,7 +8617,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sand Canyon 5 - Stage Completion",
@@ -8110,7 +8632,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -8162,7 +8686,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 5 - Enemy 16 (KeKe)",
@@ -8176,7 +8702,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 5 - Enemy 17 (Kabu)",
@@ -8190,7 +8718,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -8225,7 +8755,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 6 - Enemy 2 (Doka)",
@@ -8239,7 +8771,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 6 - Enemy 3 (Cappy)",
@@ -8253,7 +8787,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 6 - Enemy 4 (Pteran)",
@@ -8267,7 +8803,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -8302,7 +8840,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 6 - Animal 2",
@@ -8316,7 +8856,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 6 - Animal 3",
@@ -8330,7 +8872,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -9599,7 +10143,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 6 - Animal 5",
@@ -9613,7 +10159,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 6 - Animal 6",
@@ -9627,7 +10175,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -9974,7 +10524,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 6 - Enemy 6 (Bukiset (Cutter))",
@@ -9988,7 +10540,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -10037,7 +10591,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 6 - Enemy 8 (Bukiset (Spark))",
@@ -10051,7 +10607,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -10100,7 +10658,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 6 - Enemy 10 (Bukiset (Needle))",
@@ -10114,7 +10674,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -10163,7 +10725,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Sand Canyon 6 - Enemy 12 (Bukiset (Stone))",
@@ -10177,7 +10741,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -10346,7 +10912,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -10461,7 +11029,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10481,7 +11050,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sand Canyon 6 - Stage Completion",
@@ -10495,7 +11065,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -10592,7 +11164,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 Boss - Defeated",
@@ -10610,7 +11183,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Level 3 Boss - Purified",
@@ -10701,7 +11276,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -10736,7 +11313,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 1 - Enemy 2 (KeKe)",
@@ -10750,7 +11329,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 1 - Enemy 3 (Cappy)",
@@ -10764,7 +11345,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -10799,7 +11382,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -10834,7 +11419,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 1 - Enemy 5 (Togezo)",
@@ -10848,7 +11435,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -10883,7 +11472,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -10918,7 +11509,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -10953,7 +11546,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 1 - Animal 4",
@@ -10967,7 +11562,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -11002,7 +11599,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 1 - Enemy 8 (Como)",
@@ -11016,7 +11615,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -11051,7 +11652,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -11086,7 +11689,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -11121,7 +11726,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -11156,7 +11763,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 1 - Enemy 11 (Sir Kibble)",
@@ -11170,7 +11779,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -11205,7 +11816,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 1 - Enemy 13 (Nruff)",
@@ -11219,7 +11832,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -11265,7 +11880,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11285,7 +11901,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cloudy Park 1 - Stage Completion",
@@ -11299,7 +11916,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -11334,7 +11953,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 2 - Enemy 2 (Sasuke)",
@@ -11348,7 +11969,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -11383,7 +12006,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 2 - Enemy 4 (Sparky)",
@@ -11397,7 +12022,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 2 - Enemy 5 (Broom Hatter)",
@@ -11411,7 +12038,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -11446,7 +12075,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 2 - Enemy 7 (Pteran)",
@@ -11460,7 +12091,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -11495,7 +12128,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 2 - Enemy 9 (Dogon)",
@@ -11509,7 +12144,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -11544,7 +12181,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 2 - Enemy 11 (Oro)",
@@ -11558,7 +12197,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 2 - Enemy 12 (Bronto Burt)",
@@ -11572,7 +12213,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 2 - Enemy 13 (Rocky)",
@@ -11586,7 +12229,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -11621,7 +12266,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 2 - Enemy 15 (Kapar)",
@@ -11635,7 +12282,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -11670,7 +12319,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 2 - Animal 2",
@@ -11684,7 +12335,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 2 - Animal 3",
@@ -11698,7 +12351,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -11754,7 +12409,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11774,7 +12430,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cloudy Park 2 - Stage Completion",
@@ -11788,7 +12445,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -11823,7 +12482,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 3 - Enemy 2 (Mopoo)",
@@ -11837,7 +12498,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 3 - Enemy 3 (Poppy Bros Jr.)",
@@ -11851,7 +12514,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -11886,7 +12551,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -11935,7 +12602,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 3 - Enemy 6 (Bobin)",
@@ -11949,7 +12618,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 3 - Enemy 7 (Loud)",
@@ -11963,7 +12634,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 3 - Enemy 8 (Kapar)",
@@ -11977,7 +12650,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -12012,7 +12687,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 3 - Animal 2",
@@ -12026,7 +12703,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 3 - Animal 3",
@@ -12040,7 +12719,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -12075,7 +12756,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 3 - Enemy 10 (Batamon)",
@@ -12089,7 +12772,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 3 - Enemy 11 (Bouncy)",
@@ -12103,7 +12788,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -12158,7 +12845,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12178,7 +12866,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cloudy Park 3 - Stage Completion",
@@ -12192,7 +12881,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -12247,7 +12938,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 4 - Animal 2",
@@ -12261,7 +12954,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -12296,7 +12991,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 4 - Enemy 2 (Como)",
@@ -12310,7 +13007,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 4 - Enemy 3 (Wapod)",
@@ -12324,7 +13023,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 4 - Enemy 4 (Cappy)",
@@ -12338,7 +13039,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -12373,7 +13076,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 4 - Enemy 6 (Togezo)",
@@ -12387,7 +13092,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -12422,7 +13129,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 4 - Enemy 8 (KeKe)",
@@ -12436,7 +13145,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 4 - Enemy 9 (Bouncy)",
@@ -12450,7 +13161,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -12485,7 +13198,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 4 - Enemy 11 (Mariel)",
@@ -12499,7 +13214,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -12534,7 +13251,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 4 - Enemy 13 (Wappa)",
@@ -12548,7 +13267,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -12583,7 +13304,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -12639,7 +13362,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12659,7 +13383,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cloudy Park 4 - Stage Completion",
@@ -12673,7 +13398,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -12708,7 +13435,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 5 - Enemy 2 (Sir Kibble)",
@@ -12722,7 +13451,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 5 - Enemy 3 (Cappy)",
@@ -12736,7 +13467,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 5 - Enemy 4 (Wappa)",
@@ -12750,7 +13483,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -12785,7 +13520,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 5 - Enemy 6 (Bronto Burt)",
@@ -12799,7 +13536,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 5 - Enemy 7 (KeKe)",
@@ -12813,7 +13552,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -12848,7 +13589,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 5 - Animal 2",
@@ -12862,7 +13605,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -12897,7 +13642,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 5 - Enemy 9 (Klinko)",
@@ -12911,7 +13658,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -12946,7 +13695,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -13001,7 +13752,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -13037,7 +13790,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -13057,7 +13811,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cloudy Park 5 - Stage Completion",
@@ -13071,7 +13826,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -13160,7 +13917,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -13229,7 +13988,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 6 - Enemy 3 (Como)",
@@ -13243,7 +14004,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -13278,7 +14041,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 6 - Enemy 5 (Bronto Burt Drawing)",
@@ -13292,7 +14057,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 6 - Enemy 6 (Bouncy Drawing)",
@@ -13306,7 +14073,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -13341,7 +14110,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -13404,7 +14175,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -13439,7 +14212,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 6 - Enemy 10 (Bukiset (Ice))",
@@ -13453,7 +14228,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 6 - Enemy 11 (Bukiset (Needle))",
@@ -13467,7 +14244,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 6 - Enemy 12 (Bukiset (Clean))",
@@ -13481,7 +14260,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 6 - Enemy 13 (Bukiset (Cutter))",
@@ -13495,7 +14276,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -13564,7 +14347,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 6 - Animal 2",
@@ -13578,7 +14363,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Cloudy Park 6 - Animal 3",
@@ -13592,7 +14379,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -13721,7 +14510,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -13741,7 +14531,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Cloudy Park 6 - Stage Completion",
@@ -13755,7 +14546,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -13852,7 +14645,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 Boss - Defeated",
@@ -13870,7 +14664,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Level 4 Boss - Purified",
@@ -13961,7 +14757,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -13996,7 +14794,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 1 - Enemy 2 (Klinko)",
@@ -14010,7 +14810,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 1 - Enemy 3 (KeKe)",
@@ -14024,7 +14826,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -14059,7 +14863,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 1 - Enemy 5 (Galbo)",
@@ -14073,7 +14879,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 1 - Enemy 6 (Rocky)",
@@ -14087,7 +14895,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -14136,7 +14946,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -14171,7 +14983,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 1 - Animal 2",
@@ -14185,7 +14999,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -14220,7 +15036,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 1 - Enemy 9 (Babut)",
@@ -14234,7 +15052,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 1 - Enemy 10 (Wappa)",
@@ -14248,7 +15068,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -14283,7 +15105,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 1 - Enemy 12 (Chilly)",
@@ -14297,7 +15121,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 1 - Enemy 13 (Poppy Bros Jr.)",
@@ -14311,7 +15137,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -14347,7 +15175,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14367,7 +15196,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Iceberg 1 - Stage Completion",
@@ -14381,7 +15211,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -14416,7 +15248,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 2 - Enemy 2 (Nruff)",
@@ -14430,7 +15264,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -14465,7 +15301,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 2 - Enemy 4 (Chilly)",
@@ -14479,7 +15317,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 2 - Enemy 5 (Pteran)",
@@ -14493,7 +15333,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -14584,7 +15426,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 2 - Enemy 7 (Galbo)",
@@ -14598,7 +15442,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 2 - Enemy 8 (Babut)",
@@ -14612,7 +15458,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 2 - Enemy 9 (Magoo)",
@@ -14626,7 +15474,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -14721,7 +15571,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 2 - Enemy 11 (Nidoo)",
@@ -14735,7 +15587,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 2 - Enemy 12 (Oro)",
@@ -14749,7 +15603,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -14784,7 +15640,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 2 - Enemy 14 (Bronto Burt)",
@@ -14798,7 +15656,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -14834,7 +15694,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14869,7 +15730,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 2 - Animal 2",
@@ -14883,7 +15746,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -14903,7 +15768,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Iceberg 2 - Stage Completion",
@@ -14917,7 +15783,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -14966,7 +15834,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 3 - Enemy 2 (Bouncy)",
@@ -14980,7 +15850,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 3 - Enemy 3 (Chilly)",
@@ -14994,7 +15866,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 3 - Enemy 4 (Pteran)",
@@ -15008,7 +15882,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -15043,7 +15919,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 3 - Animal 2",
@@ -15057,7 +15935,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 3 - Animal 3",
@@ -15071,7 +15951,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -15106,7 +15988,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 3 - Enemy 6 (Kapar)",
@@ -15120,7 +16004,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 3 - Enemy 7 (Blipper)",
@@ -15134,7 +16020,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -15183,7 +16071,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -15218,7 +16108,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 3 - Animal 5",
@@ -15232,7 +16124,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -15287,7 +16181,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 3 - Enemy 10 (Icicle)",
@@ -15301,7 +16197,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -15336,7 +16234,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -15356,7 +16255,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Iceberg 3 - Stage Completion",
@@ -15370,7 +16270,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -15405,7 +16307,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 4 - Enemy 2 (Galbo)",
@@ -15419,7 +16323,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 4 - Enemy 3 (Klinko)",
@@ -15433,7 +16339,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 4 - Enemy 4 (Chilly)",
@@ -15447,7 +16355,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -15482,7 +16392,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 4 - Enemy 6 (Wappa)",
@@ -15496,7 +16408,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -15605,7 +16519,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -15640,7 +16556,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -15752,7 +16670,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -15807,7 +16727,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -15842,7 +16764,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -15905,7 +16829,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 4 - Animal 2",
@@ -15930,7 +16856,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 4 - Animal 3",
@@ -15960,7 +16888,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -16009,7 +16939,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 4 - Enemy 12 (Sasuke)",
@@ -16023,7 +16955,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -16092,7 +17026,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -16127,7 +17063,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -16162,7 +17100,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -16213,7 +17153,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -16234,7 +17175,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Iceberg 4 - Stage Completion",
@@ -16248,7 +17190,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -16283,7 +17227,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 5 - Enemy 2 (Bukiset (Stone))",
@@ -16297,7 +17243,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 5 - Enemy 3 (Bukiset (Ice))",
@@ -16311,7 +17259,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 5 - Enemy 4 (Bukiset (Needle))",
@@ -16325,7 +17275,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 5 - Enemy 5 (Bukiset (Clean))",
@@ -16339,7 +17291,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 5 - Enemy 6 (Bukiset (Parasol))",
@@ -16353,7 +17307,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 5 - Enemy 7 (Bukiset (Spark))",
@@ -16367,7 +17323,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 5 - Enemy 8 (Bukiset (Cutter))",
@@ -16381,7 +17339,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -16436,7 +17396,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -16471,7 +17433,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -16506,7 +17470,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -16541,7 +17507,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -16676,7 +17644,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -16711,7 +17681,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -16746,7 +17718,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -16801,7 +17775,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -16876,7 +17852,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -16911,7 +17889,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -16946,7 +17926,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -16981,7 +17963,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 5 - Enemy 21 (Bronto Burt Drawing)",
@@ -16995,7 +17979,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 5 - Enemy 22 (Bouncy Drawing)",
@@ -17009,7 +17995,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -17044,7 +18032,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -17079,7 +18069,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -17114,7 +18106,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -17149,7 +18143,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -17184,7 +18180,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -17219,7 +18217,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 5 - Enemy 29 (Bobin)",
@@ -17233,7 +18233,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -17268,7 +18270,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -17323,7 +18327,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 5 - Animal 2",
@@ -17337,7 +18343,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -17372,7 +18380,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 5 - Animal 4",
@@ -17386,7 +18396,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -17421,7 +18433,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 5 - Animal 6",
@@ -17435,7 +18449,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -17470,7 +18486,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 5 - Animal 8",
@@ -17484,7 +18502,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -17519,7 +18539,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -17575,7 +18597,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -17595,7 +18618,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Iceberg 5 - Stage Completion",
@@ -17609,7 +18633,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -17644,7 +18670,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -17679,7 +18707,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 6 - Animal 2",
@@ -17693,7 +18723,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 6 - Animal 3",
@@ -17707,7 +18739,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -17762,7 +18796,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 6 - Animal 5",
@@ -17776,7 +18812,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Iceberg 6 - Animal 6",
@@ -17790,7 +18828,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -17865,7 +18905,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -17900,7 +18942,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -17969,7 +19013,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -18024,7 +19070,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -18079,7 +19127,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -18134,7 +19184,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -18189,7 +19241,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -18244,7 +19298,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -18299,7 +19355,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -18434,7 +19492,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -18454,7 +19513,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Iceberg 6 - Stage Completion",
@@ -18468,7 +19528,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -18565,7 +19627,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 5 Boss - Defeated",
@@ -18583,7 +19646,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Level 5 Boss - Purified",
@@ -18674,7 +19739,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -19119,7 +20186,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       }
@@ -19142,12 +20211,10 @@
           "Copy Ability",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Stone": {
         "name": "Stone",
@@ -19156,12 +20223,10 @@
           "Copy Ability",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Ice": {
         "name": "Ice",
@@ -19170,12 +20235,10 @@
           "Copy Ability",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Needle": {
         "name": "Needle",
@@ -19184,12 +20247,10 @@
           "Copy Ability",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Clean": {
         "name": "Clean",
@@ -19198,12 +20259,10 @@
           "Copy Ability",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Parasol": {
         "name": "Parasol",
@@ -19212,12 +20271,10 @@
           "Copy Ability",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Spark": {
         "name": "Spark",
@@ -19226,12 +20283,10 @@
           "Copy Ability",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Cutter": {
         "name": "Cutter",
@@ -19240,12 +20295,10 @@
           "Copy Ability",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Rick": {
         "name": "Rick",
@@ -19254,12 +20307,10 @@
           "Animal Friend",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Kine": {
         "name": "Kine",
@@ -19268,12 +20319,10 @@
           "Animal Friend",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Coo": {
         "name": "Coo",
@@ -19282,12 +20331,10 @@
           "Animal Friend",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Nago": {
         "name": "Nago",
@@ -19296,12 +20343,10 @@
           "Animal Friend",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "ChuChu": {
         "name": "ChuChu",
@@ -19310,12 +20355,10 @@
           "Animal Friend",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Pitch": {
         "name": "Pitch",
@@ -19324,12 +20367,10 @@
           "Animal Friend",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Heart Star": {
         "name": "Heart Star",
@@ -19337,25 +20378,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 46
+        "max_count": 23
       },
       "1-Up": {
         "name": "1-Up",
+        "hint_text": "1 Up",
         "id": 7798817,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 20
+        "max_count": 10
       },
       "Maxim Tomato": {
         "name": "Maxim Tomato",
@@ -19363,12 +20401,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1
       },
       "Invincible Candy": {
         "name": "Invincible Candy",
@@ -19376,12 +20412,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3
       },
       "Little Star": {
         "name": "Little Star",
@@ -19389,9 +20423,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19402,9 +20434,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19415,9 +20445,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -19428,12 +20456,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 18
+        "max_count": 9
       },
       "Slowness": {
         "name": "Slowness",
@@ -19441,12 +20467,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2
       },
       "Eject Ability": {
         "name": "Eject Ability",
@@ -19454,20 +20478,16 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3
       },
       "No Ability": {
         "name": "No Ability",
         "id": null,
         "groups": [],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": true,
         "type": null,
         "max_count": 190
@@ -19476,9 +20496,7 @@
         "name": "Cutter Ability",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 22
@@ -19487,9 +20505,7 @@
         "name": "Spark Ability",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 22
@@ -19498,9 +20514,7 @@
         "name": "Parasol Ability",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 21
@@ -19509,9 +20523,7 @@
         "name": "Nago Spawn",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 16
@@ -19520,9 +20532,7 @@
         "name": "Rick Spawn",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 20
@@ -19531,9 +20541,7 @@
         "name": "Stone Ability",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 19
@@ -19542,9 +20550,7 @@
         "name": "Clean Ability",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 23
@@ -19553,9 +20559,7 @@
         "name": "Burning Ability",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 26
@@ -19564,9 +20568,7 @@
         "name": "ChuChu Spawn",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 17
@@ -19575,9 +20577,7 @@
         "name": "Pitch Spawn",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 15
@@ -19586,9 +20586,7 @@
         "name": "Needle Ability",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 22
@@ -19597,9 +20595,7 @@
         "name": "Kine Spawn",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 13
@@ -19608,9 +20604,7 @@
         "name": "Coo Spawn",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 17
@@ -19619,9 +20613,7 @@
         "name": "Level 1 Boss Defeated",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 1
@@ -19630,9 +20622,7 @@
         "name": "Level 1 Boss Purified",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 1
@@ -19641,9 +20631,7 @@
         "name": "Level 2 Boss Defeated",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 1
@@ -19652,9 +20640,7 @@
         "name": "Level 2 Boss Purified",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 1
@@ -19663,9 +20649,7 @@
         "name": "Ice Ability",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 18
@@ -19674,9 +20658,7 @@
         "name": "Level 3 Boss Defeated",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 1
@@ -19685,9 +20667,7 @@
         "name": "Level 3 Boss Purified",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 1
@@ -19696,9 +20676,7 @@
         "name": "Level 4 Boss Defeated",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 1
@@ -19707,9 +20685,7 @@
         "name": "Level 4 Boss Purified",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 1
@@ -19718,9 +20694,7 @@
         "name": "Level 5 Boss Defeated",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 1
@@ -19729,75 +20703,67 @@
         "name": "Level 5 Boss Purified",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 1
       },
       "Grass Land - Stage Completion": {
         "name": "Grass Land - Stage Completion",
+        "hint_text": "Grass Land   Stage Completion",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 6
       },
       "Ripple Field - Stage Completion": {
         "name": "Ripple Field - Stage Completion",
+        "hint_text": "Ripple Field   Stage Completion",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 6
       },
       "Sand Canyon - Stage Completion": {
         "name": "Sand Canyon - Stage Completion",
+        "hint_text": "Sand Canyon   Stage Completion",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 6
       },
       "Cloudy Park - Stage Completion": {
         "name": "Cloudy Park - Stage Completion",
+        "hint_text": "Cloudy Park   Stage Completion",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 6
       },
       "Iceberg - Stage Completion": {
         "name": "Iceberg - Stage Completion",
+        "hint_text": "Iceberg   Stage Completion",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 6
       },
       "Love-Love Rod": {
         "name": "Love-Love Rod",
+        "hint_text": "Love Love Rod",
         "id": null,
         "groups": [],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
         "type": null,
         "max_count": 1
@@ -19813,27 +20779,27 @@
   },
   "itempool_counts": {
     "1": {
-      "1-Up": 20,
-      "Burning": 2,
+      "1-Up": 10,
+      "Burning": 1,
       "Burning Ability": 26,
-      "ChuChu": 2,
+      "ChuChu": 1,
       "ChuChu Spawn": 17,
-      "Clean": 2,
+      "Clean": 1,
       "Clean Ability": 23,
       "Cloudy Park - Stage Completion": 6,
-      "Coo": 2,
+      "Coo": 1,
       "Coo Spawn": 17,
-      "Cutter": 2,
+      "Cutter": 1,
       "Cutter Ability": 22,
-      "Eject Ability": 6,
-      "Gooey Bag": 18,
+      "Eject Ability": 3,
+      "Gooey Bag": 9,
       "Grass Land - Stage Completion": 6,
-      "Heart Star": 46,
-      "Ice": 2,
+      "Heart Star": 23,
+      "Ice": 1,
       "Ice Ability": 18,
       "Iceberg - Stage Completion": 6,
-      "Invincible Candy": 6,
-      "Kine": 2,
+      "Invincible Candy": 3,
+      "Kine": 1,
       "Kine Spawn": 13,
       "Level 1 Boss Defeated": 1,
       "Level 1 Boss Purified": 1,
@@ -19846,24 +20812,24 @@
       "Level 5 Boss Defeated": 1,
       "Level 5 Boss Purified": 1,
       "Love-Love Rod": 1,
-      "Maxim Tomato": 2,
-      "Nago": 2,
+      "Maxim Tomato": 1,
+      "Nago": 1,
       "Nago Spawn": 16,
-      "Needle": 2,
+      "Needle": 1,
       "Needle Ability": 22,
       "No Ability": 190,
-      "Parasol": 2,
+      "Parasol": 1,
       "Parasol Ability": 21,
-      "Pitch": 2,
+      "Pitch": 1,
       "Pitch Spawn": 15,
-      "Rick": 2,
+      "Rick": 1,
       "Rick Spawn": 20,
       "Ripple Field - Stage Completion": 6,
       "Sand Canyon - Stage Completion": 6,
-      "Slowness": 4,
-      "Spark": 2,
+      "Slowness": 2,
+      "Spark": 1,
       "Spark Ability": 22,
-      "Stone": 2,
+      "Stone": 1,
       "Stone Ability": 19
     }
   },
@@ -19962,5 +20928,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

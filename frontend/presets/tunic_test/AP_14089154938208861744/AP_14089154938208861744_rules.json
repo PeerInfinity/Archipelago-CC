@@ -10957,12 +10957,10 @@
           "Bombs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "filler"
       },
       "Firecracker x3": {
         "name": "Firecracker x3",
@@ -10971,12 +10969,10 @@
           "Bombs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "filler"
       },
       "Firecracker x4": {
         "name": "Firecracker x4",
@@ -10985,12 +10981,10 @@
           "Bombs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "filler"
       },
       "Firecracker x5": {
         "name": "Firecracker x5",
@@ -10999,12 +10993,10 @@
           "Bombs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Firecracker x6": {
         "name": "Firecracker x6",
@@ -11013,12 +11005,10 @@
           "Bombs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "filler"
       },
       "Fire Bomb x2": {
         "name": "Fire Bomb x2",
@@ -11027,12 +11017,10 @@
           "Bombs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "filler"
       },
       "Fire Bomb x3": {
         "name": "Fire Bomb x3",
@@ -11041,12 +11029,10 @@
           "Bombs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ice Bomb x2": {
         "name": "Ice Bomb x2",
@@ -11055,12 +11041,10 @@
           "Bombs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "filler"
       },
       "Ice Bomb x3": {
         "name": "Ice Bomb x3",
@@ -11069,12 +11053,10 @@
           "Bombs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "filler"
       },
       "Ice Bomb x5": {
         "name": "Ice Bomb x5",
@@ -11083,12 +11065,10 @@
           "Bombs",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Lure": {
         "name": "Lure",
@@ -11097,12 +11077,10 @@
           "Consumables",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "filler"
       },
       "Lure x2": {
         "name": "Lure x2",
@@ -11111,12 +11089,10 @@
           "Consumables",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Pepper x2": {
         "name": "Pepper x2",
@@ -11125,12 +11101,10 @@
           "Consumables",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "filler"
       },
       "Ivy x3": {
         "name": "Ivy x3",
@@ -11139,12 +11113,10 @@
           "Consumables",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "filler"
       },
       "Effigy": {
         "name": "Effigy",
@@ -11153,12 +11125,10 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 12,
+        "classification": "useful"
       },
       "HP Berry": {
         "name": "HP Berry",
@@ -11167,12 +11137,10 @@
           "Consumables",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "filler"
       },
       "HP Berry x2": {
         "name": "HP Berry x2",
@@ -11181,12 +11149,10 @@
           "Consumables",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "filler"
       },
       "HP Berry x3": {
         "name": "HP Berry x3",
@@ -11195,12 +11161,10 @@
           "Consumables",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "filler"
       },
       "MP Berry": {
         "name": "MP Berry",
@@ -11209,12 +11173,10 @@
           "Consumables",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "filler"
       },
       "MP Berry x2": {
         "name": "MP Berry x2",
@@ -11223,12 +11185,10 @@
           "Consumables",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "filler"
       },
       "MP Berry x3": {
         "name": "MP Berry x3",
@@ -11237,12 +11197,10 @@
           "Consumables",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 7
+        "max_count": 7,
+        "classification": "filler"
       },
       "Fairy": {
         "name": "Fairy",
@@ -11250,12 +11208,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 20
+        "max_count": 20,
+        "classification": "progression"
       },
       "Stick": {
         "name": "Stick",
@@ -11265,12 +11221,10 @@
           "Melee Weapons",
           "Weapons"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Sword": {
         "name": "Sword",
@@ -11280,12 +11234,10 @@
           "Melee Weapons",
           "Weapons"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Sword Upgrade": {
         "name": "Sword Upgrade",
@@ -11296,12 +11248,10 @@
           "Progressive Sword",
           "Weapons"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "progression"
       },
       "Magic Wand": {
         "name": "Magic Wand",
@@ -11313,12 +11263,10 @@
           "Wand",
           "Weapons"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Magic Dagger": {
         "name": "Magic Dagger",
@@ -11327,12 +11275,10 @@
           "Dagger",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Magic Orb": {
         "name": "Magic Orb",
@@ -11341,12 +11287,10 @@
           "Everything",
           "Orb"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Hero's Laurels": {
         "name": "Hero's Laurels",
@@ -11355,12 +11299,10 @@
           "Everything",
           "Laurels"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Lantern": {
         "name": "Lantern",
@@ -11368,12 +11310,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Gun": {
         "name": "Gun",
@@ -11382,12 +11322,10 @@
           "Everything",
           "Weapons"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Shield": {
         "name": "Shield",
@@ -11395,12 +11333,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Dath Stone": {
         "name": "Dath Stone",
@@ -11408,12 +11344,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Hourglass": {
         "name": "Hourglass",
@@ -11421,12 +11355,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Old House Key": {
         "name": "Old House Key",
@@ -11435,12 +11367,10 @@
           "Everything",
           "Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key": {
         "name": "Key",
@@ -11449,12 +11379,10 @@
           "Everything",
           "Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "progression"
       },
       "Fortress Vault Key": {
         "name": "Fortress Vault Key",
@@ -11463,12 +11391,10 @@
           "Everything",
           "Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Flask Shard": {
         "name": "Flask Shard",
@@ -11476,12 +11402,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 12,
+        "classification": "useful"
       },
       "Potion Flask": {
         "name": "Potion Flask",
@@ -11490,12 +11414,10 @@
           "Everything",
           "Flask"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 5
+        "max_count": 5,
+        "classification": "useful"
       },
       "Golden Coin": {
         "name": "Golden Coin",
@@ -11503,12 +11425,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 17
+        "max_count": 17,
+        "classification": "progression"
       },
       "Card Slot": {
         "name": "Card Slot",
@@ -11516,12 +11436,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "useful"
       },
       "Red Questagon": {
         "name": "Red Questagon",
@@ -11531,12 +11449,10 @@
           "Hexagons",
           "Questagons"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Green Questagon": {
         "name": "Green Questagon",
@@ -11546,12 +11462,10 @@
           "Hexagons",
           "Questagons"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Blue Questagon": {
         "name": "Blue Questagon",
@@ -11561,12 +11475,10 @@
           "Hexagons",
           "Questagons"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Gold Questagon": {
         "name": "Gold Questagon",
@@ -11576,12 +11488,10 @@
           "Hexagons",
           "Questagons"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "ATT Offering": {
         "name": "ATT Offering",
@@ -11590,12 +11500,10 @@
           "Everything",
           "Offerings"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "useful"
       },
       "DEF Offering": {
         "name": "DEF Offering",
@@ -11604,12 +11512,10 @@
           "Everything",
           "Offerings"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "useful"
       },
       "Potion Offering": {
         "name": "Potion Offering",
@@ -11618,12 +11524,10 @@
           "Everything",
           "Offerings"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "useful"
       },
       "HP Offering": {
         "name": "HP Offering",
@@ -11632,12 +11536,10 @@
           "Everything",
           "Offerings"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "classification": "useful"
       },
       "MP Offering": {
         "name": "MP Offering",
@@ -11646,12 +11548,10 @@
           "Everything",
           "Offerings"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "useful"
       },
       "SP Offering": {
         "name": "SP Offering",
@@ -11660,96 +11560,88 @@
           "Everything",
           "Offerings"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "useful"
       },
       "Hero Relic - ATT": {
         "name": "Hero Relic - ATT",
+        "hint_text": "Hero Relic   ATT",
         "id": 509342451,
         "groups": [
           "Everything",
           "Hero Relics"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Hero Relic - DEF": {
         "name": "Hero Relic - DEF",
+        "hint_text": "Hero Relic   DEF",
         "id": 509342452,
         "groups": [
           "Everything",
           "Hero Relics"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Hero Relic - HP": {
         "name": "Hero Relic - HP",
+        "hint_text": "Hero Relic   HP",
         "id": 509342453,
         "groups": [
           "Everything",
           "Hero Relics"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Hero Relic - MP": {
         "name": "Hero Relic - MP",
+        "hint_text": "Hero Relic   MP",
         "id": 509342454,
         "groups": [
           "Everything",
           "Hero Relics"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Hero Relic - POTION": {
         "name": "Hero Relic - POTION",
+        "hint_text": "Hero Relic   POTION",
         "id": 509342455,
         "groups": [
           "Everything",
           "Hero Relics"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Hero Relic - SP": {
         "name": "Hero Relic - SP",
+        "hint_text": "Hero Relic   SP",
         "id": 509342456,
         "groups": [
           "Everything",
           "Hero Relics"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Orange Peril Ring": {
         "name": "Orange Peril Ring",
@@ -11758,12 +11650,10 @@
           "Cards",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Tincture": {
         "name": "Tincture",
@@ -11772,12 +11662,10 @@
           "Cards",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Scavenger Mask": {
         "name": "Scavenger Mask",
@@ -11786,12 +11674,10 @@
           "Cards",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Cyan Peril Ring": {
         "name": "Cyan Peril Ring",
@@ -11800,12 +11686,10 @@
           "Cards",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Bracer": {
         "name": "Bracer",
@@ -11814,12 +11698,10 @@
           "Cards",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Dagger Strap": {
         "name": "Dagger Strap",
@@ -11828,12 +11710,10 @@
           "Cards",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Inverted Ash": {
         "name": "Inverted Ash",
@@ -11842,12 +11722,10 @@
           "Cards",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Lucky Cup": {
         "name": "Lucky Cup",
@@ -11856,12 +11734,10 @@
           "Cards",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Magic Echo": {
         "name": "Magic Echo",
@@ -11870,12 +11746,10 @@
           "Cards",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Anklet": {
         "name": "Anklet",
@@ -11884,12 +11758,10 @@
           "Cards",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Muffling Bell": {
         "name": "Muffling Bell",
@@ -11898,12 +11770,10 @@
           "Cards",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Glass Cannon": {
         "name": "Glass Cannon",
@@ -11912,12 +11782,10 @@
           "Cards",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Perfume": {
         "name": "Perfume",
@@ -11926,12 +11794,10 @@
           "Cards",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Louder Echo": {
         "name": "Louder Echo",
@@ -11940,12 +11806,10 @@
           "Cards",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Aura's Gem": {
         "name": "Aura's Gem",
@@ -11954,12 +11818,10 @@
           "Cards",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Bone Card": {
         "name": "Bone Card",
@@ -11968,12 +11830,10 @@
           "Cards",
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Mr Mayor": {
         "name": "Mr Mayor",
@@ -11982,12 +11842,10 @@
           "Everything",
           "Golden Treasures"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Secret Legend": {
         "name": "Secret Legend",
@@ -11996,12 +11854,10 @@
           "Everything",
           "Golden Treasures"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Sacred Geometry": {
         "name": "Sacred Geometry",
@@ -12010,12 +11866,10 @@
           "Everything",
           "Golden Treasures"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Vintage": {
         "name": "Vintage",
@@ -12024,12 +11878,10 @@
           "Everything",
           "Golden Treasures"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Just Some Pals": {
         "name": "Just Some Pals",
@@ -12038,12 +11890,10 @@
           "Everything",
           "Golden Treasures"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Regal Weasel": {
         "name": "Regal Weasel",
@@ -12052,12 +11902,10 @@
           "Everything",
           "Golden Treasures"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Spring Falls": {
         "name": "Spring Falls",
@@ -12066,12 +11914,10 @@
           "Everything",
           "Golden Treasures"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Power Up": {
         "name": "Power Up",
@@ -12080,12 +11926,10 @@
           "Everything",
           "Golden Treasures"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Back To Work": {
         "name": "Back To Work",
@@ -12094,12 +11938,10 @@
           "Everything",
           "Golden Treasures"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Phonomath": {
         "name": "Phonomath",
@@ -12108,12 +11950,10 @@
           "Everything",
           "Golden Treasures"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Dusty": {
         "name": "Dusty",
@@ -12122,12 +11962,10 @@
           "Everything",
           "Golden Treasures"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Forever Friend": {
         "name": "Forever Friend",
@@ -12136,12 +11974,10 @@
           "Everything",
           "Golden Treasures"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Fool Trap": {
         "name": "Fool Trap",
@@ -12149,12 +11985,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 15
+        "max_count": 15,
+        "classification": "trap"
       },
       "Money x1": {
         "name": "Money x1",
@@ -12163,12 +11997,10 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Money x10": {
         "name": "Money x10",
@@ -12177,12 +12009,10 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Money x15": {
         "name": "Money x15",
@@ -12191,12 +12021,10 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Money x16": {
         "name": "Money x16",
@@ -12205,12 +12033,10 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Money x20": {
         "name": "Money x20",
@@ -12219,12 +12045,10 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 17
+        "max_count": 17,
+        "classification": "filler"
       },
       "Money x25": {
         "name": "Money x25",
@@ -12233,12 +12057,10 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 14,
+        "classification": "filler"
       },
       "Money x30": {
         "name": "Money x30",
@@ -12247,12 +12069,10 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "filler"
       },
       "Money x32": {
         "name": "Money x32",
@@ -12261,12 +12081,10 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "filler"
       },
       "Money x40": {
         "name": "Money x40",
@@ -12275,12 +12093,10 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "filler"
       },
       "Money x48": {
         "name": "Money x48",
@@ -12289,12 +12105,10 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Money x50": {
         "name": "Money x50",
@@ -12303,12 +12117,10 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 7
+        "max_count": 7,
+        "classification": "filler"
       },
       "Money x64": {
         "name": "Money x64",
@@ -12317,12 +12129,10 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Money x100": {
         "name": "Money x100",
@@ -12331,12 +12141,10 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 5
+        "max_count": 5,
+        "classification": "filler"
       },
       "Money x128": {
         "name": "Money x128",
@@ -12345,12 +12153,10 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "useful"
       },
       "Money x200": {
         "name": "Money x200",
@@ -12359,12 +12165,10 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Money x255": {
         "name": "Money x255",
@@ -12373,183 +12177,170 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 0-1": {
         "name": "Pages 0-1",
+        "hint_text": "Pages 0 1",
         "id": 509342502,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 2-3": {
         "name": "Pages 2-3",
+        "hint_text": "Pages 2 3",
         "id": 509342503,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 4-5": {
         "name": "Pages 4-5",
+        "hint_text": "Pages 4 5",
         "id": 509342504,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 6-7": {
         "name": "Pages 6-7",
+        "hint_text": "Pages 6 7",
         "id": 509342505,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 8-9": {
         "name": "Pages 8-9",
+        "hint_text": "Pages 8 9",
         "id": 509342506,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 10-11": {
         "name": "Pages 10-11",
+        "hint_text": "Pages 10 11",
         "id": 509342507,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 12-13": {
         "name": "Pages 12-13",
+        "hint_text": "Pages 12 13",
         "id": 509342508,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 14-15": {
         "name": "Pages 14-15",
+        "hint_text": "Pages 14 15",
         "id": 509342509,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 16-17": {
         "name": "Pages 16-17",
+        "hint_text": "Pages 16 17",
         "id": 509342510,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 18-19": {
         "name": "Pages 18-19",
+        "hint_text": "Pages 18 19",
         "id": 509342511,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 20-21": {
         "name": "Pages 20-21",
+        "hint_text": "Pages 20 21",
         "id": 509342512,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 22-23": {
         "name": "Pages 22-23",
+        "hint_text": "Pages 22 23",
         "id": 509342513,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 24-25 (Prayer)": {
         "name": "Pages 24-25 (Prayer)",
+        "hint_text": "Pages 24 25 (Prayer)",
         "id": 509342514,
         "groups": [
           "Abilities",
@@ -12557,127 +12348,118 @@
           "Pages",
           "Prayer"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Pages 26-27": {
         "name": "Pages 26-27",
+        "hint_text": "Pages 26 27",
         "id": 509342515,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 28-29": {
         "name": "Pages 28-29",
+        "hint_text": "Pages 28 29",
         "id": 509342516,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 30-31": {
         "name": "Pages 30-31",
+        "hint_text": "Pages 30 31",
         "id": 509342517,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 32-33": {
         "name": "Pages 32-33",
+        "hint_text": "Pages 32 33",
         "id": 509342518,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 34-35": {
         "name": "Pages 34-35",
+        "hint_text": "Pages 34 35",
         "id": 509342519,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 36-37": {
         "name": "Pages 36-37",
+        "hint_text": "Pages 36 37",
         "id": 509342520,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 38-39": {
         "name": "Pages 38-39",
+        "hint_text": "Pages 38 39",
         "id": 509342521,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 40-41": {
         "name": "Pages 40-41",
+        "hint_text": "Pages 40 41",
         "id": 509342522,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 42-43 (Holy Cross)": {
         "name": "Pages 42-43 (Holy Cross)",
+        "hint_text": "Pages 42 43 (Holy Cross)",
         "id": 509342523,
         "groups": [
           "Abilities",
@@ -12685,71 +12467,66 @@
           "Holy Cross",
           "Pages"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Pages 44-45": {
         "name": "Pages 44-45",
+        "hint_text": "Pages 44 45",
         "id": 509342524,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 46-47": {
         "name": "Pages 46-47",
+        "hint_text": "Pages 46 47",
         "id": 509342525,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 48-49": {
         "name": "Pages 48-49",
+        "hint_text": "Pages 48 49",
         "id": 509342526,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 50-51": {
         "name": "Pages 50-51",
+        "hint_text": "Pages 50 51",
         "id": 509342527,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pages 52-53 (Icebolt)": {
         "name": "Pages 52-53 (Icebolt)",
+        "hint_text": "Pages 52 53 (Icebolt)",
         "id": 509342528,
         "groups": [
           "Abilities",
@@ -12758,26 +12535,23 @@
           "Icebolt",
           "Pages"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Pages 54-55": {
         "name": "Pages 54-55",
+        "hint_text": "Pages 54 55",
         "id": 509342529,
         "groups": [
           "Everything",
           "Pages"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Ladders near Weathervane": {
         "name": "Ladders near Weathervane",
@@ -12786,12 +12560,10 @@
           "Everything",
           "Ladders"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ladders near Overworld Checkpoint": {
         "name": "Ladders near Overworld Checkpoint",
@@ -12800,12 +12572,10 @@
           "Everything",
           "Ladders"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ladders near Patrol Cave": {
         "name": "Ladders near Patrol Cave",
@@ -12814,12 +12584,10 @@
           "Everything",
           "Ladders"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ladder near Temple Rafters": {
         "name": "Ladder near Temple Rafters",
@@ -12828,12 +12596,10 @@
           "Everything",
           "Ladders"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ladders near Dark Tomb": {
         "name": "Ladders near Dark Tomb",
@@ -12842,12 +12608,10 @@
           "Everything",
           "Ladders"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ladder to Quarry": {
         "name": "Ladder to Quarry",
@@ -12856,12 +12620,10 @@
           "Everything",
           "Ladders"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ladders to West Bell": {
         "name": "Ladders to West Bell",
@@ -12871,12 +12633,10 @@
           "Ladders",
           "Ladders to Bell"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ladders in Overworld Town": {
         "name": "Ladders in Overworld Town",
@@ -12886,12 +12646,10 @@
           "Ladders",
           "Ladders in Town"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ladder to Ruined Atoll": {
         "name": "Ladder to Ruined Atoll",
@@ -12901,12 +12659,10 @@
           "Ladder to Atoll",
           "Ladders"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ladder to Swamp": {
         "name": "Ladder to Swamp",
@@ -12915,12 +12671,10 @@
           "Everything",
           "Ladders"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ladders in Well": {
         "name": "Ladders in Well",
@@ -12930,12 +12684,10 @@
           "Ladders",
           "Ladders to Well"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ladder in Dark Tomb": {
         "name": "Ladder in Dark Tomb",
@@ -12944,12 +12696,10 @@
           "Everything",
           "Ladders"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ladder to East Forest": {
         "name": "Ladder to East Forest",
@@ -12958,12 +12708,10 @@
           "Everything",
           "Ladders"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ladders to Lower Forest": {
         "name": "Ladders to Lower Forest",
@@ -12972,12 +12720,10 @@
           "Everything",
           "Ladders"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ladder to Beneath the Vault": {
         "name": "Ladder to Beneath the Vault",
@@ -12986,12 +12732,10 @@
           "Everything",
           "Ladders"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ladders in Hourglass Cave": {
         "name": "Ladders in Hourglass Cave",
@@ -13000,12 +12744,10 @@
           "Everything",
           "Ladders"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ladders in South Atoll": {
         "name": "Ladders in South Atoll",
@@ -13016,12 +12758,10 @@
           "Ladders in Atoll",
           "Ladders in Ruined Atoll"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ladders to Frog's Domain": {
         "name": "Ladders to Frog's Domain",
@@ -13030,12 +12770,10 @@
           "Everything",
           "Ladders"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ladders in Library": {
         "name": "Ladders in Library",
@@ -13044,12 +12782,10 @@
           "Everything",
           "Ladders"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ladders in Lower Quarry": {
         "name": "Ladders in Lower Quarry",
@@ -13059,12 +12795,10 @@
           "Ladder in Quarry",
           "Ladders"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ladders in Swamp": {
         "name": "Ladders in Swamp",
@@ -13073,12 +12807,10 @@
           "Everything",
           "Ladders"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Grass": {
         "name": "Grass",
@@ -13086,12 +12818,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Money x2": {
         "name": "Money x2",
@@ -13100,12 +12830,10 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Money x3": {
         "name": "Money x3",
@@ -13114,12 +12842,10 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Money x4": {
         "name": "Money x4",
@@ -13128,12 +12854,10 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Money x5": {
         "name": "Money x5",
@@ -13142,12 +12866,10 @@
           "Everything",
           "Money"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Torch": {
         "name": "Torch",
@@ -13155,12 +12877,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Fuse 1": {
         "name": "Swamp Fuse 1",
@@ -13169,12 +12889,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Fuse 2": {
         "name": "Swamp Fuse 2",
@@ -13183,12 +12901,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Swamp Fuse 3": {
         "name": "Swamp Fuse 3",
@@ -13197,12 +12913,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Cathedral Elevator Fuse": {
         "name": "Cathedral Elevator Fuse",
@@ -13211,12 +12925,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Fuse 1": {
         "name": "Quarry Fuse 1",
@@ -13225,12 +12937,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Quarry Fuse 2": {
         "name": "Quarry Fuse 2",
@@ -13239,12 +12949,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ziggurat Miniboss Fuse": {
         "name": "Ziggurat Miniboss Fuse",
@@ -13253,12 +12961,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ziggurat Teleporter Fuse": {
         "name": "Ziggurat Teleporter Fuse",
@@ -13267,12 +12973,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Fortress Exterior Fuse 1": {
         "name": "Fortress Exterior Fuse 1",
@@ -13281,12 +12985,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Fortress Exterior Fuse 2": {
         "name": "Fortress Exterior Fuse 2",
@@ -13295,12 +12997,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Fortress Courtyard Upper Fuse": {
         "name": "Fortress Courtyard Upper Fuse",
@@ -13309,12 +13009,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Fortress Courtyard Fuse": {
         "name": "Fortress Courtyard Fuse",
@@ -13323,12 +13021,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Beneath the Vault Fuse": {
         "name": "Beneath the Vault Fuse",
@@ -13337,12 +13033,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Fortress Candles Fuse": {
         "name": "Fortress Candles Fuse",
@@ -13351,12 +13045,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Fortress Door Left Fuse": {
         "name": "Fortress Door Left Fuse",
@@ -13365,12 +13057,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Fortress Door Right Fuse": {
         "name": "Fortress Door Right Fuse",
@@ -13379,12 +13069,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "West Furnace Fuse": {
         "name": "West Furnace Fuse",
@@ -13393,12 +13081,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "West Garden Fuse": {
         "name": "West Garden Fuse",
@@ -13407,12 +13093,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Atoll Northeast Fuse": {
         "name": "Atoll Northeast Fuse",
@@ -13421,12 +13105,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Atoll Northwest Fuse": {
         "name": "Atoll Northwest Fuse",
@@ -13435,12 +13117,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Atoll Southeast Fuse": {
         "name": "Atoll Southeast Fuse",
@@ -13449,12 +13129,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Atoll Southwest Fuse": {
         "name": "Atoll Southwest Fuse",
@@ -13463,12 +13141,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Library Lab Fuse": {
         "name": "Library Lab Fuse",
@@ -13477,12 +13153,10 @@
           "Everything",
           "Fuses"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "East Bell": {
         "name": "East Bell",
@@ -13491,12 +13165,10 @@
           "Bells",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "West Bell": {
         "name": "West Bell",
@@ -13505,12 +13177,10 @@
           "Bells",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Activate Beneath the Vault Fuse": {
         "name": "Activate Beneath the Vault Fuse",
@@ -13518,12 +13188,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ring Eastern Bell": {
         "name": "Ring Eastern Bell",
@@ -13531,12 +13199,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Activate Eastern Vault East Fuse": {
         "name": "Activate Eastern Vault East Fuse",
@@ -13544,12 +13210,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Activate Eastern Vault West Fuses": {
         "name": "Activate Eastern Vault West Fuses",
@@ -13557,12 +13221,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Activate Furnace Fuse": {
         "name": "Activate Furnace Fuse",
@@ -13570,12 +13232,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Activate Library Fuse": {
         "name": "Activate Library Fuse",
@@ -13583,12 +13243,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Unseal the Heir": {
         "name": "Unseal the Heir",
@@ -13596,12 +13254,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Activate Quarry Connector Fuse": {
         "name": "Activate Quarry Connector Fuse",
@@ -13609,12 +13265,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Activate Quarry Fuse": {
         "name": "Activate Quarry Fuse",
@@ -13622,12 +13276,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Activate South and West Fortress Exterior Fuses": {
         "name": "Activate South and West Fortress Exterior Fuses",
@@ -13635,12 +13287,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Victory": {
         "name": "Victory",
@@ -13648,12 +13298,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Activate Upper and Central Fortress Exterior Fuses": {
         "name": "Activate Upper and Central Fortress Exterior Fuses",
@@ -13661,12 +13309,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Activate West Garden Fuse": {
         "name": "Activate West Garden Fuse",
@@ -13674,12 +13320,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ring Western Bell": {
         "name": "Ring Western Bell",
@@ -13687,12 +13331,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Activate Ziggurat Fuse": {
         "name": "Activate Ziggurat Fuse",
@@ -13700,12 +13342,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -13913,5 +13553,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

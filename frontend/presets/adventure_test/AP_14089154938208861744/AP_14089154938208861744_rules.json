@@ -250,6 +250,7 @@
       },
       "YellowCastle": {
         "name": "YellowCastle",
+        "hint_text": "Yellow Castle",
         "exits": [
           {
             "name": "YellowCastleExit",
@@ -300,11 +301,11 @@
             },
             "locked": true
           }
-        ],
-        "hint_text": "Yellow Castle"
+        ]
       },
       "WhiteCastle": {
         "name": "WhiteCastle",
+        "hint_text": "White Castle",
         "exits": [
           {
             "name": "WhiteCastleExit",
@@ -371,11 +372,11 @@
             },
             "locked": true
           }
-        ],
-        "hint_text": "White Castle"
+        ]
       },
       "WhiteCastlePreVaultPeek": {
         "name": "WhiteCastlePreVaultPeek",
+        "hint_text": "White Castle Secret Peek",
         "exits": [
           {
             "name": "WhiteCastleFromPeek",
@@ -402,11 +403,11 @@
             },
             "locked": true
           }
-        ],
-        "hint_text": "White Castle Secret Peek"
+        ]
       },
       "WhiteCastleVault": {
         "name": "WhiteCastleVault",
+        "hint_text": "White Castle Vault",
         "exits": [
           {
             "name": "WhiteCastleReturnPassage",
@@ -457,11 +458,11 @@
             },
             "locked": true
           }
-        ],
-        "hint_text": "White Castle Vault"
+        ]
       },
       "BlackCastle": {
         "name": "BlackCastle",
+        "hint_text": "Black Castle",
         "exits": [
           {
             "name": "BlackCastleExit",
@@ -559,11 +560,11 @@
             },
             "locked": true
           }
-        ],
-        "hint_text": "Black Castle"
+        ]
       },
       "BlackCastleVault": {
         "name": "BlackCastleVault",
+        "hint_text": "Black Castle Vault",
         "exits": [
           {
             "name": "BlackCastleReturnPassage",
@@ -590,11 +591,11 @@
             },
             "locked": true
           }
-        ],
-        "hint_text": "Black Castle Vault"
+        ]
       },
       "CreditsRoom": {
         "name": "CreditsRoom",
+        "hint_text": "Credits Room",
         "exits": [
           {
             "name": "CreditsExit",
@@ -629,11 +630,11 @@
             },
             "locked": true
           }
-        ],
-        "hint_text": "Credits Room"
+        ]
       },
       "CreditsRoomFarSide": {
         "name": "CreditsRoomFarSide",
+        "hint_text": "Credits Far Side",
         "exits": [
           {
             "name": "CreditsFromFarSide",
@@ -660,8 +661,7 @@
             },
             "locked": true
           }
-        ],
-        "hint_text": "Credits Far Side"
+        ]
       }
     }
   },
@@ -897,5 +897,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

@@ -28,7 +28,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 Item (Boomerang)",
@@ -42,7 +43,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 Map",
@@ -56,7 +58,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 Compass",
@@ -70,7 +73,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 Boss",
@@ -84,7 +88,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 Triforce",
@@ -110,7 +115,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Level 1 Key Drop (Keese Entrance)",
@@ -124,7 +130,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 Key Drop (Stalfos Middle)",
@@ -138,7 +145,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 Key Drop (Moblins)",
@@ -152,7 +160,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 Key Drop (Stalfos Water)",
@@ -166,7 +175,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 Key Drop (Stalfos Entrance)",
@@ -180,7 +190,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 Key Drop (Wallmasters)",
@@ -194,7 +205,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 1 Boss Status",
@@ -227,7 +239,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -327,7 +341,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 Map",
@@ -421,7 +436,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 Compass",
@@ -515,7 +531,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 Boss",
@@ -609,7 +626,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 Triforce",
@@ -715,7 +733,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Level 2 Key Drop (Ropes West)",
@@ -809,7 +828,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 Key Drop (Moldorms)",
@@ -903,7 +923,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 Key Drop (Ropes Middle)",
@@ -997,7 +1018,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 Key Drop (Ropes Entrance)",
@@ -1091,7 +1113,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 Bomb Drop (Keese)",
@@ -1185,7 +1208,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 Bomb Drop (Moblins)",
@@ -1279,7 +1303,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 Rupee Drop (Gels)",
@@ -1373,7 +1398,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 2 Boss Status",
@@ -1486,7 +1512,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -1586,7 +1614,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 Map",
@@ -1680,7 +1709,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 Compass",
@@ -1774,7 +1804,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 Boss",
@@ -1868,7 +1899,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 Triforce",
@@ -1974,7 +2006,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Level 3 Key Drop (Zols and Keese West)",
@@ -2068,7 +2101,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 Key Drop (Keese North)",
@@ -2162,7 +2196,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 Key Drop (Zols Central)",
@@ -2256,7 +2291,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 Key Drop (Zols South)",
@@ -2350,7 +2386,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 Key Drop (Zols Entrance)",
@@ -2444,7 +2481,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 Bomb Drop (Darknuts West)",
@@ -2538,7 +2576,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 Bomb Drop (Keese Corridor)",
@@ -2632,7 +2671,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 Bomb Drop (Darknuts Central)",
@@ -2726,7 +2766,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 Rupee Drop (Zols and Keese East)",
@@ -2820,7 +2861,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 3 Boss Status",
@@ -2933,7 +2975,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -3078,7 +3122,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 Map",
@@ -3226,7 +3271,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 Compass",
@@ -3365,7 +3411,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 Boss",
@@ -3531,7 +3578,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 Triforce",
@@ -3709,7 +3757,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Level 4 Key Drop (Keese Entrance)",
@@ -3848,7 +3897,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 Key Drop (Keese Central)",
@@ -3987,7 +4037,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 Key Drop (Zols)",
@@ -4126,7 +4177,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 Key Drop (Keese North)",
@@ -4274,7 +4326,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 4 Boss Status",
@@ -4432,7 +4485,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -4568,7 +4623,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 5 Map",
@@ -4698,7 +4754,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 5 Compass",
@@ -4828,7 +4885,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 5 Boss",
@@ -4967,7 +5025,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 5 Triforce",
@@ -5118,7 +5177,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Level 5 Key Drop (Keese North)",
@@ -5248,7 +5308,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 5 Key Drop (Gibdos North)",
@@ -5378,7 +5439,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 5 Key Drop (Gibdos Central)",
@@ -5508,7 +5570,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 5 Key Drop (Pols Voice Entrance)",
@@ -5665,7 +5728,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 5 Key Drop (Gibdos Entrance)",
@@ -5795,7 +5859,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 5 Key Drop (Gibdos, Keese, and Pols Voice)",
@@ -5952,7 +6017,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 5 Key Drop (Zols)",
@@ -6082,7 +6148,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 5 Bomb Drop (Gibdos)",
@@ -6212,7 +6279,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 5 Bomb Drop (Dodongos)",
@@ -6342,7 +6410,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 5 Rupee Drop (Zols)",
@@ -6472,7 +6541,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 5 Boss Status",
@@ -6621,7 +6691,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -6757,7 +6829,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 6 Map",
@@ -6887,7 +6960,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 6 Compass",
@@ -7017,7 +7091,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 6 Boss",
@@ -7165,7 +7240,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 6 Triforce",
@@ -7325,7 +7401,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Level 6 Key Drop (Wizzrobes Entrance)",
@@ -7455,7 +7532,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 6 Key Drop (Keese)",
@@ -7585,7 +7663,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 6 Key Drop (Wizzrobes North Island)",
@@ -7715,7 +7794,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 6 Key Drop (Wizzrobes North Stream)",
@@ -7845,7 +7925,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 6 Key Drop (Vires)",
@@ -7975,7 +8056,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 6 Bomb Drop (Wizzrobes)",
@@ -8105,7 +8187,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 6 Rupee Drop (Wizzrobes)",
@@ -8235,7 +8318,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 6 Boss Status",
@@ -8384,7 +8468,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -8538,7 +8624,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 7 Map",
@@ -8686,7 +8773,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 7 Compass",
@@ -8825,7 +8913,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 7 Boss",
@@ -8973,7 +9062,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 7 Triforce",
@@ -9133,7 +9223,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Level 7 Key Drop (Ropes)",
@@ -9272,7 +9363,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 7 Key Drop (Goriyas)",
@@ -9420,7 +9512,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 7 Key Drop (Stalfos)",
@@ -9559,7 +9652,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 7 Key Drop (Moldorms)",
@@ -9698,7 +9792,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 7 Bomb Drop (Goriyas South)",
@@ -9837,7 +9932,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 7 Bomb Drop (Keese and Spikes)",
@@ -9976,7 +10072,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 7 Bomb Drop (Moldorms South)",
@@ -10115,7 +10212,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 7 Bomb Drop (Moldorms North)",
@@ -10263,7 +10361,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 7 Bomb Drop (Goriyas North)",
@@ -10411,7 +10510,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 7 Bomb Drop (Dodongos)",
@@ -10559,7 +10659,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 7 Bomb Drop (Digdogger)",
@@ -10698,7 +10799,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 7 Rupee Drop (Goriyas Central)",
@@ -10837,7 +10939,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 7 Rupee Drop (Dodongos)",
@@ -10976,7 +11079,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 7 Rupee Drop (Goriyas North)",
@@ -11124,7 +11228,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 7 Boss Status",
@@ -11282,7 +11387,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -11463,7 +11570,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 8 Map",
@@ -11602,7 +11710,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 8 Compass",
@@ -11741,7 +11850,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 8 Item (Book of Magic)",
@@ -11880,7 +11990,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 8 Boss",
@@ -12037,7 +12148,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 8 Triforce",
@@ -12206,7 +12318,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Level 8 Key Drop (Darknuts West)",
@@ -12345,7 +12458,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 8 Key Drop (Darknuts Far West)",
@@ -12484,7 +12598,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 8 Key Drop (Pols Voice South)",
@@ -12650,7 +12765,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 8 Key Drop (Pols Voice and Keese)",
@@ -12816,7 +12932,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 8 Key Drop (Darknuts Central)",
@@ -12955,7 +13072,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 8 Key Drop (Keese and Zols Entrance)",
@@ -13094,7 +13212,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 8 Bomb Drop (Darknuts North)",
@@ -13269,7 +13388,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 8 Bomb Drop (Darknuts East)",
@@ -13408,7 +13528,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 8 Bomb Drop (Pols Voice North)",
@@ -13574,7 +13695,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 8 Rupee Drop (Manhandla Entrance West)",
@@ -13713,7 +13835,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 8 Rupee Drop (Manhandla Entrance North)",
@@ -13852,7 +13975,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 8 Rupee Drop (Darknuts and Gibdos)",
@@ -13991,7 +14115,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 8 Boss Status",
@@ -14149,7 +14274,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -14307,7 +14434,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 9 Item (Red Ring)",
@@ -14459,7 +14587,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 9 Map",
@@ -14611,7 +14740,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 9 Compass",
@@ -14763,7 +14893,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 9 Key Drop (Patra Southwest)",
@@ -14915,7 +15046,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 9 Key Drop (Like Likes and Zols East)",
@@ -15067,7 +15199,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 9 Key Drop (Wizzrobes and Bubbles East)",
@@ -15219,7 +15352,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 9 Key Drop (Wizzrobes East Island)",
@@ -15371,7 +15505,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 9 Bomb Drop (Blue Lanmolas)",
@@ -15523,7 +15658,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 9 Bomb Drop (Gels Lake)",
@@ -15675,7 +15811,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 9 Bomb Drop (Like Likes and Zols Corridor)",
@@ -15827,7 +15964,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 9 Bomb Drop (Patra Northeast)",
@@ -15979,7 +16117,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 9 Bomb Drop (Vires)",
@@ -16131,7 +16270,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 9 Rupee Drop (Wizzrobes West Island)",
@@ -16283,7 +16423,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 9 Rupee Drop (Red Lanmolas)",
@@ -16435,7 +16576,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 9 Rupee Drop (Keese Southwest)",
@@ -16587,7 +16729,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 9 Rupee Drop (Keese Central Island)",
@@ -16739,7 +16882,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 9 Rupee Drop (Wizzrobes Central)",
@@ -16891,7 +17035,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 9 Rupee Drop (Wizzrobes North Island)",
@@ -17043,7 +17188,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Level 9 Rupee Drop (Gels East)",
@@ -17195,7 +17341,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ganon",
@@ -17365,7 +17512,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           },
           {
             "name": "Zelda",
@@ -17526,7 +17675,9 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true,
+            "show_in_spoiler": false
           }
         ]
       },
@@ -17633,7 +17784,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "White Sword Pond",
@@ -17651,7 +17803,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Magical Sword Grave",
@@ -17669,7 +17822,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Take Any Item Left",
@@ -17692,7 +17846,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Take Any Item Middle",
@@ -17715,7 +17870,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Take Any Item Right",
@@ -17738,7 +17894,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Armos Knights",
@@ -17752,7 +17909,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ocean Heart Container",
@@ -17766,7 +17924,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Letter Cave",
@@ -17780,7 +17939,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arrow Shop Item Left",
@@ -17794,7 +17954,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Arrow Shop Item Middle",
@@ -17808,7 +17969,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Arrow Shop Item Right",
@@ -17822,7 +17984,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Candle Shop Item Left",
@@ -17836,7 +17999,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Candle Shop Item Middle",
@@ -17850,7 +18014,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Candle Shop Item Right",
@@ -17864,7 +18029,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue Ring Shop Item Left",
@@ -17878,7 +18044,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue Ring Shop Item Middle",
@@ -17892,7 +18059,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue Ring Shop Item Right",
@@ -17906,7 +18074,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Shield Shop Item Left",
@@ -17938,7 +18107,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Shield Shop Item Middle",
@@ -17970,7 +18140,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Shield Shop Item Right",
@@ -18002,7 +18173,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Potion Shop Item Left",
@@ -18025,7 +18197,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Potion Shop Item Middle",
@@ -18048,7 +18221,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Potion Shop Item Right",
@@ -18071,7 +18245,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       }
@@ -18093,12 +18268,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Bow": {
         "name": "Bow",
@@ -18106,12 +18279,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Magical Boomerang": {
         "name": "Magical Boomerang",
@@ -18119,12 +18290,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Raft": {
         "name": "Raft",
@@ -18132,12 +18301,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Stepladder": {
         "name": "Stepladder",
@@ -18145,12 +18312,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Recorder": {
         "name": "Recorder",
@@ -18158,12 +18323,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Magical Rod": {
         "name": "Magical Rod",
@@ -18172,12 +18335,10 @@
           "Everything",
           "weapons"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Red Candle": {
         "name": "Red Candle",
@@ -18187,12 +18348,10 @@
           "candles",
           "weapons"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Book of Magic": {
         "name": "Book of Magic",
@@ -18200,12 +18359,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Magical Key": {
         "name": "Magical Key",
@@ -18213,12 +18370,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Red Ring": {
         "name": "Red Ring",
@@ -18226,12 +18381,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Silver Arrow": {
         "name": "Silver Arrow",
@@ -18240,12 +18393,10 @@
           "Everything",
           "arrows"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Sword": {
         "name": "Sword",
@@ -18255,12 +18406,10 @@
           "swords",
           "weapons"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "White Sword": {
         "name": "White Sword",
@@ -18270,12 +18419,10 @@
           "swords",
           "weapons"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Magical Sword": {
         "name": "Magical Sword",
@@ -18285,12 +18432,10 @@
           "swords",
           "weapons"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Heart Container": {
         "name": "Heart Container",
@@ -18298,12 +18443,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 26
+        "max_count": 13,
+        "classification": "progression"
       },
       "Letter": {
         "name": "Letter",
@@ -18311,12 +18454,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Magical Shield": {
         "name": "Magical Shield",
@@ -18324,12 +18465,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "useful"
       },
       "Candle": {
         "name": "Candle",
@@ -18338,12 +18477,10 @@
           "Everything",
           "candles"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Arrow": {
         "name": "Arrow",
@@ -18352,12 +18489,10 @@
           "Everything",
           "arrows"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Food": {
         "name": "Food",
@@ -18365,12 +18500,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Water of Life (Blue)": {
         "name": "Water of Life (Blue)",
@@ -18378,12 +18511,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "useful"
       },
       "Water of Life (Red)": {
         "name": "Water of Life (Red)",
@@ -18391,12 +18522,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 2,
+        "classification": "useful"
       },
       "Blue Ring": {
         "name": "Blue Ring",
@@ -18404,12 +18533,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Triforce Fragment": {
         "name": "Triforce Fragment",
@@ -18417,12 +18544,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 8,
+        "classification": "progression"
       },
       "Power Bracelet": {
         "name": "Power Bracelet",
@@ -18430,12 +18555,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Small Key": {
         "name": "Small Key",
@@ -18443,12 +18566,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 97
+        "max_count": 49,
+        "classification": "filler"
       },
       "Bomb": {
         "name": "Bomb",
@@ -18456,12 +18577,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 51
+        "max_count": 26,
+        "classification": "progression"
       },
       "Recovery Heart": {
         "name": "Recovery Heart",
@@ -18469,12 +18588,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Five Rupees": {
         "name": "Five Rupees",
@@ -18482,12 +18599,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 36
+        "max_count": 18,
+        "classification": "filler"
       },
       "Rupee": {
         "name": "Rupee",
@@ -18495,12 +18610,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Clock": {
         "name": "Clock",
@@ -18508,12 +18621,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "Fairy": {
         "name": "Fairy",
@@ -18521,12 +18632,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "filler"
       },
       "Boss 1 Defeated": {
         "name": "Boss 1 Defeated",
@@ -18534,12 +18643,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Boss 2 Defeated": {
         "name": "Boss 2 Defeated",
@@ -18547,12 +18654,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Boss 3 Defeated": {
         "name": "Boss 3 Defeated",
@@ -18560,12 +18665,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Boss 4 Defeated": {
         "name": "Boss 4 Defeated",
@@ -18573,12 +18676,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Boss 5 Defeated": {
         "name": "Boss 5 Defeated",
@@ -18586,12 +18687,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Boss 6 Defeated": {
         "name": "Boss 6 Defeated",
@@ -18599,12 +18698,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Boss 7 Defeated": {
         "name": "Boss 7 Defeated",
@@ -18612,12 +18709,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Boss 8 Defeated": {
         "name": "Boss 8 Defeated",
@@ -18625,12 +18720,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Triforce of Power": {
         "name": "Triforce of Power",
@@ -18638,12 +18731,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Rescued Zelda!": {
         "name": "Rescued Zelda!",
@@ -18651,12 +18742,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -18672,10 +18761,10 @@
   "itempool_counts": {
     "1": {
       "Arrow": 1,
-      "Blue Ring": 2,
-      "Bomb": 51,
-      "Book of Magic": 2,
-      "Boomerang": 2,
+      "Blue Ring": 1,
+      "Bomb": 26,
+      "Book of Magic": 1,
+      "Boomerang": 1,
       "Boss 1 Defeated": 1,
       "Boss 2 Defeated": 1,
       "Boss 3 Defeated": 1,
@@ -18684,34 +18773,34 @@
       "Boss 6 Defeated": 1,
       "Boss 7 Defeated": 1,
       "Boss 8 Defeated": 1,
-      "Bow": 2,
-      "Candle": 2,
-      "Clock": 6,
-      "Fairy": 12,
-      "Five Rupees": 36,
-      "Food": 4,
-      "Heart Container": 26,
-      "Letter": 2,
-      "Magical Boomerang": 2,
-      "Magical Key": 2,
-      "Magical Rod": 2,
-      "Magical Shield": 6,
-      "Magical Sword": 2,
-      "Power Bracelet": 2,
-      "Raft": 2,
-      "Recorder": 2,
-      "Recovery Heart": 2,
-      "Red Candle": 2,
-      "Red Ring": 2,
+      "Bow": 1,
+      "Candle": 1,
+      "Clock": 3,
+      "Fairy": 6,
+      "Five Rupees": 18,
+      "Food": 2,
+      "Heart Container": 13,
+      "Letter": 1,
+      "Magical Boomerang": 1,
+      "Magical Key": 1,
+      "Magical Rod": 1,
+      "Magical Shield": 3,
+      "Magical Sword": 1,
+      "Power Bracelet": 1,
+      "Raft": 1,
+      "Recorder": 1,
+      "Recovery Heart": 1,
+      "Red Candle": 1,
+      "Red Ring": 1,
       "Rescued Zelda!": 1,
-      "Silver Arrow": 2,
-      "Small Key": 97,
-      "Stepladder": 2,
-      "Sword": 4,
+      "Silver Arrow": 1,
+      "Small Key": 49,
+      "Stepladder": 1,
+      "Sword": 2,
       "Triforce Fragment": 8,
       "Triforce of Power": 1,
-      "Water of Life (Blue)": 6,
-      "Water of Life (Red)": 3,
+      "Water of Life (Blue)": 3,
+      "Water of Life (Red)": 2,
       "White Sword": 1
     }
   },
@@ -18735,5 +18824,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

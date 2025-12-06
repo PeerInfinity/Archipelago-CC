@@ -203,7 +203,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Afterlife: Jar near Mangled Wayne",
@@ -217,7 +218,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Afterlife: Jar under Pool",
@@ -231,7 +233,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Afterlife: TV",
@@ -245,7 +248,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -282,7 +286,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Waynehouse: Basement Pot 1",
@@ -296,7 +301,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Waynehouse: Basement Pot 2",
@@ -310,7 +316,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Waynehouse: Basement Pot 3",
@@ -324,7 +331,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Waynehouse: Sarcophagus",
@@ -338,7 +346,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Waynehouse: TV",
@@ -352,7 +361,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -639,7 +649,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "New Muldul: Shop Ceiling Pot 2",
@@ -653,7 +664,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "New Muldul: Flag Banana",
@@ -667,7 +679,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "New Muldul: Pot near Vault",
@@ -681,7 +694,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "New Muldul: Pot above Vault",
@@ -695,7 +709,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "New Muldul: Underground Pot",
@@ -709,7 +724,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "New Muldul: Underground Chest",
@@ -723,7 +739,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "New Muldul: Juice Trade",
@@ -737,7 +754,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "New Muldul: Basement Suitcase",
@@ -751,7 +769,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "New Muldul: Upper House Chest 1",
@@ -765,7 +784,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "New Muldul: Upper House Chest 2",
@@ -779,7 +799,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "New Muldul: Talk to Pongorma",
@@ -793,7 +814,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "New Muldul: Rescued Blerol 1",
@@ -869,7 +891,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "New Muldul: Rescued Blerol 2",
@@ -945,7 +968,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "New Muldul: TV",
@@ -959,7 +983,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1014,7 +1039,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "New Muldul: Vault Right Chest",
@@ -1054,7 +1080,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "New Muldul: Vault Bomb",
@@ -1094,12 +1121,14 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
       "Viewax": {
         "name": "Viewax",
+        "hint_text": "Viewax's Edifice",
         "exits": [
           {
             "name": "Viewax To World",
@@ -1131,7 +1160,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Viewax's Edifice: Dedusmuln's Suitcase",
@@ -1145,7 +1175,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Viewax's Edifice: Dedusmuln's Campfire",
@@ -1159,7 +1190,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Viewax's Edifice: Talk to Dedusmuln",
@@ -1173,7 +1205,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Viewax's Edifice: Canopic Jar",
@@ -1187,7 +1220,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Viewax's Edifice: Cave Sarcophagus",
@@ -1201,7 +1235,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Viewax's Edifice: Shielded Key",
@@ -1224,7 +1259,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Viewax's Edifice: Tower Pot",
@@ -1238,7 +1274,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Viewax's Edifice: Tower Jar",
@@ -1252,7 +1289,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Viewax's Edifice: Tower Chest",
@@ -1275,7 +1313,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Viewax's Edifice: Sage Fridge",
@@ -1289,7 +1328,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Viewax's Edifice: Sage Item 1",
@@ -1303,7 +1343,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Viewax's Edifice: Sage Item 2",
@@ -1317,7 +1358,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Viewax's Edifice: Viewax Pot",
@@ -1331,7 +1373,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Viewax's Edifice: Defeat Viewax",
@@ -1345,7 +1388,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arcade 1: Key",
@@ -1359,7 +1403,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arcade 1: Coin Dash",
@@ -1373,7 +1418,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arcade 1: Burrito Alcove 1",
@@ -1387,7 +1433,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arcade 1: Burrito Alcove 2",
@@ -1401,7 +1448,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arcade 1: Behind Spikes Banana",
@@ -1415,7 +1463,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arcade 1: Pyramid Banana",
@@ -1429,7 +1478,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arcade 1: Moving Platforms Muscle Applique",
@@ -1443,7 +1493,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arcade 1: Bed Banana",
@@ -1457,7 +1508,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Viewax's Edifice: TV",
@@ -1480,7 +1532,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1509,7 +1562,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1538,7 +1592,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arcade 2: Flying Machine Banana",
@@ -1552,7 +1607,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arcade 2: Paper Cup Detour",
@@ -1566,7 +1622,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arcade 2: Peak Muscle Applique",
@@ -1580,7 +1637,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arcade 2: Double Banana 1",
@@ -1594,7 +1652,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arcade 2: Double Banana 2",
@@ -1608,7 +1667,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Arcade 2: Cave Burrito",
@@ -1622,7 +1682,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1659,7 +1720,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1688,7 +1750,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Juice Ranch: Juice 2",
@@ -1702,7 +1765,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Juice Ranch: Juice 3",
@@ -1716,7 +1780,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Juice Ranch: Ledge Rancher",
@@ -1730,7 +1795,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Juice Ranch: Battle with Somsnosa",
@@ -1744,7 +1810,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Juice Ranch: Fridge",
@@ -1758,7 +1825,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Juice Ranch: TV",
@@ -1772,7 +1840,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1852,7 +1921,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1889,7 +1959,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Foglast: Underground Sarcophagus",
@@ -1903,7 +1974,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Foglast: Shielded Key",
@@ -1917,7 +1989,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Foglast: Buy Clicker",
@@ -1931,7 +2004,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Foglast: Shielded Chest",
@@ -1945,7 +2019,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Foglast: Cave Fridge",
@@ -1959,7 +2034,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Foglast: Roof Sarcophagus",
@@ -1982,7 +2058,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Foglast: Under Lair Sarcophagus 1",
@@ -2005,7 +2082,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Foglast: Under Lair Sarcophagus 2",
@@ -2028,7 +2106,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Foglast: Under Lair Sarcophagus 3",
@@ -2051,7 +2130,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Foglast: Sage Sarcophagus",
@@ -2074,7 +2154,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Foglast: Sage Item 1",
@@ -2097,7 +2178,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Foglast: Sage Item 2",
@@ -2120,7 +2202,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Foglast: TV",
@@ -2143,7 +2226,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2180,7 +2264,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Drill Castle: Island Banana",
@@ -2194,7 +2279,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Drill Castle: Island Pot",
@@ -2208,7 +2294,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Drill Castle: Cave Sarcophagus",
@@ -2222,7 +2309,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Drill Castle: Roof Banana",
@@ -2236,7 +2324,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Drill Castle: TV",
@@ -2250,7 +2339,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2287,7 +2377,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: 1F Hidden Sarcophagus",
@@ -2301,7 +2392,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: 1F Four Statues Chest 1",
@@ -2315,7 +2407,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: 1F Four Statues Chest 2",
@@ -2329,7 +2422,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: B1 Double Chest 1",
@@ -2343,7 +2437,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: B1 Double Chest 2",
@@ -2357,7 +2452,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: B1 Single Chest",
@@ -2371,7 +2467,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: B1 Enemy Chest",
@@ -2385,7 +2482,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: B1 Hidden Sarcophagus",
@@ -2399,7 +2497,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: B1 Hole Chest",
@@ -2413,7 +2512,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: B2 Hidden Sarcophagus 1",
@@ -2427,7 +2527,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: B2 Hidden Sarcophagus 2",
@@ -2441,7 +2542,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: 2F Sarcophagus",
@@ -2455,7 +2557,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: Boss Secret Chest 1",
@@ -2469,7 +2572,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: Boss Secret Chest 2",
@@ -2483,7 +2587,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: Motor Hunter Sarcophagus",
@@ -2506,7 +2611,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: Sage Item 1",
@@ -2520,7 +2626,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: Sage Item 2",
@@ -2534,7 +2641,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: Sage Left Arm",
@@ -2548,7 +2656,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: Sage Right Arm",
@@ -2562,7 +2671,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: Sage Left Leg",
@@ -2576,7 +2686,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Labyrinth: Sage Right Leg",
@@ -2590,7 +2701,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2619,7 +2731,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Airship: Flesh Pot",
@@ -2633,7 +2746,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Airship: Top Jar",
@@ -2647,7 +2761,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sage Airship: TV",
@@ -2665,7 +2780,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2702,7 +2818,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hylemxylem: Lower Reservoir Key",
@@ -2716,7 +2833,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hylemxylem: Fountain Banana",
@@ -2730,7 +2848,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hylemxylem: East Island Banana",
@@ -2744,7 +2863,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hylemxylem: East Island Chest",
@@ -2758,7 +2878,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hylemxylem: Upper Chamber Banana",
@@ -2772,7 +2893,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hylemxylem: Across Upper Reservoir Chest",
@@ -2786,7 +2908,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hylemxylem: Drained Lower Reservoir Chest",
@@ -2800,7 +2923,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hylemxylem: Drained Lower Reservoir Burrito 1",
@@ -2814,7 +2938,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hylemxylem: Drained Lower Reservoir Burrito 2",
@@ -2828,7 +2953,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hylemxylem: Lower Reservoir Hole Pot 1",
@@ -2842,7 +2968,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hylemxylem: Lower Reservoir Hole Pot 2",
@@ -2856,7 +2983,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hylemxylem: Lower Reservoir Hole Pot 3",
@@ -2870,7 +2998,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hylemxylem: Lower Reservoir Hole Sarcophagus",
@@ -2884,7 +3013,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hylemxylem: Drained Upper Reservoir Burrito 1",
@@ -2898,7 +3028,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hylemxylem: Drained Upper Reservoir Burrito 2",
@@ -2912,7 +3043,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hylemxylem: Drained Upper Reservoir Burrito 3",
@@ -2926,7 +3058,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hylemxylem: Upper Reservoir Hole Key",
@@ -2940,7 +3073,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Defeat Gibby",
@@ -2963,7 +3097,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       }
@@ -2985,12 +3120,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "BURRITO": {
         "name": "BURRITO",
@@ -2998,12 +3131,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 22
+        "max_count": 11,
+        "classification": "filler"
       },
       "COFFEE": {
         "name": "COFFEE",
@@ -3011,12 +3142,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "SOUL SPONGE": {
         "name": "SOUL SPONGE",
@@ -3024,12 +3153,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "filler"
       },
       "MUSCLE APPLIQUE": {
         "name": "MUSCLE APPLIQUE",
@@ -3037,12 +3164,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "useful"
       },
       "POOLWINE": {
         "name": "POOLWINE",
@@ -3050,12 +3175,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "CUPCAKE": {
         "name": "CUPCAKE",
@@ -3063,12 +3186,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "COOKIE": {
         "name": "COOKIE",
@@ -3076,12 +3197,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "HOUSE KEY": {
         "name": "HOUSE KEY",
@@ -3089,12 +3208,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "MEAT": {
         "name": "MEAT",
@@ -3102,12 +3219,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "PNEUMATOPHORE": {
         "name": "PNEUMATOPHORE",
@@ -3115,12 +3230,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "CAVE KEY": {
         "name": "CAVE KEY",
@@ -3128,12 +3241,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "JUICE": {
         "name": "JUICE",
@@ -3141,12 +3252,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "filler"
       },
       "DOCK KEY": {
         "name": "DOCK KEY",
@@ -3154,12 +3263,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "BANANA": {
         "name": "BANANA",
@@ -3167,12 +3274,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 28
+        "max_count": 14,
+        "classification": "filler"
       },
       "PAPER CUP": {
         "name": "PAPER CUP",
@@ -3180,12 +3285,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression"
       },
       "JAIL KEY": {
         "name": "JAIL KEY",
@@ -3193,12 +3296,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "PADDLE": {
         "name": "PADDLE",
@@ -3206,12 +3307,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "WORM ROOM KEY": {
         "name": "WORM ROOM KEY",
@@ -3219,12 +3318,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "BRIDGE KEY": {
         "name": "BRIDGE KEY",
@@ -3232,12 +3329,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "STEM CELL": {
         "name": "STEM CELL",
@@ -3245,12 +3340,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "UPPER CHAMBER KEY": {
         "name": "UPPER CHAMBER KEY",
@@ -3258,12 +3351,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "VESSEL ROOM KEY": {
         "name": "VESSEL ROOM KEY",
@@ -3271,12 +3362,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "CLOUD GERM": {
         "name": "CLOUD GERM",
@@ -3284,12 +3373,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "SKULL BOMB": {
         "name": "SKULL BOMB",
@@ -3297,12 +3384,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "TOWER KEY": {
         "name": "TOWER KEY",
@@ -3310,12 +3395,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "DEEP KEY": {
         "name": "DEEP KEY",
@@ -3323,38 +3406,34 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "MULTI-COFFEE": {
         "name": "MULTI-COFFEE",
+        "hint_text": "MULTI COFFEE",
         "id": 200649,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "MULTI-JUICE": {
         "name": "MULTI-JUICE",
+        "hint_text": "MULTI JUICE",
         "id": 200650,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "filler"
       },
       "MULTI STEM CELL": {
         "name": "MULTI STEM CELL",
@@ -3362,12 +3441,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "MULTI SOUL SPONGE": {
         "name": "MULTI SOUL SPONGE",
@@ -3375,12 +3452,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 6,
+        "classification": "filler"
       },
       "UPPER HOUSE KEY": {
         "name": "UPPER HOUSE KEY",
@@ -3388,12 +3463,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "BOTTOMLESS JUICE": {
         "name": "BOTTOMLESS JUICE",
@@ -3401,12 +3474,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "SAGE TOKEN": {
         "name": "SAGE TOKEN",
@@ -3414,12 +3485,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression"
       },
       "CLICKER": {
         "name": "CLICKER",
@@ -3427,12 +3496,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "CURSED GLOVES": {
         "name": "CURSED GLOVES",
@@ -3440,12 +3507,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "LONG GLOVES": {
         "name": "LONG GLOVES",
@@ -3453,12 +3518,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5,
+        "classification": "useful"
       },
       "BRAIN DIGITS": {
         "name": "BRAIN DIGITS",
@@ -3466,12 +3529,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "MATERIEL MITTS": {
         "name": "MATERIEL MITTS",
@@ -3479,12 +3540,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "PLEATHER GAGE": {
         "name": "PLEATHER GAGE",
@@ -3492,12 +3551,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "PEPTIDE BODKINS": {
         "name": "PEPTIDE BODKINS",
@@ -3505,12 +3562,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "TELESCOPIC SLEEVE": {
         "name": "TELESCOPIC SLEEVE",
@@ -3518,12 +3573,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "TENDRIL HAND": {
         "name": "TENDRIL HAND",
@@ -3531,12 +3584,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "PSYCHIC KNUCKLE": {
         "name": "PSYCHIC KNUCKLE",
@@ -3544,12 +3595,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "SINGLE GLOVE": {
         "name": "SINGLE GLOVE",
@@ -3557,12 +3606,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "FADED PONCHO": {
         "name": "FADED PONCHO",
@@ -3570,12 +3617,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "JUMPSUIT": {
         "name": "JUMPSUIT",
@@ -3583,12 +3628,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "BOOTS": {
         "name": "BOOTS",
@@ -3596,12 +3639,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "CONVERTER WORM": {
         "name": "CONVERTER WORM",
@@ -3609,12 +3650,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "COFFEE CHIP": {
         "name": "COFFEE CHIP",
@@ -3622,12 +3661,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "RANCHER PONCHO": {
         "name": "RANCHER PONCHO",
@@ -3635,12 +3672,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "ORGAN FORT": {
         "name": "ORGAN FORT",
@@ -3648,12 +3683,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "LOOPED DOME": {
         "name": "LOOPED DOME",
@@ -3661,12 +3694,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "useful"
       },
       "DUCTILE HABIT": {
         "name": "DUCTILE HABIT",
@@ -3674,12 +3705,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "TARP": {
         "name": "TARP",
@@ -3687,12 +3716,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "useful"
       },
       "POROMER BLEB": {
         "name": "POROMER BLEB",
@@ -3700,12 +3727,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "SOUL CRISPER": {
         "name": "SOUL CRISPER",
@@ -3713,12 +3738,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "TIME SIGIL": {
         "name": "TIME SIGIL",
@@ -3726,12 +3749,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "CHARGE UP": {
         "name": "CHARGE UP",
@@ -3739,12 +3760,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "FATE SANDBOX": {
         "name": "FATE SANDBOX",
@@ -3752,12 +3771,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "TELEDENUDATE": {
         "name": "TELEDENUDATE",
@@ -3765,12 +3782,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "LINK MOLLUSC": {
         "name": "LINK MOLLUSC",
@@ -3778,25 +3793,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "BOMBO - GENESIS": {
         "name": "BOMBO - GENESIS",
+        "hint_text": "BOMBO   GENESIS",
         "id": 200685,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "100 Bones": {
         "name": "100 Bones",
@@ -3804,12 +3816,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "50 Bones": {
         "name": "50 Bones",
@@ -3817,12 +3827,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "NEMATODE INTERFACE": {
         "name": "NEMATODE INTERFACE",
@@ -3830,12 +3838,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pongorma": {
         "name": "Pongorma",
@@ -3843,12 +3849,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Dedusmuln": {
         "name": "Dedusmuln",
@@ -3856,12 +3860,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Somsnosa": {
         "name": "Somsnosa",
@@ -3869,12 +3871,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "10 Bones": {
         "name": "10 Bones",
@@ -3882,12 +3882,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Victory": {
         "name": "Victory",
@@ -3895,12 +3893,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       }
     }
   },
@@ -3911,73 +3907,73 @@
   },
   "itempool_counts": {
     "1": {
-      "100 Bones": 2,
-      "50 Bones": 2,
-      "BANANA": 28,
-      "BOMBO - GENESIS": 2,
-      "BOOTS": 2,
-      "BOTTOMLESS JUICE": 2,
-      "BRAIN DIGITS": 2,
-      "BRIDGE KEY": 2,
-      "BURRITO": 22,
-      "CAVE KEY": 2,
-      "CHARGE UP": 2,
-      "CLICKER": 2,
-      "CLOUD GERM": 6,
-      "COFFEE": 2,
-      "COFFEE CHIP": 2,
-      "CONVERTER WORM": 2,
-      "COOKIE": 6,
-      "CUPCAKE": 6,
-      "CURSED GLOVES": 2,
-      "DEEP KEY": 2,
-      "DOCK KEY": 2,
-      "DUBIOUS BERRY": 2,
-      "DUCTILE HABIT": 2,
-      "FADED PONCHO": 2,
-      "FATE SANDBOX": 2,
-      "HOUSE KEY": 2,
-      "JAIL KEY": 2,
-      "JUICE": 12,
-      "JUMPSUIT": 2,
-      "LINK MOLLUSC": 2,
-      "LONG GLOVES": 10,
-      "LOOPED DOME": 4,
-      "MATERIEL MITTS": 2,
-      "MEAT": 4,
-      "MULTI SOUL SPONGE": 12,
-      "MULTI STEM CELL": 6,
-      "MULTI-COFFEE": 2,
-      "MULTI-JUICE": 8,
-      "MUSCLE APPLIQUE": 14,
-      "NEMATODE INTERFACE": 2,
-      "ORGAN FORT": 2,
-      "PADDLE": 2,
-      "PAPER CUP": 6,
-      "PEPTIDE BODKINS": 2,
-      "PLEATHER GAGE": 2,
-      "PNEUMATOPHORE": 2,
-      "POOLWINE": 2,
-      "POROMER BLEB": 2,
-      "PSYCHIC KNUCKLE": 2,
-      "RANCHER PONCHO": 2,
-      "SAGE TOKEN": 6,
-      "SINGLE GLOVE": 2,
-      "SKULL BOMB": 2,
-      "SOUL CRISPER": 2,
-      "SOUL SPONGE": 12,
-      "STEM CELL": 4,
-      "TARP": 4,
-      "TELEDENUDATE": 2,
-      "TELESCOPIC SLEEVE": 2,
-      "TENDRIL HAND": 2,
-      "TIME SIGIL": 2,
-      "TOWER KEY": 2,
-      "UPPER CHAMBER KEY": 2,
-      "UPPER HOUSE KEY": 2,
-      "VESSEL ROOM KEY": 2,
+      "100 Bones": 1,
+      "50 Bones": 1,
+      "BANANA": 14,
+      "BOMBO - GENESIS": 1,
+      "BOOTS": 1,
+      "BOTTOMLESS JUICE": 1,
+      "BRAIN DIGITS": 1,
+      "BRIDGE KEY": 1,
+      "BURRITO": 11,
+      "CAVE KEY": 1,
+      "CHARGE UP": 1,
+      "CLICKER": 1,
+      "CLOUD GERM": 3,
+      "COFFEE": 1,
+      "COFFEE CHIP": 1,
+      "CONVERTER WORM": 1,
+      "COOKIE": 3,
+      "CUPCAKE": 3,
+      "CURSED GLOVES": 1,
+      "DEEP KEY": 1,
+      "DOCK KEY": 1,
+      "DUBIOUS BERRY": 1,
+      "DUCTILE HABIT": 1,
+      "FADED PONCHO": 1,
+      "FATE SANDBOX": 1,
+      "HOUSE KEY": 1,
+      "JAIL KEY": 1,
+      "JUICE": 6,
+      "JUMPSUIT": 1,
+      "LINK MOLLUSC": 1,
+      "LONG GLOVES": 5,
+      "LOOPED DOME": 2,
+      "MATERIEL MITTS": 1,
+      "MEAT": 2,
+      "MULTI SOUL SPONGE": 6,
+      "MULTI STEM CELL": 3,
+      "MULTI-COFFEE": 1,
+      "MULTI-JUICE": 4,
+      "MUSCLE APPLIQUE": 7,
+      "NEMATODE INTERFACE": 1,
+      "ORGAN FORT": 1,
+      "PADDLE": 1,
+      "PAPER CUP": 3,
+      "PEPTIDE BODKINS": 1,
+      "PLEATHER GAGE": 1,
+      "PNEUMATOPHORE": 1,
+      "POOLWINE": 1,
+      "POROMER BLEB": 1,
+      "PSYCHIC KNUCKLE": 1,
+      "RANCHER PONCHO": 1,
+      "SAGE TOKEN": 3,
+      "SINGLE GLOVE": 1,
+      "SKULL BOMB": 1,
+      "SOUL CRISPER": 1,
+      "SOUL SPONGE": 6,
+      "STEM CELL": 2,
+      "TARP": 2,
+      "TELEDENUDATE": 1,
+      "TELESCOPIC SLEEVE": 1,
+      "TENDRIL HAND": 1,
+      "TIME SIGIL": 1,
+      "TOWER KEY": 1,
+      "UPPER CHAMBER KEY": 1,
+      "UPPER HOUSE KEY": 1,
+      "VESSEL ROOM KEY": 1,
       "Victory": 1,
-      "WORM ROOM KEY": 2
+      "WORM ROOM KEY": 1
     }
   },
   "progression_mapping": {
@@ -4000,5 +3996,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

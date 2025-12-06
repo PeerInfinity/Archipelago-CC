@@ -37,7 +37,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 2.0%",
@@ -60,7 +61,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 3.0%",
@@ -83,7 +85,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 4.0%",
@@ -106,7 +109,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 5.0%",
@@ -129,7 +133,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 6.0%",
@@ -152,7 +157,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 7.0%",
@@ -175,7 +181,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 8.0%",
@@ -198,7 +205,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 9.0%",
@@ -221,7 +229,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 10.0%",
@@ -244,7 +253,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 11.0%",
@@ -267,7 +277,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 12.0%",
@@ -290,7 +301,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 13.0%",
@@ -313,7 +325,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 14.0%",
@@ -336,7 +349,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 15.0%",
@@ -359,7 +373,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 16.0%",
@@ -382,7 +397,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 17.0%",
@@ -405,7 +421,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 18.0%",
@@ -428,7 +445,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 19.0%",
@@ -451,7 +469,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 20.0%",
@@ -474,7 +493,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 21.0%",
@@ -497,7 +517,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 22.0%",
@@ -520,7 +541,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 23.0%",
@@ -543,7 +565,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 24.0%",
@@ -566,7 +589,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 25.0%",
@@ -589,7 +613,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 26.0%",
@@ -612,7 +637,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 27.0%",
@@ -635,7 +661,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 28.0%",
@@ -658,7 +685,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 29.0%",
@@ -681,7 +709,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 30.0%",
@@ -704,7 +733,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 31.0%",
@@ -727,7 +757,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 32.0%",
@@ -750,7 +781,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 33.0%",
@@ -773,7 +805,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 34.0%",
@@ -796,7 +829,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 35.0%",
@@ -819,7 +853,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 36.0%",
@@ -842,7 +877,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 37.0%",
@@ -865,7 +901,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 38.0%",
@@ -888,7 +925,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 39.0%",
@@ -911,7 +949,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 40.0%",
@@ -934,7 +973,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 41.0%",
@@ -957,7 +997,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 42.0%",
@@ -980,7 +1021,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 43.0%",
@@ -1003,7 +1045,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 44.0%",
@@ -1026,7 +1069,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 45.0%",
@@ -1049,7 +1093,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 46.0%",
@@ -1072,7 +1117,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 47.0%",
@@ -1095,7 +1141,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 48.0%",
@@ -1118,7 +1165,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 49.0%",
@@ -1141,7 +1189,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 50.0%",
@@ -1164,7 +1213,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 50.5%",
@@ -1187,7 +1237,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 51.0%",
@@ -1210,7 +1261,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 51.5%",
@@ -1233,7 +1285,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 52.0%",
@@ -1256,7 +1309,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 52.5%",
@@ -1279,7 +1333,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 53.0%",
@@ -1302,7 +1357,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 53.5%",
@@ -1325,7 +1381,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 54.0%",
@@ -1348,7 +1405,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 54.5%",
@@ -1371,7 +1429,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 55.0%",
@@ -1394,7 +1453,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 55.5%",
@@ -1417,7 +1477,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 56.0%",
@@ -1440,7 +1501,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 56.5%",
@@ -1463,7 +1525,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 57.0%",
@@ -1486,7 +1549,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 57.5%",
@@ -1509,7 +1573,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 58.0%",
@@ -1532,7 +1597,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 58.5%",
@@ -1555,7 +1621,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 59.0%",
@@ -1578,7 +1645,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 59.5%",
@@ -1601,7 +1669,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 60.0%",
@@ -1624,7 +1693,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 60.5%",
@@ -1647,7 +1717,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 61.0%",
@@ -1670,7 +1741,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 61.5%",
@@ -1693,7 +1765,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 62.0%",
@@ -1716,7 +1789,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 62.5%",
@@ -1739,7 +1813,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 63.0%",
@@ -1762,7 +1837,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 63.5%",
@@ -1785,7 +1861,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 64.0%",
@@ -1808,7 +1885,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 64.5%",
@@ -1831,7 +1909,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 65.0%",
@@ -1854,7 +1933,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 65.5%",
@@ -1877,7 +1957,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 66.0%",
@@ -1900,7 +1981,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 66.5%",
@@ -1923,7 +2005,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 67.0%",
@@ -1946,7 +2029,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 67.5%",
@@ -1969,7 +2053,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 68.0%",
@@ -1992,7 +2077,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 68.5%",
@@ -2015,7 +2101,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 69.0%",
@@ -2038,7 +2125,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 69.5%",
@@ -2061,7 +2149,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 70.0%",
@@ -2084,7 +2173,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 70.25%",
@@ -2107,7 +2197,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 70.5%",
@@ -2130,7 +2221,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 70.75%",
@@ -2153,7 +2245,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 71.0%",
@@ -2176,7 +2269,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 71.25%",
@@ -2199,7 +2293,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 71.5%",
@@ -2222,7 +2317,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 71.75%",
@@ -2245,7 +2341,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 72.0%",
@@ -2268,7 +2365,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 72.25%",
@@ -2291,7 +2389,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 72.5%",
@@ -2314,7 +2413,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 72.75%",
@@ -2337,7 +2437,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 73.0%",
@@ -2360,7 +2461,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 73.25%",
@@ -2383,7 +2485,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 73.5%",
@@ -2406,7 +2509,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 73.75%",
@@ -2429,7 +2533,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 74.0%",
@@ -2452,7 +2557,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 74.25%",
@@ -2475,7 +2581,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 74.5%",
@@ -2498,7 +2605,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 74.75%",
@@ -2521,7 +2629,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 75.0%",
@@ -2544,7 +2653,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 75.25%",
@@ -2567,7 +2677,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 75.5%",
@@ -2590,7 +2701,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 75.75%",
@@ -2613,7 +2725,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 76.0%",
@@ -2636,7 +2749,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 76.25%",
@@ -2659,7 +2773,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 76.5%",
@@ -2682,7 +2797,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 76.75%",
@@ -2705,7 +2821,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 77.0%",
@@ -2728,7 +2845,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 77.25%",
@@ -2751,7 +2869,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 77.5%",
@@ -2774,7 +2893,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 77.75%",
@@ -2797,7 +2917,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 78.0%",
@@ -2820,7 +2941,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 78.25%",
@@ -2843,7 +2965,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 78.5%",
@@ -2866,7 +2989,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 78.75%",
@@ -2889,7 +3013,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 79.0%",
@@ -2912,7 +3037,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 79.25%",
@@ -2935,7 +3061,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 79.5%",
@@ -2958,7 +3085,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 79.75%",
@@ -2981,7 +3109,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Similarity: 80.0%",
@@ -3004,7 +3133,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       }
@@ -3026,12 +3156,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "progression"
       },
       "Progressive Canvas Height": {
         "name": "Progressive Canvas Height",
@@ -3039,12 +3167,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression"
       },
       "Progressive Color Depth (Red)": {
         "name": "Progressive Color Depth (Red)",
@@ -3052,12 +3178,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 13
+        "max_count": 7,
+        "classification": "progression"
       },
       "Progressive Color Depth (Green)": {
         "name": "Progressive Color Depth (Green)",
@@ -3065,12 +3189,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 13
+        "max_count": 7,
+        "classification": "progression"
       },
       "Progressive Color Depth (Blue)": {
         "name": "Progressive Color Depth (Blue)",
@@ -3078,25 +3200,22 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 13
+        "max_count": 7,
+        "classification": "progression"
       },
       "Free-Form Select": {
         "name": "Free-Form Select",
+        "hint_text": "Free Form Select",
         "id": 198506,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Select": {
         "name": "Select",
@@ -3104,12 +3223,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Eraser/Color Eraser": {
         "name": "Eraser/Color Eraser",
@@ -3117,12 +3234,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Fill With Color": {
         "name": "Fill With Color",
@@ -3130,12 +3245,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pick Color": {
         "name": "Pick Color",
@@ -3143,12 +3256,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Magnifier": {
         "name": "Magnifier",
@@ -3156,12 +3267,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pencil": {
         "name": "Pencil",
@@ -3169,12 +3278,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Brush": {
         "name": "Brush",
@@ -3182,12 +3289,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Airbrush": {
         "name": "Airbrush",
@@ -3195,12 +3300,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Text": {
         "name": "Text",
@@ -3208,12 +3311,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Line": {
         "name": "Line",
@@ -3221,12 +3322,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Curve": {
         "name": "Curve",
@@ -3234,12 +3333,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Rectangle": {
         "name": "Rectangle",
@@ -3247,12 +3344,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Polygon": {
         "name": "Polygon",
@@ -3260,12 +3355,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Ellipse": {
         "name": "Ellipse",
@@ -3273,12 +3366,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Rounded Rectangle": {
         "name": "Rounded Rectangle",
@@ -3286,12 +3377,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Additional Palette Color": {
         "name": "Additional Palette Color",
@@ -3299,12 +3388,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 182
+        "max_count": 91,
+        "classification": "filler"
       },
       "Undo Trap": {
         "name": "Undo Trap",
@@ -3312,12 +3399,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Clear Image Trap": {
         "name": "Clear Image Trap",
@@ -3325,12 +3410,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Invert Colors Trap": {
         "name": "Invert Colors Trap",
@@ -3338,12 +3421,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Flip Horizontal Trap": {
         "name": "Flip Horizontal Trap",
@@ -3351,12 +3432,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Flip Vertical Trap": {
         "name": "Flip Vertical Trap",
@@ -3364,12 +3443,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       }
     }
   },
@@ -3380,28 +3457,28 @@
   },
   "itempool_counts": {
     "1": {
-      "Additional Palette Color": 182,
-      "Airbrush": 2,
+      "Additional Palette Color": 91,
+      "Airbrush": 1,
       "Brush": 1,
-      "Curve": 2,
-      "Ellipse": 2,
-      "Eraser/Color Eraser": 2,
-      "Fill With Color": 2,
-      "Free-Form Select": 2,
-      "Line": 2,
+      "Curve": 1,
+      "Ellipse": 1,
+      "Eraser/Color Eraser": 1,
+      "Fill With Color": 1,
+      "Free-Form Select": 1,
+      "Line": 1,
       "Magnifier": 1,
-      "Pencil": 2,
-      "Pick Color": 2,
-      "Polygon": 2,
-      "Progressive Canvas Height": 6,
-      "Progressive Canvas Width": 8,
-      "Progressive Color Depth (Blue)": 13,
-      "Progressive Color Depth (Green)": 13,
-      "Progressive Color Depth (Red)": 13,
-      "Rectangle": 2,
-      "Rounded Rectangle": 2,
-      "Select": 2,
-      "Text": 2
+      "Pencil": 1,
+      "Pick Color": 1,
+      "Polygon": 1,
+      "Progressive Canvas Height": 3,
+      "Progressive Canvas Width": 4,
+      "Progressive Color Depth (Blue)": 7,
+      "Progressive Color Depth (Green)": 7,
+      "Progressive Color Depth (Red)": 7,
+      "Rectangle": 1,
+      "Rounded Rectangle": 1,
+      "Select": 1,
+      "Text": 1
     }
   },
   "progression_mapping": {
@@ -3432,5 +3509,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

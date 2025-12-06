@@ -2409,12 +2409,10 @@
           "Everything",
           "Traps"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 10,
+        "classification": "trap"
       },
       "Extra Max HP": {
         "name": "Extra Max HP",
@@ -2423,12 +2421,10 @@
           "Everything",
           "Pickups"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 20
+        "max_count": 20,
+        "classification": "useful"
       },
       "Spell Refresher": {
         "name": "Spell Refresher",
@@ -2437,12 +2433,10 @@
           "Everything",
           "Pickups"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "classification": "filler"
       },
       "Potion": {
         "name": "Potion",
@@ -2450,12 +2444,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 13
+        "max_count": 13,
+        "classification": "filler"
       },
       "Gold (200)": {
         "name": "Gold (200)",
@@ -2464,12 +2456,10 @@
           "Everything",
           "Gold"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 7
+        "max_count": 7,
+        "classification": "filler"
       },
       "Gold (1000)": {
         "name": "Gold (1000)",
@@ -2478,12 +2468,10 @@
           "Everything",
           "Gold"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Wand (Tier 1)": {
         "name": "Wand (Tier 1)",
@@ -2492,12 +2480,10 @@
           "Everything",
           "Wands"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "useful"
       },
       "Wand (Tier 2)": {
         "name": "Wand (Tier 2)",
@@ -2506,12 +2492,10 @@
           "Everything",
           "Wands"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "useful"
       },
       "Wand (Tier 3)": {
         "name": "Wand (Tier 3)",
@@ -2520,12 +2504,10 @@
           "Everything",
           "Wands"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "classification": "useful"
       },
       "Wand (Tier 4)": {
         "name": "Wand (Tier 4)",
@@ -2534,12 +2516,10 @@
           "Everything",
           "Wands"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "useful"
       },
       "Wand (Tier 5)": {
         "name": "Wand (Tier 5)",
@@ -2548,12 +2528,10 @@
           "Everything",
           "Wands"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "useful"
       },
       "Wand (Tier 6)": {
         "name": "Wand (Tier 6)",
@@ -2562,12 +2540,10 @@
           "Everything",
           "Wands"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "useful"
       },
       "Kantele": {
         "name": "Kantele",
@@ -2576,12 +2552,10 @@
           "Everything",
           "Wands"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Fire Immunity Perk": {
         "name": "Fire Immunity Perk",
@@ -2590,12 +2564,10 @@
           "Everything",
           "Perks"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Toxic Immunity Perk": {
         "name": "Toxic Immunity Perk",
@@ -2604,12 +2576,10 @@
           "Everything",
           "Perks"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Explosion Immunity Perk": {
         "name": "Explosion Immunity Perk",
@@ -2618,12 +2588,10 @@
           "Everything",
           "Perks"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Melee Immunity Perk": {
         "name": "Melee Immunity Perk",
@@ -2632,12 +2600,10 @@
           "Everything",
           "Perks"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Electricity Immunity Perk": {
         "name": "Electricity Immunity Perk",
@@ -2646,12 +2612,10 @@
           "Everything",
           "Perks"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Tinker with Wands Everywhere Perk": {
         "name": "Tinker with Wands Everywhere Perk",
@@ -2660,26 +2624,23 @@
           "Everything",
           "Perks"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "All-Seeing Eye Perk": {
         "name": "All-Seeing Eye Perk",
+        "hint_text": "All Seeing Eye Perk",
         "id": 110019,
         "groups": [
           "Everything",
           "Perks"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Spatial Awareness Perk": {
         "name": "Spatial Awareness Perk",
@@ -2688,12 +2649,10 @@
           "Everything",
           "Perks"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Extra Life Perk": {
         "name": "Extra Life Perk",
@@ -2702,12 +2661,10 @@
           "Everything",
           "Repeatable Perks"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "useful"
       },
       "Orb": {
         "name": "Orb",
@@ -2716,12 +2673,10 @@
           "Everything",
           "Orbs"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Random Potion": {
         "name": "Random Potion",
@@ -2730,12 +2685,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "filler"
       },
       "Secret Potion": {
         "name": "Secret Potion",
@@ -2744,12 +2697,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "filler"
       },
       "Powder Pouch": {
         "name": "Powder Pouch",
@@ -2758,12 +2709,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "classification": "filler"
       },
       "Chaos Die": {
         "name": "Chaos Die",
@@ -2772,12 +2721,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "filler"
       },
       "Greed Die": {
         "name": "Greed Die",
@@ -2786,12 +2733,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "trap"
       },
       "Kammi": {
         "name": "Kammi",
@@ -2800,12 +2745,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "filler"
       },
       "Refreshing Gourd": {
         "name": "Refreshing Gourd",
@@ -2814,12 +2757,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "S\u00e4dekivi": {
         "name": "S\u00e4dekivi",
@@ -2828,12 +2769,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Broken Wand": {
         "name": "Broken Wand",
@@ -2842,12 +2781,10 @@
           "Everything",
           "Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "filler"
       },
       "Portal to Holy Mountain 1": {
         "name": "Portal to Holy Mountain 1",
@@ -2855,12 +2792,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Portal to Holy Mountain 2": {
         "name": "Portal to Holy Mountain 2",
@@ -2868,12 +2803,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Portal to Holy Mountain 3": {
         "name": "Portal to Holy Mountain 3",
@@ -2881,12 +2814,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Portal to Holy Mountain 4": {
         "name": "Portal to Holy Mountain 4",
@@ -2894,12 +2825,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Portal to Holy Mountain 5": {
         "name": "Portal to Holy Mountain 5",
@@ -2907,12 +2836,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Portal to Holy Mountain 6": {
         "name": "Portal to Holy Mountain 6",
@@ -2920,12 +2847,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Portal to Holy Mountain 7": {
         "name": "Portal to Holy Mountain 7",
@@ -2933,12 +2858,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Victory": {
         "name": "Victory",
@@ -2946,12 +2869,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -3030,5 +2951,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

@@ -875,18 +875,172 @@
   },
   "items": {
     "1": {
-      "Movement Pack": {
-        "name": "Movement Pack",
-        "id": 120000,
+      "60 coins": {
+        "name": "60 coins",
+        "id": null,
         "groups": [
-          "Everything"
+          "coins"
         ],
         "advancement": true,
         "useful": false,
         "trap": false,
         "event": false,
-        "type": null,
+        "type": "coins",
         "max_count": 1
+      },
+      "89 coins": {
+        "name": "89 coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 1
+      },
+      "9 coins": {
+        "name": "9 coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 1
+      },
+      "10 coins": {
+        "name": "10 coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 1
+      },
+      "50 coins": {
+        "name": "50 coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 1
+      },
+      "4 coins": {
+        "name": "4 coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 1
+      },
+      "46 coins": {
+        "name": "46 coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 1
+      },
+      "100 coins": {
+        "name": "100 coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 1
+      },
+      "171 coins": {
+        "name": "171 coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 1
+      },
+      "203 coins": {
+        "name": "203 coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 1
+      },
+      "76 coins": {
+        "name": "76 coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 1
+      },
+      "7 coins": {
+        "name": "7 coins",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 1
+      },
+      "Victory Basic": {
+        "name": "Victory Basic",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
       },
       "Animation Pack": {
         "name": "Animation Pack",
@@ -894,165 +1048,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Audio Pack": {
-        "name": "Audio Pack",
-        "id": 120002,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Pause Menu Pack": {
-        "name": "Pause Menu Pack",
-        "id": 120003,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Time is Money Pack": {
-        "name": "Time is Money Pack",
-        "id": 120004,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Double Jump Pack": {
-        "name": "Double Jump Pack",
-        "id": 120005,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Pet Pack": {
-        "name": "Pet Pack",
-        "id": 120006,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Sexy Outfits Pack": {
-        "name": "Sexy Outfits Pack",
-        "id": 120007,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Top Hat Pack": {
-        "name": "Top Hat Pack",
-        "id": 120008,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Map Pack": {
-        "name": "Map Pack",
-        "id": 120009,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Gun Pack": {
-        "name": "Gun Pack",
-        "id": 120010,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "The Zombie Pack": {
-        "name": "The Zombie Pack",
-        "id": 120011,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Night Map Pack": {
-        "name": "Night Map Pack",
-        "id": 120012,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Psychological Warfare Pack": {
-        "name": "Psychological Warfare Pack",
-        "id": 120013,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -1063,256 +1059,18 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Finish the Fight Pack": {
-        "name": "Finish the Fight Pack",
-        "id": 120015,
+      "Audio Pack": {
+        "name": "Audio Pack",
+        "id": 120002,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Particles Pack": {
-        "name": "Particles Pack",
-        "id": 120016,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Day One Patch Pack": {
-        "name": "Day One Patch Pack",
-        "id": 120017,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Checkpoint Pack": {
-        "name": "Checkpoint Pack",
-        "id": 120018,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Incredibly Important Pack": {
-        "name": "Incredibly Important Pack",
-        "id": 120019,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Wall Jump Pack": {
-        "name": "Wall Jump Pack",
-        "id": 120020,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Health Bar Pack": {
-        "name": "Health Bar Pack",
-        "id": 120021,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Parallax Pack": {
-        "name": "Parallax Pack",
-        "id": 120022,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Harmless Plants Pack": {
-        "name": "Harmless Plants Pack",
-        "id": 120023,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Death of Comedy Pack": {
-        "name": "Death of Comedy Pack",
-        "id": 120024,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Canadian Dialog Pack": {
-        "name": "Canadian Dialog Pack",
-        "id": 120025,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "DLC NPC Pack": {
-        "name": "DLC NPC Pack",
-        "id": 120026,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Cut Content Pack": {
-        "name": "Cut Content Pack",
-        "id": 120027,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Name Change Pack": {
-        "name": "Name Change Pack",
-        "id": 120028,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
-        "event": false,
-        "type": null,
-        "max_count": 4
-      },
-      "Pickaxe": {
-        "name": "Pickaxe",
-        "id": 120029,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Season Pass": {
-        "name": "Season Pass",
-        "id": 120030,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "High Definition Next Gen Pack": {
-        "name": "High Definition Next Gen Pack",
-        "id": 120031,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Increased HP Pack": {
-        "name": "Increased HP Pack",
-        "id": 120032,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Removed Ads Pack": {
-        "name": "Removed Ads Pack",
-        "id": 120033,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -1323,74 +1081,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Really Big Sword Pack": {
-        "name": "Really Big Sword Pack",
-        "id": 120035,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Unfathomable Sword Pack": {
-        "name": "Unfathomable Sword Pack",
-        "id": 120036,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Gun": {
-        "name": "Gun",
-        "id": 120037,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Sword": {
-        "name": "Sword",
-        "id": 120038,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Wooden Sword": {
-        "name": "Wooden Sword",
-        "id": 120039,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -1401,22 +1092,51 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Humble Indie Bindle": {
-        "name": "Humble Indie Bindle",
-        "id": 120041,
+      "Canadian Dialog Pack": {
+        "name": "Canadian Dialog Pack",
+        "id": 120025,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Checkpoint Pack": {
+        "name": "Checkpoint Pack",
+        "id": 120018,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cut Content Pack": {
+        "name": "Cut Content Pack",
+        "id": 120027,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "DLC NPC Pack": {
+        "name": "DLC NPC Pack",
+        "id": 120026,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -1427,87 +1147,7 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Live Freemium or Die: Coin Bundle": {
-        "name": "Live Freemium or Die: Coin Bundle",
-        "id": 120043,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Zombie Sheep": {
-        "name": "Zombie Sheep",
-        "id": 120044,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Temporary Spike": {
-        "name": "Temporary Spike",
-        "id": 120045,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Loading Screen": {
-        "name": "Loading Screen",
-        "id": 120046,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
-        "event": false,
-        "type": null,
-        "max_count": 7
-      },
-      "DLC Quest: Progressive Weapon": {
-        "name": "DLC Quest: Progressive Weapon",
-        "id": 120048,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Live Freemium or Die: Progressive Weapon": {
-        "name": "Live Freemium or Die: Progressive Weapon",
-        "id": 120049,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -1518,9 +1158,161 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "DLC Quest: Progressive Weapon": {
+        "name": "DLC Quest: Progressive Weapon",
+        "id": 120048,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Day One Patch Pack": {
+        "name": "Day One Patch Pack",
+        "id": 120017,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Death of Comedy Pack": {
+        "name": "Death of Comedy Pack",
+        "id": 120024,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Double Jump Pack": {
+        "name": "Double Jump Pack",
+        "id": 120005,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Finish the Fight Pack": {
+        "name": "Finish the Fight Pack",
+        "id": 120015,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Gun": {
+        "name": "Gun",
+        "id": 120037,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Gun Pack": {
+        "name": "Gun Pack",
+        "id": 120010,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Harmless Plants Pack": {
+        "name": "Harmless Plants Pack",
+        "id": 120023,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Health Bar Pack": {
+        "name": "Health Bar Pack",
+        "id": 120021,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "High Definition Next Gen Pack": {
+        "name": "High Definition Next Gen Pack",
+        "id": 120031,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Humble Indie Bindle": {
+        "name": "Humble Indie Bindle",
+        "id": 120041,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Increased HP Pack": {
+        "name": "Increased HP Pack",
+        "id": 120032,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Incredibly Important Pack": {
+        "name": "Incredibly Important Pack",
+        "id": 120019,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Live Freemium or Die: Coin Bundle": {
+        "name": "Live Freemium or Die: Coin Bundle",
+        "id": 120043,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -1531,192 +1323,284 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "60 coins": {
-        "name": "60 coins",
-        "id": null,
+      "Live Freemium or Die: Progressive Weapon": {
+        "name": "Live Freemium or Die: Progressive Weapon",
+        "id": 120049,
         "groups": [
-          "Event",
-          "coins"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "filler",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "89 coins": {
-        "name": "89 coins",
-        "id": null,
+      "Loading Screen": {
+        "name": "Loading Screen",
+        "id": 120046,
         "groups": [
-          "Event",
-          "coins"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "trap",
+        "event": false,
+        "type": null,
+        "max_count": 7
+      },
+      "Map Pack": {
+        "name": "Map Pack",
+        "id": 120009,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "9 coins": {
-        "name": "9 coins",
-        "id": null,
+      "Movement Pack": {
+        "name": "Movement Pack",
+        "id": 120000,
         "groups": [
-          "Event",
-          "coins"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "progression",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "10 coins": {
-        "name": "10 coins",
-        "id": null,
+      "Name Change Pack": {
+        "name": "Name Change Pack",
+        "id": 120028,
         "groups": [
-          "Event",
-          "coins"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "trap",
+        "event": false,
+        "type": null,
+        "max_count": 4
+      },
+      "Night Map Pack": {
+        "name": "Night Map Pack",
+        "id": 120012,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "useful",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "50 coins": {
-        "name": "50 coins",
-        "id": null,
+      "Parallax Pack": {
+        "name": "Parallax Pack",
+        "id": 120022,
         "groups": [
-          "Event",
-          "coins"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "filler",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "4 coins": {
-        "name": "4 coins",
-        "id": null,
+      "Particles Pack": {
+        "name": "Particles Pack",
+        "id": 120016,
         "groups": [
-          "Event",
-          "coins"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "filler",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "46 coins": {
-        "name": "46 coins",
-        "id": null,
+      "Pause Menu Pack": {
+        "name": "Pause Menu Pack",
+        "id": 120003,
         "groups": [
-          "Event",
-          "coins"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "useful",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "100 coins": {
-        "name": "100 coins",
-        "id": null,
+      "Pet Pack": {
+        "name": "Pet Pack",
+        "id": 120006,
         "groups": [
-          "Event",
-          "coins"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "filler",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "171 coins": {
-        "name": "171 coins",
-        "id": null,
+      "Pickaxe": {
+        "name": "Pickaxe",
+        "id": 120029,
         "groups": [
-          "Event",
-          "coins"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "filler",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "203 coins": {
-        "name": "203 coins",
-        "id": null,
+      "Psychological Warfare Pack": {
+        "name": "Psychological Warfare Pack",
+        "id": 120013,
         "groups": [
-          "Event",
-          "coins"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "progression",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "76 coins": {
-        "name": "76 coins",
-        "id": null,
+      "Really Big Sword Pack": {
+        "name": "Really Big Sword Pack",
+        "id": 120035,
         "groups": [
-          "Event",
-          "coins"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "filler",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "7 coins": {
-        "name": "7 coins",
-        "id": null,
+      "Removed Ads Pack": {
+        "name": "Removed Ads Pack",
+        "id": 120033,
         "groups": [
-          "Event",
-          "coins"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "filler",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
-      "Victory Basic": {
-        "name": "Victory Basic",
-        "id": null,
+      "Season Pass": {
+        "name": "Season Pass",
+        "id": 120030,
         "groups": [
-          "Event"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sexy Outfits Pack": {
+        "name": "Sexy Outfits Pack",
+        "id": 120007,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sword": {
+        "name": "Sword",
+        "id": 120038,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Temporary Spike": {
+        "name": "Temporary Spike",
+        "id": 120045,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "trap",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "The Zombie Pack": {
+        "name": "The Zombie Pack",
+        "id": 120011,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Time is Money Pack": {
+        "name": "Time is Money Pack",
+        "id": 120004,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Top Hat Pack": {
+        "name": "Top Hat Pack",
+        "id": 120008,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Unfathomable Sword Pack": {
+        "name": "Unfathomable Sword Pack",
+        "id": 120036,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Wall Jump Pack": {
+        "name": "Wall Jump Pack",
+        "id": 120020,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Wooden Sword": {
+        "name": "Wooden Sword",
+        "id": 120039,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Zombie Sheep": {
+        "name": "Zombie Sheep",
+        "id": 120044,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "trap",
+        "event": false,
+        "type": null,
         "max_count": 1
       },
       " coins": {
@@ -1728,9 +1612,22 @@
         "advancement": true,
         "useful": false,
         "trap": false,
-        "event": true,
-        "type": null,
-        "max_count": 825
+        "event": false,
+        "type": "coins",
+        "max_count": 999999
+      },
+      " coins freemium": {
+        "name": " coins freemium",
+        "id": null,
+        "groups": [
+          "coins"
+        ],
+        "advancement": true,
+        "useful": false,
+        "trap": false,
+        "event": false,
+        "type": "coins",
+        "max_count": 999999
       }
     }
   },
@@ -1783,833 +1680,7 @@
     "1": {}
   },
   "starting_items": {
-    "1": [
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins",
-      " coins"
-    ]
+    "1": []
   },
   "settings": {
     "1": {
@@ -2623,7 +1694,20 @@
       "name": "DLCQuest Test",
       "rule_format": {
         "version": "1.0"
+      },
+      "accumulator_rules": [
+        {
+          "pattern": "^(\\d+) coins?$",
+          "extract_value": true,
+          "target": " coins",
+          "discriminator": null
+        }
+      ],
+      "prog_items_init": {
+        " coins": 825,
+        " coins freemium": 0
       }
     }
-  }
+  },
+  "helpers": {}
 }

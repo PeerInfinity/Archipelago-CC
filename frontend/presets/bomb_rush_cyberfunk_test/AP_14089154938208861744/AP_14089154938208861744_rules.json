@@ -4555,1607 +4555,60 @@
   },
   "items": {
     "1": {
-      "Music (GET ENUF)": {
-        "name": "Music (GET ENUF)",
-        "id": 2308000,
+      "16 REP": {
+        "name": "16 REP",
+        "id": 2308160,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 32
       },
-      "Music (Chuckin Up)": {
-        "name": "Music (Chuckin Up)",
-        "id": 2308001,
+      "24 REP": {
+        "name": "24 REP",
+        "id": 2308161,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 13
       },
-      "Music (Spectres)": {
-        "name": "Music (Spectres)",
-        "id": 2308002,
+      "32 REP": {
+        "name": "32 REP",
+        "id": 2308162,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 5
       },
-      "Music (You Can Say Hi)": {
-        "name": "Music (You Can Say Hi)",
-        "id": 2308003,
+      "48 REP": {
+        "name": "48 REP",
+        "id": 2308163,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 3
       },
-      "Music (JACK DA FUNK)": {
-        "name": "Music (JACK DA FUNK)",
-        "id": 2308004,
+      "8 REP": {
+        "name": "8 REP",
+        "id": 2308159,
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
-      },
-      "Music (Feel The Funk (Computer Love))": {
-        "name": "Music (Feel The Funk (Computer Love))",
-        "id": 2308005,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Big City Life)": {
-        "name": "Music (Big City Life)",
-        "id": 2308006,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (I Wanna Kno)": {
-        "name": "Music (I Wanna Kno)",
-        "id": 2308007,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Plume)": {
-        "name": "Music (Plume)",
-        "id": 2308008,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Two Days Off)": {
-        "name": "Music (Two Days Off)",
-        "id": 2308009,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Scraped On The Way Out)": {
-        "name": "Music (Scraped On The Way Out)",
-        "id": 2308010,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Last Hoorah)": {
-        "name": "Music (Last Hoorah)",
-        "id": 2308011,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (State of Mind)": {
-        "name": "Music (State of Mind)",
-        "id": 2308012,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (AGUA)": {
-        "name": "Music (AGUA)",
-        "id": 2308013,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Condensed milk)": {
-        "name": "Music (Condensed milk)",
-        "id": 2308014,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Light Switch)": {
-        "name": "Music (Light Switch)",
-        "id": 2308015,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Hair Dun Nails Dun)": {
-        "name": "Music (Hair Dun Nails Dun)",
-        "id": 2308016,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Precious Thing)": {
-        "name": "Music (Precious Thing)",
-        "id": 2308017,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Next To Me)": {
-        "name": "Music (Next To Me)",
-        "id": 2308018,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Refuse)": {
-        "name": "Music (Refuse)",
-        "id": 2308019,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Iridium)": {
-        "name": "Music (Iridium)",
-        "id": 2308020,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Funk Express)": {
-        "name": "Music (Funk Express)",
-        "id": 2308021,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (In The Pocket)": {
-        "name": "Music (In The Pocket)",
-        "id": 2308022,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Bounce Upon A Time)": {
-        "name": "Music (Bounce Upon A Time)",
-        "id": 2308023,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (hwbouths)": {
-        "name": "Music (hwbouths)",
-        "id": 2308024,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Morning Glow)": {
-        "name": "Music (Morning Glow)",
-        "id": 2308025,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Chromebies)": {
-        "name": "Music (Chromebies)",
-        "id": 2308026,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (watchyaback!)": {
-        "name": "Music (watchyaback!)",
-        "id": 2308027,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Anime Break)": {
-        "name": "Music (Anime Break)",
-        "id": 2308028,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (DA PEOPLE)": {
-        "name": "Music (DA PEOPLE)",
-        "id": 2308029,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Trinitron)": {
-        "name": "Music (Trinitron)",
-        "id": 2308030,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Operator)": {
-        "name": "Music (Operator)",
-        "id": 2308031,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Sunshine Popping Mixtape)": {
-        "name": "Music (Sunshine Popping Mixtape)",
-        "id": 2308032,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (House Cats Mixtape)": {
-        "name": "Music (House Cats Mixtape)",
-        "id": 2308033,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Breaking Machine Mixtape)": {
-        "name": "Music (Breaking Machine Mixtape)",
-        "id": 2308034,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Music (Beastmode Hip Hop Mixtape)": {
-        "name": "Music (Beastmode Hip Hop Mixtape)",
-        "id": 2308035,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (M - OVERWHELMME)": {
-        "name": "Graffiti (M - OVERWHELMME)",
-        "id": 2308036,
-        "groups": [
-          "Everything",
-          "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (M - QUICK BING)": {
-        "name": "Graffiti (M - QUICK BING)",
-        "id": 2308037,
-        "groups": [
-          "Everything",
-          "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (M - BLOCKY)": {
-        "name": "Graffiti (M - BLOCKY)",
-        "id": 2308038,
-        "groups": [
-          "Everything",
-          "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (M - Pora)": {
-        "name": "Graffiti (M - Pora)",
-        "id": 2308039,
-        "groups": [
-          "Everything",
-          "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (M - Teddy 4)": {
-        "name": "Graffiti (M - Teddy 4)",
-        "id": 2308040,
-        "groups": [
-          "Everything",
-          "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (M - BOMB BEATS)": {
-        "name": "Graffiti (M - BOMB BEATS)",
-        "id": 2308041,
-        "groups": [
-          "Everything",
-          "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (M - SPRAYTANICPANIC!)": {
-        "name": "Graffiti (M - SPRAYTANICPANIC!)",
-        "id": 2308042,
-        "groups": [
-          "Everything",
-          "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (M - SHOGUN)": {
-        "name": "Graffiti (M - SHOGUN)",
-        "id": 2308043,
-        "groups": [
-          "Everything",
-          "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (M - TeleBinge)": {
-        "name": "Graffiti (M - TeleBinge)",
-        "id": 2308044,
-        "groups": [
-          "Everything",
-          "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (M - 0m33)": {
-        "name": "Graffiti (M - 0m33)",
-        "id": 2308045,
-        "groups": [
-          "Everything",
-          "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (M - Vom'B)": {
-        "name": "Graffiti (M - Vom'B)",
-        "id": 2308046,
-        "groups": [
-          "Everything",
-          "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (M - Street classic)": {
-        "name": "Graffiti (M - Street classic)",
-        "id": 2308047,
-        "groups": [
-          "Everything",
-          "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (M - Thick Candy)": {
-        "name": "Graffiti (M - Thick Candy)",
-        "id": 2308048,
-        "groups": [
-          "Everything",
-          "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (M - colorBOMB)": {
-        "name": "Graffiti (M - colorBOMB)",
-        "id": 2308049,
-        "groups": [
-          "Everything",
-          "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (M - Zona Leste)": {
-        "name": "Graffiti (M - Zona Leste)",
-        "id": 2308050,
-        "groups": [
-          "Everything",
-          "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (M - Stacked Symbols)": {
-        "name": "Graffiti (M - Stacked Symbols)",
-        "id": 2308051,
-        "groups": [
-          "Everything",
-          "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (M - B-boy Love)": {
-        "name": "Graffiti (M - B-boy Love)",
-        "id": 2308052,
-        "groups": [
-          "Everything",
-          "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (M - Devil 68)": {
-        "name": "Graffiti (M - Devil 68)",
-        "id": 2308053,
-        "groups": [
-          "Everything",
-          "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (M - pico pow)": {
-        "name": "Graffiti (M - pico pow)",
-        "id": 2308054,
-        "groups": [
-          "Everything",
-          "graffitim"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (L - WHOLE SIXER)": {
-        "name": "Graffiti (L - WHOLE SIXER)",
-        "id": 2308055,
-        "groups": [
-          "Everything",
-          "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (L - INFINITY)": {
-        "name": "Graffiti (L - INFINITY)",
-        "id": 2308056,
-        "groups": [
-          "Everything",
-          "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (L - VoodooBoy)": {
-        "name": "Graffiti (L - VoodooBoy)",
-        "id": 2308057,
-        "groups": [
-          "Everything",
-          "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (L - Fang It Up!)": {
-        "name": "Graffiti (L - Fang It Up!)",
-        "id": 2308058,
-        "groups": [
-          "Everything",
-          "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (L - FREAKS)": {
-        "name": "Graffiti (L - FREAKS)",
-        "id": 2308059,
-        "groups": [
-          "Everything",
-          "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (L - Graffo Le Fou)": {
-        "name": "Graffiti (L - Graffo Le Fou)",
-        "id": 2308060,
-        "groups": [
-          "Everything",
-          "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (L - Lauder)": {
-        "name": "Graffiti (L - Lauder)",
-        "id": 2308061,
-        "groups": [
-          "Everything",
-          "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (L - SpawningSeason)": {
-        "name": "Graffiti (L - SpawningSeason)",
-        "id": 2308062,
-        "groups": [
-          "Everything",
-          "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (L - Moai Marathon)": {
-        "name": "Graffiti (L - Moai Marathon)",
-        "id": 2308063,
-        "groups": [
-          "Everything",
-          "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (L - Tius)": {
-        "name": "Graffiti (L - Tius)",
-        "id": 2308064,
-        "groups": [
-          "Everything",
-          "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (L - NOISY NINJA)": {
-        "name": "Graffiti (L - NOISY NINJA)",
-        "id": 2308065,
-        "groups": [
-          "Everything",
-          "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (L - Campaign Trail)": {
-        "name": "Graffiti (L - Campaign Trail)",
-        "id": 2308066,
-        "groups": [
-          "Everything",
-          "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (L - skate or di3)": {
-        "name": "Graffiti (L - skate or di3)",
-        "id": 2308067,
-        "groups": [
-          "Everything",
-          "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (L - Jd Vila Formosa)": {
-        "name": "Graffiti (L - Jd Vila Formosa)",
-        "id": 2308068,
-        "groups": [
-          "Everything",
-          "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (L - Messenger Mural)": {
-        "name": "Graffiti (L - Messenger Mural)",
-        "id": 2308069,
-        "groups": [
-          "Everything",
-          "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (L - RECORD.HEAD)": {
-        "name": "Graffiti (L - RECORD.HEAD)",
-        "id": 2308070,
-        "groups": [
-          "Everything",
-          "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (L - Boom)": {
-        "name": "Graffiti (L - Boom)",
-        "id": 2308071,
-        "groups": [
-          "Everything",
-          "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (L - wild rush)": {
-        "name": "Graffiti (L - wild rush)",
-        "id": 2308072,
-        "groups": [
-          "Everything",
-          "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (L - buttercup)": {
-        "name": "Graffiti (L - buttercup)",
-        "id": 2308073,
-        "groups": [
-          "Everything",
-          "graffitil"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (XL - Gold Rush)": {
-        "name": "Graffiti (XL - Gold Rush)",
-        "id": 2308074,
-        "groups": [
-          "Everything",
-          "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (XL - WILD STRUXXA)": {
-        "name": "Graffiti (XL - WILD STRUXXA)",
-        "id": 2308075,
-        "groups": [
-          "Everything",
-          "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (XL - VIBRATIONS)": {
-        "name": "Graffiti (XL - VIBRATIONS)",
-        "id": 2308076,
-        "groups": [
-          "Everything",
-          "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (XL - SECOND SIGHT)": {
-        "name": "Graffiti (XL - SECOND SIGHT)",
-        "id": 2308077,
-        "groups": [
-          "Everything",
-          "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (XL - Bomb Croc)": {
-        "name": "Graffiti (XL - Bomb Croc)",
-        "id": 2308078,
-        "groups": [
-          "Everything",
-          "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (XL - FATE)": {
-        "name": "Graffiti (XL - FATE)",
-        "id": 2308079,
-        "groups": [
-          "Everything",
-          "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (XL - Web Spitter)": {
-        "name": "Graffiti (XL - Web Spitter)",
-        "id": 2308080,
-        "groups": [
-          "Everything",
-          "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (XL - MOTORCYCLE GANG)": {
-        "name": "Graffiti (XL - MOTORCYCLE GANG)",
-        "id": 2308081,
-        "groups": [
-          "Everything",
-          "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (XL - Deep Dive)": {
-        "name": "Graffiti (XL - Deep Dive)",
-        "id": 2308082,
-        "groups": [
-          "Everything",
-          "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (XL - MegaHood)": {
-        "name": "Graffiti (XL - MegaHood)",
-        "id": 2308083,
-        "groups": [
-          "Everything",
-          "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (XL - Gamex UPA ABL)": {
-        "name": "Graffiti (XL - Gamex UPA ABL)",
-        "id": 2308084,
-        "groups": [
-          "Everything",
-          "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (XL - BiGSHiNYBoMB)": {
-        "name": "Graffiti (XL - BiGSHiNYBoMB)",
-        "id": 2308085,
-        "groups": [
-          "Everything",
-          "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (XL - Bomb Burner)": {
-        "name": "Graffiti (XL - Bomb Burner)",
-        "id": 2308086,
-        "groups": [
-          "Everything",
-          "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (XL - Pirate's Life 4 Me)": {
-        "name": "Graffiti (XL - Pirate's Life 4 Me)",
-        "id": 2308087,
-        "groups": [
-          "Everything",
-          "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (XL - Bombing by FireMan)": {
-        "name": "Graffiti (XL - Bombing by FireMan)",
-        "id": 2308088,
-        "groups": [
-          "Everything",
-          "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (XL - end 2 end)": {
-        "name": "Graffiti (XL - end 2 end)",
-        "id": 2308089,
-        "groups": [
-          "Everything",
-          "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (XL - Raver Funk)": {
-        "name": "Graffiti (XL - Raver Funk)",
-        "id": 2308090,
-        "groups": [
-          "Everything",
-          "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Graffiti (XL - headphones on Helmet on)": {
-        "name": "Graffiti (XL - headphones on Helmet on)",
-        "id": 2308091,
-        "groups": [
-          "Everything",
-          "graffitixl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Skateboard (Devon)": {
-        "name": "Skateboard (Devon)",
-        "id": 2308092,
-        "groups": [
-          "Everything",
-          "skateboard"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Skateboard (Terrence)": {
-        "name": "Skateboard (Terrence)",
-        "id": 2308093,
-        "groups": [
-          "Everything",
-          "skateboard"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Skateboard (Maceo)": {
-        "name": "Skateboard (Maceo)",
-        "id": 2308094,
-        "groups": [
-          "Everything",
-          "skateboard"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Skateboard (Lazer Accuracy)": {
-        "name": "Skateboard (Lazer Accuracy)",
-        "id": 2308095,
-        "groups": [
-          "Everything",
-          "skateboard"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Skateboard (Death Boogie)": {
-        "name": "Skateboard (Death Boogie)",
-        "id": 2308096,
-        "groups": [
-          "Everything",
-          "skateboard"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Skateboard (Sylk)": {
-        "name": "Skateboard (Sylk)",
-        "id": 2308097,
-        "groups": [
-          "Everything",
-          "skateboard"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Skateboard (Taiga)": {
-        "name": "Skateboard (Taiga)",
-        "id": 2308098,
-        "groups": [
-          "Everything",
-          "skateboard"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Skateboard (Just Swell)": {
-        "name": "Skateboard (Just Swell)",
-        "id": 2308099,
-        "groups": [
-          "Everything",
-          "skateboard"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Skateboard (Mantra)": {
-        "name": "Skateboard (Mantra)",
-        "id": 2308100,
-        "groups": [
-          "Everything",
-          "skateboard"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Inline Skates (Glaciers)": {
-        "name": "Inline Skates (Glaciers)",
-        "id": 2308101,
-        "groups": [
-          "Everything",
-          "inline",
-          "inline skates",
-          "skates"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Inline Skates (Sweet Royale)": {
-        "name": "Inline Skates (Sweet Royale)",
-        "id": 2308102,
-        "groups": [
-          "Everything",
-          "inline",
-          "inline skates",
-          "skates"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Inline Skates (Strawberry Missiles)": {
-        "name": "Inline Skates (Strawberry Missiles)",
-        "id": 2308103,
-        "groups": [
-          "Everything",
-          "inline",
-          "inline skates",
-          "skates"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Inline Skates (Ice Cold Killers)": {
-        "name": "Inline Skates (Ice Cold Killers)",
-        "id": 2308104,
-        "groups": [
-          "Everything",
-          "inline",
-          "inline skates",
-          "skates"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Inline Skates (Red Industry)": {
-        "name": "Inline Skates (Red Industry)",
-        "id": 2308105,
-        "groups": [
-          "Everything",
-          "inline",
-          "inline skates",
-          "skates"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Inline Skates (Mech Adversary)": {
-        "name": "Inline Skates (Mech Adversary)",
-        "id": 2308106,
-        "groups": [
-          "Everything",
-          "inline",
-          "inline skates",
-          "skates"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Inline Skates (Orange Blasters)": {
-        "name": "Inline Skates (Orange Blasters)",
-        "id": 2308107,
-        "groups": [
-          "Everything",
-          "inline",
-          "inline skates",
-          "skates"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Inline Skates (ck)": {
-        "name": "Inline Skates (ck)",
-        "id": 2308108,
-        "groups": [
-          "Everything",
-          "inline",
-          "inline skates",
-          "skates"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Inline Skates (Sharpshooters)": {
-        "name": "Inline Skates (Sharpshooters)",
-        "id": 2308109,
-        "groups": [
-          "Everything",
-          "inline",
-          "inline skates",
-          "skates"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BMX (Mr. Taupe)": {
-        "name": "BMX (Mr. Taupe)",
-        "id": 2308110,
-        "groups": [
-          "Everything",
-          "bicycle",
-          "bike",
-          "bmx"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BMX (Gum)": {
-        "name": "BMX (Gum)",
-        "id": 2308111,
-        "groups": [
-          "Everything",
-          "bicycle",
-          "bike",
-          "bmx"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BMX (Steel Wheeler)": {
-        "name": "BMX (Steel Wheeler)",
-        "id": 2308112,
-        "groups": [
-          "Everything",
-          "bicycle",
-          "bike",
-          "bmx"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BMX (oyo)": {
-        "name": "BMX (oyo)",
-        "id": 2308113,
-        "groups": [
-          "Everything",
-          "bicycle",
-          "bike",
-          "bmx"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BMX (Rigid No.6)": {
-        "name": "BMX (Rigid No.6)",
-        "id": 2308114,
-        "groups": [
-          "Everything",
-          "bicycle",
-          "bike",
-          "bmx"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
+        "max_count": 34
       },
       "BMX (Ceremony)": {
         "name": "BMX (Ceremony)",
@@ -6166,41 +4619,7 @@
           "bike",
           "bmx"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BMX (XXX)": {
-        "name": "BMX (XXX)",
-        "id": 2308116,
-        "groups": [
-          "Everything",
-          "bicycle",
-          "bike",
-          "bmx"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "BMX (Terrazza)": {
-        "name": "BMX (Terrazza)",
-        "id": 2308117,
-        "groups": [
-          "Everything",
-          "bicycle",
-          "bike",
-          "bmx"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -6214,309 +4633,105 @@
           "bike",
           "bmx"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Outfit (Red - Autumn)": {
-        "name": "Outfit (Red - Autumn)",
-        "id": 2308119,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Red - Winter)": {
-        "name": "Outfit (Red - Winter)",
-        "id": 2308120,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Tryce - Autumn)": {
-        "name": "Outfit (Tryce - Autumn)",
-        "id": 2308121,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Tryce - Winter)": {
-        "name": "Outfit (Tryce - Winter)",
-        "id": 2308122,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Bel - Autumn)": {
-        "name": "Outfit (Bel - Autumn)",
-        "id": 2308123,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Bel - Winter)": {
-        "name": "Outfit (Bel - Winter)",
-        "id": 2308124,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Vinyl - Autumn)": {
-        "name": "Outfit (Vinyl - Autumn)",
-        "id": 2308125,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Vinyl - Winter)": {
-        "name": "Outfit (Vinyl - Winter)",
-        "id": 2308126,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Solace - Autumn)": {
-        "name": "Outfit (Solace - Autumn)",
-        "id": 2308127,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Solace - Winter)": {
-        "name": "Outfit (Solace - Winter)",
-        "id": 2308128,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Felix - Autumn)": {
-        "name": "Outfit (Felix - Autumn)",
-        "id": 2308129,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Felix - Winter)": {
-        "name": "Outfit (Felix - Winter)",
-        "id": 2308130,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Rave - Autumn)": {
-        "name": "Outfit (Rave - Autumn)",
-        "id": 2308131,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Rave - Winter)": {
-        "name": "Outfit (Rave - Winter)",
-        "id": 2308132,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Mesh - Autumn)": {
-        "name": "Outfit (Mesh - Autumn)",
-        "id": 2308133,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Mesh - Winter)": {
-        "name": "Outfit (Mesh - Winter)",
-        "id": 2308134,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Shine - Autumn)": {
-        "name": "Outfit (Shine - Autumn)",
-        "id": 2308135,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Shine - Winter)": {
-        "name": "Outfit (Shine - Winter)",
-        "id": 2308136,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Rise - Autumn)": {
-        "name": "Outfit (Rise - Autumn)",
-        "id": 2308137,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Rise - Winter)": {
-        "name": "Outfit (Rise - Winter)",
-        "id": 2308138,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Coil - Autumn)": {
-        "name": "Outfit (Coil - Autumn)",
-        "id": 2308139,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Outfit (Coil - Winter)": {
-        "name": "Outfit (Coil - Winter)",
-        "id": 2308140,
-        "groups": [
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Tryce": {
-        "name": "Tryce",
-        "id": 2308141,
+      "BMX (Gum)": {
+        "name": "BMX (Gum)",
+        "id": 2308111,
         "groups": [
           "Everything",
-          "characters"
+          "bicycle",
+          "bike",
+          "bmx"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BMX (Mr. Taupe)": {
+        "name": "BMX (Mr. Taupe)",
+        "id": 2308110,
+        "groups": [
+          "Everything",
+          "bicycle",
+          "bike",
+          "bmx"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BMX (Rigid No.6)": {
+        "name": "BMX (Rigid No.6)",
+        "id": 2308114,
+        "groups": [
+          "Everything",
+          "bicycle",
+          "bike",
+          "bmx"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BMX (Steel Wheeler)": {
+        "name": "BMX (Steel Wheeler)",
+        "id": 2308112,
+        "groups": [
+          "Everything",
+          "bicycle",
+          "bike",
+          "bmx"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BMX (Terrazza)": {
+        "name": "BMX (Terrazza)",
+        "id": 2308117,
+        "groups": [
+          "Everything",
+          "bicycle",
+          "bike",
+          "bmx"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BMX (XXX)": {
+        "name": "BMX (XXX)",
+        "id": 2308116,
+        "groups": [
+          "Everything",
+          "bicycle",
+          "bike",
+          "bmx"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BMX (oyo)": {
+        "name": "BMX (oyo)",
+        "id": 2308113,
+        "groups": [
+          "Everything",
+          "bicycle",
+          "bike",
+          "bmx"
+        ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -6529,97 +4744,18 @@
           "characters",
           "girl"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Vinyl": {
-        "name": "Vinyl",
-        "id": 2308143,
+      "Camera App": {
+        "name": "Camera App",
+        "id": 2308164,
         "groups": [
-          "Everything",
-          "characters",
-          "girl"
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Solace": {
-        "name": "Solace",
-        "id": 2308144,
-        "groups": [
-          "Everything",
-          "characters"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Rave": {
-        "name": "Rave",
-        "id": 2308145,
-        "groups": [
-          "Everything",
-          "characters",
-          "girl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Mesh": {
-        "name": "Mesh",
-        "id": 2308146,
-        "groups": [
-          "Everything",
-          "characters"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Shine": {
-        "name": "Shine",
-        "id": 2308147,
-        "groups": [
-          "Everything",
-          "characters",
-          "girl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Rise": {
-        "name": "Rise",
-        "id": 2308148,
-        "groups": [
-          "Everything",
-          "characters",
-          "girl"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -6631,37 +4767,7 @@
           "Everything",
           "characters"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Frank": {
-        "name": "Frank",
-        "id": 2308150,
-        "groups": [
-          "Everything",
-          "characters"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Rietveld": {
-        "name": "Rietveld",
-        "id": 2308151,
-        "groups": [
-          "Everything",
-          "characters"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -6673,23 +4779,7 @@
           "Everything",
           "characters"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Eclipse": {
-        "name": "Eclipse",
-        "id": 2308153,
-        "groups": [
-          "Everything",
-          "characters"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -6701,9 +4791,7 @@
           "Everything",
           "characters"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -6715,9 +4803,19 @@
           "Everything",
           "characters"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Eclipse": {
+        "name": "Eclipse",
+        "id": 2308153,
+        "groups": [
+          "Everything",
+          "characters"
+        ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -6729,9 +4827,19 @@
           "Everything",
           "characters"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Frank": {
+        "name": "Frank",
+        "id": 2308150,
+        "groups": [
+          "Everything",
+          "characters"
+        ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -6744,9 +4852,1269 @@
           "characters",
           "girl"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - Boom)": {
+        "name": "Graffiti (L - Boom)",
+        "hint_text": "Graffiti (L   Boom)",
+        "id": 2308071,
+        "groups": [
+          "Everything",
+          "graffitil"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - Campaign Trail)": {
+        "name": "Graffiti (L - Campaign Trail)",
+        "hint_text": "Graffiti (L   Campaign Trail)",
+        "id": 2308066,
+        "groups": [
+          "Everything",
+          "graffitil"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - FREAKS)": {
+        "name": "Graffiti (L - FREAKS)",
+        "hint_text": "Graffiti (L   FREAKS)",
+        "id": 2308059,
+        "groups": [
+          "Everything",
+          "graffitil"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - Fang It Up!)": {
+        "name": "Graffiti (L - Fang It Up!)",
+        "hint_text": "Graffiti (L   Fang It Up!)",
+        "id": 2308058,
+        "groups": [
+          "Everything",
+          "graffitil"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - Graffo Le Fou)": {
+        "name": "Graffiti (L - Graffo Le Fou)",
+        "hint_text": "Graffiti (L   Graffo Le Fou)",
+        "id": 2308060,
+        "groups": [
+          "Everything",
+          "graffitil"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - INFINITY)": {
+        "name": "Graffiti (L - INFINITY)",
+        "hint_text": "Graffiti (L   INFINITY)",
+        "id": 2308056,
+        "groups": [
+          "Everything",
+          "graffitil"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - Jd Vila Formosa)": {
+        "name": "Graffiti (L - Jd Vila Formosa)",
+        "hint_text": "Graffiti (L   Jd Vila Formosa)",
+        "id": 2308068,
+        "groups": [
+          "Everything",
+          "graffitil"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - Lauder)": {
+        "name": "Graffiti (L - Lauder)",
+        "hint_text": "Graffiti (L   Lauder)",
+        "id": 2308061,
+        "groups": [
+          "Everything",
+          "graffitil"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - Messenger Mural)": {
+        "name": "Graffiti (L - Messenger Mural)",
+        "hint_text": "Graffiti (L   Messenger Mural)",
+        "id": 2308069,
+        "groups": [
+          "Everything",
+          "graffitil"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - Moai Marathon)": {
+        "name": "Graffiti (L - Moai Marathon)",
+        "hint_text": "Graffiti (L   Moai Marathon)",
+        "id": 2308063,
+        "groups": [
+          "Everything",
+          "graffitil"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - NOISY NINJA)": {
+        "name": "Graffiti (L - NOISY NINJA)",
+        "hint_text": "Graffiti (L   NOISY NINJA)",
+        "id": 2308065,
+        "groups": [
+          "Everything",
+          "graffitil"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - RECORD.HEAD)": {
+        "name": "Graffiti (L - RECORD.HEAD)",
+        "hint_text": "Graffiti (L   RECORD.HEAD)",
+        "id": 2308070,
+        "groups": [
+          "Everything",
+          "graffitil"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - SpawningSeason)": {
+        "name": "Graffiti (L - SpawningSeason)",
+        "hint_text": "Graffiti (L   SpawningSeason)",
+        "id": 2308062,
+        "groups": [
+          "Everything",
+          "graffitil"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - Tius)": {
+        "name": "Graffiti (L - Tius)",
+        "hint_text": "Graffiti (L   Tius)",
+        "id": 2308064,
+        "groups": [
+          "Everything",
+          "graffitil"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - VoodooBoy)": {
+        "name": "Graffiti (L - VoodooBoy)",
+        "hint_text": "Graffiti (L   VoodooBoy)",
+        "id": 2308057,
+        "groups": [
+          "Everything",
+          "graffitil"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - WHOLE SIXER)": {
+        "name": "Graffiti (L - WHOLE SIXER)",
+        "hint_text": "Graffiti (L   WHOLE SIXER)",
+        "id": 2308055,
+        "groups": [
+          "Everything",
+          "graffitil"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - buttercup)": {
+        "name": "Graffiti (L - buttercup)",
+        "hint_text": "Graffiti (L   buttercup)",
+        "id": 2308073,
+        "groups": [
+          "Everything",
+          "graffitil"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - skate or di3)": {
+        "name": "Graffiti (L - skate or di3)",
+        "hint_text": "Graffiti (L   skate or di3)",
+        "id": 2308067,
+        "groups": [
+          "Everything",
+          "graffitil"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (L - wild rush)": {
+        "name": "Graffiti (L - wild rush)",
+        "hint_text": "Graffiti (L   wild rush)",
+        "id": 2308072,
+        "groups": [
+          "Everything",
+          "graffitil"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - 0m33)": {
+        "name": "Graffiti (M - 0m33)",
+        "hint_text": "Graffiti (M   0m33)",
+        "id": 2308045,
+        "groups": [
+          "Everything",
+          "graffitim"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - B-boy Love)": {
+        "name": "Graffiti (M - B-boy Love)",
+        "hint_text": "Graffiti (M   B boy Love)",
+        "id": 2308052,
+        "groups": [
+          "Everything",
+          "graffitim"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - BLOCKY)": {
+        "name": "Graffiti (M - BLOCKY)",
+        "hint_text": "Graffiti (M   BLOCKY)",
+        "id": 2308038,
+        "groups": [
+          "Everything",
+          "graffitim"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - BOMB BEATS)": {
+        "name": "Graffiti (M - BOMB BEATS)",
+        "hint_text": "Graffiti (M   BOMB BEATS)",
+        "id": 2308041,
+        "groups": [
+          "Everything",
+          "graffitim"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - Devil 68)": {
+        "name": "Graffiti (M - Devil 68)",
+        "hint_text": "Graffiti (M   Devil 68)",
+        "id": 2308053,
+        "groups": [
+          "Everything",
+          "graffitim"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - OVERWHELMME)": {
+        "name": "Graffiti (M - OVERWHELMME)",
+        "hint_text": "Graffiti (M   OVERWHELMME)",
+        "id": 2308036,
+        "groups": [
+          "Everything",
+          "graffitim"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - Pora)": {
+        "name": "Graffiti (M - Pora)",
+        "hint_text": "Graffiti (M   Pora)",
+        "id": 2308039,
+        "groups": [
+          "Everything",
+          "graffitim"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - QUICK BING)": {
+        "name": "Graffiti (M - QUICK BING)",
+        "hint_text": "Graffiti (M   QUICK BING)",
+        "id": 2308037,
+        "groups": [
+          "Everything",
+          "graffitim"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - SHOGUN)": {
+        "name": "Graffiti (M - SHOGUN)",
+        "hint_text": "Graffiti (M   SHOGUN)",
+        "id": 2308043,
+        "groups": [
+          "Everything",
+          "graffitim"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - SPRAYTANICPANIC!)": {
+        "name": "Graffiti (M - SPRAYTANICPANIC!)",
+        "hint_text": "Graffiti (M   SPRAYTANICPANIC!)",
+        "id": 2308042,
+        "groups": [
+          "Everything",
+          "graffitim"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - Stacked Symbols)": {
+        "name": "Graffiti (M - Stacked Symbols)",
+        "hint_text": "Graffiti (M   Stacked Symbols)",
+        "id": 2308051,
+        "groups": [
+          "Everything",
+          "graffitim"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - Street classic)": {
+        "name": "Graffiti (M - Street classic)",
+        "hint_text": "Graffiti (M   Street classic)",
+        "id": 2308047,
+        "groups": [
+          "Everything",
+          "graffitim"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - Teddy 4)": {
+        "name": "Graffiti (M - Teddy 4)",
+        "hint_text": "Graffiti (M   Teddy 4)",
+        "id": 2308040,
+        "groups": [
+          "Everything",
+          "graffitim"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - TeleBinge)": {
+        "name": "Graffiti (M - TeleBinge)",
+        "hint_text": "Graffiti (M   TeleBinge)",
+        "id": 2308044,
+        "groups": [
+          "Everything",
+          "graffitim"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - Thick Candy)": {
+        "name": "Graffiti (M - Thick Candy)",
+        "hint_text": "Graffiti (M   Thick Candy)",
+        "id": 2308048,
+        "groups": [
+          "Everything",
+          "graffitim"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - Vom'B)": {
+        "name": "Graffiti (M - Vom'B)",
+        "hint_text": "Graffiti (M   Vom'B)",
+        "id": 2308046,
+        "groups": [
+          "Everything",
+          "graffitim"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - Zona Leste)": {
+        "name": "Graffiti (M - Zona Leste)",
+        "hint_text": "Graffiti (M   Zona Leste)",
+        "id": 2308050,
+        "groups": [
+          "Everything",
+          "graffitim"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - colorBOMB)": {
+        "name": "Graffiti (M - colorBOMB)",
+        "hint_text": "Graffiti (M   colorBOMB)",
+        "id": 2308049,
+        "groups": [
+          "Everything",
+          "graffitim"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (M - pico pow)": {
+        "name": "Graffiti (M - pico pow)",
+        "hint_text": "Graffiti (M   pico pow)",
+        "id": 2308054,
+        "groups": [
+          "Everything",
+          "graffitim"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (XL - BiGSHiNYBoMB)": {
+        "name": "Graffiti (XL - BiGSHiNYBoMB)",
+        "hint_text": "Graffiti (XL   BiGSHiNYBoMB)",
+        "id": 2308085,
+        "groups": [
+          "Everything",
+          "graffitixl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (XL - Bomb Burner)": {
+        "name": "Graffiti (XL - Bomb Burner)",
+        "hint_text": "Graffiti (XL   Bomb Burner)",
+        "id": 2308086,
+        "groups": [
+          "Everything",
+          "graffitixl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (XL - Bomb Croc)": {
+        "name": "Graffiti (XL - Bomb Croc)",
+        "hint_text": "Graffiti (XL   Bomb Croc)",
+        "id": 2308078,
+        "groups": [
+          "Everything",
+          "graffitixl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (XL - Bombing by FireMan)": {
+        "name": "Graffiti (XL - Bombing by FireMan)",
+        "hint_text": "Graffiti (XL   Bombing by FireMan)",
+        "id": 2308088,
+        "groups": [
+          "Everything",
+          "graffitixl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (XL - Deep Dive)": {
+        "name": "Graffiti (XL - Deep Dive)",
+        "hint_text": "Graffiti (XL   Deep Dive)",
+        "id": 2308082,
+        "groups": [
+          "Everything",
+          "graffitixl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (XL - FATE)": {
+        "name": "Graffiti (XL - FATE)",
+        "hint_text": "Graffiti (XL   FATE)",
+        "id": 2308079,
+        "groups": [
+          "Everything",
+          "graffitixl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (XL - Gamex UPA ABL)": {
+        "name": "Graffiti (XL - Gamex UPA ABL)",
+        "hint_text": "Graffiti (XL   Gamex UPA ABL)",
+        "id": 2308084,
+        "groups": [
+          "Everything",
+          "graffitixl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (XL - Gold Rush)": {
+        "name": "Graffiti (XL - Gold Rush)",
+        "hint_text": "Graffiti (XL   Gold Rush)",
+        "id": 2308074,
+        "groups": [
+          "Everything",
+          "graffitixl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (XL - MOTORCYCLE GANG)": {
+        "name": "Graffiti (XL - MOTORCYCLE GANG)",
+        "hint_text": "Graffiti (XL   MOTORCYCLE GANG)",
+        "id": 2308081,
+        "groups": [
+          "Everything",
+          "graffitixl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (XL - MegaHood)": {
+        "name": "Graffiti (XL - MegaHood)",
+        "hint_text": "Graffiti (XL   MegaHood)",
+        "id": 2308083,
+        "groups": [
+          "Everything",
+          "graffitixl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (XL - Pirate's Life 4 Me)": {
+        "name": "Graffiti (XL - Pirate's Life 4 Me)",
+        "hint_text": "Graffiti (XL   Pirate's Life 4 Me)",
+        "id": 2308087,
+        "groups": [
+          "Everything",
+          "graffitixl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (XL - Raver Funk)": {
+        "name": "Graffiti (XL - Raver Funk)",
+        "hint_text": "Graffiti (XL   Raver Funk)",
+        "id": 2308090,
+        "groups": [
+          "Everything",
+          "graffitixl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (XL - SECOND SIGHT)": {
+        "name": "Graffiti (XL - SECOND SIGHT)",
+        "hint_text": "Graffiti (XL   SECOND SIGHT)",
+        "id": 2308077,
+        "groups": [
+          "Everything",
+          "graffitixl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (XL - VIBRATIONS)": {
+        "name": "Graffiti (XL - VIBRATIONS)",
+        "hint_text": "Graffiti (XL   VIBRATIONS)",
+        "id": 2308076,
+        "groups": [
+          "Everything",
+          "graffitixl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (XL - WILD STRUXXA)": {
+        "name": "Graffiti (XL - WILD STRUXXA)",
+        "hint_text": "Graffiti (XL   WILD STRUXXA)",
+        "id": 2308075,
+        "groups": [
+          "Everything",
+          "graffitixl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (XL - Web Spitter)": {
+        "name": "Graffiti (XL - Web Spitter)",
+        "hint_text": "Graffiti (XL   Web Spitter)",
+        "id": 2308080,
+        "groups": [
+          "Everything",
+          "graffitixl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (XL - end 2 end)": {
+        "name": "Graffiti (XL - end 2 end)",
+        "hint_text": "Graffiti (XL   end 2 end)",
+        "id": 2308089,
+        "groups": [
+          "Everything",
+          "graffitixl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Graffiti (XL - headphones on Helmet on)": {
+        "name": "Graffiti (XL - headphones on Helmet on)",
+        "hint_text": "Graffiti (XL   headphones on Helmet on)",
+        "id": 2308091,
+        "groups": [
+          "Everything",
+          "graffitixl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Inline Skates (Glaciers)": {
+        "name": "Inline Skates (Glaciers)",
+        "id": 2308101,
+        "groups": [
+          "Everything",
+          "inline",
+          "inline skates",
+          "skates"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Inline Skates (Ice Cold Killers)": {
+        "name": "Inline Skates (Ice Cold Killers)",
+        "id": 2308104,
+        "groups": [
+          "Everything",
+          "inline",
+          "inline skates",
+          "skates"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Inline Skates (Mech Adversary)": {
+        "name": "Inline Skates (Mech Adversary)",
+        "id": 2308106,
+        "groups": [
+          "Everything",
+          "inline",
+          "inline skates",
+          "skates"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Inline Skates (Orange Blasters)": {
+        "name": "Inline Skates (Orange Blasters)",
+        "id": 2308107,
+        "groups": [
+          "Everything",
+          "inline",
+          "inline skates",
+          "skates"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Inline Skates (Red Industry)": {
+        "name": "Inline Skates (Red Industry)",
+        "id": 2308105,
+        "groups": [
+          "Everything",
+          "inline",
+          "inline skates",
+          "skates"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Inline Skates (Sharpshooters)": {
+        "name": "Inline Skates (Sharpshooters)",
+        "id": 2308109,
+        "groups": [
+          "Everything",
+          "inline",
+          "inline skates",
+          "skates"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Inline Skates (Strawberry Missiles)": {
+        "name": "Inline Skates (Strawberry Missiles)",
+        "id": 2308103,
+        "groups": [
+          "Everything",
+          "inline",
+          "inline skates",
+          "skates"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Inline Skates (Sweet Royale)": {
+        "name": "Inline Skates (Sweet Royale)",
+        "id": 2308102,
+        "groups": [
+          "Everything",
+          "inline",
+          "inline skates",
+          "skates"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Inline Skates (ck)": {
+        "name": "Inline Skates (ck)",
+        "id": 2308108,
+        "groups": [
+          "Everything",
+          "inline",
+          "inline skates",
+          "skates"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mesh": {
+        "name": "Mesh",
+        "id": 2308146,
+        "groups": [
+          "Everything",
+          "characters"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (AGUA)": {
+        "name": "Music (AGUA)",
+        "id": 2308013,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Anime Break)": {
+        "name": "Music (Anime Break)",
+        "id": 2308028,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Beastmode Hip Hop Mixtape)": {
+        "name": "Music (Beastmode Hip Hop Mixtape)",
+        "id": 2308035,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Big City Life)": {
+        "name": "Music (Big City Life)",
+        "id": 2308006,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Bounce Upon A Time)": {
+        "name": "Music (Bounce Upon A Time)",
+        "id": 2308023,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Breaking Machine Mixtape)": {
+        "name": "Music (Breaking Machine Mixtape)",
+        "id": 2308034,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Chromebies)": {
+        "name": "Music (Chromebies)",
+        "id": 2308026,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Chuckin Up)": {
+        "name": "Music (Chuckin Up)",
+        "id": 2308001,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Condensed milk)": {
+        "name": "Music (Condensed milk)",
+        "id": 2308014,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (DA PEOPLE)": {
+        "name": "Music (DA PEOPLE)",
+        "id": 2308029,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Feel The Funk (Computer Love))": {
+        "name": "Music (Feel The Funk (Computer Love))",
+        "id": 2308005,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Funk Express)": {
+        "name": "Music (Funk Express)",
+        "id": 2308021,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (GET ENUF)": {
+        "name": "Music (GET ENUF)",
+        "id": 2308000,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Hair Dun Nails Dun)": {
+        "name": "Music (Hair Dun Nails Dun)",
+        "id": 2308016,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (House Cats Mixtape)": {
+        "name": "Music (House Cats Mixtape)",
+        "id": 2308033,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (I Wanna Kno)": {
+        "name": "Music (I Wanna Kno)",
+        "id": 2308007,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (In The Pocket)": {
+        "name": "Music (In The Pocket)",
+        "id": 2308022,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Iridium)": {
+        "name": "Music (Iridium)",
+        "id": 2308020,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (JACK DA FUNK)": {
+        "name": "Music (JACK DA FUNK)",
+        "id": 2308004,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Last Hoorah)": {
+        "name": "Music (Last Hoorah)",
+        "id": 2308011,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Light Switch)": {
+        "name": "Music (Light Switch)",
+        "id": 2308015,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Morning Glow)": {
+        "name": "Music (Morning Glow)",
+        "id": 2308025,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Next To Me)": {
+        "name": "Music (Next To Me)",
+        "id": 2308018,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Operator)": {
+        "name": "Music (Operator)",
+        "id": 2308031,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Plume)": {
+        "name": "Music (Plume)",
+        "id": 2308008,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Precious Thing)": {
+        "name": "Music (Precious Thing)",
+        "id": 2308017,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Refuse)": {
+        "name": "Music (Refuse)",
+        "id": 2308019,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Scraped On The Way Out)": {
+        "name": "Music (Scraped On The Way Out)",
+        "id": 2308010,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Spectres)": {
+        "name": "Music (Spectres)",
+        "id": 2308002,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (State of Mind)": {
+        "name": "Music (State of Mind)",
+        "id": 2308012,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Sunshine Popping Mixtape)": {
+        "name": "Music (Sunshine Popping Mixtape)",
+        "id": 2308032,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Trinitron)": {
+        "name": "Music (Trinitron)",
+        "id": 2308030,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (Two Days Off)": {
+        "name": "Music (Two Days Off)",
+        "id": 2308009,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (You Can Say Hi)": {
+        "name": "Music (You Can Say Hi)",
+        "id": 2308003,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (hwbouths)": {
+        "name": "Music (hwbouths)",
+        "id": 2308024,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Music (watchyaback!)": {
+        "name": "Music (watchyaback!)",
+        "id": 2308027,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -6758,87 +6126,467 @@
           "Everything",
           "characters"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "8 REP": {
-        "name": "8 REP",
-        "id": 2308159,
+      "Outfit (Bel - Autumn)": {
+        "name": "Outfit (Bel - Autumn)",
+        "hint_text": "Outfit (Bel   Autumn)",
+        "id": 2308123,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 34
+        "max_count": 1
       },
-      "16 REP": {
-        "name": "16 REP",
-        "id": 2308160,
+      "Outfit (Bel - Winter)": {
+        "name": "Outfit (Bel - Winter)",
+        "hint_text": "Outfit (Bel   Winter)",
+        "id": 2308124,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 32
+        "max_count": 1
       },
-      "24 REP": {
-        "name": "24 REP",
-        "id": 2308161,
+      "Outfit (Coil - Autumn)": {
+        "name": "Outfit (Coil - Autumn)",
+        "hint_text": "Outfit (Coil   Autumn)",
+        "id": 2308139,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 13
+        "max_count": 1
       },
-      "32 REP": {
-        "name": "32 REP",
-        "id": 2308162,
+      "Outfit (Coil - Winter)": {
+        "name": "Outfit (Coil - Winter)",
+        "hint_text": "Outfit (Coil   Winter)",
+        "id": 2308140,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 5
+        "max_count": 1
       },
-      "48 REP": {
-        "name": "48 REP",
-        "id": 2308163,
+      "Outfit (Felix - Autumn)": {
+        "name": "Outfit (Felix - Autumn)",
+        "hint_text": "Outfit (Felix   Autumn)",
+        "id": 2308129,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 1
       },
-      "Camera App": {
-        "name": "Camera App",
-        "id": 2308164,
+      "Outfit (Felix - Winter)": {
+        "name": "Outfit (Felix - Winter)",
+        "hint_text": "Outfit (Felix   Winter)",
+        "id": 2308130,
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Outfit (Mesh - Autumn)": {
+        "name": "Outfit (Mesh - Autumn)",
+        "hint_text": "Outfit (Mesh   Autumn)",
+        "id": 2308133,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Outfit (Mesh - Winter)": {
+        "name": "Outfit (Mesh - Winter)",
+        "hint_text": "Outfit (Mesh   Winter)",
+        "id": 2308134,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Outfit (Rave - Autumn)": {
+        "name": "Outfit (Rave - Autumn)",
+        "hint_text": "Outfit (Rave   Autumn)",
+        "id": 2308131,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Outfit (Rave - Winter)": {
+        "name": "Outfit (Rave - Winter)",
+        "hint_text": "Outfit (Rave   Winter)",
+        "id": 2308132,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Outfit (Red - Autumn)": {
+        "name": "Outfit (Red - Autumn)",
+        "hint_text": "Outfit (Red   Autumn)",
+        "id": 2308119,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Outfit (Red - Winter)": {
+        "name": "Outfit (Red - Winter)",
+        "hint_text": "Outfit (Red   Winter)",
+        "id": 2308120,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Outfit (Rise - Autumn)": {
+        "name": "Outfit (Rise - Autumn)",
+        "hint_text": "Outfit (Rise   Autumn)",
+        "id": 2308137,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Outfit (Rise - Winter)": {
+        "name": "Outfit (Rise - Winter)",
+        "hint_text": "Outfit (Rise   Winter)",
+        "id": 2308138,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Outfit (Shine - Autumn)": {
+        "name": "Outfit (Shine - Autumn)",
+        "hint_text": "Outfit (Shine   Autumn)",
+        "id": 2308135,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Outfit (Shine - Winter)": {
+        "name": "Outfit (Shine - Winter)",
+        "hint_text": "Outfit (Shine   Winter)",
+        "id": 2308136,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Outfit (Solace - Autumn)": {
+        "name": "Outfit (Solace - Autumn)",
+        "hint_text": "Outfit (Solace   Autumn)",
+        "id": 2308127,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Outfit (Solace - Winter)": {
+        "name": "Outfit (Solace - Winter)",
+        "hint_text": "Outfit (Solace   Winter)",
+        "id": 2308128,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Outfit (Tryce - Autumn)": {
+        "name": "Outfit (Tryce - Autumn)",
+        "hint_text": "Outfit (Tryce   Autumn)",
+        "id": 2308121,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Outfit (Tryce - Winter)": {
+        "name": "Outfit (Tryce - Winter)",
+        "hint_text": "Outfit (Tryce   Winter)",
+        "id": 2308122,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Outfit (Vinyl - Autumn)": {
+        "name": "Outfit (Vinyl - Autumn)",
+        "hint_text": "Outfit (Vinyl   Autumn)",
+        "id": 2308125,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Outfit (Vinyl - Winter)": {
+        "name": "Outfit (Vinyl - Winter)",
+        "hint_text": "Outfit (Vinyl   Winter)",
+        "id": 2308126,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rave": {
+        "name": "Rave",
+        "id": 2308145,
+        "groups": [
+          "Everything",
+          "characters",
+          "girl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rietveld": {
+        "name": "Rietveld",
+        "id": 2308151,
+        "groups": [
+          "Everything",
+          "characters"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rise": {
+        "name": "Rise",
+        "id": 2308148,
+        "groups": [
+          "Everything",
+          "characters",
+          "girl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Shine": {
+        "name": "Shine",
+        "id": 2308147,
+        "groups": [
+          "Everything",
+          "characters",
+          "girl"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Skateboard (Death Boogie)": {
+        "name": "Skateboard (Death Boogie)",
+        "id": 2308096,
+        "groups": [
+          "Everything",
+          "skateboard"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Skateboard (Devon)": {
+        "name": "Skateboard (Devon)",
+        "id": 2308092,
+        "groups": [
+          "Everything",
+          "skateboard"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Skateboard (Just Swell)": {
+        "name": "Skateboard (Just Swell)",
+        "id": 2308099,
+        "groups": [
+          "Everything",
+          "skateboard"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Skateboard (Lazer Accuracy)": {
+        "name": "Skateboard (Lazer Accuracy)",
+        "id": 2308095,
+        "groups": [
+          "Everything",
+          "skateboard"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Skateboard (Maceo)": {
+        "name": "Skateboard (Maceo)",
+        "id": 2308094,
+        "groups": [
+          "Everything",
+          "skateboard"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Skateboard (Mantra)": {
+        "name": "Skateboard (Mantra)",
+        "id": 2308100,
+        "groups": [
+          "Everything",
+          "skateboard"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Skateboard (Sylk)": {
+        "name": "Skateboard (Sylk)",
+        "id": 2308097,
+        "groups": [
+          "Everything",
+          "skateboard"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Skateboard (Taiga)": {
+        "name": "Skateboard (Taiga)",
+        "id": 2308098,
+        "groups": [
+          "Everything",
+          "skateboard"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Skateboard (Terrence)": {
+        "name": "Skateboard (Terrence)",
+        "id": 2308093,
+        "groups": [
+          "Everything",
+          "skateboard"
+        ],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Solace": {
+        "name": "Solace",
+        "id": 2308144,
+        "groups": [
+          "Everything",
+          "characters"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Tryce": {
+        "name": "Tryce",
+        "id": 2308141,
+        "groups": [
+          "Everything",
+          "characters"
+        ],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Vinyl": {
+        "name": "Vinyl",
+        "id": 2308143,
+        "groups": [
+          "Everything",
+          "characters",
+          "girl"
+        ],
+        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -6849,11 +6597,9 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 4
       },
       "Victory": {
@@ -6862,11 +6608,9 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
+        "classification": "progression",
         "event": true,
-        "type": "Event",
+        "type": null,
         "max_count": 1
       }
     }
@@ -7061,7 +6805,18 @@
     }
   },
   "progression_mapping": {
-    "1": {}
+    "1": {
+      "rep": {
+        "type": "additive",
+        "items": {
+          "8 REP": 8,
+          "16 REP": 16,
+          "24 REP": 24,
+          "32 REP": 32,
+          "48 REP": 48
+        }
+      }
+    }
   },
   "starting_items": {
     "1": []
@@ -7075,10 +6830,11 @@
   },
   "game_info": {
     "1": {
-      "name": "Bomb Rush Cyberfunk Test",
+      "name": "Bomb Rush Cyberfunk",
       "rule_format": {
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

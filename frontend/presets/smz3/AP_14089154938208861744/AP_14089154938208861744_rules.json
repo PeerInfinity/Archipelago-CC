@@ -3451,7 +3451,8 @@
               "player": 1,
               "advancement": true,
               "type": 164
-            }
+            },
+            "locked": true
           },
           {
             "name": "Castle Tower - Dark Maze",
@@ -3482,7 +3483,8 @@
               "player": 1,
               "advancement": true,
               "type": 164
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3511,7 +3513,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Eastern Palace - Map Chest",
@@ -3525,7 +3528,8 @@
               "player": 1,
               "advancement": true,
               "type": 157
-            }
+            },
+            "locked": true
           },
           {
             "name": "Eastern Palace - Compass Chest",
@@ -3539,7 +3543,8 @@
               "player": 1,
               "advancement": true,
               "type": 180
-            }
+            },
+            "locked": false
           },
           {
             "name": "Eastern Palace - Big Chest",
@@ -3553,7 +3558,8 @@
               "player": 1,
               "advancement": true,
               "type": 141
-            }
+            },
+            "locked": true
           },
           {
             "name": "Eastern Palace - Big Key Chest",
@@ -3567,7 +3573,8 @@
               "player": 1,
               "advancement": false,
               "type": 70
-            }
+            },
+            "locked": false
           },
           {
             "name": "Eastern Palace - Armos Knights",
@@ -3594,7 +3601,8 @@
               "player": 1,
               "advancement": true,
               "type": 125
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3623,7 +3631,8 @@
               "player": 1,
               "advancement": true,
               "type": 140
-            }
+            },
+            "locked": true
           },
           {
             "name": "Desert Palace - Torch",
@@ -3637,7 +3646,8 @@
               "player": 1,
               "advancement": false,
               "type": 196
-            }
+            },
+            "locked": false
           },
           {
             "name": "Desert Palace - Map Chest",
@@ -3651,7 +3661,8 @@
               "player": 1,
               "advancement": true,
               "type": 163
-            }
+            },
+            "locked": true
           },
           {
             "name": "Desert Palace - Big Key Chest",
@@ -3665,7 +3676,8 @@
               "player": 1,
               "advancement": true,
               "type": 156
-            }
+            },
+            "locked": true
           },
           {
             "name": "Desert Palace - Compass Chest",
@@ -3679,7 +3691,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Desert Palace - Lanmolas",
@@ -3741,7 +3754,8 @@
               "player": 1,
               "advancement": true,
               "type": 124
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3770,7 +3784,8 @@
               "player": 1,
               "advancement": true,
               "type": 170
-            }
+            },
+            "locked": true
           },
           {
             "name": "Tower of Hera - Map Chest",
@@ -3784,7 +3799,8 @@
               "player": 1,
               "advancement": true,
               "type": 10
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of Hera - Big Key Chest",
@@ -3808,7 +3824,8 @@
               "player": 1,
               "advancement": true,
               "type": 149
-            }
+            },
+            "locked": true
           },
           {
             "name": "Tower of Hera - Compass Chest",
@@ -3822,7 +3839,8 @@
               "player": 1,
               "advancement": true,
               "type": 182
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of Hera - Big Chest",
@@ -3836,7 +3854,8 @@
               "player": 1,
               "advancement": true,
               "type": 133
-            }
+            },
+            "locked": true
           },
           {
             "name": "Tower of Hera - Moldorm",
@@ -3868,7 +3887,8 @@
               "player": 1,
               "advancement": true,
               "type": 117
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3897,7 +3917,8 @@
               "player": 1,
               "advancement": true,
               "type": 166
-            }
+            },
+            "locked": true
           },
           {
             "name": "Palace of Darkness - Big Key Chest",
@@ -3919,7 +3940,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Palace of Darkness - Stalfos Basement",
@@ -3959,7 +3981,8 @@
               "player": 1,
               "advancement": true,
               "type": 166
-            }
+            },
+            "locked": true
           },
           {
             "name": "Palace of Darkness - The Arena - Bridge",
@@ -3999,7 +4022,8 @@
               "player": 1,
               "advancement": true,
               "type": 153
-            }
+            },
+            "locked": true
           },
           {
             "name": "Palace of Darkness - The Arena - Ledge",
@@ -4013,7 +4037,8 @@
               "player": 1,
               "advancement": true,
               "type": 166
-            }
+            },
+            "locked": true
           },
           {
             "name": "Palace of Darkness - Map Chest",
@@ -4027,7 +4052,8 @@
               "player": 1,
               "advancement": true,
               "type": 166
-            }
+            },
+            "locked": true
           },
           {
             "name": "Palace of Darkness - Compass Chest",
@@ -4049,7 +4075,8 @@
               "player": 1,
               "advancement": true,
               "type": 166
-            }
+            },
+            "locked": true
           },
           {
             "name": "Palace of Darkness - Harmless Hellway",
@@ -4071,7 +4098,8 @@
               "player": 1,
               "advancement": true,
               "type": 166
-            }
+            },
+            "locked": true
           },
           {
             "name": "Palace of Darkness - Dark Basement - Left",
@@ -4102,7 +4130,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           },
           {
             "name": "Palace of Darkness - Dark Basement - Right",
@@ -4133,7 +4162,8 @@
               "player": 1,
               "advancement": false,
               "type": 196
-            }
+            },
+            "locked": false
           },
           {
             "name": "Palace of Darkness - Dark Maze - Top",
@@ -4164,7 +4194,8 @@
               "player": 1,
               "advancement": true,
               "type": 137
-            }
+            },
+            "locked": true
           },
           {
             "name": "Palace of Darkness - Dark Maze - Bottom",
@@ -4195,7 +4226,8 @@
               "player": 1,
               "advancement": true,
               "type": 121
-            }
+            },
+            "locked": true
           },
           {
             "name": "Palace of Darkness - Big Chest",
@@ -4230,7 +4262,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           },
           {
             "name": "Palace of Darkness - Helmasaur King",
@@ -4273,7 +4306,8 @@
               "player": 1,
               "advancement": true,
               "type": 184
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4302,7 +4336,8 @@
               "player": 1,
               "advancement": true,
               "type": 165
-            }
+            },
+            "locked": true
           },
           {
             "name": "Swamp Palace - Map Chest",
@@ -4316,7 +4351,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Swamp Palace - Big Chest",
@@ -4343,7 +4379,8 @@
               "player": 1,
               "advancement": false,
               "type": 154
-            }
+            },
+            "locked": true
           },
           {
             "name": "Swamp Palace - Compass Chest",
@@ -4366,7 +4403,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Swamp Palace - West Chest",
@@ -4389,7 +4427,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           },
           {
             "name": "Swamp Palace - Big Key Chest",
@@ -4412,7 +4451,8 @@
               "player": 1,
               "advancement": true,
               "type": 122
-            }
+            },
+            "locked": true
           },
           {
             "name": "Swamp Palace - Flooded Room - Left",
@@ -4439,7 +4479,8 @@
               "player": 1,
               "advancement": true,
               "type": 138
-            }
+            },
+            "locked": true
           },
           {
             "name": "Swamp Palace - Flooded Room - Right",
@@ -4466,7 +4507,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Swamp Palace - Waterfall Room",
@@ -4493,7 +4535,8 @@
               "player": 1,
               "advancement": true,
               "type": 96
-            }
+            },
+            "locked": false
           },
           {
             "name": "Swamp Palace - Arrghus",
@@ -4520,7 +4563,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4549,7 +4593,8 @@
               "player": 1,
               "advancement": true,
               "type": 135
-            }
+            },
+            "locked": true
           },
           {
             "name": "Skull Woods - Compass Chest",
@@ -4563,7 +4608,8 @@
               "player": 1,
               "advancement": true,
               "type": 168
-            }
+            },
+            "locked": true
           },
           {
             "name": "Skull Woods - Big Chest",
@@ -4577,7 +4623,8 @@
               "player": 1,
               "advancement": false,
               "type": 151
-            }
+            },
+            "locked": true
           },
           {
             "name": "Skull Woods - Map Chest",
@@ -4591,7 +4638,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Skull Woods - Pinball Room",
@@ -4605,7 +4653,8 @@
               "player": 1,
               "advancement": true,
               "type": 168
-            }
+            },
+            "locked": true
           },
           {
             "name": "Skull Woods - Big Key Chest",
@@ -4619,7 +4668,8 @@
               "player": 1,
               "advancement": true,
               "type": 95
-            }
+            },
+            "locked": false
           },
           {
             "name": "Skull Woods - Bridge Room",
@@ -4633,7 +4683,8 @@
               "player": 1,
               "advancement": true,
               "type": 168
-            }
+            },
+            "locked": true
           },
           {
             "name": "Skull Woods - Mothula",
@@ -4668,7 +4719,8 @@
               "player": 1,
               "advancement": true,
               "type": 119
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4697,7 +4749,8 @@
               "player": 1,
               "advancement": true,
               "type": 148
-            }
+            },
+            "locked": true
           },
           {
             "name": "Thieves' Town - Ambush Chest",
@@ -4711,7 +4764,8 @@
               "player": 1,
               "advancement": true,
               "type": 116
-            }
+            },
+            "locked": true
           },
           {
             "name": "Thieves' Town - Compass Chest",
@@ -4725,7 +4779,8 @@
               "player": 1,
               "advancement": true,
               "type": 171
-            }
+            },
+            "locked": true
           },
           {
             "name": "Thieves' Town - Big Key Chest",
@@ -4739,7 +4794,8 @@
               "player": 1,
               "advancement": true,
               "type": 183
-            }
+            },
+            "locked": false
           },
           {
             "name": "Thieves' Town - Attic",
@@ -4762,7 +4818,8 @@
               "player": 1,
               "advancement": true,
               "type": 132
-            }
+            },
+            "locked": true
           },
           {
             "name": "Thieves' Town - Blind's Cell",
@@ -4776,7 +4833,8 @@
               "player": 1,
               "advancement": false,
               "type": 195
-            }
+            },
+            "locked": false
           },
           {
             "name": "Thieves' Town - Big Chest",
@@ -4812,7 +4870,8 @@
               "player": 1,
               "advancement": true,
               "type": 30
-            }
+            },
+            "locked": false
           },
           {
             "name": "Thieves' Town - Blind",
@@ -4856,7 +4915,8 @@
               "player": 1,
               "advancement": false,
               "type": 52
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -4885,7 +4945,8 @@
               "player": 1,
               "advancement": true,
               "type": 118
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ice Palace - Spike Room",
@@ -4952,7 +5013,8 @@
               "player": 1,
               "advancement": true,
               "type": 169
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ice Palace - Map Chest",
@@ -5033,7 +5095,8 @@
               "player": 1,
               "advancement": true,
               "type": 169
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ice Palace - Big Key Chest",
@@ -5114,7 +5177,8 @@
               "player": 1,
               "advancement": true,
               "type": 150
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ice Palace - Iced T Room",
@@ -5128,7 +5192,8 @@
               "player": 1,
               "advancement": true,
               "type": 134
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ice Palace - Freezor Chest",
@@ -5142,7 +5207,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ice Palace - Big Chest",
@@ -5156,7 +5222,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ice Palace - Kholdstare",
@@ -5207,7 +5274,8 @@
               "player": 1,
               "advancement": true,
               "type": 191
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -5253,7 +5321,8 @@
               "player": 1,
               "advancement": false,
               "type": 83
-            }
+            },
+            "locked": false
           },
           {
             "name": "Misery Mire - Map Chest",
@@ -5284,7 +5353,8 @@
               "player": 1,
               "advancement": true,
               "type": 152
-            }
+            },
+            "locked": true
           },
           {
             "name": "Misery Mire - Bridge Chest",
@@ -5298,7 +5368,8 @@
               "player": 1,
               "advancement": true,
               "type": 136
-            }
+            },
+            "locked": true
           },
           {
             "name": "Misery Mire - Spike Chest",
@@ -5312,7 +5383,8 @@
               "player": 1,
               "advancement": true,
               "type": 167
-            }
+            },
+            "locked": true
           },
           {
             "name": "Misery Mire - Compass Chest",
@@ -5344,7 +5416,8 @@
               "player": 1,
               "advancement": true,
               "type": 120
-            }
+            },
+            "locked": true
           },
           {
             "name": "Misery Mire - Big Key Chest",
@@ -5376,7 +5449,8 @@
               "player": 1,
               "advancement": false,
               "type": 62
-            }
+            },
+            "locked": false
           },
           {
             "name": "Misery Mire - Big Chest",
@@ -5390,7 +5464,8 @@
               "player": 1,
               "advancement": true,
               "type": 167
-            }
+            },
+            "locked": true
           },
           {
             "name": "Misery Mire - Vitreous",
@@ -5417,7 +5492,8 @@
               "player": 1,
               "advancement": true,
               "type": 167
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5446,7 +5522,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Turtle Rock - Roller Room - Left",
@@ -5460,7 +5537,8 @@
               "player": 1,
               "advancement": true,
               "type": 172
-            }
+            },
+            "locked": true
           },
           {
             "name": "Turtle Rock - Roller Room - Right",
@@ -5474,7 +5552,8 @@
               "player": 1,
               "advancement": true,
               "type": 172
-            }
+            },
+            "locked": true
           },
           {
             "name": "Turtle Rock - Chain Chomps",
@@ -5496,7 +5575,8 @@
               "player": 1,
               "advancement": true,
               "type": 147
-            }
+            },
+            "locked": true
           },
           {
             "name": "Turtle Rock - Big Key Chest",
@@ -5518,7 +5598,8 @@
               "player": 1,
               "advancement": false,
               "type": 65
-            }
+            },
+            "locked": false
           },
           {
             "name": "Turtle Rock - Big Chest",
@@ -5549,7 +5630,8 @@
               "player": 1,
               "advancement": false,
               "type": 65
-            }
+            },
+            "locked": false
           },
           {
             "name": "Turtle Rock - Crystaroller Room",
@@ -5580,7 +5662,8 @@
               "player": 1,
               "advancement": true,
               "type": 172
-            }
+            },
+            "locked": true
           },
           {
             "name": "Turtle Rock - Eye Bridge - Top Right",
@@ -5632,7 +5715,8 @@
               "player": 1,
               "advancement": true,
               "type": 172
-            }
+            },
+            "locked": true
           },
           {
             "name": "Turtle Rock - Eye Bridge - Top Left",
@@ -5684,7 +5768,8 @@
               "player": 1,
               "advancement": false,
               "type": 196
-            }
+            },
+            "locked": false
           },
           {
             "name": "Turtle Rock - Eye Bridge - Bottom Right",
@@ -5736,7 +5821,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Turtle Rock - Eye Bridge - Bottom Left",
@@ -5788,7 +5874,8 @@
               "player": 1,
               "advancement": true,
               "type": 115
-            }
+            },
+            "locked": true
           },
           {
             "name": "Turtle Rock - Trinexx",
@@ -5836,7 +5923,8 @@
               "player": 1,
               "advancement": true,
               "type": 131
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5865,7 +5953,8 @@
               "player": 1,
               "advancement": false,
               "type": 81
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganon's Tower - DMs Room - Top Left",
@@ -5888,7 +5977,8 @@
               "player": 1,
               "advancement": false,
               "type": 40
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ganon's Tower - DMs Room - Top Right",
@@ -5911,7 +6001,8 @@
               "player": 1,
               "advancement": true,
               "type": 22
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ganon's Tower - DMs Room - Bottom Left",
@@ -5934,7 +6025,8 @@
               "player": 1,
               "advancement": true,
               "type": 173
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganon's Tower - DMs Room - Bottom Right",
@@ -5957,7 +6049,8 @@
               "player": 1,
               "advancement": false,
               "type": 88
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ganon's Tower - Map Chest",
@@ -6001,7 +6094,8 @@
               "player": 1,
               "advancement": false,
               "type": 62
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ganon's Tower - Firesnake Room",
@@ -6036,7 +6130,8 @@
               "player": 1,
               "advancement": false,
               "type": 65
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganon's Tower - Randomizer Room - Top Left",
@@ -6087,7 +6182,8 @@
               "player": 1,
               "advancement": true,
               "type": 130
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganon's Tower - Randomizer Room - Top Right",
@@ -6138,7 +6234,8 @@
               "player": 1,
               "advancement": true,
               "type": 114
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganon's Tower - Randomizer Room - Bottom Left",
@@ -6189,7 +6286,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganon's Tower - Randomizer Room - Bottom Right",
@@ -6240,7 +6338,8 @@
               "player": 1,
               "advancement": false,
               "type": 70
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganon's Tower - Hope Room - Left",
@@ -6254,7 +6353,8 @@
               "player": 1,
               "advancement": true,
               "type": 173
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganon's Tower - Hope Room - Right",
@@ -6268,7 +6368,8 @@
               "player": 1,
               "advancement": false,
               "type": 192
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganon's Tower - Tile Room",
@@ -6282,7 +6383,8 @@
               "player": 1,
               "advancement": true,
               "type": 173
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganon's Tower - Compass Room - Top Left",
@@ -6333,7 +6435,8 @@
               "player": 1,
               "advancement": false,
               "type": 70
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ganon's Tower - Compass Room - Top Right",
@@ -6384,7 +6487,8 @@
               "player": 1,
               "advancement": false,
               "type": 192
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ganon's Tower - Compass Room - Bottom Left",
@@ -6435,7 +6539,8 @@
               "player": 1,
               "advancement": false,
               "type": 40
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ganon's Tower - Compass Room - Bottom Right",
@@ -6486,7 +6591,8 @@
               "player": 1,
               "advancement": false,
               "type": 52
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganon's Tower - Bob's Chest",
@@ -6544,7 +6650,8 @@
               "player": 1,
               "advancement": false,
               "type": 81
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganon's Tower - Big Chest",
@@ -6606,7 +6713,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganon's Tower - Big Key Chest",
@@ -6669,7 +6777,8 @@
               "player": 1,
               "advancement": false,
               "type": 62
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ganon's Tower - Big Key Room - Left",
@@ -6732,7 +6841,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganon's Tower - Big Key Room - Right",
@@ -6795,7 +6905,8 @@
               "player": 1,
               "advancement": true,
               "type": 146
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganon's Tower - Mini Helmasaur Room - Left",
@@ -6835,7 +6946,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ganon's Tower - Mini Helmasaur Room - Right",
@@ -6875,7 +6987,8 @@
               "player": 1,
               "advancement": false,
               "type": 62
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ganon's Tower - Pre-Moldorm Chest",
@@ -6915,7 +7028,8 @@
               "player": 1,
               "advancement": true,
               "type": 173
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganon's Tower - Moldorm Chest",
@@ -6964,7 +7078,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -7024,7 +7139,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Spectacle Rock",
@@ -7038,7 +7154,8 @@
               "player": 1,
               "advancement": true,
               "type": 179
-            }
+            },
+            "locked": false
           },
           {
             "name": "Spectacle Rock Cave",
@@ -7052,7 +7169,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           },
           {
             "name": "Old Man",
@@ -7066,7 +7184,8 @@
               "player": 1,
               "advancement": false,
               "type": 40
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7109,7 +7228,8 @@
               "player": 1,
               "advancement": false,
               "type": 68
-            }
+            },
+            "locked": false
           },
           {
             "name": "Spiral Cave",
@@ -7123,7 +7243,8 @@
               "player": 1,
               "advancement": false,
               "type": 192
-            }
+            },
+            "locked": false
           },
           {
             "name": "Paradox Cave Upper - Left",
@@ -7137,7 +7258,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Paradox Cave Upper - Right",
@@ -7151,7 +7273,8 @@
               "player": 1,
               "advancement": false,
               "type": 63
-            }
+            },
+            "locked": false
           },
           {
             "name": "Paradox Cave Lower - Far Left",
@@ -7165,7 +7288,8 @@
               "player": 1,
               "advancement": false,
               "type": 68
-            }
+            },
+            "locked": false
           },
           {
             "name": "Paradox Cave Lower - Left",
@@ -7179,7 +7303,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Paradox Cave Lower - Middle",
@@ -7193,7 +7318,8 @@
               "player": 1,
               "advancement": false,
               "type": 67
-            }
+            },
+            "locked": false
           },
           {
             "name": "Paradox Cave Lower - Right",
@@ -7207,7 +7333,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Paradox Cave Lower - Far Right",
@@ -7221,7 +7348,8 @@
               "player": 1,
               "advancement": false,
               "type": 195
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mimic Cave",
@@ -7256,7 +7384,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7291,7 +7420,8 @@
               "player": 1,
               "advancement": true,
               "type": 193
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mushroom",
@@ -7305,7 +7435,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lost Woods Hideout",
@@ -7319,7 +7450,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lumberjack Tree",
@@ -7348,7 +7480,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pegasus Rocks",
@@ -7362,7 +7495,8 @@
               "player": 1,
               "advancement": true,
               "type": 19
-            }
+            },
+            "locked": false
           },
           {
             "name": "Graveyard Ledge",
@@ -7389,7 +7523,8 @@
               "player": 1,
               "advancement": true,
               "type": 33
-            }
+            },
+            "locked": false
           },
           {
             "name": "King's Tomb",
@@ -7435,7 +7570,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kakariko Well - Top",
@@ -7449,7 +7585,8 @@
               "player": 1,
               "advancement": true,
               "type": 195
-            }
+            },
+            "locked": true
           },
           {
             "name": "Kakariko Well - Left",
@@ -7463,7 +7600,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kakariko Well - Middle",
@@ -7477,7 +7615,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kakariko Well - Right",
@@ -7491,7 +7630,8 @@
               "player": 1,
               "advancement": false,
               "type": 65
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kakariko Well - Bottom",
@@ -7505,7 +7645,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blind's Hideout - Top",
@@ -7519,7 +7660,8 @@
               "player": 1,
               "advancement": false,
               "type": 68
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blind's Hideout - Far Left",
@@ -7533,7 +7675,8 @@
               "player": 1,
               "advancement": false,
               "type": 192
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blind's Hideout - Left",
@@ -7547,7 +7690,8 @@
               "player": 1,
               "advancement": false,
               "type": 195
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blind's Hideout - Right",
@@ -7561,7 +7705,8 @@
               "player": 1,
               "advancement": false,
               "type": 83
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blind's Hideout - Far Right",
@@ -7575,7 +7720,8 @@
               "player": 1,
               "advancement": true,
               "type": 188
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bottle Merchant",
@@ -7589,7 +7735,8 @@
               "player": 1,
               "advancement": false,
               "type": 40
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chicken House",
@@ -7603,7 +7750,8 @@
               "player": 1,
               "advancement": true,
               "type": 176
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sick Kid",
@@ -7617,7 +7765,8 @@
               "player": 1,
               "advancement": false,
               "type": 83
-            }
+            },
+            "locked": false
           },
           {
             "name": "Kakariko Tavern",
@@ -7631,7 +7780,8 @@
               "player": 1,
               "advancement": false,
               "type": 40
-            }
+            },
+            "locked": false
           },
           {
             "name": "Magic Bat",
@@ -7677,7 +7827,8 @@
               "player": 1,
               "advancement": false,
               "type": 40
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7716,7 +7867,8 @@
               "player": 1,
               "advancement": true,
               "type": 192
-            }
+            },
+            "locked": false
           },
           {
             "name": "Zora's Ledge",
@@ -7730,7 +7882,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Waterfall Fairy - Left",
@@ -7744,7 +7897,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Waterfall Fairy - Right",
@@ -7758,7 +7912,8 @@
               "player": 1,
               "advancement": true,
               "type": 18
-            }
+            },
+            "locked": false
           },
           {
             "name": "Potion Shop",
@@ -7772,7 +7927,8 @@
               "player": 1,
               "advancement": false,
               "type": 68
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sahasrahla's Hut - Left",
@@ -7786,7 +7942,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sahasrahla's Hut - Middle",
@@ -7800,7 +7957,8 @@
               "player": 1,
               "advancement": true,
               "type": 192
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sahasrahla's Hut - Right",
@@ -7814,7 +7972,8 @@
               "player": 1,
               "advancement": false,
               "type": 195
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sahasrahla",
@@ -7834,7 +7993,8 @@
               "player": 1,
               "advancement": false,
               "type": 62
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -7863,7 +8023,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Library",
@@ -7877,7 +8038,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Flute Spot",
@@ -7891,7 +8053,8 @@
               "player": 1,
               "advancement": true,
               "type": 186
-            }
+            },
+            "locked": false
           },
           {
             "name": "South of Grove",
@@ -7914,7 +8077,8 @@
               "player": 1,
               "advancement": true,
               "type": 192
-            }
+            },
+            "locked": false
           },
           {
             "name": "Link's House",
@@ -7928,7 +8092,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Aginah's Cave",
@@ -7942,7 +8107,8 @@
               "player": 1,
               "advancement": false,
               "type": 195
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mini Moldorm Cave - Far Left",
@@ -7956,7 +8122,8 @@
               "player": 1,
               "advancement": false,
               "type": 195
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mini Moldorm Cave - Left",
@@ -7970,7 +8137,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mini Moldorm Cave - NPC",
@@ -7984,7 +8152,8 @@
               "player": 1,
               "advancement": true,
               "type": 29
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mini Moldorm Cave - Right",
@@ -7998,7 +8167,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mini Moldorm Cave - Far Right",
@@ -8012,7 +8182,8 @@
               "player": 1,
               "advancement": false,
               "type": 53
-            }
+            },
+            "locked": false
           },
           {
             "name": "Desert Ledge",
@@ -8026,7 +8197,8 @@
               "player": 1,
               "advancement": false,
               "type": 65
-            }
+            },
+            "locked": false
           },
           {
             "name": "Checkerboard Cave",
@@ -8079,7 +8251,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bombos Tablet",
@@ -8110,7 +8283,8 @@
               "player": 1,
               "advancement": true,
               "type": 196
-            }
+            },
+            "locked": false
           },
           {
             "name": "Floodgate Chest",
@@ -8124,7 +8298,8 @@
               "player": 1,
               "advancement": true,
               "type": 196
-            }
+            },
+            "locked": true
           },
           {
             "name": "Sunken Treasure",
@@ -8138,7 +8313,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Lake Hylia Island",
@@ -8178,7 +8354,8 @@
               "player": 1,
               "advancement": false,
               "type": 195
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hobo",
@@ -8192,7 +8369,8 @@
               "player": 1,
               "advancement": true,
               "type": 189
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ice Rod Cave",
@@ -8206,7 +8384,8 @@
               "player": 1,
               "advancement": true,
               "type": 22
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8235,7 +8414,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sewers - Secret Room - Left",
@@ -8268,7 +8448,8 @@
               "player": 1,
               "advancement": true,
               "type": 11
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sewers - Secret Room - Middle",
@@ -8301,7 +8482,8 @@
               "player": 1,
               "advancement": false,
               "type": 195
-            }
+            },
+            "locked": false
           },
           {
             "name": "Sewers - Secret Room - Right",
@@ -8334,7 +8516,8 @@
               "player": 1,
               "advancement": true,
               "type": 160
-            }
+            },
+            "locked": true
           },
           {
             "name": "Sewers - Dark Cross",
@@ -8348,7 +8531,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hyrule Castle - Map Chest",
@@ -8362,7 +8546,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hyrule Castle - Boomerang Chest",
@@ -8376,7 +8561,8 @@
               "player": 1,
               "advancement": true,
               "type": 127
-            }
+            },
+            "locked": true
           },
           {
             "name": "Hyrule Castle - Zelda's Cell",
@@ -8390,7 +8576,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           },
           {
             "name": "Link's Uncle",
@@ -8404,7 +8591,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Secret Passage",
@@ -8418,7 +8606,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8488,7 +8677,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8526,7 +8716,8 @@
               "player": 1,
               "advancement": false,
               "type": 195
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hookshot Cave - Top Left",
@@ -8549,7 +8740,8 @@
               "player": 1,
               "advancement": true,
               "type": 193
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hookshot Cave - Bottom Left",
@@ -8572,7 +8764,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hookshot Cave - Bottom Right",
@@ -8604,7 +8797,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Superbunny Cave - Top",
@@ -8618,7 +8812,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Superbunny Cave - Bottom",
@@ -8632,7 +8827,8 @@
               "player": 1,
               "advancement": false,
               "type": 81
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8671,7 +8867,8 @@
               "player": 1,
               "advancement": false,
               "type": 196
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chest Game",
@@ -8685,7 +8882,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "C-Shaped House",
@@ -8699,7 +8897,8 @@
               "player": 1,
               "advancement": false,
               "type": 83
-            }
+            },
+            "locked": false
           },
           {
             "name": "Brewery",
@@ -8713,7 +8912,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hammer Pegs",
@@ -8737,7 +8937,8 @@
               "player": 1,
               "advancement": true,
               "type": 7
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blacksmith",
@@ -8752,7 +8953,8 @@
               "player": 1,
               "advancement": true,
               "type": 8
-            }
+            },
+            "locked": false
           },
           {
             "name": "Purple Chest",
@@ -8767,7 +8969,8 @@
               "player": 1,
               "advancement": false,
               "type": 177
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8806,7 +9009,8 @@
               "player": 1,
               "advancement": true,
               "type": 20
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid",
@@ -8820,7 +9024,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Fairy - Left",
@@ -8881,7 +9086,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pyramid Fairy - Right",
@@ -8942,7 +9148,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -8971,7 +9178,8 @@
               "player": 1,
               "advancement": false,
               "type": 195
-            }
+            },
+            "locked": false
           },
           {
             "name": "Stumpy",
@@ -8985,7 +9193,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hype Cave - Top",
@@ -8999,7 +9208,8 @@
               "player": 1,
               "advancement": false,
               "type": 68
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hype Cave - Middle Right",
@@ -9013,7 +9223,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hype Cave - Middle Left",
@@ -9027,7 +9238,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hype Cave - Bottom",
@@ -9041,7 +9253,8 @@
               "player": 1,
               "advancement": false,
               "type": 195
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hype Cave - NPC",
@@ -9055,7 +9268,8 @@
               "player": 1,
               "advancement": false,
               "type": 192
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9084,7 +9298,8 @@
               "player": 1,
               "advancement": true,
               "type": 75
-            }
+            },
+            "locked": false
           },
           {
             "name": "Mire Shed - Right",
@@ -9098,7 +9313,8 @@
               "player": 1,
               "advancement": true,
               "type": 97
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9127,7 +9343,8 @@
               "player": 1,
               "advancement": false,
               "type": 65
-            }
+            },
+            "locked": false
           },
           {
             "name": "Energy Tank, Gauntlet",
@@ -9177,7 +9394,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (Crateria gauntlet right)",
@@ -9242,7 +9460,8 @@
               "player": 1,
               "advancement": false,
               "type": 196
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (Crateria gauntlet left)",
@@ -9307,7 +9526,8 @@
               "player": 1,
               "advancement": false,
               "type": 68
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9356,7 +9576,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (Crateria middle)",
@@ -9371,7 +9592,8 @@
               "player": 1,
               "advancement": false,
               "type": 196
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (Crateria bottom)",
@@ -9386,7 +9608,8 @@
               "player": 1,
               "advancement": true,
               "type": 13
-            }
+            },
+            "locked": false
           },
           {
             "name": "Super Missile (Crateria)",
@@ -9420,7 +9643,8 @@
               "player": 1,
               "advancement": false,
               "type": 70
-            }
+            },
+            "locked": false
           },
           {
             "name": "Bombs",
@@ -9474,7 +9698,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9571,7 +9796,8 @@
               "player": 1,
               "advancement": true,
               "type": 31
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (outside Wrecked Ship top)",
@@ -9599,7 +9825,8 @@
               "player": 1,
               "advancement": false,
               "type": 195
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (outside Wrecked Ship middle)",
@@ -9627,7 +9854,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (Crateria moat)",
@@ -9641,7 +9869,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9670,7 +9899,8 @@
               "player": 1,
               "advancement": true,
               "type": 96
-            }
+            },
+            "locked": false
           },
           {
             "name": "Power Bomb (blue Brinstar)",
@@ -9685,7 +9915,8 @@
               "player": 1,
               "advancement": true,
               "type": 193
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (blue Brinstar middle)",
@@ -9708,7 +9939,8 @@
               "player": 1,
               "advancement": true,
               "type": 185
-            }
+            },
+            "locked": false
           },
           {
             "name": "Energy Tank, Brinstar Ceiling",
@@ -9768,7 +10000,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (blue Brinstar bottom)",
@@ -9782,7 +10015,8 @@
               "player": 1,
               "advancement": true,
               "type": 181
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (blue Brinstar top)",
@@ -9806,7 +10040,8 @@
               "player": 1,
               "advancement": true,
               "type": 95
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (blue Brinstar behind missile)",
@@ -9830,7 +10065,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -9869,7 +10105,8 @@
               "player": 1,
               "advancement": true,
               "type": 26
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (green Brinstar below super missile)",
@@ -9894,7 +10131,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Super Missile (green Brinstar top)",
@@ -9956,7 +10194,8 @@
               "player": 1,
               "advancement": false,
               "type": 40
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reserve Tank, Brinstar",
@@ -10018,7 +10257,8 @@
               "player": 1,
               "advancement": false,
               "type": 70
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (green Brinstar behind missile)",
@@ -10095,7 +10335,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (green Brinstar behind reserve tank)",
@@ -10152,7 +10393,8 @@
               "player": 1,
               "advancement": true,
               "type": 41
-            }
+            },
+            "locked": false
           },
           {
             "name": "Energy Tank, Etecoons",
@@ -10176,7 +10418,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Super Missile (green Brinstar bottom)",
@@ -10204,7 +10447,8 @@
               "player": 1,
               "advancement": true,
               "type": 22
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10289,7 +10533,8 @@
               "player": 1,
               "advancement": true,
               "type": 192
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (pink Brinstar top)",
@@ -10303,7 +10548,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (pink Brinstar bottom)",
@@ -10317,7 +10563,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           },
           {
             "name": "Charge Beam",
@@ -10332,7 +10579,8 @@
               "player": 1,
               "advancement": true,
               "type": 95
-            }
+            },
+            "locked": false
           },
           {
             "name": "Power Bomb (pink Brinstar)",
@@ -10395,7 +10643,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (green Brinstar pipe)",
@@ -10432,7 +10681,8 @@
               "player": 1,
               "advancement": false,
               "type": 40
-            }
+            },
+            "locked": false
           },
           {
             "name": "Energy Tank, Waterway",
@@ -10480,7 +10730,8 @@
               "player": 1,
               "advancement": true,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Energy Tank, Brinstar Gate",
@@ -10560,7 +10811,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10723,7 +10975,8 @@
               "player": 1,
               "advancement": true,
               "type": 94
-            }
+            },
+            "locked": false
           },
           {
             "name": "Power Bomb (red Brinstar sidehopper room)",
@@ -10747,7 +11000,8 @@
               "player": 1,
               "advancement": true,
               "type": 17
-            }
+            },
+            "locked": false
           },
           {
             "name": "Power Bomb (red Brinstar spike room)",
@@ -10799,7 +11053,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (red Brinstar spike room)",
@@ -10823,7 +11078,8 @@
               "player": 1,
               "advancement": true,
               "type": 78
-            }
+            },
+            "locked": false
           },
           {
             "name": "Spazer",
@@ -10847,7 +11103,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10876,7 +11133,8 @@
               "player": 1,
               "advancement": true,
               "type": 97
-            }
+            },
+            "locked": false
           },
           {
             "name": "Varia Suit",
@@ -10890,7 +11148,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (Kraid)",
@@ -10905,7 +11164,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -10935,7 +11195,8 @@
               "player": 1,
               "advancement": false,
               "type": 40
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reserve Tank, Wrecked Ship",
@@ -11067,7 +11328,8 @@
               "player": 1,
               "advancement": false,
               "type": 196
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (Gravity Suit)",
@@ -11181,7 +11443,8 @@
               "player": 1,
               "advancement": true,
               "type": 94
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (Wrecked Ship top)",
@@ -11196,7 +11459,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Energy Tank, Wrecked Ship",
@@ -11310,7 +11574,8 @@
               "player": 1,
               "advancement": false,
               "type": 64
-            }
+            },
+            "locked": false
           },
           {
             "name": "Super Missile (Wrecked Ship left)",
@@ -11325,7 +11590,8 @@
               "player": 1,
               "advancement": false,
               "type": 195
-            }
+            },
+            "locked": false
           },
           {
             "name": "Right Super, Wrecked Ship",
@@ -11340,7 +11606,8 @@
               "player": 1,
               "advancement": true,
               "type": 178
-            }
+            },
+            "locked": false
           },
           {
             "name": "Gravity Suit",
@@ -11454,7 +11721,8 @@
               "player": 1,
               "advancement": false,
               "type": 62
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11511,7 +11779,8 @@
               "player": 1,
               "advancement": false,
               "type": 53
-            }
+            },
+            "locked": false
           },
           {
             "name": "Super Missile (green Maridia)",
@@ -11525,7 +11794,8 @@
               "player": 1,
               "advancement": false,
               "type": 40
-            }
+            },
+            "locked": false
           },
           {
             "name": "Energy Tank, Mama turtle",
@@ -11629,7 +11899,8 @@
               "player": 1,
               "advancement": true,
               "type": 94
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (green Maridia tatori)",
@@ -11644,7 +11915,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -11714,7 +11986,8 @@
               "player": 1,
               "advancement": false,
               "type": 42
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (yellow Maridia super missile)",
@@ -11764,7 +12037,8 @@
               "player": 1,
               "advancement": true,
               "type": 15
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (yellow Maridia false wall)",
@@ -11814,7 +12088,8 @@
               "player": 1,
               "advancement": true,
               "type": 192
-            }
+            },
+            "locked": false
           },
           {
             "name": "Plasma Beam",
@@ -11945,7 +12220,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (left Maridia sand pit room)",
@@ -12035,7 +12311,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Reserve Tank, Maridia",
@@ -12125,7 +12402,8 @@
               "player": 1,
               "advancement": false,
               "type": 65
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (right Maridia sand pit room)",
@@ -12149,7 +12427,8 @@
               "player": 1,
               "advancement": false,
               "type": 192
-            }
+            },
+            "locked": false
           },
           {
             "name": "Power Bomb (right Maridia sand pit room)",
@@ -12173,7 +12452,8 @@
               "player": 1,
               "advancement": false,
               "type": 192
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (pink Maridia)",
@@ -12226,7 +12506,8 @@
               "player": 1,
               "advancement": false,
               "type": 68
-            }
+            },
+            "locked": false
           },
           {
             "name": "Super Missile (pink Maridia)",
@@ -12279,7 +12560,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Spring Ball",
@@ -12403,7 +12685,8 @@
               "player": 1,
               "advancement": false,
               "type": 195
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (Draygon)",
@@ -12503,7 +12786,8 @@
               "player": 1,
               "advancement": true,
               "type": 24
-            }
+            },
+            "locked": false
           },
           {
             "name": "Energy Tank, Botwoon",
@@ -12555,7 +12839,8 @@
               "player": 1,
               "advancement": false,
               "type": 53
-            }
+            },
+            "locked": false
           },
           {
             "name": "Space Jump",
@@ -12570,7 +12855,8 @@
               "player": 1,
               "advancement": true,
               "type": 25
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -12747,7 +13033,8 @@
               "player": 1,
               "advancement": false,
               "type": 62
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ice Beam",
@@ -12826,7 +13113,8 @@
               "player": 1,
               "advancement": false,
               "type": 12
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (below Ice Beam)",
@@ -12949,7 +13237,8 @@
               "player": 1,
               "advancement": true,
               "type": 193
-            }
+            },
+            "locked": false
           },
           {
             "name": "Hi-Jump Boots",
@@ -12974,7 +13263,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (Hi-Jump Boots)",
@@ -12998,7 +13288,8 @@
               "player": 1,
               "advancement": true,
               "type": 9
-            }
+            },
+            "locked": false
           },
           {
             "name": "Energy Tank (Hi-Jump Boots)",
@@ -13013,7 +13304,8 @@
               "player": 1,
               "advancement": false,
               "type": 40
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -13124,7 +13416,8 @@
               "player": 1,
               "advancement": false,
               "type": 62
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (Norfair Reserve Tank)",
@@ -13220,7 +13513,8 @@
               "player": 1,
               "advancement": false,
               "type": 195
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (bubble Norfair green door)",
@@ -13312,7 +13606,8 @@
               "player": 1,
               "advancement": false,
               "type": 54
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (bubble Norfair)",
@@ -13326,7 +13621,8 @@
               "player": 1,
               "advancement": false,
               "type": 192
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (Speed Booster)",
@@ -13414,7 +13710,8 @@
               "player": 1,
               "advancement": false,
               "type": 40
-            }
+            },
+            "locked": false
           },
           {
             "name": "Speed Booster",
@@ -13502,7 +13799,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (Wave Beam)",
@@ -13616,7 +13914,8 @@
               "player": 1,
               "advancement": false,
               "type": 192
-            }
+            },
+            "locked": false
           },
           {
             "name": "Wave Beam",
@@ -13779,7 +14078,8 @@
               "player": 1,
               "advancement": false,
               "type": 53
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -13857,7 +14157,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (above Crocomire)",
@@ -13969,7 +14270,8 @@
               "player": 1,
               "advancement": true,
               "type": 21
-            }
+            },
+            "locked": false
           },
           {
             "name": "Power Bomb (Crocomire)",
@@ -14027,7 +14329,8 @@
               "player": 1,
               "advancement": true,
               "type": 187
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (below Crocomire)",
@@ -14051,7 +14354,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (Grappling Beam)",
@@ -14156,7 +14460,8 @@
               "player": 1,
               "advancement": false,
               "type": 62
-            }
+            },
+            "locked": false
           },
           {
             "name": "Grappling Beam",
@@ -14259,7 +14564,8 @@
               "player": 1,
               "advancement": false,
               "type": 196
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14381,7 +14687,8 @@
               "player": 1,
               "advancement": false,
               "type": 194
-            }
+            },
+            "locked": false
           },
           {
             "name": "Super Missile (Gold Torizo)",
@@ -14480,7 +14787,8 @@
               "player": 1,
               "advancement": true,
               "type": 16
-            }
+            },
+            "locked": false
           },
           {
             "name": "Screw Attack",
@@ -14563,7 +14871,8 @@
               "player": 1,
               "advancement": true,
               "type": 22
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (Mickey Mouse room)",
@@ -14813,7 +15122,8 @@
               "player": 1,
               "advancement": false,
               "type": 81
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -14843,7 +15153,8 @@
               "player": 1,
               "advancement": false,
               "type": 190
-            }
+            },
+            "locked": false
           },
           {
             "name": "Power Bomb (lower Norfair above fire flea room)",
@@ -14858,7 +15169,8 @@
               "player": 1,
               "advancement": false,
               "type": 23
-            }
+            },
+            "locked": false
           },
           {
             "name": "Power Bomb (Power Bombs of shame)",
@@ -14883,7 +15195,8 @@
               "player": 1,
               "advancement": false,
               "type": 40
-            }
+            },
+            "locked": false
           },
           {
             "name": "Missile (lower Norfair near Wave Beam)",
@@ -14898,7 +15211,8 @@
               "player": 1,
               "advancement": false,
               "type": 62
-            }
+            },
+            "locked": false
           },
           {
             "name": "Energy Tank, Ridley",
@@ -14931,7 +15245,8 @@
               "player": 1,
               "advancement": false,
               "type": 68
-            }
+            },
+            "locked": false
           },
           {
             "name": "Energy Tank, Firefleas",
@@ -14946,7 +15261,8 @@
               "player": 1,
               "advancement": true,
               "type": 94
-            }
+            },
+            "locked": false
           }
         ]
       }
@@ -14968,12 +15284,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Firerod": {
         "name": "Firerod",
@@ -14981,12 +15295,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Icerod": {
         "name": "Icerod",
@@ -14994,12 +15306,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Hammer": {
         "name": "Hammer",
@@ -15007,12 +15317,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Hookshot": {
         "name": "Hookshot",
@@ -15020,12 +15328,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Bow": {
         "name": "Bow",
@@ -15033,12 +15339,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "BlueBoomerang": {
         "name": "BlueBoomerang",
@@ -15046,12 +15350,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Powder": {
         "name": "Powder",
@@ -15059,12 +15361,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "BeeContent": {
         "name": "BeeContent",
@@ -15072,12 +15372,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bombos": {
         "name": "Bombos",
@@ -15085,12 +15383,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ether": {
         "name": "Ether",
@@ -15098,12 +15394,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Quake": {
         "name": "Quake",
@@ -15111,12 +15405,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Lamp": {
         "name": "Lamp",
@@ -15124,12 +15416,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Shovel": {
         "name": "Shovel",
@@ -15137,12 +15427,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Flute": {
         "name": "Flute",
@@ -15150,12 +15438,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Somaria": {
         "name": "Somaria",
@@ -15163,12 +15449,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Bottle": {
         "name": "Bottle",
@@ -15176,12 +15460,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "progression"
       },
       "HeartPiece": {
         "name": "HeartPiece",
@@ -15189,12 +15471,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 47
+        "max_count": 24,
+        "classification": "filler"
       },
       "Byrna": {
         "name": "Byrna",
@@ -15202,12 +15482,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Cape": {
         "name": "Cape",
@@ -15215,12 +15493,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mirror": {
         "name": "Mirror",
@@ -15228,12 +15504,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Book": {
         "name": "Book",
@@ -15241,12 +15515,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Flippers": {
         "name": "Flippers",
@@ -15254,12 +15526,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "MoonPearl": {
         "name": "MoonPearl",
@@ -15267,12 +15537,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Bugnet": {
         "name": "Bugnet",
@@ -15280,12 +15548,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key": {
         "name": "Key",
@@ -15293,12 +15559,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Compass": {
         "name": "Compass",
@@ -15306,12 +15570,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "ThreeBombs": {
         "name": "ThreeBombs",
@@ -15319,12 +15581,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 26
+        "max_count": 13,
+        "classification": "filler"
       },
       "Mushroom": {
         "name": "Mushroom",
@@ -15332,12 +15592,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "RedBoomerang": {
         "name": "RedBoomerang",
@@ -15345,12 +15603,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "BottleWithRedPotion": {
         "name": "BottleWithRedPotion",
@@ -15358,12 +15614,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "BottleWithGreenPotion": {
         "name": "BottleWithGreenPotion",
@@ -15371,12 +15625,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "BottleWithBluePotion": {
         "name": "BottleWithBluePotion",
@@ -15384,12 +15636,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "RedContent": {
         "name": "RedContent",
@@ -15397,12 +15647,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "GreenContent": {
         "name": "GreenContent",
@@ -15410,12 +15658,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "BlueContent": {
         "name": "BlueContent",
@@ -15423,12 +15669,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "BigKey": {
         "name": "BigKey",
@@ -15436,12 +15680,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Map": {
         "name": "Map",
@@ -15449,12 +15691,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "OneRupee": {
         "name": "OneRupee",
@@ -15462,12 +15702,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 2,
+        "classification": "filler"
       },
       "FiveRupees": {
         "name": "FiveRupees",
@@ -15475,12 +15713,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "filler"
       },
       "TwentyRupees": {
         "name": "TwentyRupees",
@@ -15488,12 +15724,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 55
+        "max_count": 28,
+        "classification": "filler"
       },
       "BottleWithBee": {
         "name": "BottleWithBee",
@@ -15501,12 +15735,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "BottleWithFairy": {
         "name": "BottleWithFairy",
@@ -15514,12 +15746,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "HeartContainer": {
         "name": "HeartContainer",
@@ -15527,12 +15757,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 20
+        "max_count": 10,
+        "classification": "useful"
       },
       "HeartContainerRefill": {
         "name": "HeartContainerRefill",
@@ -15540,12 +15768,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "OneHundredRupees": {
         "name": "OneHundredRupees",
@@ -15553,12 +15779,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "FiftyRupees": {
         "name": "FiftyRupees",
@@ -15566,12 +15790,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 13
+        "max_count": 7,
+        "classification": "filler"
       },
       "Arrow": {
         "name": "Arrow",
@@ -15579,12 +15801,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "TenArrows": {
         "name": "TenArrows",
@@ -15592,12 +15812,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 16
+        "max_count": 8,
+        "classification": "filler"
       },
       "ThreeHundredRupees": {
         "name": "ThreeHundredRupees",
@@ -15605,12 +15823,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 9
+        "max_count": 5,
+        "classification": "filler"
       },
       "TwentyRupees2": {
         "name": "TwentyRupees2",
@@ -15618,12 +15834,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "BottleWithGoldBee": {
         "name": "BottleWithGoldBee",
@@ -15631,12 +15845,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Boots": {
         "name": "Boots",
@@ -15644,12 +15856,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "HalfMagic": {
         "name": "HalfMagic",
@@ -15657,12 +15867,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "BombUpgrade5": {
         "name": "BombUpgrade5",
@@ -15670,12 +15878,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 4,
+        "classification": "filler"
       },
       "BombUpgrade10": {
         "name": "BombUpgrade10",
@@ -15683,12 +15889,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "ArrowUpgrade5": {
         "name": "ArrowUpgrade5",
@@ -15696,12 +15900,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "filler"
       },
       "ArrowUpgrade10": {
         "name": "ArrowUpgrade10",
@@ -15709,12 +15911,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "SilverArrows": {
         "name": "SilverArrows",
@@ -15722,12 +15922,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "ProgressiveSword": {
         "name": "ProgressiveSword",
@@ -15735,12 +15933,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "progression"
       },
       "ProgressiveShield": {
         "name": "ProgressiveShield",
@@ -15748,12 +15944,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression"
       },
       "ProgressiveTunic": {
         "name": "ProgressiveTunic",
@@ -15761,12 +15955,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "ProgressiveGlove": {
         "name": "ProgressiveGlove",
@@ -15774,12 +15966,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Something": {
         "name": "Something",
@@ -15787,12 +15977,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "MapGT": {
         "name": "MapGT",
@@ -15800,12 +15988,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "MapTR": {
         "name": "MapTR",
@@ -15813,12 +15999,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "MapTT": {
         "name": "MapTT",
@@ -15826,12 +16010,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "MapTH": {
         "name": "MapTH",
@@ -15839,12 +16021,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "MapIP": {
         "name": "MapIP",
@@ -15852,12 +16032,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "MapSW": {
         "name": "MapSW",
@@ -15865,12 +16043,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "MapMM": {
         "name": "MapMM",
@@ -15878,12 +16054,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "MapPD": {
         "name": "MapPD",
@@ -15891,12 +16065,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "MapSP": {
         "name": "MapSP",
@@ -15904,12 +16076,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "MapDP": {
         "name": "MapDP",
@@ -15917,12 +16087,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "MapEP": {
         "name": "MapEP",
@@ -15930,12 +16098,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "MapHC": {
         "name": "MapHC",
@@ -15943,12 +16109,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CompassGT": {
         "name": "CompassGT",
@@ -15956,12 +16120,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CompassTR": {
         "name": "CompassTR",
@@ -15969,12 +16131,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CompassTT": {
         "name": "CompassTT",
@@ -15982,12 +16142,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CompassTH": {
         "name": "CompassTH",
@@ -15995,12 +16153,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CompassIP": {
         "name": "CompassIP",
@@ -16008,12 +16164,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CompassSW": {
         "name": "CompassSW",
@@ -16021,12 +16175,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CompassMM": {
         "name": "CompassMM",
@@ -16034,12 +16186,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CompassPD": {
         "name": "CompassPD",
@@ -16047,12 +16197,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CompassSP": {
         "name": "CompassSP",
@@ -16060,12 +16208,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CompassDP": {
         "name": "CompassDP",
@@ -16073,12 +16219,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CompassEP": {
         "name": "CompassEP",
@@ -16086,12 +16230,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "BigKeyGT": {
         "name": "BigKeyGT",
@@ -16099,12 +16241,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "BigKeyTR": {
         "name": "BigKeyTR",
@@ -16112,12 +16252,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "BigKeyTT": {
         "name": "BigKeyTT",
@@ -16125,12 +16263,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "BigKeyTH": {
         "name": "BigKeyTH",
@@ -16138,12 +16274,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "BigKeyIP": {
         "name": "BigKeyIP",
@@ -16151,12 +16285,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "BigKeySW": {
         "name": "BigKeySW",
@@ -16164,12 +16296,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "BigKeyMM": {
         "name": "BigKeyMM",
@@ -16177,12 +16307,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "BigKeyPD": {
         "name": "BigKeyPD",
@@ -16190,12 +16318,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "BigKeySP": {
         "name": "BigKeySP",
@@ -16203,12 +16329,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "BigKeyDP": {
         "name": "BigKeyDP",
@@ -16216,12 +16340,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "BigKeyEP": {
         "name": "BigKeyEP",
@@ -16229,12 +16351,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "KeyHC": {
         "name": "KeyHC",
@@ -16242,12 +16362,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "KeyDP": {
         "name": "KeyDP",
@@ -16255,12 +16373,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "KeyCT": {
         "name": "KeyCT",
@@ -16268,12 +16384,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "progression"
       },
       "KeySP": {
         "name": "KeySP",
@@ -16281,12 +16395,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "KeyPD": {
         "name": "KeyPD",
@@ -16294,12 +16406,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 6,
+        "classification": "progression"
       },
       "KeyMM": {
         "name": "KeyMM",
@@ -16307,12 +16417,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "progression"
       },
       "KeySW": {
         "name": "KeySW",
@@ -16320,12 +16428,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "progression"
       },
       "KeyIP": {
         "name": "KeyIP",
@@ -16333,12 +16439,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "progression"
       },
       "KeyTH": {
         "name": "KeyTH",
@@ -16346,12 +16450,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "KeyTT": {
         "name": "KeyTT",
@@ -16359,12 +16461,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "KeyTR": {
         "name": "KeyTR",
@@ -16372,12 +16472,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "progression"
       },
       "KeyGT": {
         "name": "KeyGT",
@@ -16385,12 +16483,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "progression"
       },
       "Grapple": {
         "name": "Grapple",
@@ -16398,12 +16494,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "XRay": {
         "name": "XRay",
@@ -16411,12 +16505,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Varia": {
         "name": "Varia",
@@ -16424,12 +16516,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "SpringBall": {
         "name": "SpringBall",
@@ -16437,12 +16527,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Morph": {
         "name": "Morph",
@@ -16450,12 +16538,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "ScrewAttack": {
         "name": "ScrewAttack",
@@ -16463,12 +16549,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Gravity": {
         "name": "Gravity",
@@ -16476,12 +16560,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "HiJump": {
         "name": "HiJump",
@@ -16489,12 +16571,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "SpaceJump": {
         "name": "SpaceJump",
@@ -16502,12 +16582,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Bombs": {
         "name": "Bombs",
@@ -16515,12 +16593,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "SpeedBooster": {
         "name": "SpeedBooster",
@@ -16528,12 +16604,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Charge": {
         "name": "Charge",
@@ -16541,12 +16615,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ice": {
         "name": "Ice",
@@ -16554,12 +16626,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Wave": {
         "name": "Wave",
@@ -16567,12 +16637,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Spazer": {
         "name": "Spazer",
@@ -16580,12 +16648,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Plasma": {
         "name": "Plasma",
@@ -16593,12 +16659,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "ETank": {
         "name": "ETank",
@@ -16606,12 +16670,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 27
+        "max_count": 14,
+        "classification": "progression"
       },
       "ReserveTank": {
         "name": "ReserveTank",
@@ -16619,12 +16681,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "progression"
       },
       "Missile": {
         "name": "Missile",
@@ -16632,12 +16692,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 78
+        "max_count": 40,
+        "classification": "progression"
       },
       "Super": {
         "name": "Super",
@@ -16645,12 +16703,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 31
+        "max_count": 16,
+        "classification": "progression"
       },
       "PowerBomb": {
         "name": "PowerBomb",
@@ -16658,12 +16714,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 19
+        "max_count": 10,
+        "classification": "progression"
       },
       "SmMapBrinstar": {
         "name": "SmMapBrinstar",
@@ -16671,12 +16725,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "SmMapWreckedShip": {
         "name": "SmMapWreckedShip",
@@ -16684,12 +16736,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "SmMapMaridia": {
         "name": "SmMapMaridia",
@@ -16697,12 +16747,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "SmMapLowerNorfair": {
         "name": "SmMapLowerNorfair",
@@ -16710,12 +16758,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "CardCrateriaL1": {
         "name": "CardCrateriaL1",
@@ -16723,12 +16769,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CardCrateriaL2": {
         "name": "CardCrateriaL2",
@@ -16736,12 +16780,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CardCrateriaBoss": {
         "name": "CardCrateriaBoss",
@@ -16749,12 +16791,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CardBrinstarL1": {
         "name": "CardBrinstarL1",
@@ -16762,12 +16802,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CardBrinstarL2": {
         "name": "CardBrinstarL2",
@@ -16775,12 +16813,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CardBrinstarBoss": {
         "name": "CardBrinstarBoss",
@@ -16788,12 +16824,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CardNorfairL1": {
         "name": "CardNorfairL1",
@@ -16801,12 +16835,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CardNorfairL2": {
         "name": "CardNorfairL2",
@@ -16814,12 +16846,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CardNorfairBoss": {
         "name": "CardNorfairBoss",
@@ -16827,12 +16857,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CardMaridiaL1": {
         "name": "CardMaridiaL1",
@@ -16840,12 +16868,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CardMaridiaL2": {
         "name": "CardMaridiaL2",
@@ -16853,12 +16879,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CardMaridiaBoss": {
         "name": "CardMaridiaBoss",
@@ -16866,12 +16890,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CardWreckedShipL1": {
         "name": "CardWreckedShipL1",
@@ -16879,12 +16901,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CardWreckedShipBoss": {
         "name": "CardWreckedShipBoss",
@@ -16892,12 +16912,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CardLowerNorfairL1": {
         "name": "CardLowerNorfairL1",
@@ -16905,12 +16923,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "CardLowerNorfairBoss": {
         "name": "CardLowerNorfairBoss",
@@ -16918,12 +16934,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -16934,8 +16948,8 @@
   },
   "itempool_counts": {
     "1": {
-      "Arrow": 2,
-      "ArrowUpgrade5": 8,
+      "Arrow": 1,
+      "ArrowUpgrade5": 4,
       "BigKeyDP": 1,
       "BigKeyEP": 1,
       "BigKeyGT": 1,
@@ -16947,17 +16961,17 @@
       "BigKeyTH": 1,
       "BigKeyTR": 1,
       "BigKeyTT": 1,
-      "BlueBoomerang": 2,
-      "BombUpgrade5": 6,
-      "Bombos": 2,
-      "Bombs": 2,
-      "Book": 2,
-      "Boots": 2,
-      "Bottle": 8,
-      "Bow": 2,
-      "Bugnet": 2,
-      "Byrna": 2,
-      "Cape": 2,
+      "BlueBoomerang": 1,
+      "BombUpgrade5": 4,
+      "Bombos": 1,
+      "Bombs": 1,
+      "Book": 1,
+      "Boots": 1,
+      "Bottle": 4,
+      "Bow": 1,
+      "Bugnet": 1,
+      "Byrna": 1,
+      "Cape": 1,
       "CardBrinstarBoss": 1,
       "CardBrinstarL1": 1,
       "CardBrinstarL2": 1,
@@ -16974,7 +16988,7 @@
       "CardNorfairL2": 1,
       "CardWreckedShipBoss": 1,
       "CardWreckedShipL1": 1,
-      "Charge": 2,
+      "Charge": 1,
       "CompassDP": 1,
       "CompassEP": 1,
       "CompassGT": 1,
@@ -16986,24 +17000,24 @@
       "CompassTH": 1,
       "CompassTR": 1,
       "CompassTT": 1,
-      "ETank": 27,
-      "Ether": 2,
-      "FiftyRupees": 13,
-      "Firerod": 2,
-      "FiveRupees": 8,
-      "Flippers": 2,
-      "Flute": 2,
-      "Grapple": 2,
-      "Gravity": 2,
-      "HalfMagic": 2,
-      "Hammer": 2,
-      "HeartContainer": 20,
-      "HeartContainerRefill": 2,
-      "HeartPiece": 47,
-      "HiJump": 2,
-      "Hookshot": 2,
-      "Ice": 2,
-      "Icerod": 2,
+      "ETank": 14,
+      "Ether": 1,
+      "FiftyRupees": 7,
+      "Firerod": 1,
+      "FiveRupees": 4,
+      "Flippers": 1,
+      "Flute": 1,
+      "Grapple": 1,
+      "Gravity": 1,
+      "HalfMagic": 1,
+      "Hammer": 1,
+      "HeartContainer": 10,
+      "HeartContainerRefill": 1,
+      "HeartPiece": 24,
+      "HiJump": 1,
+      "Hookshot": 1,
+      "Ice": 1,
+      "Icerod": 1,
       "KeyCT": 2,
       "KeyDP": 1,
       "KeyGT": 4,
@@ -17016,7 +17030,7 @@
       "KeyTH": 1,
       "KeyTR": 4,
       "KeyTT": 1,
-      "Lamp": 2,
+      "Lamp": 1,
       "MapDP": 1,
       "MapEP": 1,
       "MapGT": 1,
@@ -17029,39 +17043,39 @@
       "MapTH": 1,
       "MapTR": 1,
       "MapTT": 1,
-      "Mirror": 2,
-      "Missile": 78,
-      "MoonPearl": 2,
-      "Morph": 2,
-      "Mushroom": 2,
-      "OneHundredRupees": 2,
-      "OneRupee": 3,
-      "Plasma": 2,
-      "Powder": 2,
-      "PowerBomb": 19,
-      "ProgressiveGlove": 4,
-      "ProgressiveShield": 6,
-      "ProgressiveSword": 8,
-      "ProgressiveTunic": 4,
-      "Quake": 2,
-      "RedBoomerang": 2,
-      "ReserveTank": 8,
-      "ScrewAttack": 2,
-      "Shovel": 2,
-      "SilverArrows": 2,
-      "Somaria": 2,
-      "SpaceJump": 2,
-      "Spazer": 2,
-      "SpeedBooster": 2,
-      "SpringBall": 2,
-      "Super": 31,
-      "TenArrows": 16,
-      "ThreeBombs": 26,
-      "ThreeHundredRupees": 9,
-      "TwentyRupees": 55,
-      "Varia": 2,
-      "Wave": 2,
-      "XRay": 2
+      "Mirror": 1,
+      "Missile": 40,
+      "MoonPearl": 1,
+      "Morph": 1,
+      "Mushroom": 1,
+      "OneHundredRupees": 1,
+      "OneRupee": 2,
+      "Plasma": 1,
+      "Powder": 1,
+      "PowerBomb": 10,
+      "ProgressiveGlove": 2,
+      "ProgressiveShield": 3,
+      "ProgressiveSword": 4,
+      "ProgressiveTunic": 2,
+      "Quake": 1,
+      "RedBoomerang": 1,
+      "ReserveTank": 4,
+      "ScrewAttack": 1,
+      "Shovel": 1,
+      "SilverArrows": 1,
+      "Somaria": 1,
+      "SpaceJump": 1,
+      "Spazer": 1,
+      "SpeedBooster": 1,
+      "SpringBall": 1,
+      "Super": 16,
+      "TenArrows": 8,
+      "ThreeBombs": 13,
+      "ThreeHundredRupees": 5,
+      "TwentyRupees": 28,
+      "Varia": 1,
+      "Wave": 1,
+      "XRay": 1
     }
   },
   "progression_mapping": {
@@ -17290,5 +17304,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

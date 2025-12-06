@@ -11607,12 +11607,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Tree Wither": {
         "name": "Tree Wither",
@@ -11621,12 +11619,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Wakewater": {
         "name": "Wakewater",
@@ -11635,12 +11631,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Venus Key": {
         "name": "Venus Key",
@@ -11649,12 +11643,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Multi Key": {
         "name": "Multi Key",
@@ -11663,12 +11655,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mask": {
         "name": "Mask",
@@ -11677,12 +11667,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Magic Mirror": {
         "name": "Magic Mirror",
@@ -11691,12 +11679,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Thunder Rock": {
         "name": "Thunder Rock",
@@ -11705,12 +11691,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Captain's Cap": {
         "name": "Captain's Cap",
@@ -11719,12 +11703,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Libra Crest": {
         "name": "Libra Crest",
@@ -11733,12 +11715,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Gemini Crest": {
         "name": "Gemini Crest",
@@ -11747,12 +11727,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mobius Crest": {
         "name": "Mobius Crest",
@@ -11761,12 +11739,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Sand Coin": {
         "name": "Sand Coin",
@@ -11776,12 +11752,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "River Coin": {
         "name": "River Coin",
@@ -11791,12 +11765,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Sun Coin": {
         "name": "Sun Coin",
@@ -11806,12 +11778,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Sky Coin": {
         "name": "Sky Coin",
@@ -11821,612 +11791,10 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
-      },
-      "Cure Potion": {
-        "name": "Cure Potion",
-        "id": 4325392,
-        "groups": [
-          "Consumables",
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 60
-      },
-      "Heal Potion": {
-        "name": "Heal Potion",
-        "id": 4325393,
-        "groups": [
-          "Consumables",
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 52
-      },
-      "Seed": {
-        "name": "Seed",
-        "id": 4325394,
-        "groups": [
-          "Consumables",
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 2
-      },
-      "Refresher": {
-        "name": "Refresher",
-        "id": 4325395,
-        "groups": [
-          "Consumables",
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 17
-      },
-      "Exit Book": {
-        "name": "Exit Book",
-        "id": 4325396,
-        "groups": [
-          "Everything",
-          "Spells"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Cure Book": {
-        "name": "Cure Book",
-        "id": 4325397,
-        "groups": [
-          "Everything",
-          "Spells"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Heal Book": {
-        "name": "Heal Book",
-        "id": 4325398,
-        "groups": [
-          "Everything",
-          "Spells"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Life Book": {
-        "name": "Life Book",
-        "id": 4325399,
-        "groups": [
-          "Everything",
-          "Spells"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Quake Book": {
-        "name": "Quake Book",
-        "id": 4325400,
-        "groups": [
-          "Everything",
-          "Spells"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Blizzard Book": {
-        "name": "Blizzard Book",
-        "id": 4325401,
-        "groups": [
-          "Everything",
-          "Spells"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Fire Book": {
-        "name": "Fire Book",
-        "id": 4325402,
-        "groups": [
-          "Everything",
-          "Spells"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Aero Book": {
-        "name": "Aero Book",
-        "id": 4325403,
-        "groups": [
-          "Everything",
-          "Spells"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Thunder Seal": {
-        "name": "Thunder Seal",
-        "id": 4325404,
-        "groups": [
-          "Everything",
-          "Spells"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "White Seal": {
-        "name": "White Seal",
-        "id": 4325405,
-        "groups": [
-          "Everything",
-          "Spells"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Meteor Seal": {
-        "name": "Meteor Seal",
-        "id": 4325406,
-        "groups": [
-          "Everything",
-          "Spells"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Flare Seal": {
-        "name": "Flare Seal",
-        "id": 4325407,
-        "groups": [
-          "Everything",
-          "Spells"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Steel Sword": {
-        "name": "Steel Sword",
-        "id": 4325408,
-        "groups": [
-          "Everything",
-          "Swords",
-          "Weapons"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Knight Sword": {
-        "name": "Knight Sword",
-        "id": 4325409,
-        "groups": [
-          "Everything",
-          "Swords",
-          "Weapons"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Excalibur": {
-        "name": "Excalibur",
-        "id": 4325410,
-        "groups": [
-          "Everything",
-          "Swords",
-          "Weapons"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Axe": {
-        "name": "Axe",
-        "id": 4325411,
-        "groups": [
-          "Axes",
-          "Everything",
-          "Weapons"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Battle Axe": {
-        "name": "Battle Axe",
-        "id": 4325412,
-        "groups": [
-          "Axes",
-          "Everything",
-          "Weapons"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Giant's Axe": {
-        "name": "Giant's Axe",
-        "id": 4325413,
-        "groups": [
-          "Axes",
-          "Everything",
-          "Weapons"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Cat Claw": {
-        "name": "Cat Claw",
-        "id": 4325414,
-        "groups": [
-          "Claws",
-          "Everything",
-          "Weapons"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Charm Claw": {
-        "name": "Charm Claw",
-        "id": 4325415,
-        "groups": [
-          "Claws",
-          "Everything",
-          "Weapons"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Dragon Claw": {
-        "name": "Dragon Claw",
-        "id": 4325416,
-        "groups": [
-          "Claws",
-          "Everything",
-          "Weapons"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Bomb": {
-        "name": "Bomb",
-        "id": 4325417,
-        "groups": [
-          "Bombs",
-          "Everything",
-          "Weapons"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Jumbo Bomb": {
-        "name": "Jumbo Bomb",
-        "id": 4325418,
-        "groups": [
-          "Bombs",
-          "Everything",
-          "Weapons"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Mega Grenade": {
-        "name": "Mega Grenade",
-        "id": 4325419,
-        "groups": [
-          "Bombs",
-          "Everything",
-          "Weapons"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Steel Helm": {
-        "name": "Steel Helm",
-        "id": 4325423,
-        "groups": [
-          "Everything",
-          "Helms"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Moon Helm": {
-        "name": "Moon Helm",
-        "id": 4325424,
-        "groups": [
-          "Everything",
-          "Helms"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Apollo Helm": {
-        "name": "Apollo Helm",
-        "id": 4325425,
-        "groups": [
-          "Everything",
-          "Helms"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Steel Armor": {
-        "name": "Steel Armor",
-        "id": 4325426,
-        "groups": [
-          "Armors",
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Noble Armor": {
-        "name": "Noble Armor",
-        "id": 4325427,
-        "groups": [
-          "Armors",
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Gaia's Armor": {
-        "name": "Gaia's Armor",
-        "id": 4325428,
-        "groups": [
-          "Armors",
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Steel Shield": {
-        "name": "Steel Shield",
-        "id": 4325433,
-        "groups": [
-          "Everything",
-          "Shields"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Venus Shield": {
-        "name": "Venus Shield",
-        "id": 4325434,
-        "groups": [
-          "Everything",
-          "Shields"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Aegis Shield": {
-        "name": "Aegis Shield",
-        "id": 4325435,
-        "groups": [
-          "Everything",
-          "Shields"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Charm": {
-        "name": "Charm",
-        "id": 4325437,
-        "groups": [
-          "Accessories",
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Magic Ring": {
-        "name": "Magic Ring",
-        "id": 4325438,
-        "groups": [
-          "Accessories",
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Cupid Locket": {
-        "name": "Cupid Locket",
-        "id": 4325439,
-        "groups": [
-          "Accessories",
-          "Everything"
-        ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Bomb Refill": {
-        "name": "Bomb Refill",
-        "id": 4325597,
-        "groups": [
-          "Everything",
-          "Refills"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 19
-      },
-      "Projectile Refill": {
-        "name": "Projectile Refill",
-        "id": 4325598,
-        "groups": [
-          "Everything",
-          "Refills"
-        ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
-        "event": false,
-        "type": null,
-        "max_count": 49
+        "max_count": 1,
+        "classification": "progression"
       },
       "Sky Fragment": {
         "name": "Sky Fragment",
@@ -12435,12 +11803,202 @@
           "Everything",
           "Key Items"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Cure Potion": {
+        "name": "Cure Potion",
+        "id": 4325392,
+        "groups": [
+          "Consumables",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 60,
+        "classification": "filler"
+      },
+      "Heal Potion": {
+        "name": "Heal Potion",
+        "id": 4325393,
+        "groups": [
+          "Consumables",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 52,
+        "classification": "filler"
+      },
+      "Seed": {
+        "name": "Seed",
+        "id": 4325394,
+        "groups": [
+          "Consumables",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "Refresher": {
+        "name": "Refresher",
+        "id": 4325395,
+        "groups": [
+          "Consumables",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 17,
+        "classification": "filler"
+      },
+      "Exit Book": {
+        "name": "Exit Book",
+        "id": 4325396,
+        "groups": [
+          "Everything",
+          "Spells"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Cure Book": {
+        "name": "Cure Book",
+        "id": 4325397,
+        "groups": [
+          "Everything",
+          "Spells"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Heal Book": {
+        "name": "Heal Book",
+        "id": 4325398,
+        "groups": [
+          "Everything",
+          "Spells"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Life Book": {
+        "name": "Life Book",
+        "id": 4325399,
+        "groups": [
+          "Everything",
+          "Spells"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Quake Book": {
+        "name": "Quake Book",
+        "id": 4325400,
+        "groups": [
+          "Everything",
+          "Spells"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Blizzard Book": {
+        "name": "Blizzard Book",
+        "id": 4325401,
+        "groups": [
+          "Everything",
+          "Spells"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Fire Book": {
+        "name": "Fire Book",
+        "id": 4325402,
+        "groups": [
+          "Everything",
+          "Spells"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Aero Book": {
+        "name": "Aero Book",
+        "id": 4325403,
+        "groups": [
+          "Everything",
+          "Spells"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Thunder Seal": {
+        "name": "Thunder Seal",
+        "id": 4325404,
+        "groups": [
+          "Everything",
+          "Spells"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "White Seal": {
+        "name": "White Seal",
+        "id": 4325405,
+        "groups": [
+          "Everything",
+          "Spells"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Meteor Seal": {
+        "name": "Meteor Seal",
+        "id": 4325406,
+        "groups": [
+          "Everything",
+          "Spells"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Flare Seal": {
+        "name": "Flare Seal",
+        "id": 4325407,
+        "groups": [
+          "Everything",
+          "Spells"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
       },
       "Progressive Sword": {
         "name": "Progressive Sword",
@@ -12450,12 +12008,49 @@
           "Swords",
           "Weapons"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Steel Sword": {
+        "name": "Steel Sword",
+        "id": 4325408,
+        "groups": [
+          "Everything",
+          "Swords",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Knight Sword": {
+        "name": "Knight Sword",
+        "id": 4325409,
+        "groups": [
+          "Everything",
+          "Swords",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Excalibur": {
+        "name": "Excalibur",
+        "id": 4325410,
+        "groups": [
+          "Everything",
+          "Swords",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
       },
       "Progressive Axe": {
         "name": "Progressive Axe",
@@ -12465,12 +12060,49 @@
           "Everything",
           "Weapons"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Axe": {
+        "name": "Axe",
+        "id": 4325411,
+        "groups": [
+          "Axes",
+          "Everything",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Battle Axe": {
+        "name": "Battle Axe",
+        "id": 4325412,
+        "groups": [
+          "Axes",
+          "Everything",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Giant's Axe": {
+        "name": "Giant's Axe",
+        "id": 4325413,
+        "groups": [
+          "Axes",
+          "Everything",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
       },
       "Progressive Claw": {
         "name": "Progressive Claw",
@@ -12480,12 +12112,49 @@
           "Everything",
           "Weapons"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Cat Claw": {
+        "name": "Cat Claw",
+        "id": 4325414,
+        "groups": [
+          "Claws",
+          "Everything",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Charm Claw": {
+        "name": "Charm Claw",
+        "id": 4325415,
+        "groups": [
+          "Claws",
+          "Everything",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Dragon Claw": {
+        "name": "Dragon Claw",
+        "id": 4325416,
+        "groups": [
+          "Claws",
+          "Everything",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
       },
       "Progressive Bomb": {
         "name": "Progressive Bomb",
@@ -12495,12 +12164,49 @@
           "Everything",
           "Weapons"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Bomb": {
+        "name": "Bomb",
+        "id": 4325417,
+        "groups": [
+          "Bombs",
+          "Everything",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Jumbo Bomb": {
+        "name": "Jumbo Bomb",
+        "id": 4325418,
+        "groups": [
+          "Bombs",
+          "Everything",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Mega Grenade": {
+        "name": "Mega Grenade",
+        "id": 4325419,
+        "groups": [
+          "Bombs",
+          "Everything",
+          "Weapons"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
       },
       "Progressive Helm": {
         "name": "Progressive Helm",
@@ -12509,12 +12215,46 @@
           "Everything",
           "Helms"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Steel Helm": {
+        "name": "Steel Helm",
+        "id": 4325423,
+        "groups": [
+          "Everything",
+          "Helms"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Moon Helm": {
+        "name": "Moon Helm",
+        "id": 4325424,
+        "groups": [
+          "Everything",
+          "Helms"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Apollo Helm": {
+        "name": "Apollo Helm",
+        "id": 4325425,
+        "groups": [
+          "Everything",
+          "Helms"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
       },
       "Progressive Armor": {
         "name": "Progressive Armor",
@@ -12523,12 +12263,46 @@
           "Armors",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Steel Armor": {
+        "name": "Steel Armor",
+        "id": 4325426,
+        "groups": [
+          "Armors",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Noble Armor": {
+        "name": "Noble Armor",
+        "id": 4325427,
+        "groups": [
+          "Armors",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Gaia's Armor": {
+        "name": "Gaia's Armor",
+        "id": 4325428,
+        "groups": [
+          "Armors",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
       },
       "Progressive Shield": {
         "name": "Progressive Shield",
@@ -12537,12 +12311,46 @@
           "Everything",
           "Shields"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Steel Shield": {
+        "name": "Steel Shield",
+        "id": 4325433,
+        "groups": [
+          "Everything",
+          "Shields"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Venus Shield": {
+        "name": "Venus Shield",
+        "id": 4325434,
+        "groups": [
+          "Everything",
+          "Shields"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Aegis Shield": {
+        "name": "Aegis Shield",
+        "id": 4325435,
+        "groups": [
+          "Everything",
+          "Shields"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
       },
       "Progressive Accessory": {
         "name": "Progressive Accessory",
@@ -12551,220 +12359,70 @@
           "Accessories",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
-      "Spencer Cave Libra Block Bombed": {
-        "name": "Spencer Cave Libra Block Bombed",
-        "id": null,
+      "Charm": {
+        "name": "Charm",
+        "id": 4325437,
         "groups": [
-          "Event"
+          "Accessories",
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
       },
-      "Ship Loaned": {
-        "name": "Ship Loaned",
-        "id": null,
+      "Magic Ring": {
+        "name": "Magic Ring",
+        "id": 4325438,
         "groups": [
-          "Event"
+          "Accessories",
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
       },
-      "Ship Liberated": {
-        "name": "Ship Liberated",
-        "id": null,
+      "Cupid Locket": {
+        "name": "Cupid Locket",
+        "id": 4325439,
         "groups": [
-          "Event"
+          "Accessories",
+          "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
       },
-      "Dark King": {
-        "name": "Dark King",
-        "id": null,
+      "Bomb Refill": {
+        "name": "Bomb Refill",
+        "id": 4325597,
         "groups": [
-          "Event"
+          "Everything",
+          "Refills"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
+        "event": false,
+        "type": null,
+        "max_count": 19,
+        "classification": "filler"
       },
-      "Dualhead Hydra": {
-        "name": "Dualhead Hydra",
-        "id": null,
+      "Projectile Refill": {
+        "name": "Projectile Refill",
+        "id": 4325598,
         "groups": [
-          "Event"
+          "Everything",
+          "Refills"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Dullahan": {
-        "name": "Dullahan",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Flamerus Rex": {
-        "name": "Flamerus Rex",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Freezer Crab": {
-        "name": "Freezer Crab",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Gidrah": {
-        "name": "Gidrah",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Ice Golem": {
-        "name": "Ice Golem",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Ice Pyramid 1F Statue": {
-        "name": "Ice Pyramid 1F Statue",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Ice Pyramid 3F Statue": {
-        "name": "Ice Pyramid 3F Statue",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Ice Pyramid 4F Statue": {
-        "name": "Ice Pyramid 4F Statue",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Ice Pyramid 5F Statue": {
-        "name": "Ice Pyramid 5F Statue",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Jinn": {
-        "name": "Jinn",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Kaeli 2": {
-        "name": "Kaeli 2",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
+        "event": false,
+        "type": null,
+        "max_count": 49,
+        "classification": "filler"
       },
       "Kaeli 1": {
         "name": "Kaeli 1",
@@ -12772,376 +12430,21 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
-      "Lava Dome Plate": {
-        "name": "Lava Dome Plate",
+      "Kaeli 2": {
+        "name": "Kaeli 2",
         "id": null,
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
-      },
-      "Long Spine Bombed": {
-        "name": "Long Spine Bombed",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Ship Steering Wheel": {
-        "name": "Ship Steering Wheel",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Medusa": {
-        "name": "Medusa",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Minotaur": {
-        "name": "Minotaur",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Barrel Pushed": {
-        "name": "Barrel Pushed",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Rainbow Bridge": {
-        "name": "Rainbow Bridge",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Pazuzu": {
-        "name": "Pazuzu",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Pazuzu 1F": {
-        "name": "Pazuzu 1F",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Pazuzu 2F": {
-        "name": "Pazuzu 2F",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Pazuzu 2F Lock": {
-        "name": "Pazuzu 2F Lock",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Pazuzu 3F": {
-        "name": "Pazuzu 3F",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Pazuzu 4F": {
-        "name": "Pazuzu 4F",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Pazuzu 4F Lock": {
-        "name": "Pazuzu 4F Lock",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Pazuzu 5F": {
-        "name": "Pazuzu 5F",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Pazuzu 6F": {
-        "name": "Pazuzu 6F",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Pazuzu 6F Lock": {
-        "name": "Pazuzu 6F Lock",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Phanquid": {
-        "name": "Phanquid",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Phoebe 1": {
-        "name": "Phoebe 1",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Reuben 1": {
-        "name": "Reuben 1",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Reuben Dad Saved": {
-        "name": "Reuben Dad Saved",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Ship Dock Access": {
-        "name": "Ship Dock Access",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Short Spine Bombed": {
-        "name": "Short Spine Bombed",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Skull 1 Bombed": {
-        "name": "Skull 1 Bombed",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Skull 2 Bombed": {
-        "name": "Skull 2 Bombed",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Stone Golem": {
-        "name": "Stone Golem",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Summer Aquaria": {
-        "name": "Summer Aquaria",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
-      },
-      "Tristam Bone Item Given": {
-        "name": "Tristam Bone Item Given",
-        "id": null,
-        "groups": [
-          "Event"
-        ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
-        "event": true,
-        "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Tristam": {
         "name": "Tristam",
@@ -13149,12 +12452,307 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Phoebe 1": {
+        "name": "Phoebe 1",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Reuben 1": {
+        "name": "Reuben 1",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Reuben Dad Saved": {
+        "name": "Reuben Dad Saved",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Otto": {
+        "name": "Otto",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Captain Mac": {
+        "name": "Captain Mac",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Ship Steering Wheel": {
+        "name": "Ship Steering Wheel",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Minotaur": {
+        "name": "Minotaur",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Flamerus Rex": {
+        "name": "Flamerus Rex",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Phanquid": {
+        "name": "Phanquid",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Freezer Crab": {
+        "name": "Freezer Crab",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Ice Golem": {
+        "name": "Ice Golem",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Jinn": {
+        "name": "Jinn",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Medusa": {
+        "name": "Medusa",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Dualhead Hydra": {
+        "name": "Dualhead Hydra",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Gidrah": {
+        "name": "Gidrah",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Dullahan": {
+        "name": "Dullahan",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Pazuzu": {
+        "name": "Pazuzu",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Aquaria Plaza": {
+        "name": "Aquaria Plaza",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Summer Aquaria": {
+        "name": "Summer Aquaria",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Reuben Mine": {
+        "name": "Reuben Mine",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Alive Forest": {
+        "name": "Alive Forest",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Rainbow Bridge": {
+        "name": "Rainbow Bridge",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Collapse Spencer's Cave": {
+        "name": "Collapse Spencer's Cave",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Ship Liberated": {
+        "name": "Ship Liberated",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Ship Loaned": {
+        "name": "Ship Loaned",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Ship Dock Access": {
+        "name": "Ship Dock Access",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Stone Golem": {
+        "name": "Stone Golem",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
       },
       "Twinhead Wyvern": {
         "name": "Twinhead Wyvern",
@@ -13162,12 +12760,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Zuh": {
         "name": "Zuh",
@@ -13175,12 +12771,450 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Libra Temple Crest Tile": {
+        "name": "Libra Temple Crest Tile",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Life Temple Crest Tile": {
+        "name": "Life Temple Crest Tile",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Aquaria Vendor Crest Tile": {
+        "name": "Aquaria Vendor Crest Tile",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Fireburg Vendor Crest Tile": {
+        "name": "Fireburg Vendor Crest Tile",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Fireburg Grenademan Crest Tile": {
+        "name": "Fireburg Grenademan Crest Tile",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Sealed Temple Crest Tile": {
+        "name": "Sealed Temple Crest Tile",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Wintry Temple Crest Tile": {
+        "name": "Wintry Temple Crest Tile",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Kaidge Temple Crest Tile": {
+        "name": "Kaidge Temple Crest Tile",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Light Temple Crest Tile": {
+        "name": "Light Temple Crest Tile",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Windia Kids Crest Tile": {
+        "name": "Windia Kids Crest Tile",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Windia Dock Crest Tile": {
+        "name": "Windia Dock Crest Tile",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Ship Dock Crest Tile": {
+        "name": "Ship Dock Crest Tile",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Alive Forest Libra Crest Tile": {
+        "name": "Alive Forest Libra Crest Tile",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Alive Forest Gemini Crest Tile": {
+        "name": "Alive Forest Gemini Crest Tile",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Alive Forest Mobius Crest Tile": {
+        "name": "Alive Forest Mobius Crest Tile",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Wood House Libra Crest Tile": {
+        "name": "Wood House Libra Crest Tile",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Wood House Gemini Crest Tile": {
+        "name": "Wood House Gemini Crest Tile",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Wood House Mobius Crest Tile": {
+        "name": "Wood House Mobius Crest Tile",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Barrel Pushed": {
+        "name": "Barrel Pushed",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Long Spine Bombed": {
+        "name": "Long Spine Bombed",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Short Spine Bombed": {
+        "name": "Short Spine Bombed",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Skull 1 Bombed": {
+        "name": "Skull 1 Bombed",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Skull 2 Bombed": {
+        "name": "Skull 2 Bombed",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Ice Pyramid 1F Statue": {
+        "name": "Ice Pyramid 1F Statue",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Ice Pyramid 3F Statue": {
+        "name": "Ice Pyramid 3F Statue",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Ice Pyramid 4F Statue": {
+        "name": "Ice Pyramid 4F Statue",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Ice Pyramid 5F Statue": {
+        "name": "Ice Pyramid 5F Statue",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Spencer Cave Libra Block Bombed": {
+        "name": "Spencer Cave Libra Block Bombed",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Lava Dome Plate": {
+        "name": "Lava Dome Plate",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Pazuzu 2F Lock": {
+        "name": "Pazuzu 2F Lock",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Pazuzu 4F Lock": {
+        "name": "Pazuzu 4F Lock",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Pazuzu 6F Lock": {
+        "name": "Pazuzu 6F Lock",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Pazuzu 1F": {
+        "name": "Pazuzu 1F",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Pazuzu 2F": {
+        "name": "Pazuzu 2F",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Pazuzu 3F": {
+        "name": "Pazuzu 3F",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Pazuzu 4F": {
+        "name": "Pazuzu 4F",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Pazuzu 5F": {
+        "name": "Pazuzu 5F",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Pazuzu 6F": {
+        "name": "Pazuzu 6F",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Dark King": {
+        "name": "Dark King",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Tristam Bone Item Given": {
+        "name": "Tristam Bone Item Given",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -13334,5 +13368,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }

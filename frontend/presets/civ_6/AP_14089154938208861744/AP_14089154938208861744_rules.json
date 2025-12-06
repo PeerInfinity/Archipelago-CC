@@ -83,7 +83,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_ANCIENT_01",
@@ -97,7 +98,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "TECH_AP_ANCIENT_02",
@@ -111,7 +113,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "TECH_AP_ANCIENT_03",
@@ -125,7 +128,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "TECH_AP_ANCIENT_04",
@@ -139,7 +143,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_ANCIENT_05",
@@ -153,7 +158,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "TECH_AP_ANCIENT_06",
@@ -167,7 +173,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "TECH_AP_ANCIENT_07",
@@ -181,7 +188,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "TECH_AP_ANCIENT_08",
@@ -195,7 +203,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "TECH_AP_ANCIENT_09",
@@ -209,7 +218,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_ANCIENT_10",
@@ -223,7 +233,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_ANCIENT_00",
@@ -237,7 +248,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_ANCIENT_01",
@@ -251,7 +263,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_ANCIENT_02",
@@ -265,7 +278,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_ANCIENT_03",
@@ -279,7 +293,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_ANCIENT_04",
@@ -293,7 +308,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "CIVIC_AP_ANCIENT_05",
@@ -307,7 +323,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_ANCIENT_06",
@@ -321,7 +338,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           },
           {
             "name": "GOODY_HUT_1",
@@ -335,7 +353,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "GOODY_HUT_2",
@@ -349,7 +369,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "GOODY_HUT_3",
@@ -363,7 +385,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "GOODY_HUT_4",
@@ -377,7 +401,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "GOODY_HUT_5",
@@ -391,7 +417,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "GOODY_HUT_6",
@@ -405,7 +433,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "GOODY_HUT_7",
@@ -419,7 +449,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "GOODY_HUT_8",
@@ -433,7 +465,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "GOODY_HUT_9",
@@ -447,7 +481,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           },
           {
             "name": "GOODY_HUT_10",
@@ -461,7 +497,9 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false,
+            "progress_type": "EXCLUDED"
           }
         ]
       },
@@ -523,7 +561,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_CLASSICAL_12",
@@ -537,7 +576,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_CLASSICAL_13",
@@ -551,7 +591,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_CLASSICAL_14",
@@ -565,7 +606,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_CLASSICAL_15",
@@ -579,7 +621,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_CLASSICAL_16",
@@ -593,7 +636,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_CLASSICAL_17",
@@ -607,7 +651,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_CLASSICAL_18",
@@ -621,7 +666,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_CLASSICAL_07",
@@ -635,7 +681,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_CLASSICAL_08",
@@ -649,7 +696,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_CLASSICAL_09",
@@ -663,7 +711,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_CLASSICAL_10",
@@ -677,7 +726,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_CLASSICAL_11",
@@ -691,7 +741,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_CLASSICAL_12",
@@ -705,7 +756,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_CLASSICAL_13",
@@ -719,7 +771,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -781,7 +834,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_MEDIEVAL_20",
@@ -795,7 +849,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_MEDIEVAL_21",
@@ -809,7 +864,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_MEDIEVAL_22",
@@ -823,7 +879,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_MEDIEVAL_23",
@@ -837,7 +894,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_MEDIEVAL_24",
@@ -851,7 +909,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_MEDIEVAL_25",
@@ -865,7 +924,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_MEDIEVAL_67",
@@ -879,7 +939,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_MEDIEVAL_14",
@@ -893,7 +954,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_MEDIEVAL_15",
@@ -907,7 +969,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_MEDIEVAL_16",
@@ -921,7 +984,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_MEDIEVAL_17",
@@ -935,7 +999,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_MEDIEVAL_18",
@@ -949,7 +1014,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_MEDIEVAL_19",
@@ -963,7 +1029,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_MEDIEVAL_20",
@@ -977,7 +1044,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1041,7 +1109,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_RENAISSANCE_27",
@@ -1055,7 +1124,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_RENAISSANCE_28",
@@ -1069,7 +1139,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_RENAISSANCE_29",
@@ -1083,7 +1154,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_RENAISSANCE_30",
@@ -1097,7 +1169,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_RENAISSANCE_31",
@@ -1111,7 +1184,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_RENAISSANCE_32",
@@ -1125,7 +1199,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_RENAISSANCE_33",
@@ -1139,7 +1214,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_RENAISSANCE_34",
@@ -1153,7 +1229,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_RENAISSANCE_21",
@@ -1167,7 +1244,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_RENAISSANCE_22",
@@ -1181,7 +1259,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_RENAISSANCE_23",
@@ -1195,7 +1274,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_RENAISSANCE_24",
@@ -1209,7 +1289,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_RENAISSANCE_25",
@@ -1223,7 +1304,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_RENAISSANCE_26",
@@ -1237,7 +1319,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1299,7 +1382,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_INDUSTRIAL_36",
@@ -1313,7 +1397,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_INDUSTRIAL_37",
@@ -1327,7 +1412,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_INDUSTRIAL_38",
@@ -1341,7 +1427,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_INDUSTRIAL_39",
@@ -1355,7 +1442,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_INDUSTRIAL_40",
@@ -1369,7 +1457,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_INDUSTRIAL_41",
@@ -1383,7 +1472,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_INDUSTRIAL_42",
@@ -1397,7 +1487,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_INDUSTRIAL_27",
@@ -1411,7 +1502,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_INDUSTRIAL_28",
@@ -1425,7 +1517,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_INDUSTRIAL_29",
@@ -1439,7 +1532,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_INDUSTRIAL_30",
@@ -1453,7 +1547,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_INDUSTRIAL_31",
@@ -1467,7 +1562,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_INDUSTRIAL_32",
@@ -1481,7 +1577,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_INDUSTRIAL_33",
@@ -1495,7 +1592,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1561,7 +1659,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_MODERN_44",
@@ -1575,7 +1674,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_MODERN_45",
@@ -1589,7 +1689,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_MODERN_46",
@@ -1603,7 +1704,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_MODERN_47",
@@ -1617,7 +1719,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_MODERN_48",
@@ -1631,7 +1734,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_MODERN_49",
@@ -1645,7 +1749,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_MODERN_68",
@@ -1659,7 +1764,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_MODERN_34",
@@ -1673,7 +1779,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_MODERN_35",
@@ -1687,7 +1794,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_MODERN_36",
@@ -1701,7 +1809,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_MODERN_37",
@@ -1715,7 +1824,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_MODERN_38",
@@ -1729,7 +1839,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_MODERN_39",
@@ -1743,7 +1854,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_MODERN_40",
@@ -1757,7 +1869,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_MODERN_41",
@@ -1771,7 +1884,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_MODERN_42",
@@ -1785,7 +1899,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1850,7 +1965,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_ATOMIC_51",
@@ -1864,7 +1980,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_ATOMIC_52",
@@ -1878,7 +1995,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_ATOMIC_53",
@@ -1892,7 +2010,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_ATOMIC_54",
@@ -1906,7 +2025,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_ATOMIC_55",
@@ -1920,7 +2040,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_ATOMIC_56",
@@ -1934,7 +2055,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_ATOMIC_57",
@@ -1948,7 +2070,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_ATOMIC_43",
@@ -1962,7 +2085,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_ATOMIC_44",
@@ -1976,7 +2100,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_ATOMIC_45",
@@ -1990,7 +2115,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_ATOMIC_46",
@@ -2004,7 +2130,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_ATOMIC_47",
@@ -2018,7 +2145,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2084,7 +2212,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_INFORMATION_59",
@@ -2098,7 +2227,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_INFORMATION_60",
@@ -2112,7 +2242,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_INFORMATION_61",
@@ -2126,7 +2257,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_INFORMATION_62",
@@ -2140,7 +2272,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_INFORMATION_63",
@@ -2154,7 +2287,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_INFORMATION_64",
@@ -2168,7 +2302,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_INFORMATION_65",
@@ -2182,7 +2317,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_INFORMATION_66",
@@ -2196,7 +2332,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_INFORMATION_48",
@@ -2210,7 +2347,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_INFORMATION_49",
@@ -2224,7 +2362,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_INFORMATION_51",
@@ -2238,7 +2377,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_INFORMATION_52",
@@ -2252,7 +2392,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_INFORMATION_53",
@@ -2266,7 +2407,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_INFORMATION_54",
@@ -2280,7 +2422,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_INFORMATION_55",
@@ -2294,7 +2437,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2314,7 +2458,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_FUTURE_70",
@@ -2328,7 +2473,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_FUTURE_71",
@@ -2342,7 +2488,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_FUTURE_72",
@@ -2356,7 +2503,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_FUTURE_73",
@@ -2370,7 +2518,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_FUTURE_74",
@@ -2384,7 +2533,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_FUTURE_75",
@@ -2398,7 +2548,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "TECH_AP_FUTURE_76",
@@ -2412,7 +2563,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_FUTURE_50",
@@ -2426,7 +2578,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_FUTURE_56",
@@ -2440,7 +2593,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_FUTURE_57",
@@ -2454,7 +2608,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_FUTURE_58",
@@ -2468,7 +2623,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_FUTURE_59",
@@ -2482,7 +2638,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "CIVIC_AP_FUTURE_60",
@@ -2496,7 +2653,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Complete a victory type",
@@ -2516,7 +2674,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       }
@@ -2538,12 +2697,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Animal Husbandry": {
         "name": "Animal Husbandry",
@@ -2551,12 +2708,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mining": {
         "name": "Mining",
@@ -2564,12 +2719,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Sailing": {
         "name": "Sailing",
@@ -2577,12 +2730,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Astrology": {
         "name": "Astrology",
@@ -2590,12 +2741,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Irrigation": {
         "name": "Irrigation",
@@ -2603,12 +2752,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Archery": {
         "name": "Archery",
@@ -2616,12 +2763,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Writing": {
         "name": "Writing",
@@ -2629,12 +2774,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Masonry": {
         "name": "Masonry",
@@ -2642,12 +2785,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Bronze Working": {
         "name": "Bronze Working",
@@ -2655,12 +2796,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "The Wheel": {
         "name": "The Wheel",
@@ -2668,12 +2807,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Celestial Navigation": {
         "name": "Celestial Navigation",
@@ -2681,12 +2818,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Currency": {
         "name": "Currency",
@@ -2694,12 +2829,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Horseback Riding": {
         "name": "Horseback Riding",
@@ -2707,12 +2840,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Iron Working": {
         "name": "Iron Working",
@@ -2720,12 +2851,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Shipbuilding": {
         "name": "Shipbuilding",
@@ -2733,12 +2862,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mathematics": {
         "name": "Mathematics",
@@ -2746,12 +2873,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Construction": {
         "name": "Construction",
@@ -2759,12 +2884,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Engineering": {
         "name": "Engineering",
@@ -2772,12 +2895,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Military Tactics": {
         "name": "Military Tactics",
@@ -2785,12 +2906,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Apprenticeship": {
         "name": "Apprenticeship",
@@ -2798,12 +2917,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Machinery": {
         "name": "Machinery",
@@ -2811,12 +2928,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Education": {
         "name": "Education",
@@ -2824,12 +2939,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Stirrups": {
         "name": "Stirrups",
@@ -2837,12 +2950,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Military Engineering": {
         "name": "Military Engineering",
@@ -2850,12 +2961,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Castles": {
         "name": "Castles",
@@ -2863,12 +2972,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Cartography": {
         "name": "Cartography",
@@ -2876,12 +2983,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mass Production": {
         "name": "Mass Production",
@@ -2889,12 +2994,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Banking": {
         "name": "Banking",
@@ -2902,12 +3005,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Gunpowder": {
         "name": "Gunpowder",
@@ -2915,12 +3016,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Printing": {
         "name": "Printing",
@@ -2928,12 +3027,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Square Rigging": {
         "name": "Square Rigging",
@@ -2941,12 +3038,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Astronomy": {
         "name": "Astronomy",
@@ -2954,12 +3049,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Metal Casting": {
         "name": "Metal Casting",
@@ -2967,12 +3060,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Siege Tactics": {
         "name": "Siege Tactics",
@@ -2980,12 +3071,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Industrialization": {
         "name": "Industrialization",
@@ -2993,12 +3082,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Scientific Theory": {
         "name": "Scientific Theory",
@@ -3006,12 +3093,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Ballistics": {
         "name": "Ballistics",
@@ -3019,12 +3104,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Military Science": {
         "name": "Military Science",
@@ -3032,12 +3115,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Steam Power": {
         "name": "Steam Power",
@@ -3045,12 +3126,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Sanitation": {
         "name": "Sanitation",
@@ -3058,12 +3137,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Economics": {
         "name": "Economics",
@@ -3071,12 +3148,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Rifling": {
         "name": "Rifling",
@@ -3084,12 +3159,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Flight": {
         "name": "Flight",
@@ -3097,12 +3170,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Replaceable Parts": {
         "name": "Replaceable Parts",
@@ -3110,12 +3181,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Steel": {
         "name": "Steel",
@@ -3123,12 +3192,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Electricity": {
         "name": "Electricity",
@@ -3136,12 +3203,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Radio": {
         "name": "Radio",
@@ -3149,12 +3214,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Chemistry": {
         "name": "Chemistry",
@@ -3162,12 +3225,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Combustion": {
         "name": "Combustion",
@@ -3175,12 +3236,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Advanced Flight": {
         "name": "Advanced Flight",
@@ -3188,12 +3247,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Rocketry": {
         "name": "Rocketry",
@@ -3201,12 +3258,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Advanced Ballistics": {
         "name": "Advanced Ballistics",
@@ -3214,12 +3269,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Combined Arms": {
         "name": "Combined Arms",
@@ -3227,12 +3280,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Plastics": {
         "name": "Plastics",
@@ -3240,12 +3291,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Computers": {
         "name": "Computers",
@@ -3253,12 +3302,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Nuclear Fission": {
         "name": "Nuclear Fission",
@@ -3266,12 +3313,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Synthetic Materials": {
         "name": "Synthetic Materials",
@@ -3279,12 +3324,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Telecommunications": {
         "name": "Telecommunications",
@@ -3292,12 +3335,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Satellites": {
         "name": "Satellites",
@@ -3305,12 +3346,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Guidance Systems": {
         "name": "Guidance Systems",
@@ -3318,12 +3357,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Lasers": {
         "name": "Lasers",
@@ -3331,12 +3368,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Composites": {
         "name": "Composites",
@@ -3344,12 +3379,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Stealth Technology": {
         "name": "Stealth Technology",
@@ -3357,12 +3390,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Robotics": {
         "name": "Robotics",
@@ -3370,12 +3401,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Nanotechnology": {
         "name": "Nanotechnology",
@@ -3383,12 +3412,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Nuclear Fusion": {
         "name": "Nuclear Fusion",
@@ -3396,12 +3423,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Buttress": {
         "name": "Buttress",
@@ -3409,12 +3434,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Refining": {
         "name": "Refining",
@@ -3422,12 +3445,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Seasteads": {
         "name": "Seasteads",
@@ -3435,12 +3456,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Advanced AI": {
         "name": "Advanced AI",
@@ -3448,12 +3467,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Advanced Power Cells": {
         "name": "Advanced Power Cells",
@@ -3461,12 +3478,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Cybernetics": {
         "name": "Cybernetics",
@@ -3474,12 +3489,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Smart Materials": {
         "name": "Smart Materials",
@@ -3487,12 +3500,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Predictive Systems": {
         "name": "Predictive Systems",
@@ -3500,12 +3511,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Offworld Mission": {
         "name": "Offworld Mission",
@@ -3513,12 +3522,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Future Tech": {
         "name": "Future Tech",
@@ -3526,12 +3533,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Code of Laws": {
         "name": "Code of Laws",
@@ -3539,12 +3544,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Craftsmanship": {
         "name": "Craftsmanship",
@@ -3552,12 +3555,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Foreign Trade": {
         "name": "Foreign Trade",
@@ -3565,12 +3566,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Military Tradition": {
         "name": "Military Tradition",
@@ -3578,12 +3577,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "State Workforce": {
         "name": "State Workforce",
@@ -3591,12 +3588,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Early Empire": {
         "name": "Early Empire",
@@ -3604,12 +3599,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Mysticism": {
         "name": "Mysticism",
@@ -3617,12 +3610,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Games Recreation": {
         "name": "Games Recreation",
@@ -3630,12 +3621,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Political Philosophy": {
         "name": "Political Philosophy",
@@ -3643,12 +3632,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Drama and Poetry": {
         "name": "Drama and Poetry",
@@ -3656,12 +3643,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Military Training": {
         "name": "Military Training",
@@ -3669,12 +3654,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Defensive Tactics": {
         "name": "Defensive Tactics",
@@ -3682,12 +3665,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Recorded History": {
         "name": "Recorded History",
@@ -3695,12 +3676,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Theology": {
         "name": "Theology",
@@ -3708,12 +3687,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Naval Tradition": {
         "name": "Naval Tradition",
@@ -3721,12 +3698,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Feudalism": {
         "name": "Feudalism",
@@ -3734,12 +3709,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Civil Service": {
         "name": "Civil Service",
@@ -3747,12 +3720,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Mercenaries": {
         "name": "Mercenaries",
@@ -3760,12 +3731,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Medieval Faires": {
         "name": "Medieval Faires",
@@ -3773,12 +3742,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Guilds": {
         "name": "Guilds",
@@ -3786,12 +3753,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Divine Right": {
         "name": "Divine Right",
@@ -3799,12 +3764,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Exploration": {
         "name": "Exploration",
@@ -3812,12 +3775,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Humanism": {
         "name": "Humanism",
@@ -3825,12 +3786,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Diplomatic Service": {
         "name": "Diplomatic Service",
@@ -3838,12 +3797,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Reformed Church": {
         "name": "Reformed Church",
@@ -3851,12 +3808,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mercantilism": {
         "name": "Mercantilism",
@@ -3864,12 +3819,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "The Enlightenment": {
         "name": "The Enlightenment",
@@ -3877,12 +3830,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Colonialism": {
         "name": "Colonialism",
@@ -3890,12 +3841,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Civil Engineering": {
         "name": "Civil Engineering",
@@ -3903,12 +3852,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Nationalism": {
         "name": "Nationalism",
@@ -3916,12 +3863,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Opera and Ballet": {
         "name": "Opera and Ballet",
@@ -3929,12 +3874,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Natural History": {
         "name": "Natural History",
@@ -3942,12 +3885,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Scorched Earth": {
         "name": "Scorched Earth",
@@ -3955,12 +3896,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Urbanization": {
         "name": "Urbanization",
@@ -3968,12 +3907,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Conservation": {
         "name": "Conservation",
@@ -3981,12 +3918,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Capitalism": {
         "name": "Capitalism",
@@ -3994,12 +3929,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Nuclear Program": {
         "name": "Nuclear Program",
@@ -4007,12 +3940,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Mass Media": {
         "name": "Mass Media",
@@ -4020,12 +3951,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Mobilization": {
         "name": "Mobilization",
@@ -4033,12 +3962,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Ideology": {
         "name": "Ideology",
@@ -4046,12 +3973,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Suffrage": {
         "name": "Suffrage",
@@ -4059,12 +3984,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Totalitarianism": {
         "name": "Totalitarianism",
@@ -4072,12 +3995,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Class Struggle": {
         "name": "Class Struggle",
@@ -4085,12 +4006,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Cold War": {
         "name": "Cold War",
@@ -4098,12 +4017,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Professional Sports": {
         "name": "Professional Sports",
@@ -4111,12 +4028,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Cultural Heritage": {
         "name": "Cultural Heritage",
@@ -4124,12 +4039,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Rapid Deployment": {
         "name": "Rapid Deployment",
@@ -4137,12 +4050,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Space Race": {
         "name": "Space Race",
@@ -4150,12 +4061,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Globalization": {
         "name": "Globalization",
@@ -4163,12 +4072,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Social Media": {
         "name": "Social Media",
@@ -4176,12 +4083,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Future Civic": {
         "name": "Future Civic",
@@ -4189,12 +4094,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Environmentalism": {
         "name": "Environmentalism",
@@ -4202,12 +4105,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Corporate Libertarianism": {
         "name": "Corporate Libertarianism",
@@ -4215,12 +4116,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Digital Democracy": {
         "name": "Digital Democracy",
@@ -4228,12 +4127,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Synthetic Technocracy": {
         "name": "Synthetic Technocracy",
@@ -4241,12 +4138,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Near Future Governance": {
         "name": "Near Future Governance",
@@ -4254,12 +4149,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Global Warming Mitigation": {
         "name": "Global Warming Mitigation",
@@ -4267,12 +4160,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Smart Power Doctrine": {
         "name": "Smart Power Doctrine",
@@ -4280,12 +4171,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Information Warfare": {
         "name": "Information Warfare",
@@ -4293,12 +4182,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Exodus Imperative": {
         "name": "Exodus Imperative",
@@ -4306,12 +4193,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Cultural Hegemony": {
         "name": "Cultural Hegemony",
@@ -4319,12 +4204,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Progressive Campus": {
         "name": "Progressive Campus",
@@ -4332,12 +4215,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression"
       },
       "Progressive Theater": {
         "name": "Progressive Theater",
@@ -4345,12 +4226,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression"
       },
       "Progressive Holy Site": {
         "name": "Progressive Holy Site",
@@ -4358,12 +4237,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Progressive Encampment": {
         "name": "Progressive Encampment",
@@ -4371,12 +4248,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression"
       },
       "Progressive Commercial Hub": {
         "name": "Progressive Commercial Hub",
@@ -4384,12 +4259,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression"
       },
       "Progressive Harbor": {
         "name": "Progressive Harbor",
@@ -4397,12 +4270,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Progressive Industrial Zone": {
         "name": "Progressive Industrial Zone",
@@ -4410,12 +4281,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "progression"
       },
       "Progressive Preserve": {
         "name": "Progressive Preserve",
@@ -4423,12 +4292,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "useful"
       },
       "Progressive Entertainment Complex": {
         "name": "Progressive Entertainment Complex",
@@ -4436,12 +4303,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression"
       },
       "Progressive Neighborhood": {
         "name": "Progressive Neighborhood",
@@ -4449,12 +4314,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "useful"
       },
       "Progressive Aerodrome": {
         "name": "Progressive Aerodrome",
@@ -4462,12 +4325,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Progressive Diplomatic Quarter": {
         "name": "Progressive Diplomatic Quarter",
@@ -4475,12 +4336,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Progressive Space Port": {
         "name": "Progressive Space Port",
@@ -4488,12 +4347,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 5,
+        "classification": "progression"
       },
       "Progressive Era": {
         "name": "Progressive Era",
@@ -4501,12 +4358,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Gold: Small": {
         "name": "Gold: Small",
@@ -4514,12 +4369,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Gold: Medium": {
         "name": "Gold: Medium",
@@ -4527,12 +4380,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "filler"
       },
       "Gold: Large": {
         "name": "Gold: Large",
@@ -4540,12 +4391,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Faith: Small": {
         "name": "Faith: Small",
@@ -4553,12 +4402,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Faith: Medium": {
         "name": "Faith: Medium",
@@ -4566,12 +4413,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "filler"
       },
       "Faith: Large": {
         "name": "Faith: Large",
@@ -4579,12 +4424,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Diplomatic Favor": {
         "name": "Diplomatic Favor",
@@ -4592,12 +4435,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Governor Title": {
         "name": "Governor Title",
@@ -4605,12 +4446,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Envoy": {
         "name": "Envoy",
@@ -4618,12 +4457,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Relic": {
         "name": "Relic",
@@ -4631,12 +4468,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Scout": {
         "name": "Scout",
@@ -4644,12 +4479,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Additional Population": {
         "name": "Additional Population",
@@ -4657,12 +4490,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "filler"
       },
       "Builder": {
         "name": "Builder",
@@ -4670,12 +4501,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Trader": {
         "name": "Trader",
@@ -4683,12 +4512,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Settler": {
         "name": "Settler",
@@ -4696,12 +4523,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Victory": {
         "name": "Victory",
@@ -4709,12 +4534,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -4725,127 +4548,127 @@
   },
   "itempool_counts": {
     "1": {
-      "Additional Population": 2,
-      "Advanced AI": 2,
-      "Advanced Ballistics": 2,
-      "Advanced Power Cells": 2,
-      "Animal Husbandry": 2,
-      "Archery": 2,
-      "Astronomy": 2,
-      "Ballistics": 2,
-      "Buttress": 2,
-      "Cartography": 2,
-      "Castles": 2,
-      "Civil Engineering": 2,
-      "Civil Service": 2,
-      "Class Struggle": 2,
-      "Code of Laws": 2,
-      "Cold War": 2,
-      "Colonialism": 2,
-      "Combined Arms": 2,
-      "Combustion": 2,
-      "Composites": 2,
-      "Computers": 2,
-      "Construction": 2,
-      "Corporate Libertarianism": 2,
-      "Craftsmanship": 2,
-      "Cultural Hegemony": 2,
-      "Cultural Heritage": 2,
-      "Cybernetics": 2,
-      "Defensive Tactics": 2,
-      "Digital Democracy": 2,
-      "Divine Right": 2,
-      "Early Empire": 2,
-      "Engineering": 2,
-      "Environmentalism": 2,
-      "Exodus Imperative": 2,
-      "Exploration": 2,
-      "Faith: Large": 2,
-      "Faith: Medium": 4,
-      "Faith: Small": 2,
-      "Feudalism": 2,
-      "Foreign Trade": 2,
-      "Future Civic": 2,
-      "Future Tech": 2,
-      "Global Warming Mitigation": 2,
-      "Globalization": 2,
-      "Gold: Medium": 6,
-      "Gold: Small": 2,
-      "Governor Title": 2,
-      "Guidance Systems": 2,
-      "Guilds": 2,
-      "Gunpowder": 2,
-      "Horseback Riding": 2,
-      "Ideology": 2,
-      "Information Warfare": 2,
-      "Iron Working": 2,
-      "Irrigation": 2,
-      "Lasers": 2,
-      "Machinery": 2,
-      "Masonry": 2,
-      "Mass Media": 2,
-      "Medieval Faires": 2,
-      "Mercantilism": 2,
-      "Mercenaries": 2,
-      "Metal Casting": 2,
-      "Military Tactics": 2,
-      "Military Tradition": 2,
-      "Military Training": 2,
-      "Mining": 2,
-      "Mobilization": 2,
-      "Nationalism": 2,
-      "Naval Tradition": 2,
-      "Near Future Governance": 2,
-      "Nuclear Fusion": 2,
-      "Nuclear Program": 2,
-      "Opera and Ballet": 2,
-      "Plastics": 2,
-      "Political Philosophy": 2,
-      "Pottery": 2,
-      "Predictive Systems": 2,
-      "Printing": 2,
-      "Progressive Aerodrome": 4,
-      "Progressive Campus": 6,
-      "Progressive Commercial Hub": 6,
-      "Progressive Diplomatic Quarter": 4,
-      "Progressive Encampment": 6,
-      "Progressive Entertainment Complex": 6,
-      "Progressive Harbor": 4,
-      "Progressive Holy Site": 4,
-      "Progressive Industrial Zone": 8,
-      "Progressive Neighborhood": 6,
-      "Progressive Preserve": 4,
-      "Progressive Space Port": 10,
-      "Progressive Theater": 6,
-      "Rapid Deployment": 2,
-      "Recorded History": 2,
-      "Refining": 2,
-      "Reformed Church": 2,
-      "Rifling": 2,
-      "Robotics": 2,
-      "Sailing": 2,
-      "Sanitation": 2,
-      "Scientific Theory": 2,
-      "Scorched Earth": 2,
-      "Seasteads": 2,
-      "Shipbuilding": 2,
-      "Siege Tactics": 2,
-      "Smart Power Doctrine": 2,
-      "Social Media": 2,
-      "Space Race": 2,
-      "Square Rigging": 2,
-      "State Workforce": 2,
-      "Stealth Technology": 2,
-      "Steam Power": 2,
-      "Steel": 2,
-      "Stirrups": 2,
-      "Suffrage": 2,
-      "Synthetic Materials": 2,
-      "Synthetic Technocracy": 2,
-      "Telecommunications": 2,
-      "The Enlightenment": 2,
-      "The Wheel": 2,
-      "Totalitarianism": 2,
+      "Additional Population": 1,
+      "Advanced AI": 1,
+      "Advanced Ballistics": 1,
+      "Advanced Power Cells": 1,
+      "Animal Husbandry": 1,
+      "Archery": 1,
+      "Astronomy": 1,
+      "Ballistics": 1,
+      "Buttress": 1,
+      "Cartography": 1,
+      "Castles": 1,
+      "Civil Engineering": 1,
+      "Civil Service": 1,
+      "Class Struggle": 1,
+      "Code of Laws": 1,
+      "Cold War": 1,
+      "Colonialism": 1,
+      "Combined Arms": 1,
+      "Combustion": 1,
+      "Composites": 1,
+      "Computers": 1,
+      "Construction": 1,
+      "Corporate Libertarianism": 1,
+      "Craftsmanship": 1,
+      "Cultural Hegemony": 1,
+      "Cultural Heritage": 1,
+      "Cybernetics": 1,
+      "Defensive Tactics": 1,
+      "Digital Democracy": 1,
+      "Divine Right": 1,
+      "Early Empire": 1,
+      "Engineering": 1,
+      "Environmentalism": 1,
+      "Exodus Imperative": 1,
+      "Exploration": 1,
+      "Faith: Large": 1,
+      "Faith: Medium": 2,
+      "Faith: Small": 1,
+      "Feudalism": 1,
+      "Foreign Trade": 1,
+      "Future Civic": 1,
+      "Future Tech": 1,
+      "Global Warming Mitigation": 1,
+      "Globalization": 1,
+      "Gold: Medium": 3,
+      "Gold: Small": 1,
+      "Governor Title": 1,
+      "Guidance Systems": 1,
+      "Guilds": 1,
+      "Gunpowder": 1,
+      "Horseback Riding": 1,
+      "Ideology": 1,
+      "Information Warfare": 1,
+      "Iron Working": 1,
+      "Irrigation": 1,
+      "Lasers": 1,
+      "Machinery": 1,
+      "Masonry": 1,
+      "Mass Media": 1,
+      "Medieval Faires": 1,
+      "Mercantilism": 1,
+      "Mercenaries": 1,
+      "Metal Casting": 1,
+      "Military Tactics": 1,
+      "Military Tradition": 1,
+      "Military Training": 1,
+      "Mining": 1,
+      "Mobilization": 1,
+      "Nationalism": 1,
+      "Naval Tradition": 1,
+      "Near Future Governance": 1,
+      "Nuclear Fusion": 1,
+      "Nuclear Program": 1,
+      "Opera and Ballet": 1,
+      "Plastics": 1,
+      "Political Philosophy": 1,
+      "Pottery": 1,
+      "Predictive Systems": 1,
+      "Printing": 1,
+      "Progressive Aerodrome": 2,
+      "Progressive Campus": 3,
+      "Progressive Commercial Hub": 3,
+      "Progressive Diplomatic Quarter": 2,
+      "Progressive Encampment": 3,
+      "Progressive Entertainment Complex": 3,
+      "Progressive Harbor": 2,
+      "Progressive Holy Site": 2,
+      "Progressive Industrial Zone": 4,
+      "Progressive Neighborhood": 3,
+      "Progressive Preserve": 2,
+      "Progressive Space Port": 5,
+      "Progressive Theater": 3,
+      "Rapid Deployment": 1,
+      "Recorded History": 1,
+      "Refining": 1,
+      "Reformed Church": 1,
+      "Rifling": 1,
+      "Robotics": 1,
+      "Sailing": 1,
+      "Sanitation": 1,
+      "Scientific Theory": 1,
+      "Scorched Earth": 1,
+      "Seasteads": 1,
+      "Shipbuilding": 1,
+      "Siege Tactics": 1,
+      "Smart Power Doctrine": 1,
+      "Social Media": 1,
+      "Space Race": 1,
+      "Square Rigging": 1,
+      "State Workforce": 1,
+      "Stealth Technology": 1,
+      "Steam Power": 1,
+      "Steel": 1,
+      "Stirrups": 1,
+      "Suffrage": 1,
+      "Synthetic Materials": 1,
+      "Synthetic Technocracy": 1,
+      "Telecommunications": 1,
+      "The Enlightenment": 1,
+      "The Wheel": 1,
+      "Totalitarianism": 1,
       "Victory": 1
     }
   },
@@ -5022,5 +4845,6 @@
         "ERA_FUTURE": 0
       }
     }
-  }
+  },
+  "helpers": {}
 }

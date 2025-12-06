@@ -529,7 +529,8 @@
               "player": 1,
               "advancement": true,
               "type": "Event"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Forsaken Fortress - Chest Guarded By Bokoblin",
@@ -544,7 +545,8 @@
               "player": 1,
               "advancement": false,
               "type": "Map"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Forsaken Fortress - Chest Inside Lower Jail Cell",
@@ -559,7 +561,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forsaken Fortress - Chest Outside Upper Jail Cell",
@@ -598,7 +601,8 @@
               "player": 1,
               "advancement": false,
               "type": "Compass"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Forsaken Fortress - Chest on Bed",
@@ -613,7 +617,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forsaken Fortress - Phantom Ganon",
@@ -628,7 +633,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Ganon's Tower - Maze Chest",
@@ -653,7 +659,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Outset Island - Great Fairy",
@@ -673,7 +680,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item",
@@ -688,7 +696,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item",
@@ -703,7 +712,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item",
@@ -718,7 +728,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "The Great Sea - Salvage Corp Gift",
@@ -732,7 +743,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Windfall Island - Jail - Tingle - First Gift",
@@ -746,7 +758,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Windfall Island - Jail - Tingle - Second Gift",
@@ -760,7 +773,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Windfall Island - Maggie - Free Item",
@@ -774,7 +788,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Windfall Island - Tott - Teach Rhythm",
@@ -788,7 +803,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -831,7 +847,8 @@
               "player": 1,
               "advancement": true,
               "type": "Small Key"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Dragon Roost Cavern - Big Key Chest",
@@ -860,7 +877,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dragon Roost Cavern - Bird's Nest",
@@ -878,7 +896,8 @@
               "player": 1,
               "advancement": true,
               "type": "Small Key"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Dragon Roost Cavern - Boarded Up Chest",
@@ -896,7 +915,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dragon Roost Cavern - Boss Stairs Left Chest",
@@ -911,7 +931,8 @@
               "player": 1,
               "advancement": false,
               "type": "Map"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Dragon Roost Cavern - Boss Stairs Right Chest",
@@ -926,7 +947,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dragon Roost Cavern - Chest Across Lava Pit",
@@ -977,7 +999,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dragon Roost Cavern - Dark Room",
@@ -995,7 +1018,8 @@
               "player": 1,
               "advancement": false,
               "type": "Compass"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Dragon Roost Cavern - First Room",
@@ -1009,7 +1033,8 @@
               "player": 1,
               "advancement": true,
               "type": "Small Key"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Dragon Roost Cavern - Miniboss",
@@ -1027,7 +1052,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dragon Roost Cavern - Pot Room Chest",
@@ -1045,7 +1071,8 @@
               "player": 1,
               "advancement": true,
               "type": "Big Key"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Dragon Roost Cavern - Rat Room",
@@ -1063,7 +1090,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dragon Roost Cavern - Rat Room Boarded Up Chest",
@@ -1081,7 +1109,8 @@
               "player": 1,
               "advancement": true,
               "type": "Small Key"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Dragon Roost Cavern - Under Rope Bridge",
@@ -1118,7 +1147,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1237,7 +1267,8 @@
               "player": 1,
               "advancement": false,
               "type": "Map"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Forbidden Woods - Chest Across Red Hanging Flower",
@@ -1275,7 +1306,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forbidden Woods - Chest in Locked Tree Trunk",
@@ -1313,7 +1345,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forbidden Woods - Climb to Top Using Boko Baba Bulbs",
@@ -1338,7 +1371,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forbidden Woods - Double Mothula Room",
@@ -1382,7 +1416,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forbidden Woods - First Room",
@@ -1396,7 +1431,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forbidden Woods - Hole in Tree",
@@ -1421,7 +1457,8 @@
               "player": 1,
               "advancement": true,
               "type": "Small Key"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Forbidden Woods - Inside Hollow Tree's Mouth",
@@ -1446,7 +1483,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forbidden Woods - Morth Pit",
@@ -1475,7 +1513,8 @@
               "player": 1,
               "advancement": true,
               "type": "Big Key"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Forbidden Woods - Past Seeds Hanging by Vines",
@@ -1533,7 +1572,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forbidden Woods - Tall Room Before Miniboss",
@@ -1586,7 +1626,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forbidden Woods - Vine Maze Left Chest",
@@ -1615,7 +1656,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Forbidden Woods - Vine Maze Right Chest",
@@ -1644,7 +1686,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -1732,7 +1775,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of the Gods - Chest Behind Bombable Walls",
@@ -1746,7 +1790,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of the Gods - First Chest Guarded by Armos Knights",
@@ -1771,7 +1816,8 @@
               "player": 1,
               "advancement": true,
               "type": "Big Key"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Tower of the Gods - Floating Platforms Room",
@@ -1830,7 +1876,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of the Gods - Hop Across Floating Boxes",
@@ -1844,7 +1891,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of the Gods - Light Two Torches",
@@ -1858,7 +1906,8 @@
               "player": 1,
               "advancement": false,
               "type": "Map"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Tower of the Gods - Second Chest Guarded by Armos Knights",
@@ -1887,7 +1936,8 @@
               "player": 1,
               "advancement": true,
               "type": "Small Key"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Tower of the Gods - Shoot Eye Above Skulls Room Chest",
@@ -1911,7 +1961,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of the Gods - Skulls Room Chest",
@@ -1925,7 +1976,8 @@
               "player": 1,
               "advancement": true,
               "type": "Small Key"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Tower of the Gods - Stone Tablet",
@@ -1949,7 +2001,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Tower of the Gods - Top of Floating Platforms Room",
@@ -1974,7 +2027,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2119,7 +2173,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Earth Temple - Casket in Second Crypt",
@@ -2134,7 +2189,8 @@
               "player": 1,
               "advancement": false,
               "type": "Map"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Earth Temple - Chest Behind Destructible Walls",
@@ -2159,7 +2215,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Earth Temple - Chest Behind Statues",
@@ -2194,7 +2251,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Earth Temple - Chest In Three Blocks Room",
@@ -2243,7 +2301,8 @@
               "player": 1,
               "advancement": true,
               "type": "Small Key"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Earth Temple - Chest in Third Crypt",
@@ -2258,7 +2317,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Earth Temple - End of Foggy Room With Floormasters",
@@ -2293,7 +2353,8 @@
               "player": 1,
               "advancement": true,
               "type": "Big Key"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Earth Temple - Kill All Floormasters in Foggy Room",
@@ -2333,7 +2394,8 @@
               "player": 1,
               "advancement": true,
               "type": "Small Key"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Earth Temple - Many Mirrors Room Left Chest",
@@ -2367,7 +2429,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Earth Temple - Many Mirrors Room Right Chest",
@@ -2392,7 +2455,8 @@
               "player": 1,
               "advancement": false,
               "type": "Compass"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Earth Temple - Stalfos Crypt Room",
@@ -2417,7 +2481,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Earth Temple - Transparent Chest In Warp Pot Room",
@@ -2432,7 +2497,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Earth Temple - Transparent Chest in First Crypt",
@@ -2471,7 +2537,8 @@
               "player": 1,
               "advancement": true,
               "type": "Small Key"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2577,7 +2644,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Wind Temple - Chest Behind Seven Armos",
@@ -2602,7 +2670,8 @@
               "player": 1,
               "advancement": true,
               "type": "Big Key"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Wind Temple - Chest Behind Stone Head",
@@ -2635,7 +2704,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Wind Temple - Chest Between Two Dirt Patches",
@@ -2650,7 +2720,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Wind Temple - Chest In Many Cyclones Room",
@@ -2752,7 +2823,8 @@
               "player": 1,
               "advancement": true,
               "type": "Small Key"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Wind Temple - Chest In Middle Of Hub Room",
@@ -2767,7 +2839,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Wind Temple - Chest at Top of Hub Room",
@@ -2782,7 +2855,8 @@
               "player": 1,
               "advancement": true,
               "type": "Small Key"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Wind Temple - Chest in Left Alcove",
@@ -2811,7 +2885,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Wind Temple - Kill All Enemies in Tall Basement Room",
@@ -2846,7 +2921,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Wind Temple - Spike Wall Room - Destroy All Cracked Floors",
@@ -2870,7 +2946,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Wind Temple - Spike Wall Room - First Chest",
@@ -2894,7 +2971,8 @@
               "player": 1,
               "advancement": false,
               "type": "Compass"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2915,7 +2993,8 @@
               "player": 1,
               "advancement": false,
               "type": "Compass"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2936,7 +3015,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2966,7 +3046,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -2997,7 +3078,8 @@
               "player": 1,
               "advancement": false,
               "type": "Map"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3018,7 +3100,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3039,7 +3122,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3060,7 +3144,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3081,7 +3166,8 @@
               "player": 1,
               "advancement": false,
               "type": "Compass"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3102,7 +3188,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3123,7 +3210,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3144,7 +3232,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3188,7 +3277,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3208,7 +3298,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Private Oasis - Cabana Labyrinth - Upper Floor Chest",
@@ -3232,7 +3323,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3253,7 +3345,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3293,7 +3386,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3329,7 +3423,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3350,7 +3445,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pawprint Isle - Chuchu Cave - Behind Right Boulder",
@@ -3365,7 +3461,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pawprint Isle - Chuchu Cave - Chest",
@@ -3379,7 +3476,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Pawprint Isle - Chuchu Cave - Scale the Wall",
@@ -3393,7 +3491,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3418,7 +3517,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Diamond Steppe Island - Warp Maze Cave - Second Chest",
@@ -3432,7 +3532,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3453,7 +3554,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3528,7 +3630,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3563,7 +3666,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3588,7 +3692,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3608,7 +3713,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3628,7 +3734,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3648,7 +3755,8 @@
               "player": 1,
               "advancement": false,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -3668,7 +3776,8 @@
               "player": 1,
               "advancement": true,
               "type": "Item"
-            }
+            },
+            "locked": false
           }
         ]
       }
@@ -3690,12 +3799,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Wind Waker": {
         "name": "Wind Waker",
@@ -3703,12 +3810,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Grappling Hook": {
         "name": "Grappling Hook",
@@ -3716,12 +3821,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Spoils Bag": {
         "name": "Spoils Bag",
@@ -3729,12 +3832,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Boomerang": {
         "name": "Boomerang",
@@ -3742,12 +3843,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Deku Leaf": {
         "name": "Deku Leaf",
@@ -3755,12 +3854,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Tingle Tuner": {
         "name": "Tingle Tuner",
@@ -3768,12 +3865,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Iron Boots": {
         "name": "Iron Boots",
@@ -3781,12 +3876,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Magic Armor": {
         "name": "Magic Armor",
@@ -3794,12 +3887,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Bait Bag": {
         "name": "Bait Bag",
@@ -3807,12 +3898,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Bombs": {
         "name": "Bombs",
@@ -3820,12 +3909,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Delivery Bag": {
         "name": "Delivery Bag",
@@ -3833,12 +3920,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Hookshot": {
         "name": "Hookshot",
@@ -3846,12 +3931,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Skull Hammer": {
         "name": "Skull Hammer",
@@ -3859,12 +3942,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Power Bracelets": {
         "name": "Power Bracelets",
@@ -3872,12 +3953,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Hero's Charm": {
         "name": "Hero's Charm",
@@ -3885,12 +3964,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Hurricane Spin": {
         "name": "Hurricane Spin",
@@ -3898,12 +3975,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Dragon Tingle Statue": {
         "name": "Dragon Tingle Statue",
@@ -3912,12 +3987,10 @@
           "Everything",
           "Tingle Statues"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Forbidden Tingle Statue": {
         "name": "Forbidden Tingle Statue",
@@ -3926,12 +3999,10 @@
           "Everything",
           "Tingle Statues"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Goddess Tingle Statue": {
         "name": "Goddess Tingle Statue",
@@ -3940,12 +4011,10 @@
           "Everything",
           "Tingle Statues"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Earth Tingle Statue": {
         "name": "Earth Tingle Statue",
@@ -3954,12 +4023,10 @@
           "Everything",
           "Tingle Statues"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Wind Tingle Statue": {
         "name": "Wind Tingle Statue",
@@ -3968,12 +4035,10 @@
           "Everything",
           "Tingle Statues"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Wind's Requiem": {
         "name": "Wind's Requiem",
@@ -3982,12 +4047,10 @@
           "Everything",
           "Songs"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ballad of Gales": {
         "name": "Ballad of Gales",
@@ -3996,12 +4059,10 @@
           "Everything",
           "Songs"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Command Melody": {
         "name": "Command Melody",
@@ -4010,12 +4071,10 @@
           "Everything",
           "Songs"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Earth God's Lyric": {
         "name": "Earth God's Lyric",
@@ -4024,12 +4083,10 @@
           "Everything",
           "Songs"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Wind God's Aria": {
         "name": "Wind God's Aria",
@@ -4038,12 +4095,10 @@
           "Everything",
           "Songs"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Song of Passing": {
         "name": "Song of Passing",
@@ -4052,12 +4107,10 @@
           "Everything",
           "Songs"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Triforce Shard 1": {
         "name": "Triforce Shard 1",
@@ -4066,12 +4119,10 @@
           "Everything",
           "Shards"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Triforce Shard 2": {
         "name": "Triforce Shard 2",
@@ -4080,12 +4131,10 @@
           "Everything",
           "Shards"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Triforce Shard 3": {
         "name": "Triforce Shard 3",
@@ -4094,12 +4143,10 @@
           "Everything",
           "Shards"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Triforce Shard 4": {
         "name": "Triforce Shard 4",
@@ -4108,12 +4155,10 @@
           "Everything",
           "Shards"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Triforce Shard 5": {
         "name": "Triforce Shard 5",
@@ -4122,12 +4167,10 @@
           "Everything",
           "Shards"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Triforce Shard 6": {
         "name": "Triforce Shard 6",
@@ -4136,12 +4179,10 @@
           "Everything",
           "Shards"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Triforce Shard 7": {
         "name": "Triforce Shard 7",
@@ -4150,12 +4191,10 @@
           "Everything",
           "Shards"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Triforce Shard 8": {
         "name": "Triforce Shard 8",
@@ -4164,12 +4203,10 @@
           "Everything",
           "Shards"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Skull Necklace": {
         "name": "Skull Necklace",
@@ -4177,12 +4214,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Boko Baba Seed": {
         "name": "Boko Baba Seed",
@@ -4190,12 +4225,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Golden Feather": {
         "name": "Golden Feather",
@@ -4203,12 +4236,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Knight's Crest": {
         "name": "Knight's Crest",
@@ -4216,12 +4247,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Red Chu Jelly": {
         "name": "Red Chu Jelly",
@@ -4229,12 +4258,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Green Chu Jelly": {
         "name": "Green Chu Jelly",
@@ -4242,12 +4269,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Joy Pendant": {
         "name": "Joy Pendant",
@@ -4255,12 +4280,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "All-Purpose Bait": {
         "name": "All-Purpose Bait",
@@ -4268,12 +4291,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Hyoi Pear": {
         "name": "Hyoi Pear",
@@ -4281,12 +4302,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Note to Mom": {
         "name": "Note to Mom",
@@ -4295,12 +4314,10 @@
           "Everything",
           "Mail"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Maggie's Letter": {
         "name": "Maggie's Letter",
@@ -4309,12 +4326,10 @@
           "Everything",
           "Mail"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Moblin's Letter": {
         "name": "Moblin's Letter",
@@ -4323,12 +4338,10 @@
           "Everything",
           "Mail"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Cabana Deed": {
         "name": "Cabana Deed",
@@ -4336,12 +4349,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Fill-Up Coupon": {
         "name": "Fill-Up Coupon",
@@ -4349,12 +4360,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Nayru's Pearl": {
         "name": "Nayru's Pearl",
@@ -4363,12 +4372,10 @@
           "Everything",
           "Pearls"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Din's Pearl": {
         "name": "Din's Pearl",
@@ -4377,12 +4384,10 @@
           "Everything",
           "Pearls"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Farore's Pearl": {
         "name": "Farore's Pearl",
@@ -4391,12 +4396,10 @@
           "Everything",
           "Pearls"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Progressive Sword": {
         "name": "Progressive Sword",
@@ -4404,12 +4407,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 7
+        "max_count": 4,
+        "classification": "progression"
       },
       "Progressive Shield": {
         "name": "Progressive Shield",
@@ -4417,12 +4418,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Progressive Picto Box": {
         "name": "Progressive Picto Box",
@@ -4430,12 +4429,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Progressive Bow": {
         "name": "Progressive Bow",
@@ -4443,12 +4440,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 6
+        "max_count": 3,
+        "classification": "progression"
       },
       "Progressive Magic Meter": {
         "name": "Progressive Magic Meter",
@@ -4456,12 +4451,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Quiver Capacity Upgrade": {
         "name": "Quiver Capacity Upgrade",
@@ -4469,12 +4462,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Bomb Bag Capacity Upgrade": {
         "name": "Bomb Bag Capacity Upgrade",
@@ -4482,12 +4473,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "Wallet Capacity Upgrade": {
         "name": "Wallet Capacity Upgrade",
@@ -4495,12 +4484,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 2,
+        "classification": "progression"
       },
       "Empty Bottle": {
         "name": "Empty Bottle",
@@ -4508,12 +4495,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 4,
+        "classification": "progression"
       },
       "Triforce Chart 1": {
         "name": "Triforce Chart 1",
@@ -4522,12 +4507,10 @@
           "Everything",
           "Triforce Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Triforce Chart 2": {
         "name": "Triforce Chart 2",
@@ -4536,12 +4519,10 @@
           "Everything",
           "Triforce Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Triforce Chart 3": {
         "name": "Triforce Chart 3",
@@ -4550,12 +4531,10 @@
           "Everything",
           "Triforce Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Triforce Chart 4": {
         "name": "Triforce Chart 4",
@@ -4564,12 +4543,10 @@
           "Everything",
           "Triforce Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Triforce Chart 5": {
         "name": "Triforce Chart 5",
@@ -4578,12 +4555,10 @@
           "Everything",
           "Triforce Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Triforce Chart 6": {
         "name": "Triforce Chart 6",
@@ -4592,12 +4567,10 @@
           "Everything",
           "Triforce Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Triforce Chart 7": {
         "name": "Triforce Chart 7",
@@ -4606,12 +4579,10 @@
           "Everything",
           "Triforce Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Triforce Chart 8": {
         "name": "Triforce Chart 8",
@@ -4620,12 +4591,10 @@
           "Everything",
           "Triforce Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 1": {
         "name": "Treasure Chart 1",
@@ -4634,12 +4603,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 2": {
         "name": "Treasure Chart 2",
@@ -4648,12 +4615,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 3": {
         "name": "Treasure Chart 3",
@@ -4662,12 +4627,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 4": {
         "name": "Treasure Chart 4",
@@ -4676,12 +4639,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 5": {
         "name": "Treasure Chart 5",
@@ -4690,12 +4651,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 6": {
         "name": "Treasure Chart 6",
@@ -4704,12 +4663,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 7": {
         "name": "Treasure Chart 7",
@@ -4718,12 +4675,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 8": {
         "name": "Treasure Chart 8",
@@ -4732,12 +4687,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 9": {
         "name": "Treasure Chart 9",
@@ -4746,12 +4699,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 10": {
         "name": "Treasure Chart 10",
@@ -4760,12 +4711,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 11": {
         "name": "Treasure Chart 11",
@@ -4774,12 +4723,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 12": {
         "name": "Treasure Chart 12",
@@ -4788,12 +4735,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 13": {
         "name": "Treasure Chart 13",
@@ -4802,12 +4747,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 14": {
         "name": "Treasure Chart 14",
@@ -4816,12 +4759,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 15": {
         "name": "Treasure Chart 15",
@@ -4830,12 +4771,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 16": {
         "name": "Treasure Chart 16",
@@ -4844,12 +4783,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 17": {
         "name": "Treasure Chart 17",
@@ -4858,12 +4795,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 18": {
         "name": "Treasure Chart 18",
@@ -4872,12 +4807,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 19": {
         "name": "Treasure Chart 19",
@@ -4886,12 +4819,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 20": {
         "name": "Treasure Chart 20",
@@ -4900,12 +4831,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 21": {
         "name": "Treasure Chart 21",
@@ -4914,12 +4843,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 22": {
         "name": "Treasure Chart 22",
@@ -4928,12 +4855,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 23": {
         "name": "Treasure Chart 23",
@@ -4942,12 +4867,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 24": {
         "name": "Treasure Chart 24",
@@ -4956,12 +4879,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 25": {
         "name": "Treasure Chart 25",
@@ -4970,12 +4891,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 26": {
         "name": "Treasure Chart 26",
@@ -4984,12 +4903,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 27": {
         "name": "Treasure Chart 27",
@@ -4998,12 +4915,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 28": {
         "name": "Treasure Chart 28",
@@ -5012,12 +4927,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 29": {
         "name": "Treasure Chart 29",
@@ -5026,12 +4939,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 30": {
         "name": "Treasure Chart 30",
@@ -5040,12 +4951,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 31": {
         "name": "Treasure Chart 31",
@@ -5054,12 +4963,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 32": {
         "name": "Treasure Chart 32",
@@ -5068,12 +4975,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 33": {
         "name": "Treasure Chart 33",
@@ -5082,12 +4987,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 34": {
         "name": "Treasure Chart 34",
@@ -5096,12 +4999,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 35": {
         "name": "Treasure Chart 35",
@@ -5110,12 +5011,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 36": {
         "name": "Treasure Chart 36",
@@ -5124,12 +5023,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 37": {
         "name": "Treasure Chart 37",
@@ -5138,12 +5035,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 38": {
         "name": "Treasure Chart 38",
@@ -5152,12 +5047,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 39": {
         "name": "Treasure Chart 39",
@@ -5166,12 +5059,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 40": {
         "name": "Treasure Chart 40",
@@ -5180,12 +5071,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Treasure Chart 41": {
         "name": "Treasure Chart 41",
@@ -5194,12 +5083,10 @@
           "Everything",
           "Treasure Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Tingle's Chart": {
         "name": "Tingle's Chart",
@@ -5208,12 +5095,10 @@
           "Everything",
           "Special Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Ghost Ship Chart": {
         "name": "Ghost Ship Chart",
@@ -5222,12 +5107,10 @@
           "Everything",
           "Special Charts"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "progression"
       },
       "Octo Chart": {
         "name": "Octo Chart",
@@ -5236,12 +5119,10 @@
           "Everything",
           "Special Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Great Fairy Chart": {
         "name": "Great Fairy Chart",
@@ -5250,12 +5131,10 @@
           "Everything",
           "Special Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Secret Cave Chart": {
         "name": "Secret Cave Chart",
@@ -5264,12 +5143,10 @@
           "Everything",
           "Special Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Light Ring Chart": {
         "name": "Light Ring Chart",
@@ -5278,12 +5155,10 @@
           "Everything",
           "Special Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Platform Chart": {
         "name": "Platform Chart",
@@ -5292,12 +5167,10 @@
           "Everything",
           "Special Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Beedle's Chart": {
         "name": "Beedle's Chart",
@@ -5306,12 +5179,10 @@
           "Everything",
           "Special Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Submarine Chart": {
         "name": "Submarine Chart",
@@ -5320,12 +5191,10 @@
           "Everything",
           "Special Charts"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Green Rupee": {
         "name": "Green Rupee",
@@ -5334,12 +5203,10 @@
           "Everything",
           "Rupees"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Blue Rupee": {
         "name": "Blue Rupee",
@@ -5348,12 +5215,10 @@
           "Everything",
           "Rupees"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Yellow Rupee": {
         "name": "Yellow Rupee",
@@ -5362,12 +5227,10 @@
           "Everything",
           "Rupees"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Red Rupee": {
         "name": "Red Rupee",
@@ -5376,12 +5239,10 @@
           "Everything",
           "Rupees"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Purple Rupee": {
         "name": "Purple Rupee",
@@ -5390,12 +5251,10 @@
           "Everything",
           "Rupees"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Orange Rupee": {
         "name": "Orange Rupee",
@@ -5404,12 +5263,10 @@
           "Everything",
           "Rupees"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 14
+        "max_count": 7,
+        "classification": "useful"
       },
       "Silver Rupee": {
         "name": "Silver Rupee",
@@ -5418,12 +5275,10 @@
           "Everything",
           "Rupees"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 16
+        "max_count": 8,
+        "classification": "useful"
       },
       "Rainbow Rupee": {
         "name": "Rainbow Rupee",
@@ -5432,12 +5287,10 @@
           "Everything",
           "Rupees"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Piece of Heart": {
         "name": "Piece of Heart",
@@ -5445,12 +5298,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 20
+        "max_count": 10,
+        "classification": "useful"
       },
       "Heart Container": {
         "name": "Heart Container",
@@ -5458,12 +5309,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": true,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 1,
+        "classification": "useful"
       },
       "DRC Big Key": {
         "name": "DRC Big Key",
@@ -5472,12 +5321,10 @@
           "Big Keys",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "DRC Small Key": {
         "name": "DRC Small Key",
@@ -5486,12 +5333,10 @@
           "Everything",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "progression"
       },
       "FW Big Key": {
         "name": "FW Big Key",
@@ -5500,12 +5345,10 @@
           "Big Keys",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "FW Small Key": {
         "name": "FW Small Key",
@@ -5514,12 +5357,10 @@
           "Everything",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "TotG Big Key": {
         "name": "TotG Big Key",
@@ -5528,12 +5369,10 @@
           "Big Keys",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "TotG Small Key": {
         "name": "TotG Small Key",
@@ -5542,12 +5381,10 @@
           "Everything",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "progression"
       },
       "ET Big Key": {
         "name": "ET Big Key",
@@ -5556,12 +5393,10 @@
           "Big Keys",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "ET Small Key": {
         "name": "ET Small Key",
@@ -5570,12 +5405,10 @@
           "Everything",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "progression"
       },
       "WT Big Key": {
         "name": "WT Big Key",
@@ -5584,12 +5417,10 @@
           "Big Keys",
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "WT Small Key": {
         "name": "WT Small Key",
@@ -5598,12 +5429,10 @@
           "Everything",
           "Small Keys"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "progression"
       },
       "DRC Dungeon Map": {
         "name": "DRC Dungeon Map",
@@ -5612,12 +5441,10 @@
           "Dungeon Items",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "DRC Compass": {
         "name": "DRC Compass",
@@ -5626,12 +5453,10 @@
           "Dungeon Items",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "FW Dungeon Map": {
         "name": "FW Dungeon Map",
@@ -5640,12 +5465,10 @@
           "Dungeon Items",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "FW Compass": {
         "name": "FW Compass",
@@ -5654,12 +5477,10 @@
           "Dungeon Items",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "TotG Dungeon Map": {
         "name": "TotG Dungeon Map",
@@ -5668,12 +5489,10 @@
           "Dungeon Items",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "TotG Compass": {
         "name": "TotG Compass",
@@ -5682,12 +5501,10 @@
           "Dungeon Items",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "FF Dungeon Map": {
         "name": "FF Dungeon Map",
@@ -5696,12 +5513,10 @@
           "Dungeon Items",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "FF Compass": {
         "name": "FF Compass",
@@ -5710,12 +5525,10 @@
           "Dungeon Items",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "ET Dungeon Map": {
         "name": "ET Dungeon Map",
@@ -5724,12 +5537,10 @@
           "Dungeon Items",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "ET Compass": {
         "name": "ET Compass",
@@ -5738,12 +5549,10 @@
           "Dungeon Items",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "WT Dungeon Map": {
         "name": "WT Dungeon Map",
@@ -5752,12 +5561,10 @@
           "Dungeon Items",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "WT Compass": {
         "name": "WT Compass",
@@ -5766,12 +5573,10 @@
           "Dungeon Items",
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Victory": {
         "name": "Victory",
@@ -5779,12 +5584,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -5807,76 +5610,76 @@
   },
   "itempool_counts": {
     "1": {
-      "Bait Bag": 2,
-      "Ballad of Gales": 2,
-      "Bomb Bag Capacity Upgrade": 2,
-      "Bombs": 2,
-      "Boomerang": 2,
-      "Cabana Deed": 2,
-      "Command Melody": 2,
+      "Bait Bag": 1,
+      "Ballad of Gales": 1,
+      "Bomb Bag Capacity Upgrade": 1,
+      "Bombs": 1,
+      "Boomerang": 1,
+      "Cabana Deed": 1,
+      "Command Melody": 1,
       "DRC Big Key": 1,
       "DRC Compass": 1,
       "DRC Dungeon Map": 1,
       "DRC Small Key": 4,
-      "Deku Leaf": 2,
-      "Delivery Bag": 2,
-      "Din's Pearl": 2,
+      "Deku Leaf": 1,
+      "Delivery Bag": 1,
+      "Din's Pearl": 1,
       "ET Big Key": 1,
       "ET Compass": 1,
       "ET Dungeon Map": 1,
       "ET Small Key": 3,
-      "Earth God's Lyric": 2,
-      "Empty Bottle": 8,
+      "Earth God's Lyric": 1,
+      "Empty Bottle": 4,
       "FF Compass": 1,
       "FF Dungeon Map": 1,
       "FW Big Key": 1,
       "FW Compass": 1,
       "FW Dungeon Map": 1,
       "FW Small Key": 1,
-      "Farore's Pearl": 2,
-      "Ghost Ship Chart": 2,
-      "Grappling Hook": 2,
-      "Heart Container": 2,
-      "Hero's Charm": 2,
-      "Hookshot": 2,
-      "Hurricane Spin": 2,
-      "Iron Boots": 2,
-      "Magic Armor": 2,
-      "Nayru's Pearl": 2,
-      "Note to Mom": 2,
-      "Orange Rupee": 14,
-      "Piece of Heart": 20,
-      "Power Bracelets": 2,
-      "Progressive Bow": 6,
-      "Progressive Magic Meter": 4,
-      "Progressive Shield": 4,
-      "Progressive Sword": 7,
-      "Silver Rupee": 16,
-      "Skull Hammer": 2,
-      "Song of Passing": 2,
-      "Telescope": 2,
-      "Tingle Tuner": 2,
+      "Farore's Pearl": 1,
+      "Ghost Ship Chart": 1,
+      "Grappling Hook": 1,
+      "Heart Container": 1,
+      "Hero's Charm": 1,
+      "Hookshot": 1,
+      "Hurricane Spin": 1,
+      "Iron Boots": 1,
+      "Magic Armor": 1,
+      "Nayru's Pearl": 1,
+      "Note to Mom": 1,
+      "Orange Rupee": 7,
+      "Piece of Heart": 10,
+      "Power Bracelets": 1,
+      "Progressive Bow": 3,
+      "Progressive Magic Meter": 2,
+      "Progressive Shield": 2,
+      "Progressive Sword": 4,
+      "Silver Rupee": 8,
+      "Skull Hammer": 1,
+      "Song of Passing": 1,
+      "Telescope": 1,
+      "Tingle Tuner": 1,
       "TotG Big Key": 1,
       "TotG Compass": 1,
       "TotG Dungeon Map": 1,
       "TotG Small Key": 2,
-      "Triforce Shard 1": 2,
-      "Triforce Shard 2": 2,
-      "Triforce Shard 3": 2,
-      "Triforce Shard 4": 2,
-      "Triforce Shard 5": 2,
-      "Triforce Shard 6": 2,
-      "Triforce Shard 7": 2,
-      "Triforce Shard 8": 2,
+      "Triforce Shard 1": 1,
+      "Triforce Shard 2": 1,
+      "Triforce Shard 3": 1,
+      "Triforce Shard 4": 1,
+      "Triforce Shard 5": 1,
+      "Triforce Shard 6": 1,
+      "Triforce Shard 7": 1,
+      "Triforce Shard 8": 1,
       "Victory": 1,
       "WT Big Key": 1,
       "WT Compass": 1,
       "WT Dungeon Map": 1,
       "WT Small Key": 2,
-      "Wallet Capacity Upgrade": 4,
-      "Wind God's Aria": 2,
-      "Wind Waker": 2,
-      "Wind's Requiem": 2
+      "Wallet Capacity Upgrade": 2,
+      "Wind God's Aria": 1,
+      "Wind Waker": 1,
+      "Wind's Requiem": 1
     }
   },
   "progression_mapping": {
@@ -5911,5 +5714,6 @@
         "version": "1.0"
       }
     }
-  }
+  },
+  "helpers": {}
 }
