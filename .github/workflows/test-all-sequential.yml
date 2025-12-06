@@ -64,7 +64,7 @@ on:
         options:
           - 'single-job'
           - 'parallel-10-jobs'
-        default: 'single-job'
+        default: 'parallel-10-jobs'
 
       multitemplate_tests:
         description: 'Multitemplate tests'

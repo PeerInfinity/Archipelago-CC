@@ -43,12 +43,24 @@ jobs:
           sudo apt update
           sudo apt -y install python3-gi libgirepository1.0-dev
 
+      - name: Cache Python virtual environment
+        uses: actions/cache@v4
+        id: cache-venv
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements.txt') }}
+
       - name: Create virtual environment and install dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
         run: |
           python -m venv .venv
           source .venv/bin/activate
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      - name: Run ModuleUpdate
+        run: |
+          source .venv/bin/activate
           python ModuleUpdate.py --yes
 
       - name: Generate template files
@@ -72,10 +84,26 @@ jobs:
             python scripts/setup/update_host_settings.py minimal-spoilers
           fi
 
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v4
+        id: cache-node
+        with:
+          path: node_modules
+          key: node-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
       - name: Install Node.js dependencies
+        if: steps.cache-node.outputs.cache-hit != 'true'
         run: npm install
 
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: cache-playwright
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
       - name: Install Playwright browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
         run: |
           source .venv/bin/activate
           npx playwright install chromium
