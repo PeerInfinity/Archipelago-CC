@@ -14,8 +14,41 @@ from collections import defaultdict
 import Utils
 from .analyzer import analyze_rule
 from .games import get_game_export_handler
+from BaseClasses import ItemClassification
 
 logger = logging.getLogger(__name__)
+
+
+def classification_to_string(classification: ItemClassification) -> str:
+    """Convert an ItemClassification enum to its string name.
+
+    Handles combined flags by returning the most specific named combination,
+    or the base classification name.
+    """
+    # Check for exact named combinations first (most specific)
+    if classification == ItemClassification.progression_deprioritized_skip_balancing:
+        return "progression_deprioritized_skip_balancing"
+    if classification == ItemClassification.progression_skip_balancing:
+        return "progression_skip_balancing"
+    if classification == ItemClassification.progression_deprioritized:
+        return "progression_deprioritized"
+
+    # Check individual flags
+    if classification == ItemClassification.progression:
+        return "progression"
+    if classification == ItemClassification.useful:
+        return "useful"
+    if classification == ItemClassification.trap:
+        return "trap"
+    if classification == ItemClassification.filler:
+        return "filler"
+
+    # For other combinations, use the enum's name if available
+    try:
+        return classification.name
+    except (AttributeError, ValueError):
+        # Fallback: return string representation
+        return str(classification)
 
 # Module-level cache for rule analysis results
 _rule_analysis_cache: Dict[Tuple[int, int, Optional[int]], Any] = {}
@@ -1398,6 +1431,23 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
         logger.error(f"Error getting game-specific item data for {game_name}: {e}")
         items_data = {} # Start empty if handler fails
 
+    # 1b. Migrate old-style handler data (advancement/useful/trap) to new classification field
+    for item_name, item_data in items_data.items():
+        if 'classification' not in item_data:
+            # Convert old boolean flags to classification string
+            if item_data.get('advancement'):
+                item_data['classification'] = 'progression'
+            elif item_data.get('useful'):
+                item_data['classification'] = 'useful'
+            elif item_data.get('trap'):
+                item_data['classification'] = 'trap'
+            else:
+                item_data['classification'] = 'filler'
+        # Remove old boolean flags from items table
+        item_data.pop('advancement', None)
+        item_data.pop('useful', None)
+        item_data.pop('trap', None)
+
     # 2. Layer in base item IDs and groups from world.item_id_to_name
     for item_id, item_name in getattr(world, 'item_id_to_name', {}).items():
         if item_name not in items_data:
@@ -1407,7 +1457,8 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
                 'name': item_name,
                 'id': item_id,
                 'groups': [],
-                'advancement': False, 'useful': False, 'trap': False, 'event': False,
+                'classification': 'filler',
+                'event': False,
                 'type': None, 'max_count': 1
             }
         else:
@@ -1435,10 +1486,12 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
             if new_groups_added:
                  items_data[item_name]['groups'].sort()
 
-    # 3. Update classification flags from placed items (use values from placed items if not set by handler)
+    # 3. Update classification from placed items (use values from placed items if not set by handler)
     for location in multiworld.get_locations(player):
         if location.item:
             item_name = location.item.name
+            item_classification = getattr(location.item, 'classification', ItemClassification.filler)
+
             # Add event items that aren't in items_data yet (items with code=None)
             if item_name not in items_data:
                 # Extract type value
@@ -1456,29 +1509,24 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
                     'name': item_name,
                     'id': getattr(location.item, 'code', None),
                     'groups': [],
-                    'advancement': getattr(location.item, 'advancement', False),
-                    'useful': getattr(location.item, 'useful', False),
-                    'trap': getattr(location.item, 'trap', False),
+                    'classification': classification_to_string(item_classification),
                     'event': True if getattr(location.item, 'code', None) is None else False,
                     'type': item_type,
                     'max_count': 1
                 }
             else:
-                # Item already exists, update flags if they are still default (False)
+                # Item already exists, update classification if not already set
                 item_data = items_data[item_name]
-                if not item_data.get('advancement'):
-                    item_data['advancement'] = getattr(location.item, 'advancement', False)
-                if not item_data.get('useful'):
-                     item_data['useful'] = getattr(location.item, 'useful', False)
-                if not item_data.get('trap'):
-                     item_data['trap'] = getattr(location.item, 'trap', False)
-                # Event flag likely comes from type, less critical to update here unless specific logic requires it
+                if item_data.get('classification') == 'filler':
+                    item_data['classification'] = classification_to_string(item_classification)
 
-    # 3b. Also check precollected items for advancement status
+    # 3b. Also check precollected items for classification
     if player in multiworld.precollected_items:
         for item in multiworld.precollected_items[player]:
             item_name = item.name
-            # Add event items that aren't in items_data yet (items with code=None)
+            item_classification = getattr(item, 'classification', ItemClassification.filler)
+
+            # Add items that aren't in items_data yet
             if item_name not in items_data:
                 # Extract type value
                 type_obj = getattr(item, 'type', None)
@@ -1490,27 +1538,21 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
                 else:
                     item_type = None
 
-                # This is likely an event item - create an entry for it
+                # Create an entry for this item
                 items_data[item_name] = {
                     'name': item_name,
                     'id': getattr(item, 'code', None),
                     'groups': [],
-                    'advancement': getattr(item, 'advancement', False),
-                    'useful': getattr(item, 'useful', False),
-                    'trap': getattr(item, 'trap', False),
+                    'classification': classification_to_string(item_classification),
                     'event': True if getattr(item, 'code', None) is None else False,
                     'type': item_type,
                     'max_count': 1
                 }
             else:
-                # Item already exists, update flags if they are still default (False)
+                # Item already exists, update classification if not already set
                 item_data = items_data[item_name]
-                if not item_data.get('advancement'):
-                    item_data['advancement'] = getattr(item, 'advancement', False)
-                if not item_data.get('useful'):
-                    item_data['useful'] = getattr(item, 'useful', False)
-                if not item_data.get('trap'):
-                    item_data['trap'] = getattr(item, 'trap', False)
+                if item_data.get('classification') == 'filler':
+                    item_data['classification'] = classification_to_string(item_classification)
 
     # 4. Get and apply game-specific max counts
     try:

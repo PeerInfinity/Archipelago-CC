@@ -112,7 +112,16 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
 
 
 def _determine_classification(item_data: Dict[str, Any]) -> str:
-    """Determine item classification from JSON flags."""
+    """Determine item classification from JSON data.
+
+    First checks for the new 'classification' field, then falls back to
+    legacy boolean flags for backwards compatibility.
+    """
+    # New format: direct classification string
+    if 'classification' in item_data:
+        return item_data['classification']
+
+    # Legacy format: boolean flags (for backwards compatibility)
     if item_data.get('event', False):
         return 'progression'
     if item_data.get('trap', False):

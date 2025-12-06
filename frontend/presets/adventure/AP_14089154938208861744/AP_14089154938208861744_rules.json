@@ -84,7 +84,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Blue Labyrinth 1",
@@ -98,7 +99,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Catacombs",
@@ -112,7 +114,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Adjacent to Catacombs",
@@ -126,7 +129,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Southwest of Catacombs",
@@ -140,7 +144,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "White Castle Gate",
@@ -154,7 +159,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Black Castle Gate",
@@ -168,7 +174,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Yellow Castle Gate",
@@ -182,7 +189,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Northeast of Catacombs",
@@ -196,7 +204,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Southeast of Catacombs",
@@ -210,7 +219,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Slay Yorgle",
@@ -233,7 +243,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -262,7 +273,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Chalice Home",
@@ -285,7 +297,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -339,7 +352,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "RedMaze1",
@@ -353,7 +367,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -382,7 +397,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -411,7 +427,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Slay Grundle",
@@ -434,7 +451,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -480,7 +498,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Dungeon1",
@@ -494,7 +513,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Black Castle Foyer",
@@ -508,7 +528,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           },
           {
             "name": "Slay Rhindle",
@@ -531,7 +552,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -560,7 +582,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -597,7 +620,8 @@
               "player": 1,
               "advancement": false,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       },
@@ -626,7 +650,8 @@
               "player": 1,
               "advancement": true,
               "type": "None"
-            }
+            },
+            "locked": false
           }
         ]
       }
@@ -648,12 +673,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "White Key": {
         "name": "White Key",
@@ -661,12 +684,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Black Key": {
         "name": "Black Key",
@@ -674,12 +695,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Bridge": {
         "name": "Bridge",
@@ -687,12 +706,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Magnet": {
         "name": "Magnet",
@@ -700,12 +717,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Sword": {
         "name": "Sword",
@@ -713,12 +728,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Chalice": {
         "name": "Chalice",
@@ -726,12 +739,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "Left Difficulty Switch": {
         "name": "Left Difficulty Switch",
@@ -739,12 +750,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Right Difficulty Switch": {
         "name": "Right Difficulty Switch",
@@ -752,12 +761,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Freeincarnate": {
         "name": "Freeincarnate",
@@ -765,12 +772,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 12,
+        "classification": "filler"
       },
       "Slow Yorgle": {
         "name": "Slow Yorgle",
@@ -778,12 +783,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Slow Grundle": {
         "name": "Slow Grundle",
@@ -791,12 +794,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Slow Rhindle": {
         "name": "Slow Rhindle",
@@ -804,12 +805,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Revive Dragons": {
         "name": "Revive Dragons",
@@ -817,12 +816,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": true,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "trap"
       },
       "nothing": {
         "name": "nothing",
@@ -830,12 +827,10 @@
         "groups": [
           "Everything"
         ],
-        "advancement": false,
-        "useful": false,
-        "trap": false,
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "filler"
       },
       "Victory": {
         "name": "Victory",
@@ -843,12 +838,10 @@
         "groups": [
           "Event"
         ],
-        "advancement": true,
-        "useful": false,
-        "trap": false,
         "event": true,
         "type": "Event",
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },

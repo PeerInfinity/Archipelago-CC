@@ -16,36 +16,36 @@ Excluded Locations:
 Priority Locations:              
 Item Links:                      
 Plando Items:                    
-Randomize Items:                 Yes
+Randomize Items:                 No
 
 
 Locations:
 
-Adjacent to Catacombs: Freeincarnate
-Black Castle Foyer: Bridge
-Black Castle Gate: Left Difficulty Switch
-Blue Labyrinth 0: Freeincarnate
-Blue Labyrinth 1: Chalice
+Blue Labyrinth 0: Left Difficulty Switch
+Blue Labyrinth 1: Slow Yorgle
 Catacombs: Sword
+Adjacent to Catacombs: Slow Grundle
+Southwest of Catacombs: Freeincarnate
+White Castle Gate: Freeincarnate
+Black Castle Gate: Black Key
+Yellow Castle Gate: Freeincarnate
+Northeast of Catacombs: Freeincarnate
+Southeast of Catacombs: Freeincarnate
+Slay Yorgle: Freeincarnate
+Inside Yellow Castle: Magnet
 Chalice Home: Victory
-Credits Left Side: Freeincarnate
-Credits Right Side: Freeincarnate
-Dungeon Vault: Freeincarnate
+RedMaze0: Freeincarnate
+RedMaze1: Freeincarnate
+Red Maze Vault Entrance: Freeincarnate
+Red Maze Vault: Freeincarnate
+Slay Grundle: Yellow Key
 Dungeon0: Freeincarnate
 Dungeon1: Right Difficulty Switch
-Inside Yellow Castle: White Key
-Northeast of Catacombs: Freeincarnate
-Red Maze Vault: Freeincarnate
-Red Maze Vault Entrance: Freeincarnate
-RedMaze0: Freeincarnate
-RedMaze1: Slow Rhindle
-Slay Grundle: Freeincarnate
-Slay Rhindle: Yellow Key
-Slay Yorgle: Slow Yorgle
-Southeast of Catacombs: Freeincarnate
-Southwest of Catacombs: Slow Grundle
-White Castle Gate: Magnet
-Yellow Castle Gate: Black Key
+Black Castle Foyer: Bridge
+Slay Rhindle: Slow Rhindle
+Dungeon Vault: White Key
+Credits Left Side: Freeincarnate
+Credits Right Side: Chalice
 
 Playthrough:
 
@@ -53,19 +53,25 @@ Playthrough:
 
 }
 1: {
-  Blue Labyrinth 1: Chalice
+  Black Castle Gate: Black Key
   Catacombs: Sword
-  White Castle Gate: Magnet
-  Yellow Castle Gate: Black Key
 }
 2: {
   Black Castle Foyer: Bridge
   Dungeon1: Right Difficulty Switch
 }
 3: {
-  Slay Rhindle: Yellow Key
+  Dungeon Vault: White Key
 }
 4: {
+  Slay Grundle: Yellow Key
+}
+5: {
+  Inside Yellow Castle: Magnet
+}
+6: {
+  Credits Right Side: Chalice
+}
+7: {
   Chalice Home: Victory
-  Inside Yellow Castle: White Key
 }

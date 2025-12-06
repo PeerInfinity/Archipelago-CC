@@ -24,9 +24,9 @@ def generate_items_py(data: ExtractedData) -> str:
     game_name = data.metadata.game_name
     class_name = sanitize_class_name(game_name)
 
-    # Build item table entries
+    # Build item table entries (preserve original order from JSON)
     item_entries = []
-    for item_name, item_data in sorted(data.items.items()):
+    for item_name, item_data in data.items.items():
         classification = _classification_to_enum(item_data.classification)
         item_id = 'None' if item_data.item_id is None else str(item_data.item_id)
 
@@ -73,9 +73,9 @@ def generate_locations_py(data: ExtractedData) -> str:
     game_name = data.metadata.game_name
     class_name = sanitize_class_name(game_name)
 
-    # Build location table entries
+    # Build location table entries (preserve original order from JSON)
     location_entries = []
-    for loc_name, loc_data in sorted(data.locations.items()):
+    for loc_name, loc_data in data.locations.items():
         loc_id = 'None' if loc_data.location_id is None else str(loc_data.location_id)
         region_escaped = loc_data.region.replace('\\', '\\\\').replace('"', '\\"')
         name_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
@@ -124,9 +124,10 @@ def generate_regions_py(data: ExtractedData) -> str:
     class_name = sanitize_class_name(game_name)
 
     # Build region list - always include Menu (required by Archipelago)
-    region_names_set = set(data.regions.keys())
-    region_names_set.add("Menu")
-    region_names = sorted(region_names_set)
+    # Preserve original order from JSON (Menu first if not already present)
+    region_names = list(data.regions.keys())
+    if "Menu" not in region_names:
+        region_names.insert(0, "Menu")
     # Escape quotes in region names
     region_list = ', '.join(f'"{r.replace(chr(34), chr(92)+chr(34))}"' for r in region_names)
 
@@ -140,7 +141,7 @@ def generate_regions_py(data: ExtractedData) -> str:
             f'    _create_entrance(regions["Menu"], regions["{start_region}"], "MenuToStart")'
         )
 
-    for exit_name, exit_data in sorted(data.exits.items()):
+    for exit_name, exit_data in data.exits.items():
         source = exit_data.source_region.replace('"', '\\"')
         target = exit_data.target_region.replace('"', '\\"')
         name = exit_name.replace('"', '\\"')
@@ -209,8 +210,8 @@ def generate_rules_py(data: ExtractedData) -> str:
     entrance_rules = []
     location_rules = []
 
-    # Process entrance rules
-    for exit_name, exit_data in sorted(data.exits.items()):
+    # Process entrance rules (preserve original order)
+    for exit_name, exit_data in data.exits.items():
         if not is_trivial_rule(exit_data.access_rule):
             rule_code = generator.generate(exit_data.access_rule)
             exit_escaped = exit_name.replace('\\', '\\\\').replace('"', '\\"')
@@ -221,8 +222,8 @@ def generate_rules_py(data: ExtractedData) -> str:
                 f'    )'
             )
 
-    # Process location rules
-    for loc_name, loc_data in sorted(data.locations.items()):
+    # Process location rules (preserve original order)
+    for loc_name, loc_data in data.locations.items():
         if not is_trivial_rule(loc_data.access_rule):
             rule_code = generator.generate(loc_data.access_rule)
             loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
@@ -321,7 +322,7 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     # Build original placements dict (only needed if canonical_seed1 is enabled)
     placement_entries = []
     if canonical_seed1:
-        for loc_name, item_name in sorted(data.original_placements.items()):
+        for loc_name, item_name in data.original_placements.items():
             if item_name:  # Skip empty placements
                 loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
                 item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
@@ -409,9 +410,9 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     def create_items(self) -> None:
 '''
 
-    # Build locked_placements dictionary
+    # Build locked_placements dictionary (preserve original order)
     locked_entries = []
-    for loc_name, item_name in sorted(data.locked_placements.items()):
+    for loc_name, item_name in data.locked_placements.items():
         if item_name:
             loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
             item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
@@ -419,9 +420,9 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
 
     locked_content = '\n'.join(locked_entries)
 
-    # Build starting_items dictionary (precollected items)
+    # Build starting_items dictionary (preserve original order)
     starting_entries = []
-    for item_name, count in sorted(data.starting_items.items()):
+    for item_name, count in data.starting_items.items():
         if count > 0:
             item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
             starting_entries.append(f'    "{item_escaped}": {count},')
@@ -445,7 +446,7 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     prog_items_init_content = ''
     if data.prog_items_init:
         init_entries = []
-        for item_name, value in sorted(data.prog_items_init.items()):
+        for item_name, value in data.prog_items_init.items():
             item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
             init_entries.append(f'        "{item_escaped}": {value},')
         prog_items_init_content = '\n'.join(init_entries)
@@ -479,9 +480,9 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
         if item_name:
             locked_item_counts[item_name] = locked_item_counts.get(item_name, 0) + 1
 
-    # Build itempool_counts dictionary (excluding locked items)
+    # Build itempool_counts dictionary (preserve original order, excluding locked items)
     itempool_entries = []
-    for item_name, count in sorted(data.itempool_counts.items()):
+    for item_name, count in data.itempool_counts.items():
         # Subtract locked items from the count
         adjusted_count = count - locked_item_counts.get(item_name, 0)
         if adjusted_count > 0:
@@ -490,11 +491,11 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
 
     itempool_content = '\n'.join(itempool_entries)
 
-    # Build item_name_groups dictionary
+    # Build item_name_groups dictionary (preserve original order)
     item_name_groups_entries = []
-    for group_name, item_names in sorted(data.item_name_groups.items()):
+    for group_name, item_names in data.item_name_groups.items():
         group_escaped = group_name.replace('\\', '\\\\').replace('"', '\\"')
-        items_list = ', '.join(f'"{item.replace(chr(92), chr(92)+chr(92)).replace(chr(34), chr(92)+chr(34))}"' for item in sorted(item_names))
+        items_list = ', '.join(f'"{item.replace(chr(92), chr(92)+chr(92)).replace(chr(34), chr(92)+chr(34))}"' for item in item_names)
         item_name_groups_entries.append(f'        "{group_escaped}": frozenset([{items_list}]),')
 
     item_name_groups_content = '\n'.join(item_name_groups_entries)
@@ -636,6 +637,9 @@ def _classification_to_enum(classification: str) -> str:
     """Convert classification string to ItemClassification enum."""
     mapping = {
         'progression': 'ItemClassification.progression',
+        'progression_skip_balancing': 'ItemClassification.progression_skip_balancing',
+        'progression_deprioritized': 'ItemClassification.progression_deprioritized',
+        'progression_deprioritized_skip_balancing': 'ItemClassification.progression_deprioritized_skip_balancing',
         'useful': 'ItemClassification.useful',
         'trap': 'ItemClassification.trap',
         'filler': 'ItemClassification.filler',

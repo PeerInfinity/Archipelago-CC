@@ -12,7 +12,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     """Create all regions, locations, and connections."""
 
     # Create all regions
-    region_names = ["BlackCastle", "BlackCastleVault", "CreditsRoom", "CreditsRoomFarSide", "Menu", "Overworld", "WhiteCastle", "WhiteCastlePreVaultPeek", "WhiteCastleVault", "YellowCastle"]
+    region_names = ["Menu", "Overworld", "YellowCastle", "WhiteCastle", "WhiteCastlePreVaultPeek", "WhiteCastleVault", "BlackCastle", "BlackCastleVault", "CreditsRoom", "CreditsRoomFarSide"]
 
     regions = {}
     for region_name in region_names:
@@ -35,23 +35,23 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
         region.locations.append(location)
 
     # Create entrances
-    _create_entrance(regions["BlackCastle"], regions["Overworld"], "BlackCastleExit")
-    _create_entrance(regions["Overworld"], regions["BlackCastle"], "BlackCastlePort")
-    _create_entrance(regions["BlackCastleVault"], regions["BlackCastle"], "BlackCastleReturnPassage")
-    _create_entrance(regions["BlackCastle"], regions["BlackCastleVault"], "BlackCastleVaultEntrance")
-    _create_entrance(regions["CreditsRoom"], regions["Overworld"], "CreditsExit")
-    _create_entrance(regions["CreditsRoomFarSide"], regions["CreditsRoom"], "CreditsFromFarSide")
-    _create_entrance(regions["CreditsRoom"], regions["CreditsRoomFarSide"], "CreditsToFarSide")
-    _create_entrance(regions["Overworld"], regions["CreditsRoom"], "CreditsWall")
     _create_entrance(regions["Menu"], regions["Overworld"], "GameStart")
-    _create_entrance(regions["WhiteCastle"], regions["Overworld"], "WhiteCastleExit")
-    _create_entrance(regions["WhiteCastlePreVaultPeek"], regions["WhiteCastle"], "WhiteCastleFromPeek")
-    _create_entrance(regions["WhiteCastle"], regions["WhiteCastlePreVaultPeek"], "WhiteCastlePeekPassage")
-    _create_entrance(regions["Overworld"], regions["WhiteCastle"], "WhiteCastlePort")
-    _create_entrance(regions["WhiteCastleVault"], regions["WhiteCastle"], "WhiteCastleReturnPassage")
-    _create_entrance(regions["WhiteCastle"], regions["WhiteCastleVault"], "WhiteCastleSecretPassage")
-    _create_entrance(regions["YellowCastle"], regions["Overworld"], "YellowCastleExit")
     _create_entrance(regions["Overworld"], regions["YellowCastle"], "YellowCastlePort")
+    _create_entrance(regions["Overworld"], regions["WhiteCastle"], "WhiteCastlePort")
+    _create_entrance(regions["Overworld"], regions["BlackCastle"], "BlackCastlePort")
+    _create_entrance(regions["Overworld"], regions["CreditsRoom"], "CreditsWall")
+    _create_entrance(regions["YellowCastle"], regions["Overworld"], "YellowCastleExit")
+    _create_entrance(regions["WhiteCastle"], regions["Overworld"], "WhiteCastleExit")
+    _create_entrance(regions["WhiteCastle"], regions["WhiteCastleVault"], "WhiteCastleSecretPassage")
+    _create_entrance(regions["WhiteCastle"], regions["WhiteCastlePreVaultPeek"], "WhiteCastlePeekPassage")
+    _create_entrance(regions["WhiteCastlePreVaultPeek"], regions["WhiteCastle"], "WhiteCastleFromPeek")
+    _create_entrance(regions["WhiteCastleVault"], regions["WhiteCastle"], "WhiteCastleReturnPassage")
+    _create_entrance(regions["BlackCastle"], regions["Overworld"], "BlackCastleExit")
+    _create_entrance(regions["BlackCastle"], regions["BlackCastleVault"], "BlackCastleVaultEntrance")
+    _create_entrance(regions["BlackCastleVault"], regions["BlackCastle"], "BlackCastleReturnPassage")
+    _create_entrance(regions["CreditsRoom"], regions["Overworld"], "CreditsExit")
+    _create_entrance(regions["CreditsRoom"], regions["CreditsRoomFarSide"], "CreditsToFarSide")
+    _create_entrance(regions["CreditsRoomFarSide"], regions["CreditsRoom"], "CreditsFromFarSide")
 
 
 def _create_entrance(source: Region, target: Region, name: str) -> Entrance:

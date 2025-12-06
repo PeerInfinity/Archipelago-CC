@@ -97,15 +97,32 @@ print(f'Passed: {len(rules) - len(failed)}/{len(rules)}')
 ```bash
 source .venv/bin/activate
 
-# Generate the test world
+# Generate the test world (randomized item placement)
 python scripts/test/test-world-generator.py --include-list "Game Name.yaml" --phase generate-test-worlds
 
 # Regenerate templates to include the _test world
 python scripts/test/test-world-generator.py --include-list "Game Name.yaml" --phase regenerate-templates
 
-# Run the test phase
+# Run the test phase (verifies rules work correctly)
 python scripts/test/test-world-generator.py --include-list "Game Name Test.yaml" --phase test
 ```
+
+### Step 3b: Test with Canonical Seed 1 Placement (Optional)
+
+For stricter validation, you can also test with `--canonical-seed1` which places items in their original locations when seed=1. This validates that the generated world produces identical item placements to the original:
+
+```bash
+# Generate test world with canonical seed 1 placement
+python scripts/test/test-world-generator.py --include-list "Game Name.yaml" --phase generate-test-worlds --canonical-seed1
+
+# Regenerate templates
+python scripts/test/test-world-generator.py --include-list "Game Name.yaml" --phase regenerate-templates
+
+# Run test - cross-validation should pass since items are in original locations
+python scripts/test/test-world-generator.py --include-list "Game Name Test.yaml" --phase test
+```
+
+**Note:** With `--canonical-seed1`, the cross-validation test compares the sphere logs and should pass if the generated world correctly reproduces the original item placements. Without this flag, cross-validation will fail because items are randomized differently.
 
 ### Step 4: Add to Test Suite
 
