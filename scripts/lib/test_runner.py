@@ -709,117 +709,151 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
         }
     }
 
-    # In second pass mode, skip prerequisite checks (template already passed first pass)
-    if is_second_pass:
-        print(f"Second pass mode - skipping prerequisite checks")
-        result['prerequisite_check']['all_prerequisites_passed'] = True
-        result['prerequisite_check']['note'] = 'Skipped in second pass mode'
-    else:
-        # Check prerequisites - the template must have passed all three other test types
-        print(f"Checking prerequisites for {template_filename}...")
+    # Check prerequisites - the template must have passed all three other test types
+    # (always run this check - it's cheap and provides useful verification info)
+    print(f"Checking prerequisites for {template_filename}...")
 
-        # Load the three test results files
-        spoiler_minimal_file = os.path.join(project_root, 'scripts/output/spoiler-minimal/test-results.json')
-        spoiler_full_file = os.path.join(project_root, 'scripts/output/spoiler-full/test-results.json')
-        multiclient_file = os.path.join(project_root, 'scripts/output/multiclient/test-results.json')
+    # Load the three test results files
+    spoiler_minimal_file = os.path.join(project_root, 'scripts/output/spoiler-minimal/test-results.json')
+    spoiler_full_file = os.path.join(project_root, 'scripts/output/spoiler-full/test-results.json')
+    multiclient_file = os.path.join(project_root, 'scripts/output/multiclient/test-results.json')
 
-        spoiler_minimal_passed = False
-        spoiler_full_passed = False
-        multiclient_passed = False
+    spoiler_minimal_passed = False
+    spoiler_full_passed = False
+    multiclient_passed = False
 
-        # Check spoiler minimal
-        if os.path.exists(spoiler_minimal_file):
-            with open(spoiler_minimal_file, 'r') as f:
-                spoiler_minimal_results = json.load(f)
-                if template_filename in spoiler_minimal_results.get('results', {}):
-                    template_result = spoiler_minimal_results['results'][template_filename]
-                    if isinstance(template_result, dict):
-                        # Check if this is seed range data (same logic as postprocessing script)
-                        if 'seed_range' in template_result:
-                            # Seed range results - check if all seeds passed
-                            seeds_failed = template_result.get('seeds_failed', 0)
-                            seeds_passed = template_result.get('seeds_passed', 0)
-                            spoiler_minimal_passed = (seeds_failed == 0 and seeds_passed > 0)
-                        else:
-                            # Single seed result
-                            spoiler_test = template_result.get('spoiler_test', {})
-                            generation = template_result.get('generation', {})
-                            # Apply same criteria as postprocessing script
-                            spoiler_minimal_passed = (
-                                spoiler_test.get('pass_fail') == 'passed' and
-                                generation.get('error_count', 0) == 0 and
-                                spoiler_test.get('total_spheres', 0) > 0
-                            )
-
-        # Check spoiler full
-        if os.path.exists(spoiler_full_file):
-            with open(spoiler_full_file, 'r') as f:
-                spoiler_full_results = json.load(f)
-                if template_filename in spoiler_full_results.get('results', {}):
-                    template_result = spoiler_full_results['results'][template_filename]
-                    if isinstance(template_result, dict):
-                        # Check if this is seed range data (same logic as postprocessing script)
-                        if 'seed_range' in template_result:
-                            # Seed range results - check if all seeds passed
-                            seeds_failed = template_result.get('seeds_failed', 0)
-                            seeds_passed = template_result.get('seeds_passed', 0)
-                            spoiler_full_passed = (seeds_failed == 0 and seeds_passed > 0)
-                        else:
-                            # Single seed result
-                            spoiler_test = template_result.get('spoiler_test', {})
-                            generation = template_result.get('generation', {})
-                            # Apply same criteria as postprocessing script
-                            spoiler_full_passed = (
-                                spoiler_test.get('pass_fail') == 'passed' and
-                                generation.get('error_count', 0) == 0 and
-                                spoiler_test.get('total_spheres', 0) > 0
-                            )
-
-        # Check multiclient
-        if os.path.exists(multiclient_file):
-            with open(multiclient_file, 'r') as f:
-                multiclient_results = json.load(f)
-                if template_filename in multiclient_results.get('results', {}):
-                    template_result = multiclient_results['results'][template_filename]
-                    if isinstance(template_result, dict):
-                        multiclient_test = template_result.get('multiclient_test', {})
+    # Check spoiler minimal
+    if os.path.exists(spoiler_minimal_file):
+        with open(spoiler_minimal_file, 'r') as f:
+            spoiler_minimal_results = json.load(f)
+            if template_filename in spoiler_minimal_results.get('results', {}):
+                template_result = spoiler_minimal_results['results'][template_filename]
+                if isinstance(template_result, dict):
+                    # Check if this is seed range data (same logic as postprocessing script)
+                    if 'seed_range' in template_result:
+                        # Seed range results - check if all seeds passed
+                        seeds_failed = template_result.get('seeds_failed', 0)
+                        seeds_passed = template_result.get('seeds_passed', 0)
+                        spoiler_minimal_passed = (seeds_failed == 0 and seeds_passed > 0)
+                    else:
+                        # Single seed result
+                        spoiler_test = template_result.get('spoiler_test', {})
                         generation = template_result.get('generation', {})
                         # Apply same criteria as postprocessing script
-                        multiclient_passed = (
-                            multiclient_test.get('success', False) and
-                            generation.get('error_count', 0) == 0
+                        spoiler_minimal_passed = (
+                            spoiler_test.get('pass_fail') == 'passed' and
+                            generation.get('error_count', 0) == 0 and
+                            spoiler_test.get('total_spheres', 0) > 0
                         )
 
-        result['prerequisite_check']['spoiler_minimal_passed'] = spoiler_minimal_passed
-        result['prerequisite_check']['spoiler_full_passed'] = spoiler_full_passed
-        result['prerequisite_check']['multiclient_passed'] = multiclient_passed
-        result['prerequisite_check']['all_prerequisites_passed'] = (
-            spoiler_minimal_passed and spoiler_full_passed and multiclient_passed
-        )
+    # Check spoiler full
+    if os.path.exists(spoiler_full_file):
+        with open(spoiler_full_file, 'r') as f:
+            spoiler_full_results = json.load(f)
+            if template_filename in spoiler_full_results.get('results', {}):
+                template_result = spoiler_full_results['results'][template_filename]
+                if isinstance(template_result, dict):
+                    # Check if this is seed range data (same logic as postprocessing script)
+                    if 'seed_range' in template_result:
+                        # Seed range results - check if all seeds passed
+                        seeds_failed = template_result.get('seeds_failed', 0)
+                        seeds_passed = template_result.get('seeds_passed', 0)
+                        spoiler_full_passed = (seeds_failed == 0 and seeds_passed > 0)
+                    else:
+                        # Single seed result
+                        spoiler_test = template_result.get('spoiler_test', {})
+                        generation = template_result.get('generation', {})
+                        # Apply same criteria as postprocessing script
+                        spoiler_full_passed = (
+                            spoiler_test.get('pass_fail') == 'passed' and
+                            generation.get('error_count', 0) == 0 and
+                            spoiler_test.get('total_spheres', 0) > 0
+                        )
 
-        print(f"  Spoiler Minimal: {'PASS' if spoiler_minimal_passed else 'FAIL'}")
-        print(f"  Spoiler Full: {'PASS' if spoiler_full_passed else 'FAIL'}")
-        print(f"  Multiclient: {'PASS' if multiclient_passed else 'FAIL'}")
+    # Check multiclient
+    if os.path.exists(multiclient_file):
+        with open(multiclient_file, 'r') as f:
+            multiclient_results = json.load(f)
+            if template_filename in multiclient_results.get('results', {}):
+                template_result = multiclient_results['results'][template_filename]
+                if isinstance(template_result, dict):
+                    multiclient_test = template_result.get('multiclient_test', {})
+                    generation = template_result.get('generation', {})
+                    # Apply same criteria as postprocessing script
+                    multiclient_passed = (
+                        multiclient_test.get('success', False) and
+                        generation.get('error_count', 0) == 0
+                    )
 
-        if require_prerequisites and not result['prerequisite_check']['all_prerequisites_passed']:
-            print(f"Skipping {template_filename} - not all prerequisites passed")
-            result['multiworld_test']['success'] = False
-            result['multiworld_test']['skip_reason'] = 'Prerequisites not met'
-            return result
-        elif not require_prerequisites:
-            print(f"Proceeding with multiworld test (prerequisite check disabled)")
+    result['prerequisite_check']['spoiler_minimal_passed'] = spoiler_minimal_passed
+    result['prerequisite_check']['spoiler_full_passed'] = spoiler_full_passed
+    result['prerequisite_check']['multiclient_passed'] = multiclient_passed
+    result['prerequisite_check']['all_prerequisites_passed'] = (
+        spoiler_minimal_passed and spoiler_full_passed and multiclient_passed
+    )
 
-    # Copy template to multiworld directory (unless keep_templates is True or is_second_pass)
+    print(f"  Spoiler Minimal: {'PASS' if spoiler_minimal_passed else 'FAIL'}")
+    print(f"  Spoiler Full: {'PASS' if spoiler_full_passed else 'FAIL'}")
+    print(f"  Multiclient: {'PASS' if multiclient_passed else 'FAIL'}")
+
+    if require_prerequisites and not result['prerequisite_check']['all_prerequisites_passed']:
+        print(f"Skipping {template_filename} - not all prerequisites passed")
+        result['multiworld_test']['success'] = False
+        result['multiworld_test']['skip_reason'] = 'Prerequisites not met'
+        return result
+    elif not require_prerequisites:
+        print(f"Proceeding with multiworld test (prerequisite check disabled)")
+
+    # Copy template to multiworld directory (unless keep_templates is True)
+    # Track whether we need to regenerate (if template set changed in second pass)
+    needs_regeneration = False
+
     if is_second_pass:
-        # In second pass mode, template should already be in multiworld directory
-        # Verify it exists
+        # In second pass mode, check if template is in multiworld directory
         expected_path = os.path.join(multiworld_dir, template_filename)
-        if not os.path.exists(expected_path):
-            print(f"Error: Template {template_filename} not found in multiworld directory for second pass")
-            result['multiworld_test']['success'] = False
-            result['multiworld_test']['error'] = 'Template not found in multiworld directory'
-            return result
-        print(f"Second pass mode - using existing template in multiworld directory")
+        if os.path.exists(expected_path):
+            print(f"Second pass mode - template already in multiworld directory")
+        else:
+            # Template was removed during first pass (total templates > max_templates)
+            # Need to copy it back and regenerate
+            print(f"Second pass mode - template not in multiworld directory, restoring...")
+
+            existing_templates = [f for f in os.listdir(multiworld_dir) if f.endswith('.yaml')]
+
+            # If at max capacity, remove the oldest template to make room
+            if len(existing_templates) >= max_templates:
+                # Get file modification times
+                template_times = []
+                for template in existing_templates:
+                    template_path = os.path.join(multiworld_dir, template)
+                    mtime = os.path.getmtime(template_path)
+                    template_times.append((template, mtime))
+
+                # Sort by modification time (oldest first)
+                template_times.sort(key=lambda x: x[1])
+
+                # Remove the oldest template
+                old_template = template_times[0][0]
+                old_template_path = os.path.join(multiworld_dir, old_template)
+                try:
+                    os.remove(old_template_path)
+                    print(f"  Removed {old_template} to make room")
+                except Exception as e:
+                    print(f"  Warning: Could not remove {old_template}: {e}")
+
+            # Copy the template from templates_dir
+            source_path = os.path.join(templates_dir, template_filename)
+            dest_path = os.path.join(multiworld_dir, template_filename)
+
+            try:
+                shutil.copy2(source_path, dest_path)
+                print(f"  Restored {template_filename} to multiworld directory")
+                needs_regeneration = True  # Template set changed, need to regenerate
+            except Exception as e:
+                print(f"  Error restoring template: {e}")
+                result['multiworld_test']['success'] = False
+                result['multiworld_test']['error'] = f"Failed to restore template: {e}"
+                return result
     elif not keep_templates:
         # Check if we need to remove old templates to stay under the limit
         existing_templates = [f for f in os.listdir(multiworld_dir) if f.endswith('.yaml')]
@@ -910,12 +944,16 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     print(f"Templates in multiworld: {templates_in_dir}")
 
     # Step 1: Run Generate.py with all templates in multiworld directory
-    # Skip if test_only mode or is_second_pass (second pass uses existing generation output)
-    if is_second_pass:
+    # Skip if test_only mode, or if second pass without template set changes
+    # If needs_regeneration is True (template was restored in second pass), we must regenerate
+    if is_second_pass and not needs_regeneration:
         print(f"Skipping generation for {template_filename} (second pass mode - using existing output)")
         result['generation'] = {'note': 'Skipped in second pass mode'}
-    elif not test_only:
-        print(f"Running Generate.py for multiworld with {len(templates_in_dir)} players...")
+    elif not test_only or needs_regeneration:
+        if needs_regeneration:
+            print(f"Running Generate.py for multiworld with {len(templates_in_dir)} players (template restored, regeneration required)...")
+        else:
+            print(f"Running Generate.py for multiworld with {len(templates_in_dir)} players...")
         generate_cmd = [
             "python", "Generate.py",
             "--player_files_path", "Players/presets/Multiworld",
@@ -1083,12 +1121,21 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     result['multiworld_test']['processing_time_seconds'] = test_processing_time
     result['multiworld_test']['success'] = all_players_passed
 
-    # If any player failed, delete the template from multiworld directory
-    # (unless keep_templates or is_second_pass)
+    # Handle template cleanup based on test result and mode
     if not all_players_passed:
         print(f"\n  Multiworld test FAILED for {template_filename}")
         if not keep_templates and not is_second_pass:
+            # First pass failure - remove the template
             print(f"  Removing {template_filename} from multiworld directory...")
+            try:
+                dest_path = os.path.join(multiworld_dir, template_filename)
+                os.remove(dest_path)
+                print(f"  Removed successfully")
+            except Exception as e:
+                print(f"  Error removing template: {e}")
+        elif is_second_pass and needs_regeneration:
+            # Second pass with restored template - remove it to restore previous state
+            print(f"  Removing restored template {template_filename} from multiworld directory...")
             try:
                 dest_path = os.path.join(multiworld_dir, template_filename)
                 os.remove(dest_path)
@@ -1101,6 +1148,15 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
         print(f"\n  Multiworld test PASSED for {template_filename}")
         if not keep_templates and not is_second_pass:
             print(f"  Keeping {template_filename} in multiworld directory for future tests")
+        elif is_second_pass and needs_regeneration:
+            # Second pass with restored template - remove it to restore previous state
+            print(f"  Removing restored template {template_filename} from multiworld directory (was temporarily added for second pass test)...")
+            try:
+                dest_path = os.path.join(multiworld_dir, template_filename)
+                os.remove(dest_path)
+                print(f"  Removed successfully")
+            except Exception as e:
+                print(f"  Error removing template: {e}")
 
     print(f"\nCompleted {template_filename}: Multiworld Test={'[PASS]' if result['multiworld_test']['success'] else '[FAIL]'}, "
           f"Players Passed={result['multiworld_test']['players_passed']}/{result['multiworld_test']['total_players_tested']}")
