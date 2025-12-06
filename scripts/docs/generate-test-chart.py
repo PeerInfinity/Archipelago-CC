@@ -272,8 +272,8 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
         md_content += f"- **Total Intermittent Failures:** {intermittent_total_count}\n\n"
 
     md_content += "## Test Results\n\n"
-    md_content += "| Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Custom Exporter | Custom GameLogic |\n"
-    md_content += "|-----------|-------------|------------|----------------|-------------|----------|-----------------|------------------|\n"
+    md_content += "| Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Base Exporter | Base GameLogic |\n"
+    md_content += "|-----------|-------------|------------|----------------|-------------|----------|---------------|----------------|\n"
 
     for game_name, pass_fail, gen_error_count, sphere_reached, max_spheres, has_custom_exporter, has_custom_game_logic, rules_consistent, spoilers_consistent in chart_data:
         if 'passed' in pass_fail.lower():
@@ -296,8 +296,8 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
         else:
             result_display = "❌ Failed"
 
-        exporter_indicator = "✅" if has_custom_exporter else "⚫"
-        game_logic_indicator = "✅" if has_custom_game_logic else "⚫"
+        exporter_indicator = "⚫" if has_custom_exporter else "✅"
+        game_logic_indicator = "⚫" if has_custom_game_logic else "✅"
 
         md_content += f"| {game_name} | {result_display} | {gen_error_count} | {sphere_reached:g} | {max_spheres:g} | {progress} | {exporter_indicator} | {game_logic_indicator} |\n"
 
@@ -344,8 +344,8 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
     md_content += "- **Sphere Reached:** The logical sphere the test reached before completion/failure\n"
     md_content += "- **Max Spheres:** Total logical spheres available in the game\n"
     md_content += "- **Progress:** Percentage of logical spheres completed\n"
-    md_content += "- **Custom Exporter:** ✅ Has custom Python exporter script, ⚫ Uses generic exporter\n"
-    md_content += "- **Custom GameLogic:** ✅ Has custom JavaScript game logic, ⚫ Uses generic logic\n\n"
+    md_content += "- **Base Exporter:** ✅ Uses generic exporter, ⚫ Has custom Python exporter script\n"
+    md_content += "- **Base GameLogic:** ✅ Uses generic logic, ⚫ Has custom JavaScript game logic\n\n"
     md_content += "**Pass Criteria:** Generation errors = 0, Max spheres > 0, Spoiler test completed successfully\n"
 
     return md_content
@@ -390,8 +390,8 @@ def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int
         md_content += f"- **Failed:** {total_games - passed} ({(total_games-passed)/total_games*100:.1f}%)\n\n"
 
     md_content += "## Test Results\n\n"
-    md_content += "| Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Custom Exporter | Custom GameLogic |\n"
-    md_content += "|-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|-----------------|------------------|\n"
+    md_content += "| Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Base Exporter | Base GameLogic |\n"
+    md_content += "|-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|---------------|----------------|\n"
 
     for (game_name, pass_fail, gen_error_count,
          client1_checked, client1_total, client1_manually_checkable, client1_manually_checkable_checked,
@@ -402,8 +402,8 @@ def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int
         result_display = "✅ Passed" if pass_fail.lower() == 'passed' else "❌ Failed"
         client1_status = "✅" if client1_passed else "❌"
         client2_status = "✅" if client2_passed else "❌"
-        exporter_indicator = "✅" if has_custom_exporter else "⚫"
-        game_logic_indicator = "✅" if has_custom_game_logic else "⚫"
+        exporter_indicator = "⚫" if has_custom_exporter else "✅"
+        game_logic_indicator = "⚫" if has_custom_game_logic else "✅"
 
         # Format location counts as "checked/total"
         c1_total_str = f"{client1_checked}/{client1_total}"
@@ -426,8 +426,8 @@ def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int
     md_content += "- **Client 2 (Receive Test):** Tests receiving location checks at Client 2\n"
     md_content += "  - **C2 Locations:** Locations received / total expected (received/total)\n"
     md_content += "  - Client 2 passes if all expected locations are received\n"
-    md_content += "- **Custom Exporter:** ✅ Has custom Python exporter script, ⚫ Uses generic exporter\n"
-    md_content += "- **Custom GameLogic:** ✅ Has custom JavaScript game logic, ⚫ Uses generic logic\n\n"
+    md_content += "- **Base Exporter:** ✅ Uses generic exporter, ⚫ Has custom Python exporter script\n"
+    md_content += "- **Base GameLogic:** ✅ Uses generic logic, ⚫ Has custom JavaScript game logic\n\n"
     md_content += "**Pass Criteria:** A test is marked as ✅ Passed only if:\n"
     md_content += "- Generation errors = 0 (no errors during world generation)\n"
     md_content += "- Client 1 passed (all manually-checkable locations sent)\n"
@@ -555,11 +555,11 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
 
     # Add Second Pass column if there's second pass data
     if has_second_pass_data:
-        md_content += "| Game Name | First Pass | Second Pass | Player # | MW Size | Custom Exporter | Custom GameLogic |\n"
-        md_content += "|-----------|------------|-------------|----------|---------|-----------------|------------------|\n"
+        md_content += "| Game Name | First Pass | Second Pass | Player # | MW Size | Base Exporter | Base GameLogic |\n"
+        md_content += "|-----------|------------|-------------|----------|---------|---------------|----------------|\n"
     else:
-        md_content += "| Game Name | Test Result | Player # | Total Players | Players Passed | Players Failed | Custom Exporter | Custom GameLogic |\n"
-        md_content += "|-----------|-------------|----------|---------------|----------------|----------------|-----------------|------------------|\n"
+        md_content += "| Game Name | Test Result | Player # | Total Players | Players Passed | Players Failed | Base Exporter | Base GameLogic |\n"
+        md_content += "|-----------|-------------|----------|---------------|----------------|----------------|---------------|----------------|\n"
 
     for entry in chart_data:
         game_name = entry['game_name']
@@ -580,8 +580,8 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
         else:
             result_display = "❌ Failed"
 
-        exporter_indicator = "✅" if has_custom_exporter else "⚫"
-        game_logic_indicator = "✅" if has_custom_game_logic else "⚫"
+        exporter_indicator = "⚫" if has_custom_exporter else "✅"
+        game_logic_indicator = "⚫" if has_custom_game_logic else "✅"
 
         player_display = str(player_number) if player_number > 0 else "N/A"
 
@@ -706,8 +706,8 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
     md_content += "- **Total Players / MW Size:** Number of players in the multiworld configuration when this template was tested\n"
     md_content += "- **Players Passed:** Number of players that passed the spoiler test\n"
     md_content += "- **Players Failed:** Number of players that failed the spoiler test\n"
-    md_content += "- **Custom Exporter:** ✅ Has custom Python exporter script, ⚫ Uses generic exporter\n"
-    md_content += "- **Custom GameLogic:** ✅ Has custom JavaScript game logic, ⚫ Uses generic logic\n\n"
+    md_content += "- **Base Exporter:** ✅ Uses generic exporter, ⚫ Has custom Python exporter script\n"
+    md_content += "- **Base GameLogic:** ✅ Uses generic logic, ⚫ Has custom JavaScript game logic\n\n"
     md_content += "**Pass Criteria:** All prerequisite tests (Spoiler Minimal, Spoiler Full, Multiclient) must pass, and all players in the multiworld must pass their spoiler tests\n\n"
     md_content += "**Skipped:** Templates that did not meet prerequisite requirements\n\n"
 
@@ -815,12 +815,12 @@ def generate_multitemplate_markdown(chart_data: Dict[str, List[Tuple[str, str, i
 
         # Get exporter/logic info from first template (all templates for a game share these)
         _, _, _, _, _, has_custom_exporter, has_custom_game_logic = templates[0]
-        exporter_indicator = "✅ Yes" if has_custom_exporter else "⚫ No"
-        game_logic_indicator = "✅ Yes" if has_custom_game_logic else "⚫ No"
+        exporter_indicator = "⚫ No" if has_custom_exporter else "✅ Yes"
+        game_logic_indicator = "⚫ No" if has_custom_game_logic else "✅ Yes"
 
         md_content += f"## {game_name}\n\n"
         md_content += f"**Results:** {passed}/{total} passed ({passed/total*100:.1f}%)  \n"
-        md_content += f"**Custom Exporter:** {exporter_indicator} | **Custom GameLogic:** {game_logic_indicator}\n\n"
+        md_content += f"**Base Exporter:** {exporter_indicator} | **Base GameLogic:** {game_logic_indicator}\n\n"
 
         md_content += "| Template | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress |\n"
         md_content += "|----------|-------------|------------|----------------|-------------|----------|\n"
@@ -859,8 +859,8 @@ def generate_multitemplate_markdown(chart_data: Dict[str, List[Tuple[str, str, i
     md_content += "- **Max Spheres:** Total logical spheres available in the game\n"
     md_content += "- **Progress:** Percentage of logical spheres completed\n\n"
     md_content += "### Game Information\n\n"
-    md_content += "- **Custom Exporter:** Whether the game has a custom Python exporter script (✅ Yes) or uses generic exporter (⚫ No)\n"
-    md_content += "- **Custom GameLogic:** Whether the game has custom JavaScript game logic (✅ Yes) or uses generic logic (⚫ No)\n\n"
+    md_content += "- **Base Exporter:** Whether the game uses generic exporter (✅ Yes) or has a custom Python exporter script (⚫ No)\n"
+    md_content += "- **Base GameLogic:** Whether the game uses generic logic (✅ Yes) or has custom JavaScript game logic (⚫ No)\n\n"
     md_content += "**Pass Criteria:** Generation errors = 0, Max spheres > 0, Spoiler test completed successfully\n\n"
     md_content += "**Invalid Configurations:** Templates marked as Invalid have settings that cannot be satisfied by the game's logic (FillError). These represent impossible configurations, not bugs.\n"
 
@@ -885,13 +885,9 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
     for name, desc, link in test_types:
         md_content += f"- **{name}:** {desc} - [View Details]({link})\n"
 
-    # Add link to UT comparison (separate from main test types - not included in statistics)
-    if ut_comparison_data is not None:
-        md_content += "\nAdditional test results:\n"
-        if has_ut_fixed:
-            md_content += "- **UT Comparison Test (Fixed Seed):** Validates Universal Tracker matches Python sphere log with seed=1 - [View Details](./test-results-ut-comparison-fixed-seed.md)\n"
-        if has_ut_random:
-            md_content += "- **UT Comparison Test (Random Seed):** Validates Universal Tracker matches Python sphere log with random seeds - [View Details](./test-results-ut-comparison-random-seed.md)\n"
+    # Add additional test results links
+    md_content += "\nAdditional test results:\n"
+    md_content += "- **World Generator Test:** Tests world generation for all templates - [View Details](./test-results-world-generator.md)\n"
 
     md_content += "\n"
 
@@ -1000,11 +996,11 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
     # Add Test Results table
     md_content += "\n## Test Results\n\n"
     if multiworld_data is not None:
-        md_content += "| Game Name | Minimal Test | Full Test | Multiclient Test | Multiworld Test | Consistent Rules | Consistent Spoilers | Custom Exporter | Custom GameLogic |\n"
-        md_content += "|-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|-----------------|------------------|\n"
+        md_content += "| Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Base Exporter | Base GameLogic |\n"
+        md_content += "|-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|---------------|----------------|\n"
     else:
-        md_content += "| Game Name | Minimal Test | Full Test | Multiclient Test | Consistent Rules | Consistent Spoilers | Custom Exporter | Custom GameLogic |\n"
-        md_content += "|-----------|--------------|-----------|------------------|------------------|---------------------|-----------------|------------------|\n"
+        md_content += "| Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | Consistent Rules | Consistent Spoilers | Base Exporter | Base GameLogic |\n"
+        md_content += "|-----------|--------------|-----------|------------------|------------------|---------------------|---------------|----------------|\n"
 
     for game in all_games:
         minimal_result = games_minimal.get(game, "N/A")
@@ -1014,8 +1010,8 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
 
         # Get exporter/logic info
         has_exporter, has_logic = games_exporter_logic.get(game, (False, False))
-        exporter_indicator = "✅" if has_exporter else "⚫"
-        logic_indicator = "✅" if has_logic else "⚫"
+        exporter_indicator = "⚫" if has_exporter else "✅"
+        logic_indicator = "⚫" if has_logic else "✅"
 
         # Get consistency info
         rules_consistent, spoilers_consistent = games_consistency.get(game, (None, None))
@@ -1104,6 +1100,18 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
                 game_name = game.replace('.yaml', '')
                 md_content += f"- {game_name}\n"
         md_content += "\n"
+
+    # Add Notes section
+    md_content += "## Notes\n\n"
+    md_content += "### Column Descriptions\n\n"
+    md_content += "- **[Minimal Test](./test-results-spoilers-minimal.md):** Spoiler test using advancement items only\n"
+    md_content += "- **[Full Test](./test-results-spoilers-full.md):** Spoiler test using all locations\n"
+    md_content += "- **[Multiclient Test](./test-results-multiclient.md):** Tests sending and receiving location checks between two clients\n"
+    md_content += "- **[Multiworld Test](./test-results-multiworld.md):** Tests the game in a multiworld with multiple other games\n"
+    md_content += "- **Consistent Rules:** ✅ if rules.json files are identical across all tested seeds, ⚫ if they differ, ❓ if not tested\n"
+    md_content += "- **Consistent Spoilers:** ✅ if spoiler files are identical across all tested seeds, ⚫ if they differ, ❓ if not tested\n"
+    md_content += "- **Base Exporter:** ✅ Uses generic exporter, ⚫ Has custom Python exporter script\n"
+    md_content += "- **Base GameLogic:** ✅ Uses generic logic, ⚫ Has custom JavaScript game logic\n"
 
     return md_content
 

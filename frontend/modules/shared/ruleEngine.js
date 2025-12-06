@@ -1665,9 +1665,13 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           }
         }
 
+        // Note: Unresolved names are expected in some cases (e.g., Python-side variables
+        // like 'location' that can't be resolved in the frontend). This is not necessarily
+        // an error - the containing rule may still evaluate correctly through other means.
+        // Only log at debug level to avoid noisy warnings.
         if (result === undefined) {
           log(
-            'warn',
+            'debug',
             `[evaluateRule] Could not resolve name: ${rule.name}`
           );
         }

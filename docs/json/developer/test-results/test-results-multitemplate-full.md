@@ -4,7 +4,7 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-12-06 10:22:34
+**Generated:** 2025-12-06 12:14:32
 
 **Source Data Created:** 2025-12-06T11:50:15.440800
 
@@ -21,7 +21,7 @@
 ## A Link to the Past
 
 **Results:** 168/203 passed (82.8%)  
-**Custom Exporter:** ✅ Yes | **Custom GameLogic:** ✅ Yes
+**Base Exporter:** ⚫ No | **Base GameLogic:** ⚫ No
 
 | Template | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress |
 |----------|-------------|------------|----------------|-------------|----------|
@@ -246,8 +246,8 @@
 
 ### Game Information
 
-- **Custom Exporter:** Whether the game has a custom Python exporter script (✅ Yes) or uses generic exporter (⚫ No)
-- **Custom GameLogic:** Whether the game has custom JavaScript game logic (✅ Yes) or uses generic logic (⚫ No)
+- **Base Exporter:** Whether the game uses generic exporter (✅ Yes) or has a custom Python exporter script (⚫ No)
+- **Base GameLogic:** Whether the game uses generic logic (✅ Yes) or has custom JavaScript game logic (⚫ No)
 
 **Pass Criteria:** Generation errors = 0, Max spheres > 0, Spoiler test completed successfully
 
