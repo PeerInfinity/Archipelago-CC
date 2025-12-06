@@ -369,6 +369,22 @@ export const evaluateRule = (rule, context, depth = 0) => {
   try {
     switch (ruleType) {
       case 'helper': {
+        // First, check if there's a helper definition in the rules.json
+        // This allows the exporter to provide helper logic that the frontend
+        // can evaluate directly without needing game-specific JavaScript code
+        if (typeof context?.getStaticData === 'function') {
+          const staticData = context.getStaticData();
+          const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
+          const helperDefinition = staticData?.helpers?.[playerId]?.[rule.name];
+
+          if (helperDefinition) {
+            // Found a helper definition in rules.json - evaluate it recursively
+            log('debug', `[evaluateRule] Using exported helper definition for '${rule.name}'`);
+            result = evaluateRule(helperDefinition, context, depth + 1);
+            break;
+          }
+        }
+
         // Handle Python built-in functions
         if (rule.name === 'any') {
           // Python's any() returns True if any element is truthy

@@ -333,3 +333,55 @@ class BaseGameExportHandler:
         """
         # Base implementation returns data unchanged
         return data
+
+    def get_helpers_to_export_whitelist(self) -> set:
+        """
+        Return a set of helper function names that SHOULD be exported as definitions.
+
+        When this returns a non-empty set, only these helpers will be exported as
+        definitions in the rules.json. All other helpers will remain as helper calls
+        that the frontend must implement.
+
+        Returns:
+            A set of helper function names to export as definitions.
+        """
+        # Default: return empty set (no helpers exported as definitions)
+        return set()
+
+    def get_helpers_to_export_blacklist(self) -> set:
+        """
+        Return a set of helper function names that should NOT be exported as definitions.
+
+        When this returns a non-empty set, these helpers will NOT be exported as
+        definitions even if they would otherwise be eligible. This is useful when
+        most helpers can be exported but a few are too complex.
+
+        The blacklist is checked after the whitelist.
+
+        Returns:
+            A set of helper function names to NOT export as definitions.
+        """
+        # Default: return empty set (no helpers blacklisted)
+        return set()
+
+    def get_helper_definitions(self, world) -> dict:
+        """
+        Extract helper function definitions and return them as rule structures.
+
+        This method analyzes helper functions from the game's rules module and
+        converts them to rule structures that the frontend can evaluate directly,
+        eliminating the need for game-specific JavaScript helper implementations.
+
+        The method respects the whitelist and blacklist to control which helpers
+        are exported as definitions.
+
+        Args:
+            world: The world object for this player
+
+        Returns:
+            A dictionary mapping helper names to their rule definitions.
+            Example: {"can_cut_half": {"type": "item_check", "item": "Cutter"}}
+        """
+        # Default: return empty dict (no helper definitions)
+        # Games should override this to provide their helper definitions
+        return {}

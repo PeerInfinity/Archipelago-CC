@@ -719,6 +719,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         'itempool_counts': {},  # Complete itempool counts by player
         'game_info': {},  # Game-specific information for frontend
         'starting_items': {}, # Starting items by player
+        'helpers': {},  # Helper function definitions by player
     }
     
     # Dungeons will only be added if there's data to include
@@ -803,6 +804,17 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
                 'error': error_msg,
                 'details': "Failed to read game settings. Check logs for more information."
             }
+
+        # Get helper definitions using handler
+        try:
+            helper_definitions = game_handler.get_helper_definitions(world)
+            if helper_definitions:
+                export_data['helpers'][player_str] = helper_definitions
+                logger.debug(f"Exported {len(helper_definitions)} helper definitions for player {player}")
+        except Exception as e:
+            error_msg = f"Error exporting helper definitions for player {player}: {str(e)}"
+            logger.error(error_msg)
+            # Don't add error to export_data - just skip helpers silently
 
         # Start regions
         try:
