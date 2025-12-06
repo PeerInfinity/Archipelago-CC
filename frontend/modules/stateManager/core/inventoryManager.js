@@ -197,6 +197,19 @@ export function clearInventory(sm) {
     }
   }
 
+  // Re-initialize prog_items from prog_items_init (e.g., for precollected coins)
+  const gameInfo = sm.gameInfo?.[sm.playerId];
+  if (gameInfo?.prog_items_init && sm.prog_items) {
+    const playerId = sm.playerId;
+    if (!sm.prog_items[playerId]) {
+      sm.prog_items[playerId] = {};
+    }
+    for (const [accumulatorName, initialValue] of Object.entries(gameInfo.prog_items_init)) {
+      sm.prog_items[playerId][accumulatorName] = initialValue;
+    }
+    sm._logDebug(`[InventoryManager] Re-initialized prog_items from prog_items_init`);
+  }
+
   sm._logDebug('[InventoryManager] Inventory and prog_items cleared.');
 
   // Only invalidate cache and recompute if NOT in batch mode

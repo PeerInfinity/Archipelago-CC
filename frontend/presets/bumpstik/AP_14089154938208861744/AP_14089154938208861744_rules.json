@@ -1854,15 +1854,15 @@
   },
   "itempool_counts": {
     "1": {
-      "Booster Bumper": 10,
-      "Hazard Bumper": 50,
-      "Rainbow Trap": 6,
-      "Score Bonus": 44,
-      "Spinner Trap": 4,
-      "Starting Paint Can": 6,
-      "Starting Turner": 6,
-      "Task Advance": 8,
-      "Treasure Bumper": 66
+      "Booster Bumper": 5,
+      "Hazard Bumper": 25,
+      "Rainbow Trap": 3,
+      "Score Bonus": 22,
+      "Spinner Trap": 2,
+      "Starting Paint Can": 3,
+      "Starting Turner": 3,
+      "Task Advance": 4,
+      "Treasure Bumper": 33
     }
   },
   "progression_mapping": {

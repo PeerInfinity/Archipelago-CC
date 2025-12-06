@@ -463,8 +463,24 @@ export function createStateSnapshotInterface(
         return selectedHelpers.count(snapshot, staticData, itemName);
       }
 
-      // Legacy implementation fallback
-      return snapshot?.inventory?.[itemName] || 0;
+      // Check regular inventory first
+      const inventoryCount = snapshot?.inventory?.[itemName] || 0;
+      if (inventoryCount > 0) {
+        return inventoryCount;
+      }
+
+      // Also check prog_items for counter items (e.g., " coins")
+      // This allows item_check rules to work with accumulator_rules targets
+      const playerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
+      const progItemsCount = snapshot?.prog_items?.[playerId]?.[itemName] ||
+                             snapshot?.prog_items?.[String(playerId)]?.[itemName] ||
+                             snapshot?.prog_items?.[parseInt(playerId)]?.[itemName] || 0;
+
+      if (progItemsCount > 0) {
+        return progItemsCount;
+      }
+
+      return 0;
     },
     getTotalItemCount: () => {
       // Count total items across all item types in inventory

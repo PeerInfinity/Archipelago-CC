@@ -16,6 +16,34 @@ from .Regions import create_regions
 from .Rules import set_rules
 
 
+# Item pool counts from original generation (excluding locked placements)
+ITEMPOOL_COUNTS: Dict[str, int] = {
+    "Black Key": 1,
+    "Bridge": 1,
+    "Chalice": 1,
+    "Freeincarnate": 12,
+    "Left Difficulty Switch": 1,
+    "Magnet": 1,
+    "Right Difficulty Switch": 1,
+    "Slow Grundle": 1,
+    "Slow Rhindle": 1,
+    "Slow Yorgle": 1,
+    "Sword": 1,
+    "White Key": 1,
+    "Yellow Key": 1,
+}
+
+# Locked placements - items that must be placed via place_locked_item
+LOCKED_PLACEMENTS: Dict[str, str] = {
+    "Chalice Home": "Victory",
+}
+
+# Starting items - items the player begins with (precollected)
+STARTING_ITEMS: Dict[str, int] = {
+
+}
+
+
 class AdventureTestWeb(WebWorld):
     """Web interface for Adventure Test."""
     theme = "ocean"
@@ -47,6 +75,17 @@ class AdventureTestWorld(RuleWorldMixin, World):
         if data.location_id is not None
     }
 
+    item_name_groups: ClassVar[Dict[str, frozenset]] = {
+        "Everything": frozenset(["Yellow Key", "White Key", "Black Key", "Bridge", "Magnet", "Sword", "Chalice", "Left Difficulty Switch", "Right Difficulty Switch", "Freeincarnate", "Slow Yorgle", "Slow Grundle", "Slow Rhindle", "Revive Dragons", "nothing"]),
+        "Event": frozenset(["Victory"]),
+    }
+
+    def generate_early(self) -> None:
+        """Push starting items and disable randomization for seed 1."""
+        self._push_starting_items()
+        if self.multiworld.seed == 1:
+            self.options.randomize_items.value = False
+
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
@@ -56,23 +95,100 @@ class AdventureTestWorld(RuleWorldMixin, World):
         set_rules(self)
 
     def create_items(self) -> None:
+        """Create the item pool."""
+        if not self.options.randomize_items.value:
+            self._place_original_items()
+        else:
+            self._create_item_pool()
+
+    def _place_original_items(self) -> None:
+        """Place items in their original locations (for seed=1)."""
+        original_placements = {
+        "Blue Labyrinth 0": "Left Difficulty Switch",
+        "Blue Labyrinth 1": "Slow Yorgle",
+        "Catacombs": "Sword",
+        "Adjacent to Catacombs": "Slow Grundle",
+        "Southwest of Catacombs": "Freeincarnate",
+        "White Castle Gate": "Freeincarnate",
+        "Black Castle Gate": "Black Key",
+        "Yellow Castle Gate": "Freeincarnate",
+        "Northeast of Catacombs": "Freeincarnate",
+        "Southeast of Catacombs": "Freeincarnate",
+        "Slay Yorgle": "Freeincarnate",
+        "Inside Yellow Castle": "Magnet",
+        "Chalice Home": "Victory",
+        "RedMaze0": "Freeincarnate",
+        "RedMaze1": "Freeincarnate",
+        "Red Maze Vault Entrance": "Freeincarnate",
+        "Red Maze Vault": "Freeincarnate",
+        "Slay Grundle": "Yellow Key",
+        "Dungeon0": "Freeincarnate",
+        "Dungeon1": "Right Difficulty Switch",
+        "Black Castle Foyer": "Bridge",
+        "Slay Rhindle": "Slow Rhindle",
+        "Dungeon Vault": "White Key",
+        "Credits Left Side": "Freeincarnate",
+        "Credits Right Side": "Chalice",
+        }
+
+        for location_name, item_name in original_placements.items():
+            if item_name and item_name in item_table:
+                location = self.multiworld.get_location(location_name, self.player)
+                item_data = item_table[item_name]
+                item = AdventureTestItem(
+                    item_name,
+                    item_data.classification,
+                    item_data.id,
+                    self.player
+                )
+                location.place_locked_item(item)
+
+    def _create_item_pool(self) -> None:
         """Create randomized item pool."""
+        # First, place any locked items
+        self._place_locked_items()
+
+        # Then create the random item pool
         item_pool = []
 
-        for item_name, item_data in item_table.items():
+        for item_name, count in ITEMPOOL_COUNTS.items():
             # Skip event items
-            if item_data.id is None:
+            if item_name not in item_table or item_table[item_name].id is None:
                 continue
 
-            item = AdventureTestItem(
-                item_name,
-                item_data.classification,
-                item_data.id,
-                self.player
-            )
-            item_pool.append(item)
+            item_data = item_table[item_name]
+            for _ in range(count):
+                item = AdventureTestItem(
+                    item_name,
+                    item_data.classification,
+                    item_data.id,
+                    self.player
+                )
+                item_pool.append(item)
 
         self.multiworld.itempool += item_pool
+
+    def _place_locked_items(self) -> None:
+        """Place items that must be in specific locations (locked placements)."""
+        for location_name, item_name in LOCKED_PLACEMENTS.items():
+            if item_name and item_name in item_table:
+                location = self.multiworld.get_location(location_name, self.player)
+                item_data = item_table[item_name]
+                item = AdventureTestItem(
+                    item_name,
+                    item_data.classification,
+                    item_data.id,
+                    self.player
+                )
+                location.place_locked_item(item)
+
+    def _push_starting_items(self) -> None:
+        """Push starting items as precollected (for state counters like coins)."""
+        for item_name, count in STARTING_ITEMS.items():
+            if item_name in item_table:
+                for _ in range(count):
+                    item = self.create_item(item_name)
+                    self.multiworld.push_precollected(item)
 
     def generate_basic(self) -> None:
         """Place victory event item."""

@@ -23,8 +23,33 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
+        multiworld.get_entrance("YellowCastlePort", player),
+        Has("Yellow Key")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("WhiteCastlePort", player),
+        Has("White Key")
+    )
+
+    world.set_rule(
         multiworld.get_entrance("BlackCastlePort", player),
         Has("Black Key")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("CreditsWall", player),
+        (Has("Black Key")) & (Has("Bridge"))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("WhiteCastleSecretPassage", player),
+        Has("Bridge")
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("WhiteCastlePeekPassage", player),
+        (Has("Bridge")) | (Has("Magnet"))
     )
 
     world.set_rule(
@@ -36,32 +61,12 @@ def set_rules(world: "World") -> None:
         multiworld.get_entrance("CreditsToFarSide", player),
         Has("Magnet")
     )
-
-    world.set_rule(
-        multiworld.get_entrance("CreditsWall", player),
-        (Has("Black Key")) & (Has("Bridge"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("WhiteCastlePeekPassage", player),
-        (Has("Bridge")) | (Has("Magnet"))
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("WhiteCastlePort", player),
-        Has("White Key")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("WhiteCastleSecretPassage", player),
-        Has("Bridge")
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("YellowCastlePort", player),
-        Has("Yellow Key")
-    )
     # Location rules
+    world.set_rule(
+        multiworld.get_location("Slay Yorgle", player),
+        (Has("Right Difficulty Switch")) & (Has("Sword"))
+    )
+
     world.set_rule(
         multiworld.get_location("Chalice Home", player),
         (Has("Chalice")) & (Has("Yellow Key"))
@@ -74,10 +79,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Slay Rhindle", player),
-        (Has("Right Difficulty Switch")) & (Has("Sword"))
-    )
-
-    world.set_rule(
-        multiworld.get_location("Slay Yorgle", player),
         (Has("Right Difficulty Switch")) & (Has("Sword"))
     )

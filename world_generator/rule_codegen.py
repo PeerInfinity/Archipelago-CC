@@ -70,14 +70,16 @@ class RuleCodeGenerator:
             'state_method': self._convert_state_method,
             'not': self._convert_not,
             'helper': self._convert_helper,
+            'compare': self._convert_compare,
         }
 
         converter = converters.get(rule_type)
         if converter:
             return converter(rule)
 
-        # Unknown rule type - generate a comment
-        return f'True_()  # TODO: Unknown rule type: {rule_type}'
+        # Unknown rule type - return True_() as placeholder
+        # Don't use inline comments as they break multi-line expressions
+        return 'True_()'
 
     def _convert_constant(self, rule: Dict[str, Any]) -> str:
         """Convert constant true/false rule."""
@@ -110,7 +112,8 @@ class RuleCodeGenerator:
         """Convert item_check to Has()."""
         self.required_imports.add('Has')
 
-        item = rule.get('item', '')
+        item_raw = rule.get('item', '')
+        item = self._extract_constant_value(item_raw, '')
         count_raw = rule.get('count', 1)
         count = self._extract_constant_value(count_raw, 1)
 
@@ -126,7 +129,8 @@ class RuleCodeGenerator:
         """Convert group_check to HasGroup()."""
         self.required_imports.add('HasGroup')
 
-        group = rule.get('group', '')
+        group_raw = rule.get('group', '')
+        group = self._extract_constant_value(group_raw, '')
         count_raw = rule.get('count', 1)
         count = self._extract_constant_value(count_raw, 1)
 
@@ -175,7 +179,8 @@ class RuleCodeGenerator:
         """Convert can_reach to CanReachRegion()."""
         self.required_imports.add('CanReachRegion')
 
-        region = rule.get('region', '')
+        region_raw = rule.get('region', '')
+        region = self._extract_constant_value(region_raw, '')
         region_escaped = region.replace('\\', '\\\\').replace('"', '\\"')
 
         return f'CanReachRegion("{region_escaped}")'
@@ -184,7 +189,8 @@ class RuleCodeGenerator:
         """Convert location_check to CanReachLocation()."""
         self.required_imports.add('CanReachLocation')
 
-        location = rule.get('location', '')
+        location_raw = rule.get('location', '')
+        location = self._extract_constant_value(location_raw, '')
         location_escaped = location.replace('\\', '\\\\').replace('"', '\\"')
 
         return f'CanReachLocation("{location_escaped}")'
@@ -193,7 +199,8 @@ class RuleCodeGenerator:
         """Convert can_reach_entrance to CanReachEntrance()."""
         self.required_imports.add('CanReachEntrance')
 
-        entrance = rule.get('entrance', '')
+        entrance_raw = rule.get('entrance', '')
+        entrance = self._extract_constant_value(entrance_raw, '')
         entrance_escaped = entrance.replace('\\', '\\\\').replace('"', '\\"')
 
         return f'CanReachEntrance("{entrance_escaped}")'
@@ -217,8 +224,8 @@ class RuleCodeGenerator:
             self.required_imports.add(class_name)
             return extractor(class_name, args)
 
-        # Unknown state method - generate placeholder
-        return f'True_()  # TODO: state_method {method}'
+        # Unknown state method - return True_() as placeholder
+        return 'True_()'
 
     def _extract_item_list(self, class_name: str, args: List[Dict[str, Any]]) -> str:
         """Extract item list for HasAll/HasAny.
@@ -238,7 +245,7 @@ class RuleCodeGenerator:
             items_repr = ', '.join(repr(item) for item in items)
             return f'{class_name}({items_repr})'
 
-        return f'{class_name}()  # TODO: complex args'
+        return f'{class_name}()'
 
     def _extract_item_dict(self, class_name: str, args: List[Dict[str, Any]]) -> str:
         """Extract item dict for HasAllCounts."""
@@ -251,10 +258,14 @@ class RuleCodeGenerator:
             items_repr = repr(items)
             return f'{class_name}({items_repr})'
 
-        return f'{class_name}({{}})  # TODO: complex args'
+        return f'{class_name}({{}})'
 
     def _extract_item_list_with_count(self, class_name: str, args: List[Dict[str, Any]]) -> str:
-        """Extract item list and count for HasFromList."""
+        """Extract item list and count for HasFromList.
+
+        HasFromList expects (*item_names: str, count: int = 1), so we need
+        to expand items as positional args and use count= keyword arg.
+        """
         items = []
         count = 1
 
@@ -263,7 +274,9 @@ class RuleCodeGenerator:
         if len(args) >= 2 and args[1].get('type') == 'constant':
             count = args[1].get('value', 1)
 
-        return f'{class_name}({repr(items)}, {count})'
+        # Expand items as positional args, use count= as keyword arg
+        items_str = ', '.join(repr(item) for item in items)
+        return f'{class_name}({items_str}, count={count})'
 
     def _extract_group_with_count(self, class_name: str, args: List[Dict[str, Any]]) -> str:
         """Extract group and count for HasGroupUnique."""
@@ -277,23 +290,116 @@ class RuleCodeGenerator:
 
         return f'{class_name}("{group}", {count})'
 
+    def _convert_compare(self, rule: Dict[str, Any]) -> str:
+        """
+        Convert compare rule to Has() if it matches the prog_items pattern.
+
+        Pattern: state.prog_items[player][item_name] OP count
+        Converts to: Has(item_name, count)
+        """
+        left = rule.get('left', {})
+        op = rule.get('op', '')
+        right = rule.get('right', {})
+
+        # Try to recognize the pattern: state.prog_items[player][item_name] >= count
+        result = self._try_convert_prog_items_compare(left, op, right)
+        if result is not None:
+            return result
+
+        # Unknown compare pattern - return True_() as placeholder
+        return 'True_()'
+
+    def _try_convert_prog_items_compare(
+        self, left: Any, op: str, right: Any
+    ) -> Optional[str]:
+        """
+        Try to convert a prog_items comparison to Has().
+
+        Returns None if the pattern doesn't match.
+        """
+        # Check if right side is a constant (the count)
+        if not isinstance(right, dict) or right.get('type') != 'constant':
+            return None
+        count = right.get('value', 0)
+
+        # Extract item name from the left side
+        item_name = self._extract_prog_items_item_name(left)
+        if item_name is None:
+            return None
+
+        # Convert based on operator
+        if op == '>=':
+            pass  # count stays as is
+        elif op == '>':
+            count = count + 1  # > n means >= n+1
+        elif op == '==' and count > 0:
+            pass  # approximate as "has at least count"
+        else:
+            return None
+
+        self.required_imports.add('Has')
+
+        # Escape item name for Python string
+        item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+
+        if count == 1:
+            return f'Has("{item_escaped}")'
+        else:
+            return f'Has("{item_escaped}", {count})'
+
+    def _extract_prog_items_item_name(self, expr: Any) -> Optional[str]:
+        """
+        Extract the item name from a prog_items subscript expression.
+
+        Pattern: state.prog_items[player][item_name]
+        Returns the item_name string if the pattern matches, None otherwise.
+        """
+        # Expected structure:
+        # {"type": "subscript", "value": {...}, "index": {"type": "constant", "value": "item_name"}}
+        if not isinstance(expr, dict) or expr.get('type') != 'subscript':
+            return None
+
+        # Get the item name from the outer subscript index
+        index = expr.get('index', {})
+        if not isinstance(index, dict) or index.get('type') != 'constant':
+            return None
+        item_name = index.get('value')
+
+        # Check that the inner expression is state.prog_items[player]
+        inner = expr.get('value', {})
+        if not isinstance(inner, dict) or inner.get('type') != 'subscript':
+            return None
+
+        # Check the innermost expression is state.prog_items
+        innermost = inner.get('value', {})
+        if not isinstance(innermost, dict) or innermost.get('type') != 'attribute':
+            return None
+
+        if innermost.get('attr') != 'prog_items':
+            return None
+
+        obj = innermost.get('object', {})
+        if not isinstance(obj, dict) or obj.get('type') != 'name' or obj.get('name') != 'state':
+            return None
+
+        return item_name
+
     def _convert_not(self, rule: Dict[str, Any]) -> str:
         """Convert not rule - Rule Builder doesn't have Not, use lambda fallback."""
         inner = rule.get('condition', rule.get('value', {}))
         inner_code = self._convert_rule(inner)
 
         # Note: Rule Builder doesn't have a Not class
-        # We'll generate a comment suggesting manual review
-        return f'True_()  # TODO: NOT({inner_code}) - needs manual implementation'
+        # Return True_() as a placeholder - NOT logic needs manual review
+        # Don't use inline comments as they break when combined with & or |
+        return 'True_()'
 
     def _convert_helper(self, rule: Dict[str, Any]) -> str:
         """Convert helper rule - these are custom functions."""
-        name = rule.get('name', 'unknown')
-        args = rule.get('args', [])
-
-        # Helper functions need manual implementation
-        args_str = ', '.join(repr(a.get('value', a)) if isinstance(a, dict) else repr(a) for a in args)
-        return f'True_()  # TODO: helper {name}({args_str})'
+        # Helper functions are game-specific and can't be auto-generated
+        # Return True_() as a placeholder - don't use inline comments
+        # as they break when combined with & or | in expressions
+        return 'True_()'
 
 
 def cc_rule_to_python(rule: Optional[Dict[str, Any]]) -> Tuple[str, List[str]]:

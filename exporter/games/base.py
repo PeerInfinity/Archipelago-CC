@@ -158,14 +158,22 @@ class BaseGameExportHandler:
         pass
 
     def get_itempool_counts(self, world, multiworld, player) -> Dict[str, int]:
-        """Calculate and return item counts for the player's pool."""
+        """Calculate and return item counts for the player's pool.
+
+        Note: After the fill process, multiworld.itempool still contains all original items
+        because distribute_items_restrictive operates on a sorted copy. We only count items
+        that are actually placed in locations (plus precollected items) to get accurate counts.
+        """
         itempool_counts = collections.defaultdict(int)
-        for item in multiworld.itempool:
-            if item.player == player:
-                itempool_counts[item.name] += 1
+
+        # Count precollected items (items player starts with)
         if hasattr(multiworld, 'precollected_items'):
             for item in multiworld.precollected_items.get(player, []):
                 itempool_counts[item.name] += 1
+
+        # Count items placed in locations
+        # Note: We don't count from multiworld.itempool because after fill it still contains
+        # the original items (fill operates on a copy), which would cause double-counting.
         for location in multiworld.get_locations(player):
             if location.item and location.item.player == player:
                 itempool_counts[location.item.name] += 1
@@ -210,16 +218,30 @@ class BaseGameExportHandler:
         """
         Get information about the game's rule formats and structure.
         This can be overridden by game-specific expanders to provide more detailed information.
-        
+
+        The base handler checks for accumulator_rules and prog_items_init class attributes
+        on the world, allowing generated worlds to define state counter patterns.
+
         Returns:
             A dictionary with game information for the frontend.
         """
-        return {
+        game_info = {
             "name": world.game,
             "rule_format": {
                 "version": "1.0"
             }
         }
+
+        # Check if the world defines accumulator rules (for state counter patterns like coins)
+        # This allows generated worlds from CC format to export accumulator rules
+        if hasattr(world, 'accumulator_rules') and world.accumulator_rules:
+            game_info['accumulator_rules'] = world.accumulator_rules
+
+        # Check if the world defines initial values for prog_items accumulators
+        if hasattr(world, 'prog_items_init') and world.prog_items_init:
+            game_info['prog_items_init'] = world.prog_items_init
+
+        return game_info
         
     def get_required_fields(self) -> List[str]:
         """

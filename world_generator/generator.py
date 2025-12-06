@@ -11,7 +11,7 @@ import logging
 from pathlib import Path
 from typing import List, Optional
 
-from .extractors import extract_all, ExtractedData
+from .extractors import extract_all, ExtractedData, sanitize_identifier
 from .templates import (
     generate_items_py,
     generate_locations_py,
@@ -103,11 +103,14 @@ class WorldGenerator:
         self.data.metadata.game_name = new_name
 
         # Update world class name: "My Game Test" -> "MyGameTestWorld"
-        class_base = new_name.replace(' ', '').replace('-', '')
+        class_base = sanitize_identifier(new_name)
         self.data.metadata.world_class_name = class_base + 'World'
 
         # Update game directory: "My Game Test" -> "my_game_test"
-        self.data.metadata.game_directory = new_name.lower().replace(' ', '_').replace('-', '_')
+        # First remove non-alphanumeric chars except spaces and dashes, then convert to snake_case
+        import re
+        clean_name = re.sub(r"[^a-zA-Z0-9 -]", '', new_name)
+        self.data.metadata.game_directory = clean_name.lower().replace(' ', '_').replace('-', '_')
 
         logger.info(f"Renamed game from '{old_name}' to '{new_name}'")
 

@@ -61,6 +61,11 @@ from .rules import (
     CanReachEntrance,
 )
 
+from .cc_format import (
+    is_cc_format,
+    parse_cc_rule,
+)
+
 __all__ = [
     # World mixin
     'RuleWorldMixin',
@@ -92,4 +97,7 @@ __all__ = [
     'CanReachLocation',
     'CanReachRegion',
     'CanReachEntrance',
+    # CC format support
+    'is_cc_format',
+    'parse_cc_rule',
 ]

@@ -268,7 +268,8 @@ def run_world_generator(
     rules_path: str,
     output_dir: str,
     game_name: str,
-    project_root: str
+    project_root: str,
+    canonical_seed1: bool = False
 ) -> Dict:
     """Run the world generator to create a _test world."""
     result = {
@@ -285,6 +286,9 @@ def run_world_generator(
         '--game-name', game_name,
         '--force'
     ]
+
+    if canonical_seed1:
+        cmd.append('--canonical-seed1')
 
     start_time = time.time()
     return_code, stdout, stderr = run_command(cmd, cwd=project_root, timeout=120)
@@ -370,7 +374,8 @@ def process_template(
     seed: int,
     results: Dict,
     skip_generation: bool = False,
-    skip_spoiler_test: bool = False
+    skip_spoiler_test: bool = False,
+    canonical_seed1: bool = False
 ) -> Dict:
     """
     Test a single template through the full round-trip process.
@@ -457,7 +462,8 @@ def process_template(
     test_game_name = f"{game_name_display} Test"
 
     world_gen_result = run_world_generator(
-        rules_path, test_world_dir, test_game_name, project_root
+        rules_path, test_world_dir, test_game_name, project_root,
+        canonical_seed1=canonical_seed1
     )
     template_result['test_world']['world_generation'] = world_gen_result
 
@@ -694,6 +700,10 @@ def main():
         '-v', '--verbose', action='store_true',
         help='Verbose output'
     )
+    parser.add_argument(
+        '--canonical-seed1', action='store_true',
+        help='Enable seed=1 canonical placement (places items in original locations when seed is 1)'
+    )
 
     args = parser.parse_args()
     project_root = get_project_root()
@@ -705,6 +715,8 @@ def main():
     print(f"Seed: {args.seed}")
     print(f"Output file: {args.output_file}")
     print(f"Phase: {args.phase}")
+    if args.canonical_seed1:
+        print(f"Canonical seed 1: enabled")
 
     # Initialize results - use dict keyed by game name for compatibility with combine-test-results.py
     results = {
@@ -712,6 +724,7 @@ def main():
             'timestamp': datetime.now().isoformat(),
             'seed': args.seed,
             'phase': args.phase,
+            'canonical_seed1': args.canonical_seed1,
             'total_templates': 0,
             'successful_generations': 0,
             'failed_generations': 0,
@@ -777,7 +790,8 @@ def main():
             template_result = process_template(
                 template, project_root, args.seed, results,
                 skip_generation=args.skip_generation,
-                skip_spoiler_test=True  # We'll do spoiler tests in the test phase
+                skip_spoiler_test=True,  # We'll do spoiler tests in the test phase
+                canonical_seed1=args.canonical_seed1
             )
             # Use game_name as key for dictionary structure
             game_name = template_result.get('game_name', template.replace('.yaml', ''))

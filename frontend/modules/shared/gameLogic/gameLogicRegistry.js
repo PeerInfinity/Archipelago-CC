@@ -674,7 +674,13 @@ export function detectGameFromWorldClass(worldClass) {
  * @returns {Object} Object containing logicModule, helperFunctions, and optional constants
  */
 export function getGameLogic(gameName) {
-  const config = GAME_REGISTRY[gameName];
+  let config = GAME_REGISTRY[gameName];
+
+  // Try to find config for " Test" suffixed game names (e.g., "DLCQuest Test" -> "DLCQuest")
+  if (!config && gameName && gameName.endsWith(' Test')) {
+    const baseGameName = gameName.slice(0, -5); // Remove " Test" suffix
+    config = GAME_REGISTRY[baseGameName];
+  }
 
   if (!config) {
     // Fallback to Generic for unknown games
