@@ -33,10 +33,11 @@ class ItemData:
     """Extracted item data."""
     name: str
     item_id: Optional[int]
-    classification: str  # 'progression', 'useful', 'trap', 'filler'
+    classification: str  # 'progression', 'useful', 'trap', 'filler', 'progression_skip_balancing', etc.
     groups: List[str] = field(default_factory=list)
     max_count: int = 1
     is_event: bool = False
+    hint_text: Optional[str] = None  # Display name if different from name
 
 
 @dataclass
@@ -49,6 +50,8 @@ class LocationData:
     is_event: bool = False
     original_item: Optional[str] = None  # For seed=1 placement
     locked: bool = False  # True if item was placed via place_locked_item
+    progress_type: Optional[str] = None  # 'EXCLUDED', 'PRIORITY', or None for DEFAULT
+    show_in_spoiler: bool = True  # Whether to show in spoiler log
 
 
 @dataclass
@@ -66,6 +69,7 @@ class RegionData:
     name: str
     locations: List[str] = field(default_factory=list)
     exits: List[str] = field(default_factory=list)
+    hint_text: Optional[str] = None  # Display name if different from name
 
 
 @dataclass
@@ -151,6 +155,7 @@ def extract_items(json_data: Dict[str, Any]) -> Tuple[Dict[str, ItemData], List[
         item_id = item_info.get('id')
         is_event = item_id is None or item_info.get('event', False)
         groups = item_info.get('groups', [])
+        hint_text = item_info.get('hint_text')  # Only set if different from name
 
         items[item_name] = ItemData(
             name=item_name,
@@ -159,6 +164,7 @@ def extract_items(json_data: Dict[str, Any]) -> Tuple[Dict[str, ItemData], List[
             groups=groups,
             max_count=item_info.get('max_count', 1),
             is_event=is_event,
+            hint_text=hint_text,
         )
 
         # Build item_name_groups mapping
@@ -193,6 +199,8 @@ def extract_locations(json_data: Dict[str, Any]) -> Tuple[Dict[str, LocationData
             loc_id = loc_info.get('id')
             is_event = loc_id is None
             is_locked = loc_info.get('locked', False)
+            progress_type = loc_info.get('progress_type')  # 'EXCLUDED', 'PRIORITY', or None
+            show_in_spoiler = loc_info.get('show_in_spoiler', True)
 
             locations[loc_name] = LocationData(
                 name=loc_name,
@@ -201,6 +209,8 @@ def extract_locations(json_data: Dict[str, Any]) -> Tuple[Dict[str, LocationData
                 access_rule=loc_info.get('access_rule'),
                 is_event=is_event,
                 locked=is_locked,
+                progress_type=progress_type,
+                show_in_spoiler=show_in_spoiler,
             )
 
             # Track original item placement for seed=1 mode
@@ -230,11 +240,13 @@ def extract_regions(json_data: Dict[str, Any]) -> Tuple[Dict[str, RegionData], D
     for region_name, region_info in regions_data.items():
         location_names = [loc.get('name', '') for loc in region_info.get('locations', [])]
         exit_names = [exit_info.get('name', '') for exit_info in region_info.get('exits', [])]
+        hint_text = region_info.get('hint_text')  # Only set if different from name
 
         regions[region_name] = RegionData(
             name=region_name,
             locations=location_names,
             exits=exit_names,
+            hint_text=hint_text,
         )
 
         # Extract exits

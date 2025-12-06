@@ -250,6 +250,7 @@
       },
       "YellowCastle": {
         "name": "YellowCastle",
+        "hint_text": "Yellow Castle",
         "exits": [
           {
             "name": "YellowCastleExit",
@@ -304,6 +305,7 @@
       },
       "WhiteCastle": {
         "name": "WhiteCastle",
+        "hint_text": "White Castle",
         "exits": [
           {
             "name": "WhiteCastleExit",
@@ -374,6 +376,7 @@
       },
       "WhiteCastlePreVaultPeek": {
         "name": "WhiteCastlePreVaultPeek",
+        "hint_text": "White Castle Secret Peek",
         "exits": [
           {
             "name": "WhiteCastleFromPeek",
@@ -404,6 +407,7 @@
       },
       "WhiteCastleVault": {
         "name": "WhiteCastleVault",
+        "hint_text": "White Castle Vault",
         "exits": [
           {
             "name": "WhiteCastleReturnPassage",
@@ -458,6 +462,7 @@
       },
       "BlackCastle": {
         "name": "BlackCastle",
+        "hint_text": "Black Castle",
         "exits": [
           {
             "name": "BlackCastleExit",
@@ -559,6 +564,7 @@
       },
       "BlackCastleVault": {
         "name": "BlackCastleVault",
+        "hint_text": "Black Castle Vault",
         "exits": [
           {
             "name": "BlackCastleReturnPassage",
@@ -589,6 +595,7 @@
       },
       "CreditsRoom": {
         "name": "CreditsRoom",
+        "hint_text": "Credits Room",
         "exits": [
           {
             "name": "CreditsExit",
@@ -627,6 +634,7 @@
       },
       "CreditsRoomFarSide": {
         "name": "CreditsRoomFarSide",
+        "hint_text": "Credits Far Side",
         "exits": [
           {
             "name": "CreditsFromFarSide",

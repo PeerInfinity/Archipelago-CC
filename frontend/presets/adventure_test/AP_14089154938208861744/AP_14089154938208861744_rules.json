@@ -300,7 +300,8 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "hint_text": "Yellow Castle"
       },
       "WhiteCastle": {
         "name": "WhiteCastle",
@@ -370,7 +371,8 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "hint_text": "White Castle"
       },
       "WhiteCastlePreVaultPeek": {
         "name": "WhiteCastlePreVaultPeek",
@@ -400,7 +402,8 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "hint_text": "White Castle Secret Peek"
       },
       "WhiteCastleVault": {
         "name": "WhiteCastleVault",
@@ -454,7 +457,8 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "hint_text": "White Castle Vault"
       },
       "BlackCastle": {
         "name": "BlackCastle",
@@ -555,7 +559,8 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "hint_text": "Black Castle"
       },
       "BlackCastleVault": {
         "name": "BlackCastleVault",
@@ -585,7 +590,8 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "hint_text": "Black Castle Vault"
       },
       "CreditsRoom": {
         "name": "CreditsRoom",
@@ -623,7 +629,8 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "hint_text": "Credits Room"
       },
       "CreditsRoomFarSide": {
         "name": "CreditsRoomFarSide",
@@ -653,7 +660,8 @@
             },
             "locked": true
           }
-        ]
+        ],
+        "hint_text": "Credits Far Side"
       }
     }
   },
