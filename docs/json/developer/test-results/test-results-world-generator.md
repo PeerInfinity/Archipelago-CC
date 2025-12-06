@@ -1,6 +1,6 @@
 # World Generator Test Results
 
-**Generated:** 2025-12-05 18:12:11 UTC
+**Generated:** 2025-12-06 04:41:39 UTC
 **Seed:** N/A
 
 This report shows the results of round-trip testing the world generator.
@@ -31,251 +31,376 @@ world is validated to produce equivalent game logic.
 | Total Templates | 80 |
 | Successful Original Generations | 80 |
 | Failed Original Generations | 0 |
-| Successful Test World Generations | 75 |
-| Failed Test World Generations | 5 |
-| Cross-Validation Passed | 11 |
-| Cross-Validation Failed | 0 |
+| Successful Test World Generations | 80 |
+| Failed Test World Generations | 0 |
+| Cross-Validation Passed | 24 |
+| Cross-Validation Failed | 40 |
 
 ## Detailed Results
 
 | Game | Original Gen | Original Test | World Gen | Test Gen | Test Spoiler | Cross-Validation |
 |------|--------------|---------------|-----------|----------|--------------|------------------|
-| A Hat in Time | ✅ | Skipped | ✅ | ❌ | - | - |
-| A Link to the Past | ✅ | Skipped | ✅ | ❌ | - | - |
-| A Short Hike | ✅ | ✅ | ✅ | ❌ | - | - |
+| A Hat in Time | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| A Link to the Past | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| A Short Hike | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | APQuest | ✅ | ✅ | ✅ | ❌ | - | - |
-| Adventure | ✅ | ✅ | ✅ | ❌ | - | - |
-| Aquaria | ✅ | ✅ | ✅ | ❌ | - | - |
-| Blasphemous | ✅ | Skipped | ✅ | ❌ | - | - |
-| Bomb Rush Cyberfunk | ✅ | ✅ | ✅ | ❌ | - | - |
-| Bumper Stickers | ✅ | ✅ | ✅ | ❌ | - | - |
-| Castlevania - Circle of the Moon | ✅ | Skipped | ✅ | ❌ | - | - |
-| Castlevania 64 | ✅ | Skipped | ✅ | ❌ | - | - |
-| Celeste (Open World) | ✅ | Skipped | ✅ | ❌ | - | - |
-| Celeste 64 | ✅ | ✅ | ✅ | ❌ | - | - |
-| ChecksFinder | ✅ | ✅ | ✅ | ❌ | - | - |
+| Adventure | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Aquaria | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Blasphemous | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Bomb Rush Cyberfunk | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Bumper Stickers | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Castlevania - Circle of the Moon | ✅ | ✅ | ✅ | ❌ | - | - |
+| Castlevania 64 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Celeste (Open World) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Celeste 64 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| ChecksFinder | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | ChocolateChipCookies | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Choo-Choo Charles | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Civilization VI | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| DLCQuest | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| DOOM 1993 | ✅ | ✅ | ✅ | ❌ | - | - |
-| DOOM II | ✅ | ✅ | ✅ | ❌ | - | - |
-| Dark Souls III | ✅ | Skipped | ❌ | - | - | - |
-| Donkey Kong Country 3 | ✅ | ✅ | ✅ | ❌ | - | - |
-| Factorio | ✅ | Skipped | ❌ | - | - | - |
-| Faxanadu | ✅ | ✅ | ✅ | ❌ | - | - |
-| Final Fantasy Mystic Quest | ✅ | ✅ | ✅ | ❌ | - | - |
-| Heretic | ✅ | ✅ | ✅ | ❌ | - | - |
+| DLCQuest | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| DOOM 1993 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| DOOM II | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Dark Souls III | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Donkey Kong Country 3 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Factorio | ✅ | ✅ | ✅ | ❌ | - | - |
+| Faxanadu | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Final Fantasy Mystic Quest | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Heretic | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Hylics 2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Inscryption | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Jak and Daxter The Precursor Legacy | ✅ | Skipped | ✅ | ❌ | - | - |
-| Kingdom Hearts | ✅ | Skipped | ✅ | ❌ | - | - |
-| Kingdom Hearts 2 | ✅ | Skipped | ✅ | ❌ | - | - |
-| Kirby's Dream Land 3 | ✅ | Skipped | ✅ | ❌ | - | - |
-| Landstalker - The Treasures of King Nole | ✅ | ✅ | ✅ | ❌ | - | - |
-| Lingo | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Jak and Daxter The Precursor Legacy | ✅ | ✅ | ✅ | ❌ | - | - |
+| Kingdom Hearts | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Kingdom Hearts 2 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Kirby's Dream Land 3 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Landstalker - The Treasures of King Nole | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Lingo | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Links Awakening DX | ✅ | ✅ | ✅ | ❌ | - | - |
-| Lufia II Ancient Cave | ✅ | ✅ | ✅ | ❌ | - | - |
-| Mario & Luigi Superstar Saga | ✅ | Skipped | ✅ | ❌ | - | - |
+| Lufia II Ancient Cave | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Mario & Luigi Superstar Saga | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | MathProof2p2e4 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Mega Man 2 | ✅ | ✅ | ✅ | ❌ | - | - |
-| MegaMan Battle Network 3 | ✅ | Skipped | ✅ | ❌ | - | - |
-| Meritous | ✅ | ✅ | ✅ | ❌ | - | - |
-| Metamath | ✅ | Skipped | ❌ | - | - | - |
+| MegaMan Battle Network 3 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Meritous | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Metamath | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Muse Dash | ✅ | ✅ | ✅ | ❌ | - | - |
 | Noita | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Old School Runescape | ✅ | Skipped | ✅ | ❌ | - | - |
-| Overcooked! 2 | ✅ | Skipped | ✅ | ❌ | - | - |
-| Paint | ✅ | ✅ | ✅ | ❌ | - | - |
-| Pokemon Emerald | ✅ | Skipped | ✅ | ❌ | - | - |
-| Pokemon Red and Blue | ✅ | Skipped | ✅ | ❌ | - | - |
-| Raft | ✅ | Skipped | ✅ | ❌ | - | - |
-| Risk of Rain 2 | ✅ | Skipped | ✅ | ❌ | - | - |
-| SMZ3 | ✅ | Skipped | ✅ | ❌ | - | - |
-| Saving Princess | ✅ | ✅ | ✅ | ❌ | - | - |
-| Secret of Evermore | ✅ | Skipped | ✅ | ❌ | - | - |
-| Shivers | ✅ | Skipped | ✅ | ❌ | - | - |
-| Sonic Adventure 2 Battle | ✅ | Skipped | ✅ | ❌ | - | - |
-| Starcraft 2 | ✅ | Skipped | ✅ | ❌ | - | - |
-| Stardew Valley | ✅ | Skipped | ✅ | ❌ | - | - |
-| Subnautica | ✅ | Skipped | ✅ | ❌ | - | - |
-| Super Mario 64 | ✅ | Skipped | ✅ | ❌ | - | - |
-| Super Mario Land 2 | ✅ | Skipped | ✅ | ❌ | - | - |
+| Old School Runescape | ✅ | ✅ | ✅ | ❌ | - | - |
+| Overcooked! 2 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Paint | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| Pokemon Emerald | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Pokemon Red and Blue | ✅ | ✅ | ✅ | ❌ | - | - |
+| Raft | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| SMZ3 | ✅ | ✅ | ✅ | ❌ | - | - |
+| Saving Princess | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Secret of Evermore | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| Shivers | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Sonic Adventure 2 Battle | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Starcraft 2 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Stardew Valley | ✅ | ✅ | ✅ | ❌ | - | - |
+| Subnautica | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Super Mario 64 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Super Mario Land 2 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Super Mario World | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Super Metroid | ✅ | Skipped | ✅ | ❌ | - | - |
-| TOEM original | ✅ | ✅ | ✅ | ❌ | - | - |
-| TOEM rule builder | ✅ | ✅ | ✅ | ❌ | - | - |
-| TUNIC | ✅ | Skipped | ✅ | ❌ | - | - |
-| Terraria | ✅ | Skipped | ✅ | ❌ | - | - |
-| The Legend of Zelda | ✅ | Skipped | ❌ | - | - | - |
-| The Messenger | ✅ | Skipped | ❌ | - | - | - |
-| The Wind Waker | ✅ | Skipped | ✅ | ❌ | - | - |
-| The Witness | ✅ | Skipped | ✅ | ❌ | - | - |
-| Timespinner | ✅ | Skipped | ✅ | ❌ | - | - |
-| Undertale | ✅ | Skipped | ✅ | ❌ | - | - |
-| VVVVVV | ✅ | Skipped | ✅ | ❌ | - | - |
-| Wargroove | ✅ | Skipped | ✅ | ❌ | - | - |
+| Super Metroid | ✅ | ✅ | ✅ | ❌ | - | - |
+| TOEM original | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| TOEM rule builder | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| TUNIC | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Terraria | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| The Legend of Zelda | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| The Messenger | ✅ | ✅ | ✅ | ❌ | - | - |
+| The Wind Waker | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| The Witness | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Timespinner | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Undertale | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| VVVVVV | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Wargroove | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | WebDevJourney | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Yacht Dice | ✅ | ✅ | ✅ | ❌ | - | - |
-| Yoshi's Island | ✅ | Skipped | ✅ | ❌ | - | - |
-| Yu-Gi-Oh! 2006 | ✅ | Skipped | ✅ | ❌ | - | - |
-| shapez | ✅ | Skipped | ✅ | ❌ | - | - |
+| Yoshi's Island | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Yu-Gi-Oh! 2006 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| shapez | ✅ | ✅ | ✅ | ❌ | - | - |
 
 ## Failures
 
-**30 games had errors:**
+**56 games had errors:**
 
-### A Short Hike
+### A Hat in Time
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
+- Cross-validation failed
+
+### A Link to the Past
+
+**Testing phase:**
+- Cross-validation failed
 
 ### APQuest
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
-
-### Adventure
-
-**Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
+- Test world seed generation failed: raise FillError(
 
 ### Aquaria
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
+- Cross-validation failed
+
+### Blasphemous
+
+**Testing phase:**
+- Cross-validation failed
 
 ### Bomb Rush Cyberfunk
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
+- Cross-validation failed
 
-### Bumper Stickers
+### Castlevania - Circle of the Moon
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
+- Test world seed generation failed: raise FillError(
+
+### Castlevania 64
+
+**Testing phase:**
+- Cross-validation failed
 
 ### Celeste 64
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
+- Cross-validation failed
 
-### ChecksFinder
-
-**Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
-
-### DOOM 1993
+### DLCQuest
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
-
-### DOOM II
-
-**Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
-
-### Dark Souls III
-
-**Generation phase:**
-- World generation failed: World generator failed: 
-INFO: Loading JSON from /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/dark_souls_3/AP_14089154938208861744/AP_14089154938208861744_...
+- Cross-validation failed
 
 ### Donkey Kong Country 3
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
+- Cross-validation failed
 
 ### Factorio
 
-**Generation phase:**
-- World generation failed: World generator failed: 
-INFO: Loading JSON from /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/factorio/AP_14089154938208861744/AP_14089154938208861744_rule...
+**Testing phase:**
+- Test world seed generation failed: raise FillError(
 
 ### Faxanadu
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
+- Cross-validation failed
 
 ### Final Fantasy Mystic Quest
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
+- Cross-validation failed
 
-### Heretic
+### Jak and Daxter The Precursor Legacy
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
+- Test world seed generation failed: raise FillError(
+
+### Kingdom Hearts
+
+**Testing phase:**
+- Cross-validation failed
+
+### Kingdom Hearts 2
+
+**Testing phase:**
+- Cross-validation failed
+
+### Kirby's Dream Land 3
+
+**Testing phase:**
+- Cross-validation failed
 
 ### Landstalker - The Treasures of King Nole
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
+- Cross-validation failed
+
+### Lingo
+
+**Testing phase:**
+- Cross-validation failed
 
 ### Links Awakening DX
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
+- Test world seed generation failed: raise FillError(
 
-### Lufia II Ancient Cave
+### Mario & Luigi Superstar Saga
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
+- Cross-validation failed
 
 ### Mega Man 2
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
+- Test world seed generation failed: raise FillError(
 
-### Meritous
+### MegaMan Battle Network 3
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
-
-### Metamath
-
-**Generation phase:**
-- World generation failed: World generator failed: 
-INFO: Loading JSON from /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/metamath/AP_14089154938208861744/AP_14089154938208861744_rule...
+- Cross-validation failed
 
 ### Muse Dash
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
+- Test world seed generation failed: raise FillError(
+
+### Old School Runescape
+
+**Testing phase:**
+- Test world seed generation failed: AssertionError: item code None should be event, location.address should then also be None. Location:  Points: Cook's Assistant, Item: 1 QP (Cook's Assistant)
+
+### Overcooked! 2
+
+**Testing phase:**
+- Cross-validation failed
 
 ### Paint
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
+- Cross-validation failed
+
+### Pokemon Red and Blue
+
+**Testing phase:**
+- Test world seed generation failed: raise FillError(
+
+### Raft
+
+**Testing phase:**
+- Cross-validation failed
+
+### Risk of Rain 2
+
+**Testing phase:**
+- Cross-validation failed
+
+### SMZ3
+
+**Testing phase:**
+- Test world seed generation failed: raise FillError(
 
 ### Saving Princess
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
+- Cross-validation failed
+
+### Secret of Evermore
+
+**Testing phase:**
+- Cross-validation failed
+
+### Shivers
+
+**Testing phase:**
+- Cross-validation failed
+
+### Sonic Adventure 2 Battle
+
+**Testing phase:**
+- Cross-validation failed
+
+### Starcraft 2
+
+**Testing phase:**
+- Cross-validation failed
+
+### Stardew Valley
+
+**Testing phase:**
+- Test world seed generation failed: raise FillError(
+
+### Subnautica
+
+**Testing phase:**
+- Cross-validation failed
+
+### Super Mario 64
+
+**Testing phase:**
+- Cross-validation failed
+
+### Super Mario Land 2
+
+**Testing phase:**
+- Cross-validation failed
+
+### Super Metroid
+
+**Testing phase:**
+- Test world seed generation failed: AssertionError: item code None should be event, location.address should then also be None. Location:  Ridley, Item: Ridley
 
 ### TOEM original
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
+- Cross-validation failed
 
 ### TOEM rule builder
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
+- Cross-validation failed
+
+### TUNIC
+
+**Testing phase:**
+- Cross-validation failed
+
+### Terraria
+
+**Testing phase:**
+- Cross-validation failed
 
 ### The Legend of Zelda
 
-**Generation phase:**
-- World generation failed: World generator failed: 
-INFO: Loading JSON from /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/tloz/AP_14089154938208861744/AP_14089154938208861744_rules.js...
+**Testing phase:**
+- Cross-validation failed
 
 ### The Messenger
 
-**Generation phase:**
-- World generation failed: World generator failed: 
-INFO: Loading JSON from /home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/messenger/AP_14089154938208861744/AP_14089154938208861744_rul...
+**Testing phase:**
+- Test world seed generation failed: raise FillError(
+
+### The Wind Waker
+
+**Testing phase:**
+- Cross-validation failed
+
+### Timespinner
+
+**Testing phase:**
+- Cross-validation failed
+
+### VVVVVV
+
+**Testing phase:**
+- Cross-validation failed
+
+### Wargroove
+
+**Testing phase:**
+- Cross-validation failed
 
 ### Yacht Dice
 
 **Testing phase:**
-- Test world seed generation failed: SyntaxError: invalid syntax. Perhaps you forgot a comma?
+- Test world seed generation failed: AssertionError: item code None should be event, location.address should then also be None. Location:  777 score, Item: Victory
+
+### Yoshi's Island
+
+**Testing phase:**
+- Cross-validation failed
+
+### Yu-Gi-Oh! 2006
+
+**Testing phase:**
+- Cross-validation failed
+
+### shapez
+
+**Testing phase:**
+- Test world seed generation failed: KeyError: 'Achievements needing a MAM'
