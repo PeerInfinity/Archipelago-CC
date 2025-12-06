@@ -4,17 +4,17 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-12-05 09:39:24
+**Generated:** 2025-12-06 10:22:34
 
-**Source Data Created:** 2025-12-05T06:51:16.765370
+**Source Data Created:** 2025-12-06T07:36:46.720676
 
-**Source Data Last Updated:** 2025-12-05T06:51:16.765379
+**Source Data Last Updated:** 2025-12-06T07:36:46.720681
 
 ## Summary
 
-- **Total Games:** 81
-- **Passed:** 80 (98.8%)
-- **Failed:** 1 (1.2%)
+- **Total Games:** 102
+- **Passed:** 101 (99.0%)
+- **Failed:** 1 (1.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
@@ -25,40 +25,54 @@
 | A Hat in Time | ✅ Passed seeds 1-10 | 0 | 5.21 | 5.21 | 🟢 Complete | ✅ | ✅ |
 | A Link to the Past | ✅ Passed seeds 1-10 | 0 | 22.1 | 22.1 | 🟢 Complete | ✅ | ✅ |
 | A Short Hike | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ⚫ |
+| A Short Hike Test | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ⚫ | ⚫ |
 | APQuest | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ⚫ | ⚫ |
 | Adventure | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ⚫ |
-| Adventure Test | ❌ Failed seed 1 | 3 | 0 | 0 | 🔴 0.0% | ⚫ | ⚫ |
+| Adventure Test | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ⚫ | ⚫ |
 | Aquaria | ✅ Passed seeds 1-10 | 0 | 5.19 | 5.19 | 🟢 Complete | ✅ | ✅ |
+| Aquaria Test | ✅ Passed seeds 1-10 | 0 | 7.17 | 7.17 | 🟢 Complete | ⚫ | ⚫ |
 | Blasphemous | ✅ Passed seeds 1-10 | 0 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed seeds 1-10 | 0 | 10.18 | 10.18 | 🟢 Complete | ✅ | ⚫ |
+| Bomb Rush Cyberfunk Test | ✅ Passed seeds 1-10 | 1 | 1.27 | 1.27 | 🟢 Complete | ⚫ | ⚫ |
 | Bumper Stickers | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ⚫ |
+| Bumper Stickers Test | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | ⚫ | ⚫ |
 | Castlevania - Circle of the Moon | ✅ Passed seeds 1-10 | 0 | 4.41 | 4.41 | 🟢 Complete | ✅ | ✅ |
 | Castlevania 64 | ✅ Passed seeds 1-10 | 0 | 5.6 | 5.6 | 🟢 Complete | ✅ | ✅ |
 | Celeste (Open World) | ✅ Passed seeds 1-10 | 0 | 16.5 | 16.5 | 🟢 Complete | ✅ | ⚫ |
 | Celeste 64 | ✅ Passed seeds 1-10 | 0 | 5.2 | 5.2 | 🟢 Complete | ✅ | ✅ |
 | ChecksFinder | ✅ Passed seeds 1-10 | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ⚫ |
+| ChecksFinder Test | ✅ Passed seeds 1-10 | 0 | 4.5 | 4.5 | 🟢 Complete | ⚫ | ⚫ |
 | ChocolateChipCookies | ✅ Passed seeds 1-10 | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ⚫ |
 | Choo-Choo Charles | ✅ Passed seeds 1-10 | 0 | 4.3 | 4.3 | 🟢 Complete | ⚫ | ⚫ |
 | Civilization VI | ✅ Passed seeds 1-10 | 0 | 8.15 | 8.15 | 🟢 Complete | ✅ | ⚫ |
 | DLCQuest | ✅ Passed seeds 1-10 | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
+| DLCQuest Test | ❌ Failed seed 1 | 0 | 0.1 | 4.2 | 🟠 2.4% | ⚫ | ⚫ |
 | DOOM 1993 | ✅ Passed seeds 1-10 | 0 | 18.5 | 18.5 | 🟢 Complete | ✅ | ⚫ |
 | DOOM II | ✅ Passed seeds 1-10 | 0 | 21.4 | 21.4 | 🟢 Complete | ✅ | ⚫ |
 | Dark Souls III | ✅ Passed seeds 1-10 | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ⚫ |
 | Donkey Kong Country 3 | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ⚫ |
 | Factorio | ✅ Passed seeds 1-10 | 0 | 12.1 | 12.1 | 🟢 Complete | ✅ | ✅ |
 | Faxanadu | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ⚫ |
+| Faxanadu Test | ✅ Passed seeds 1-10 | 0 | 9.2 | 9.2 | 🟢 Complete | ⚫ | ⚫ |
 | Final Fantasy Mystic Quest | ✅ Passed seeds 1-10 | 0 | 19.6 | 19.6 | 🟢 Complete | ✅ | ⚫ |
+| Final Fantasy Mystic Quest Test | ✅ Passed seeds 1-10 | 0 | 16.6 | 16.6 | 🟢 Complete | ⚫ | ⚫ |
 | Heretic | ✅ Passed seeds 1-10 | 0 | 24.4 | 24.4 | 🟢 Complete | ⚫ | ⚫ |
 | Hylics 2 | ✅ Passed seeds 1-10 | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
+| Hylics 2 Test | ✅ Passed seeds 1-10 | 0 | 8.1 | 8.1 | 🟢 Complete | ⚫ | ⚫ |
 | Inscryption | ✅ Passed seeds 1-10 | 0 | 10.2 | 10.2 | 🟢 Complete | ✅ | ✅ |
+| Inscryption Test | ✅ Passed seeds 1-10 | 0 | 10.2 | 10.2 | 🟢 Complete | ⚫ | ⚫ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed seeds 1-10 | 0 | 14.1 | 14.1 | 🟢 Complete | ✅ | ✅ |
 | Kingdom Hearts | ✅ Passed seeds 1-10 | 0 | 10.8 | 10.8 | 🟢 Complete | ✅ | ✅ |
 | Kingdom Hearts 2 | ✅ Passed seeds 1-10 | 0 | 15.2 | 15.2 | 🟢 Complete | ✅ | ✅ |
 | Kirby's Dream Land 3 | ✅ Passed seeds 1-10 | 0 | 11.3 | 11.3 | 🟢 Complete | ✅ | ✅ |
+| Kirby's Dream Land 3 Test | ✅ Passed seeds 1-10 | 0 | 9.2 | 9.2 | 🟢 Complete | ⚫ | ⚫ |
 | Landstalker - The Treasures of King Nole | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
+| Landstalker - The Treasures of King Nole Test | ✅ Passed seeds 1-10 | 0 | 10.2 | 10.2 | 🟢 Complete | ⚫ | ⚫ |
 | Lingo | ✅ Passed seeds 1-10 | 0 | 6.12 | 6.12 | 🟢 Complete | ✅ | ✅ |
+| Lingo Test | ✅ Passed seeds 1-10 | 0 | 0.156 | 0.156 | 🟢 Complete | ⚫ | ⚫ |
 | Links Awakening DX | ✅ Passed seeds 1-10 | 0 | 15.1 | 15.1 | 🟢 Complete | ✅ | ✅ |
 | Lufia II Ancient Cave | ✅ Passed seeds 1-10 | 0 | 4.16 | 4.16 | 🟢 Complete | ⚫ | ⚫ |
+| Lufia II Ancient Cave Test | ✅ Passed seeds 1-10 | 0 | 4.16 | 4.16 | 🟢 Complete | ⚫ | ⚫ |
 | Mario & Luigi Superstar Saga | ✅ Passed seeds 1-10 | 0 | 8.8 | 8.8 | 🟢 Complete | ✅ | ✅ |
 | MathProof2p2e4 | ✅ Passed seeds 1-10 | 0 | 4.1 | 4.1 | 🟢 Complete | ⚫ | ⚫ |
 | Mega Man 2 | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
@@ -67,6 +81,7 @@
 | Metamath | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ⚫ |
 | Muse Dash | ✅ Passed seeds 1-10 | 0 | 8.6 | 8.6 | 🟢 Complete | ⚫ | ⚫ |
 | Noita | ✅ Passed seeds 1-10 | 0 | 0.117 | 0.117 | 🟢 Complete | ⚫ | ⚫ |
+| Noita Test | ✅ Passed seeds 1-10 | 0 | 0.117 | 0.117 | 🟢 Complete | ⚫ | ⚫ |
 | Old School Runescape | ✅ Passed seeds 1-10 | 0 | 7.6 | 7.6 | 🟢 Complete | ✅ | ✅ |
 | Overcooked! 2 | ✅ Passed seeds 1-10 | 0 | 18.3 | 18.3 | 🟢 Complete | ✅ | ✅ |
 | Paint | ✅ Passed seeds 1-10 | 0 | 13.2 | 13.2 | 🟢 Complete | ✅ | ✅ |
@@ -76,8 +91,10 @@
 | Risk of Rain 2 | ✅ Passed seeds 1-10 | 0 | 8.35 | 8.35 | 🟢 Complete | ⚫ | ⚫ |
 | SMZ3 | ✅ Passed seeds 1-10 | 0 | 16.1 | 16.1 | 🟢 Complete | ✅ | ✅ |
 | Saving Princess | ✅ Passed seeds 1-10 | 0 | 5.3 | 5.3 | 🟢 Complete | ✅ | ⚫ |
+| Saving Princess Test | ✅ Passed seeds 1-10 | 0 | 5.3 | 5.3 | 🟢 Complete | ⚫ | ⚫ |
 | Secret of Evermore | ✅ Passed seeds 1-10 | 0 | 5.19 | 5.19 | 🟢 Complete | ✅ | ✅ |
 | Shivers | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
+| Shivers Test | ✅ Passed seeds 1-10 | 0 | 16.1 | 16.1 | 🟢 Complete | ⚫ | ⚫ |
 | Sonic Adventure 2 Battle | ✅ Passed seeds 1-10 | 0 | 7.18 | 7.18 | 🟢 Complete | ✅ | ⚫ |
 | Starcraft 2 | ✅ Passed seeds 1-10 | 0 | 15.14 | 15.14 | 🟢 Complete | ✅ | ✅ |
 | Stardew Valley | ✅ Passed seeds 1-10 | 0 | 44.2 | 44.2 | 🟢 Complete | ✅ | ⚫ |
@@ -89,15 +106,19 @@
 | TOEM original | ✅ Passed seeds 1-10 | 0 | 3.66 | 3.66 | 🟢 Complete | ⚫ | ⚫ |
 | TOEM rule builder | ✅ Passed seeds 1-10 | 0 | 3.66 | 3.66 | 🟢 Complete | ⚫ | ⚫ |
 | TUNIC | ✅ Passed seeds 1-10 | 0 | 5.12 | 5.12 | 🟢 Complete | ✅ | ⚫ |
+| TUNIC Test | ✅ Passed seeds 1-10 | 0 | 3.2 | 3.2 | 🟢 Complete | ⚫ | ⚫ |
 | Terraria | ✅ Passed seeds 1-10 | 0 | 9.6 | 9.6 | 🟢 Complete | ✅ | ✅ |
 | The Legend of Zelda | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | The Messenger | ✅ Passed seeds 1-10 | 0 | 7.1 | 7.1 | 🟢 Complete | ✅ | ✅ |
 | The Wind Waker | ✅ Passed seeds 1-10 | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ✅ |
 | The Witness | ✅ Passed seeds 1-10 | 0 | 9.15 | 9.15 | 🟢 Complete | ✅ | ✅ |
+| The Witness Test | ✅ Passed seeds 1-10 | 105 | 9.15 | 9.15 | 🟢 Complete | ⚫ | ⚫ |
 | Timespinner | ✅ Passed seeds 1-10 | 0 | 7.3 | 7.3 | 🟢 Complete | ✅ | ✅ |
+| Timespinner Test | ✅ Passed seeds 1-10 | 1 | 6.2 | 6.2 | 🟢 Complete | ⚫ | ⚫ |
 | Undertale | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ⚫ |
 | VVVVVV | ✅ Passed seeds 1-10 | 0 | 3.4 | 3.4 | 🟢 Complete | ✅ | ✅ |
 | Wargroove | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
+| Wargroove Test | ✅ Passed seeds 1-10 | 0 | 0.39 | 0.39 | 🟢 Complete | ⚫ | ⚫ |
 | WebDevJourney | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ⚫ | ⚫ |
 | Yacht Dice | ✅ Passed seeds 1-10 | 0 | 21.1 | 21.1 | 🟢 Complete | ✅ | ✅ |
 | Yoshi's Island | ✅ Passed seeds 1-10 | 0 | 13.1 | 13.1 | 🟢 Complete | ✅ | ✅ |
