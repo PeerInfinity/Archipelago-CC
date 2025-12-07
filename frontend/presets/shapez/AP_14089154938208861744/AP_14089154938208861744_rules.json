@@ -5949,51 +5949,90 @@
   },
   "helpers": {
     "1": {
-      "can_make_half_shape": {
-        "type": "or",
+      "can_make_stitched_shape": {
+        "type": "and",
         "conditions": [
           {
             "type": "helper",
-            "name": "can_cut_half",
+            "name": "can_stack",
             "args": []
           },
           {
-            "type": "and",
+            "type": "or",
             "conditions": [
               {
-                "type": "item_check",
-                "item": "Quad Cutter"
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Quad Cutter"
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "name",
+                      "name": "floating"
+                    }
+                  }
+                ]
               },
               {
-                "type": "item_check",
-                "item": "Stacker"
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "helper",
+                    "name": "can_cut_half",
+                    "args": []
+                  },
+                  {
+                    "type": "helper",
+                    "name": "can_rotate_90",
+                    "args": []
+                  }
+                ]
               }
             ]
           }
         ]
       },
-      "can_paint": {
-        "type": "or",
+      "can_mix_colors": {
+        "type": "item_check",
+        "item": "Color Mixer"
+      },
+      "can_use_quad_painter": {
+        "type": "and",
         "conditions": [
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Quad Painter"
+              },
+              {
+                "type": "item_check",
+                "item": "Wires"
+              }
+            ]
+          },
           {
             "type": "or",
             "conditions": [
               {
                 "type": "item_check",
-                "item": "Double Painter"
+                "item": "Constant Signal"
               },
               {
                 "type": "item_check",
-                "item": "Painter"
+                "item": "Switch"
               }
             ]
-          },
-          {
-            "type": "helper",
-            "name": "can_use_quad_painter",
-            "args": []
           }
         ]
+      },
+      "can_stack": {
+        "type": "item_check",
+        "item": "Stacker"
       },
       "can_make_half_half_shape": {
         "type": "and",
@@ -6017,44 +6056,6 @@
             ]
           }
         ]
-      },
-      "can_make_east_windmill": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "can_stack",
-            "args": []
-          },
-          {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Quad Cutter"
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "helper",
-                    "name": "can_cut_half",
-                    "args": []
-                  },
-                  {
-                    "type": "helper",
-                    "name": "can_rotate_180",
-                    "args": []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "can_cut_half": {
-        "type": "item_check",
-        "item": "Cutter"
       },
       "can_build_mam": {
         "type": "and",
@@ -6120,53 +6121,43 @@
           }
         ]
       },
-      "can_mix_colors": {
+      "can_cut_half": {
         "type": "item_check",
-        "item": "Color Mixer"
+        "item": "Cutter"
       },
-      "can_make_stitched_shape": {
-        "type": "and",
+      "can_paint": {
+        "type": "or",
         "conditions": [
-          {
-            "type": "helper",
-            "name": "can_stack",
-            "args": []
-          },
           {
             "type": "or",
             "conditions": [
               {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "item_check",
-                    "item": "Quad Cutter"
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "name",
-                      "name": "floating"
-                    }
-                  }
-                ]
+                "type": "item_check",
+                "item": "Double Painter"
               },
               {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "helper",
-                    "name": "can_cut_half",
-                    "args": []
-                  },
-                  {
-                    "type": "helper",
-                    "name": "can_rotate_90",
-                    "args": []
-                  }
-                ]
+                "type": "item_check",
+                "item": "Painter"
               }
             ]
+          },
+          {
+            "type": "helper",
+            "name": "can_use_quad_painter",
+            "args": []
+          }
+        ]
+      },
+      "can_rotate_90": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Rotator"
+          },
+          {
+            "type": "item_check",
+            "item": "Rotator (CCW)"
           }
         ]
       },
@@ -6192,6 +6183,63 @@
           }
         ]
       },
+      "can_make_east_windmill": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "can_stack",
+            "args": []
+          },
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Quad Cutter"
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "helper",
+                    "name": "can_cut_half",
+                    "args": []
+                  },
+                  {
+                    "type": "helper",
+                    "name": "can_rotate_180",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "can_make_half_shape": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "can_cut_half",
+            "args": []
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Quad Cutter"
+              },
+              {
+                "type": "item_check",
+                "item": "Stacker"
+              }
+            ]
+          }
+        ]
+      },
       "has_tunnel": {
         "type": "or",
         "conditions": [
@@ -6202,54 +6250,6 @@
           {
             "type": "item_check",
             "item": "Tunnel Tier II"
-          }
-        ]
-      },
-      "can_use_quad_painter": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Quad Painter"
-              },
-              {
-                "type": "item_check",
-                "item": "Wires"
-              }
-            ]
-          },
-          {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Constant Signal"
-              },
-              {
-                "type": "item_check",
-                "item": "Switch"
-              }
-            ]
-          }
-        ]
-      },
-      "can_stack": {
-        "type": "item_check",
-        "item": "Stacker"
-      },
-      "can_rotate_90": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "item_check",
-            "item": "Rotator"
-          },
-          {
-            "type": "item_check",
-            "item": "Rotator (CCW)"
           }
         ]
       },

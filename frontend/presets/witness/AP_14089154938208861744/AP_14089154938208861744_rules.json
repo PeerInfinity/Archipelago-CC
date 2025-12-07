@@ -236,18 +236,18 @@
                       "type": "constant",
                       "value": [
                         [
-                          "<bound method Region.can_reach of Keep 2nd Maze>",
+                          "<bound method Region.can_reach of Keep 3rd Maze>",
                           "<bound method Region.can_reach of Keep 4th Maze>",
+                          "<bound method Region.can_reach of Keep 2nd Maze>",
                           "<bound method Region.can_reach of Keep Tower>",
-                          "<bound method Region.can_reach of Keep>",
-                          "<bound method Region.can_reach of Keep 3rd Maze>"
+                          "<bound method Region.can_reach of Keep>"
                         ],
                         [
                           "<bound method Region.can_reach of Keep 3rd Pressure Plate>",
-                          "<bound method Region.can_reach of Keep Tower>",
                           "<bound method Region.can_reach of Keep 4th Pressure Plate>",
-                          "<bound method Region.can_reach of Keep 2nd Pressure Plate>",
                           "<bound method Region.can_reach of Keep>",
+                          "<bound method Region.can_reach of Keep 2nd Pressure Plate>",
+                          "<bound method Region.can_reach of Keep Tower>",
                           "<function convert_requirement_option.<locals>.<lambda>>"
                         ]
                       ]
@@ -1686,12 +1686,12 @@
                   "type": "constant",
                   "value": [
                     [
-                      "<bound method Region.can_reach of Main Island>",
-                      "<bound method Region.can_reach of Quarry>"
-                    ],
-                    [
                       "<bound method Region.can_reach of Quarry Stoneworks Upper Floor>",
                       "<function convert_requirement_option.<locals>.<lambda>>"
+                    ],
+                    [
+                      "<bound method Region.can_reach of Main Island>",
+                      "<bound method Region.can_reach of Quarry>"
                     ]
                   ]
                 }
@@ -4432,17 +4432,17 @@
                   "type": "constant",
                   "value": [
                     [
-                      "<bound method Region.can_reach of Bunker Green Room>"
+                      "<bound method Region.can_reach of Bunker Cyan Room>"
+                    ],
+                    [
+                      "<bound method Region.can_reach of Bunker Laser Platform>"
                     ],
                     [
                       "<bound method Region.can_reach of Bunker Elevator>",
                       "<function convert_requirement_option.<locals>.<lambda>>"
                     ],
                     [
-                      "<bound method Region.can_reach of Bunker Laser Platform>"
-                    ],
-                    [
-                      "<bound method Region.can_reach of Bunker Cyan Room>"
+                      "<bound method Region.can_reach of Bunker Green Room>"
                     ]
                   ]
                 }
@@ -4489,17 +4489,17 @@
                   "type": "constant",
                   "value": [
                     [
-                      "<bound method Region.can_reach of Bunker Green Room>"
+                      "<bound method Region.can_reach of Bunker Cyan Room>"
+                    ],
+                    [
+                      "<bound method Region.can_reach of Bunker Laser Platform>"
                     ],
                     [
                       "<bound method Region.can_reach of Bunker Elevator>",
                       "<function convert_requirement_option.<locals>.<lambda>>"
                     ],
                     [
-                      "<bound method Region.can_reach of Bunker Laser Platform>"
-                    ],
-                    [
-                      "<bound method Region.can_reach of Bunker Cyan Room>"
+                      "<bound method Region.can_reach of Bunker Green Room>"
                     ]
                   ]
                 }

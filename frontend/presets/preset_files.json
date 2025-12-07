@@ -6370,5 +6370,1307 @@
         "first_failure_player": null
       }
     }
+  },
+  "ahit_worldgen": {
+    "name": "A Hat in Time WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Hat in Time WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "alttp_worldgen": {
+    "name": "A Link to the Past WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Link to the Past WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "shorthike_worldgen": {
+    "name": "A Short Hike WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Short Hike WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "adventure_worldgen": {
+    "name": "Adventure WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Adventure WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "aquaria_worldgen": {
+    "name": "Aquaria WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Aquaria WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "blasphemous_worldgen": {
+    "name": "Blasphemous WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Blasphemous WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "bomb_rush_cyberfunk_worldgen": {
+    "name": "Bomb Rush Cyberfunk WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Bomb Rush Cyberfunk WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "bumpstik_worldgen": {
+    "name": "Bumper Stickers WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Bumper Stickers WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "cv64_worldgen": {
+    "name": "Castlevania 64 WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Castlevania 64 WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "celeste_open_world_worldgen": {
+    "name": "Celeste (Open World) WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Celeste (Open World) WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "celeste64_worldgen": {
+    "name": "Celeste 64 WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Celeste 64 WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "checksfinder_worldgen": {
+    "name": "ChecksFinder WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "ChecksFinder WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "cccharles_worldgen": {
+    "name": "Choo-Choo Charles WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Choo-Choo Charles WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "civ_6_worldgen": {
+    "name": "Civilization VI WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Civilization VI WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "dark_souls_3_worldgen": {
+    "name": "Dark Souls III WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Dark Souls III WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "dlcquest_worldgen": {
+    "name": "DLCQuest WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "DLCQuest WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "dkc3_worldgen": {
+    "name": "Donkey Kong Country 3 WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Donkey Kong Country 3 WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "doom_1993_worldgen": {
+    "name": "DOOM 1993 WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "DOOM 1993 WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "doom_ii_worldgen": {
+    "name": "DOOM II WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "DOOM II WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "faxanadu_worldgen": {
+    "name": "Faxanadu WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Faxanadu WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "ffmq_worldgen": {
+    "name": "Final Fantasy Mystic Quest WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Final Fantasy Mystic Quest WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "heretic_worldgen": {
+    "name": "Heretic WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Heretic WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "hylics2_worldgen": {
+    "name": "Hylics 2 WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Hylics 2 WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "inscryption_worldgen": {
+    "name": "Inscryption WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Inscryption WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "kh2_worldgen": {
+    "name": "Kingdom Hearts 2 WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Kingdom Hearts 2 WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "kh1_worldgen": {
+    "name": "Kingdom Hearts WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Kingdom Hearts WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "kdl3_worldgen": {
+    "name": "Kirby's Dream Land 3 WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Kirby's Dream Land 3 WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "landstalker_worldgen": {
+    "name": "Landstalker - The Treasures of King Nole WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Landstalker - The Treasures of King Nole WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "lingo_worldgen": {
+    "name": "Lingo WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Lingo WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "lufia2ac_worldgen": {
+    "name": "Lufia II Ancient Cave WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Lufia II Ancient Cave WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "mlss_worldgen": {
+    "name": "Mario & Luigi Superstar Saga WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Mario & Luigi Superstar Saga WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "mmbn3_worldgen": {
+    "name": "MegaMan Battle Network 3 WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "MegaMan Battle Network 3 WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "meritous_worldgen": {
+    "name": "Meritous WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Meritous WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "noita_worldgen": {
+    "name": "Noita WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Noita WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "overcooked2_worldgen": {
+    "name": "Overcooked! 2 WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Overcooked! 2 WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "paint_worldgen": {
+    "name": "Paint WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Paint WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "pokemon_emerald_worldgen": {
+    "name": "Pokemon Emerald WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Pokemon Emerald WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "raft_worldgen": {
+    "name": "Raft WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Raft WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "ror2_worldgen": {
+    "name": "Risk of Rain 2 WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Risk of Rain 2 WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "soe_worldgen": {
+    "name": "Secret of Evermore WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Secret of Evermore WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "shivers_worldgen": {
+    "name": "Shivers WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Shivers WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "sa2b_worldgen": {
+    "name": "Sonic Adventure 2 Battle WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Sonic Adventure 2 Battle WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "sc2_worldgen": {
+    "name": "Starcraft 2 WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Starcraft 2 WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "subnautica_worldgen": {
+    "name": "Subnautica WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Subnautica WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "sm64ex_worldgen": {
+    "name": "Super Mario 64 WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Super Mario 64 WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "marioland2_worldgen": {
+    "name": "Super Mario Land 2 WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Super Mario Land 2 WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "smw_worldgen": {
+    "name": "Super Mario World WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Super Mario World WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "terraria_worldgen": {
+    "name": "Terraria WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Terraria WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "tloz_worldgen": {
+    "name": "The Legend of Zelda WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "The Legend of Zelda WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "tww_worldgen": {
+    "name": "The Wind Waker WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "The Wind Waker WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "timespinner_worldgen": {
+    "name": "Timespinner WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Timespinner WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "undertale_worldgen": {
+    "name": "Undertale WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Undertale WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "v6_worldgen": {
+    "name": "VVVVVV WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "VVVVVV WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "wargroove_worldgen": {
+    "name": "Wargroove WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Wargroove WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "yoshisisland_worldgen": {
+    "name": "Yoshi's Island WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Yoshi's Island WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "yugioh06_worldgen": {
+    "name": "Yu-Gi-Oh! 2006 WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Yu-Gi-Oh! 2006 WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "toem_original_worldgen": {
+    "name": "TOEM original WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "TOEM original WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "toem_rule_builder_worldgen": {
+    "name": "TOEM rule builder WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "TOEM rule builder WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "bakingadventure_worldgen": {
+    "name": "ChocolateChipCookies WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "ChocolateChipCookies WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "mathadventure_worldgen": {
+    "name": "MathProof2p2e4 WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "MathProof2p2e4 WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "metamath_worldgen": {
+    "name": "Metamath WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Metamath WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
+  },
+  "codingadventure_worldgen": {
+    "name": "WebDevJourney WorldGen",
+    "folders": {
+      "AP_14089154938208861744": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "WebDevJourney WorldGen"
+          }
+        ],
+        "files": [
+          "AP_14089154938208861744.archipelago",
+          "AP_14089154938208861744_Spoiler.txt",
+          "AP_14089154938208861744_rules.json",
+          "AP_14089154938208861744_sphere_log.jsonl"
+        ]
+      }
+    }
   }
 }

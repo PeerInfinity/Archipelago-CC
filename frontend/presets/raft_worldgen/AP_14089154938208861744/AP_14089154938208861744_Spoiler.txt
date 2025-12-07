@@ -1,0 +1,223 @@
+﻿Archipelago Version 0.6.5  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Raft WorldGen
+Location Count:                  154
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 No
+
+
+Locations:
+
+Honey: Recycler
+Flippers: Fuel tank
+Birds nest: progressive-grill
+Battery: progressive-anchor
+Circuit board: Resource Pack: 2 CopperOre
+Bolt: progressive-biofuel
+Hinge: progressive-crop-plot
+Shear: Resource Pack: 2 Raw_Beet
+Net launcher: progressive-battery
+Drinking glass: Hinge
+Clay bowl: progressive-spear
+Net canister: Resource Pack: 2 Plastic
+Binoculars: Resource Pack: 1 TitaniumOre
+Metal fishing rod: Resource Pack: 5 Sand
+Oxygen bottle: Water pipe
+Sprinkler: progressive-engine
+Empty bottle: progressive-spear
+Cookingpot: Resource Pack: 5 Stone
+Juicer: progressive-biofuel
+Stationary anchor: Resource Pack: 3 TitaniumOre
+Advanced grill: Antenna
+Metal Spear: progressive-headlight
+Storage: Resource Pack: 1 SeaVine
+Smelter: Resource Pack: 3 Scrap
+Paint mill: Circuit board
+Hammock: Bucket
+Metal axe: Resource Pack: 1 CopperOre
+Scrap hook: Resource Pack: 4 CopperOre
+Large crop plot: Resource Pack: 2 TitaniumOre
+Sweep net: Resource Pack: 2 Scrap
+Basic bow: Receiver
+Scarecrow: Resource Pack: 3 Plank
+Metal arrow: progressive-bottle
+Shovel: Resource Pack: 1 TitaniumOre
+Advanced collection net: progressive-battery
+Bucket: progressive-crop-plot
+Collection net: Trashcan
+Paint brush: progressive-metals
+Advanced purifier: Beehive
+Grass plot: Net canister
+Stone arrow: Firework
+Medium crop plot: progressive-metals
+Lantern: progressive-bow
+Small trophy board: progressive-engine
+Medium trophy board: Bolt
+Large trophy board: Resource Pack: 5 CopperOre
+Backpack: progressive-battery
+Leather helmet: Resource Pack: 1 Scrap
+Leather body armor: Resource Pack: 3 Raw_Beet
+Leather greaves: Resource Pack: 4 Clay
+Beehive: Honey
+Good healing salve: Resource Pack: 3 CopperOre
+Healing salve: Resource Pack: 1 Plank
+Tala (Radio Tower): progressive-anchor
+Head light blueprint: progressive-metals
+Recycler blueprint: Metal fishing rod
+Radio Tower Briefcase: Sprinkler
+Radio Tower Frequency to Vasagatan: Vasagatan Frequency
+Radio Tower Notepad 1: Resource Pack: 2 Sand
+Radio Tower Notepad 2: Resource Pack: 2 Plank
+Radio Tower Signalboard Trace: Hammock
+Hannes Letter 1: Net launcher
+Hannes Letter 2: Resource Pack: 1 MetalOre
+Hannes Letter 3: Resource Pack: 2 Thatch
+Olof Log 1: progressive-bow
+Olof Log 2: progressive-storage
+Olof Log 3: progressive-hook
+Vasagatan Recording 1: Resource Pack: 2 MetalOre
+Vasagatan Recording 2: progressive-crop-plot
+Vasagatan Recording 3: Juicer
+Vasagatan Magazine Clipping: progressive-salve
+Vasagatan Frequency to Balboa: Balboa Island Frequency
+Engine blueprint: Resource Pack: 2 SeaVine
+Steering Wheel blueprint: progressive-crop-plot
+Machete blueprint: Resource Pack: 5 MetalOre
+Balboa Island Correa twins picture: Resource Pack: 5 Scrap
+Balboa Island Schedule of engineers: Water tank
+Biofuel refiner blueprint: Resource Pack: 1 Plank
+Balboa Island Note from Henry: progressive-salve
+Balboa Island Correas diary 3: progressive-storage
+Fuel tank blueprint: Resource Pack: 4 Raw_Potato
+Balboa Island Correas diary 1: Resource Pack: 2 Stone
+Balboa Island Correas diary 2: Flippers
+Fuel pipe blueprint: Resource Pack: 4 Thatch
+Balboa Island Bear map: Shovel
+Johnny (Balboa Island): progressive-bottle
+Balboa Island Doll murderer 4: Leather greaves
+Balboa Island Doll murderer 1: Resource Pack: 3 Scrap
+Balboa Island Doll murderer 3: Resource Pack: 2 MetalOre
+Balboa Island Doll murderer 5: progressive-battery
+Balboa Island Doll murderer 2: Cookingpot
+Relay Station quest: Tangaroa Frequency
+Caravan Island Detto journal 1: Resource Pack: 5 ExplosiveGoo
+Caravan Island Detto journal 2: progressive-hook
+Caravan Island Detto journal 3: Resource Pack: 5 Stone
+Caravan Island Detto journal 4: progressive-zipline
+Caravan Island Detto journal 5: Resource Pack: 2 CopperOre
+Caravan Island Detto journal 6: Leather body armor
+Caravan Island Olaf speech: Fuel pipe
+Caravan Island Raft town article: Resource Pack: 5 SeaVine
+Caravan Island Doctor's note: Resource Pack: 3 Scrap
+Firework blueprint: Resource Pack: 2 TitaniumOre
+Battery Charger quest: progressive-bow
+Zipline quest: progressive-zipline
+Caravan Island Frequency to Tangaroa: Varuna Point Frequency
+Engine controls blueprint: progressive-scarecrow
+Metal detector blueprint: progressive-backpack
+Tangaroa Ruben 1: Birds nest
+Tangaroa Ruben 2: Resource Pack: 3 MetalOre
+Tangaroa Ruben 3: progressive-bow
+Tangaroa Ruben 4: Resource Pack: 4 Raw_Beet
+Tangaroa Ruben 5: Oxygen bottle
+Tangaroa Gardener Diary: Resource Pack: 1 Stone
+Tangaroa Riot Log: Resource Pack: 2 Clay
+Tangaroa Tulley Note: progressive-purifier
+Tangaroa Cipher: progressive-grill
+Tangaroa Frequency to Varuna Point: Caravan Island Frequency
+Water pipe blueprint: progressive-net
+Electric purifier blueprint: Resource Pack: 1 Plank
+Water tank blueprint: Resource Pack: 2 Plastic
+Large Storage blueprint: Resource Pack: 2 Thatch
+Elaine (Tangaroa): Resource Pack: 4 Stone
+Varuna Point Grabber diary 1: Resource Pack: 1 Plastic
+Varuna Point Grabber diary 2: Resource Pack: 4 Thatch
+Varuna Point Grabber diary 3: Resource Pack: 1 TitaniumOre
+Varuna Point Grabber diary 4: progressive-containers
+Varuna Point Grabber diary 5: progressive-zipline
+Varuna Point Grabber diary 6: progressive-headlight
+Varuna Point Frequency to Temperance: Temperance Frequency
+Wind Turbine blueprint: Resource Pack: 1 Clay
+Advanced Battery blueprint: progressive-axe
+Advanced Headlight blueprint: Leather helmet
+Electric Grill blueprint: Resource Pack: 3 Clay
+Temperance Bruno diary 1: Resource Pack: 1 SeaVine
+Temperance Bruno diary 2: progressive-axe
+Temperance Bruno diary 3: Resource Pack: 4 Clay
+Temperance Bruno diary 4: Resource Pack: 2 CopperOre
+Temperance Bruno diary 5: progressive-spear
+Temperance Sparrow note 1: progressive-crop-plot
+Temperance Sparrow note 2: progressive-purifier
+Temperance Frequency to Utopia: Utopia Frequency
+Temperance Star sign 1: progressive-containers
+Temperance Star sign 2: Shear
+Temperance Star sign 3: Resource Pack: 5 TitaniumOre
+Temperance Star sign 4: Resource Pack: 2 Plank
+Electric Smelter blueprint: progressive-net
+Advanced Biofuel Extractor blueprint: Resource Pack: 2 Scrap
+Advanced Stationary Anchor blueprint: Resource Pack: 3 Plastic
+Shogo (Temperance): progressive-scarecrow
+Electric Zipline blueprint: Binoculars
+Advanced Backpack blueprint: Sweep net
+Titanium Tools blueprint: progressive-backpack
+Utopia Captives note: Grass plot
+Utopia Detto map: progressive-engine
+Utopia Complete: Victory
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Advanced collection net: progressive-battery
+  Advanced grill: Antenna
+  Backpack: progressive-battery
+  Balboa Island Bear map: Shovel
+  Balboa Island Doll murderer 5: progressive-battery
+  Basic bow: Receiver
+  Caravan Island Detto journal 4: progressive-zipline
+  Caravan Island Frequency to Tangaroa: Varuna Point Frequency
+  Clay bowl: progressive-spear
+  Drinking glass: Hinge
+  Empty bottle: progressive-spear
+  Grass plot: Net canister
+  Hannes Letter 1: Net launcher
+  Head light blueprint: progressive-metals
+  Johnny (Balboa Island): progressive-bottle
+  Medium crop plot: progressive-metals
+  Medium trophy board: Bolt
+  Metal arrow: progressive-bottle
+  Net launcher: progressive-battery
+  Paint brush: progressive-metals
+  Paint mill: Circuit board
+  Radio Tower Frequency to Vasagatan: Vasagatan Frequency
+  Relay Station quest: Tangaroa Frequency
+  Small trophy board: progressive-engine
+  Sprinkler: progressive-engine
+  Tangaroa Frequency to Varuna Point: Caravan Island Frequency
+  Tangaroa Ruben 1: Birds nest
+  Temperance Bruno diary 5: progressive-spear
+  Temperance Frequency to Utopia: Utopia Frequency
+  Temperance Star sign 2: Shear
+  Utopia Captives note: Grass plot
+  Utopia Complete: Victory
+  Utopia Detto map: progressive-engine
+  Varuna Point Frequency to Temperance: Temperance Frequency
+  Varuna Point Grabber diary 5: progressive-zipline
+  Vasagatan Frequency to Balboa: Balboa Island Frequency
+  Zipline quest: progressive-zipline
+}
