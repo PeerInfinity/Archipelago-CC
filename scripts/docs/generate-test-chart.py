@@ -968,27 +968,37 @@ def generate_multitemplate_markdown(chart_data: Dict[str, List[Tuple[str, str, i
     return md_content
 
 
-def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None, ut_comparison_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None, has_ut_random=False, has_ut_fixed=False, world_mapping=None) -> str:
+def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None, ut_comparison_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None, has_ut_random=False, has_ut_fixed=False, world_mapping=None, is_worldgen=False, other_version_link=None) -> str:
     """Generate a combined summary chart with all test results."""
-    md_content = "# Archipelago Template Test Results Summary\n\n"
+    title_suffix = " (WorldGen)" if is_worldgen else ""
+    md_content = f"# Archipelago Template Test Results Summary{title_suffix}\n\n"
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
 
+    # Add cross-link to other version (original <-> worldgen)
+    if other_version_link:
+        if is_worldgen:
+            md_content += f"[View Original Template Results]({other_version_link})\n\n"
+        else:
+            md_content += f"[View WorldGen Template Results]({other_version_link})\n\n"
+
     # Build test types list dynamically
+    wg_suffix = "-worldgen" if is_worldgen else ""
     test_types = [
-        ("Minimal Spoiler Test", "Tests with advancement items only", "./test-results-spoilers-minimal.md"),
-        ("Full Spoiler Test", "Tests with all locations", "./test-results-spoilers-full.md"),
-        ("Multiclient Test", "Tests in multiclient mode", "./test-results-multiclient.md"),
+        ("Minimal Spoiler Test", "Tests with advancement items only", f"./test-results-spoilers-minimal{wg_suffix}.md"),
+        ("Full Spoiler Test", "Tests with all locations", f"./test-results-spoilers-full{wg_suffix}.md"),
+        ("Multiclient Test", "Tests in multiclient mode", f"./test-results-multiclient{wg_suffix}.md"),
     ]
     if multiworld_data is not None:
-        test_types.append(("Multiworld Test", "Tests in multiworld mode with multiple games", "./test-results-multiworld.md"))
+        test_types.append(("Multiworld Test", "Tests in multiworld mode with multiple games", f"./test-results-multiworld{wg_suffix}.md"))
 
     md_content += f"This summary combines results from {len(test_types)} types of tests:\n"
     for name, desc, link in test_types:
         md_content += f"- **{name}:** {desc} - [View Details]({link})\n"
 
-    # Add additional test results links
-    md_content += "\nAdditional test results:\n"
-    md_content += "- **World Generator Test:** Tests world generation for all templates - [View Details](./test-results-world-generator.md)\n"
+    # Add additional test results links (only for original, not worldgen)
+    if not is_worldgen:
+        md_content += "\nAdditional test results:\n"
+        md_content += "- **World Generator Test:** Tests world generation for all templates - [View Details](./test-results-world-generator.md)\n"
 
     md_content += "\n"
 
@@ -1306,6 +1316,12 @@ def main():
     # Load world mapping for file size information (used by all markdown generators)
     full_world_mapping = load_full_world_mapping(project_root)
 
+    # Initialize worldgen data variables (will be populated if files exist)
+    minimal_wg_data = []
+    full_wg_data = []
+    mp_wg_data = []
+    mw_wg_data = None
+
     # Load minimal spoiler test results (original and WorldGen)
     minimal_input = os.path.join(project_root, 'scripts/output/spoiler-minimal/test-results.json')
     minimal_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-spoilers-minimal.md')
@@ -1557,7 +1573,7 @@ def main():
     # For the summary, use fixed seed data if available, otherwise random
     ut_data = ut_fixed_data if ut_fixed_data else ut_random_data
 
-    # Generate summary chart
+    # Generate summary charts (original and WorldGen)
     if minimal_data or full_data or mp_data or mw_data or mtmin_data or mtfull_data or ut_data:
         # Load the exclude list with reasons
         excluded_games = load_template_exclude_list(project_root, include_reasons=True)
@@ -1566,10 +1582,31 @@ def main():
         minimal_meta = minimal_results.get('metadata', {}) if 'minimal_results' in locals() else None
         full_meta = full_results.get('metadata', {}) if 'full_results' in locals() else None
 
+        # Check if we have worldgen data for the summary
+        has_wg_summary = minimal_wg_data or full_wg_data or mp_wg_data or mw_wg_data
+
+        # Generate original summary with cross-link to worldgen if available
         summary_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary.md')
-        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data, ut_data, excluded_games, minimal_meta, full_meta, has_ut_random=has_random, has_ut_fixed=has_fixed, world_mapping=full_world_mapping)
+        wg_summary_link = './test-results-summary-worldgen.md' if has_wg_summary else None
+        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data, ut_data, excluded_games, minimal_meta, full_meta, has_ut_random=has_random, has_ut_fixed=has_fixed, world_mapping=full_world_mapping, is_worldgen=False, other_version_link=wg_summary_link)
         with open(summary_output, 'w') as f:
             f.write(summary_md)
+
+    # Generate WorldGen summary chart if we have any worldgen data
+    if minimal_wg_data or full_wg_data or mp_wg_data or mw_wg_data:
+        # Load the exclude list with reasons (if not already loaded)
+        if 'excluded_games' not in locals():
+            excluded_games = load_template_exclude_list(project_root, include_reasons=True)
+
+        # Get metadata for intermittent failures from worldgen results
+        minimal_wg_meta = minimal_wg_results.get('metadata', {}) if 'minimal_wg_results' in locals() else None
+        full_wg_meta = full_wg_results.get('metadata', {}) if 'full_wg_results' in locals() else None
+
+        summary_wg_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary-worldgen.md')
+        orig_summary_link = './test-results-summary.md'
+        summary_wg_md = generate_summary_chart(minimal_wg_data, full_wg_data, mp_wg_data, mw_wg_data, None, None, None, excluded_games, minimal_wg_meta, full_wg_meta, has_ut_random=False, has_ut_fixed=False, world_mapping=full_world_mapping, is_worldgen=True, other_version_link=orig_summary_link)
+        with open(summary_wg_output, 'w') as f:
+            f.write(summary_wg_md)
 
     print("\n=== Chart Generation Complete ===")
     return 0

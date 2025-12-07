@@ -1,6 +1,8 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-07 09:55:17
+**Generated:** 2025-12-07 10:18:06
+
+[View WorldGen Template Results](./test-results-summary-worldgen.md)
 
 This summary combines results from 4 types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
