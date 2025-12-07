@@ -1173,7 +1173,10 @@ Ghost Grave Dig (Koholint Prairie)
         Menu -> Start Game
    =>   Start House -> Start House -> Mabe Village
    =>   Mabe Village -> Mabe Village -> Forest
-   =>   Forest -> Forest -> No Name 62
+   =>   Forest -> Forest -> Graveyard
+   =>   Graveyard -> Graveyard -> No Name 60
+   =>   No Name 60 -> No Name 60 -> No Name 61
+   =>   No Name 61 -> No Name 61 -> No Name 62
    =>   No Name 62 -> No Name 62 -> Ghost Grave Dig (Koholint Prairie)
    =>   Ghost Grave Dig (Koholint Prairie)
 Ghost House Barrel (Martha's Bay)

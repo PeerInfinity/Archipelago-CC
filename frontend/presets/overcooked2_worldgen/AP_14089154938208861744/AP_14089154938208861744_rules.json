@@ -1,0 +1,5705 @@
+{
+  "schema_version": 3,
+  "game_name": "Overcooked! 2 WorldGen",
+  "game_directory": "overcooked2_worldgen",
+  "archipelago_version": "0.6.5",
+  "generation_seed": 1,
+  "player_names": {
+    "1": "Player1"
+  },
+  "world_classes": {
+    "1": "Overcooked2WorldGenWorld"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "Menu -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Overworld": {
+        "name": "Overworld",
+        "exits": [
+          {
+            "name": "Overworld -> 1-1",
+            "connected_region": "1-1",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Overworld -> 1-2",
+            "connected_region": "1-2",
+            "access_rule": {
+              "type": "item_check",
+              "item": "1-1 Level Complete"
+            }
+          },
+          {
+            "name": "Overworld -> 1-3",
+            "connected_region": "1-3",
+            "access_rule": {
+              "type": "item_check",
+              "item": "1-2 Level Complete"
+            }
+          },
+          {
+            "name": "Overworld -> 1-4",
+            "connected_region": "1-4",
+            "access_rule": {
+              "type": "item_check",
+              "item": "1-3 Level Complete"
+            }
+          },
+          {
+            "name": "Overworld -> 1-5",
+            "connected_region": "1-5",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "1-4 Level Complete",
+                    "Yellow Ramp"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 1-6",
+            "connected_region": "1-6",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "1-5 Level Complete",
+                    "Yellow Ramp"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 2-1",
+            "connected_region": "2-1",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Overworld -> 2-2",
+            "connected_region": "2-2",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "5-1 Level Complete",
+                            "Purple Ramp"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Green Ramp"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "2-1 Level Complete"
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 2-3",
+            "connected_region": "2-3",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "5-1 Level Complete",
+                            "Purple Ramp"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Green Ramp"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "2-2 Level Complete"
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 2-4",
+            "connected_region": "2-4",
+            "access_rule": {
+              "type": "item_check",
+              "item": "2-3 Level Complete"
+            }
+          },
+          {
+            "name": "Overworld -> 2-5",
+            "connected_region": "2-5",
+            "access_rule": {
+              "type": "item_check",
+              "item": "2-4 Level Complete"
+            }
+          },
+          {
+            "name": "Overworld -> 2-6",
+            "connected_region": "2-6",
+            "access_rule": {
+              "type": "item_check",
+              "item": "2-5 Level Complete"
+            }
+          },
+          {
+            "name": "Overworld -> 3-1",
+            "connected_region": "3-1",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Blue Ramp"
+            }
+          },
+          {
+            "name": "Overworld -> 3-2",
+            "connected_region": "3-2",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "3-1 Level Complete",
+                    "Blue Ramp"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 3-3",
+            "connected_region": "3-3",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "3-2 Level Complete",
+                    "Blue Ramp"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 3-4",
+            "connected_region": "3-4",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "3-3 Level Complete",
+                    "Blue Ramp"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 3-5",
+            "connected_region": "3-5",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "3-4 Level Complete",
+                    "Blue Ramp"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 3-6",
+            "connected_region": "3-6",
+            "access_rule": {
+              "type": "item_check",
+              "item": "3-5 Level Complete"
+            }
+          },
+          {
+            "name": "Overworld -> 4-1",
+            "connected_region": "4-1",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Overworld -> 4-2",
+            "connected_region": "4-2",
+            "access_rule": {
+              "type": "item_check",
+              "item": "4-1 Level Complete"
+            }
+          },
+          {
+            "name": "Overworld -> 4-3",
+            "connected_region": "4-3",
+            "access_rule": {
+              "type": "item_check",
+              "item": "4-2 Level Complete"
+            }
+          },
+          {
+            "name": "Overworld -> 4-4",
+            "connected_region": "4-4",
+            "access_rule": {
+              "type": "item_check",
+              "item": "4-3 Level Complete"
+            }
+          },
+          {
+            "name": "Overworld -> 4-5",
+            "connected_region": "4-5",
+            "access_rule": {
+              "type": "item_check",
+              "item": "4-4 Level Complete"
+            }
+          },
+          {
+            "name": "Overworld -> 4-6",
+            "connected_region": "4-6",
+            "access_rule": {
+              "type": "item_check",
+              "item": "4-5 Level Complete"
+            }
+          },
+          {
+            "name": "Overworld -> 5-1",
+            "connected_region": "5-1",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Overworld -> 5-2",
+            "connected_region": "5-2",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "5-1 Level Complete",
+                            "Purple Ramp"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Green Ramp"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "5-1 Level Complete"
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 5-3",
+            "connected_region": "5-3",
+            "access_rule": {
+              "type": "item_check",
+              "item": "5-2 Level Complete"
+            }
+          },
+          {
+            "name": "Overworld -> 5-4",
+            "connected_region": "5-4",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "5-1 Level Complete",
+                    "5-3 Level Complete",
+                    "Purple Ramp"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 5-5",
+            "connected_region": "5-5",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "5-1 Level Complete",
+                    "5-4 Level Complete",
+                    "Purple Ramp"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 5-6",
+            "connected_region": "5-6",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "5-1 Level Complete",
+                    "5-5 Level Complete",
+                    "Purple Ramp"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 6-1",
+            "connected_region": "6-1",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Pink Ramp"
+            }
+          },
+          {
+            "name": "Overworld -> 6-2",
+            "connected_region": "6-2",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "5-1 Level Complete",
+                    "6-1 Level Complete",
+                    "Purple Ramp"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 6-3",
+            "connected_region": "6-3",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "5-1 Level Complete",
+                    "6-2 Level Complete",
+                    "Purple Ramp"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 6-4",
+            "connected_region": "6-4",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "5-1 Level Complete",
+                            "Purple Ramp"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Green Ramp"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "6-3 Level Complete"
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 6-5",
+            "connected_region": "6-5",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "5-1 Level Complete",
+                    "6-1 Level Complete",
+                    "6-4 Level Complete",
+                    "Purple Ramp",
+                    "Red Ramp"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> 6-6",
+            "connected_region": "6-6",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "5-1 Level Complete",
+                    "6-1 Level Complete",
+                    "6-5 Level Complete",
+                    "Purple Ramp",
+                    "Red Ramp"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> Kevin-1",
+            "connected_region": "Kevin-1",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Dark Green Ramp",
+                    "Kevin-1"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> Kevin-2",
+            "connected_region": "Kevin-2",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Kevin-2"
+            }
+          },
+          {
+            "name": "Overworld -> Kevin-3",
+            "connected_region": "Kevin-3",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Kevin-3"
+            }
+          },
+          {
+            "name": "Overworld -> Kevin-4",
+            "connected_region": "Kevin-4",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Kevin-4"
+            }
+          },
+          {
+            "name": "Overworld -> Kevin-5",
+            "connected_region": "Kevin-5",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Kevin-5"
+            }
+          },
+          {
+            "name": "Overworld -> Kevin-6",
+            "connected_region": "Kevin-6",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Kevin-6"
+            }
+          },
+          {
+            "name": "Overworld -> Kevin-7",
+            "connected_region": "Kevin-7",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "5-1 Level Complete",
+                    "Kevin-7",
+                    "Purple Ramp"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Overworld -> Kevin-8",
+            "connected_region": "Kevin-8",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "5-1 Level Complete",
+                    "6-1 Level Complete",
+                    "Kevin-8",
+                    "Purple Ramp",
+                    "Red Ramp"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "1-1": {
+        "name": "1-1",
+        "exits": [
+          {
+            "name": "1-1 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "1-1 Completed",
+            "id": 1,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Progressive Dash",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-1 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "1-1 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-1 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-1 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-1 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "1-2": {
+        "name": "1-2",
+        "exits": [
+          {
+            "name": "1-2 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "1-2 Completed",
+            "id": 2,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Coin Purse",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-2 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "1-2 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-2 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-2 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-2 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "1-3": {
+        "name": "1-3",
+        "exits": [
+          {
+            "name": "1-3 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "1-3 Completed",
+            "id": 3,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Larger Tip Jar",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-3 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "1-3 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-3 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-3 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-3 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "1-4": {
+        "name": "1-4",
+        "exits": [
+          {
+            "name": "1-4 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "1-4 Completed",
+            "id": 4,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kevin-8",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-4 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "1-4 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-4 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-4 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-4 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "1-5": {
+        "name": "1-5",
+        "exits": [
+          {
+            "name": "1-5 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "1-5 Completed",
+            "id": 5,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Progressive Throw/Catch",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-5 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "1-5 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-5 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-5 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-5 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "1-6": {
+        "name": "1-6",
+        "exits": [
+          {
+            "name": "1-6 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "1-6 Completed",
+            "id": 6,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Faster Condiment/Drink Switch",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-6 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "1-6 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-6 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-6 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "1-6 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "2-1": {
+        "name": "2-1",
+        "exits": [
+          {
+            "name": "2-1 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "2-1 Completed",
+            "id": 7,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Fire Extinguisher",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-1 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "2-1 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-1 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-1 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-1 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "2-2": {
+        "name": "2-2",
+        "exits": [
+          {
+            "name": "2-2 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "2-2 Completed",
+            "id": 8,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Emote Wheel",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-2 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "2-2 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-2 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-2 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-2 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "2-3": {
+        "name": "2-3",
+        "exits": [
+          {
+            "name": "2-3 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "2-3 Completed",
+            "id": 9,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Sharp Knife",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-3 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "2-3 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-3 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-3 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-3 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "2-4": {
+        "name": "2-4",
+        "exits": [
+          {
+            "name": "2-4 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "2-4 Completed",
+            "id": 10,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Wok Wheels",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-4 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "2-4 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-4 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-4 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-4 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "2-5": {
+        "name": "2-5",
+        "exits": [
+          {
+            "name": "2-5 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "2-5 Completed",
+            "id": 11,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kevin-3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-5 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "2-5 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-5 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-5 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-5 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "2-6": {
+        "name": "2-6",
+        "exits": [
+          {
+            "name": "2-6 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "2-6 Completed",
+            "id": 12,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Yellow Ramp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-6 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "2-6 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-6 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-6 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "2-6 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "3-1": {
+        "name": "3-1",
+        "exits": [
+          {
+            "name": "3-1 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "3-1 Completed",
+            "id": 13,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Bonus Star",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-1 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "3-1 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-1 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-1 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-1 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "3-2": {
+        "name": "3-2",
+        "exits": [
+          {
+            "name": "3-2 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "3-2 Completed",
+            "id": 14,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Progressive Throw/Catch",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-2 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "3-2 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-2 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-2 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-2 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "3-3": {
+        "name": "3-3",
+        "exits": [
+          {
+            "name": "3-3 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "3-3 Completed",
+            "id": 15,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Dish Scrubber",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-3 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "3-3 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-3 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-3 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-3 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "3-4": {
+        "name": "3-4",
+        "exits": [
+          {
+            "name": "3-4 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "3-4 Completed",
+            "id": 16,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Bonus Star",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-4 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "3-4 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-4 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-4 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-4 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "3-5": {
+        "name": "3-5",
+        "exits": [
+          {
+            "name": "3-5 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "3-5 Completed",
+            "id": 17,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kevin-7",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-5 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "3-5 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-5 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-5 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-5 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "3-6": {
+        "name": "3-6",
+        "exits": [
+          {
+            "name": "3-6 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "3-6 Completed",
+            "id": 18,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kevin-5",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-6 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "3-6 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-6 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-6 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "3-6 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "4-1": {
+        "name": "4-1",
+        "exits": [
+          {
+            "name": "4-1 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "4-1 Completed",
+            "id": 19,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Green Ramp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-1 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "4-1 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-1 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-1 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-1 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "4-2": {
+        "name": "4-2",
+        "exits": [
+          {
+            "name": "4-2 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "4-2 Completed",
+            "id": 20,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kevin-1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-2 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "4-2 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-2 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-2 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-2 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "4-3": {
+        "name": "4-3",
+        "exits": [
+          {
+            "name": "4-3 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "4-3 Completed",
+            "id": 21,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Spare Plate",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-3 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "4-3 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-3 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-3 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-3 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "4-4": {
+        "name": "4-4",
+        "exits": [
+          {
+            "name": "4-4 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "4-4 Completed",
+            "id": 22,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Order Lookahead",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-4 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "4-4 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-4 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-4 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-4 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "4-5": {
+        "name": "4-5",
+        "exits": [
+          {
+            "name": "4-5 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "4-5 Completed",
+            "id": 23,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Purple Ramp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-5 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "4-5 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-5 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-5 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-5 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "4-6": {
+        "name": "4-6",
+        "exits": [
+          {
+            "name": "4-6 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "4-6 Completed",
+            "id": 24,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Faster Respawn Time",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-6 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "4-6 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-6 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-6 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "4-6 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "5-1": {
+        "name": "5-1",
+        "exits": [
+          {
+            "name": "5-1 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "5-1 Completed",
+            "id": 25,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Dark Green Ramp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-1 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "5-1 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-1 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-1 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-1 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "5-2": {
+        "name": "5-2",
+        "exits": [
+          {
+            "name": "5-2 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "5-2 Completed",
+            "id": 26,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Control Stick Batteries",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-2 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "5-2 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-2 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-2 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-2 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "5-3": {
+        "name": "5-3",
+        "exits": [
+          {
+            "name": "5-3 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "5-3 Completed",
+            "id": 27,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Blue Ramp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-3 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "5-3 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-3 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-3 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-3 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "5-4": {
+        "name": "5-4",
+        "exits": [
+          {
+            "name": "5-4 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "5-4 Completed",
+            "id": 28,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Bonus Star",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-4 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "5-4 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-4 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-4 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-4 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "5-5": {
+        "name": "5-5",
+        "exits": [
+          {
+            "name": "5-5 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "5-5 Completed",
+            "id": 29,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Red Ramp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-5 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "5-5 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-5 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-5 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-5 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "5-6": {
+        "name": "5-6",
+        "exits": [
+          {
+            "name": "5-6 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "5-6 Completed",
+            "id": 30,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Calmer Unbread",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-6 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "5-6 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-6 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-6 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "5-6 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "6-1": {
+        "name": "6-1",
+        "exits": [
+          {
+            "name": "6-1 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "6-1 Completed",
+            "id": 31,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kevin-2",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-1 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "6-1 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-1 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-1 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-1 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "6-2": {
+        "name": "6-2",
+        "exits": [
+          {
+            "name": "6-2 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "6-2 Completed",
+            "id": 32,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Burn Leniency",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-2 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "6-2 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-2 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-2 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-2 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "6-3": {
+        "name": "6-3",
+        "exits": [
+          {
+            "name": "6-3 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "6-3 Completed",
+            "id": 33,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Order Lookahead",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-3 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "6-3 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-3 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "6-4": {
+        "name": "6-4",
+        "exits": [
+          {
+            "name": "6-4 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "6-4 Completed",
+            "id": 34,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Guest Patience",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-4 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "6-4 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-4 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-4 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-4 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "6-5": {
+        "name": "6-5",
+        "exits": [
+          {
+            "name": "6-5 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "6-5 Completed",
+            "id": 35,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Clean Dishes",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-5 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "6-5 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-5 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-5 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-5 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "6-6": {
+        "name": "6-6",
+        "exits": [
+          {
+            "name": "6-6 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "6-6 Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-6 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-6 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "6-6 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Kevin-1": {
+        "name": "Kevin-1",
+        "exits": [
+          {
+            "name": "Kevin-1 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Kevin-1 Completed",
+            "id": 37,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Pink Ramp",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-1 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kevin-1 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-1 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-1 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-1 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Kevin-2": {
+        "name": "Kevin-2",
+        "exits": [
+          {
+            "name": "Kevin-2 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Kevin-2 Completed",
+            "id": 38,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kevin-6",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-2 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kevin-2 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-2 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-2 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-2 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Kevin-3": {
+        "name": "Kevin-3",
+        "exits": [
+          {
+            "name": "Kevin-3 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Kevin-3 Completed",
+            "id": 39,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Larger Tip Jar",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-3 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kevin-3 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-3 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-3 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-3 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Kevin-4": {
+        "name": "Kevin-4",
+        "exits": [
+          {
+            "name": "Kevin-4 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Kevin-4 Completed",
+            "id": 40,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Bonus Star",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-4 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kevin-4 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-4 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Kevin-5": {
+        "name": "Kevin-5",
+        "exits": [
+          {
+            "name": "Kevin-5 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Kevin-5 Completed",
+            "id": 41,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kevin-4",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-5 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kevin-5 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-5 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-5 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-5 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Kevin-6": {
+        "name": "Kevin-6",
+        "exits": [
+          {
+            "name": "Kevin-6 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Kevin-6 Completed",
+            "id": 42,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Bonus Star",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-6 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kevin-6 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-6 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-6 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-6 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Kevin-7": {
+        "name": "Kevin-7",
+        "exits": [
+          {
+            "name": "Kevin-7 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Kevin-7 Completed",
+            "id": 43,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Progressive Dash",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-7 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kevin-7 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-7 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-7 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-7 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Kevin-8": {
+        "name": "Kevin-8",
+        "exits": [
+          {
+            "name": "Kevin-8 -> Overworld",
+            "connected_region": "Overworld",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Kevin-8 Completed",
+            "id": 44,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Bonus Star",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-8 Level Completed",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kevin-8 Level Complete",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-8 (1-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-8 (2-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Kevin-8 (3-Star)",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Star",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "Wood": {
+        "name": "Wood",
+        "id": 213701,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Coal Bucket": {
+        "name": "Coal Bucket",
+        "id": 213702,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Spare Plate": {
+        "name": "Spare Plate",
+        "id": 213703,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Fire Extinguisher": {
+        "name": "Fire Extinguisher",
+        "id": 213704,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Bellows": {
+        "name": "Bellows",
+        "id": 213705,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Clean Dishes": {
+        "name": "Clean Dishes",
+        "id": 213706,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Larger Tip Jar": {
+        "name": "Larger Tip Jar",
+        "id": 213707,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "progression"
+      },
+      "Progressive Dash": {
+        "name": "Progressive Dash",
+        "id": 213708,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "progression"
+      },
+      "Progressive Throw/Catch": {
+        "name": "Progressive Throw/Catch",
+        "id": 213709,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "progression"
+      },
+      "Coin Purse": {
+        "name": "Coin Purse",
+        "id": 213710,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Control Stick Batteries": {
+        "name": "Control Stick Batteries",
+        "id": 213711,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Wok Wheels": {
+        "name": "Wok Wheels",
+        "id": 213712,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Dish Scrubber": {
+        "name": "Dish Scrubber",
+        "id": 213713,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Burn Leniency": {
+        "name": "Burn Leniency",
+        "id": 213714,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Sharp Knife": {
+        "name": "Sharp Knife",
+        "id": 213715,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Order Lookahead": {
+        "name": "Order Lookahead",
+        "id": 213716,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "useful"
+      },
+      "Lightweight Backpack": {
+        "name": "Lightweight Backpack",
+        "id": 213717,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Faster Respawn Time": {
+        "name": "Faster Respawn Time",
+        "id": 213718,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Faster Condiment/Drink Switch": {
+        "name": "Faster Condiment/Drink Switch",
+        "id": 213719,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Guest Patience": {
+        "name": "Guest Patience",
+        "id": 213720,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Kevin-1": {
+        "name": "Kevin-1",
+        "hint_text": "Kevin 1",
+        "id": 213721,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Kevin-2": {
+        "name": "Kevin-2",
+        "hint_text": "Kevin 2",
+        "id": 213722,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Kevin-3": {
+        "name": "Kevin-3",
+        "hint_text": "Kevin 3",
+        "id": 213723,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Kevin-4": {
+        "name": "Kevin-4",
+        "hint_text": "Kevin 4",
+        "id": 213724,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Kevin-5": {
+        "name": "Kevin-5",
+        "hint_text": "Kevin 5",
+        "id": 213725,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Kevin-6": {
+        "name": "Kevin-6",
+        "hint_text": "Kevin 6",
+        "id": 213726,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Kevin-7": {
+        "name": "Kevin-7",
+        "hint_text": "Kevin 7",
+        "id": 213727,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Kevin-8": {
+        "name": "Kevin-8",
+        "hint_text": "Kevin 8",
+        "id": 213728,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Cooking Emote": {
+        "name": "Cooking Emote",
+        "id": 213729,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Curse Emote": {
+        "name": "Curse Emote",
+        "id": 213730,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Serving Emote": {
+        "name": "Serving Emote",
+        "id": 213731,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Preparing Emote": {
+        "name": "Preparing Emote",
+        "id": 213732,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Washing Up Emote": {
+        "name": "Washing Up Emote",
+        "id": 213733,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Ok Emote": {
+        "name": "Ok Emote",
+        "id": 213734,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Ramp Button": {
+        "name": "Ramp Button",
+        "id": 213735,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Bonus Star": {
+        "name": "Bonus Star",
+        "id": 213736,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 6,
+        "classification": "useful"
+      },
+      "Calmer Unbread": {
+        "name": "Calmer Unbread",
+        "id": 213737,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Green Ramp": {
+        "name": "Green Ramp",
+        "id": 213738,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Yellow Ramp": {
+        "name": "Yellow Ramp",
+        "id": 213739,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Blue Ramp": {
+        "name": "Blue Ramp",
+        "id": 213740,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Pink Ramp": {
+        "name": "Pink Ramp",
+        "id": 213741,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Dark Green Ramp": {
+        "name": "Dark Green Ramp",
+        "id": 213742,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Red Ramp": {
+        "name": "Red Ramp",
+        "id": 213743,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Purple Ramp": {
+        "name": "Purple Ramp",
+        "id": 213744,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Emote Wheel": {
+        "name": "Emote Wheel",
+        "id": 213745,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "1-1 Level Complete": {
+        "name": "1-1 Level Complete",
+        "hint_text": "1 1 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Star": {
+        "name": "Star",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 128,
+        "classification": "progression_skip_balancing"
+      },
+      "1-2 Level Complete": {
+        "name": "1-2 Level Complete",
+        "hint_text": "1 2 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "1-3 Level Complete": {
+        "name": "1-3 Level Complete",
+        "hint_text": "1 3 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "1-4 Level Complete": {
+        "name": "1-4 Level Complete",
+        "hint_text": "1 4 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "1-5 Level Complete": {
+        "name": "1-5 Level Complete",
+        "hint_text": "1 5 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "1-6 Level Complete": {
+        "name": "1-6 Level Complete",
+        "hint_text": "1 6 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "2-1 Level Complete": {
+        "name": "2-1 Level Complete",
+        "hint_text": "2 1 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "2-2 Level Complete": {
+        "name": "2-2 Level Complete",
+        "hint_text": "2 2 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "2-3 Level Complete": {
+        "name": "2-3 Level Complete",
+        "hint_text": "2 3 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "2-4 Level Complete": {
+        "name": "2-4 Level Complete",
+        "hint_text": "2 4 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "2-5 Level Complete": {
+        "name": "2-5 Level Complete",
+        "hint_text": "2 5 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "2-6 Level Complete": {
+        "name": "2-6 Level Complete",
+        "hint_text": "2 6 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "3-1 Level Complete": {
+        "name": "3-1 Level Complete",
+        "hint_text": "3 1 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "3-2 Level Complete": {
+        "name": "3-2 Level Complete",
+        "hint_text": "3 2 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "3-3 Level Complete": {
+        "name": "3-3 Level Complete",
+        "hint_text": "3 3 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "3-4 Level Complete": {
+        "name": "3-4 Level Complete",
+        "hint_text": "3 4 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "3-5 Level Complete": {
+        "name": "3-5 Level Complete",
+        "hint_text": "3 5 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "3-6 Level Complete": {
+        "name": "3-6 Level Complete",
+        "hint_text": "3 6 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "4-1 Level Complete": {
+        "name": "4-1 Level Complete",
+        "hint_text": "4 1 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "4-2 Level Complete": {
+        "name": "4-2 Level Complete",
+        "hint_text": "4 2 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "4-3 Level Complete": {
+        "name": "4-3 Level Complete",
+        "hint_text": "4 3 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "4-4 Level Complete": {
+        "name": "4-4 Level Complete",
+        "hint_text": "4 4 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "4-5 Level Complete": {
+        "name": "4-5 Level Complete",
+        "hint_text": "4 5 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "4-6 Level Complete": {
+        "name": "4-6 Level Complete",
+        "hint_text": "4 6 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "5-1 Level Complete": {
+        "name": "5-1 Level Complete",
+        "hint_text": "5 1 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "5-2 Level Complete": {
+        "name": "5-2 Level Complete",
+        "hint_text": "5 2 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "5-3 Level Complete": {
+        "name": "5-3 Level Complete",
+        "hint_text": "5 3 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "5-4 Level Complete": {
+        "name": "5-4 Level Complete",
+        "hint_text": "5 4 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "5-5 Level Complete": {
+        "name": "5-5 Level Complete",
+        "hint_text": "5 5 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "5-6 Level Complete": {
+        "name": "5-6 Level Complete",
+        "hint_text": "5 6 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "6-1 Level Complete": {
+        "name": "6-1 Level Complete",
+        "hint_text": "6 1 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "6-2 Level Complete": {
+        "name": "6-2 Level Complete",
+        "hint_text": "6 2 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "6-3 Level Complete": {
+        "name": "6-3 Level Complete",
+        "hint_text": "6 3 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "6-4 Level Complete": {
+        "name": "6-4 Level Complete",
+        "hint_text": "6 4 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "6-5 Level Complete": {
+        "name": "6-5 Level Complete",
+        "hint_text": "6 5 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Kevin-1 Level Complete": {
+        "name": "Kevin-1 Level Complete",
+        "hint_text": "Kevin 1 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Kevin-2 Level Complete": {
+        "name": "Kevin-2 Level Complete",
+        "hint_text": "Kevin 2 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Kevin-3 Level Complete": {
+        "name": "Kevin-3 Level Complete",
+        "hint_text": "Kevin 3 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Kevin-4 Level Complete": {
+        "name": "Kevin-4 Level Complete",
+        "hint_text": "Kevin 4 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Kevin-5 Level Complete": {
+        "name": "Kevin-5 Level Complete",
+        "hint_text": "Kevin 5 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Kevin-6 Level Complete": {
+        "name": "Kevin-6 Level Complete",
+        "hint_text": "Kevin 6 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Kevin-7 Level Complete": {
+        "name": "Kevin-7 Level Complete",
+        "hint_text": "Kevin 7 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Kevin-8 Level Complete": {
+        "name": "Kevin-8 Level Complete",
+        "hint_text": "Kevin 8 Level Complete",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Event",
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "1-1 Level Complete": 1,
+      "1-2 Level Complete": 1,
+      "1-3 Level Complete": 1,
+      "1-4 Level Complete": 1,
+      "1-5 Level Complete": 1,
+      "1-6 Level Complete": 1,
+      "2-1 Level Complete": 1,
+      "2-2 Level Complete": 1,
+      "2-3 Level Complete": 1,
+      "2-4 Level Complete": 1,
+      "2-5 Level Complete": 1,
+      "2-6 Level Complete": 1,
+      "3-1 Level Complete": 1,
+      "3-2 Level Complete": 1,
+      "3-3 Level Complete": 1,
+      "3-4 Level Complete": 1,
+      "3-5 Level Complete": 1,
+      "3-6 Level Complete": 1,
+      "4-1 Level Complete": 1,
+      "4-2 Level Complete": 1,
+      "4-3 Level Complete": 1,
+      "4-4 Level Complete": 1,
+      "4-5 Level Complete": 1,
+      "4-6 Level Complete": 1,
+      "5-1 Level Complete": 1,
+      "5-2 Level Complete": 1,
+      "5-3 Level Complete": 1,
+      "5-4 Level Complete": 1,
+      "5-5 Level Complete": 1,
+      "5-6 Level Complete": 1,
+      "6-1 Level Complete": 1,
+      "6-2 Level Complete": 1,
+      "6-3 Level Complete": 1,
+      "6-4 Level Complete": 1,
+      "6-5 Level Complete": 1,
+      "Blue Ramp": 1,
+      "Bonus Star": 6,
+      "Burn Leniency": 1,
+      "Calmer Unbread": 1,
+      "Clean Dishes": 1,
+      "Coin Purse": 1,
+      "Control Stick Batteries": 1,
+      "Dark Green Ramp": 1,
+      "Dish Scrubber": 1,
+      "Emote Wheel": 1,
+      "Faster Condiment/Drink Switch": 1,
+      "Faster Respawn Time": 1,
+      "Fire Extinguisher": 1,
+      "Green Ramp": 1,
+      "Guest Patience": 1,
+      "Kevin-1": 1,
+      "Kevin-1 Level Complete": 1,
+      "Kevin-2": 1,
+      "Kevin-2 Level Complete": 1,
+      "Kevin-3": 1,
+      "Kevin-3 Level Complete": 1,
+      "Kevin-4": 1,
+      "Kevin-4 Level Complete": 1,
+      "Kevin-5": 1,
+      "Kevin-5 Level Complete": 1,
+      "Kevin-6": 1,
+      "Kevin-6 Level Complete": 1,
+      "Kevin-7": 1,
+      "Kevin-7 Level Complete": 1,
+      "Kevin-8": 1,
+      "Kevin-8 Level Complete": 1,
+      "Larger Tip Jar": 2,
+      "Order Lookahead": 2,
+      "Pink Ramp": 1,
+      "Progressive Dash": 2,
+      "Progressive Throw/Catch": 2,
+      "Purple Ramp": 1,
+      "Red Ramp": 1,
+      "Sharp Knife": 1,
+      "Spare Plate": 1,
+      "Star": 128,
+      "Victory": 1,
+      "Wok Wheels": 1,
+      "Yellow Ramp": 1
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "settings": {
+    "1": {
+      "game": "Overcooked! 2 WorldGen",
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {
+      "name": "Overcooked! 2 WorldGen",
+      "rule_format": {
+        "version": "1.0"
+      }
+    }
+  },
+  "helpers": {}
+}

@@ -1,0 +1,119 @@
+﻿Archipelago Version 0.6.5  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Celeste 64 WorldGen
+Location Count:                  40
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 No
+
+
+Starting Items:
+
+Ground Dash
+Air Dash
+Skid Jump
+Climb
+
+Locations:
+
+First Strawberry: Strawberry
+Intro Checkpoint: Intro Checkpoint
+Floating Blocks Strawberry: Breakable Blocks
+South-East Tower Top Strawberry: Dash Refills
+Theo Strawberry: Raspberry
+Fall Through Spike Floor Strawberry: Strawberry
+South-West Dash Refills Strawberry: Cassettes
+South-East Tower Side Strawberry: Double Dash Refills
+Theo Tower Lower Cassette Strawberry: Strawberry
+Theo Tower Upper Cassette Strawberry: Traffic Blocks
+You Are Ready Cassette Strawberry: Strawberry
+Granny Checkpoint: Granny Checkpoint
+South-East Tower Checkpoint: South-East Tower Checkpoint
+Climb Sign Checkpoint: Climb Sign Checkpoint
+Troll Strawberry: Strawberry
+Falling Blocks Strawberry: Strawberry
+Girders Strawberry: Strawberry
+Breakable Blocks Strawberry: Strawberry
+South End of Bridge Cassette Strawberry: Springs
+North End of Bridge Cassette Strawberry: Feathers
+Freeway Checkpoint: Freeway Checkpoint
+Freeway Feather Checkpoint: Freeway Feather Checkpoint
+Traffic Block Strawberry: Strawberry
+Feather Maze Strawberry: Strawberry
+Feather Chain Strawberry: Strawberry
+Feather Hidden Strawberry: Coins
+Distant Feather Cassette Strawberry: Strawberry
+Feather Arches Cassette Strawberry: Strawberry
+Feather Maze Checkpoint: Feather Maze Checkpoint
+Double Dash Puzzle Strawberry: Strawberry
+Double Dash Spike Climb Strawberry: Raspberry
+Double Dash Spring Strawberry: Strawberry
+Cassette Hidden in the House Strawberry: Strawberry
+Double Dash House Checkpoint: Double Dash House Checkpoint
+Badeline Tower Bottom Strawberry: Strawberry
+Badeline Tower Breakable Bottom Strawberry: Strawberry
+Badeline Tower Cassette Strawberry: Strawberry
+Badeline Tower Checkpoint: Badeline Tower Checkpoint
+Badeline Island Cassette Strawberry: Strawberry
+Badeline Island Checkpoint: Badeline Island Checkpoint
+
+Playthrough:
+
+0: {
+  Air Dash
+  Climb
+  Ground Dash
+  Skid Jump
+}
+1: {
+  Badeline Island Cassette Strawberry: Strawberry
+  Badeline Island Checkpoint: Badeline Island Checkpoint
+  Badeline Tower Bottom Strawberry: Strawberry
+  Badeline Tower Breakable Bottom Strawberry: Strawberry
+  Badeline Tower Cassette Strawberry: Strawberry
+  Badeline Tower Checkpoint: Badeline Tower Checkpoint
+  Breakable Blocks Strawberry: Strawberry
+  Cassette Hidden in the House Strawberry: Strawberry
+  Climb Sign Checkpoint: Climb Sign Checkpoint
+  Distant Feather Cassette Strawberry: Strawberry
+  Double Dash House Checkpoint: Double Dash House Checkpoint
+  Double Dash Puzzle Strawberry: Strawberry
+  Double Dash Spring Strawberry: Strawberry
+  Fall Through Spike Floor Strawberry: Strawberry
+  Falling Blocks Strawberry: Strawberry
+  Feather Arches Cassette Strawberry: Strawberry
+  Feather Chain Strawberry: Strawberry
+  Feather Hidden Strawberry: Coins
+  Feather Maze Checkpoint: Feather Maze Checkpoint
+  Feather Maze Strawberry: Strawberry
+  First Strawberry: Strawberry
+  Floating Blocks Strawberry: Breakable Blocks
+  Freeway Checkpoint: Freeway Checkpoint
+  Freeway Feather Checkpoint: Freeway Feather Checkpoint
+  Girders Strawberry: Strawberry
+  Granny Checkpoint: Granny Checkpoint
+  Intro Checkpoint: Intro Checkpoint
+  North End of Bridge Cassette Strawberry: Feathers
+  South End of Bridge Cassette Strawberry: Springs
+  South-East Tower Checkpoint: South-East Tower Checkpoint
+  South-East Tower Side Strawberry: Double Dash Refills
+  South-East Tower Top Strawberry: Dash Refills
+  South-West Dash Refills Strawberry: Cassettes
+  Theo Tower Lower Cassette Strawberry: Strawberry
+  Theo Tower Upper Cassette Strawberry: Traffic Blocks
+  Traffic Block Strawberry: Strawberry
+  Troll Strawberry: Strawberry
+  You Are Ready Cassette Strawberry: Strawberry
+}

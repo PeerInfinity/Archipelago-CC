@@ -1,0 +1,7122 @@
+{
+  "schema_version": 3,
+  "game_name": "Timespinner WorldGen",
+  "game_directory": "timespinner_worldgen",
+  "archipelago_version": "0.6.5",
+  "generation_seed": 1,
+  "player_names": {
+    "1": "Player1"
+  },
+  "world_classes": {
+    "1": "TimespinnerWorldGenWorld"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "Tutorial",
+            "connected_region": "Tutorial",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Tutorial": {
+        "name": "Tutorial",
+        "exits": [
+          {
+            "name": "Start Game",
+            "connected_region": "Lake desolation",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Tutorial: Yo Momma 1",
+            "id": 1337000,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Ice Orb",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tutorial: Yo Momma 2",
+            "id": 1337001,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Infernal Flames",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Lake desolation": {
+        "name": "Lake desolation",
+        "exits": [
+          {
+            "name": "Lake desolation -> Lower lake desolation",
+            "connected_region": "Lower lake desolation",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Lake desolation -> Upper lake desolation",
+            "connected_region": "Upper lake desolation",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Lake desolation -> Skeleton Shaft",
+            "connected_region": "Skeleton Shaft",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Lake desolation -> Space time continuum",
+            "connected_region": "Space time continuum",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Twin Pyramid Key"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Lake Desolation: Starter chest 2",
+            "id": 1337002,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max Aura",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Desolation: Starter chest 3",
+            "id": 1337003,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Demon",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Desolation: Starter chest 1",
+            "id": 1337004,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Celestial Sash",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Desolation (Lower): Timespinner Wheel room",
+            "id": 1337005,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Bleak Ring",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Desolation: Forget me not chest",
+            "id": 1337006,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Desolation (Lower): Chicken chest",
+            "id": 1337007,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin",
+                    "Timespinner Wheel"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Captain's Cap",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Upper lake desolation": {
+        "name": "Upper lake desolation",
+        "exits": [
+          {
+            "name": "Upper lake desolation -> Lake desolation",
+            "connected_region": "Lake desolation",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Upper lake desolation -> Eastern lake desolation",
+            "connected_region": "Eastern lake desolation",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Lake Desolation (Upper): Oxygen recovery room",
+            "id": 1337010,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Iron Orb",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Desolation (Upper): Secret room",
+            "id": 1337011,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Water Mask",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Desolation (Upper): Double jump cave platform",
+            "id": 1337012,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Plasma Geyser",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Desolation (Upper): Double jump cave floor",
+            "id": 1337013,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Berry Pick-Mi-Up",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Desolation (Upper): Sparrow chest",
+            "id": 1337014,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max Sand",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Desolation (Upper): Crash site pedestal",
+            "id": 1337015,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Sunglasses",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Desolation (Upper): Crash site chest 1",
+            "id": 1337016,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Killed Maw"
+            },
+            "item": {
+              "name": "Library Keycard V",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Desolation (Upper): Crash site chest 2",
+            "id": 1337017,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Killed Maw"
+            },
+            "item": {
+              "name": "Max Aura",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Lower lake desolation": {
+        "name": "Lower lake desolation",
+        "exits": [
+          {
+            "name": "Lower lake desolation -> Lake desolation",
+            "connected_region": "Lake desolation",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Lower lake desolation -> Eastern lake desolation",
+            "connected_region": "Eastern lake desolation",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Lake Desolation (Lower): Not so secret room",
+            "id": 1337008,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Umbra Orb",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Desolation (Upper): Tank chest",
+            "id": 1337009,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin",
+                    "Timespinner Wheel"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Max Sand",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Eastern lake desolation": {
+        "name": "Eastern lake desolation",
+        "exits": [
+          {
+            "name": "Eastern lake desolation -> Space time continuum",
+            "connected_region": "Space time continuum",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Twin Pyramid Key"
+            }
+          },
+          {
+            "name": "Eastern lake desolation -> Library",
+            "connected_region": "Library",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Eastern lake desolation -> Lower lake desolation",
+            "connected_region": "Lower lake desolation",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Eastern lake desolation -> Upper lake desolation",
+            "connected_region": "Upper lake desolation",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Lake Desolation: Kitty Boss",
+            "id": 1337018,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Forbidden Tome",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Library": {
+        "name": "Library",
+        "exits": [
+          {
+            "name": "Library -> Eastern lake desolation",
+            "connected_region": "Eastern lake desolation",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Library -> Library top",
+            "connected_region": "Library top",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Library -> Varndagroth tower left",
+            "connected_region": "Varndagroth tower left",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Security Keycard A",
+                    "Security Keycard B",
+                    "Security Keycard C",
+                    "Security Keycard D"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Library -> Space time continuum",
+            "connected_region": "Space time continuum",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Twin Pyramid Key"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Library: Basement",
+            "id": 1337019,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Wind Orb",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Library: Warp gate",
+            "id": 1337020,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Wyrm Brooch",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Library: Librarian",
+            "id": 1337021,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Herb",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Library: Reading nook chest",
+            "id": 1337022,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Blue Orb",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Library: Storage room chest 1",
+            "id": 1337023,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Security Keycard A",
+                    "Security Keycard B",
+                    "Security Keycard C",
+                    "Security Keycard D"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Library: Storage room chest 2",
+            "id": 1337024,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Security Keycard A",
+                    "Security Keycard B",
+                    "Security Keycard C",
+                    "Security Keycard D"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Scythe Ring",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Library: Storage room chest 3",
+            "id": 1337025,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Security Keycard A",
+                    "Security Keycard B",
+                    "Security Keycard C",
+                    "Security Keycard D"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Jerky",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Library: Terminal 2 (Lachiem)",
+            "id": 1337156,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Tablet"
+            },
+            "item": {
+              "name": "Ancient Coin",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Library: Terminal 1 (Windaria)",
+            "id": 1337157,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Tablet"
+            },
+            "item": {
+              "name": "Galaxy Earrings",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Library: Terminal 3 (Emperor Nuvius)",
+            "id": 1337159,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Tablet"
+            },
+            "item": {
+              "name": "Chaos Rose",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Library: V terminal 1 (War of the Sisters)",
+            "id": 1337160,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Library Keycard V",
+                    "Tablet"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Frozen Spires",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Library: V terminal 2 (Lake Desolation Map)",
+            "id": 1337161,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Library Keycard V",
+                    "Tablet"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Security Keycard B",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Library: V terminal 3 (Vilete)",
+            "id": 1337162,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Library Keycard V",
+                    "Tablet"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Jewelry Box",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Library top": {
+        "name": "Library top",
+        "exits": [
+          {
+            "name": "Library top -> Library",
+            "connected_region": "Library",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Library: Backer room chest 5",
+            "id": 1337026,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Metal Wristband",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Library: Backer room chest 4",
+            "id": 1337027,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Security Keycard A",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Library: Backer room chest 3",
+            "id": 1337028,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max Sand",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Library: Backer room chest 2",
+            "id": 1337029,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Nether Orb",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Library: Backer room chest 1",
+            "id": 1337030,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Merchant Crow",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Library: Backer room terminal (Vandagray Metropolis Map)",
+            "id": 1337163,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Tablet"
+            },
+            "item": {
+              "name": "Max Sand",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Varndagroth tower left": {
+        "name": "Varndagroth tower left",
+        "exits": [
+          {
+            "name": "Varndagroth tower left -> Library",
+            "connected_region": "Library",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Varndagroth tower left -> Varndagroth tower right (upper)",
+            "connected_region": "Varndagroth tower right (upper)",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Security Keycard A",
+                    "Security Keycard B",
+                    "Security Keycard C"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Varndagroth tower left -> Varndagroth tower right (lower)",
+            "connected_region": "Varndagroth tower right (lower)",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Security Keycard A",
+                    "Security Keycard B"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Varndagroth tower left -> Sealed Caves (Sirens)",
+            "connected_region": "Sealed Caves (Sirens)",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Elevator Keycard"
+            }
+          },
+          {
+            "name": "Varndagroth tower left -> Refugee Camp",
+            "connected_region": "Refugee Camp",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Timespinner Spindle",
+                    "Timespinner Wheel"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Varndagroth Towers (Left): Elevator Key not required",
+            "id": 1337031,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Plasma IV Bag",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varndagroth Towers (Left): Ye olde Timespinner",
+            "id": 1337032,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Soul Scanner",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varndagroth Towers (Left): Bottom floor",
+            "id": 1337033,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Security Keycard A",
+                    "Security Keycard B",
+                    "Security Keycard C"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Eternal Coat",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varndagroth Towers (Left): Air vents secret",
+            "id": 1337034,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Alchemy Tools",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varndagroth Towers (Left): Elevator chest",
+            "id": 1337035,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Elevator Keycard"
+            },
+            "item": {
+              "name": "Oculus Ring",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Varndagroth tower right (upper)": {
+        "name": "Varndagroth tower right (upper)",
+        "exits": [
+          {
+            "name": "Varndagroth tower right (upper) -> Varndagroth tower left",
+            "connected_region": "Varndagroth tower left",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Varndagroth tower right (upper) -> Varndagroth tower right (elevator)",
+            "connected_region": "Varndagroth tower right (elevator)",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Elevator Keycard"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Varndagroth Towers: Bridge",
+            "id": 1337036,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Pyro Ring",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varndagroth Towers (Right): Elevator card chest",
+            "id": 1337038,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max HP",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varndagroth Towers (Right): Air vents right chest",
+            "id": 1337039,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max Sand",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varndagroth Towers (Right): Air vents left chest",
+            "id": 1337040,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Plasma Orb",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Varndagroth tower right (lower)": {
+        "name": "Varndagroth tower right (lower)",
+        "exits": [
+          {
+            "name": "Varndagroth tower right (lower) -> Varndagroth tower left",
+            "connected_region": "Varndagroth tower left",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Security Keycard A",
+                    "Security Keycard B"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Varndagroth tower right (lower) -> Varndagroth tower right (elevator)",
+            "connected_region": "Varndagroth tower right (elevator)",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Elevator Keycard"
+            }
+          },
+          {
+            "name": "Varndagroth tower right (lower) -> Sealed Caves (Sirens)",
+            "connected_region": "Sealed Caves (Sirens)",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Elevator Keycard"
+            }
+          },
+          {
+            "name": "Varndagroth tower right (lower) -> Military Fortress",
+            "connected_region": "Military Fortress",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Killed Aelana",
+                    "Killed Maw",
+                    "Killed Twins"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Varndagroth tower right (lower) -> Space time continuum",
+            "connected_region": "Space time continuum",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Twin Pyramid Key"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Varndagroth Towers (Right): Bottom floor",
+            "id": 1337041,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Hi-Ether",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Varndagroth tower right (elevator)": {
+        "name": "Varndagroth tower right (elevator)",
+        "exits": [
+          {
+            "name": "Varndagroth tower right (elevator) -> Varndagroth tower right (upper)",
+            "connected_region": "Varndagroth tower right (upper)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Varndagroth tower right (elevator) -> Varndagroth tower right (lower)",
+            "connected_region": "Varndagroth tower right (lower)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Varndagroth Towers (Right): Elevator chest",
+            "id": 1337037,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Colossal Hammer",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varndagroth Towers (Right): Varndagroth",
+            "id": 1337042,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Security Keycard A",
+                    "Security Keycard B",
+                    "Security Keycard C"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Sanguine Ring",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varndagroth Towers (Right): Spider Hell",
+            "id": 1337043,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Security Keycard A"
+            },
+            "item": {
+              "name": "Twin Pyramid Key",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varndagroth Towers (Right): Medbay terminal (Bleakness Research)",
+            "id": 1337164,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Tablet"
+            },
+            "item": {
+              "name": "Max Sand",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Sealed Caves (Sirens)": {
+        "name": "Sealed Caves (Sirens)",
+        "exits": [
+          {
+            "name": "Sealed Caves (Sirens) -> Varndagroth tower left",
+            "connected_region": "Varndagroth tower left",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Elevator Keycard"
+            }
+          },
+          {
+            "name": "Sealed Caves (Sirens) -> Varndagroth tower right (lower)",
+            "connected_region": "Varndagroth tower right (lower)",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Elevator Keycard"
+            }
+          },
+          {
+            "name": "Sealed Caves (Sirens) -> Space time continuum",
+            "connected_region": "Space time continuum",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Twin Pyramid Key"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Sealed Caves (Sirens): Water hook",
+            "id": 1337053,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Water Mask"
+            },
+            "item": {
+              "name": "Timespinner Gear 2",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sealed Caves (Sirens): Siren room underwater right",
+            "id": 1337054,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Water Mask"
+            },
+            "item": {
+              "name": "Shattered Orb",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sealed Caves (Sirens): Siren room underwater left",
+            "id": 1337055,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Water Mask"
+            },
+            "item": {
+              "name": "Gilded Egg",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sealed Caves (Sirens): Cave after sirens chest 1",
+            "id": 1337056,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Chaos Rose",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sealed Caves (Sirens): Cave after sirens chest 2",
+            "id": 1337057,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Kobo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Military Fortress": {
+        "name": "Military Fortress",
+        "exits": [
+          {
+            "name": "Military Fortress -> Varndagroth tower right (lower)",
+            "connected_region": "Varndagroth tower right (lower)",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Killed Aelana",
+                    "Killed Maw",
+                    "Killed Twins"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Military Fortress -> Temporal Gyre",
+            "connected_region": "Temporal Gyre",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Timespinner Wheel"
+            }
+          },
+          {
+            "name": "Military Fortress -> Military Fortress (hangar)",
+            "connected_region": "Military Fortress (hangar)",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Military Fortress: Bomber chest",
+            "id": 1337058,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Timespinner Wheel"
+            },
+            "item": {
+              "name": "Empire Orb",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Military Fortress: Close combat room",
+            "id": 1337059,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Bird Statue",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Military Fortress (hangar)": {
+        "name": "Military Fortress (hangar)",
+        "exits": [
+          {
+            "name": "Military Fortress (hangar) -> Military Fortress",
+            "connected_region": "Military Fortress",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Military Fortress (hangar) -> Lab Entrance",
+            "connected_region": "Lab Entrance",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Military Fortress: Soldiers bridge",
+            "id": 1337060,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max Aura",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Military Fortress: Giantess room",
+            "id": 1337061,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Chaos Rose",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Military Fortress: Giantess bridge",
+            "id": 1337062,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Ether",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Military Fortress: B door chest 2",
+            "id": 1337063,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Icicle Ring",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Military Fortress: B door chest 1",
+            "id": 1337064,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Bombardment",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Military Fortress: Pedestal",
+            "id": 1337065,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Dark Flames",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Lab Entrance": {
+        "name": "Lab Entrance",
+        "exits": [
+          {
+            "name": "Lab Entrance -> Main Lab",
+            "connected_region": "Main Lab",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Lab Entrance -> Military Fortress (hangar)",
+            "connected_region": "Military Fortress (hangar)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Main Lab": {
+        "name": "Main Lab",
+        "exits": [
+          {
+            "name": "Main Lab -> Lab Entrance",
+            "connected_region": "Lab Entrance",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Main Lab -> Lab Research",
+            "connected_region": "Lab Research",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Main Lab -> The lab (upper)",
+            "connected_region": "The lab (upper)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Lab: Coffee break",
+            "id": 1337066,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Aura Serpent",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lab: Lower trash right",
+            "id": 1337067,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Old Coat",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lab: Lower trash left",
+            "id": 1337068,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Shiny Rock",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lab: Below lab entrance",
+            "id": 1337069,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Sand Vial",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lab: Trash jump room",
+            "id": 1337070,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max Sand",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lab: Experiment #13",
+            "id": 1337073,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Trendy Jacket",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lab: Sentry platform terminal (Origins)",
+            "id": 1337167,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Tablet"
+            },
+            "item": {
+              "name": "Silence Ring",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lab: Experiment 13 terminal (W.R.E.C Farewell)",
+            "id": 1337168,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Tablet"
+            },
+            "item": {
+              "name": "Star of Lachiem",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lab: Left terminal (Biotechnology)",
+            "id": 1337169,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Tablet"
+            },
+            "item": {
+              "name": "Royal Ring",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Lab Research": {
+        "name": "Lab Research",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Lab: Dynamo Works",
+            "id": 1337071,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Meyef",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lab: Spider Hell",
+            "id": 1337076,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Goddess Brooch",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lab: Middle terminal (Amadeus Laboratory Map)",
+            "id": 1337166,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Tablet"
+            },
+            "item": {
+              "name": "Hi-Ether",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lab: Right terminal (Experiment #11)",
+            "id": 1337170,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Tablet"
+            },
+            "item": {
+              "name": "Max Sand",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "The lab (upper)": {
+        "name": "The lab (upper)",
+        "exits": [
+          {
+            "name": "The lab (upper) -> Main Lab",
+            "connected_region": "Main Lab",
+            "access_rule": {
+              "type": "constant",
+              "value": false
+            }
+          },
+          {
+            "name": "The lab (upper) -> Emperors tower (courtyard)",
+            "connected_region": "Emperors tower (courtyard)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "The lab (upper) -> Ancient Pyramid (entrance)",
+            "connected_region": "Ancient Pyramid (entrance)",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Timespinner Gear 1",
+                    "Timespinner Gear 2",
+                    "Timespinner Gear 3",
+                    "Timespinner Spindle",
+                    "Timespinner Wheel"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Lab: Genza (Blob Mom)",
+            "id": 1337072,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Chaos Trap",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lab: Download and chest room chest",
+            "id": 1337074,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max HP",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lab: Lab secret",
+            "id": 1337075,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Viletian Crown",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lab: Download and chest room terminal (Experiment #13)",
+            "id": 1337165,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Tablet"
+            },
+            "item": {
+              "name": "Max HP",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Emperors tower (courtyard)": {
+        "name": "Emperors tower (courtyard)",
+        "exits": [
+          {
+            "name": "Emperors tower (courtyard) -> The lab (upper)",
+            "connected_region": "The lab (upper)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Emperors tower (courtyard) -> Emperors tower",
+            "connected_region": "Emperors tower",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Emperor's Tower: Courtyard bottom chest",
+            "id": 1337077,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Librarian Hat",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Emperors tower": {
+        "name": "Emperors tower",
+        "exits": [
+          {
+            "name": "Emperors tower -> Emperors tower (courtyard)",
+            "connected_region": "Emperors tower (courtyard)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Emperor's Tower: Courtyard floor secret",
+            "id": 1337078,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Colossal Blade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Emperor's Tower: Courtyard upper chest",
+            "id": 1337079,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Empire Crown",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Emperor's Tower: Galactic sage room",
+            "id": 1337080,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Librarian Robe",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Emperor's Tower: Bottom right tower",
+            "id": 1337081,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max Sand",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Emperor's Tower: Wayyyy up there",
+            "id": 1337082,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Filigree Clasp",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Emperor's Tower: Left tower balcony",
+            "id": 1337083,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Sand Bottle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Emperor's Tower: Emperor's Chambers chest",
+            "id": 1337084,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Glass Pumpkin",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Emperor's Tower: Emperor's Chambers pedestal",
+            "id": 1337085,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Sand Bottle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Killed Emperor",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Killed Emperor",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Skeleton Shaft": {
+        "name": "Skeleton Shaft",
+        "exits": [
+          {
+            "name": "Skeleton Shaft -> Lake desolation",
+            "connected_region": "Lake desolation",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Skeleton Shaft -> Sealed Caves (Xarion)",
+            "connected_region": "Sealed Caves (Xarion)",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Security Keycard A"
+            }
+          },
+          {
+            "name": "Skeleton Shaft -> Space time continuum",
+            "connected_region": "Space time continuum",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Twin Pyramid Key"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Sealed Caves (Xarion): Skeleton",
+            "id": 1337044,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max Aura",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Sealed Caves (Xarion)": {
+        "name": "Sealed Caves (Xarion)",
+        "exits": [
+          {
+            "name": "Sealed Caves (Xarion) -> Skeleton Shaft",
+            "connected_region": "Skeleton Shaft",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Sealed Caves (Xarion) -> Space time continuum",
+            "connected_region": "Space time continuum",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Twin Pyramid Key"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Sealed Caves (Xarion): Shroom jump room",
+            "id": 1337045,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin",
+                    "Timespinner Wheel"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Ether",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sealed Caves (Xarion): Double shroom room",
+            "id": 1337046,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Plasma Crystal",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sealed Caves (Xarion): Jacksquat room",
+            "id": 1337047,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Elevator Keycard",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sealed Caves (Xarion): Below Jacksquat room",
+            "id": 1337048,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Radiant Orb",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sealed Caves (Xarion): Secret room",
+            "id": 1337049,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Gun Orb",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sealed Caves (Xarion): Bottom left room",
+            "id": 1337050,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Warp Shard",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sealed Caves (Xarion): Last chance before Xarion",
+            "id": 1337051,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Max HP",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sealed Caves (Xarion): Xarion",
+            "id": 1337052,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Lightwall",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Refugee Camp": {
+        "name": "Refugee Camp",
+        "exits": [
+          {
+            "name": "Refugee Camp -> Forest",
+            "connected_region": "Forest",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Refugee Camp -> Library",
+            "connected_region": "Library",
+            "access_rule": {
+              "type": "constant",
+              "value": false
+            }
+          },
+          {
+            "name": "Refugee Camp -> Space time continuum",
+            "connected_region": "Space time continuum",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Twin Pyramid Key"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Refugee Camp: Neliste's Bra",
+            "id": 1337086,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Eye Orb",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Refugee Camp: Storage chest 3",
+            "id": 1337087,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max HP",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Refugee Camp: Storage chest 2",
+            "id": 1337088,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Pointy Hat",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Refugee Camp: Storage chest 1",
+            "id": 1337089,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max Sand",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Forest": {
+        "name": "Forest",
+        "exits": [
+          {
+            "name": "Forest -> Refugee Camp",
+            "connected_region": "Refugee Camp",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Forest -> Left Side forest Caves",
+            "connected_region": "Left Side forest Caves",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Forest -> Caves of Banishment (Sirens)",
+            "connected_region": "Caves of Banishment (Sirens)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Forest -> Castle Ramparts",
+            "connected_region": "Castle Ramparts",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Forest: Refugee camp roof",
+            "id": 1337090,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max Aura",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest: Bat jump ledge",
+            "id": 1337091,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Buckle Hat",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest: Green platform secret",
+            "id": 1337092,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Tailwind Ring",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest: Rats guarded chest",
+            "id": 1337093,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max HP",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest: Waterfall chest 1",
+            "id": 1337094,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Water Mask"
+            },
+            "item": {
+              "name": "Timespinner Gear 3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest: Waterfall chest 2",
+            "id": 1337095,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Water Mask"
+            },
+            "item": {
+              "name": "Sprite",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Forest: Batcave",
+            "id": 1337096,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max Aura",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Castle Ramparts: In the moat",
+            "id": 1337097,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Blood Orb",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Left Side forest Caves": {
+        "name": "Left Side forest Caves",
+        "exits": [
+          {
+            "name": "Left Side forest Caves -> Forest",
+            "connected_region": "Forest",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Left Side forest Caves -> Upper Lake Serene",
+            "connected_region": "Upper Lake Serene",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin",
+                    "Timespinner Wheel"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Left Side forest Caves -> Lower Lake Serene",
+            "connected_region": "Lower Lake Serene",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Left Side forest Caves -> Space time continuum",
+            "connected_region": "Space time continuum",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Twin Pyramid Key"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Forest: Before Serene single bat cave",
+            "id": 1337098,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Shield Ring",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Serene (Lower): Under the eels",
+            "id": 1337106,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Water Mask"
+            },
+            "item": {
+              "name": "Storm Eye",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Serene (Lower): Past the eels",
+            "id": 1337110,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Water Mask"
+            },
+            "item": {
+              "name": "Hi-Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Upper Lake Serene": {
+        "name": "Upper Lake Serene",
+        "exits": [
+          {
+            "name": "Upper Lake Serene -> Left Side forest Caves",
+            "connected_region": "Left Side forest Caves",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Upper Lake Serene -> Lower Lake Serene",
+            "connected_region": "Lower Lake Serene",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Lake Serene (Upper): Rat nest",
+            "id": 1337099,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Crimson Vortex",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Serene (Upper): Double jump cave platform",
+            "id": 1337100,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Berry Pick-Mi-Up+",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Serene (Upper): Double jump cave floor",
+            "id": 1337101,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Shadow Seal",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Serene (Upper): Cave secret",
+            "id": 1337102,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Traveler's Cloak",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Serene: Before Big Bird",
+            "id": 1337175,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max Aura",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Serene: Behind the vines",
+            "id": 1337103,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Talaria Attachment",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Serene: Pyramid keys room",
+            "id": 1337104,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Captain's Uniform",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Serene (Upper): Chicken ledge",
+            "id": 1337174,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Sun Ring",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Lower Lake Serene": {
+        "name": "Lower Lake Serene",
+        "exits": [
+          {
+            "name": "Lower Lake Serene -> Upper Lake Serene",
+            "connected_region": "Upper Lake Serene",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Lower Lake Serene -> Left Side forest Caves",
+            "connected_region": "Left Side forest Caves",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Lower Lake Serene -> Caves of Banishment (upper)",
+            "connected_region": "Caves of Banishment (upper)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Lake Serene (Lower): Deep dive",
+            "id": 1337105,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Ether",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Serene (Lower): Water spikes room",
+            "id": 1337107,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Blade Orb",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Serene (Lower): Underwater secret",
+            "id": 1337108,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Corruption",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Serene (Lower): T chest",
+            "id": 1337109,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max Sand",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lake Serene (Lower): Underwater pedestal",
+            "id": 1337111,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Aura Blast",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Caves of Banishment (upper)": {
+        "name": "Caves of Banishment (upper)",
+        "exits": [
+          {
+            "name": "Caves of Banishment (upper) -> Lower Lake Serene",
+            "connected_region": "Lower Lake Serene",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Caves of Banishment (upper) -> Caves of Banishment (Maw)",
+            "connected_region": "Caves of Banishment (Maw)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Caves of Banishment (upper) -> Space time continuum",
+            "connected_region": "Space time continuum",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Twin Pyramid Key"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Caves of Banishment (Maw): Shroom jump room",
+            "id": 1337112,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max Aura",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caves of Banishment (Maw): Secret room",
+            "id": 1337113,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Ether",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caves of Banishment (Maw): Bottom left room",
+            "id": 1337114,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Spaghetti",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caves of Banishment (Maw): Single shroom room",
+            "id": 1337115,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Griffin",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caves of Banishment (Maw): Jackpot room chest 1",
+            "id": 1337116,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Hi-Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caves of Banishment (Maw): Jackpot room chest 2",
+            "id": 1337117,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Galaxy Stone",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caves of Banishment (Maw): Jackpot room chest 3",
+            "id": 1337118,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max HP",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caves of Banishment (Maw): Jackpot room chest 4",
+            "id": 1337119,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Pendulum",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caves of Banishment (Maw): Pedestal",
+            "id": 1337120,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Chaos Blades",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Caves of Banishment (Maw)": {
+        "name": "Caves of Banishment (Maw)",
+        "exits": [
+          {
+            "name": "Caves of Banishment (Maw) -> Caves of Banishment (upper)",
+            "connected_region": "Caves of Banishment (upper)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Caves of Banishment (Maw) -> Caves of Banishment (Sirens)",
+            "connected_region": "Caves of Banishment (Sirens)",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Gas Mask",
+                    "Talaria Attachment"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Caves of Banishment (Maw) -> Caves of Banishment (Flooded)",
+            "connected_region": "Caves of Banishment (Flooded)",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Water Mask"
+            }
+          },
+          {
+            "name": "Caves of Banishment (Maw) -> Space time continuum",
+            "connected_region": "Space time continuum",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Twin Pyramid Key"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Caves of Banishment (Maw): Last chance before Maw",
+            "id": 1337121,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Timespinner Gear 1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caves of Banishment (Maw): Plasma Crystal",
+            "id": 1337173,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Gas Mask",
+                    "Talaria Attachment"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Max Aura",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Killed Maw",
+            "id": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Gas Mask"
+            },
+            "item": {
+              "name": "Killed Maw",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caves of Banishment (Maw): Mineshaft",
+            "id": 1337122,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Gas Mask",
+                    "Talaria Attachment"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Princess Dress",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Caves of Banishment (Flooded)": {
+        "name": "Caves of Banishment (Flooded)",
+        "exits": [],
+        "locations": []
+      },
+      "Caves of Banishment (Sirens)": {
+        "name": "Caves of Banishment (Sirens)",
+        "exits": [
+          {
+            "name": "Caves of Banishment (Sirens) -> Forest",
+            "connected_region": "Forest",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Caves of Banishment (Sirens): Wyvern room",
+            "id": 1337123,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Hope Ring",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caves of Banishment (Sirens): Siren room above water chest",
+            "id": 1337124,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Arm Cannon",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caves of Banishment (Sirens): Siren room underwater left chest",
+            "id": 1337125,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Water Mask"
+            },
+            "item": {
+              "name": "Tablet",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caves of Banishment (Sirens): Siren room underwater right chest",
+            "id": 1337126,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Water Mask"
+            },
+            "item": {
+              "name": "Lab Glasses",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caves of Banishment (Sirens): Siren room underwater right ground",
+            "id": 1337172,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Water Mask"
+            },
+            "item": {
+              "name": "Max Sand",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caves of Banishment (Sirens): Water hook",
+            "id": 1337127,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Water Mask"
+            },
+            "item": {
+              "name": "Mind Refresh",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Castle Ramparts": {
+        "name": "Castle Ramparts",
+        "exits": [
+          {
+            "name": "Castle Ramparts -> Forest",
+            "connected_region": "Forest",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Castle Ramparts -> Castle Keep",
+            "connected_region": "Castle Keep",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Castle Ramparts -> Space time continuum",
+            "connected_region": "Space time continuum",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Twin Pyramid Key"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Castle Ramparts: Bomber chest",
+            "id": 1337128,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Berry Pick-Mi-Up+",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Castle Ramparts: Freeze the engineer",
+            "id": 1337129,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Empress Robe",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Castle Ramparts: Giantess guarded room",
+            "id": 1337130,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Timespinner Spindle",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Castle Ramparts: Knight and archer guarded room",
+            "id": 1337131,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Timespinner Wheel",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Castle Ramparts: Pedestal",
+            "id": 1337132,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Gas Mask",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Castle Keep": {
+        "name": "Castle Keep",
+        "exits": [
+          {
+            "name": "Castle Keep -> Castle Ramparts",
+            "connected_region": "Castle Ramparts",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Castle Keep -> Castle Basement",
+            "connected_region": "Castle Basement",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Castle Keep -> Royal towers (lower)",
+            "connected_region": "Royal towers (lower)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Castle Keep -> Space time continuum",
+            "connected_region": "Space time continuum",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Twin Pyramid Key"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Castle Keep: Under the twins",
+            "id": 1337139,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max Sand",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Killed Twins",
+            "id": null,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin",
+                    "Timespinner Wheel"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Killed Twins",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Castle Keep: Advisor jump",
+            "id": 1337171,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin",
+                    "Timespinner Wheel"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Lab Coat",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Castle Keep: Twins",
+            "id": 1337140,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin",
+                    "Timespinner Wheel"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Dusk Ring",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Castle Keep: Royal guard tiny room",
+            "id": 1337141,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max Sand",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Castle Basement": {
+        "name": "Castle Basement",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Castle Basement: Secret pedestal",
+            "id": 1337133,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Economizer Ring",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Castle Basement: Clean the castle basement",
+            "id": 1337134,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Filigree Tea",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Castle Basement: Giantess guarded chest",
+            "id": 1337136,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Security Keycard C",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Castle Basement: Omelette chest",
+            "id": 1337137,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Hi-Potion",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Castle Basement: Just an egg",
+            "id": 1337138,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Greed Brooch",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Royal towers (lower)": {
+        "name": "Royal towers (lower)",
+        "exits": [
+          {
+            "name": "Royal towers (lower) -> Castle Keep",
+            "connected_region": "Castle Keep",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Royal towers (lower) -> Royal towers",
+            "connected_region": "Royal towers",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Royal towers (lower) -> Space time continuum",
+            "connected_region": "Space time continuum",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Twin Pyramid Key"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Castle Keep: Yas queen room",
+            "id": 1337135,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Plasma Geyser",
+                    "Plasma Orb",
+                    "Royal Ring"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Max HP",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Royal Towers: Floor secret",
+            "id": 1337142,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Meteor Sparrow Trap",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Royal towers": {
+        "name": "Royal towers",
+        "exits": [
+          {
+            "name": "Royal towers -> Royal towers (lower)",
+            "connected_region": "Royal towers (lower)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Royal towers -> Royal towers (upper)",
+            "connected_region": "Royal towers (upper)",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Royal Towers: Pre-climb gap",
+            "id": 1337143,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max Aura",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Royal Towers: Long balcony",
+            "id": 1337144,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max HP",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Royal Towers: Past bottom struggle juggle",
+            "id": 1337145,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Eternal Brooch",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Royal Towers: Bottom struggle juggle",
+            "id": 1337146,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max Aura",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Royal Towers: Right tower freebie",
+            "id": 1337149,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max Aura",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Royal towers (upper)": {
+        "name": "Royal towers (upper)",
+        "exits": [
+          {
+            "name": "Royal towers (upper) -> Royal towers",
+            "connected_region": "Royal towers",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Royal Towers: Top struggle juggle",
+            "id": 1337147,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max Aura",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Royal Towers: No struggle required",
+            "id": 1337148,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Eternal Crown",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Royal Towers: Left tower small balcony",
+            "id": 1337150,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max HP",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Royal Towers: Left tower royal guard",
+            "id": 1337151,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Midnight Cloak",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Royal Towers: Before Aelana",
+            "id": 1337152,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Succubus Hairpin",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Killed Aelana",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Killed Aelana",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Royal Towers: Aelana's attic",
+            "id": 1337153,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Celestial Sash",
+                    "Lightwall"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Max HP",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Royal Towers: Aelana's chest",
+            "id": 1337154,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Selen's Bangle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Royal Towers: Aelana's pedestal",
+            "id": 1337155,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Max HP",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Temporal Gyre": {
+        "name": "Temporal Gyre",
+        "exits": [
+          {
+            "name": "Temporal Gyre -> Military Fortress",
+            "connected_region": "Military Fortress",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Ancient Pyramid (entrance)": {
+        "name": "Ancient Pyramid (entrance)",
+        "exits": [
+          {
+            "name": "Ancient Pyramid (entrance) -> Ancient Pyramid (left)",
+            "connected_region": "Ancient Pyramid (left)",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Celestial Sash",
+                    "Lightwall",
+                    "Succubus Hairpin"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "Ancient Pyramid (entrance) -> Space time continuum",
+            "connected_region": "Space time continuum",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Twin Pyramid Key"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Ancient Pyramid: Why not it's right there",
+            "id": 1337246,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Djinn Inferno",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Ancient Pyramid (left)": {
+        "name": "Ancient Pyramid (left)",
+        "exits": [
+          {
+            "name": "Ancient Pyramid (left) -> Ancient Pyramid (entrance)",
+            "connected_region": "Ancient Pyramid (entrance)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Ancient Pyramid (left) -> Ancient Pyramid (right)",
+            "connected_region": "Ancient Pyramid (right)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Ancient Pyramid (left) -> Space time continuum",
+            "connected_region": "Space time continuum",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Twin Pyramid Key"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Ancient Pyramid: Conviction guarded room",
+            "id": 1337247,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Food Synthesizer",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Ancient Pyramid: Pit secret room",
+            "id": 1337248,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Sand Bottle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Ancient Pyramid: Regret chest",
+            "id": 1337249,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Security Keycard D",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Ancient Pyramid (right)": {
+        "name": "Ancient Pyramid (right)",
+        "exits": [
+          {
+            "name": "Ancient Pyramid (right) -> Ancient Pyramid (left)",
+            "connected_region": "Ancient Pyramid (left)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Ancient Pyramid (right) -> Space time continuum",
+            "connected_region": "Space time continuum",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Twin Pyramid Key"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Ancient Pyramid: Nightmare Door chest",
+            "id": 1337236,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Fire Orb",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Killed Nightmare",
+            "id": null,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Timespinner Gear 1",
+                    "Timespinner Gear 2",
+                    "Timespinner Gear 3",
+                    "Timespinner Spindle",
+                    "Timespinner Wheel"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "Killed Nightmare",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Space time continuum": {
+        "name": "Space time continuum",
+        "exits": [
+          {
+            "name": "Teleport back to start",
+            "connected_region": "Lake desolation",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Space time continuum -> Lake desolation",
+            "connected_region": "Lake desolation",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Space time continuum -> Lower lake desolation",
+            "connected_region": "Lower lake desolation",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Space time continuum -> Library",
+            "connected_region": "Library",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Space time continuum -> Varndagroth tower right (lower)",
+            "connected_region": "Varndagroth tower right (lower)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Space time continuum -> Skeleton Shaft",
+            "connected_region": "Skeleton Shaft",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Space time continuum -> Sealed Caves (Sirens)",
+            "connected_region": "Sealed Caves (Sirens)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Space time continuum -> Sealed Caves (Xarion)",
+            "connected_region": "Sealed Caves (Xarion)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Space time continuum -> Upper Lake Serene",
+            "connected_region": "Upper Lake Serene",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Space time continuum -> Left Side forest Caves",
+            "connected_region": "Left Side forest Caves",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Space time continuum -> Refugee Camp",
+            "connected_region": "Refugee Camp",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Space time continuum -> Forest",
+            "connected_region": "Forest",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Space time continuum -> Castle Keep",
+            "connected_region": "Castle Keep",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Space time continuum -> Royal towers (lower)",
+            "connected_region": "Royal towers (lower)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Space time continuum -> Caves of Banishment (Maw)",
+            "connected_region": "Caves of Banishment (Maw)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Space time continuum -> Caves of Banishment (upper)",
+            "connected_region": "Caves of Banishment (upper)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Space time continuum -> Military Fortress (hangar)",
+            "connected_region": "Military Fortress (hangar)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Space time continuum -> The lab (upper)",
+            "connected_region": "The lab (upper)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Space time continuum -> Ancient Pyramid (entrance)",
+            "connected_region": "Ancient Pyramid (entrance)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Space time continuum -> Ancient Pyramid (right)",
+            "connected_region": "Ancient Pyramid (right)",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "Eternal Crown": {
+        "name": "Eternal Crown",
+        "id": 1337000,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Security Visor": {
+        "name": "Security Visor",
+        "id": 1337001,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Engineer Goggles": {
+        "name": "Engineer Goggles",
+        "id": 1337002,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Leather Helmet": {
+        "name": "Leather Helmet",
+        "id": 1337003,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Copper Helmet": {
+        "name": "Copper Helmet",
+        "id": 1337004,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Pointy Hat": {
+        "name": "Pointy Hat",
+        "id": 1337005,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Dragoon Helmet": {
+        "name": "Dragoon Helmet",
+        "id": 1337006,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Buckle Hat": {
+        "name": "Buckle Hat",
+        "id": 1337007,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Advisor Hat": {
+        "name": "Advisor Hat",
+        "id": 1337008,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Librarian Hat": {
+        "name": "Librarian Hat",
+        "id": 1337009,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Combat Helmet": {
+        "name": "Combat Helmet",
+        "id": 1337010,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Captain's Cap": {
+        "name": "Captain's Cap",
+        "id": 1337011,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Lab Glasses": {
+        "name": "Lab Glasses",
+        "id": 1337012,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Empire Crown": {
+        "name": "Empire Crown",
+        "id": 1337013,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Viletian Crown": {
+        "name": "Viletian Crown",
+        "id": 1337014,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Sunglasses": {
+        "name": "Sunglasses",
+        "id": 1337015,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Old Coat": {
+        "name": "Old Coat",
+        "id": 1337016,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Trendy Jacket": {
+        "name": "Trendy Jacket",
+        "id": 1337017,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Security Vest": {
+        "name": "Security Vest",
+        "id": 1337018,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Leather Jerkin": {
+        "name": "Leather Jerkin",
+        "id": 1337019,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Copper Breastplate": {
+        "name": "Copper Breastplate",
+        "id": 1337020,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Traveler's Cloak": {
+        "name": "Traveler's Cloak",
+        "id": 1337021,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Dragoon Armor": {
+        "name": "Dragoon Armor",
+        "id": 1337022,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Midnight Cloak": {
+        "name": "Midnight Cloak",
+        "id": 1337023,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Advisor Robe": {
+        "name": "Advisor Robe",
+        "id": 1337024,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Librarian Robe": {
+        "name": "Librarian Robe",
+        "id": 1337025,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Military Armor": {
+        "name": "Military Armor",
+        "id": 1337026,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Captain's Uniform": {
+        "name": "Captain's Uniform",
+        "id": 1337027,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Lab Coat": {
+        "name": "Lab Coat",
+        "id": 1337028,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Empress Robe": {
+        "name": "Empress Robe",
+        "id": 1337029,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Princess Dress": {
+        "name": "Princess Dress",
+        "id": 1337030,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Eternal Coat": {
+        "name": "Eternal Coat",
+        "id": 1337031,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Synthetic Plume": {
+        "name": "Synthetic Plume",
+        "id": 1337032,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Cheveur Plume": {
+        "name": "Cheveur Plume",
+        "id": 1337033,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Metal Wristband": {
+        "name": "Metal Wristband",
+        "id": 1337034,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Nymph Hairband": {
+        "name": "Nymph Hairband",
+        "id": 1337035,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Mother o' Pearl": {
+        "name": "Mother o' Pearl",
+        "id": 1337036,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Bird Statue": {
+        "name": "Bird Statue",
+        "id": 1337037,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Chaos Stole": {
+        "name": "Chaos Stole",
+        "id": 1337038,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Pendulum": {
+        "name": "Pendulum",
+        "id": 1337039,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Chaos Horn": {
+        "name": "Chaos Horn",
+        "id": 1337040,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Filigree Clasp": {
+        "name": "Filigree Clasp",
+        "id": 1337041,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Azure Stole": {
+        "name": "Azure Stole",
+        "id": 1337042,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Ancient Coin": {
+        "name": "Ancient Coin",
+        "id": 1337043,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Shiny Rock": {
+        "name": "Shiny Rock",
+        "id": 1337044,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Galaxy Earrings": {
+        "name": "Galaxy Earrings",
+        "id": 1337045,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Selen's Bangle": {
+        "name": "Selen's Bangle",
+        "id": 1337046,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Glass Pumpkin": {
+        "name": "Glass Pumpkin",
+        "id": 1337047,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Gilded Egg": {
+        "name": "Gilded Egg",
+        "id": 1337048,
+        "groups": [
+          "Equipment",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Meyef": {
+        "name": "Meyef",
+        "id": 1337049,
+        "groups": [
+          "Everything",
+          "Familiar"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Griffin": {
+        "name": "Griffin",
+        "id": 1337050,
+        "groups": [
+          "Everything",
+          "Familiar"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Merchant Crow": {
+        "name": "Merchant Crow",
+        "id": 1337051,
+        "groups": [
+          "Everything",
+          "Familiar"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Kobo": {
+        "name": "Kobo",
+        "id": 1337052,
+        "groups": [
+          "Everything",
+          "Familiar"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Sprite": {
+        "name": "Sprite",
+        "id": 1337053,
+        "groups": [
+          "Everything",
+          "Familiar"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Demon": {
+        "name": "Demon",
+        "id": 1337054,
+        "groups": [
+          "Everything",
+          "Familiar"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Potion": {
+        "name": "Potion",
+        "id": 1337055,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "Ether": {
+        "name": "Ether",
+        "id": 1337056,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 4,
+        "classification": "filler"
+      },
+      "Sand Vial": {
+        "name": "Sand Vial",
+        "id": 1337057,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Hi-Potion": {
+        "name": "Hi-Potion",
+        "hint_text": "Hi Potion",
+        "id": 1337058,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "filler"
+      },
+      "Hi-Ether": {
+        "name": "Hi-Ether",
+        "hint_text": "Hi Ether",
+        "id": 1337059,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "Sand Bottle": {
+        "name": "Sand Bottle",
+        "id": 1337060,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "filler"
+      },
+      "Berry Pick-Mi-Up": {
+        "name": "Berry Pick-Mi-Up",
+        "hint_text": "Berry Pick Mi Up",
+        "id": 1337061,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Berry Pick-Mi-Up+": {
+        "name": "Berry Pick-Mi-Up+",
+        "hint_text": "Berry Pick Mi Up+",
+        "id": 1337062,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "Mind Refresh": {
+        "name": "Mind Refresh",
+        "id": 1337063,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Mind Refresh ULTRA": {
+        "name": "Mind Refresh ULTRA",
+        "id": 1337064,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Antidote": {
+        "name": "Antidote",
+        "id": 1337065,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Chaos Rose": {
+        "name": "Chaos Rose",
+        "id": 1337066,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "filler"
+      },
+      "Warp Shard": {
+        "name": "Warp Shard",
+        "id": 1337067,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Dream Wisp": {
+        "name": "Dream Wisp",
+        "id": 1337068,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "PlaceHolderItem1": {
+        "name": "PlaceHolderItem1",
+        "id": 1337069,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Lachiemi Sun": {
+        "name": "Lachiemi Sun",
+        "id": 1337070,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Jerky": {
+        "name": "Jerky",
+        "id": 1337071,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Biscuit": {
+        "name": "Biscuit",
+        "id": 1337072,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Fried Cheveur": {
+        "name": "Fried Cheveur",
+        "id": 1337073,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Saut\u00e9ed Wyvern Tail": {
+        "name": "Saut\u00e9ed Wyvern Tail",
+        "id": 1337074,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Unagi Roll": {
+        "name": "Unagi Roll",
+        "id": 1337075,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Cheveur au Vin": {
+        "name": "Cheveur au Vin",
+        "id": 1337076,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Royal Casserole": {
+        "name": "Royal Casserole",
+        "id": 1337077,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Spaghetti": {
+        "name": "Spaghetti",
+        "id": 1337078,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Plump Maggot": {
+        "name": "Plump Maggot",
+        "id": 1337079,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Orange Juice": {
+        "name": "Orange Juice",
+        "id": 1337080,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Filigree Tea": {
+        "name": "Filigree Tea",
+        "id": 1337081,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Empress Cake": {
+        "name": "Empress Cake",
+        "id": 1337082,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Rotten Tail": {
+        "name": "Rotten Tail",
+        "id": 1337083,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Alchemy Tools": {
+        "name": "Alchemy Tools",
+        "id": 1337084,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Galaxy Stone": {
+        "name": "Galaxy Stone",
+        "id": 1337085,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Essence Crystal": {
+        "name": "Essence Crystal",
+        "id": 1337087,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Gold Ring": {
+        "name": "Gold Ring",
+        "id": 1337088,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Gold Necklace": {
+        "name": "Gold Necklace",
+        "id": 1337089,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Herb": {
+        "name": "Herb",
+        "id": 1337090,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Mushroom": {
+        "name": "Mushroom",
+        "id": 1337091,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Plasma Crystal": {
+        "name": "Plasma Crystal",
+        "id": 1337092,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Plasma IV Bag": {
+        "name": "Plasma IV Bag",
+        "id": 1337093,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Cheveur Drumstick": {
+        "name": "Cheveur Drumstick",
+        "id": 1337094,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Wyvern Tail": {
+        "name": "Wyvern Tail",
+        "id": 1337095,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Eel Meat": {
+        "name": "Eel Meat",
+        "id": 1337096,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Cheveux Breast": {
+        "name": "Cheveux Breast",
+        "id": 1337097,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Food Synthesizer": {
+        "name": "Food Synthesizer",
+        "id": 1337098,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Cheveux Feather": {
+        "name": "Cheveux Feather",
+        "id": 1337099,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Siren Ink": {
+        "name": "Siren Ink",
+        "id": 1337100,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Plasma Core": {
+        "name": "Plasma Core",
+        "id": 1337101,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Silver Ore": {
+        "name": "Silver Ore",
+        "id": 1337102,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Historical Documents": {
+        "name": "Historical Documents",
+        "id": 1337103,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "MapReveal 0": {
+        "name": "MapReveal 0",
+        "id": 1337104,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "MapReveal 1": {
+        "name": "MapReveal 1",
+        "id": 1337105,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "MapReveal 2": {
+        "name": "MapReveal 2",
+        "id": 1337106,
+        "groups": [
+          "Everything",
+          "UseItem"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Timespinner Wheel": {
+        "name": "Timespinner Wheel",
+        "id": 1337107,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Timespinner Spindle": {
+        "name": "Timespinner Spindle",
+        "id": 1337108,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Timespinner Gear 1": {
+        "name": "Timespinner Gear 1",
+        "id": 1337109,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Timespinner Gear 2": {
+        "name": "Timespinner Gear 2",
+        "id": 1337110,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Timespinner Gear 3": {
+        "name": "Timespinner Gear 3",
+        "id": 1337111,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Twin Pyramid Key": {
+        "name": "Twin Pyramid Key",
+        "id": 1337112,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Celestial Sash": {
+        "name": "Celestial Sash",
+        "id": 1337113,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Succubus Hairpin": {
+        "name": "Succubus Hairpin",
+        "id": 1337114,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Talaria Attachment": {
+        "name": "Talaria Attachment",
+        "id": 1337115,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Water Mask": {
+        "name": "Water Mask",
+        "id": 1337116,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Gas Mask": {
+        "name": "Gas Mask",
+        "id": 1337117,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Soul Scanner": {
+        "name": "Soul Scanner",
+        "id": 1337118,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Security Keycard A": {
+        "name": "Security Keycard A",
+        "id": 1337119,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Security Keycard B": {
+        "name": "Security Keycard B",
+        "id": 1337120,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Security Keycard C": {
+        "name": "Security Keycard C",
+        "id": 1337121,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Security Keycard D": {
+        "name": "Security Keycard D",
+        "id": 1337122,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Library Keycard V": {
+        "name": "Library Keycard V",
+        "id": 1337123,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Tablet": {
+        "name": "Tablet",
+        "id": 1337124,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Elevator Keycard": {
+        "name": "Elevator Keycard",
+        "id": 1337125,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Jewelry Box": {
+        "name": "Jewelry Box",
+        "id": 1337126,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Goddess Brooch": {
+        "name": "Goddess Brooch",
+        "id": 1337127,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Wyrm Brooch": {
+        "name": "Wyrm Brooch",
+        "id": 1337128,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Greed Brooch": {
+        "name": "Greed Brooch",
+        "id": 1337129,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Eternal Brooch": {
+        "name": "Eternal Brooch",
+        "id": 1337130,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Blue Orb": {
+        "name": "Blue Orb",
+        "id": 1337131,
+        "groups": [
+          "Everything",
+          "Orb Melee"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Blade Orb": {
+        "name": "Blade Orb",
+        "id": 1337132,
+        "groups": [
+          "Everything",
+          "Orb Melee"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Fire Orb": {
+        "name": "Fire Orb",
+        "id": 1337133,
+        "groups": [
+          "Everything",
+          "Orb Melee"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Plasma Orb": {
+        "name": "Plasma Orb",
+        "id": 1337134,
+        "groups": [
+          "Everything",
+          "Orb Melee"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Iron Orb": {
+        "name": "Iron Orb",
+        "id": 1337135,
+        "groups": [
+          "Everything",
+          "Orb Melee"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Ice Orb": {
+        "name": "Ice Orb",
+        "id": 1337136,
+        "groups": [
+          "Everything",
+          "Orb Melee"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Wind Orb": {
+        "name": "Wind Orb",
+        "id": 1337137,
+        "groups": [
+          "Everything",
+          "Orb Melee"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Gun Orb": {
+        "name": "Gun Orb",
+        "id": 1337138,
+        "groups": [
+          "Everything",
+          "Orb Melee"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Umbra Orb": {
+        "name": "Umbra Orb",
+        "id": 1337139,
+        "groups": [
+          "Everything",
+          "Orb Melee"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Empire Orb": {
+        "name": "Empire Orb",
+        "id": 1337140,
+        "groups": [
+          "Everything",
+          "Orb Melee"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Eye Orb": {
+        "name": "Eye Orb",
+        "id": 1337141,
+        "groups": [
+          "Everything",
+          "Orb Melee"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Blood Orb": {
+        "name": "Blood Orb",
+        "id": 1337142,
+        "groups": [
+          "Everything",
+          "Orb Melee"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Forbidden Tome": {
+        "name": "Forbidden Tome",
+        "id": 1337143,
+        "groups": [
+          "Everything",
+          "Orb Melee"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Shattered Orb": {
+        "name": "Shattered Orb",
+        "id": 1337144,
+        "groups": [
+          "Everything",
+          "Orb Melee"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Nether Orb": {
+        "name": "Nether Orb",
+        "id": 1337145,
+        "groups": [
+          "Everything",
+          "Orb Melee"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Radiant Orb": {
+        "name": "Radiant Orb",
+        "id": 1337146,
+        "groups": [
+          "Everything",
+          "Orb Melee"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Aura Blast": {
+        "name": "Aura Blast",
+        "id": 1337147,
+        "groups": [
+          "Everything",
+          "Orb Spell"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Colossal Blade": {
+        "name": "Colossal Blade",
+        "id": 1337148,
+        "groups": [
+          "Everything",
+          "Orb Spell"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Infernal Flames": {
+        "name": "Infernal Flames",
+        "id": 1337149,
+        "groups": [
+          "Everything",
+          "Orb Spell"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Plasma Geyser": {
+        "name": "Plasma Geyser",
+        "id": 1337150,
+        "groups": [
+          "Everything",
+          "Orb Spell"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Colossal Hammer": {
+        "name": "Colossal Hammer",
+        "id": 1337151,
+        "groups": [
+          "Everything",
+          "Orb Spell"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Frozen Spires": {
+        "name": "Frozen Spires",
+        "id": 1337152,
+        "groups": [
+          "Everything",
+          "Orb Spell"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Storm Eye": {
+        "name": "Storm Eye",
+        "id": 1337153,
+        "groups": [
+          "Everything",
+          "Orb Spell"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Arm Cannon": {
+        "name": "Arm Cannon",
+        "id": 1337154,
+        "groups": [
+          "Everything",
+          "Orb Spell"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Dark Flames": {
+        "name": "Dark Flames",
+        "id": 1337155,
+        "groups": [
+          "Everything",
+          "Orb Spell"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Aura Serpent": {
+        "name": "Aura Serpent",
+        "id": 1337156,
+        "groups": [
+          "Everything",
+          "Orb Spell"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Chaos Blades": {
+        "name": "Chaos Blades",
+        "id": 1337157,
+        "groups": [
+          "Everything",
+          "Orb Spell"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Crimson Vortex": {
+        "name": "Crimson Vortex",
+        "id": 1337158,
+        "groups": [
+          "Everything",
+          "Orb Spell"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Djinn Inferno": {
+        "name": "Djinn Inferno",
+        "id": 1337159,
+        "groups": [
+          "Everything",
+          "Orb Spell"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Bombardment": {
+        "name": "Bombardment",
+        "id": 1337160,
+        "groups": [
+          "Everything",
+          "Orb Spell"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Corruption": {
+        "name": "Corruption",
+        "id": 1337161,
+        "groups": [
+          "Everything",
+          "Orb Spell"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Lightwall": {
+        "name": "Lightwall",
+        "id": 1337162,
+        "groups": [
+          "Everything",
+          "Orb Spell"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Bleak Ring": {
+        "name": "Bleak Ring",
+        "id": 1337163,
+        "groups": [
+          "Everything",
+          "Orb Passive"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Scythe Ring": {
+        "name": "Scythe Ring",
+        "id": 1337164,
+        "groups": [
+          "Everything",
+          "Orb Passive"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Pyro Ring": {
+        "name": "Pyro Ring",
+        "id": 1337165,
+        "groups": [
+          "Everything",
+          "Orb Passive"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Royal Ring": {
+        "name": "Royal Ring",
+        "id": 1337166,
+        "groups": [
+          "Everything",
+          "Orb Passive"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Shield Ring": {
+        "name": "Shield Ring",
+        "id": 1337167,
+        "groups": [
+          "Everything",
+          "Orb Passive"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Icicle Ring": {
+        "name": "Icicle Ring",
+        "id": 1337168,
+        "groups": [
+          "Everything",
+          "Orb Passive"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Tailwind Ring": {
+        "name": "Tailwind Ring",
+        "id": 1337169,
+        "groups": [
+          "Everything",
+          "Orb Passive"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Economizer Ring": {
+        "name": "Economizer Ring",
+        "id": 1337170,
+        "groups": [
+          "Everything",
+          "Orb Passive"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Dusk Ring": {
+        "name": "Dusk Ring",
+        "id": 1337171,
+        "groups": [
+          "Everything",
+          "Orb Passive"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Star of Lachiem": {
+        "name": "Star of Lachiem",
+        "id": 1337172,
+        "groups": [
+          "Everything",
+          "Orb Passive"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Oculus Ring": {
+        "name": "Oculus Ring",
+        "id": 1337173,
+        "groups": [
+          "Everything",
+          "Orb Passive"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Sanguine Ring": {
+        "name": "Sanguine Ring",
+        "id": 1337174,
+        "groups": [
+          "Everything",
+          "Orb Passive"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Sun Ring": {
+        "name": "Sun Ring",
+        "id": 1337175,
+        "groups": [
+          "Everything",
+          "Orb Passive"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Silence Ring": {
+        "name": "Silence Ring",
+        "id": 1337176,
+        "groups": [
+          "Everything",
+          "Orb Passive"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Shadow Seal": {
+        "name": "Shadow Seal",
+        "id": 1337177,
+        "groups": [
+          "Everything",
+          "Orb Passive"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Hope Ring": {
+        "name": "Hope Ring",
+        "id": 1337178,
+        "groups": [
+          "Everything",
+          "Orb Passive"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Max HP": {
+        "name": "Max HP",
+        "id": 1337179,
+        "groups": [
+          "Everything",
+          "Stat"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 12,
+        "classification": "filler"
+      },
+      "Max Aura": {
+        "name": "Max Aura",
+        "id": 1337180,
+        "groups": [
+          "Everything",
+          "Stat"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 13,
+        "classification": "filler"
+      },
+      "Timeworn Warp Beacon": {
+        "name": "Timeworn Warp Beacon",
+        "id": 1337181,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Modern Warp Beacon": {
+        "name": "Modern Warp Beacon",
+        "id": 1337182,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Mysterious Warp Beacon": {
+        "name": "Mysterious Warp Beacon",
+        "id": 1337183,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Meteor Sparrow Trap": {
+        "name": "Meteor Sparrow Trap",
+        "id": 1337184,
+        "groups": [
+          "Everything",
+          "Trap"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "trap"
+      },
+      "Poison Trap": {
+        "name": "Poison Trap",
+        "id": 1337185,
+        "groups": [
+          "Everything",
+          "Trap"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Chaos Trap": {
+        "name": "Chaos Trap",
+        "id": 1337186,
+        "groups": [
+          "Everything",
+          "Trap"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "trap"
+      },
+      "Neurotoxin Trap": {
+        "name": "Neurotoxin Trap",
+        "id": 1337187,
+        "groups": [
+          "Everything",
+          "Trap"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Bee Trap": {
+        "name": "Bee Trap",
+        "id": 1337188,
+        "groups": [
+          "Everything",
+          "Trap"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Laser Access A": {
+        "name": "Laser Access A",
+        "id": 1337189,
+        "groups": [
+          "Everything",
+          "Laser Access"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Laser Access I": {
+        "name": "Laser Access I",
+        "id": 1337191,
+        "groups": [
+          "Everything",
+          "Laser Access"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Laser Access M": {
+        "name": "Laser Access M",
+        "id": 1337192,
+        "groups": [
+          "Everything",
+          "Laser Access"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Throw Stun Trap": {
+        "name": "Throw Stun Trap",
+        "id": 1337193,
+        "groups": [
+          "Everything",
+          "Trap"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Lab Access Genza": {
+        "name": "Lab Access Genza",
+        "id": 1337194,
+        "groups": [
+          "Everything",
+          "Lab Access"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Lab Access Experiment": {
+        "name": "Lab Access Experiment",
+        "id": 1337195,
+        "groups": [
+          "Everything",
+          "Lab Access"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Lab Access Research": {
+        "name": "Lab Access Research",
+        "id": 1337196,
+        "groups": [
+          "Everything",
+          "Lab Access"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Lab Access Dynamo": {
+        "name": "Lab Access Dynamo",
+        "id": 1337197,
+        "groups": [
+          "Everything",
+          "Lab Access"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Drawbridge Key": {
+        "name": "Drawbridge Key",
+        "id": 1337198,
+        "groups": [
+          "Everything",
+          "Key"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Cube of Bodie": {
+        "name": "Cube of Bodie",
+        "id": 1337199,
+        "groups": [
+          "Everything",
+          "Relic"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Spider Trap": {
+        "name": "Spider Trap",
+        "id": 1337200,
+        "groups": [
+          "Everything",
+          "Trap"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Lights Out Trap": {
+        "name": "Lights Out Trap",
+        "id": 1337201,
+        "groups": [
+          "Everything",
+          "Trap"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Palm Punch Trap": {
+        "name": "Palm Punch Trap",
+        "id": 1337202,
+        "groups": [
+          "Everything",
+          "Trap"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Max Sand": {
+        "name": "Max Sand",
+        "id": 1337249,
+        "groups": [
+          "Everything",
+          "Stat"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 14,
+        "classification": "filler"
+      },
+      "Killed Emperor": {
+        "name": "Killed Emperor",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Killed Maw": {
+        "name": "Killed Maw",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Killed Twins": {
+        "name": "Killed Twins",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Killed Aelana": {
+        "name": "Killed Aelana",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Killed Nightmare": {
+        "name": "Killed Nightmare",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Equipment",
+      "Event",
+      "Everything",
+      "Familiar",
+      "Key",
+      "Lab Access",
+      "Laser Access",
+      "Orb Melee",
+      "Orb Passive",
+      "Orb Spell",
+      "Relic",
+      "Stat",
+      "Trap",
+      "UseItem"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "Alchemy Tools": 1,
+      "Ancient Coin": 1,
+      "Arm Cannon": 1,
+      "Aura Blast": 1,
+      "Aura Serpent": 1,
+      "Berry Pick-Mi-Up": 1,
+      "Berry Pick-Mi-Up+": 2,
+      "Bird Statue": 1,
+      "Blade Orb": 1,
+      "Bleak Ring": 1,
+      "Blood Orb": 1,
+      "Blue Orb": 1,
+      "Bombardment": 1,
+      "Buckle Hat": 1,
+      "Captain's Cap": 1,
+      "Captain's Uniform": 1,
+      "Celestial Sash": 1,
+      "Chaos Blades": 1,
+      "Chaos Rose": 3,
+      "Chaos Trap": 1,
+      "Colossal Blade": 1,
+      "Colossal Hammer": 1,
+      "Corruption": 1,
+      "Crimson Vortex": 1,
+      "Dark Flames": 1,
+      "Demon": 1,
+      "Djinn Inferno": 1,
+      "Dusk Ring": 1,
+      "Economizer Ring": 1,
+      "Elevator Keycard": 1,
+      "Empire Crown": 1,
+      "Empire Orb": 1,
+      "Empress Robe": 1,
+      "Eternal Brooch": 1,
+      "Eternal Coat": 1,
+      "Eternal Crown": 1,
+      "Ether": 4,
+      "Eye Orb": 1,
+      "Filigree Clasp": 1,
+      "Filigree Tea": 1,
+      "Fire Orb": 1,
+      "Food Synthesizer": 1,
+      "Forbidden Tome": 1,
+      "Frozen Spires": 1,
+      "Galaxy Earrings": 1,
+      "Galaxy Stone": 1,
+      "Gas Mask": 1,
+      "Gilded Egg": 1,
+      "Glass Pumpkin": 1,
+      "Goddess Brooch": 1,
+      "Greed Brooch": 1,
+      "Griffin": 1,
+      "Gun Orb": 1,
+      "Herb": 1,
+      "Hi-Ether": 2,
+      "Hi-Potion": 3,
+      "Hope Ring": 1,
+      "Ice Orb": 1,
+      "Icicle Ring": 1,
+      "Infernal Flames": 1,
+      "Iron Orb": 1,
+      "Jerky": 1,
+      "Jewelry Box": 1,
+      "Killed Aelana": 1,
+      "Killed Emperor": 1,
+      "Killed Maw": 1,
+      "Killed Nightmare": 1,
+      "Killed Twins": 1,
+      "Kobo": 1,
+      "Lab Coat": 1,
+      "Lab Glasses": 1,
+      "Librarian Hat": 1,
+      "Librarian Robe": 1,
+      "Library Keycard V": 1,
+      "Lightwall": 1,
+      "Max Aura": 13,
+      "Max HP": 12,
+      "Max Sand": 14,
+      "Merchant Crow": 1,
+      "Metal Wristband": 1,
+      "Meteor Sparrow Trap": 1,
+      "Meyef": 1,
+      "Midnight Cloak": 1,
+      "Mind Refresh": 1,
+      "Nether Orb": 1,
+      "Oculus Ring": 1,
+      "Old Coat": 1,
+      "Pendulum": 1,
+      "Plasma Crystal": 1,
+      "Plasma Geyser": 1,
+      "Plasma IV Bag": 1,
+      "Plasma Orb": 1,
+      "Pointy Hat": 1,
+      "Potion": 2,
+      "Princess Dress": 1,
+      "Pyro Ring": 1,
+      "Radiant Orb": 1,
+      "Royal Ring": 1,
+      "Sand Bottle": 3,
+      "Sand Vial": 1,
+      "Sanguine Ring": 1,
+      "Scythe Ring": 1,
+      "Security Keycard A": 1,
+      "Security Keycard B": 1,
+      "Security Keycard C": 1,
+      "Security Keycard D": 1,
+      "Selen's Bangle": 1,
+      "Shadow Seal": 1,
+      "Shattered Orb": 1,
+      "Shield Ring": 1,
+      "Shiny Rock": 1,
+      "Silence Ring": 1,
+      "Soul Scanner": 1,
+      "Spaghetti": 1,
+      "Sprite": 1,
+      "Star of Lachiem": 1,
+      "Storm Eye": 1,
+      "Succubus Hairpin": 1,
+      "Sun Ring": 1,
+      "Sunglasses": 1,
+      "Tablet": 1,
+      "Tailwind Ring": 1,
+      "Talaria Attachment": 1,
+      "Timespinner Gear 1": 1,
+      "Timespinner Gear 2": 1,
+      "Timespinner Gear 3": 1,
+      "Timespinner Spindle": 1,
+      "Timespinner Wheel": 1,
+      "Traveler's Cloak": 1,
+      "Trendy Jacket": 1,
+      "Twin Pyramid Key": 1,
+      "Umbra Orb": 1,
+      "Viletian Crown": 1,
+      "Warp Shard": 1,
+      "Water Mask": 1,
+      "Wind Orb": 1,
+      "Wyrm Brooch": 1
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "settings": {
+    "1": {
+      "game": "Timespinner WorldGen",
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {
+      "name": "Timespinner WorldGen",
+      "rule_format": {
+        "version": "1.0"
+      }
+    }
+  },
+  "helpers": {}
+}

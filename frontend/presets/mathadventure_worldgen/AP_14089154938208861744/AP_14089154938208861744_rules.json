@@ -1,0 +1,504 @@
+{
+  "schema_version": 3,
+  "game_name": "MathProof2p2e4 WorldGen",
+  "game_directory": "mathadventure_worldgen",
+  "archipelago_version": "0.6.5",
+  "generation_seed": 1,
+  "player_names": {
+    "1": "Player1"
+  },
+  "world_classes": {
+    "1": "MathProof2p2e4WorldGenWorld"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "StartProof",
+            "connected_region": "Definitions",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "Definitions": {
+        "name": "Definitions",
+        "exits": [
+          {
+            "name": "ToAxioms",
+            "connected_region": "Axioms",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "ToBasicProperties",
+            "connected_region": "BasicProperties",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "ToOperations",
+            "connected_region": "ArithmeticOperations",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "df-2",
+                    "df-3"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Definition of 2",
+            "id": 200000001,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "df-2",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Definition of 3",
+            "id": 200000002,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "df-3",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Definition of 4",
+            "id": 200000003,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "df-4",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Axioms": {
+        "name": "Axioms",
+        "exits": [
+          {
+            "name": "BackToDefinitions",
+            "connected_region": "Definitions",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "1 is Complex",
+            "id": 200000004,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "ax-1cn",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "BasicProperties": {
+        "name": "BasicProperties",
+        "exits": [
+          {
+            "name": "BackToDefinitionsFromProperties",
+            "connected_region": "Definitions",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "2 is Complex",
+            "id": 200000005,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "2cn",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "ArithmeticOperations": {
+        "name": "ArithmeticOperations",
+        "exits": [
+          {
+            "name": "ToProofCompletion",
+            "connected_region": "ProofCompletion",
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "addassi",
+                    "oveq2i"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Equality Substitution Right",
+            "id": 200000006,
+            "access_rule": {
+              "type": "item_check",
+              "item": "df-2"
+            },
+            "item": {
+              "name": "oveq2i",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Equality Substitution Left",
+            "id": 200000007,
+            "access_rule": {
+              "type": "item_check",
+              "item": "df-3"
+            },
+            "item": {
+              "name": "oveq1i",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Addition Associativity",
+            "id": 200000008,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "2cn",
+                    "ax-1cn"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "addassi",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "ProofCompletion": {
+        "name": "ProofCompletion",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Triple Equality Transitivity",
+            "id": 200000009,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "addassi",
+                    "df-4",
+                    "oveq1i"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "3eqtri",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Final Equality",
+            "id": 200000010,
+            "access_rule": {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "3eqtri",
+                    "oveq2i"
+                  ]
+                }
+              ]
+            },
+            "item": {
+              "name": "eqtr4i",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Theorem: 2+2=4",
+            "id": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": "eqtr4i"
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "df-2": {
+        "name": "df-2",
+        "hint_text": "df 2",
+        "id": 200100001,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "df-3": {
+        "name": "df-3",
+        "hint_text": "df 3",
+        "id": 200100002,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "df-4": {
+        "name": "df-4",
+        "hint_text": "df 4",
+        "id": 200100003,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "ax-1cn": {
+        "name": "ax-1cn",
+        "hint_text": "ax 1cn",
+        "id": 200100004,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "2cn": {
+        "name": "2cn",
+        "id": 200100005,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "oveq2i": {
+        "name": "oveq2i",
+        "id": 200100006,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "oveq1i": {
+        "name": "oveq1i",
+        "id": 200100007,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "addassi": {
+        "name": "addassi",
+        "id": 200100008,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "3eqtri": {
+        "name": "3eqtri",
+        "id": 200100009,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "eqtr4i": {
+        "name": "eqtr4i",
+        "id": 200100010,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Event",
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "2cn": 1,
+      "3eqtri": 1,
+      "Victory": 1,
+      "addassi": 1,
+      "ax-1cn": 1,
+      "df-2": 1,
+      "df-3": 1,
+      "df-4": 1,
+      "eqtr4i": 1,
+      "oveq1i": 1,
+      "oveq2i": 1
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "settings": {
+    "1": {
+      "game": "MathProof2p2e4 WorldGen",
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {
+      "name": "MathProof2p2e4 WorldGen",
+      "rule_format": {
+        "version": "1.0"
+      }
+    }
+  },
+  "helpers": {}
+}
