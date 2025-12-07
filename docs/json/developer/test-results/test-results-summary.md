@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-06 12:14:32
+**Generated:** 2025-12-07 01:53:25
 
 This summary combines results from 4 types of tests:
 - **Minimal Spoiler Test:** Tests with advancement items only - [View Details](./test-results-spoilers-minimal.md)
@@ -155,6 +155,7 @@ The following games are excluded from automated testing:
 | Game | Reason |
 |------|--------|
 | Archipelago | Not a game |
+| Blasphemous | The spoiler test currently freezes |
 | Final Fantasy | Requires manual configuration and is not compatible with automated testing |
 | Hollow Knight | The spoiler test currently freezes |
 | Ocarina of Time | The default yaml file fails to generate |
