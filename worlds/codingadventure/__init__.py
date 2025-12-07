@@ -1,4 +1,4 @@
-from typing import Dict, ClassVar
+from typing import ClassVar, Dict, Any
 from BaseClasses import Item, ItemClassification, MultiWorld, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from .Items import item_table, WebDevJourneyItem
@@ -30,7 +30,73 @@ class WebDevJourneyWorld(World):
     location_name_to_id: ClassVar[Dict[str, int]] = {
         name: data.location_id for name, data in location_table.items() if data.location_id is not None
     }
-    
+
+    # Canonical item placements - where items belong in the "vanilla" game
+    # Used by exporter to distinguish canonical placements from always-locked items
+    canonical_placements: ClassVar[Dict[str, str]] = {
+        "Learn HTML": "HTML",
+        "Learn CSS": "CSS",
+        "Learn Design Systems": "Design Systems",
+        "Learn JavaScript": "JavaScript Basics",
+        "Learn DOM Manipulation": "DOM Manipulation",
+        "Learn Algorithms": "Algorithms",
+        "Choose Server Language": "Server Basics",
+        "Learn File I/O": "File I/O",
+        "Learn HTTP Basics": "HTTP Basics",
+        "Learn Git": "Git",
+        "Learn Command Line": "Command Line",
+        "Learn Package Managers": "Package Managers",
+        "Static Website Milestone": "Static Website Complete",
+        "Learn React": "React",
+        "React Components": "Frontend Framework",
+        "Redux": "State Management",
+        "Learn Vue": "Vue",
+        "Vue Components": "Frontend Framework",
+        "Vuex": "State Management",
+        "Advanced Vanilla JS": "Frontend Framework",
+        "Custom State System": "State Management",
+        "Learn Express": "Express",
+        "Build REST APIs": "REST APIs",
+        "MongoDB Integration": "Database Integration",
+        "Learn Django": "Django",
+        "Django REST Framework": "REST APIs",
+        "Django ORM": "Database Integration",
+        "Learn Flask": "Flask",
+        "Flask-RESTful": "REST APIs",
+        "SQLAlchemy": "Database Integration",
+        "UI/UX Principles": "UI/UX",
+        "Responsive Design": "Responsive Design",
+        "Accessibility": "Accessibility",
+        "Learn SQL": "SQL",
+        "PostgreSQL": "Database Basics",
+        "Query Optimization": "Query Optimization",
+        "Learn NoSQL": "NoSQL",
+        "MongoDB": "Database Basics",
+        "Indexing Strategies": "Query Optimization",
+        "Interactive App Milestone": "Interactive App Complete",
+        "Sessions": "Sessions",
+        "JWT": "JWT",
+        "OAuth": "Authentication",
+        "Caching": "Caching",
+        "CDN": "CDN",
+        "Load Balancing": "Performance",
+        "Unit Tests": "Unit Tests",
+        "Integration Tests": "Integration Tests",
+        "E2E Tests": "Testing",
+        "Docker": "Docker",
+        "CI/CD": "CI/CD",
+        "Monitoring": "DevOps",
+        "Full-Stack Integration Milestone": "Full-Stack Complete",
+        "HTTPS": "HTTPS",
+        "CORS": "CORS",
+        "Input Validation": "Security Complete",
+        "Horizontal Scaling": "Horizontal Scaling",
+        "Microservices": "Scaling Complete",
+        "Cloud Provider": "Cloud Provider",
+        "Domain Setup": "Domain",
+        "SSL Certificate": "Deployment Complete",
+    }
+
     def generate_early(self) -> None:
         # If seed is 1, disable randomization to use canonical item placements
         if self.multiworld.seed == 1:
@@ -111,71 +177,7 @@ class WebDevJourneyWorld(World):
     
     def _place_original_items(self) -> None:
         """Place items in canonical locations when randomization is disabled."""
-        original_placements = {
-            "Learn HTML": "HTML",
-            "Learn CSS": "CSS",
-            "Learn Design Systems": "Design Systems",
-            "Learn JavaScript": "JavaScript Basics",
-            "Learn DOM Manipulation": "DOM Manipulation",
-            "Learn Algorithms": "Algorithms",
-            "Choose Server Language": "Server Basics",
-            "Learn File I/O": "File I/O",
-            "Learn HTTP Basics": "HTTP Basics",
-            "Learn Git": "Git",
-            "Learn Command Line": "Command Line",
-            "Learn Package Managers": "Package Managers",
-            "Static Website Milestone": "Static Website Complete",
-            "Learn React": "React",
-            "React Components": "Frontend Framework",
-            "Redux": "State Management",
-            "Learn Vue": "Vue",
-            "Vue Components": "Frontend Framework",
-            "Vuex": "State Management",
-            "Advanced Vanilla JS": "Frontend Framework",
-            "Custom State System": "State Management",
-            "Learn Express": "Express",
-            "Build REST APIs": "REST APIs",
-            "MongoDB Integration": "Database Integration",
-            "Learn Django": "Django",
-            "Django REST Framework": "REST APIs",
-            "Django ORM": "Database Integration",
-            "Learn Flask": "Flask",
-            "Flask-RESTful": "REST APIs",
-            "SQLAlchemy": "Database Integration",
-            "UI/UX Principles": "UI/UX",
-            "Responsive Design": "Responsive Design",
-            "Accessibility": "Accessibility",
-            "Learn SQL": "SQL",
-            "PostgreSQL": "Database Basics",
-            "Query Optimization": "Query Optimization",
-            "Learn NoSQL": "NoSQL",
-            "MongoDB": "Database Basics",
-            "Indexing Strategies": "Query Optimization",
-            "Interactive App Milestone": "Interactive App Complete",
-            "Sessions": "Sessions",
-            "JWT": "JWT",
-            "OAuth": "Authentication",
-            "Caching": "Caching",
-            "CDN": "CDN",
-            "Load Balancing": "Performance",
-            "Unit Tests": "Unit Tests",
-            "Integration Tests": "Integration Tests",
-            "E2E Tests": "Testing",
-            "Docker": "Docker",
-            "CI/CD": "CI/CD",
-            "Monitoring": "DevOps",
-            "Full-Stack Integration Milestone": "Full-Stack Complete",
-            "HTTPS": "HTTPS",
-            "CORS": "CORS",
-            "Input Validation": "Security Complete",
-            "Horizontal Scaling": "Horizontal Scaling",
-            "Microservices": "Scaling Complete",
-            "Cloud Provider": "Cloud Provider",
-            "Domain Setup": "Domain",
-            "SSL Certificate": "Deployment Complete"
-        }
-        
-        for location_name, item_name in original_placements.items():
+        for location_name, item_name in self.canonical_placements.items():
             location = self.multiworld.get_location(location_name, self.player)
             item_data = item_table[item_name]
             item = WebDevJourneyItem(item_name, item_data.classification, item_data.id, self.player)

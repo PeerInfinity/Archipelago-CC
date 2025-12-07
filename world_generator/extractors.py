@@ -19,6 +19,17 @@ def sanitize_identifier(name: str) -> str:
 
 
 @dataclass
+class TutorialData:
+    """Tutorial information."""
+    name: str
+    description: str
+    language: str
+    file_name: str
+    link: str
+    authors: List[str] = field(default_factory=list)
+
+
+@dataclass
 class GameMetadata:
     """Extracted game metadata."""
     game_name: str
@@ -26,6 +37,12 @@ class GameMetadata:
     world_class_name: str
     archipelago_version: str
     schema_version: int
+    base_id: Optional[int] = None
+    web_theme: Optional[str] = None
+    web_tutorials: List[TutorialData] = field(default_factory=list)
+    world_description: Optional[str] = None
+    slot_data_fields: Dict[str, Any] = field(default_factory=dict)  # Fields returned by fill_slot_data
+    game_options: Dict[str, Any] = field(default_factory=dict)  # Game-specific options from settings
 
 
 @dataclass
@@ -83,12 +100,13 @@ class ExtractedData:
     item_groups: List[str]
     item_name_groups: Dict[str, List[str]]  # group_name -> [item_names]
     start_region: str
-    original_placements: Dict[str, str]  # location -> item
+    original_placements: Dict[str, str]  # location -> item (from locked items at generation time)
     itempool_counts: Dict[str, int] = field(default_factory=dict)  # item -> count
-    locked_placements: Dict[str, str] = field(default_factory=dict)  # location -> item (must be placed via place_locked_item)
+    locked_placements: Dict[str, str] = field(default_factory=dict)  # location -> item (must ALWAYS be placed via place_locked_item, e.g., events)
     starting_items: Dict[str, int] = field(default_factory=dict)  # item -> count (precollected items)
     accumulator_rules: List[Dict[str, Any]] = field(default_factory=list)  # Rules for state counters (e.g., coins)
     prog_items_init: Dict[str, int] = field(default_factory=dict)  # Initial values for prog_items counters
+    canonical_placements: Dict[str, str] = field(default_factory=dict)  # location -> item (vanilla/original locations from world class)
 
 
 def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
@@ -106,12 +124,50 @@ def extract_game_metadata(json_data: Dict[str, Any]) -> GameMetadata:
         # Derive from game name: "My Game" -> "MyGameWorld"
         world_class_name = sanitize_identifier(game_name) + 'World'
 
+    # Extract game_info for player 1 (contains new metadata fields)
+    game_info = json_data.get('game_info', {}).get('1', {})
+
+    # Extract base_id
+    base_id = game_info.get('base_id')
+
+    # Extract web theme
+    web_theme = game_info.get('web_theme')
+
+    # Extract tutorials
+    web_tutorials = []
+    tutorials_data = game_info.get('web_tutorials', [])
+    for t in tutorials_data:
+        web_tutorials.append(TutorialData(
+            name=t.get('name', ''),
+            description=t.get('description', ''),
+            language=t.get('language', 'English'),
+            file_name=t.get('file_name', ''),
+            link=t.get('link', ''),
+            authors=t.get('authors', []),
+        ))
+
+    # Extract world description (docstring)
+    world_description = game_info.get('world_description')
+
+    # Extract slot_data fields
+    slot_data_fields = game_info.get('slot_data', {})
+
+    # Extract game options from settings (for generating dynamic fill_slot_data)
+    settings = json_data.get('settings', {}).get('1', {})
+    game_options = settings.get('options', {})
+
     return GameMetadata(
         game_name=game_name,
         game_directory=json_data.get('game_directory', game_name.lower().replace(' ', '_')),
         world_class_name=world_class_name,
         archipelago_version=json_data.get('archipelago_version', '0.0.0'),
         schema_version=json_data.get('schema_version', 1),
+        base_id=base_id,
+        web_theme=web_theme,
+        web_tutorials=web_tutorials,
+        world_description=world_description,
+        slot_data_fields=slot_data_fields,
+        game_options=game_options,
     )
 
 
@@ -321,6 +377,21 @@ def extract_starting_items(json_data: Dict[str, Any]) -> Dict[str, int]:
     return starting
 
 
+def extract_canonical_placements(json_data: Dict[str, Any]) -> Dict[str, str]:
+    """
+    Extract canonical placements from JSON.
+
+    Canonical placements are the vanilla/original item locations as defined
+    by the world class. These are used for seed=1 mode to place items in
+    their original positions.
+
+    Returns:
+        Dict mapping location name to item name
+    """
+    canonical_data = json_data.get('canonical_placements', {}).get('1', {})
+    return dict(canonical_data)
+
+
 def compute_state_counter_accumulator_rules(
     items: Dict[str, 'ItemData'],
     original_placements: Dict[str, str]
@@ -428,6 +499,9 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
     # Get starting items from JSON
     starting_items = extract_starting_items(json_data)
 
+    # Get canonical placements from JSON (vanilla/original item locations)
+    canonical_placements = extract_canonical_placements(json_data)
+
     # Compute accumulator rules for state counter patterns (for frontend export)
     accumulator_rules, prog_items_init = compute_state_counter_accumulator_rules(items, original_placements)
 
@@ -472,4 +546,5 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
         starting_items=starting_items,
         accumulator_rules=accumulator_rules,
         prog_items_init=prog_items_init,
+        canonical_placements=canonical_placements,
     )

@@ -1,4 +1,4 @@
-from typing import Dict, ClassVar
+from typing import ClassVar, Dict, Any
 from BaseClasses import Item, ItemClassification, MultiWorld, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from .Items import item_table, MathProofItem
@@ -43,7 +43,22 @@ class MathProof2p2e4World(World):
     location_name_to_id: ClassVar[Dict[str, int]] = {
         name: data.location_id for name, data in location_table.items() if data.location_id is not None
     }
-    
+
+    # Canonical item placements - where items belong in the "vanilla" game
+    # Used by exporter to distinguish canonical placements from always-locked items
+    canonical_placements: ClassVar[Dict[str, str]] = {
+        "Definition of 2": "df-2",
+        "Definition of 3": "df-3",
+        "Definition of 4": "df-4",
+        "1 is Complex": "ax-1cn",
+        "2 is Complex": "2cn",
+        "Equality Substitution Right": "oveq2i",
+        "Equality Substitution Left": "oveq1i",
+        "Addition Associativity": "addassi",
+        "Triple Equality Transitivity": "3eqtri",
+        "Final Equality": "eqtr4i",
+    }
+
     def __init__(self, world: MultiWorld, player: int):
         super().__init__(world, player)
     
@@ -72,21 +87,7 @@ class MathProof2p2e4World(World):
     
     def _place_original_items(self) -> None:
         """Place items in their canonical locations when randomization is disabled."""
-        # Original item placements: location_name -> item_name
-        original_placements = {
-            "Definition of 2": "df-2",
-            "Definition of 3": "df-3", 
-            "Definition of 4": "df-4",
-            "1 is Complex": "ax-1cn",
-            "2 is Complex": "2cn",
-            "Equality Substitution Right": "oveq2i",
-            "Equality Substitution Left": "oveq1i",
-            "Addition Associativity": "addassi",
-            "Triple Equality Transitivity": "3eqtri",
-            "Final Equality": "eqtr4i",
-        }
-        
-        for location_name, item_name in original_placements.items():
+        for location_name, item_name in self.canonical_placements.items():
             location = self.multiworld.get_location(location_name, self.player)
             item_data = item_table[item_name]
             item = MathProofItem(item_name, item_data.classification, item_data.id, self.player)

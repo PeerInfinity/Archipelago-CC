@@ -674,6 +674,25 @@
       "Victory": 1
     }
   },
+  "canonical_placements": {
+    "1": {
+      "Gather Mixing Bowls": "Mixing Bowls",
+      "Get Electric Mixer": "Electric Mixer",
+      "Find Measuring Tools": "Measuring Tools",
+      "Preheat Oven to 375F": "Preheated Oven",
+      "Line Baking Sheets": "Prepared Sheets",
+      "Soften Butter": "Softened Butter",
+      "Cream Butter and Sugars": "Butter Sugar Base",
+      "Add Eggs": "Egg Mixture",
+      "Add Vanilla": "Creamed Mixture",
+      "Measure Flour": "Measured Flour",
+      "Add Baking Soda and Salt": "Flour Mixture",
+      "Gradually Mix Dry into Wet": "Basic Dough",
+      "Fold in Chocolate Chips": "Cookie Dough",
+      "Scoop Dough onto Sheets": "Shaped Cookies",
+      "Bake for 9-11 Minutes": "Baked Cookies"
+    }
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -684,7 +703,21 @@
     "1": {
       "game": "ChocolateChipCookies",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": 1,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      }
     }
   },
   "game_info": {
@@ -692,6 +725,24 @@
       "name": "ChocolateChipCookies",
       "rule_format": {
         "version": "1.0"
+      },
+      "base_id": 300000000,
+      "web_theme": "partyTime",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Archipelago ChocolateChipCookies randomizer on your computer.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Archipelago Team"
+          ]
+        }
+      ],
+      "world_description": "Chocolate Chip Cookies is a game about baking the perfect chocolate chip cookies.\nNavigate through the kitchen regions, gather ingredients and tools, and follow the\nbaking process step by step to create delicious cookies!",
+      "slot_data": {
+        "randomize_items": 1
       }
     }
   },

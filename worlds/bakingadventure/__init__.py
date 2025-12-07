@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import ClassVar, Dict, Any
 from BaseClasses import Region, Entrance, Location, Item, Tutorial
 from worlds.AutoWorld import World, WebWorld
 from .Items import ChocolateChipCookiesItem, base_item_id, item_table
@@ -23,18 +23,38 @@ class ChocolateChipCookiesWeb(WebWorld):
 class ChocolateChipCookiesWorld(World):
     """
     Chocolate Chip Cookies is a game about baking the perfect chocolate chip cookies.
-    Navigate through the kitchen regions, gather ingredients and tools, and follow the 
+    Navigate through the kitchen regions, gather ingredients and tools, and follow the
     baking process step by step to create delicious cookies!
     """
-    
+
     game = "ChocolateChipCookies"
     web = ChocolateChipCookiesWeb()
     options_dataclass = ChocolateChipCookiesOptions
     options: ChocolateChipCookiesOptions
-    
+
     base_id = base_location_id
     item_name_to_id = {name: data.code for name, data in item_table.items() if data.code is not None}
     location_name_to_id = {name: data.id for name, data in location_table.items() if data.id is not None}
+
+    # Canonical item placements - where items belong in the "vanilla" game
+    # Used by exporter to distinguish canonical placements from always-locked items
+    canonical_placements: ClassVar[Dict[str, str]] = {
+        "Gather Mixing Bowls": "Mixing Bowls",
+        "Get Electric Mixer": "Electric Mixer",
+        "Find Measuring Tools": "Measuring Tools",
+        "Preheat Oven to 375F": "Preheated Oven",
+        "Line Baking Sheets": "Prepared Sheets",
+        "Soften Butter": "Softened Butter",
+        "Cream Butter and Sugars": "Butter Sugar Base",
+        "Add Eggs": "Egg Mixture",
+        "Add Vanilla": "Creamed Mixture",
+        "Measure Flour": "Measured Flour",
+        "Add Baking Soda and Salt": "Flour Mixture",
+        "Gradually Mix Dry into Wet": "Basic Dough",
+        "Fold in Chocolate Chips": "Cookie Dough",
+        "Scoop Dough onto Sheets": "Shaped Cookies",
+        "Bake for 9-11 Minutes": "Baked Cookies",
+    }
     
     def create_items(self) -> None:
         """Create items for the world."""
@@ -86,26 +106,7 @@ class ChocolateChipCookiesWorld(World):
     
     def _place_original_items(self) -> None:
         """Place items in their canonical locations when not randomized."""
-        # Item placement mapping from JSON
-        item_placements = {
-            "Gather Mixing Bowls": "Mixing Bowls",
-            "Get Electric Mixer": "Electric Mixer", 
-            "Find Measuring Tools": "Measuring Tools",
-            "Preheat Oven to 375F": "Preheated Oven",
-            "Line Baking Sheets": "Prepared Sheets",
-            "Soften Butter": "Softened Butter",
-            "Cream Butter and Sugars": "Butter Sugar Base",
-            "Add Eggs": "Egg Mixture",
-            "Add Vanilla": "Creamed Mixture",
-            "Measure Flour": "Measured Flour",
-            "Add Baking Soda and Salt": "Flour Mixture",
-            "Gradually Mix Dry into Wet": "Basic Dough",
-            "Fold in Chocolate Chips": "Cookie Dough",
-            "Scoop Dough onto Sheets": "Shaped Cookies",
-            "Bake for 9-11 Minutes": "Baked Cookies",
-        }
-        
-        for location_name, item_name in item_placements.items():
+        for location_name, item_name in self.canonical_placements.items():
             location = self.multiworld.get_location(location_name, self.player)
             item = self.create_item(item_name)
             location.place_locked_item(item)

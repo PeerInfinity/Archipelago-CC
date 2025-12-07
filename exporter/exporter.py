@@ -720,6 +720,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         'game_info': {},  # Game-specific information for frontend
         'starting_items': {}, # Starting items by player
         'helpers': {},  # Helper function definitions by player
+        'canonical_placements': {},  # Canonical item placements by player (vanilla/original locations)
     }
     
     # Dungeons will only be added if there's data to include
@@ -924,6 +925,24 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         except Exception as e:
             logger.error(f"Error processing starting items for player {player}: {str(e)}")
             export_data['starting_items'][player_str] = {'error': f"Failed to process starting items: {str(e)}"}
+
+        # Process canonical_placements - vanilla/original item locations
+        # This is read from a class attribute on the world, if it exists
+        try:
+            canonical_placements = {}
+            # Check for canonical_placements class attribute
+            if hasattr(world.__class__, 'canonical_placements'):
+                canonical_placements = dict(world.__class__.canonical_placements)
+                logger.debug(f"Found {len(canonical_placements)} canonical placements for player {player}")
+            # Also check instance attribute (in case it's set dynamically)
+            elif hasattr(world, 'canonical_placements'):
+                canonical_placements = dict(world.canonical_placements)
+                logger.debug(f"Found {len(canonical_placements)} canonical placements (instance) for player {player}")
+
+            export_data['canonical_placements'][player_str] = canonical_placements
+        except Exception as e:
+            logger.error(f"Error processing canonical_placements for player {player}: {str(e)}")
+            export_data['canonical_placements'][player_str] = {}
 
     # Add raw spoiler entrances data for debugging
     #if hasattr(multiworld, 'spoiler') and multiworld.spoiler and hasattr(multiworld.spoiler, 'entrances'):
@@ -1830,6 +1849,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         'items',
         'item_groups',
         'itempool_counts',
+        'canonical_placements',
         'progression_mapping',
         'starting_items',
         'settings',
@@ -1840,8 +1860,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     # Player-specific keys contain data nested under player IDs
     player_specific_keys = [
         'regions', 'dungeons', 'items', 'item_groups', 'progression_mapping',
-        'settings', 'start_regions', 'itempool_counts', 'game_info',
-        'starting_items', 'metamath_data'
+        'settings', 'start_regions', 'itempool_counts', 'canonical_placements',
+        'game_info', 'starting_items', 'metamath_data'
     ]
 
     # Prepare the combined export data for all players using the helper
