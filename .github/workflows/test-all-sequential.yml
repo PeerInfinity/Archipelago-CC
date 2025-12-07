@@ -247,7 +247,7 @@ jobs:
         env:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -264,7 +264,7 @@ jobs:
         env:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -287,7 +287,7 @@ jobs:
         env:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -305,7 +305,7 @@ jobs:
         env:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -320,7 +320,7 @@ jobs:
         env:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -343,7 +343,7 @@ jobs:
         env:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -524,7 +524,7 @@ jobs:
         env:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || 'spoiler-full' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -541,7 +541,7 @@ jobs:
         env:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || 'spoiler-full' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -564,7 +564,7 @@ jobs:
         env:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || 'spoiler-full' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -579,7 +579,7 @@ jobs:
         env:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || 'spoiler-full' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -767,7 +767,7 @@ jobs:
         env:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || 'multiclient' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -940,7 +940,7 @@ jobs:
         env:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -1111,7 +1111,7 @@ jobs:
         env:
           PYTHONUNBUFFERED: "1"
           OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}
-          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
