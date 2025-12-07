@@ -71,12 +71,14 @@ def compute_summary_stats(results: Dict) -> Dict:
         elif comp_2_3:
             stats['pass2_vs_pass3_different'] += 1
 
-        # Overall stability
-        all_identical = all(
+        # Overall stability - only count as unstable if Pass 2→3 or later differs
+        # (Pass 1→2 differences are expected due to JSON export format changes)
+        later_passes_identical = all(
             comp.get('identical', False)
-            for comp in comparisons.values()
+            for key, comp in comparisons.items()
+            if not key.startswith('1_vs_')
         )
-        if all_identical and comparisons:
+        if later_passes_identical and comparisons:
             stats['stable_count'] += 1
         elif comparisons:
             stats['unstable_count'] += 1
@@ -119,15 +121,16 @@ def generate_report(results: Dict) -> str:
         "2. **Pass 2**: Generate seed for Pass 1 -> `rules.json` -> world_generator -> `_worldgen2`",
         "3. **Pass 3**: Generate seed for Pass 2 -> `rules.json` -> world_generator -> `_worldgen3`",
         "",
-        "If the world generator is stable, consecutive passes should produce identical output.",
+        "If the world generator is stable, Pass 2→3 and later should produce identical output.",
+        "(Pass 1→2 differences are expected due to JSON export format normalization.)",
         "",
         "## Summary",
         "",
         "| Metric | Count |",
         "|--------|-------|",
         f"| Total Templates | {stats['total_templates']} |",
-        f"| Fully Stable (all passes identical) | {stats['stable_count']} |",
-        f"| Unstable (differences found) | {stats['unstable_count']} |",
+        f"| Stable (Pass 2+ identical) | {stats['stable_count']} |",
+        f"| Unstable (Pass 2+ differs) | {stats['unstable_count']} |",
         f"| Errors | {stats['error_count']} |",
         "",
         "### Pass Comparison Breakdown",
@@ -177,12 +180,14 @@ def generate_report(results: Dict) -> str:
             else:
                 pass_2_3 = '-'
 
-            all_identical = all(
+            # Only count as unstable if Pass 2→3 or later differs
+            later_passes_identical = all(
                 comp.get('identical', False)
-                for comp in comparisons.values()
+                for key, comp in comparisons.items()
+                if not key.startswith('1_vs_')
             ) if comparisons else False
 
-            if all_identical:
+            if later_passes_identical:
                 status = '✅ Stable'
             else:
                 status = '❌ Unstable'
@@ -191,24 +196,74 @@ def generate_report(results: Dict) -> str:
 
     lines.append("")
 
-    # Section for unstable worlds (differences found)
+    # Section for unstable worlds (Pass 2+ differences only)
     unstable_worlds = []
     for game_name, result in template_results.items():
         comparisons = result.get('comparisons', {})
         for comp_key, comparison in comparisons.items():
-            if comparison.get('identical') == False and comparison.get('differences'):
+            # Only include Pass 2+ comparisons (not 1_vs_*)
+            if not comp_key.startswith('1_vs_') and comparison.get('identical') == False and comparison.get('differences'):
                 unstable_worlds.append((game_name, comp_key, comparison))
 
     if unstable_worlds:
         lines.extend([
-            "## Unstable Worlds (Differences Found)",
+            "## Unstable Worlds (Pass 2+ Differences)",
             "",
-            "The following worlds produced different output between passes:",
+            "The following worlds produced different output between Pass 2 and later:",
             "",
         ])
 
         current_game = None
         for game_name, comp_key, comparison in sorted(unstable_worlds, key=lambda x: (x[0], x[1])):
+            if current_game != game_name:
+                if current_game is not None:
+                    lines.append("")
+                lines.append(f"### {game_name}")
+                lines.append("")
+                current_game = game_name
+
+            pass_a, pass_b = comp_key.split('_vs_')
+            lines.append(f"**Pass {pass_a} vs Pass {pass_b}:**")
+            lines.append("")
+
+            for diff in comparison.get('differences', [])[:5]:
+                diff_type = diff.get('type', 'unknown')
+                filename = diff.get('file', 'unknown')
+
+                if diff_type == 'content_mismatch':
+                    lines.append(f"- `{filename}`: content differs")
+                elif diff_type == 'missing_in_world2':
+                    lines.append(f"- `{filename}`: missing in later pass")
+                elif diff_type == 'missing_in_world1':
+                    lines.append(f"- `{filename}`: only in later pass")
+                else:
+                    lines.append(f"- `{filename}`: {diff_type}")
+
+            if len(comparison.get('differences', [])) > 5:
+                remaining = len(comparison['differences']) - 5
+                lines.append(f"- ... and {remaining} more differences")
+
+            lines.append("")
+
+    # Section for Pass 1→2 differences (informational, expected)
+    pass1_differences = []
+    for game_name, result in template_results.items():
+        comparisons = result.get('comparisons', {})
+        for comp_key, comparison in comparisons.items():
+            # Only include 1_vs_* comparisons
+            if comp_key.startswith('1_vs_') and comparison.get('identical') == False and comparison.get('differences'):
+                pass1_differences.append((game_name, comp_key, comparison))
+
+    if pass1_differences:
+        lines.extend([
+            "## Pass 1→2 Differences (Expected)",
+            "",
+            "These differences are expected due to JSON export format normalization:",
+            "",
+        ])
+
+        current_game = None
+        for game_name, comp_key, comparison in sorted(pass1_differences, key=lambda x: (x[0], x[1])):
             if current_game != game_name:
                 if current_game is not None:
                     lines.append("")

@@ -778,15 +778,18 @@ def main():
         results['results'][game_name] = template_result
 
         # Determine stability
+        # Only count as unstable if Pass 2→3 or later differs (Pass 1→2 differences are expected)
         if template_result['errors']:
             results['metadata']['error_count'] += 1
         else:
-            # Check if all comparisons are identical
-            all_identical = all(
+            comparisons = template_result['comparisons']
+            # Check consecutive passes starting from pass 2 (i.e., 2_vs_3, 3_vs_4, etc.)
+            later_passes_identical = all(
                 comp.get('identical', False)
-                for comp in template_result['comparisons'].values()
+                for key, comp in comparisons.items()
+                if not key.startswith('1_vs_')
             )
-            if all_identical:
+            if later_passes_identical:
                 results['metadata']['stable_count'] += 1
             else:
                 results['metadata']['unstable_count'] += 1
@@ -820,8 +823,8 @@ def main():
     print("SUMMARY")
     print("="*60)
     print(f"Total templates tested: {results['metadata']['total_templates']}")
-    print(f"Stable (all passes identical): {results['metadata']['stable_count']}")
-    print(f"Unstable (differences found): {results['metadata']['unstable_count']}")
+    print(f"Stable (Pass 2+ identical): {results['metadata']['stable_count']}")
+    print(f"Unstable (Pass 2+ differs): {results['metadata']['unstable_count']}")
     print(f"Errors: {results['metadata']['error_count']}")
 
     # Return non-zero if any instabilities or errors
