@@ -4,7 +4,7 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-12-06 12:14:32
+**Generated:** 2025-12-06 18:22:51
 
 ## Summary
 
