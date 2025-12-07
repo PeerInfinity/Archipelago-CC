@@ -233,7 +233,8 @@ def extract_multiclient_chart_data(results: Dict[str, Any]) -> List[Tuple[str, s
 
 
 def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float, bool, bool, Optional[bool], Optional[bool]]],
-                              metadata: Dict[str, Any], subtitle: str = "") -> str:
+                              metadata: Dict[str, Any], subtitle: str = "", is_worldgen: bool = False,
+                              other_version_link: Optional[str] = None) -> str:
     """Generate a markdown table for spoiler test data."""
     md_content = "# Archipelago Template Test Results Chart\n\n"
 
@@ -242,6 +243,13 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
 
     # Add link to summary document
     md_content += "[← Back to Test Results Summary](./test-results-summary.md)\n\n"
+
+    # Add cross-link to other version (original <-> worldgen)
+    if other_version_link:
+        if is_worldgen:
+            md_content += f"[View Original Template Results]({other_version_link})\n\n"
+        else:
+            md_content += f"[View WorldGen Template Results]({other_version_link})\n\n"
 
     if metadata:
         md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
@@ -352,13 +360,21 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
 
 
 def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int, int, int, int, int, bool, int, int, bool, bool, bool]],
-                                 metadata: Dict[str, Any], top_level_metadata: Optional[Dict[str, Any]] = None) -> str:
+                                 metadata: Dict[str, Any], top_level_metadata: Optional[Dict[str, Any]] = None,
+                                 is_worldgen: bool = False, other_version_link: Optional[str] = None) -> str:
     """Generate a markdown table for multiclient test data."""
     md_content = "# Archipelago Template Test Results Chart\n\n"
     md_content += "## Multiclient Test\n\n"
 
     # Add link to summary document
     md_content += "[← Back to Test Results Summary](./test-results-summary.md)\n\n"
+
+    # Add cross-link to other version (original <-> worldgen)
+    if other_version_link:
+        if is_worldgen:
+            md_content += f"[View Original Template Results]({other_version_link})\n\n"
+        else:
+            md_content += f"[View WorldGen Template Results]({other_version_link})\n\n"
 
     # Add generated timestamp
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
@@ -502,13 +518,21 @@ def extract_multiworld_chart_data(results: Dict[str, Any]) -> List[Dict[str, Any
 
 
 def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
-                                 metadata: Dict[str, Any], top_level_metadata: Optional[Dict[str, Any]] = None) -> str:
+                                 metadata: Dict[str, Any], top_level_metadata: Optional[Dict[str, Any]] = None,
+                                 is_worldgen: bool = False, other_version_link: Optional[str] = None) -> str:
     """Generate a markdown table for multiworld test data."""
     md_content = "# Archipelago Template Test Results Chart\n\n"
     md_content += "## Multiworld Test\n\n"
 
     # Add link to summary document
     md_content += "[← Back to Test Results Summary](./test-results-summary.md)\n\n"
+
+    # Add cross-link to other version (original <-> worldgen)
+    if other_version_link:
+        if is_worldgen:
+            md_content += f"[View Original Template Results]({other_version_link})\n\n"
+        else:
+            md_content += f"[View WorldGen Template Results]({other_version_link})\n\n"
 
     # Add generated timestamp
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
@@ -1184,17 +1208,25 @@ def main():
         print(f"Chart saved to: {output_path}")
         return 0
 
-    # Process all three test types
+    # Process all test types (original and WorldGen)
 
-    # Load minimal spoiler test results
+    # Load minimal spoiler test results (original and WorldGen)
     minimal_input = os.path.join(project_root, 'scripts/output/spoiler-minimal/test-results.json')
     minimal_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-spoilers-minimal.md')
+    minimal_wg_input = os.path.join(project_root, 'scripts/output/spoiler-minimal-worldgen/test-results.json')
+    minimal_wg_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-spoilers-minimal-worldgen.md')
 
-    if os.path.exists(minimal_input):
+    has_minimal = os.path.exists(minimal_input)
+    has_minimal_wg = os.path.exists(minimal_wg_input)
+
+    if has_minimal:
         minimal_results = load_test_results(minimal_input)
         minimal_data = extract_spoiler_chart_data(minimal_results)
+        # Cross-link to WorldGen version if it exists
+        wg_link = './test-results-spoilers-minimal-worldgen.md' if has_minimal_wg else None
         minimal_md = generate_spoiler_markdown(minimal_data, minimal_results.get('metadata', {}),
-                                              "Spoiler Test - Advancement Items Only")
+                                              "Spoiler Test - Advancement Items Only",
+                                              is_worldgen=False, other_version_link=wg_link)
         os.makedirs(os.path.dirname(minimal_output), exist_ok=True)
         with open(minimal_output, 'w') as f:
             f.write(minimal_md)
@@ -1202,15 +1234,36 @@ def main():
         print(f"Warning: Minimal spoiler test results not found: {minimal_input}")
         minimal_data = []
 
-    # Load full spoiler test results
+    if has_minimal_wg:
+        minimal_wg_results = load_test_results(minimal_wg_input)
+        minimal_wg_data = extract_spoiler_chart_data(minimal_wg_results)
+        # Cross-link to original version if it exists
+        orig_link = './test-results-spoilers-minimal.md' if has_minimal else None
+        minimal_wg_md = generate_spoiler_markdown(minimal_wg_data, minimal_wg_results.get('metadata', {}),
+                                                  "Spoiler Test - Advancement Items Only (WorldGen)",
+                                                  is_worldgen=True, other_version_link=orig_link)
+        os.makedirs(os.path.dirname(minimal_wg_output), exist_ok=True)
+        with open(minimal_wg_output, 'w') as f:
+            f.write(minimal_wg_md)
+    else:
+        print(f"Info: WorldGen minimal spoiler test results not found: {minimal_wg_input}")
+
+    # Load full spoiler test results (original and WorldGen)
     full_input = os.path.join(project_root, 'scripts/output/spoiler-full/test-results.json')
     full_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-spoilers-full.md')
+    full_wg_input = os.path.join(project_root, 'scripts/output/spoiler-full-worldgen/test-results.json')
+    full_wg_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-spoilers-full-worldgen.md')
 
-    if os.path.exists(full_input):
+    has_full = os.path.exists(full_input)
+    has_full_wg = os.path.exists(full_wg_input)
+
+    if has_full:
         full_results = load_test_results(full_input)
         full_data = extract_spoiler_chart_data(full_results)
+        wg_link = './test-results-spoilers-full-worldgen.md' if has_full_wg else None
         full_md = generate_spoiler_markdown(full_data, full_results.get('metadata', {}),
-                                           "Spoiler Test - All Locations")
+                                           "Spoiler Test - All Locations",
+                                           is_worldgen=False, other_version_link=wg_link)
         os.makedirs(os.path.dirname(full_output), exist_ok=True)
         with open(full_output, 'w') as f:
             f.write(full_md)
@@ -1218,21 +1271,40 @@ def main():
         print(f"Warning: Full spoiler test results not found: {full_input}")
         full_data = []
 
-    # Load multiclient test results
+    if has_full_wg:
+        full_wg_results = load_test_results(full_wg_input)
+        full_wg_data = extract_spoiler_chart_data(full_wg_results)
+        orig_link = './test-results-spoilers-full.md' if has_full else None
+        full_wg_md = generate_spoiler_markdown(full_wg_data, full_wg_results.get('metadata', {}),
+                                               "Spoiler Test - All Locations (WorldGen)",
+                                               is_worldgen=True, other_version_link=orig_link)
+        os.makedirs(os.path.dirname(full_wg_output), exist_ok=True)
+        with open(full_wg_output, 'w') as f:
+            f.write(full_wg_md)
+    else:
+        print(f"Info: WorldGen full spoiler test results not found: {full_wg_input}")
+
+    # Load multiclient test results (original and WorldGen)
     mp_input = os.path.join(project_root, 'scripts/output/multiclient/test-results.json')
     mp_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-multiclient.md')
+    mp_wg_input = os.path.join(project_root, 'scripts/output/multiclient-worldgen/test-results.json')
+    mp_wg_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-multiclient-worldgen.md')
 
-    if os.path.exists(mp_input):
+    has_mp = os.path.exists(mp_input)
+    has_mp_wg = os.path.exists(mp_wg_input)
+
+    if has_mp:
         mp_results = load_test_results(mp_input)
         mp_data = extract_multiclient_chart_data(mp_results)
-        # Extract top-level metadata for multiclient
         top_level_mp = {
             'timestamp': mp_results.get('timestamp'),
             'test_type': mp_results.get('test_type'),
             'test_mode': mp_results.get('test_mode'),
             'seed': mp_results.get('seed')
         }
-        mp_md = generate_multiclient_markdown(mp_data, mp_results.get('metadata', {}), top_level_mp)
+        wg_link = './test-results-multiclient-worldgen.md' if has_mp_wg else None
+        mp_md = generate_multiclient_markdown(mp_data, mp_results.get('metadata', {}), top_level_mp,
+                                              is_worldgen=False, other_version_link=wg_link)
         os.makedirs(os.path.dirname(mp_output), exist_ok=True)
         with open(mp_output, 'w') as f:
             f.write(mp_md)
@@ -1240,25 +1312,65 @@ def main():
         print(f"Warning: Multiclient test results not found: {mp_input}")
         mp_data = []
 
-    # Load multiworld test results
+    if has_mp_wg:
+        mp_wg_results = load_test_results(mp_wg_input)
+        mp_wg_data = extract_multiclient_chart_data(mp_wg_results)
+        top_level_mp_wg = {
+            'timestamp': mp_wg_results.get('timestamp'),
+            'test_type': mp_wg_results.get('test_type'),
+            'test_mode': mp_wg_results.get('test_mode'),
+            'seed': mp_wg_results.get('seed')
+        }
+        orig_link = './test-results-multiclient.md' if has_mp else None
+        mp_wg_md = generate_multiclient_markdown(mp_wg_data, mp_wg_results.get('metadata', {}), top_level_mp_wg,
+                                                  is_worldgen=True, other_version_link=orig_link)
+        os.makedirs(os.path.dirname(mp_wg_output), exist_ok=True)
+        with open(mp_wg_output, 'w') as f:
+            f.write(mp_wg_md)
+    else:
+        print(f"Info: WorldGen multiclient test results not found: {mp_wg_input}")
+
+    # Load multiworld test results (original and WorldGen)
     mw_input = os.path.join(project_root, 'scripts/output/multiworld/test-results.json')
     mw_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-multiworld.md')
+    mw_wg_input = os.path.join(project_root, 'scripts/output/multiworld-worldgen/test-results.json')
+    mw_wg_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-multiworld-worldgen.md')
+
+    has_mw = os.path.exists(mw_input)
+    has_mw_wg = os.path.exists(mw_wg_input)
 
     mw_data = None
-    if os.path.exists(mw_input):
+    if has_mw:
         mw_results = load_test_results(mw_input)
         mw_data = extract_multiworld_chart_data(mw_results)
-        # Extract top-level metadata for multiworld
         top_level_mw = {
             'timestamp': mw_results.get('timestamp'),
             'seed': mw_results.get('seed')
         }
-        mw_md = generate_multiworld_markdown(mw_data, mw_results.get('metadata', {}), top_level_mw)
+        wg_link = './test-results-multiworld-worldgen.md' if has_mw_wg else None
+        mw_md = generate_multiworld_markdown(mw_data, mw_results.get('metadata', {}), top_level_mw,
+                                             is_worldgen=False, other_version_link=wg_link)
         os.makedirs(os.path.dirname(mw_output), exist_ok=True)
         with open(mw_output, 'w') as f:
             f.write(mw_md)
     else:
         print(f"Warning: Multiworld test results not found: {mw_input}")
+
+    if has_mw_wg:
+        mw_wg_results = load_test_results(mw_wg_input)
+        mw_wg_data = extract_multiworld_chart_data(mw_wg_results)
+        top_level_mw_wg = {
+            'timestamp': mw_wg_results.get('timestamp'),
+            'seed': mw_wg_results.get('seed')
+        }
+        orig_link = './test-results-multiworld.md' if has_mw else None
+        mw_wg_md = generate_multiworld_markdown(mw_wg_data, mw_wg_results.get('metadata', {}), top_level_mw_wg,
+                                                 is_worldgen=True, other_version_link=orig_link)
+        os.makedirs(os.path.dirname(mw_wg_output), exist_ok=True)
+        with open(mw_wg_output, 'w') as f:
+            f.write(mw_wg_md)
+    else:
+        print(f"Info: WorldGen multiworld test results not found: {mw_wg_input}")
 
     # Load multitemplate minimal test results
     mtmin_input = os.path.join(project_root, 'scripts/output/multitemplate-minimal/test-results.json')

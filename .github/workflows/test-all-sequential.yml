@@ -66,15 +66,23 @@ on:
           - 'parallel-10-jobs'
         default: 'parallel-10-jobs'
 
-      multitemplate_tests:
-        description: 'Multitemplate tests'
+      # multitemplate_tests:
+      #   description: 'Multitemplate tests'
+      #   type: choice
+      #   options:
+      #     - 'skip'
+      #     - 'minimal-only'
+      #     - 'full-only'
+      #     - 'both'
+      #   default: 'both'
+
+      template_type:
+        description: 'Template type to test'
         type: choice
         options:
-          - 'skip'
-          - 'minimal-only'
-          - 'full-only'
-          - 'both'
-        default: 'both'
+          - 'original'
+          - 'worldgen'
+        default: 'original'
 
 permissions:
   contents: write  # Allow pushing commits and creating branches
@@ -120,13 +128,24 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Delete all test-results.json files
-          git rm -f scripts/output/spoiler-minimal/test-results.json || true
-          git rm -f scripts/output/spoiler-full/test-results.json || true
-          git rm -f scripts/output/multiclient/test-results.json || true
-          git rm -f scripts/output/multiworld/test-results.json || true
-          git rm -f scripts/output/multitemplate-minimal/test-results.json || true
-          git rm -f scripts/output/multitemplate-full/test-results.json || true
+          # Delete test-results.json files based on template_type selection
+          if [[ "${{ inputs.template_type }}" == "original" ]]; then
+            # Original template results
+            git rm -f scripts/output/spoiler-minimal/test-results.json || true
+            git rm -f scripts/output/spoiler-full/test-results.json || true
+            git rm -f scripts/output/multiclient/test-results.json || true
+            git rm -f scripts/output/multiworld/test-results.json || true
+          else
+            # WorldGen template results
+            git rm -f scripts/output/spoiler-minimal-worldgen/test-results.json || true
+            git rm -f scripts/output/spoiler-full-worldgen/test-results.json || true
+            git rm -f scripts/output/multiclient-worldgen/test-results.json || true
+            git rm -f scripts/output/multiworld-worldgen/test-results.json || true
+          fi
+
+          # Multitemplate results (commented out for now)
+          # git rm -f scripts/output/multitemplate-minimal/test-results.json || true
+          # git rm -f scripts/output/multitemplate-full/test-results.json || true
 
           # Commit if there are changes
           if ! git diff --staged --quiet; then
@@ -136,7 +155,7 @@ jobs:
 
   # Minimal Spoiler Tests (10 parallel jobs)
   test-minimal-spoiler:
-    name: Test Minimal Spoiler Split ${{ matrix.split_num }}
+    name: Test Minimal Spoiler Split ${{ matrix.split_num }} (${{ inputs.template_type }})
     runs-on: ubuntu-latest
     needs: setup-branch
     if: inputs.spoiler_tests == 'minimal-only' || inputs.spoiler_tests == 'both'
@@ -227,13 +246,16 @@ jobs:
         if: inputs.spoiler_mode == 'single-seed'
         env:
           PYTHONUNBUFFERED: "1"
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
             --seed ${{ inputs.start_seed }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
+            --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
+            ${PATTERN_FLAG} \
             --no-backup \
             -p
 
@@ -241,6 +263,8 @@ jobs:
         if: inputs.spoiler_mode == 'single-seed' && inputs.retest_failures != 'disabled'
         env:
           PYTHONUNBUFFERED: "1"
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -249,10 +273,11 @@ jobs:
             python scripts/test/test-all-templates.py \
               --retest \
               --retest-seed-specific \
-              --retest-from-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
+              --retest-from-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
               --retest-continue-after-failure \
               --seed ${{ inputs.start_seed }} \
-              --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
+              --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
+              ${PATTERN_FLAG} \
               --no-backup \
               -p
           done
@@ -261,13 +286,16 @@ jobs:
         if: inputs.spoiler_mode == 'single-seed' && inputs.test_generation_consistency
         env:
           PYTHONUNBUFFERED: "1"
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
             --seed ${{ inputs.start_seed }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
+            --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
+            ${PATTERN_FLAG} \
             --no-backup \
             --test-consistency \
             -p
@@ -276,11 +304,14 @@ jobs:
         if: inputs.spoiler_mode == '10-seeds'
         env:
           PYTHONUNBUFFERED: "1"
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
             --seed $((${{ inputs.start_seed }} + ${{ matrix.split_num }} - 1)) \
-            --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
+            --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
+            ${PATTERN_FLAG} \
             --no-backup \
             -p
 
@@ -288,6 +319,8 @@ jobs:
         if: inputs.spoiler_mode == '10-seeds' && inputs.retest_failures != 'disabled'
         env:
           PYTHONUNBUFFERED: "1"
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -296,10 +329,11 @@ jobs:
             python scripts/test/test-all-templates.py \
               --retest \
               --retest-seed-specific \
-              --retest-from-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
+              --retest-from-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
               --retest-continue-after-failure \
               --seed $((${{ inputs.start_seed }} + ${{ matrix.split_num }} - 1)) \
-              --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
+              --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
+              ${PATTERN_FLAG} \
               --no-backup \
               -p
           done
@@ -308,11 +342,14 @@ jobs:
         if: inputs.spoiler_mode == '10-seeds' && inputs.test_generation_consistency
         env:
           PYTHONUNBUFFERED: "1"
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
             --seed $((${{ inputs.start_seed }} + ${{ matrix.split_num }} - 1)) \
-            --output-file scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json \
+            --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
+            ${PATTERN_FLAG} \
             --no-backup \
             --test-consistency \
             -p
@@ -321,13 +358,13 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-minimal-spoiler-split-${{ matrix.split_num }}
-          path: scripts/output/spoiler-minimal/test-results-split-${{ matrix.split_num }}.json
+          name: test-results-minimal-spoiler-${{ inputs.template_type }}-split-${{ matrix.split_num }}
+          path: scripts/output/${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
   # Combine minimal spoiler results
   combine-minimal-spoiler:
-    name: Combine Minimal Spoiler Results
+    name: Combine Minimal Spoiler Results (${{ inputs.template_type }})
     runs-on: ubuntu-latest
     needs: test-minimal-spoiler
     if: ${{ !cancelled() && (inputs.spoiler_tests == 'minimal-only' || inputs.spoiler_tests == 'both') }}
@@ -355,24 +392,30 @@ jobs:
           path: artifacts
 
       - name: Combine test results
+        env:
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
         run: |
-          mkdir -p /tmp/merged-results/scripts/output/spoiler-minimal
+          mkdir -p /tmp/merged-results/scripts/output/${OUTPUT_DIR}
           python scripts/test/combine-test-results.py \
-            --input-files artifacts/test-results-minimal-spoiler-split-*/test-results-split-*.json \
-            --output-file /tmp/merged-results/scripts/output/spoiler-minimal/test-results.json
+            --input-files artifacts/test-results-minimal-spoiler-${{ inputs.template_type }}-split-*/test-results-split-*.json \
+            --output-file /tmp/merged-results/scripts/output/${OUTPUT_DIR}/test-results.json
 
       - name: Copy results and generate documentation
+        env:
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
         run: |
-          mkdir -p scripts/output/spoiler-minimal
-          cp /tmp/merged-results/scripts/output/spoiler-minimal/test-results.json \
-             scripts/output/spoiler-minimal/test-results.json
+          mkdir -p scripts/output/${OUTPUT_DIR}
+          cp /tmp/merged-results/scripts/output/${OUTPUT_DIR}/test-results.json \
+             scripts/output/${OUTPUT_DIR}/test-results.json
           python scripts/docs/generate-test-chart.py
 
       - name: Commit and push results
+        env:
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-minimal-worldgen' || 'spoiler-minimal' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f scripts/output/spoiler-minimal/test-results.json
+          git add -f scripts/output/${OUTPUT_DIR}/test-results.json
           git add docs/json/developer/test-results/*.md || true
 
           if ! git diff --staged --quiet; then
@@ -387,7 +430,7 @@ jobs:
 
   # Full Spoiler Tests (10 parallel jobs)
   test-full-spoiler:
-    name: Test Full Spoiler Split ${{ matrix.split_num }}
+    name: Test Full Spoiler Split ${{ matrix.split_num }} (${{ inputs.template_type }})
     runs-on: ubuntu-latest
     needs: [setup-branch, combine-minimal-spoiler]
     if: ${{ !cancelled() && (inputs.spoiler_tests == 'full-only' || inputs.spoiler_tests == 'both') && (needs.setup-branch.result == 'success') }}
@@ -480,13 +523,16 @@ jobs:
         if: inputs.spoiler_mode == 'single-seed'
         env:
           PYTHONUNBUFFERED: "1"
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || 'spoiler-full' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
             --seed ${{ inputs.start_seed }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --output-file scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json \
+            --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
+            ${PATTERN_FLAG} \
             --no-backup \
             -p
 
@@ -494,6 +540,8 @@ jobs:
         if: inputs.spoiler_mode == 'single-seed' && inputs.retest_failures != 'disabled'
         env:
           PYTHONUNBUFFERED: "1"
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || 'spoiler-full' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -502,10 +550,11 @@ jobs:
             python scripts/test/test-all-templates.py \
               --retest \
               --retest-seed-specific \
-              --retest-from-file scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json \
+              --retest-from-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
               --retest-continue-after-failure \
               --seed ${{ inputs.start_seed }} \
-              --output-file scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json \
+              --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
+              ${PATTERN_FLAG} \
               --no-backup \
               -p
           done
@@ -514,11 +563,14 @@ jobs:
         if: inputs.spoiler_mode == '10-seeds'
         env:
           PYTHONUNBUFFERED: "1"
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || 'spoiler-full' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
             --seed $((${{ inputs.start_seed }} + ${{ matrix.split_num }} - 1)) \
-            --output-file scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json \
+            --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
+            ${PATTERN_FLAG} \
             --no-backup \
             -p
 
@@ -526,6 +578,8 @@ jobs:
         if: inputs.spoiler_mode == '10-seeds' && inputs.retest_failures != 'disabled'
         env:
           PYTHONUNBUFFERED: "1"
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || 'spoiler-full' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
         run: |
           source .venv/bin/activate
           ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
@@ -534,10 +588,11 @@ jobs:
             python scripts/test/test-all-templates.py \
               --retest \
               --retest-seed-specific \
-              --retest-from-file scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json \
+              --retest-from-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
               --retest-continue-after-failure \
               --seed $((${{ inputs.start_seed }} + ${{ matrix.split_num }} - 1)) \
-              --output-file scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json \
+              --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
+              ${PATTERN_FLAG} \
               --no-backup \
               -p
           done
@@ -546,13 +601,13 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-full-spoiler-split-${{ matrix.split_num }}
-          path: scripts/output/spoiler-full/test-results-split-${{ matrix.split_num }}.json
+          name: test-results-full-spoiler-${{ inputs.template_type }}-split-${{ matrix.split_num }}
+          path: scripts/output/${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || 'spoiler-full' }}/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
   # Combine full spoiler results
   combine-full-spoiler:
-    name: Combine Full Spoiler Results
+    name: Combine Full Spoiler Results (${{ inputs.template_type }})
     runs-on: ubuntu-latest
     needs: test-full-spoiler
     if: ${{ !cancelled() && (inputs.spoiler_tests == 'full-only' || inputs.spoiler_tests == 'both') }}
@@ -580,24 +635,30 @@ jobs:
           path: artifacts
 
       - name: Combine test results
+        env:
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || 'spoiler-full' }}
         run: |
-          mkdir -p /tmp/merged-results/scripts/output/spoiler-full
+          mkdir -p /tmp/merged-results/scripts/output/${OUTPUT_DIR}
           python scripts/test/combine-test-results.py \
-            --input-files artifacts/test-results-full-spoiler-split-*/test-results-split-*.json \
-            --output-file /tmp/merged-results/scripts/output/spoiler-full/test-results.json
+            --input-files artifacts/test-results-full-spoiler-${{ inputs.template_type }}-split-*/test-results-split-*.json \
+            --output-file /tmp/merged-results/scripts/output/${OUTPUT_DIR}/test-results.json
 
       - name: Copy results and generate documentation
+        env:
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || 'spoiler-full' }}
         run: |
-          mkdir -p scripts/output/spoiler-full
-          cp /tmp/merged-results/scripts/output/spoiler-full/test-results.json \
-             scripts/output/spoiler-full/test-results.json
+          mkdir -p scripts/output/${OUTPUT_DIR}
+          cp /tmp/merged-results/scripts/output/${OUTPUT_DIR}/test-results.json \
+             scripts/output/${OUTPUT_DIR}/test-results.json
           python scripts/docs/generate-test-chart.py
 
       - name: Commit and push results
+        env:
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'spoiler-full-worldgen' || 'spoiler-full' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f scripts/output/spoiler-full/test-results.json
+          git add -f scripts/output/${OUTPUT_DIR}/test-results.json
           git add docs/json/developer/test-results/*.md || true
 
           if ! git diff --staged --quiet; then
@@ -606,13 +667,14 @@ jobs:
             Generated by workflow run: ${{ github.run_id }}
             Spoiler mode: ${{ inputs.spoiler_mode }}
             Start seed: ${{ inputs.start_seed }}
+            Template type: ${{ inputs.template_type }}
             "
             git push origin test-results-update
           fi
 
   # Multiclient Tests (10 parallel jobs)
   test-multiclient:
-    name: Test Multiclient Split ${{ matrix.split_num }}
+    name: Test Multiclient Split ${{ matrix.split_num }} (${{ inputs.template_type }})
     runs-on: ubuntu-latest
     needs: [setup-branch, combine-full-spoiler]
     if: ${{ !cancelled() && inputs.enable_multiclient && (needs.setup-branch.result == 'success') }}
@@ -704,13 +766,16 @@ jobs:
       - name: Run multiclient test
         env:
           PYTHONUNBUFFERED: "1"
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || 'multiclient' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
             --multiclient \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --output-file scripts/output/multiclient/test-results-split-${{ matrix.split_num }}.json \
+            --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
+            ${PATTERN_FLAG} \
             --no-backup \
             -p
 
@@ -718,13 +783,13 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-multiclient-split-${{ matrix.split_num }}
-          path: scripts/output/multiclient/test-results-split-${{ matrix.split_num }}.json
+          name: test-results-multiclient-${{ inputs.template_type }}-split-${{ matrix.split_num }}
+          path: scripts/output/${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || 'multiclient' }}/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
   # Combine multiclient results
   combine-multiclient:
-    name: Combine Multiclient Results
+    name: Combine Multiclient Results (${{ inputs.template_type }})
     runs-on: ubuntu-latest
     needs: test-multiclient
     if: ${{ !cancelled() && inputs.enable_multiclient }}
@@ -752,24 +817,30 @@ jobs:
           path: artifacts
 
       - name: Combine test results
+        env:
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || 'multiclient' }}
         run: |
-          mkdir -p /tmp/merged-results/scripts/output/multiclient
+          mkdir -p /tmp/merged-results/scripts/output/${OUTPUT_DIR}
           python scripts/test/combine-test-results.py \
-            --input-files artifacts/test-results-multiclient-split-*/test-results-split-*.json \
-            --output-file /tmp/merged-results/scripts/output/multiclient/test-results.json
+            --input-files artifacts/test-results-multiclient-${{ inputs.template_type }}-split-*/test-results-split-*.json \
+            --output-file /tmp/merged-results/scripts/output/${OUTPUT_DIR}/test-results.json
 
       - name: Copy results and generate documentation
+        env:
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || 'multiclient' }}
         run: |
-          mkdir -p scripts/output/multiclient
-          cp /tmp/merged-results/scripts/output/multiclient/test-results.json \
-             scripts/output/multiclient/test-results.json
+          mkdir -p scripts/output/${OUTPUT_DIR}
+          cp /tmp/merged-results/scripts/output/${OUTPUT_DIR}/test-results.json \
+             scripts/output/${OUTPUT_DIR}/test-results.json
           python scripts/docs/generate-test-chart.py
 
       - name: Commit and push results
+        env:
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || 'multiclient' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f scripts/output/multiclient/test-results.json
+          git add -f scripts/output/${OUTPUT_DIR}/test-results.json
           git add docs/json/developer/test-results/*.md || true
 
           if ! git diff --staged --quiet; then
@@ -780,9 +851,9 @@ jobs:
             git push origin test-results-update
           fi
 
-  # Multiworld Test (single job version)
+  # Multiworld Test (single job version) - Original templates
   test-multiworld-single:
-    name: Test Multiworld (Single Job)
+    name: Test Multiworld (Single Job) (${{ inputs.template_type }})
     runs-on: ubuntu-latest
     needs: [setup-branch, combine-multiclient]
     if: ${{ !cancelled() && inputs.enable_multiworld && inputs.multiworld_parallelization == 'single-job' && (needs.setup-branch.result == 'success') }}
@@ -868,13 +939,16 @@ jobs:
       - name: Run multiworld test
         env:
           PYTHONUNBUFFERED: "1"
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
             --multiworld \
             --multiworld-bisect-failures \
             --multiworld-second-pass \
-            --output-file scripts/output/multiworld/test-results.json \
+            --output-file scripts/output/${OUTPUT_DIR}/test-results.json \
+            ${PATTERN_FLAG} \
             --no-backup \
             -p
 
@@ -882,13 +956,13 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-multiworld-single
-          path: scripts/output/multiworld/test-results.json
+          name: test-results-multiworld-single-${{ inputs.template_type }}
+          path: scripts/output/${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}/test-results.json
           retention-days: 7
 
   # Combine multiworld results (single job version)
   combine-multiworld-single:
-    name: Combine Multiworld Results (Single Job)
+    name: Combine Multiworld Results (Single Job) (${{ inputs.template_type }})
     runs-on: ubuntu-latest
     needs: test-multiworld-single
     if: ${{ !cancelled() && inputs.enable_multiworld && inputs.multiworld_parallelization == 'single-job' }}
@@ -913,33 +987,38 @@ jobs:
       - name: Download test artifacts
         uses: actions/download-artifact@v4
         with:
-          name: test-results-multiworld-single
+          name: test-results-multiworld-single-${{ inputs.template_type }}
           path: artifacts
 
       - name: Copy results and generate documentation
+        env:
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}
         run: |
-          mkdir -p scripts/output/multiworld
-          cp artifacts/test-results.json scripts/output/multiworld/test-results.json
+          mkdir -p scripts/output/${OUTPUT_DIR}
+          cp artifacts/test-results.json scripts/output/${OUTPUT_DIR}/test-results.json
           python scripts/docs/generate-test-chart.py
 
       - name: Commit and push results
+        env:
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f scripts/output/multiworld/test-results.json
+          git add -f scripts/output/${OUTPUT_DIR}/test-results.json
           git add docs/json/developer/test-results/*.md || true
 
           if ! git diff --staged --quiet; then
             git commit -m "Update multiworld test results (sequential workflow - single job)
 
             Generated by workflow run: ${{ github.run_id }}
+            Template type: ${{ inputs.template_type }}
             "
             git push origin test-results-update
           fi
 
   # Multiworld Tests (10 parallel jobs)
   test-multiworld:
-    name: Test Multiworld Split ${{ matrix.split_num }}
+    name: Test Multiworld Split ${{ matrix.split_num }} (${{ inputs.template_type }})
     runs-on: ubuntu-latest
     needs: [setup-branch, combine-multiclient]
     if: ${{ !cancelled() && inputs.enable_multiworld && inputs.multiworld_parallelization == 'parallel-10-jobs' && (needs.setup-branch.result == 'success') }}
@@ -1031,6 +1110,8 @@ jobs:
       - name: Run multiworld test
         env:
           PYTHONUNBUFFERED: "1"
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern "WorldGen"' || '--exclude-pattern "WorldGen"' }}
         run: |
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
@@ -1039,7 +1120,8 @@ jobs:
             --multiworld-second-pass \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --output-file scripts/output/multiworld/test-results-split-${{ matrix.split_num }}.json \
+            --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
+            ${PATTERN_FLAG} \
             --no-backup \
             -p
 
@@ -1047,13 +1129,13 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-multiworld-split-${{ matrix.split_num }}
-          path: scripts/output/multiworld/test-results-split-${{ matrix.split_num }}.json
+          name: test-results-multiworld-${{ inputs.template_type }}-split-${{ matrix.split_num }}
+          path: scripts/output/${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
   # Combine multiworld results
   combine-multiworld:
-    name: Combine Multiworld Results
+    name: Combine Multiworld Results (${{ inputs.template_type }})
     runs-on: ubuntu-latest
     needs: test-multiworld
     if: ${{ !cancelled() && inputs.enable_multiworld && inputs.multiworld_parallelization == 'parallel-10-jobs' }}
@@ -1081,40 +1163,49 @@ jobs:
           path: artifacts
 
       - name: Combine test results
+        env:
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}
         run: |
-          mkdir -p /tmp/merged-results/scripts/output/multiworld
+          mkdir -p /tmp/merged-results/scripts/output/${OUTPUT_DIR}
           python scripts/test/combine-test-results.py \
-            --input-files artifacts/test-results-multiworld-split-*/test-results-split-*.json \
-            --output-file /tmp/merged-results/scripts/output/multiworld/test-results.json
+            --input-files artifacts/test-results-multiworld-${{ inputs.template_type }}-split-*/test-results-split-*.json \
+            --output-file /tmp/merged-results/scripts/output/${OUTPUT_DIR}/test-results.json
 
       - name: Copy results and generate documentation
+        env:
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}
         run: |
-          mkdir -p scripts/output/multiworld
-          cp /tmp/merged-results/scripts/output/multiworld/test-results.json \
-             scripts/output/multiworld/test-results.json
+          mkdir -p scripts/output/${OUTPUT_DIR}
+          cp /tmp/merged-results/scripts/output/${OUTPUT_DIR}/test-results.json \
+             scripts/output/${OUTPUT_DIR}/test-results.json
           python scripts/docs/generate-test-chart.py
 
       - name: Commit and push results
+        env:
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f scripts/output/multiworld/test-results.json
+          git add -f scripts/output/${OUTPUT_DIR}/test-results.json
           git add docs/json/developer/test-results/*.md || true
 
           if ! git diff --staged --quiet; then
             git commit -m "Update multiworld test results (sequential workflow)
 
             Generated by workflow run: ${{ github.run_id }}
+            Template type: ${{ inputs.template_type }}
             "
             git push origin test-results-update
           fi
 
-  # Optional: Minimal Multitemplate Tests (10 parallel jobs)
+  # Optional: Minimal Multitemplate Tests (10 parallel jobs) - DISABLED
   test-minimal-multitemplate:
     name: Test Minimal Multitemplate Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     needs: [setup-branch, combine-multiworld, combine-multiworld-single]
-    if: ${{ !cancelled() && (inputs.multitemplate_tests == 'minimal-only' || inputs.multitemplate_tests == 'both') && (needs.setup-branch.result == 'success') }}
+    # Multitemplate tests are disabled - uncomment the line below and remove 'if: false' to re-enable
+    # if: ${{ !cancelled() && (inputs.multitemplate_tests == 'minimal-only' || inputs.multitemplate_tests == 'both') && (needs.setup-branch.result == 'success') }}
+    if: false
     timeout-minutes: 180
 
     strategy:
@@ -1227,12 +1318,14 @@ jobs:
           path: scripts/output/multitemplate-minimal/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
-  # Combine minimal multitemplate results
+  # Combine minimal multitemplate results - DISABLED
   combine-minimal-multitemplate:
     name: Combine Minimal Multitemplate Results
     runs-on: ubuntu-latest
     needs: test-minimal-multitemplate
-    if: ${{ !cancelled() && (inputs.multitemplate_tests == 'minimal-only' || inputs.multitemplate_tests == 'both') }}
+    # Multitemplate tests are disabled - uncomment the line below and remove 'if: false' to re-enable
+    # if: ${{ !cancelled() && (inputs.multitemplate_tests == 'minimal-only' || inputs.multitemplate_tests == 'both') }}
+    if: false
 
     steps:
       - name: Checkout test-results-update branch
@@ -1285,12 +1378,14 @@ jobs:
             git push origin test-results-update
           fi
 
-  # Optional: Full Multitemplate Tests (10 parallel jobs)
+  # Optional: Full Multitemplate Tests (10 parallel jobs) - DISABLED
   test-full-multitemplate:
     name: Test Full Multitemplate Split ${{ matrix.split_num }}
     runs-on: ubuntu-latest
     needs: [setup-branch, combine-minimal-multitemplate]
-    if: ${{ !cancelled() && (inputs.multitemplate_tests == 'full-only' || inputs.multitemplate_tests == 'both') && (needs.setup-branch.result == 'success') }}
+    # Multitemplate tests are disabled - uncomment the line below and remove 'if: false' to re-enable
+    # if: ${{ !cancelled() && (inputs.multitemplate_tests == 'full-only' || inputs.multitemplate_tests == 'both') && (needs.setup-branch.result == 'success') }}
+    if: false
     timeout-minutes: 180
 
     strategy:
@@ -1403,12 +1498,14 @@ jobs:
           path: scripts/output/multitemplate-full/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
-  # Combine full multitemplate results
+  # Combine full multitemplate results - DISABLED
   combine-full-multitemplate:
     name: Combine Full Multitemplate Results
     runs-on: ubuntu-latest
     needs: test-full-multitemplate
-    if: ${{ !cancelled() && (inputs.multitemplate_tests == 'full-only' || inputs.multitemplate_tests == 'both') }}
+    # Multitemplate tests are disabled - uncomment the line below and remove 'if: false' to re-enable
+    # if: ${{ !cancelled() && (inputs.multitemplate_tests == 'full-only' || inputs.multitemplate_tests == 'both') }}
+    if: false
 
     steps:
       - name: Checkout test-results-update branch

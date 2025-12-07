@@ -243,12 +243,20 @@ set.mm
 
 scripts/output/spoiler-minimal/test-results-*
 scripts/output/spoiler-minimal/test-results_*
+scripts/output/spoiler-minimal-worldgen/test-results-*
+scripts/output/spoiler-minimal-worldgen/test-results_*
 scripts/output/spoiler-full/test-results-*
 scripts/output/spoiler-full/test-results_*
+scripts/output/spoiler-full-worldgen/test-results-*
+scripts/output/spoiler-full-worldgen/test-results_*
 scripts/output/multiclient/test-results-*
 scripts/output/multiclient/test-results_*
+scripts/output/multiclient-worldgen/test-results-*
+scripts/output/multiclient-worldgen/test-results_*
 scripts/output/multiworld/test-results-*
 scripts/output/multiworld/test-results_*
+scripts/output/multiworld-worldgen/test-results-*
+scripts/output/multiworld-worldgen/test-results_*
 scripts/output/multitemplate-minimal/test-results-*
 scripts/output/multitemplate-minimal/test-results_*
 scripts/output/multitemplate-full/test-results-*
