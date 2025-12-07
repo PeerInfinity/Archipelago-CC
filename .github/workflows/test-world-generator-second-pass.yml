@@ -1,0 +1,356 @@
+name: Test World Generator Second Pass
+
+on:
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: 'Seed number to use for testing'
+        required: true
+        type: number
+        default: 1
+
+      canonical_seed1:
+        description: 'Use canonical seed 1 placement'
+        type: boolean
+        default: true
+
+      assume_first_pass:
+        description: 'Assume first pass _worldgen worlds already exist (requires previous test-world-generator run)'
+        type: boolean
+        default: true
+
+      include_list:
+        description: 'Comma-separated list of templates to test (e.g., "Adventure,Clique"). Leave empty for all.'
+        type: string
+        default: ''
+
+      delete_existing_results:
+        description: 'Delete existing test-results.json before testing'
+        type: boolean
+        default: true
+
+      debug_mode:
+        description: 'Debug mode - only process Adventure template'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  # Initial setup job
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Create or switch to test-results-update branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin
+
+          if git ls-remote --exit-code --heads origin test-results-update; then
+            git checkout test-results-update
+            git pull origin test-results-update
+            git rm -rf .
+            git checkout origin/main -- .
+            if ! git diff --staged --quiet; then
+              git commit -m "Sync test-results-update with main"
+              git push origin test-results-update
+            fi
+          else
+            git checkout -b test-results-update origin/main
+          fi
+
+      - name: Delete existing test results
+        if: inputs.delete_existing_results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Delete second pass test results
+          git rm -f scripts/output/world-generator-second-pass/test-results.json || true
+          git rm -f scripts/output/world-generator-second-pass/test-results-split-*.json || true
+          git rm -f docs/json/developer/test-results/test-results-world-generator-second-pass.md || true
+
+          # Commit if there are changes
+          if ! git diff --staged --quiet; then
+            git commit -m "Delete existing world generator second pass test results before new test run"
+            git push origin test-results-update
+          fi
+
+  # Run second pass tests - 10 parallel jobs
+  run-tests:
+    name: Second Pass Test (Split ${{ matrix.split_num }})
+    runs-on: ubuntu-latest
+    needs: setup
+    timeout-minutes: 180
+
+    strategy:
+      fail-fast: false
+      matrix:
+        split_num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        split_total: [10]
+
+    steps:
+      - name: Checkout test-results-update branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-results-update
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Cache Python virtual environment
+        uses: actions/cache@v4
+        id: cache-venv
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements.txt') }}
+
+      - name: Create virtual environment and install dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run ModuleUpdate
+        run: |
+          source .venv/bin/activate
+          python ModuleUpdate.py --yes
+
+      - name: Configure host settings
+        run: |
+          source .venv/bin/activate
+          python Launcher.py --update_settings
+          python scripts/setup/update_host_settings.py minimal-spoilers
+
+      - name: Generate templates
+        run: |
+          source .venv/bin/activate
+          rm -f Players/Templates/*.yaml
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v4
+        id: cache-node
+        with:
+          path: node_modules
+          key: node-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Node.js dependencies
+        if: steps.cache-node.outputs.cache-hit != 'true'
+        run: npm install
+
+      - name: Start HTTP server
+        run: |
+          python -m http.server 8000 &
+          sleep 2
+
+      # If NOT assuming first pass, run full first pass generation
+      - name: Run first pass (generate _worldgen worlds)
+        if: ${{ !inputs.assume_first_pass && (!inputs.debug_mode || matrix.split_num == 1) }}
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-world-generator.py \
+            --seed ${{ inputs.seed }} \
+            --every-nth ${{ matrix.split_total }} \
+            --skip-first $((${{ matrix.split_num }} - 1)) \
+            --output-file scripts/output/world-generator/test-results-first-pass-split-${{ matrix.split_num }}.json \
+            --phase all \
+            --skip-cleanup \
+            ${{ inputs.canonical_seed1 && '--canonical-seed1' || '' }} \
+            ${{ inputs.debug_mode && '--include-list Adventure.yaml' || '' }}
+
+      # Regenerate templates after first pass (to pick up _worldgen worlds)
+      - name: Regenerate templates after first pass
+        if: ${{ !inputs.assume_first_pass }}
+        run: |
+          source .venv/bin/activate
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+      - name: Run second pass test
+        if: ${{ !inputs.debug_mode || matrix.split_num == 1 }}
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          source .venv/bin/activate
+
+          # Build include list argument
+          INCLUDE_ARG=""
+          if [ -n "${{ inputs.include_list }}" ]; then
+            INCLUDE_ARG="--include-list $(echo '${{ inputs.include_list }}' | tr ',' ' ')"
+          fi
+          if [ "${{ inputs.debug_mode }}" = "true" ]; then
+            INCLUDE_ARG="--include-list Adventure"
+          fi
+
+          python scripts/test/test-world-generator-second-pass.py \
+            --seed ${{ inputs.seed }} \
+            --every-nth ${{ matrix.split_total }} \
+            --skip-first $((${{ matrix.split_num }} - 1)) \
+            --output-file scripts/output/world-generator-second-pass/test-results-split-${{ matrix.split_num }}.json \
+            --skip-cleanup \
+            ${{ inputs.assume_first_pass && '--assume-first-pass' || '' }} \
+            ${{ inputs.canonical_seed1 && '--canonical-seed1' || '' }} \
+            $INCLUDE_ARG
+
+      - name: Upload test results
+        if: ${{ !cancelled() && (!inputs.debug_mode || matrix.split_num == 1) }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: second-pass-results-split-${{ matrix.split_num }}
+          path: scripts/output/world-generator-second-pass/test-results-split-${{ matrix.split_num }}.json
+          retention-days: 7
+
+  # Combine results and generate report
+  combine-results:
+    name: Combine Results and Generate Report
+    runs-on: ubuntu-latest
+    needs: run-tests
+    if: ${{ always() && needs.setup.result == 'success' }}
+
+    steps:
+      - name: Checkout test-results-update branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-results-update
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Download all test result artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Combine test results
+        run: |
+          mkdir -p scripts/output/world-generator-second-pass
+
+          # Combine split results
+          if ls artifacts/second-pass-results-split-*/test-results-split-*.json 1> /dev/null 2>&1; then
+            python scripts/test/combine-test-results.py \
+              --input-files artifacts/second-pass-results-split-*/test-results-split-*.json \
+              --output-file scripts/output/world-generator-second-pass/test-results.json
+          else
+            echo "No results found"
+          fi
+
+      - name: Generate markdown report
+        run: |
+          python scripts/docs/generate-world-generator-second-pass-report.py
+
+      - name: Commit and push results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add -f scripts/output/world-generator-second-pass/test-results.json || true
+          git add -f docs/json/developer/test-results/test-results-world-generator-second-pass.md || true
+
+          if ! git diff --staged --quiet; then
+            git commit -m "Update world generator second pass test results
+
+          Generated by workflow run: ${{ github.run_id }}
+          Seed: ${{ inputs.seed }}
+          Canonical seed 1: ${{ inputs.canonical_seed1 }}
+          Assume first pass: ${{ inputs.assume_first_pass }}
+          "
+            git push origin test-results-update
+          fi
+
+  # Cleanup
+  cleanup:
+    name: Cleanup
+    runs-on: ubuntu-latest
+    needs: [combine-results]
+    if: ${{ always() }}
+
+    steps:
+      - name: Checkout test-results-update branch
+        uses: actions/checkout@v4
+        with:
+          ref: test-results-update
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Cache Python virtual environment
+        uses: actions/cache@v4
+        id: cache-venv
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements.txt') }}
+
+      - name: Create virtual environment and install dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run ModuleUpdate
+        run: |
+          source .venv/bin/activate
+          python ModuleUpdate.py --yes
+
+      - name: Cleanup test artifacts
+        run: |
+          source .venv/bin/activate
+
+          # Clean _worldgen and _worldgen2 worlds
+          find worlds -maxdepth 1 -type d -name '*_worldgen' -exec rm -rf {} + 2>/dev/null || true
+          find worlds -maxdepth 1 -type d -name '*_worldgen2' -exec rm -rf {} + 2>/dev/null || true
+
+          # Clean _worldgen and _worldgen2 templates
+          find Players/Templates -name '* WorldGen.yaml' -delete 2>/dev/null || true
+          find Players/Templates -name '* WorldGen2.yaml' -delete 2>/dev/null || true
+
+          # Clean _worldgen and _worldgen2 presets
+          find frontend/presets -maxdepth 1 -type d -name '*_worldgen' -exec rm -rf {} + 2>/dev/null || true
+          find frontend/presets -maxdepth 1 -type d -name '*_worldgen2' -exec rm -rf {} + 2>/dev/null || true
+
+          # Regenerate clean templates
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
+
+          echo "Cleanup complete."
