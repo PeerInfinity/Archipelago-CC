@@ -644,8 +644,17 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
         for entry in entries_with_templates:
             game_name = entry['game_name']
             templates_in_multiworld = entry['templates_in_multiworld']
+            pass_fail = entry['pass_fail']
 
-            md_content += f"### {game_name}\n\n"
+            # Determine result icon
+            if pass_fail.lower() == 'passed':
+                result_icon = "✅"
+            elif 'skipped' in pass_fail.lower() or 'prerequisites' in pass_fail.lower():
+                result_icon = "⚫"
+            else:
+                result_icon = "❌"
+
+            md_content += f"### {game_name} {result_icon}\n\n"
             md_content += "| Player # | Template |\n"
             md_content += "|----------|----------|\n"
 
@@ -724,6 +733,31 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
             md_content += f"| {game_name} | {first_pass_mw_size} | {second_pass_mw_size} | {second_pass_player_num} | {result_icon} |\n"
 
         md_content += "\n"
+
+        # Add Second Pass Templates in Multiworld subsection
+        md_content += "### Second Pass Templates in Multiworld\n\n"
+        md_content += "Shows which templates were in the multiworld when each game was tested in the second pass:\n\n"
+
+        for entry in entries_with_second_pass:
+            game_name = entry['game_name']
+            second_pass = entry['second_pass']
+            second_pass_templates = second_pass.get('templates_in_multiworld', {})
+
+            if second_pass_templates:
+                second_pass_success = second_pass.get('success', False)
+                result_icon = "✅" if second_pass_success else "❌"
+
+                md_content += f"#### {game_name} {result_icon}\n\n"
+                md_content += "| Player # | Template |\n"
+                md_content += "|----------|----------|\n"
+
+                # Sort by player number
+                for player_key in sorted(second_pass_templates.keys(), key=lambda x: int(x.split('_')[1])):
+                    player_num = player_key.split('_')[1]
+                    template_name = second_pass_templates[player_key]
+                    md_content += f"| {player_num} | {template_name} |\n"
+
+                md_content += "\n"
 
     md_content += "\n## Notes\n\n"
     md_content += "- **Player #:** The player number assigned to this template in the multiworld\n"

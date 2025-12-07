@@ -4,7 +4,7 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-12-07 03:34:25
+**Generated:** 2025-12-07 09:34:53
 
 ## Summary
 
@@ -104,144 +104,144 @@
 
 Shows which templates were in the multiworld when each game was tested:
 
-### A Hat in Time
+### A Hat in Time ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Hat in Time.yaml |
 
-### A Link to the Past
+### A Link to the Past ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Link to the Past.yaml |
 
-### A Short Hike
+### A Short Hike ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
 
-### APQuest
+### APQuest ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | APQuest.yaml |
 
-### Adventure
+### Adventure ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | Adventure.yaml |
 
-### Aquaria
+### Aquaria ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
 
-### Bomb Rush Cyberfunk
+### Bomb Rush Cyberfunk ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | Bomb Rush Cyberfunk.yaml |
 
-### Bumper Stickers
+### Bumper Stickers ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | Bumper Stickers.yaml |
 
-### Castlevania - Circle of the Moon
+### Castlevania - Circle of the Moon ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | Castlevania - Circle of the Moon.yaml |
 
-### Castlevania 64
+### Castlevania 64 ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | Castlevania 64.yaml |
 
-### Celeste (Open World)
+### Celeste (Open World) ❌
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Hat in Time.yaml |
 | 2 | Celeste (Open World).yaml |
 
-### Celeste 64
+### Celeste 64 ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Link to the Past.yaml |
 | 2 | Celeste 64.yaml |
 
-### ChecksFinder
+### ChecksFinder ❌
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
 | 2 | ChecksFinder.yaml |
 
-### ChocolateChipCookies
+### ChocolateChipCookies ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | APQuest.yaml |
 | 2 | ChocolateChipCookies.yaml |
 
-### Choo-Choo Charles
+### Choo-Choo Charles ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | Adventure.yaml |
 | 2 | Choo-Choo Charles.yaml |
 
-### Civilization VI
+### Civilization VI ❌
 
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
 | 2 | Civilization VI.yaml |
 
-### DLCQuest
+### DLCQuest ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | Bomb Rush Cyberfunk.yaml |
 | 2 | DLCQuest.yaml |
 
-### DOOM 1993
+### DOOM 1993 ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | Bumper Stickers.yaml |
 | 2 | DOOM 1993.yaml |
 
-### DOOM II
+### DOOM II ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | Castlevania - Circle of the Moon.yaml |
 | 2 | DOOM II.yaml |
 
-### Dark Souls III
+### Dark Souls III ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | Castlevania 64.yaml |
 | 2 | Dark Souls III.yaml |
 
-### Donkey Kong Country 3
+### Donkey Kong Country 3 ❌
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Hat in Time.yaml |
 | 2 | Donkey Kong Country 3.yaml |
 
-### Factorio
+### Factorio ❌
 
 | Player # | Template |
 |----------|----------|
@@ -249,14 +249,14 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Celeste 64.yaml |
 | 3 | Factorio.yaml |
 
-### Faxanadu
+### Faxanadu ❌
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
 | 2 | Faxanadu.yaml |
 
-### Final Fantasy Mystic Quest
+### Final Fantasy Mystic Quest ✅
 
 | Player # | Template |
 |----------|----------|
@@ -264,7 +264,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | ChocolateChipCookies.yaml |
 | 3 | Final Fantasy Mystic Quest.yaml |
 
-### Heretic
+### Heretic ✅
 
 | Player # | Template |
 |----------|----------|
@@ -272,14 +272,14 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Choo-Choo Charles.yaml |
 | 3 | Heretic.yaml |
 
-### Hylics 2
+### Hylics 2 ❌
 
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
 | 2 | Hylics 2.yaml |
 
-### Inscryption
+### Inscryption ❌
 
 | Player # | Template |
 |----------|----------|
@@ -287,7 +287,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | DLCQuest.yaml |
 | 3 | Inscryption.yaml |
 
-### Jak and Daxter: The Precursor Legacy
+### Jak and Daxter: The Precursor Legacy ❌
 
 | Player # | Template |
 |----------|----------|
@@ -295,7 +295,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | DOOM 1993.yaml |
 | 3 | Jak and Daxter The Precursor Legacy.yaml |
 
-### Kingdom Hearts
+### Kingdom Hearts ❌
 
 | Player # | Template |
 |----------|----------|
@@ -303,7 +303,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Dark Souls III.yaml |
 | 3 | Kingdom Hearts.yaml |
 
-### Kingdom Hearts 2
+### Kingdom Hearts 2 ❌
 
 | Player # | Template |
 |----------|----------|
@@ -311,14 +311,14 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | DOOM II.yaml |
 | 3 | Kingdom Hearts 2.yaml |
 
-### Kirby's Dream Land 3
+### Kirby's Dream Land 3 ❌
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Hat in Time.yaml |
 | 2 | Kirby's Dream Land 3.yaml |
 
-### Links Awakening DX
+### Links Awakening DX ❌
 
 | Player # | Template |
 |----------|----------|
@@ -327,7 +327,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Links Awakening DX.yaml |
 
-### Lufia II Ancient Cave
+### Lufia II Ancient Cave ✅
 
 | Player # | Template |
 |----------|----------|
@@ -336,14 +336,14 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Heretic.yaml |
 | 4 | Lufia II Ancient Cave.yaml |
 
-### Mario & Luigi Superstar Saga
+### Mario & Luigi Superstar Saga ❌
 
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
 | 2 | Mario & Luigi Superstar Saga.yaml |
 
-### MathProof2p2e4
+### MathProof2p2e4 ✅
 
 | Player # | Template |
 |----------|----------|
@@ -351,7 +351,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | DLCQuest.yaml |
 | 3 | MathProof2p2e4.yaml |
 
-### MegaMan Battle Network 3
+### MegaMan Battle Network 3 ❌
 
 | Player # | Template |
 |----------|----------|
@@ -359,7 +359,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | DOOM II.yaml |
 | 3 | MegaMan Battle Network 3.yaml |
 
-### Meritous
+### Meritous ✅
 
 | Player # | Template |
 |----------|----------|
@@ -367,14 +367,14 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Dark Souls III.yaml |
 | 3 | Meritous.yaml |
 
-### Metamath
+### Metamath ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Hat in Time.yaml |
 | 2 | Metamath.yaml |
 
-### Muse Dash
+### Muse Dash ✅
 
 | Player # | Template |
 |----------|----------|
@@ -382,14 +382,14 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Celeste 64.yaml |
 | 3 | Muse Dash.yaml |
 
-### Noita
+### Noita ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
 | 2 | Noita.yaml |
 
-### Overcooked! 2
+### Overcooked! 2 ✅
 
 | Player # | Template |
 |----------|----------|
@@ -399,14 +399,14 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Lufia II Ancient Cave.yaml |
 | 5 | Overcooked! 2.yaml |
 
-### Paint
+### Paint ❌
 
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
 | 2 | Paint.yaml |
 
-### Pokemon Emerald
+### Pokemon Emerald ✅
 
 | Player # | Template |
 |----------|----------|
@@ -415,7 +415,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | MathProof2p2e4.yaml |
 | 4 | Pokemon Emerald.yaml |
 
-### Pokemon Red and Blue
+### Pokemon Red and Blue ✅
 
 | Player # | Template |
 |----------|----------|
@@ -423,7 +423,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | DOOM 1993.yaml |
 | 3 | Pokemon Red and Blue.yaml |
 
-### Raft
+### Raft ❌
 
 | Player # | Template |
 |----------|----------|
@@ -431,7 +431,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | DOOM II.yaml |
 | 3 | Raft.yaml |
 
-### Risk of Rain 2
+### Risk of Rain 2 ❌
 
 | Player # | Template |
 |----------|----------|
@@ -440,7 +440,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Meritous.yaml |
 | 4 | Risk of Rain 2.yaml |
 
-### Saving Princess
+### Saving Princess ❌
 
 | Player # | Template |
 |----------|----------|
@@ -449,7 +449,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Muse Dash.yaml |
 | 4 | Saving Princess.yaml |
 
-### Secret of Evermore
+### Secret of Evermore ✅
 
 | Player # | Template |
 |----------|----------|
@@ -457,7 +457,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Noita.yaml |
 | 3 | Secret of Evermore.yaml |
 
-### Shivers
+### Shivers ✅
 
 | Player # | Template |
 |----------|----------|
@@ -466,7 +466,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Shivers.yaml |
 
-### Sonic Adventure 2 Battle
+### Sonic Adventure 2 Battle ❌
 
 | Player # | Template |
 |----------|----------|
@@ -477,14 +477,14 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Overcooked! 2.yaml |
 | 6 | Sonic Adventure 2 Battle.yaml |
 
-### Starcraft 2
+### Starcraft 2 ❌
 
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
 | 2 | Starcraft 2.yaml |
 
-### Stardew Valley
+### Stardew Valley ❌
 
 | Player # | Template |
 |----------|----------|
@@ -494,7 +494,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Pokemon Emerald.yaml |
 | 5 | Stardew Valley.yaml |
 
-### Subnautica
+### Subnautica ❌
 
 | Player # | Template |
 |----------|----------|
@@ -503,7 +503,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Pokemon Red and Blue.yaml |
 | 4 | Subnautica.yaml |
 
-### Super Mario 64
+### Super Mario 64 ❌
 
 | Player # | Template |
 |----------|----------|
@@ -511,7 +511,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | DOOM II.yaml |
 | 3 | Super Mario 64.yaml |
 
-### Super Mario Land 2
+### Super Mario Land 2 ❌
 
 | Player # | Template |
 |----------|----------|
@@ -520,7 +520,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Meritous.yaml |
 | 4 | Super Mario Land 2.yaml |
 
-### Super Mario World
+### Super Mario World ❌
 
 | Player # | Template |
 |----------|----------|
@@ -528,7 +528,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Metamath.yaml |
 | 3 | Super Mario World.yaml |
 
-### Super Metroid
+### Super Metroid ❌
 
 | Player # | Template |
 |----------|----------|
@@ -537,7 +537,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Muse Dash.yaml |
 | 4 | Super Metroid.yaml |
 
-### TOEM original
+### TOEM original ❌
 
 | Player # | Template |
 |----------|----------|
@@ -546,7 +546,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Secret of Evermore.yaml |
 | 4 | TOEM original.yaml |
 
-### TOEM rule builder
+### TOEM rule builder ❌
 
 | Player # | Template |
 |----------|----------|
@@ -556,14 +556,14 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Shivers.yaml |
 | 5 | TOEM rule builder.yaml |
 
-### Terraria
+### Terraria ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
 | 2 | Terraria.yaml |
 
-### The Legend of Zelda
+### The Legend of Zelda ❌
 
 | Player # | Template |
 |----------|----------|
@@ -573,7 +573,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Pokemon Emerald.yaml |
 | 5 | The Legend of Zelda.yaml |
 
-### The Messenger
+### The Messenger ✅
 
 | Player # | Template |
 |----------|----------|
@@ -582,7 +582,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Pokemon Red and Blue.yaml |
 | 4 | The Messenger.yaml |
 
-### The Wind Waker
+### The Wind Waker ❌
 
 | Player # | Template |
 |----------|----------|
@@ -590,7 +590,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | DOOM II.yaml |
 | 3 | The Wind Waker.yaml |
 
-### Timespinner
+### Timespinner ✅
 
 | Player # | Template |
 |----------|----------|
@@ -598,7 +598,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Metamath.yaml |
 | 3 | Timespinner.yaml |
 
-### Undertale
+### Undertale ❌
 
 | Player # | Template |
 |----------|----------|
@@ -607,7 +607,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Muse Dash.yaml |
 | 4 | Undertale.yaml |
 
-### Wargroove
+### Wargroove ✅
 
 | Player # | Template |
 |----------|----------|
@@ -617,7 +617,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Shivers.yaml |
 | 5 | Wargroove.yaml |
 
-### WebDevJourney
+### WebDevJourney ✅
 
 | Player # | Template |
 |----------|----------|
@@ -628,7 +628,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Overcooked! 2.yaml |
 | 6 | WebDevJourney.yaml |
 
-### Yacht Dice
+### Yacht Dice ❌
 
 | Player # | Template |
 |----------|----------|
@@ -636,7 +636,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Terraria.yaml |
 | 3 | Yacht Dice.yaml |
 
-### Yoshi's Island
+### Yoshi's Island ❌
 
 | Player # | Template |
 |----------|----------|
@@ -646,7 +646,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Pokemon Emerald.yaml |
 | 5 | Yoshi's Island.yaml |
 
-### shapez
+### shapez ✅
 
 | Player # | Template |
 |----------|----------|
@@ -1017,6 +1017,332 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Wargroove | 5 | 5 | 5 | ✅ Passed |
 | WebDevJourney | 6 | 6 | 6 | ✅ Passed |
 | shapez | 3 | 3 | 3 | ✅ Passed |
+
+### Second Pass Templates in Multiworld
+
+Shows which templates were in the multiworld when each game was tested in the second pass:
+
+#### A Hat in Time ❌
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Hat in Time.yaml |
+| 2 | Metamath.yaml |
+| 3 | Timespinner.yaml |
+
+#### A Link to the Past ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Link to the Past.yaml |
+| 2 | Celeste 64.yaml |
+| 3 | Muse Dash.yaml |
+
+#### A Short Hike ❌
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Short Hike.yaml |
+| 2 | Noita.yaml |
+| 3 | Secret of Evermore.yaml |
+
+#### APQuest ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | APQuest.yaml |
+| 2 | ChocolateChipCookies.yaml |
+| 3 | Final Fantasy Mystic Quest.yaml |
+| 4 | Shivers.yaml |
+| 5 | Wargroove.yaml |
+
+#### Adventure ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | Adventure.yaml |
+| 2 | Choo-Choo Charles.yaml |
+| 3 | Heretic.yaml |
+| 4 | Lufia II Ancient Cave.yaml |
+| 5 | Overcooked! 2.yaml |
+| 6 | WebDevJourney.yaml |
+
+#### Aquaria ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | Aquaria.yaml |
+| 2 | Terraria.yaml |
+
+#### Bomb Rush Cyberfunk ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bomb Rush Cyberfunk.yaml |
+| 2 | DLCQuest.yaml |
+| 3 | MathProof2p2e4.yaml |
+| 4 | Pokemon Emerald.yaml |
+
+#### Bumper Stickers ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bumper Stickers.yaml |
+| 2 | DOOM 1993.yaml |
+| 3 | Pokemon Red and Blue.yaml |
+| 4 | The Messenger.yaml |
+
+#### Castlevania - Circle of the Moon ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | Castlevania - Circle of the Moon.yaml |
+| 2 | DOOM II.yaml |
+| 3 | shapez.yaml |
+
+#### Castlevania 64 ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | Castlevania 64.yaml |
+| 2 | Dark Souls III.yaml |
+| 3 | Meritous.yaml |
+
+#### Celeste 64 ❌
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Link to the Past.yaml |
+| 2 | Celeste 64.yaml |
+| 3 | Muse Dash.yaml |
+
+#### ChocolateChipCookies ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | APQuest.yaml |
+| 2 | ChocolateChipCookies.yaml |
+| 3 | Final Fantasy Mystic Quest.yaml |
+| 4 | Shivers.yaml |
+| 5 | Wargroove.yaml |
+
+#### Choo-Choo Charles ❌
+
+| Player # | Template |
+|----------|----------|
+| 1 | Adventure.yaml |
+| 2 | Choo-Choo Charles.yaml |
+| 3 | Heretic.yaml |
+| 4 | Lufia II Ancient Cave.yaml |
+| 5 | Overcooked! 2.yaml |
+| 6 | WebDevJourney.yaml |
+
+#### DLCQuest ❌
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bomb Rush Cyberfunk.yaml |
+| 2 | DLCQuest.yaml |
+| 3 | MathProof2p2e4.yaml |
+| 4 | Pokemon Emerald.yaml |
+
+#### DOOM 1993 ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bumper Stickers.yaml |
+| 2 | DOOM 1993.yaml |
+| 3 | Pokemon Red and Blue.yaml |
+| 4 | The Messenger.yaml |
+
+#### DOOM II ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | Castlevania - Circle of the Moon.yaml |
+| 2 | DOOM II.yaml |
+| 3 | shapez.yaml |
+
+#### Dark Souls III ❌
+
+| Player # | Template |
+|----------|----------|
+| 1 | Castlevania 64.yaml |
+| 2 | Dark Souls III.yaml |
+| 3 | Meritous.yaml |
+
+#### Final Fantasy Mystic Quest ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | APQuest.yaml |
+| 2 | ChocolateChipCookies.yaml |
+| 3 | Final Fantasy Mystic Quest.yaml |
+| 4 | Shivers.yaml |
+| 5 | Wargroove.yaml |
+
+#### Heretic ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | Adventure.yaml |
+| 2 | Choo-Choo Charles.yaml |
+| 3 | Heretic.yaml |
+| 4 | Lufia II Ancient Cave.yaml |
+| 5 | Overcooked! 2.yaml |
+| 6 | WebDevJourney.yaml |
+
+#### Lufia II Ancient Cave ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | Adventure.yaml |
+| 2 | Choo-Choo Charles.yaml |
+| 3 | Heretic.yaml |
+| 4 | Lufia II Ancient Cave.yaml |
+| 5 | Overcooked! 2.yaml |
+| 6 | WebDevJourney.yaml |
+
+#### MathProof2p2e4 ❌
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bomb Rush Cyberfunk.yaml |
+| 2 | DLCQuest.yaml |
+| 3 | MathProof2p2e4.yaml |
+| 4 | Pokemon Emerald.yaml |
+
+#### Meritous ❌
+
+| Player # | Template |
+|----------|----------|
+| 1 | Castlevania 64.yaml |
+| 2 | Dark Souls III.yaml |
+| 3 | Meritous.yaml |
+
+#### Metamath ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Hat in Time.yaml |
+| 2 | Metamath.yaml |
+| 3 | Timespinner.yaml |
+
+#### Muse Dash ❌
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Link to the Past.yaml |
+| 2 | Celeste 64.yaml |
+| 3 | Muse Dash.yaml |
+
+#### Noita ❌
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Short Hike.yaml |
+| 2 | Noita.yaml |
+| 3 | Secret of Evermore.yaml |
+
+#### Overcooked! 2 ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | Adventure.yaml |
+| 2 | Choo-Choo Charles.yaml |
+| 3 | Heretic.yaml |
+| 4 | Lufia II Ancient Cave.yaml |
+| 5 | Overcooked! 2.yaml |
+| 6 | WebDevJourney.yaml |
+
+#### Pokemon Emerald ❌
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bomb Rush Cyberfunk.yaml |
+| 2 | DLCQuest.yaml |
+| 3 | MathProof2p2e4.yaml |
+| 4 | Pokemon Emerald.yaml |
+
+#### Pokemon Red and Blue ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bumper Stickers.yaml |
+| 2 | DOOM 1993.yaml |
+| 3 | Pokemon Red and Blue.yaml |
+| 4 | The Messenger.yaml |
+
+#### Secret of Evermore ❌
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Short Hike.yaml |
+| 2 | Noita.yaml |
+| 3 | Secret of Evermore.yaml |
+
+#### Shivers ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | APQuest.yaml |
+| 2 | ChocolateChipCookies.yaml |
+| 3 | Final Fantasy Mystic Quest.yaml |
+| 4 | Shivers.yaml |
+| 5 | Wargroove.yaml |
+
+#### Terraria ❌
+
+| Player # | Template |
+|----------|----------|
+| 1 | Aquaria.yaml |
+| 2 | Terraria.yaml |
+
+#### The Messenger ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bumper Stickers.yaml |
+| 2 | DOOM 1993.yaml |
+| 3 | Pokemon Red and Blue.yaml |
+| 4 | The Messenger.yaml |
+
+#### Timespinner ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Hat in Time.yaml |
+| 2 | Metamath.yaml |
+| 3 | Timespinner.yaml |
+
+#### Wargroove ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | APQuest.yaml |
+| 2 | ChocolateChipCookies.yaml |
+| 3 | Final Fantasy Mystic Quest.yaml |
+| 4 | Shivers.yaml |
+| 5 | Wargroove.yaml |
+
+#### WebDevJourney ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | Adventure.yaml |
+| 2 | Choo-Choo Charles.yaml |
+| 3 | Heretic.yaml |
+| 4 | Lufia II Ancient Cave.yaml |
+| 5 | Overcooked! 2.yaml |
+| 6 | WebDevJourney.yaml |
+
+#### shapez ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | Castlevania - Circle of the Moon.yaml |
+| 2 | DOOM II.yaml |
+| 3 | shapez.yaml |
 
 
 ## Notes
