@@ -1,31 +1,35 @@
 #!/usr/bin/env python3
 """
-World Generator Second Pass Test Script.
+World Generator Stability Test Script.
 
-This script tests the world generator's stability by:
-1. Taking a _worldgen world that was created from a first pass (rules.json -> world)
-2. Generating a seed for that _worldgen world to produce new rules.json
-3. Running the world generator again on that new rules.json -> _worldgen2 world
-4. Comparing the two generated worlds for equivalence
+This script tests the world generator's stability by running it multiple times
+and comparing results. It validates that the world generator produces stable,
+deterministic output.
 
-This validates that the world generator produces stable, deterministic output:
-if you export a world to JSON and regenerate it, the result should be the same.
+The test performs N passes (default 3):
+1. Pass 1: Uses existing _worldgen world (from first pass test)
+2. Pass 2: Generate seed for _worldgen -> rules.json -> world_generator -> _worldgen2
+3. Pass 3: Generate seed for _worldgen2 -> rules.json -> world_generator -> _worldgen3
+...and so on
+
+Then compares consecutive passes to check for stability.
 
 Usage:
-    # Run second pass test assuming first pass worlds already exist
-    python scripts/test/test-world-generator-second-pass.py --assume-first-pass
+    # Run 3-pass test assuming first pass worlds already exist
+    python scripts/test/test-world-generator-stability.py --assume-first-pass
 
-    # Run from scratch (generates first pass worlds too)
-    python scripts/test/test-world-generator-second-pass.py
+    # Run with custom number of passes
+    python scripts/test/test-world-generator-stability.py --assume-first-pass --passes 4
 
     # Test specific templates
-    python scripts/test/test-world-generator-second-pass.py --include-list Adventure.yaml
+    python scripts/test/test-world-generator-stability.py --include-list Adventure
 """
 
 import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -116,7 +120,37 @@ def get_worldgen_template_list(project_root: str, skip_list: List[str] = None) -
 def get_original_template_from_worldgen(worldgen_template: str) -> str:
     """Get the original template name from a _worldgen template name."""
     # "Game WorldGen.yaml" -> "Game.yaml"
-    return worldgen_template.replace(' WorldGen.yaml', '.yaml')
+    # "Game WorldGen2.yaml" -> "Game.yaml"
+    return re.sub(r' WorldGen\d*\.yaml$', '.yaml', worldgen_template)
+
+
+def get_base_game_name(template_name: str) -> str:
+    """Get the base game name without WorldGen suffix."""
+    # "Game WorldGen.yaml" -> "Game"
+    # "Game WorldGen2.yaml" -> "Game"
+    # "Game.yaml" -> "Game"
+    name = re.sub(r' WorldGen\d*\.yaml$', '', template_name)
+    name = re.sub(r'\.yaml$', '', name)
+    return name
+
+
+def detect_canonical_seed1(world_dir: str) -> bool:
+    """
+    Detect whether a world was generated with --canonical-seed1 flag.
+
+    This checks for the presence of 'canonical_placements' in __init__.py,
+    which is only generated when --canonical-seed1 is used.
+    """
+    init_file = os.path.join(world_dir, '__init__.py')
+    if not os.path.exists(init_file):
+        return False
+
+    try:
+        with open(init_file, 'r') as f:
+            content = f.read()
+            return 'canonical_placements' in content
+    except IOError:
+        return False
 
 
 def compute_file_hash(file_path: str) -> str:
@@ -128,8 +162,54 @@ def compute_file_hash(file_path: str) -> str:
     return sha256.hexdigest()
 
 
-def compute_directory_hashes(dir_path: str) -> Dict[str, str]:
-    """Compute hashes for all Python files in a directory."""
+def normalize_file_content(content: str, game_name_base: str) -> str:
+    """
+    Normalize file content by replacing game-name-specific strings.
+
+    This allows comparing files that differ only in their game name
+    (e.g., "WorldGen" vs "WorldGen2" vs "WorldGen3").
+    """
+    # Normalize variations of the game name
+    # e.g., "ChocolateChipCookies WorldGen3" -> "ChocolateChipCookies WorldGen"
+    # e.g., "ChocolateChipCookiesWorldGen3" -> "ChocolateChipCookiesWorldGen"
+
+    # Replace "GameName WorldGenN" with "GameName WorldGen" (N is any number)
+    content = re.sub(
+        rf'{re.escape(game_name_base)} WorldGen\d+',
+        f'{game_name_base} WorldGen',
+        content
+    )
+
+    # Replace "GameNameWorldGenN" (no space) with "GameNameWorldGen"
+    game_name_no_space = game_name_base.replace(' ', '')
+    content = re.sub(
+        rf'{game_name_no_space}WorldGen\d+',
+        f'{game_name_no_space}WorldGen',
+        content
+    )
+
+    return content
+
+
+def compute_normalized_file_hash(file_path: str, game_name_base: str) -> str:
+    """Compute SHA256 hash of a file after normalizing game name variations."""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except UnicodeDecodeError:
+        # Fall back to binary hash for non-text files
+        return compute_file_hash(file_path)
+
+    normalized = normalize_file_content(content, game_name_base)
+    return hashlib.sha256(normalized.encode('utf-8')).hexdigest()
+
+
+def compute_directory_hashes(dir_path: str, game_name_base: str = None) -> Dict[str, str]:
+    """
+    Compute hashes for all Python files in a directory.
+
+    If game_name_base is provided, normalizes game name variations before hashing.
+    """
     hashes = {}
     if not os.path.exists(dir_path):
         return hashes
@@ -137,7 +217,10 @@ def compute_directory_hashes(dir_path: str) -> Dict[str, str]:
     for item in sorted(os.listdir(dir_path)):
         if item.endswith('.py'):
             file_path = os.path.join(dir_path, item)
-            hashes[item] = compute_file_hash(file_path)
+            if game_name_base:
+                hashes[item] = compute_normalized_file_hash(file_path, game_name_base)
+            else:
+                hashes[item] = compute_file_hash(file_path)
 
     return hashes
 
@@ -250,8 +333,13 @@ def run_world_generator(
     return result
 
 
-def compare_worlds(world1_dir: str, world2_dir: str) -> Dict:
-    """Compare two generated world directories."""
+def compare_worlds(world1_dir: str, world2_dir: str, game_name_base: str = None) -> Dict:
+    """
+    Compare two generated world directories.
+
+    If game_name_base is provided, normalizes game name variations before comparing,
+    so that "WorldGen" vs "WorldGen2" vs "WorldGen3" differences are ignored.
+    """
     result = {
         'identical': False,
         'files_compared': 0,
@@ -261,9 +349,9 @@ def compare_worlds(world1_dir: str, world2_dir: str) -> Dict:
         'world2_hashes': {}
     }
 
-    # Compute hashes for both directories
-    hashes1 = compute_directory_hashes(world1_dir)
-    hashes2 = compute_directory_hashes(world2_dir)
+    # Compute hashes for both directories (with normalization if game_name_base provided)
+    hashes1 = compute_directory_hashes(world1_dir, game_name_base)
+    hashes2 = compute_directory_hashes(world2_dir, game_name_base)
 
     result['world1_hashes'] = hashes1
     result['world2_hashes'] = hashes2
@@ -299,144 +387,218 @@ def compare_worlds(world1_dir: str, world2_dir: str) -> Dict:
     return result
 
 
+def run_pass(
+    pass_num: int,
+    prev_world_dir: str,
+    prev_template_name: str,
+    base_worldgen_dir: str,
+    game_name_base: str,
+    project_root: str,
+    seed: int,
+    use_canonical: bool
+) -> Dict:
+    """
+    Run a single pass of the world generator.
+
+    Returns dict with:
+    - seed_generation: result of generating seed for previous world
+    - world_generation: result of running world generator
+    - world_dir: path to the new world directory
+    - template_name: name of the template for this pass's world
+    - success: overall success
+    - error: error message if any
+    """
+    result = {
+        'pass_num': pass_num,
+        'seed_generation': {'success': False},
+        'world_generation': {'success': False},
+        'world_dir': None,
+        'template_name': None,
+        'success': False,
+        'error': None
+    }
+
+    # Determine suffix for this pass (2, 3, 4, etc.)
+    suffix = str(pass_num)
+    new_world_dir = os.path.join(project_root, 'worlds', f'{base_worldgen_dir}{suffix}')
+    new_game_name = f"{game_name_base} WorldGen{suffix}"
+    new_template_name = f"{game_name_base} WorldGen{suffix}.yaml"
+
+    result['world_dir'] = new_world_dir
+    result['template_name'] = new_template_name
+
+    # Step 1: Generate seed for previous world to get rules.json
+    print(f"\n  [{pass_num}a] Generating seed for pass {pass_num-1} world...")
+    gen_result = run_generation(prev_template_name, project_root, seed)
+    result['seed_generation'] = gen_result
+
+    if not gen_result['success']:
+        result['error'] = f"Seed generation failed: {gen_result.get('error', 'Unknown error')}"
+        print(f"    FAILED: {gen_result.get('error', 'Unknown error')}")
+        return result
+
+    print(f"    OK (seed_id: {gen_result['seed_id']})")
+
+    # Step 2: Run world generator on the rules.json
+    print(f"  [{pass_num}b] Running world generator (pass {pass_num})...")
+
+    rules_path = gen_result['rules_path']
+    if not rules_path or not os.path.exists(rules_path):
+        result['error'] = f"Rules file not found: {rules_path}"
+        print(f"    FAILED: Rules file not found")
+        return result
+
+    world_gen_result = run_world_generator(
+        rules_path, new_world_dir, new_game_name, project_root,
+        canonical_seed1=use_canonical
+    )
+    result['world_generation'] = world_gen_result
+
+    if not world_gen_result['success']:
+        result['error'] = f"World generation failed: {world_gen_result.get('error', 'Unknown error')}"
+        print(f"    FAILED: {world_gen_result.get('error', 'Unknown error')}")
+        return result
+
+    print(f"    OK (created {new_world_dir})")
+    result['success'] = True
+
+    return result
+
+
 def process_template(
     worldgen_template: str,
     project_root: str,
     seed: int,
+    num_passes: int = 3,
     canonical_seed1: bool = False
 ) -> Dict:
     """
-    Run the second pass test for a single _worldgen template.
+    Run multi-pass stability test for a single _worldgen template.
 
-    1. Generate seed for _worldgen world -> produces rules.json
-    2. Run world_generator on that rules.json -> _worldgen2 world
-    3. Compare _worldgen and _worldgen2
+    Pass 1 is the existing _worldgen world.
+    Passes 2..N generate new worlds and compare with previous pass.
     """
-    original_template = get_original_template_from_worldgen(worldgen_template)
-    game_name_display = original_template.replace('.yaml', '')
-    worldgen_game_name = worldgen_template.replace('.yaml', '')
+    game_name_base = get_base_game_name(worldgen_template)
 
     print(f"\n{'='*60}")
-    print(f"Second Pass Test: {game_name_display}")
+    print(f"Stability Test: {game_name_base} ({num_passes} passes)")
     print('='*60)
 
     template_result = {
-        'template': original_template,
+        'template': get_original_template_from_worldgen(worldgen_template),
         'worldgen_template': worldgen_template,
-        'game_name': game_name_display,
+        'game_name': game_name_base,
         'timestamp': datetime.now().isoformat(),
         'seed': seed,
-        'first_pass': {
-            'world_dir': None,
-            'exists': False
-        },
-        'second_pass': {
-            'seed_generation': {'success': False},
-            'world_generation': {'success': False},
-            'world_dir': None
-        },
-        'comparison': {
-            'success': False,
-            'identical': False,
-            'files_compared': 0,
-            'files_matching': 0,
-            'differences': []
-        },
-        'errors': {
-            'first_pass': [],
-            'second_pass': [],
-            'comparison': []
-        }
+        'num_passes': num_passes,
+        'passes': {},
+        'comparisons': {},
+        'errors': []
     }
 
     # Get world mapping
     world_mapping = build_and_load_world_mapping(project_root)
-    worldgen_dir = get_world_directory_for_template(worldgen_template, project_root, world_mapping)
+    base_worldgen_dir = get_world_directory_for_template(worldgen_template, project_root, world_mapping)
 
-    # Check if first pass world exists
-    first_pass_world_dir = os.path.join(project_root, 'worlds', worldgen_dir)
-    template_result['first_pass']['world_dir'] = first_pass_world_dir
+    # Check if first pass (pass 1) world exists
+    pass1_world_dir = os.path.join(project_root, 'worlds', base_worldgen_dir)
 
-    if not os.path.exists(first_pass_world_dir):
-        template_result['errors']['first_pass'].append(f"First pass world not found: {first_pass_world_dir}")
-        print(f"  ERROR: First pass world not found: {first_pass_world_dir}")
+    if not os.path.exists(pass1_world_dir):
+        template_result['errors'].append(f"Pass 1 world not found: {pass1_world_dir}")
+        print(f"  ERROR: Pass 1 world not found: {pass1_world_dir}")
         return template_result
 
-    template_result['first_pass']['exists'] = True
-    print(f"  First pass world: {first_pass_world_dir}")
+    # Detect if first pass used --canonical-seed1
+    detected_canonical = detect_canonical_seed1(pass1_world_dir)
+    use_canonical = detected_canonical if detected_canonical else canonical_seed1
 
-    # Step 1: Generate seed for _worldgen world
-    print(f"\n[1/3] Generating seed for _worldgen world...")
-    gen_result = run_generation(worldgen_template, project_root, seed)
-    template_result['second_pass']['seed_generation'] = gen_result
+    template_result['passes']['1'] = {
+        'world_dir': pass1_world_dir,
+        'template_name': worldgen_template,
+        'canonical_seed1': detected_canonical,
+        'exists': True
+    }
 
-    if not gen_result['success']:
-        template_result['errors']['second_pass'].append(f"Seed generation failed: {gen_result.get('error', 'Unknown error')}")
-        print(f"  FAILED: {gen_result.get('error', 'Unknown error')}")
-        return template_result
+    print(f"  Pass 1 world: {pass1_world_dir}")
+    if detected_canonical:
+        print(f"  Detected: --canonical-seed1 was used")
 
-    print(f"  OK (seed_id: {gen_result['seed_id']})")
+    # Track world directories and template names for each pass
+    world_dirs = {1: pass1_world_dir}
+    template_names = {1: worldgen_template}
 
-    # Step 2: Run world generator on the new rules.json to create _worldgen2
-    print(f"\n[2/3] Running world generator (second pass)...")
+    # Run passes 2 through N
+    prev_world_dir = pass1_world_dir
+    prev_template_name = worldgen_template
 
-    rules_path = gen_result['rules_path']
-    if not rules_path or not os.path.exists(rules_path):
-        template_result['errors']['second_pass'].append(f"Rules file not found: {rules_path}")
-        print(f"  FAILED: Rules file not found")
-        return template_result
+    for pass_num in range(2, num_passes + 1):
+        # Regenerate templates to pick up new worlds
+        generate_yaml_templates(project_root)
 
-    # Create _worldgen2 directory name
-    second_pass_world_dir = os.path.join(project_root, 'worlds', f'{worldgen_dir}2')
-    second_pass_game_name = f"{worldgen_game_name}2"
+        pass_result = run_pass(
+            pass_num=pass_num,
+            prev_world_dir=prev_world_dir,
+            prev_template_name=prev_template_name,
+            base_worldgen_dir=base_worldgen_dir,
+            game_name_base=game_name_base,
+            project_root=project_root,
+            seed=seed,
+            use_canonical=use_canonical
+        )
 
-    template_result['second_pass']['world_dir'] = second_pass_world_dir
+        template_result['passes'][str(pass_num)] = pass_result
 
-    world_gen_result = run_world_generator(
-        rules_path, second_pass_world_dir, second_pass_game_name, project_root,
-        canonical_seed1=canonical_seed1
-    )
-    template_result['second_pass']['world_generation'] = world_gen_result
+        if not pass_result['success']:
+            template_result['errors'].append(pass_result['error'])
+            break
 
-    if not world_gen_result['success']:
-        template_result['errors']['second_pass'].append(f"World generation failed: {world_gen_result.get('error', 'Unknown error')}")
-        print(f"  FAILED: {world_gen_result.get('error', 'Unknown error')}")
-        return template_result
+        world_dirs[pass_num] = pass_result['world_dir']
+        template_names[pass_num] = pass_result['template_name']
+        prev_world_dir = pass_result['world_dir']
+        prev_template_name = pass_result['template_name']
 
-    print(f"  OK (created {second_pass_world_dir})")
+    # Compare consecutive passes
+    print(f"\n  Comparing passes...")
 
-    # Step 3: Compare the two world directories
-    print(f"\n[3/3] Comparing first and second pass worlds...")
+    for i in range(1, len(world_dirs)):
+        pass_a = i
+        pass_b = i + 1
 
-    comparison = compare_worlds(first_pass_world_dir, second_pass_world_dir)
-    template_result['comparison'] = comparison
-    template_result['comparison']['success'] = True
+        if pass_b not in world_dirs:
+            break
 
-    if comparison['identical']:
-        print(f"  IDENTICAL - {comparison['files_compared']} files match")
-    else:
-        template_result['errors']['comparison'].append(f"Worlds differ: {len(comparison['differences'])} differences")
-        print(f"  DIFFERENT - {len(comparison['differences'])} differences found:")
-        for diff in comparison['differences'][:5]:  # Show first 5
-            if diff['type'] == 'content_mismatch':
-                print(f"    - {diff['file']}: content differs")
-            elif diff['type'] == 'missing_in_world2':
-                print(f"    - {diff['file']}: missing in second pass")
-            else:
-                print(f"    - {diff['file']}: only in second pass")
-        if len(comparison['differences']) > 5:
-            print(f"    ... and {len(comparison['differences']) - 5} more")
+        comparison_key = f"{pass_a}_vs_{pass_b}"
+        print(f"  Pass {pass_a} vs Pass {pass_b}:", end=" ")
+
+        comparison = compare_worlds(
+            world_dirs[pass_a],
+            world_dirs[pass_b],
+            game_name_base=game_name_base
+        )
+
+        template_result['comparisons'][comparison_key] = comparison
+
+        if comparison['identical']:
+            print(f"IDENTICAL ({comparison['files_compared']} files)")
+        else:
+            diff_count = len(comparison['differences'])
+            print(f"DIFFERENT ({diff_count} differences)")
+            for diff in comparison['differences'][:3]:
+                print(f"    - {diff['file']}: {diff['type']}")
+            if diff_count > 3:
+                print(f"    ... and {diff_count - 3} more")
 
     return template_result
 
 
-def cleanup_second_pass_worlds(project_root: str) -> List[str]:
-    """Delete all *_worldgen2 world directories and return list of deleted dirs."""
+def cleanup_stability_test_worlds(project_root: str) -> List[str]:
+    """Delete all *_worldgenN (N >= 2) world directories."""
     worlds_dir = os.path.join(project_root, 'worlds')
     deleted = []
 
     for item in os.listdir(worlds_dir):
-        if item.endswith('_worldgen2'):
+        # Match _worldgen2, _worldgen3, etc.
+        if re.match(r'.*_worldgen\d+$', item):
             path = os.path.join(worlds_dir, item)
             if os.path.isdir(path):
                 shutil.rmtree(path)
@@ -446,8 +608,8 @@ def cleanup_second_pass_worlds(project_root: str) -> List[str]:
     return deleted
 
 
-def cleanup_second_pass_presets(project_root: str) -> List[str]:
-    """Delete all *_worldgen2 preset directories and return list of deleted dirs."""
+def cleanup_stability_test_presets(project_root: str) -> List[str]:
+    """Delete all *_worldgenN (N >= 2) preset directories."""
     presets_dir = os.path.join(project_root, 'frontend', 'presets')
     deleted = []
 
@@ -455,7 +617,8 @@ def cleanup_second_pass_presets(project_root: str) -> List[str]:
         return deleted
 
     for item in os.listdir(presets_dir):
-        if item.endswith('_worldgen2'):
+        # Match _worldgen2, _worldgen3, etc.
+        if re.match(r'.*_worldgen\d+$', item):
             path = os.path.join(presets_dir, item)
             if os.path.isdir(path):
                 shutil.rmtree(path)
@@ -480,15 +643,19 @@ def main():
     worldgen_exclude_list = [t.replace('.yaml', ' WorldGen.yaml') for t in default_exclude_list]
 
     parser = argparse.ArgumentParser(
-        description='Test world generator second pass (re-generation stability)'
+        description='Test world generator stability across multiple passes'
     )
     parser.add_argument(
         '--seed', type=int, default=1,
         help='Seed number to use (default: 1)'
     )
     parser.add_argument(
+        '--passes', type=int, default=3,
+        help='Number of passes to run (default: 3)'
+    )
+    parser.add_argument(
         '--output-file', type=str,
-        default='scripts/output/world-generator-second-pass/test-results.json',
+        default='scripts/output/world-generator-stability/test-results.json',
         help='Output file for test results'
     )
     parser.add_argument(
@@ -509,11 +676,11 @@ def main():
     )
     parser.add_argument(
         '--skip-cleanup', action='store_true',
-        help='Skip cleanup of _worldgen2 worlds after testing'
+        help='Skip cleanup of generated worlds after testing'
     )
     parser.add_argument(
         '--assume-first-pass', action='store_true',
-        help='Assume first pass _worldgen worlds already exist (skip first pass generation)'
+        help='Assume first pass _worldgen worlds already exist'
     )
     parser.add_argument(
         '--canonical-seed1', action='store_true',
@@ -528,10 +695,11 @@ def main():
     project_root = get_project_root()
 
     print("="*60)
-    print("World Generator Second Pass Test")
+    print("World Generator Stability Test")
     print("="*60)
     print(f"Project root: {project_root}")
     print(f"Seed: {args.seed}")
+    print(f"Passes: {args.passes}")
     print(f"Output file: {args.output_file}")
     print(f"Assume first pass: {args.assume_first_pass}")
     if args.canonical_seed1:
@@ -542,11 +710,12 @@ def main():
         'metadata': {
             'timestamp': datetime.now().isoformat(),
             'seed': args.seed,
+            'num_passes': args.passes,
             'canonical_seed1': args.canonical_seed1,
             'assume_first_pass': args.assume_first_pass,
             'total_templates': 0,
-            'identical_count': 0,
-            'different_count': 0,
+            'stable_count': 0,
+            'unstable_count': 0,
             'error_count': 0
         },
         'results': {}
@@ -582,11 +751,11 @@ def main():
     print(f"\nWorldGen templates to test: {len(templates)}")
 
     if not templates:
-        print("\nNo _worldgen templates found. Run the first pass test first, or remove --assume-first-pass.")
+        print("\nNo _worldgen templates found. Run the first pass test first.")
         save_results(results, os.path.join(project_root, args.output_file))
         return 1
 
-    # Start HTTP server if needed (for spoiler tests later if we add them)
+    # Start HTTP server if needed
     http_server_process = None
     if not check_http_server():
         print("\nStarting HTTP server...")
@@ -600,20 +769,27 @@ def main():
     for template in templates:
         template_result = process_template(
             template, project_root, args.seed,
+            num_passes=args.passes,
             canonical_seed1=args.canonical_seed1
         )
 
         # Store result by original game name
-        game_name = template_result.get('game_name', template.replace(' WorldGen.yaml', ''))
+        game_name = template_result.get('game_name', get_base_game_name(template))
         results['results'][game_name] = template_result
 
-        # Update counts
-        if template_result['comparison'].get('identical'):
-            results['metadata']['identical_count'] += 1
-        elif template_result['comparison'].get('success'):
-            results['metadata']['different_count'] += 1
-        else:
+        # Determine stability
+        if template_result['errors']:
             results['metadata']['error_count'] += 1
+        else:
+            # Check if all comparisons are identical
+            all_identical = all(
+                comp.get('identical', False)
+                for comp in template_result['comparisons'].values()
+            )
+            if all_identical:
+                results['metadata']['stable_count'] += 1
+            else:
+                results['metadata']['unstable_count'] += 1
 
     # Stop HTTP server
     if http_server_process:
@@ -627,11 +803,14 @@ def main():
         print("Cleanup")
         print("="*60)
 
-        print("\nDeleting _worldgen2 worlds...")
-        cleanup_second_pass_worlds(project_root)
+        print("\nDeleting generated worlds...")
+        cleanup_stability_test_worlds(project_root)
 
-        print("\nDeleting _worldgen2 presets...")
-        cleanup_second_pass_presets(project_root)
+        print("\nDeleting generated presets...")
+        cleanup_stability_test_presets(project_root)
+
+        print("\nRegenerating templates...")
+        generate_yaml_templates(project_root)
 
     # Save results
     save_results(results, os.path.join(project_root, args.output_file))
@@ -641,12 +820,12 @@ def main():
     print("SUMMARY")
     print("="*60)
     print(f"Total templates tested: {results['metadata']['total_templates']}")
-    print(f"Identical (stable): {results['metadata']['identical_count']}")
-    print(f"Different (unstable): {results['metadata']['different_count']}")
+    print(f"Stable (all passes identical): {results['metadata']['stable_count']}")
+    print(f"Unstable (differences found): {results['metadata']['unstable_count']}")
     print(f"Errors: {results['metadata']['error_count']}")
 
-    # Return non-zero if any differences or errors
-    if results['metadata']['different_count'] > 0 or results['metadata']['error_count'] > 0:
+    # Return non-zero if any instabilities or errors
+    if results['metadata']['unstable_count'] > 0 or results['metadata']['error_count'] > 0:
         return 1
     return 0
 

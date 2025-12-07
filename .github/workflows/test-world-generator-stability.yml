@@ -1,4 +1,4 @@
-name: Test World Generator Second Pass
+name: Test World Generator Stability
 
 on:
   workflow_dispatch:
@@ -8,6 +8,12 @@ on:
         required: true
         type: number
         default: 1
+
+      passes:
+        description: 'Number of passes to run (default: 3)'
+        required: true
+        type: number
+        default: 3
 
       canonical_seed1:
         description: 'Use canonical seed 1 placement'
@@ -78,20 +84,20 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Delete second pass test results
-          git rm -f scripts/output/world-generator-second-pass/test-results.json || true
-          git rm -f scripts/output/world-generator-second-pass/test-results-split-*.json || true
-          git rm -f docs/json/developer/test-results/test-results-world-generator-second-pass.md || true
+          # Delete stability test results
+          git rm -f scripts/output/world-generator-stability/test-results.json || true
+          git rm -f scripts/output/world-generator-stability/test-results-split-*.json || true
+          git rm -f docs/json/developer/test-results/test-results-world-generator-stability.md || true
 
           # Commit if there are changes
           if ! git diff --staged --quiet; then
-            git commit -m "Delete existing world generator second pass test results before new test run"
+            git commit -m "Delete existing world generator stability test results before new test run"
             git push origin test-results-update
           fi
 
-  # Run second pass tests - 10 parallel jobs
+  # Run stability tests - 10 parallel jobs
   run-tests:
-    name: Second Pass Test (Split ${{ matrix.split_num }})
+    name: Stability Test (Split ${{ matrix.split_num }})
     runs-on: ubuntu-latest
     needs: setup
     timeout-minutes: 180
@@ -191,7 +197,7 @@ jobs:
           source .venv/bin/activate
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
-      - name: Run second pass test
+      - name: Run stability test
         if: ${{ !inputs.debug_mode || matrix.split_num == 1 }}
         env:
           PYTHONUNBUFFERED: "1"
@@ -207,11 +213,12 @@ jobs:
             INCLUDE_ARG="--include-list Adventure"
           fi
 
-          python scripts/test/test-world-generator-second-pass.py \
+          python scripts/test/test-world-generator-stability.py \
             --seed ${{ inputs.seed }} \
+            --passes ${{ inputs.passes }} \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
-            --output-file scripts/output/world-generator-second-pass/test-results-split-${{ matrix.split_num }}.json \
+            --output-file scripts/output/world-generator-stability/test-results-split-${{ matrix.split_num }}.json \
             --skip-cleanup \
             ${{ inputs.assume_first_pass && '--assume-first-pass' || '' }} \
             ${{ inputs.canonical_seed1 && '--canonical-seed1' || '' }} \
@@ -221,8 +228,8 @@ jobs:
         if: ${{ !cancelled() && (!inputs.debug_mode || matrix.split_num == 1) }}
         uses: actions/upload-artifact@v4
         with:
-          name: second-pass-results-split-${{ matrix.split_num }}
-          path: scripts/output/world-generator-second-pass/test-results-split-${{ matrix.split_num }}.json
+          name: stability-results-split-${{ matrix.split_num }}
+          path: scripts/output/world-generator-stability/test-results-split-${{ matrix.split_num }}.json
           retention-days: 7
 
   # Combine results and generate report
@@ -256,34 +263,35 @@ jobs:
 
       - name: Combine test results
         run: |
-          mkdir -p scripts/output/world-generator-second-pass
+          mkdir -p scripts/output/world-generator-stability
 
           # Combine split results
-          if ls artifacts/second-pass-results-split-*/test-results-split-*.json 1> /dev/null 2>&1; then
+          if ls artifacts/stability-results-split-*/test-results-split-*.json 1> /dev/null 2>&1; then
             python scripts/test/combine-test-results.py \
-              --input-files artifacts/second-pass-results-split-*/test-results-split-*.json \
-              --output-file scripts/output/world-generator-second-pass/test-results.json
+              --input-files artifacts/stability-results-split-*/test-results-split-*.json \
+              --output-file scripts/output/world-generator-stability/test-results.json
           else
             echo "No results found"
           fi
 
       - name: Generate markdown report
         run: |
-          python scripts/docs/generate-world-generator-second-pass-report.py
+          python scripts/docs/generate-world-generator-stability-report.py
 
       - name: Commit and push results
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add -f scripts/output/world-generator-second-pass/test-results.json || true
-          git add -f docs/json/developer/test-results/test-results-world-generator-second-pass.md || true
+          git add -f scripts/output/world-generator-stability/test-results.json || true
+          git add -f docs/json/developer/test-results/test-results-world-generator-stability.md || true
 
           if ! git diff --staged --quiet; then
-            git commit -m "Update world generator second pass test results
+            git commit -m "Update world generator stability test results
 
           Generated by workflow run: ${{ github.run_id }}
           Seed: ${{ inputs.seed }}
+          Passes: ${{ inputs.passes }}
           Canonical seed 1: ${{ inputs.canonical_seed1 }}
           Assume first pass: ${{ inputs.assume_first_pass }}
           "
@@ -338,17 +346,17 @@ jobs:
         run: |
           source .venv/bin/activate
 
-          # Clean _worldgen and _worldgen2 worlds
+          # Clean _worldgen and _worldgenN worlds
           find worlds -maxdepth 1 -type d -name '*_worldgen' -exec rm -rf {} + 2>/dev/null || true
-          find worlds -maxdepth 1 -type d -name '*_worldgen2' -exec rm -rf {} + 2>/dev/null || true
+          find worlds -maxdepth 1 -type d -regex '.*_worldgen[0-9]+' -exec rm -rf {} + 2>/dev/null || true
 
-          # Clean _worldgen and _worldgen2 templates
+          # Clean _worldgen and _worldgenN templates
           find Players/Templates -name '* WorldGen.yaml' -delete 2>/dev/null || true
-          find Players/Templates -name '* WorldGen2.yaml' -delete 2>/dev/null || true
+          find Players/Templates -regex '.* WorldGen[0-9]+\.yaml' -delete 2>/dev/null || true
 
-          # Clean _worldgen and _worldgen2 presets
+          # Clean _worldgen and _worldgenN presets
           find frontend/presets -maxdepth 1 -type d -name '*_worldgen' -exec rm -rf {} + 2>/dev/null || true
-          find frontend/presets -maxdepth 1 -type d -name '*_worldgen2' -exec rm -rf {} + 2>/dev/null || true
+          find frontend/presets -maxdepth 1 -type d -regex '.*_worldgen[0-9]+' -exec rm -rf {} + 2>/dev/null || true
 
           # Regenerate clean templates
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
