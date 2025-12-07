@@ -214,22 +214,40 @@ def find_variable_definition(var_name: str, content: str, init_path: str) -> Opt
         return None
 
 
+def get_file_size(file_path: Path) -> int:
+    """Get the size of a file in bytes, or 0 if it doesn't exist."""
+    if file_path.exists():
+        return file_path.stat().st_size
+    return 0
+
+
+def get_directory_total_size(dir_path: Path) -> int:
+    """Get the total size of all files in a directory in bytes."""
+    if not dir_path.exists() or not dir_path.is_dir():
+        return 0
+    total = 0
+    for file_path in dir_path.iterdir():
+        if file_path.is_file():
+            total += file_path.stat().st_size
+    return total
+
+
 def build_world_mapping(worlds_dir: str) -> Dict[str, Dict[str, any]]:
     """
     Build a mapping from game names to world information.
     Returns dict with game names as keys and world info as values.
     """
     mapping = {}
-    
+
     worlds_path = Path(worlds_dir)
     if not worlds_path.exists():
         print(f"Error: Worlds directory not found: {worlds_dir}")
         return mapping
-    
+
     for world_dir in worlds_path.iterdir():
         if not world_dir.is_dir() or world_dir.name.startswith('.') or world_dir.name.startswith('_'):
             continue
-            
+
         init_file = world_dir / '__init__.py'
         if not init_file.exists():
             continue
@@ -244,25 +262,30 @@ def build_world_mapping(worlds_dir: str) -> Dict[str, Dict[str, any]]:
 
         if game_name:
             world_name = world_dir.name
-            
-            # Check for custom exporter
+
+            # Check for custom exporter and get file size
             exporter_path = Path('exporter/games') / f'{world_name}.py'
             has_custom_exporter = exporter_path.exists()
-            
-            # Check for custom gameLogic
-            game_logic_path = Path('frontend/modules/shared/gameLogic') / world_name / f'{world_name}Logic.js'
-            has_custom_game_logic = game_logic_path.exists()
-            
+            exporter_size = get_file_size(exporter_path)
+
+            # Check for custom gameLogic directory and get total size of all files
+            game_logic_dir = Path('frontend/modules/shared/gameLogic') / world_name
+            game_logic_main_file = game_logic_dir / f'{world_name}Logic.js'
+            has_custom_game_logic = game_logic_main_file.exists()
+            game_logic_size = get_directory_total_size(game_logic_dir)
+
             mapping[game_name] = {
                 'world_directory': world_name,
                 'has_custom_exporter': has_custom_exporter,
                 'has_custom_game_logic': has_custom_game_logic,
                 'exporter_path': f'exporter/games/{world_name}.py' if has_custom_exporter else None,
-                'game_logic_path': f'frontend/modules/shared/gameLogic/{world_name}/{world_name}Logic.js' if has_custom_game_logic else None
+                'exporter_size': exporter_size,
+                'game_logic_path': f'frontend/modules/shared/gameLogic/{world_name}/{world_name}Logic.js' if has_custom_game_logic else None,
+                'game_logic_size': game_logic_size
             }
-            
-            print(f"Found: '{game_name}' -> {world_name} (exporter: {has_custom_exporter}, gameLogic: {has_custom_game_logic})")
-    
+
+            print(f"Found: '{game_name}' -> {world_name} (exporter: {exporter_size}B, gameLogic: {game_logic_size}B)")
+
     return mapping
 
 

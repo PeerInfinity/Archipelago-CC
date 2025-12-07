@@ -6,7 +6,7 @@
 
 [View Original Template Results](./test-results-multiclient.md)
 
-**Generated:** 2025-12-07 09:34:53
+**Generated:** 2025-12-07 09:55:17
 
 ## Summary
 
@@ -16,8 +16,8 @@
 
 ## Test Results
 
-| Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Base Exporter | Base GameLogic |
-|-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|---------------|----------------|
+| Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Exporter | GameLogic |
+|-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|----------|----------|
 | A Hat in Time WorldGen | ✅ Passed | 0 | ✅ | 232/232 | 223/223 | 9/9 | ✅ | 232/232 | ✅ | ✅ |
 | A Link to the Past WorldGen | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 17/17 | ✅ | 268/268 | ✅ | ✅ |
 | A Short Hike WorldGen | ✅ Passed | 0 | ✅ | 131/131 | 131/131 | 0/0 | ✅ | 131/131 | ✅ | ✅ |
@@ -109,8 +109,8 @@
 - **Client 2 (Receive Test):** Tests receiving location checks at Client 2
   - **C2 Locations:** Locations received / total expected (received/total)
   - Client 2 passes if all expected locations are received
-- **Base Exporter:** ✅ Uses generic exporter, ⚫ Has custom Python exporter script
-- **Base GameLogic:** ✅ Uses generic logic, ⚫ Has custom JavaScript game logic
+- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script
+- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files
 
 **Pass Criteria:** A test is marked as ✅ Passed only if:
 - Generation errors = 0 (no errors during world generation)

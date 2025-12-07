@@ -8,6 +8,7 @@ Can generate individual charts for each test type and a combined summary chart.
 import argparse
 import json
 import os
+import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -24,6 +25,21 @@ from generate_ut_comparison_chart import (
     generate_ut_comparison_markdown,
     load_world_mapping
 )
+
+
+def load_full_world_mapping(project_root: str) -> Dict[str, Dict[str, Any]]:
+    """
+    Load the full world mapping from JSON file, including file sizes.
+
+    Returns a dict mapping game names to their full info dict.
+    """
+    mapping_file = os.path.join(project_root, 'scripts/data/world-mapping.json')
+    try:
+        with open(mapping_file, 'r') as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        print(f"Error loading world mapping file {mapping_file}: {e}")
+        return {}
 
 
 def load_test_results(results_file: str) -> Dict[str, Any]:
@@ -234,7 +250,8 @@ def extract_multiclient_chart_data(results: Dict[str, Any]) -> List[Tuple[str, s
 
 def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float, bool, bool, Optional[bool], Optional[bool]]],
                               metadata: Dict[str, Any], subtitle: str = "", is_worldgen: bool = False,
-                              other_version_link: Optional[str] = None) -> str:
+                              other_version_link: Optional[str] = None,
+                              world_mapping: Optional[Dict[str, Dict[str, Any]]] = None) -> str:
     """Generate a markdown table for spoiler test data."""
     md_content = "# Archipelago Template Test Results Chart\n\n"
 
@@ -280,8 +297,8 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
         md_content += f"- **Total Intermittent Failures:** {intermittent_total_count}\n\n"
 
     md_content += "## Test Results\n\n"
-    md_content += "| Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Base Exporter | Base GameLogic |\n"
-    md_content += "|-----------|-------------|------------|----------------|-------------|----------|---------------|----------------|\n"
+    md_content += "| Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |\n"
+    md_content += "|-----------|-------------|------------|----------------|-------------|----------|----------|----------|\n"
 
     for game_name, pass_fail, gen_error_count, sphere_reached, max_spheres, has_custom_exporter, has_custom_game_logic, rules_consistent, spoilers_consistent in chart_data:
         if 'passed' in pass_fail.lower():
@@ -304,8 +321,15 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
         else:
             result_display = "❌ Failed"
 
-        exporter_indicator = "⚫" if has_custom_exporter else "✅"
-        game_logic_indicator = "⚫" if has_custom_game_logic else "✅"
+        # Look up file sizes from world_mapping if available
+        if world_mapping and game_name in world_mapping:
+            exporter_size = world_mapping[game_name].get('exporter_size', 0)
+            game_logic_size = world_mapping[game_name].get('game_logic_size', 0)
+            exporter_indicator = format_file_size(exporter_size)
+            game_logic_indicator = format_file_size(game_logic_size)
+        else:
+            exporter_indicator = "⚫" if has_custom_exporter else "✅"
+            game_logic_indicator = "⚫" if has_custom_game_logic else "✅"
 
         md_content += f"| {game_name} | {result_display} | {gen_error_count} | {sphere_reached:g} | {max_spheres:g} | {progress} | {exporter_indicator} | {game_logic_indicator} |\n"
 
@@ -352,8 +376,8 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
     md_content += "- **Sphere Reached:** The logical sphere the test reached before completion/failure\n"
     md_content += "- **Max Spheres:** Total logical spheres available in the game\n"
     md_content += "- **Progress:** Percentage of logical spheres completed\n"
-    md_content += "- **Base Exporter:** ✅ Uses generic exporter, ⚫ Has custom Python exporter script\n"
-    md_content += "- **Base GameLogic:** ✅ Uses generic logic, ⚫ Has custom JavaScript game logic\n\n"
+    md_content += "- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script\n"
+    md_content += "- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files\n\n"
     md_content += "**Pass Criteria:** Generation errors = 0, Max spheres > 0, Spoiler test completed successfully\n"
 
     return md_content
@@ -361,7 +385,8 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
 
 def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int, int, int, int, int, bool, int, int, bool, bool, bool]],
                                  metadata: Dict[str, Any], top_level_metadata: Optional[Dict[str, Any]] = None,
-                                 is_worldgen: bool = False, other_version_link: Optional[str] = None) -> str:
+                                 is_worldgen: bool = False, other_version_link: Optional[str] = None,
+                                 world_mapping: Optional[Dict[str, Dict[str, Any]]] = None) -> str:
     """Generate a markdown table for multiclient test data."""
     md_content = "# Archipelago Template Test Results Chart\n\n"
     md_content += "## Multiclient Test\n\n"
@@ -406,8 +431,8 @@ def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int
         md_content += f"- **Failed:** {total_games - passed} ({(total_games-passed)/total_games*100:.1f}%)\n\n"
 
     md_content += "## Test Results\n\n"
-    md_content += "| Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Base Exporter | Base GameLogic |\n"
-    md_content += "|-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|---------------|----------------|\n"
+    md_content += "| Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Exporter | GameLogic |\n"
+    md_content += "|-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|----------|----------|\n"
 
     for (game_name, pass_fail, gen_error_count,
          client1_checked, client1_total, client1_manually_checkable, client1_manually_checkable_checked,
@@ -418,8 +443,16 @@ def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int
         result_display = "✅ Passed" if pass_fail.lower() == 'passed' else "❌ Failed"
         client1_status = "✅" if client1_passed else "❌"
         client2_status = "✅" if client2_passed else "❌"
-        exporter_indicator = "⚫" if has_custom_exporter else "✅"
-        game_logic_indicator = "⚫" if has_custom_game_logic else "✅"
+
+        # Look up file sizes from world_mapping if available
+        if world_mapping and game_name in world_mapping:
+            exporter_size = world_mapping[game_name].get('exporter_size', 0)
+            game_logic_size = world_mapping[game_name].get('game_logic_size', 0)
+            exporter_indicator = format_file_size(exporter_size)
+            game_logic_indicator = format_file_size(game_logic_size)
+        else:
+            exporter_indicator = "⚫" if has_custom_exporter else "✅"
+            game_logic_indicator = "⚫" if has_custom_game_logic else "✅"
 
         # Format location counts as "checked/total"
         c1_total_str = f"{client1_checked}/{client1_total}"
@@ -442,8 +475,8 @@ def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int
     md_content += "- **Client 2 (Receive Test):** Tests receiving location checks at Client 2\n"
     md_content += "  - **C2 Locations:** Locations received / total expected (received/total)\n"
     md_content += "  - Client 2 passes if all expected locations are received\n"
-    md_content += "- **Base Exporter:** ✅ Uses generic exporter, ⚫ Has custom Python exporter script\n"
-    md_content += "- **Base GameLogic:** ✅ Uses generic logic, ⚫ Has custom JavaScript game logic\n\n"
+    md_content += "- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script\n"
+    md_content += "- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files\n\n"
     md_content += "**Pass Criteria:** A test is marked as ✅ Passed only if:\n"
     md_content += "- Generation errors = 0 (no errors during world generation)\n"
     md_content += "- Client 1 passed (all manually-checkable locations sent)\n"
@@ -453,13 +486,22 @@ def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int
     return md_content
 
 
-def extract_multiworld_chart_data(results: Dict[str, Any]) -> List[Dict[str, Any]]:
+def format_file_size(size_bytes: int) -> str:
+    """Format file size in human-readable format (KB with one decimal)."""
+    if size_bytes == 0:
+        return "✅"
+    kb = size_bytes / 1024
+    return f"{kb:.1f}KB"
+
+
+def extract_multiworld_chart_data(results: Dict[str, Any], world_mapping: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
     """
     Extract multiworld test chart data from results.
     Returns list of dicts with keys:
         game_name, pass_fail, player_number, total_players_tested,
         total_players_in_multiworld, players_passed, players_failed,
         all_prereqs_passed, has_custom_exporter, has_custom_game_logic,
+        exporter_size, game_logic_size,
         templates_in_multiworld, bisection_results, second_pass
     """
     chart_data = []
@@ -472,6 +514,14 @@ def extract_multiworld_chart_data(results: Dict[str, Any]) -> List[Dict[str, Any
         game_name = world_info.get('game_name_from_yaml') or template_filename.replace('.yaml', '')
         has_custom_exporter = world_info.get('has_custom_exporter', False)
         has_custom_game_logic = world_info.get('has_custom_game_logic', False)
+
+        # Get file sizes from world_mapping if available, otherwise from world_info
+        if world_mapping and game_name in world_mapping:
+            exporter_size = world_mapping[game_name].get('exporter_size', 0)
+            game_logic_size = world_mapping[game_name].get('game_logic_size', 0)
+        else:
+            exporter_size = world_info.get('exporter_size', 0)
+            game_logic_size = world_info.get('game_logic_size', 0)
 
         multiworld_test = template_data.get('multiworld_test', {})
         prerequisite_check = template_data.get('prerequisite_check', {})
@@ -508,6 +558,8 @@ def extract_multiworld_chart_data(results: Dict[str, Any]) -> List[Dict[str, Any
             'all_prereqs_passed': all_prereqs_passed,
             'has_custom_exporter': has_custom_exporter,
             'has_custom_game_logic': has_custom_game_logic,
+            'exporter_size': exporter_size,
+            'game_logic_size': game_logic_size,
             'templates_in_multiworld': templates_in_multiworld,
             'bisection_results': bisection_results,
             'second_pass': second_pass
@@ -579,11 +631,11 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
 
     # Add Second Pass column if there's second pass data
     if has_second_pass_data:
-        md_content += "| Game Name | First Pass | Second Pass | Player # | MW Size | Base Exporter | Base GameLogic |\n"
-        md_content += "|-----------|------------|-------------|----------|---------|---------------|----------------|\n"
+        md_content += "| Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |\n"
+        md_content += "|-----------|------------|-------------|----------|---------|----------|----------|\n"
     else:
-        md_content += "| Game Name | Test Result | Player # | Total Players | Players Passed | Players Failed | Base Exporter | Base GameLogic |\n"
-        md_content += "|-----------|-------------|----------|---------------|----------------|----------------|---------------|----------------|\n"
+        md_content += "| Game Name | Test Result | Player # | Total Players | Players Passed | Players Failed | Exporter | GameLogic |\n"
+        md_content += "|-----------|-------------|----------|---------------|----------------|----------------|----------|----------|\n"
 
     for entry in chart_data:
         game_name = entry['game_name']
@@ -593,8 +645,8 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
         total_players_in_multiworld = entry.get('total_players_in_multiworld', 0)
         players_passed = entry['players_passed']
         players_failed = entry['players_failed']
-        has_custom_exporter = entry['has_custom_exporter']
-        has_custom_game_logic = entry['has_custom_game_logic']
+        exporter_size = entry.get('exporter_size', 0)
+        game_logic_size = entry.get('game_logic_size', 0)
         second_pass = entry.get('second_pass')
 
         if pass_fail.lower() == 'passed':
@@ -604,8 +656,8 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
         else:
             result_display = "❌ Failed"
 
-        exporter_indicator = "⚫" if has_custom_exporter else "✅"
-        game_logic_indicator = "⚫" if has_custom_game_logic else "✅"
+        exporter_indicator = format_file_size(exporter_size)
+        game_logic_indicator = format_file_size(game_logic_size)
 
         player_display = str(player_number) if player_number > 0 else "N/A"
 
@@ -764,8 +816,8 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
     md_content += "- **Total Players / MW Size:** Number of players in the multiworld configuration when this template was tested\n"
     md_content += "- **Players Passed:** Number of players that passed the spoiler test\n"
     md_content += "- **Players Failed:** Number of players that failed the spoiler test\n"
-    md_content += "- **Base Exporter:** ✅ Uses generic exporter, ⚫ Has custom Python exporter script\n"
-    md_content += "- **Base GameLogic:** ✅ Uses generic logic, ⚫ Has custom JavaScript game logic\n\n"
+    md_content += "- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script\n"
+    md_content += "- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files\n\n"
     md_content += "**Pass Criteria:** All prerequisite tests (Spoiler Minimal, Spoiler Full, Multiclient) must pass, and all players in the multiworld must pass their spoiler tests\n\n"
     md_content += "**Skipped:** Templates that did not meet prerequisite requirements\n\n"
 
@@ -871,14 +923,8 @@ def generate_multitemplate_markdown(chart_data: Dict[str, List[Tuple[str, str, i
         passed = sum(1 for _, pf, *_ in templates if pf.lower() == 'passed')
         total = len(templates)
 
-        # Get exporter/logic info from first template (all templates for a game share these)
-        _, _, _, _, _, has_custom_exporter, has_custom_game_logic = templates[0]
-        exporter_indicator = "⚫ No" if has_custom_exporter else "✅ Yes"
-        game_logic_indicator = "⚫ No" if has_custom_game_logic else "✅ Yes"
-
         md_content += f"## {game_name}\n\n"
-        md_content += f"**Results:** {passed}/{total} passed ({passed/total*100:.1f}%)  \n"
-        md_content += f"**Base Exporter:** {exporter_indicator} | **Base GameLogic:** {game_logic_indicator}\n\n"
+        md_content += f"**Results:** {passed}/{total} passed ({passed/total*100:.1f}%)\n\n"
 
         md_content += "| Template | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress |\n"
         md_content += "|----------|-------------|------------|----------------|-------------|----------|\n"
@@ -916,16 +962,13 @@ def generate_multitemplate_markdown(chart_data: Dict[str, List[Tuple[str, str, i
     md_content += "- **Sphere Reached:** The logical sphere the test reached before completion/failure\n"
     md_content += "- **Max Spheres:** Total logical spheres available in the game\n"
     md_content += "- **Progress:** Percentage of logical spheres completed\n\n"
-    md_content += "### Game Information\n\n"
-    md_content += "- **Base Exporter:** Whether the game uses generic exporter (✅ Yes) or has a custom Python exporter script (⚫ No)\n"
-    md_content += "- **Base GameLogic:** Whether the game uses generic logic (✅ Yes) or has custom JavaScript game logic (⚫ No)\n\n"
     md_content += "**Pass Criteria:** Generation errors = 0, Max spheres > 0, Spoiler test completed successfully\n\n"
     md_content += "**Invalid Configurations:** Templates marked as Invalid have settings that cannot be satisfied by the game's logic (FillError). These represent impossible configurations, not bugs.\n"
 
     return md_content
 
 
-def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None, ut_comparison_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None, has_ut_random=False, has_ut_fixed=False) -> str:
+def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None, ut_comparison_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None, has_ut_random=False, has_ut_fixed=False, world_mapping=None) -> str:
     """Generate a combined summary chart with all test results."""
     md_content = "# Archipelago Template Test Results Summary\n\n"
     md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
@@ -1054,11 +1097,11 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
     # Add Test Results table
     md_content += "\n## Test Results\n\n"
     if multiworld_data is not None:
-        md_content += "| Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Base Exporter | Base GameLogic |\n"
-        md_content += "|-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|---------------|----------------|\n"
+        md_content += "| Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic |\n"
+        md_content += "|-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|\n"
     else:
-        md_content += "| Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | Consistent Rules | Consistent Spoilers | Base Exporter | Base GameLogic |\n"
-        md_content += "|-----------|--------------|-----------|------------------|------------------|---------------------|---------------|----------------|\n"
+        md_content += "| Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic |\n"
+        md_content += "|-----------|--------------|-----------|------------------|------------------|---------------------|----------|----------|\n"
 
     for game in all_games:
         minimal_result = games_minimal.get(game, "N/A")
@@ -1066,10 +1109,16 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
         multiclient_result = games_multiclient.get(game, "N/A")
         multiworld_result = games_multiworld.get(game, "N/A") if multiworld_data is not None else None
 
-        # Get exporter/logic info
+        # Get exporter/logic info - use file sizes from world_mapping if available
         has_exporter, has_logic = games_exporter_logic.get(game, (False, False))
-        exporter_indicator = "⚫" if has_exporter else "✅"
-        logic_indicator = "⚫" if has_logic else "✅"
+        if world_mapping and game in world_mapping:
+            exporter_size = world_mapping[game].get('exporter_size', 0)
+            game_logic_size = world_mapping[game].get('game_logic_size', 0)
+            exporter_indicator = format_file_size(exporter_size)
+            logic_indicator = format_file_size(game_logic_size)
+        else:
+            exporter_indicator = "⚫" if has_exporter else "✅"
+            logic_indicator = "⚫" if has_logic else "✅"
 
         # Get consistency info
         rules_consistent, spoilers_consistent = games_consistency.get(game, (None, None))
@@ -1168,8 +1217,8 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
     md_content += "- **[Multiworld Test](./test-results-multiworld.md):** Tests the game in a multiworld with multiple other games\n"
     md_content += "- **Consistent Rules:** ✅ if rules.json files are identical across all tested seeds, ⚫ if they differ, ❓ if not tested\n"
     md_content += "- **Consistent Spoilers:** ✅ if spoiler files are identical across all tested seeds, ⚫ if they differ, ❓ if not tested\n"
-    md_content += "- **Base Exporter:** ✅ Uses generic exporter, ⚫ Has custom Python exporter script\n"
-    md_content += "- **Base GameLogic:** ✅ Uses generic logic, ⚫ Has custom JavaScript game logic\n"
+    md_content += "- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script\n"
+    md_content += "- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files\n"
 
     return md_content
 
@@ -1228,7 +1277,8 @@ def main():
             world_mapping = load_world_mapping(project_root)
             md_content = generate_ut_comparison_markdown(chart_data, metadata, world_mapping)
         else:  # multiworld
-            chart_data = extract_multiworld_chart_data(results)
+            full_world_mapping = load_full_world_mapping(project_root)
+            chart_data = extract_multiworld_chart_data(results, full_world_mapping)
             # Extract top-level metadata for multiworld
             top_level = {
                 'timestamp': results.get('timestamp'),
@@ -1243,6 +1293,18 @@ def main():
         return 0
 
     # Process all test types (original and WorldGen)
+
+    # First, update the world mapping to ensure file sizes are current
+    print("Updating world mapping...")
+    world_mapping_script = os.path.join(project_root, 'scripts/build/build-world-mapping.py')
+    result = subprocess.run([sys.executable, world_mapping_script], cwd=project_root, capture_output=True, text=True)
+    if result.returncode != 0:
+        print(f"Warning: Failed to update world mapping: {result.stderr}")
+    else:
+        print("World mapping updated successfully.")
+
+    # Load world mapping for file size information (used by all markdown generators)
+    full_world_mapping = load_full_world_mapping(project_root)
 
     # Load minimal spoiler test results (original and WorldGen)
     minimal_input = os.path.join(project_root, 'scripts/output/spoiler-minimal/test-results.json')
@@ -1260,7 +1322,8 @@ def main():
         wg_link = './test-results-spoilers-minimal-worldgen.md' if has_minimal_wg else None
         minimal_md = generate_spoiler_markdown(minimal_data, minimal_results.get('metadata', {}),
                                               "Spoiler Test - Advancement Items Only",
-                                              is_worldgen=False, other_version_link=wg_link)
+                                              is_worldgen=False, other_version_link=wg_link,
+                                              world_mapping=full_world_mapping)
         os.makedirs(os.path.dirname(minimal_output), exist_ok=True)
         with open(minimal_output, 'w') as f:
             f.write(minimal_md)
@@ -1275,7 +1338,8 @@ def main():
         orig_link = './test-results-spoilers-minimal.md' if has_minimal else None
         minimal_wg_md = generate_spoiler_markdown(minimal_wg_data, minimal_wg_results.get('metadata', {}),
                                                   "Spoiler Test - Advancement Items Only (WorldGen)",
-                                                  is_worldgen=True, other_version_link=orig_link)
+                                                  is_worldgen=True, other_version_link=orig_link,
+                                                  world_mapping=full_world_mapping)
         os.makedirs(os.path.dirname(minimal_wg_output), exist_ok=True)
         with open(minimal_wg_output, 'w') as f:
             f.write(minimal_wg_md)
@@ -1297,7 +1361,8 @@ def main():
         wg_link = './test-results-spoilers-full-worldgen.md' if has_full_wg else None
         full_md = generate_spoiler_markdown(full_data, full_results.get('metadata', {}),
                                            "Spoiler Test - All Locations",
-                                           is_worldgen=False, other_version_link=wg_link)
+                                           is_worldgen=False, other_version_link=wg_link,
+                                           world_mapping=full_world_mapping)
         os.makedirs(os.path.dirname(full_output), exist_ok=True)
         with open(full_output, 'w') as f:
             f.write(full_md)
@@ -1311,7 +1376,8 @@ def main():
         orig_link = './test-results-spoilers-full.md' if has_full else None
         full_wg_md = generate_spoiler_markdown(full_wg_data, full_wg_results.get('metadata', {}),
                                                "Spoiler Test - All Locations (WorldGen)",
-                                               is_worldgen=True, other_version_link=orig_link)
+                                               is_worldgen=True, other_version_link=orig_link,
+                                               world_mapping=full_world_mapping)
         os.makedirs(os.path.dirname(full_wg_output), exist_ok=True)
         with open(full_wg_output, 'w') as f:
             f.write(full_wg_md)
@@ -1338,7 +1404,8 @@ def main():
         }
         wg_link = './test-results-multiclient-worldgen.md' if has_mp_wg else None
         mp_md = generate_multiclient_markdown(mp_data, mp_results.get('metadata', {}), top_level_mp,
-                                              is_worldgen=False, other_version_link=wg_link)
+                                              is_worldgen=False, other_version_link=wg_link,
+                                              world_mapping=full_world_mapping)
         os.makedirs(os.path.dirname(mp_output), exist_ok=True)
         with open(mp_output, 'w') as f:
             f.write(mp_md)
@@ -1357,7 +1424,8 @@ def main():
         }
         orig_link = './test-results-multiclient.md' if has_mp else None
         mp_wg_md = generate_multiclient_markdown(mp_wg_data, mp_wg_results.get('metadata', {}), top_level_mp_wg,
-                                                  is_worldgen=True, other_version_link=orig_link)
+                                                  is_worldgen=True, other_version_link=orig_link,
+                                                  world_mapping=full_world_mapping)
         os.makedirs(os.path.dirname(mp_wg_output), exist_ok=True)
         with open(mp_wg_output, 'w') as f:
             f.write(mp_wg_md)
@@ -1376,7 +1444,7 @@ def main():
     mw_data = None
     if has_mw:
         mw_results = load_test_results(mw_input)
-        mw_data = extract_multiworld_chart_data(mw_results)
+        mw_data = extract_multiworld_chart_data(mw_results, full_world_mapping)
         top_level_mw = {
             'timestamp': mw_results.get('timestamp'),
             'seed': mw_results.get('seed')
@@ -1392,7 +1460,7 @@ def main():
 
     if has_mw_wg:
         mw_wg_results = load_test_results(mw_wg_input)
-        mw_wg_data = extract_multiworld_chart_data(mw_wg_results)
+        mw_wg_data = extract_multiworld_chart_data(mw_wg_results, full_world_mapping)
         top_level_mw_wg = {
             'timestamp': mw_wg_results.get('timestamp'),
             'seed': mw_wg_results.get('seed')
@@ -1499,7 +1567,7 @@ def main():
         full_meta = full_results.get('metadata', {}) if 'full_results' in locals() else None
 
         summary_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary.md')
-        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data, ut_data, excluded_games, minimal_meta, full_meta, has_ut_random=has_random, has_ut_fixed=has_fixed)
+        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data, ut_data, excluded_games, minimal_meta, full_meta, has_ut_random=has_random, has_ut_fixed=has_fixed, world_mapping=full_world_mapping)
         with open(summary_output, 'w') as f:
             f.write(summary_md)
 

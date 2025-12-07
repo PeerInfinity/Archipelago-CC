@@ -6,7 +6,7 @@
 
 [View Original Template Results](./test-results-spoilers-full.md)
 
-**Generated:** 2025-12-07 09:34:53
+**Generated:** 2025-12-07 09:55:17
 
 **Source Data Created:** 2025-12-07T02:00:45.583856
 
@@ -22,8 +22,8 @@
 
 ## Test Results
 
-| Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Base Exporter | Base GameLogic |
-|-----------|-------------|------------|----------------|-------------|----------|---------------|----------------|
+| Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
+|-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time WorldGen | ✅ Passed | 0 | 1.31 | 1.31 | 🟢 Complete | ✅ | ✅ |
 | A Link to the Past WorldGen | ✅ Passed | 0 | 6.11 | 6.11 | 🟢 Complete | ✅ | ✅ |
 | A Short Hike WorldGen | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
@@ -110,7 +110,7 @@
 - **Sphere Reached:** The logical sphere the test reached before completion/failure
 - **Max Spheres:** Total logical spheres available in the game
 - **Progress:** Percentage of logical spheres completed
-- **Base Exporter:** ✅ Uses generic exporter, ⚫ Has custom Python exporter script
-- **Base GameLogic:** ✅ Uses generic logic, ⚫ Has custom JavaScript game logic
+- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script
+- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files
 
 **Pass Criteria:** Generation errors = 0, Max spheres > 0, Spoiler test completed successfully
