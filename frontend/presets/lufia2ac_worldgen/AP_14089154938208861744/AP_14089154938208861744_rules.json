@@ -1,0 +1,5413 @@
+{
+  "schema_version": 3,
+  "game_name": "Lufia II Ancient Cave WorldGen",
+  "game_directory": "lufia2ac_worldgen",
+  "archipelago_version": "0.6.5",
+  "generation_seed": 1,
+  "player_names": {
+    "1": "Player1"
+  },
+  "world_classes": {
+    "1": "LufiaIIAncientCaveWorldGenWorld"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "AncientDungeonEntrance",
+            "connected_region": "AncientDungeon",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "AncientDungeon": {
+        "name": "AncientDungeon",
+        "hint_text": "Ancient Dungeon",
+        "exits": [
+          {
+            "name": "FinalFloorEntrance",
+            "connected_region": "FinalFloor",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Blue chest 1",
+            "id": 11272192,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Cryst shield",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 2",
+            "id": 11272193,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Sizzle sword",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 3",
+            "id": 11272194,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Thundo jewel",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 4",
+            "id": 11272195,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Snow sword",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 5",
+            "id": 11272196,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Silver eye",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 6",
+            "id": 11272197,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access"
+            },
+            "item": {
+              "name": "Boom turban",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 7",
+            "id": 11272198,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access"
+            },
+            "item": {
+              "name": "Snow sword",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 8",
+            "id": 11272199,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access"
+            },
+            "item": {
+              "name": "Agony helm",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 9",
+            "id": 11272200,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access"
+            },
+            "item": {
+              "name": "Aqua helm",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 10",
+            "id": 11272201,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access"
+            },
+            "item": {
+              "name": "Dragon spear",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 11",
+            "id": 11272202,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 2
+            },
+            "item": {
+              "name": "Dark mirror",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 12",
+            "id": 11272203,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 2
+            },
+            "item": {
+              "name": "Flame shield",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 13",
+            "id": 11272204,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 2
+            },
+            "item": {
+              "name": "Dragon spear",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 14",
+            "id": 11272205,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 2
+            },
+            "item": {
+              "name": "Boom turban",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 15",
+            "id": 11272206,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 2
+            },
+            "item": {
+              "name": "Dark mirror",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 16",
+            "id": 11272207,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 3
+            },
+            "item": {
+              "name": "Air whip",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 17",
+            "id": 11272208,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 3
+            },
+            "item": {
+              "name": "Agony helm",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 18",
+            "id": 11272209,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 3
+            },
+            "item": {
+              "name": "Sizzle sword",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 19",
+            "id": 11272210,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 3
+            },
+            "item": {
+              "name": "Gades blade",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 20",
+            "id": 11272211,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 3
+            },
+            "item": {
+              "name": "Dia ring",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 21",
+            "id": 11272212,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Catfish jwl.",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 22",
+            "id": 11272213,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Dragon spear",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 23",
+            "id": 11272214,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Agony helm",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 24",
+            "id": 11272215,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Sky sword",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Blue chest 25",
+            "id": 11272216,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Earth jewel",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Chest access 6-10",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Progressive chest access",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "show_in_spoiler": false
+          },
+          {
+            "name": "Chest access 11-15",
+            "id": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access"
+            },
+            "item": {
+              "name": "Progressive chest access",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "show_in_spoiler": false
+          },
+          {
+            "name": "Chest access 16-20",
+            "id": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 2
+            },
+            "item": {
+              "name": "Progressive chest access",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "show_in_spoiler": false
+          },
+          {
+            "name": "Chest access 21-25",
+            "id": null,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 3
+            },
+            "item": {
+              "name": "Progressive chest access",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "show_in_spoiler": false
+          },
+          {
+            "name": "Iris treasure 4",
+            "id": 11273119,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Iris armor",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Iris treasure 3",
+            "id": 11273118,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Iris helmet",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Iris treasure 6",
+            "id": 11273121,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Iris jewel",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Iris treasure 8",
+            "id": 11273123,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Iris pot",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Iris treasure 5",
+            "id": 11273120,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Iris ring",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Iris treasure 2",
+            "id": 11273117,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Iris shield",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Iris treasure 7",
+            "id": 11273122,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Iris staff",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Iris treasure 1",
+            "id": 11273116,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Iris sword",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Iris treasure 9",
+            "id": 11273124,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Iris tiara",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "FinalFloor": {
+        "name": "FinalFloor",
+        "hint_text": "Ancient Cave Final Floor",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Final Floor reached",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Final Floor access",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Boss",
+            "id": 11272642,
+            "access_rule": {
+              "type": "item_check",
+              "item": "Progressive chest access",
+              "count": 4
+            },
+            "item": {
+              "name": "Ancient key",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "Charred newt": {
+        "name": "Charred newt",
+        "id": 11272193,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Potion": {
+        "name": "Potion",
+        "id": 11272194,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Hi-Potion": {
+        "name": "Hi-Potion",
+        "id": 11272195,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Ex-Potion": {
+        "name": "Ex-Potion",
+        "id": 11272196,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Magic jar": {
+        "name": "Magic jar",
+        "id": 11272197,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Hi-Magic": {
+        "name": "Hi-Magic",
+        "id": 11272198,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Ex-Magic": {
+        "name": "Ex-Magic",
+        "id": 11272199,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Regain": {
+        "name": "Regain",
+        "id": 11272200,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Miracle": {
+        "name": "Miracle",
+        "id": 11272201,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Antidote": {
+        "name": "Antidote",
+        "id": 11272202,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Awake": {
+        "name": "Awake",
+        "id": 11272203,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Shriek": {
+        "name": "Shriek",
+        "id": 11272204,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Mystery pin": {
+        "name": "Mystery pin",
+        "id": 11272205,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Power gourd": {
+        "name": "Power gourd",
+        "id": 11272206,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Mind gourd": {
+        "name": "Mind gourd",
+        "id": 11272207,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Magic guard": {
+        "name": "Magic guard",
+        "id": 11272208,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Life potion": {
+        "name": "Life potion",
+        "id": 11272209,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Spell potion": {
+        "name": "Spell potion",
+        "id": 11272210,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Power potion": {
+        "name": "Power potion",
+        "id": 11272211,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Speed potion": {
+        "name": "Speed potion",
+        "id": 11272212,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Mind potion": {
+        "name": "Mind potion",
+        "id": 11272213,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Brave": {
+        "name": "Brave",
+        "id": 11272214,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Sour cider": {
+        "name": "Sour cider",
+        "id": 11272216,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Sleep ball": {
+        "name": "Sleep ball",
+        "id": 11272220,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Confuse ball": {
+        "name": "Confuse ball",
+        "id": 11272221,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Freeze ball": {
+        "name": "Freeze ball",
+        "id": 11272222,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Smoke ball": {
+        "name": "Smoke ball",
+        "id": 11272223,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Ice ball": {
+        "name": "Ice ball",
+        "id": 11272224,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Fire ball": {
+        "name": "Fire ball",
+        "id": 11272225,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Terror ball": {
+        "name": "Terror ball",
+        "id": 11272226,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Boomerang": {
+        "name": "Boomerang",
+        "id": 11272228,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Big boomer": {
+        "name": "Big boomer",
+        "id": 11272229,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Ex-boomer": {
+        "name": "Ex-boomer",
+        "id": 11272230,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Curselifter": {
+        "name": "Curselifter",
+        "id": 11272236,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Secret fruit": {
+        "name": "Secret fruit",
+        "id": 11272238,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Holy fruit": {
+        "name": "Holy fruit",
+        "id": 11272239,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Breeze fruit": {
+        "name": "Breeze fruit",
+        "id": 11272240,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Charm fruit": {
+        "name": "Charm fruit",
+        "id": 11272241,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Dark fruit": {
+        "name": "Dark fruit",
+        "id": 11272242,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Earth fruit": {
+        "name": "Earth fruit",
+        "id": 11272243,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Flame fruit": {
+        "name": "Flame fruit",
+        "id": 11272244,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Magic fruit": {
+        "name": "Magic fruit",
+        "id": 11272245,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Frypan": {
+        "name": "Frypan",
+        "id": 11272247,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Knife": {
+        "name": "Knife",
+        "id": 11272248,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Small knife": {
+        "name": "Small knife",
+        "id": 11272249,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Rapier": {
+        "name": "Rapier",
+        "id": 11272250,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Battle knife": {
+        "name": "Battle knife",
+        "id": 11272251,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Dagger": {
+        "name": "Dagger",
+        "id": 11272252,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Insect crush": {
+        "name": "Insect crush",
+        "id": 11272253,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Long knife": {
+        "name": "Long knife",
+        "id": 11272254,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Short sword": {
+        "name": "Short sword",
+        "id": 11272255,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Light knife": {
+        "name": "Light knife",
+        "id": 11272256,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Kukri": {
+        "name": "Kukri",
+        "id": 11272257,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Gladius": {
+        "name": "Gladius",
+        "id": 11272258,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Cold rapier": {
+        "name": "Cold rapier",
+        "id": 11272259,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Scimitar": {
+        "name": "Scimitar",
+        "id": 11272260,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Deadly sword": {
+        "name": "Deadly sword",
+        "id": 11272261,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "SuhrCustom11": {
+        "name": "SuhrCustom11",
+        "id": 11272263,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Bronze sword": {
+        "name": "Bronze sword",
+        "id": 11272264,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Fire dagger": {
+        "name": "Fire dagger",
+        "id": 11272265,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "War rapier": {
+        "name": "War rapier",
+        "id": 11272266,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Long sword": {
+        "name": "Long sword",
+        "id": 11272267,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Beserk blade": {
+        "name": "Beserk blade",
+        "id": 11272268,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Multi sword": {
+        "name": "Multi sword",
+        "id": 11272270,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Rockbreaker": {
+        "name": "Rockbreaker",
+        "id": 11272271,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Broadsword": {
+        "name": "Broadsword",
+        "id": 11272272,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Estok": {
+        "name": "Estok",
+        "id": 11272273,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Silvo rapier": {
+        "name": "Silvo rapier",
+        "id": 11272274,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Burn sword": {
+        "name": "Burn sword",
+        "id": 11272275,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Dekar blade": {
+        "name": "Dekar blade",
+        "id": 11272276,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Crazy blade": {
+        "name": "Crazy blade",
+        "id": 11272277,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Deadly sword (fake)": {
+        "name": "Deadly sword (fake)",
+        "id": 11272278,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Luck rapier": {
+        "name": "Luck rapier",
+        "id": 11272280,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Aqua sword": {
+        "name": "Aqua sword",
+        "id": 11272282,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Red saber": {
+        "name": "Red saber",
+        "id": 11272283,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Lucky blade": {
+        "name": "Lucky blade",
+        "id": 11272284,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Mist rapier": {
+        "name": "Mist rapier",
+        "id": 11272286,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Boom sword": {
+        "name": "Boom sword",
+        "id": 11272287,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Freeze sword": {
+        "name": "Freeze sword",
+        "id": 11272288,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Silver sword": {
+        "name": "Silver sword",
+        "id": 11272289,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Flying blow": {
+        "name": "Flying blow",
+        "id": 11272290,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Super sword": {
+        "name": "Super sword",
+        "id": 11272291,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Buster sword": {
+        "name": "Buster sword",
+        "id": 11272292,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Rune rapier": {
+        "name": "Rune rapier",
+        "id": 11272293,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Old sword": {
+        "name": "Old sword",
+        "id": 11272294,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Lizard blow": {
+        "name": "Lizard blow",
+        "id": 11272295,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Zirco sword": {
+        "name": "Zirco sword",
+        "id": 11272296,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Myth blade": {
+        "name": "Myth blade",
+        "id": 11272299,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Franshiska": {
+        "name": "Franshiska",
+        "id": 11272305,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Thunder ax": {
+        "name": "Thunder ax",
+        "id": 11272306,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Hand ax": {
+        "name": "Hand ax",
+        "id": 11272307,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Bronze ax": {
+        "name": "Bronze ax",
+        "id": 11272308,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Rainy ax": {
+        "name": "Rainy ax",
+        "id": 11272310,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Great ax": {
+        "name": "Great ax",
+        "id": 11272311,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Zirco ax": {
+        "name": "Zirco ax",
+        "id": 11272312,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Mace": {
+        "name": "Mace",
+        "id": 11272314,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Rod": {
+        "name": "Rod",
+        "id": 11272315,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Staff": {
+        "name": "Staff",
+        "id": 11272316,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Deadly rod": {
+        "name": "Deadly rod",
+        "id": 11272317,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Sleep rod": {
+        "name": "Sleep rod",
+        "id": 11272319,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Long staff": {
+        "name": "Long staff",
+        "id": 11272320,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Holy staff": {
+        "name": "Holy staff",
+        "id": 11272321,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Morning star": {
+        "name": "Morning star",
+        "id": 11272322,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Pounder rod": {
+        "name": "Pounder rod",
+        "id": 11272323,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Crystal wand": {
+        "name": "Crystal wand",
+        "id": 11272324,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Silver rod": {
+        "name": "Silver rod",
+        "id": 11272325,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Zirco rod": {
+        "name": "Zirco rod",
+        "id": 11272326,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Zirco flail": {
+        "name": "Zirco flail",
+        "id": 11272327,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Whip": {
+        "name": "Whip",
+        "id": 11272329,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Wire": {
+        "name": "Wire",
+        "id": 11272330,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Chain": {
+        "name": "Chain",
+        "id": 11272331,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Aqua whip": {
+        "name": "Aqua whip",
+        "id": 11272332,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Cutter whip": {
+        "name": "Cutter whip",
+        "id": 11272333,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Royal whip": {
+        "name": "Royal whip",
+        "id": 11272334,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Holy whip": {
+        "name": "Holy whip",
+        "id": 11272335,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Zirco whip": {
+        "name": "Zirco whip",
+        "id": 11272336,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Fatal pick": {
+        "name": "Fatal pick",
+        "id": 11272338,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Spear": {
+        "name": "Spear",
+        "id": 11272340,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Trident": {
+        "name": "Trident",
+        "id": 11272341,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Halberd": {
+        "name": "Halberd",
+        "id": 11272342,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Heavy lance": {
+        "name": "Heavy lance",
+        "id": 11272343,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Vice pliers": {
+        "name": "Vice pliers",
+        "id": 11272346,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Coma hit": {
+        "name": "Coma hit",
+        "id": 11272347,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Figgoru": {
+        "name": "Figgoru",
+        "id": 11272348,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Superdriver": {
+        "name": "Superdriver",
+        "id": 11272349,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Stun gun": {
+        "name": "Stun gun",
+        "id": 11272350,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Battledriver": {
+        "name": "Battledriver",
+        "id": 11272351,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Launcher": {
+        "name": "Launcher",
+        "id": 11272352,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Freeze bow": {
+        "name": "Freeze bow",
+        "id": 11272353,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Cursed bow": {
+        "name": "Cursed bow",
+        "id": 11272354,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Apron": {
+        "name": "Apron",
+        "id": 11272356,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Dress": {
+        "name": "Dress",
+        "id": 11272357,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Cloth": {
+        "name": "Cloth",
+        "id": 11272358,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Lab-coat": {
+        "name": "Lab-coat",
+        "id": 11272359,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Hide armor": {
+        "name": "Hide armor",
+        "id": 11272360,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Frock": {
+        "name": "Frock",
+        "id": 11272361,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Robe": {
+        "name": "Robe",
+        "id": 11272362,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Cloth armor": {
+        "name": "Cloth armor",
+        "id": 11272363,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Coat": {
+        "name": "Coat",
+        "id": 11272364,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Tough hide": {
+        "name": "Tough hide",
+        "id": 11272365,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Light dress": {
+        "name": "Light dress",
+        "id": 11272366,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Light armor": {
+        "name": "Light armor",
+        "id": 11272367,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Camu armor": {
+        "name": "Camu armor",
+        "id": 11272368,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Baggy": {
+        "name": "Baggy",
+        "id": 11272369,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Tight dress": {
+        "name": "Tight dress",
+        "id": 11272370,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Chainmail": {
+        "name": "Chainmail",
+        "id": 11272371,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Holy wings": {
+        "name": "Holy wings",
+        "id": 11272372,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Ironmail": {
+        "name": "Ironmail",
+        "id": 11272373,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Toga": {
+        "name": "Toga",
+        "id": 11272374,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Chain armor": {
+        "name": "Chain armor",
+        "id": 11272375,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Thick cloth": {
+        "name": "Thick cloth",
+        "id": 11272376,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Stone plate": {
+        "name": "Stone plate",
+        "id": 11272377,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Long robe": {
+        "name": "Long robe",
+        "id": 11272378,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Plated cloth": {
+        "name": "Plated cloth",
+        "id": 11272379,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Iron plate": {
+        "name": "Iron plate",
+        "id": 11272380,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Metal mail": {
+        "name": "Metal mail",
+        "id": 11272381,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Silk toga": {
+        "name": "Silk toga",
+        "id": 11272382,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Silver armor": {
+        "name": "Silver armor",
+        "id": 11272383,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Light jacket": {
+        "name": "Light jacket",
+        "id": 11272384,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Metal coat": {
+        "name": "Metal coat",
+        "id": 11272385,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Silver mail": {
+        "name": "Silver mail",
+        "id": 11272386,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Power jacket": {
+        "name": "Power jacket",
+        "id": 11272387,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Quilted silk": {
+        "name": "Quilted silk",
+        "id": 11272388,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Metal armor": {
+        "name": "Metal armor",
+        "id": 11272389,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Power cape": {
+        "name": "Power cape",
+        "id": 11272390,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Magic bikini": {
+        "name": "Magic bikini",
+        "id": 11272391,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Silver robe": {
+        "name": "Silver robe",
+        "id": 11272392,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Evening gown": {
+        "name": "Evening gown",
+        "id": 11272393,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Plate armor": {
+        "name": "Plate armor",
+        "id": 11272394,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Plati plate": {
+        "name": "Plati plate",
+        "id": 11272395,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Silk robe": {
+        "name": "Silk robe",
+        "id": 11272396,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Revive armor": {
+        "name": "Revive armor",
+        "id": 11272397,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Crystal mail": {
+        "name": "Crystal mail",
+        "id": 11272398,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Crystal robe": {
+        "name": "Crystal robe",
+        "id": 11272399,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Heal armor": {
+        "name": "Heal armor",
+        "id": 11272400,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Metal jacket": {
+        "name": "Metal jacket",
+        "id": 11272401,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Deadly armor": {
+        "name": "Deadly armor",
+        "id": 11272402,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Eron dress": {
+        "name": "Eron dress",
+        "id": 11272404,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Bright armor": {
+        "name": "Bright armor",
+        "id": 11272405,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Bright cloth": {
+        "name": "Bright cloth",
+        "id": 11272406,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Power robe": {
+        "name": "Power robe",
+        "id": 11272407,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Magic scale": {
+        "name": "Magic scale",
+        "id": 11272408,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Ghostclothes": {
+        "name": "Ghostclothes",
+        "id": 11272410,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Royal dress": {
+        "name": "Royal dress",
+        "id": 11272411,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Full mail": {
+        "name": "Full mail",
+        "id": 11272412,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Old armor": {
+        "name": "Old armor",
+        "id": 11272413,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Zircon plate": {
+        "name": "Zircon plate",
+        "id": 11272414,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Zircon armor": {
+        "name": "Zircon armor",
+        "id": 11272415,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Chop board": {
+        "name": "Chop board",
+        "id": 11272419,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Small shield": {
+        "name": "Small shield",
+        "id": 11272420,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Hide shield": {
+        "name": "Hide shield",
+        "id": 11272421,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Buckler": {
+        "name": "Buckler",
+        "id": 11272422,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Mini shield": {
+        "name": "Mini shield",
+        "id": 11272423,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Wood shield": {
+        "name": "Wood shield",
+        "id": 11272424,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Bracelet": {
+        "name": "Bracelet",
+        "id": 11272425,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Power brace": {
+        "name": "Power brace",
+        "id": 11272426,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Kite shield": {
+        "name": "Kite shield",
+        "id": 11272427,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Tough gloves": {
+        "name": "Tough gloves",
+        "id": 11272428,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Brone shield": {
+        "name": "Brone shield",
+        "id": 11272429,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Anger brace": {
+        "name": "Anger brace",
+        "id": 11272430,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Block shield": {
+        "name": "Block shield",
+        "id": 11272431,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Tecto gloves": {
+        "name": "Tecto gloves",
+        "id": 11272432,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Round shield": {
+        "name": "Round shield",
+        "id": 11272433,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Pearl brace": {
+        "name": "Pearl brace",
+        "id": 11272434,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Fayza shield": {
+        "name": "Fayza shield",
+        "id": 11272435,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Big shield": {
+        "name": "Big shield",
+        "id": 11272436,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Tall shield": {
+        "name": "Tall shield",
+        "id": 11272437,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Silvo shield": {
+        "name": "Silvo shield",
+        "id": 11272438,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Spike shield": {
+        "name": "Spike shield",
+        "id": 11272439,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Slash shield": {
+        "name": "Slash shield",
+        "id": 11272440,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Mage shield": {
+        "name": "Mage shield",
+        "id": 11272441,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Tuff buckler": {
+        "name": "Tuff buckler",
+        "id": 11272442,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Tect buckler": {
+        "name": "Tect buckler",
+        "id": 11272443,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Gold gloves": {
+        "name": "Gold gloves",
+        "id": 11272444,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Gold shield": {
+        "name": "Gold shield",
+        "id": 11272445,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Plati gloves": {
+        "name": "Plati gloves",
+        "id": 11272446,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Plati shield": {
+        "name": "Plati shield",
+        "id": 11272447,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Gauntlet": {
+        "name": "Gauntlet",
+        "id": 11272448,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Rune gloves": {
+        "name": "Rune gloves",
+        "id": 11272449,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Holy shield": {
+        "name": "Holy shield",
+        "id": 11272450,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Zirco gloves": {
+        "name": "Zirco gloves",
+        "id": 11272451,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Zirco shield": {
+        "name": "Zirco shield",
+        "id": 11272452,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Old shield": {
+        "name": "Old shield",
+        "id": 11272453,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Pot": {
+        "name": "Pot",
+        "id": 11272463,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Beret": {
+        "name": "Beret",
+        "id": 11272464,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Cap": {
+        "name": "Cap",
+        "id": 11272465,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Cloth helmet": {
+        "name": "Cloth helmet",
+        "id": 11272466,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Hairband": {
+        "name": "Hairband",
+        "id": 11272467,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Headband": {
+        "name": "Headband",
+        "id": 11272468,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Hide helmet": {
+        "name": "Hide helmet",
+        "id": 11272469,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Jet helm": {
+        "name": "Jet helm",
+        "id": 11272470,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Red beret": {
+        "name": "Red beret",
+        "id": 11272471,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Glass cap": {
+        "name": "Glass cap",
+        "id": 11272472,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Wood helmet": {
+        "name": "Wood helmet",
+        "id": 11272473,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Blue beret": {
+        "name": "Blue beret",
+        "id": 11272474,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Brone helmet": {
+        "name": "Brone helmet",
+        "id": 11272475,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Stone helmet": {
+        "name": "Stone helmet",
+        "id": 11272476,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Cloche": {
+        "name": "Cloche",
+        "id": 11272477,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Fury helmet": {
+        "name": "Fury helmet",
+        "id": 11272478,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Iron helmet": {
+        "name": "Iron helmet",
+        "id": 11272479,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Tight helmet": {
+        "name": "Tight helmet",
+        "id": 11272480,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Turban": {
+        "name": "Turban",
+        "id": 11272481,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Plate cap": {
+        "name": "Plate cap",
+        "id": 11272482,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Roomy helmet": {
+        "name": "Roomy helmet",
+        "id": 11272483,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Tight turban": {
+        "name": "Tight turban",
+        "id": 11272484,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Glass cloche": {
+        "name": "Glass cloche",
+        "id": 11272485,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Plate helmet": {
+        "name": "Plate helmet",
+        "id": 11272486,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Rock helmet": {
+        "name": "Rock helmet",
+        "id": 11272487,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Jute helmet": {
+        "name": "Jute helmet",
+        "id": 11272488,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Shade hat": {
+        "name": "Shade hat",
+        "id": 11272489,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Metal cloche": {
+        "name": "Metal cloche",
+        "id": 11272490,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "SilverHelmet": {
+        "name": "SilverHelmet",
+        "id": 11272491,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Fury ribbon": {
+        "name": "Fury ribbon",
+        "id": 11272492,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Silver hat": {
+        "name": "Silver hat",
+        "id": 11272493,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Eron hat": {
+        "name": "Eron hat",
+        "id": 11272494,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Circlet": {
+        "name": "Circlet",
+        "id": 11272495,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Golden helm": {
+        "name": "Golden helm",
+        "id": 11272496,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Gold band": {
+        "name": "Gold band",
+        "id": 11272497,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Plati band": {
+        "name": "Plati band",
+        "id": 11272498,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Plati helm": {
+        "name": "Plati helm",
+        "id": 11272499,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Crysto beret": {
+        "name": "Crysto beret",
+        "id": 11272500,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Crysto helm": {
+        "name": "Crysto helm",
+        "id": 11272501,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Holy cap": {
+        "name": "Holy cap",
+        "id": 11272502,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Safety hat": {
+        "name": "Safety hat",
+        "id": 11272503,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Zirco band": {
+        "name": "Zirco band",
+        "id": 11272504,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Zirco helmet": {
+        "name": "Zirco helmet",
+        "id": 11272505,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Old helmet": {
+        "name": "Old helmet",
+        "id": 11272506,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Brill helm": {
+        "name": "Brill helm",
+        "id": 11272513,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Ear jewel": {
+        "name": "Ear jewel",
+        "id": 11272515,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Glass brace": {
+        "name": "Glass brace",
+        "id": 11272516,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Glass ring": {
+        "name": "Glass ring",
+        "id": 11272517,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Speedy ring": {
+        "name": "Speedy ring",
+        "id": 11272519,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Power ring": {
+        "name": "Power ring",
+        "id": 11272520,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Muscle ring": {
+        "name": "Muscle ring",
+        "id": 11272521,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Protect ring": {
+        "name": "Protect ring",
+        "id": 11272522,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Mind ring": {
+        "name": "Mind ring",
+        "id": 11272523,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Witch ring": {
+        "name": "Witch ring",
+        "id": 11272524,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Fire ring": {
+        "name": "Fire ring",
+        "id": 11272525,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Water ring": {
+        "name": "Water ring",
+        "id": 11272526,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Ice ring": {
+        "name": "Ice ring",
+        "id": 11272527,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Thunder ring": {
+        "name": "Thunder ring",
+        "id": 11272528,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Fury ring": {
+        "name": "Fury ring",
+        "id": 11272529,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Mystery ring": {
+        "name": "Mystery ring",
+        "id": 11272530,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Sonic ring": {
+        "name": "Sonic ring",
+        "id": 11272531,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Hipower ring": {
+        "name": "Hipower ring",
+        "id": 11272532,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Trick ring": {
+        "name": "Trick ring",
+        "id": 11272533,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Fake ring": {
+        "name": "Fake ring",
+        "id": 11272534,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "S-power ring": {
+        "name": "S-power ring",
+        "id": 11272539,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "S-mind ring": {
+        "name": "S-mind ring",
+        "id": 11272540,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "S-pro ring": {
+        "name": "S-pro ring",
+        "id": 11272541,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "S-witch ring": {
+        "name": "S-witch ring",
+        "id": 11272542,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Undead ring": {
+        "name": "Undead ring",
+        "id": 11272543,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Rocket ring": {
+        "name": "Rocket ring",
+        "id": 11272544,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Ghost ring": {
+        "name": "Ghost ring",
+        "id": 11272545,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Angry ring": {
+        "name": "Angry ring",
+        "id": 11272546,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "S-myst ring": {
+        "name": "S-myst ring",
+        "id": 11272547,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Dragon ring": {
+        "name": "Dragon ring",
+        "id": 11272550,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Horse rock": {
+        "name": "Horse rock",
+        "id": 11272553,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Eagle rock": {
+        "name": "Eagle rock",
+        "id": 11272554,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Lion fang": {
+        "name": "Lion fang",
+        "id": 11272555,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Bee rock": {
+        "name": "Bee rock",
+        "id": 11272556,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Snake rock": {
+        "name": "Snake rock",
+        "id": 11272557,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Cancer rock": {
+        "name": "Cancer rock",
+        "id": 11272558,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Pumkin jewel": {
+        "name": "Pumkin jewel",
+        "id": 11272559,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Uni jewel": {
+        "name": "Uni jewel",
+        "id": 11272560,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Mysto jewel": {
+        "name": "Mysto jewel",
+        "id": 11272561,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Samu jewel": {
+        "name": "Samu jewel",
+        "id": 11272562,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Bat rock": {
+        "name": "Bat rock",
+        "id": 11272563,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Hidora rock": {
+        "name": "Hidora rock",
+        "id": 11272564,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Flame jewel": {
+        "name": "Flame jewel",
+        "id": 11272565,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Magma rock": {
+        "name": "Magma rock",
+        "id": 11272572,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Evil jewel": {
+        "name": "Evil jewel",
+        "id": 11272573,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Gorgon rock": {
+        "name": "Gorgon rock",
+        "id": 11272575,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Song rock": {
+        "name": "Song rock",
+        "id": 11272576,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Kraken rock": {
+        "name": "Kraken rock",
+        "id": 11272577,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Light jewel": {
+        "name": "Light jewel",
+        "id": 11272582,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Selan": {
+        "name": "Selan",
+        "id": 11272626,
+        "groups": [
+          "Everything",
+          "Party members"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Guy": {
+        "name": "Guy",
+        "id": 11272627,
+        "groups": [
+          "Everything",
+          "Party members"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Arty": {
+        "name": "Arty",
+        "id": 11272628,
+        "groups": [
+          "Everything",
+          "Party members"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Dekar": {
+        "name": "Dekar",
+        "id": 11272629,
+        "groups": [
+          "Everything",
+          "Party members"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Tia": {
+        "name": "Tia",
+        "id": 11272630,
+        "groups": [
+          "Everything",
+          "Party members"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Lexis": {
+        "name": "Lexis",
+        "id": 11272631,
+        "groups": [
+          "Everything",
+          "Party members"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "JELZE": {
+        "name": "JELZE",
+        "id": 11272632,
+        "groups": [
+          "Capsule monsters",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "FLASH": {
+        "name": "FLASH",
+        "id": 11272633,
+        "groups": [
+          "Capsule monsters",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "GUSTO": {
+        "name": "GUSTO",
+        "id": 11272634,
+        "groups": [
+          "Capsule monsters",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "ZEPPY": {
+        "name": "ZEPPY",
+        "id": 11272635,
+        "groups": [
+          "Capsule monsters",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "DARBI": {
+        "name": "DARBI",
+        "id": 11272636,
+        "groups": [
+          "Capsule monsters",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "SULLY": {
+        "name": "SULLY",
+        "id": 11272637,
+        "groups": [
+          "Capsule monsters",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "BLAZE": {
+        "name": "BLAZE",
+        "id": 11272638,
+        "groups": [
+          "Capsule monsters",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Ancient key": {
+        "name": "Ancient key",
+        "id": 11272642,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Iris sword": {
+        "name": "Iris sword",
+        "id": 11273116,
+        "groups": [
+          "Everything",
+          "Iris treasures"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Iris shield": {
+        "name": "Iris shield",
+        "id": 11273117,
+        "groups": [
+          "Everything",
+          "Iris treasures"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Iris helmet": {
+        "name": "Iris helmet",
+        "id": 11273118,
+        "groups": [
+          "Everything",
+          "Iris treasures"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Iris armor": {
+        "name": "Iris armor",
+        "id": 11273119,
+        "groups": [
+          "Everything",
+          "Iris treasures"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Iris ring": {
+        "name": "Iris ring",
+        "id": 11273120,
+        "groups": [
+          "Everything",
+          "Iris treasures"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Iris jewel": {
+        "name": "Iris jewel",
+        "id": 11273121,
+        "groups": [
+          "Everything",
+          "Iris treasures"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Iris staff": {
+        "name": "Iris staff",
+        "id": 11273122,
+        "groups": [
+          "Everything",
+          "Iris treasures"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Iris pot": {
+        "name": "Iris pot",
+        "id": 11273123,
+        "groups": [
+          "Everything",
+          "Iris treasures"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Iris tiara": {
+        "name": "Iris tiara",
+        "id": 11273124,
+        "groups": [
+          "Everything",
+          "Iris treasures"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
+      },
+      "Sizzle sword": {
+        "name": "Sizzle sword",
+        "id": 11288681,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "useful"
+      },
+      "Blaze sword": {
+        "name": "Blaze sword",
+        "id": 11288682,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Gades blade": {
+        "name": "Gades blade",
+        "id": 11288684,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Sky sword": {
+        "name": "Sky sword",
+        "id": 11288685,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Snow sword": {
+        "name": "Snow sword",
+        "id": 11288686,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "useful"
+      },
+      "Fry sword": {
+        "name": "Fry sword",
+        "id": 11288687,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Mega ax": {
+        "name": "Mega ax",
+        "id": 11288697,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Spark staff": {
+        "name": "Spark staff",
+        "id": 11288712,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Air whip": {
+        "name": "Air whip",
+        "id": 11288721,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Water spear": {
+        "name": "Water spear",
+        "id": 11288728,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Dragon spear": {
+        "name": "Dragon spear",
+        "id": 11288729,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "useful"
+      },
+      "Mirak plate": {
+        "name": "Mirak plate",
+        "id": 11288800,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Ruse armor": {
+        "name": "Ruse armor",
+        "id": 11288801,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Flame shield": {
+        "name": "Flame shield",
+        "id": 11288838,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Water gaunt": {
+        "name": "Water gaunt",
+        "id": 11288839,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Bolt shield": {
+        "name": "Bolt shield",
+        "id": 11288840,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Cryst shield": {
+        "name": "Cryst shield",
+        "id": 11288841,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Dark mirror": {
+        "name": "Dark mirror",
+        "id": 11288843,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "useful"
+      },
+      "Apron shield": {
+        "name": "Apron shield",
+        "id": 11288845,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Agony helm": {
+        "name": "Agony helm",
+        "id": 11288891,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "useful"
+      },
+      "Boom turban": {
+        "name": "Boom turban",
+        "id": 11288892,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "useful"
+      },
+      "Aqua helm": {
+        "name": "Aqua helm",
+        "id": 11288893,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Ice hairband": {
+        "name": "Ice hairband",
+        "id": 11288894,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Hairpin": {
+        "name": "Hairpin",
+        "id": 11288896,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Earring": {
+        "name": "Earring",
+        "id": 11288902,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Dia ring": {
+        "name": "Dia ring",
+        "id": 11288932,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Sea ring": {
+        "name": "Sea ring",
+        "id": 11288933,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Engage ring": {
+        "name": "Engage ring",
+        "id": 11288935,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Water jewel": {
+        "name": "Water jewel",
+        "id": 11288950,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Thundo jewel": {
+        "name": "Thundo jewel",
+        "id": 11288951,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Earth jewel": {
+        "name": "Earth jewel",
+        "id": 11288952,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Twist jewel": {
+        "name": "Twist jewel",
+        "id": 11288953,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Gloom jewel": {
+        "name": "Gloom jewel",
+        "id": 11288954,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Tidal jewel": {
+        "name": "Tidal jewel",
+        "id": 11288955,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Catfish jwl.": {
+        "name": "Catfish jwl.",
+        "id": 11288962,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Camu jewel": {
+        "name": "Camu jewel",
+        "id": 11288963,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Spido jewel": {
+        "name": "Spido jewel",
+        "id": 11288964,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Gorgan rock": {
+        "name": "Gorgan rock",
+        "id": 11288965,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Black eye": {
+        "name": "Black eye",
+        "id": 11288967,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Silver eye": {
+        "name": "Silver eye",
+        "id": 11288968,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Gold eye": {
+        "name": "Gold eye",
+        "id": 11288969,
+        "groups": [
+          "Blue chest items",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Flash": {
+        "name": "Flash",
+        "id": 11304960,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Bolt": {
+        "name": "Bolt",
+        "id": 11304961,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Thunder": {
+        "name": "Thunder",
+        "id": 11304962,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Spark": {
+        "name": "Spark",
+        "id": 11304963,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Fireball": {
+        "name": "Fireball",
+        "id": 11304964,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Firebird": {
+        "name": "Firebird",
+        "id": 11304965,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Droplet": {
+        "name": "Droplet",
+        "id": 11304966,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Vortex": {
+        "name": "Vortex",
+        "id": 11304967,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Dragon": {
+        "name": "Dragon",
+        "id": 11304968,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Gale": {
+        "name": "Gale",
+        "id": 11304969,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Blizzard": {
+        "name": "Blizzard",
+        "id": 11304970,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Ice Valk": {
+        "name": "Ice Valk",
+        "id": 11304971,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Perish": {
+        "name": "Perish",
+        "id": 11304972,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Destroy": {
+        "name": "Destroy",
+        "id": 11304973,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Drowsy": {
+        "name": "Drowsy",
+        "id": 11304974,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Coma": {
+        "name": "Coma",
+        "id": 11304975,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Dread": {
+        "name": "Dread",
+        "id": 11304976,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Deflect": {
+        "name": "Deflect",
+        "id": 11304977,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Absorb": {
+        "name": "Absorb",
+        "id": 11304978,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Fake": {
+        "name": "Fake",
+        "id": 11304979,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Trick": {
+        "name": "Trick",
+        "id": 11304980,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Confuse": {
+        "name": "Confuse",
+        "id": 11304981,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Bravery": {
+        "name": "Bravery",
+        "id": 11304982,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Courage": {
+        "name": "Courage",
+        "id": 11304983,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Mirror": {
+        "name": "Mirror",
+        "id": 11304984,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Strong": {
+        "name": "Strong",
+        "id": 11304985,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Stronger": {
+        "name": "Stronger",
+        "id": 11304986,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Champion": {
+        "name": "Champion",
+        "id": 11304987,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Poison": {
+        "name": "Poison",
+        "id": 11304988,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Rally": {
+        "name": "Rally",
+        "id": 11304989,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Valor": {
+        "name": "Valor",
+        "id": 11304990,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Fry": {
+        "name": "Fry",
+        "id": 11304991,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Zap": {
+        "name": "Zap",
+        "id": 11304992,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Shield": {
+        "name": "Shield",
+        "id": 11304993,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Waken": {
+        "name": "Waken",
+        "id": 11304994,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Progressive chest access": {
+        "name": "Progressive chest access",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 4,
+        "classification": "progression"
+      },
+      "Final Floor access": {
+        "name": "Final Floor access",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Blue chest items",
+      "Capsule monsters",
+      "Event",
+      "Everything",
+      "Iris treasures",
+      "Party members"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "Agony helm": 3,
+      "Air whip": 1,
+      "Ancient key": 1,
+      "Aqua helm": 1,
+      "Boom turban": 2,
+      "Catfish jwl.": 1,
+      "Cryst shield": 1,
+      "Dark mirror": 2,
+      "Dia ring": 1,
+      "Dragon spear": 3,
+      "Earth jewel": 1,
+      "Final Floor access": 1,
+      "Flame shield": 1,
+      "Gades blade": 1,
+      "Iris armor": 1,
+      "Iris helmet": 1,
+      "Iris jewel": 1,
+      "Iris pot": 1,
+      "Iris ring": 1,
+      "Iris shield": 1,
+      "Iris staff": 1,
+      "Iris sword": 1,
+      "Iris tiara": 1,
+      "Progressive chest access": 4,
+      "Silver eye": 1,
+      "Sizzle sword": 2,
+      "Sky sword": 1,
+      "Snow sword": 2,
+      "Thundo jewel": 1
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "settings": {
+    "1": {
+      "game": "Lufia II Ancient Cave WorldGen",
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {
+      "name": "Lufia II Ancient Cave WorldGen",
+      "rule_format": {
+        "version": "1.0"
+      }
+    }
+  },
+  "helpers": {}
+}

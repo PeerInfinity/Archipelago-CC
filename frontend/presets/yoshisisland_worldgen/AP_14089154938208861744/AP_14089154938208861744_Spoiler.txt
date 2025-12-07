@@ -1,0 +1,314 @@
+﻿Archipelago Version 0.6.5  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Yoshi's Island WorldGen
+Location Count:                  191
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 No
+
+
+Locations:
+
+Make Eggs, Throw Eggs: Red Coins: Pocket Fire Melon
+Make Eggs, Throw Eggs: Flowers: Giant Eggs
+Make Eggs, Throw Eggs: Stars: Pocket Ice Melon
+Make Eggs, Throw Eggs: Level Clear: Magnifying Glass
+Watch Out Below!: Red Coins: Vanishing Arrow Wheel
+Watch Out Below!: Flowers: 2-Up
+Watch Out Below!: Stars: Egg Capacity Upgrade
+Watch Out Below!: Level Clear: 10-Up
+The Cave Of Chomp Rock: Red Coins: Pocket Melon
+The Cave Of Chomp Rock: Flowers: World 4 Gate
+The Cave Of Chomp Rock: Stars: Egg Capacity Upgrade
+The Cave Of Chomp Rock: Level Clear: +20 Stars
+Burt The Bashful's Fort: Red Coins: +20 Stars
+Burt The Bashful's Fort: Flowers: World 3 Gate
+Burt The Bashful's Fort: Stars: ! Switch
+Burt The Bashful's Fort: Level Clear: Magnifying Glass
+Burt The Bashful's Boss Room: Boss Clear
+Hop! Hop! Donut Lifts: Red Coins: Chomp Rock
+Hop! Hop! Donut Lifts: Flowers: +10 Stars
+Hop! Hop! Donut Lifts: Stars: World 6 Gate
+Hop! Hop! Donut Lifts: Level Clear: Dashed Platform
+Shy-Guys On Stilts: Red Coins: Magnifying Glass
+Shy-Guys On Stilts: Flowers: Pocket Fire Melon
+Shy-Guys On Stilts: Stars: 10-Up
+Shy-Guys On Stilts: Level Clear: Anytime Egg
+Touch Fuzzy Get Dizzy: Red Coins: Pocket Melon
+Touch Fuzzy Get Dizzy: Flowers: Spring Ball
+Touch Fuzzy Get Dizzy: Stars: 3-Up
+Touch Fuzzy Get Dizzy: Level Clear: +10 Stars
+Touch Fuzzy Get Dizzy: Gather Coins: Bandit Consumables
+Salvo The Slime's Castle: Red Coins: Large Spring Ball
+Salvo The Slime's Castle: Flowers: Pocket Ice Melon
+Salvo The Slime's Castle: Stars: 2-Up
+Salvo The Slime's Castle: Level Clear: Pocket Fire Melon
+Salvo The Slime's Boss Room: Boss Clear
+Visit Koopa And Para-Koopa: Red Coins: +10 Stars
+Visit Koopa And Para-Koopa: Flowers: Pocket Melon
+Visit Koopa And Para-Koopa: Stars: +20 Stars
+Visit Koopa And Para-Koopa: Level Clear: Winged Cloud Maker
+The Baseball Boys: Red Coins: 1-Up
+The Baseball Boys: Flowers: 2-Up
+The Baseball Boys: Stars: Submarine Morph
+The Baseball Boys: Level Clear: Winged Cloud Maker
+What's Gusty Taste Like?: Red Coins: 2-Up
+What's Gusty Taste Like?: Flowers: Winged Cloud Maker
+What's Gusty Taste Like?: Stars: Anytime Egg
+What's Gusty Taste Like?: Level Clear: Pocket Melon
+Bigger Boo's Fort: Red Coins: Egg Capacity Upgrade
+Bigger Boo's Fort: Flowers: 1-Up
+Bigger Boo's Fort: Stars: 2-Up
+Bigger Boo's Fort: Level Clear: Egg Plant
+Bigger Boo's Boss Room: Boss Clear
+Watch Out For Lakitu: Red Coins: Beanstalk
+Watch Out For Lakitu: Flowers: Anytime Egg
+Watch Out For Lakitu: Stars: Pocket Ice Melon
+Watch Out For Lakitu: Level Clear: Pocket Melon
+The Cave Of The Mystery Maze: Red Coins: Winged Cloud Maker
+The Cave Of The Mystery Maze: Flowers: Pocket Fire Melon
+The Cave Of The Mystery Maze: Stars: Pocket Ice Melon
+The Cave Of The Mystery Maze: Level Clear: 1-Up
+The Cave Of the Mystery Maze: Seed Spitting Contest: Bandit Watermelons
+Lakitu's Wall: Red Coins: Magnifying Glass
+Lakitu's Wall: Flowers: +20 Stars
+Lakitu's Wall: Stars: Pocket Ice Melon
+Lakitu's Wall: Level Clear: Pocket Melon
+Lakitu's Wall: Gather Coins: Bandit Consumables
+The Potted Ghost's Castle: Red Coins: Magnifying Glass
+The Potted Ghost's Castle: Flowers: Pocket Fire Melon
+The Potted Ghost's Castle: Stars: Pocket Fire Melon
+The Potted Ghost's Castle: Level Clear: +10 Stars
+Roger The Ghost's Boss Room: Boss Clear
+Welcome To Monkey World!: Red Coins: 3-Up
+Welcome To Monkey World!: Flowers: 1-Up
+Welcome To Monkey World!: Stars: Anytime Egg
+Welcome To Monkey World!: Level Clear: World 5 Gate
+Jungle Rhythm...: Red Coins: 3-Up
+Jungle Rhythm...: Flowers: 3-Up
+Jungle Rhythm...: Stars: Magnifying Glass
+Jungle Rhythm...: Level Clear: Anytime Egg
+Nep-Enuts' Domain: Red Coins: Pocket Ice Melon
+Nep-Enuts' Domain: Flowers: +10 Stars
+Nep-Enuts' Domain: Stars: 3-Up
+Nep-Enuts' Domain: Level Clear: Pocket Melon
+Prince Froggy's Fort: Red Coins: Winged Cloud Maker
+Prince Froggy's Fort: Flowers: +20 Stars
+Prince Froggy's Fort: Stars: Winged Cloud Maker
+Prince Froggy's Fort: Level Clear: Pocket Melon
+Prince Froggy's Boss Room: Boss Clear
+Jammin' Through The Trees: Red Coins: 1-Up
+Jammin' Through The Trees: Flowers: 3-Up
+Jammin' Through The Trees: Stars: Pocket Melon
+Jammin' Through The Trees: Level Clear: +10 Stars
+The Cave Of Harry Hedgehog: Red Coins: Poochy
+The Cave Of Harry Hedgehog: Flowers: Anywhere Pow
+The Cave Of Harry Hedgehog: Stars: Pocket Ice Melon
+The Cave Of Harry Hedgehog: Level Clear: +10 Stars
+Monkeys' Favorite Lake: Red Coins: Anywhere Pow
+Monkeys' Favorite Lake: Flowers: 2-Up
+Monkeys' Favorite Lake: Stars: Anywhere Pow
+Monkeys' Favorite Lake: Level Clear: Anytime Egg
+Naval Piranha's Castle: Red Coins: Pocket Fire Melon
+Naval Piranha's Castle: Flowers: Dashed Stairs
+Naval Piranha's Castle: Stars: Winged Cloud Maker
+Naval Piranha's Castle: Level Clear: 10-Up
+Naval Piranha's Boss Room: Boss Clear
+GO! GO! MARIO!!: Red Coins: 1-Up
+GO! GO! MARIO!!: Flowers: Mole Tank Morph
+GO! GO! MARIO!!: Stars: +20 Stars
+GO! GO! MARIO!!: Level Clear: 3-Up
+The Cave Of The Lakitus: Red Coins: Winged Cloud Maker
+The Cave Of The Lakitus: Flowers: Pocket Ice Melon
+The Cave Of The Lakitus: Stars: Key
+The Cave Of The Lakitus: Level Clear: 2-Up
+Don't Look Back!: Red Coins: Winged Cloud Maker
+Don't Look Back!: Flowers: Pocket Ice Melon
+Don't Look Back!: Stars: Egg Launcher
+Don't Look Back!: Level Clear: Winged Cloud Maker
+Marching Milde's Fort: Red Coins: Pocket Fire Melon
+Marching Milde's Fort: Flowers: Anytime Egg
+Marching Milde's Fort: Stars: Winged Cloud Maker
+Marching Milde's Fort: Level Clear: 2-Up
+Marching Milde's Boss Room: Boss Clear
+Chomp Rock Zone: Red Coins: Train Morph
+Chomp Rock Zone: Flowers: Magnifying Glass
+Chomp Rock Zone: Stars: Platform Ghost
+Chomp Rock Zone: Level Clear: Watermelon
+Lake Shore Paradise: Red Coins: +20 Stars
+Lake Shore Paradise: Flowers: Anywhere Pow
+Lake Shore Paradise: Stars: Pocket Melon
+Lake Shore Paradise: Level Clear: 3-Up
+Ride Like The Wind: Red Coins: Anywhere Pow
+Ride Like The Wind: Flowers: Anytime Egg
+Ride Like The Wind: Stars: +20 Stars
+Ride Like The Wind: Level Clear: Ice Melon
+Ride Like The Wind: Gather Coins: Bandit Consumables
+Hookbill The Koopa's Castle: Red Coins: 10-Up
+Hookbill The Koopa's Castle: Flowers: Super Star
+Hookbill The Koopa's Castle: Stars: Winged Cloud Maker
+Hookbill The Koopa's Castle: Level Clear: +10 Stars
+Hookbill The Koopa's Boss Room: Boss Clear
+BLIZZARD!!!: Red Coins: Magnifying Glass
+BLIZZARD!!!: Flowers: 3-Up
+BLIZZARD!!!: Stars: Anywhere Pow
+BLIZZARD!!!: Level Clear: Pocket Ice Melon
+Ride The Ski Lifts: Red Coins: +10 Stars
+Ride The Ski Lifts: Flowers: Pocket Ice Melon
+Ride The Ski Lifts: Stars: Anytime Egg
+Ride The Ski Lifts: Level Clear: Anywhere Pow
+Danger - Icy Conditions Ahead: Red Coins: Pocket Fire Melon
+Danger - Icy Conditions Ahead: Flowers: Winged Cloud Maker
+Danger - Icy Conditions Ahead: Stars: Arrow Wheel
+Danger - Icy Conditions Ahead: Level Clear: Magnifying Glass
+Sluggy The Unshaven's Fort: Red Coins: +20 Stars
+Sluggy The Unshaven's Fort: Flowers: +10 Stars
+Sluggy The Unshaven's Fort: Stars: 1-Up
+Sluggy The Unshaven's Fort: Level Clear: 1-Up
+Sluggy The Unshaven's Boss Room: Boss Clear
+Goonie Rides!: Red Coins: +20 Stars
+Goonie Rides!: Flowers: World 2 Gate
+Goonie Rides!: Stars: +20 Stars
+Goonie Rides!: Level Clear: Egg Capacity Upgrade
+Welcome To Cloud World: Red Coins: Car Morph
+Welcome To Cloud World: Flowers: Pocket Melon
+Welcome To Cloud World: Stars: Helicopter Morph
+Welcome To Cloud World: Level Clear: 10-Up
+Shifting Platforms Ahead: Red Coins: Pocket Melon
+Shifting Platforms Ahead: Flowers: 3-Up
+Shifting Platforms Ahead: Stars: Pocket Melon
+Shifting Platforms Ahead: Level Clear: Magnifying Glass
+Raphael The Raven's Castle: Red Coins: Anywhere Pow
+Raphael The Raven's Castle: Flowers: +10 Stars
+Raphael The Raven's Castle: Stars: Pocket Fire Melon
+Raphael The Raven's Castle: Level Clear: +20 Stars
+Raphael The Raven's Boss Room: Boss Clear
+Scary Skeleton Goonies!: Red Coins: +10 Stars
+Scary Skeleton Goonies!: Flowers: 1-Up
+Scary Skeleton Goonies!: Stars: Pocket Ice Melon
+Scary Skeleton Goonies!: Level Clear: 3-Up
+The Cave Of The Bandits: Red Coins: 2-Up
+The Cave Of The Bandits: Flowers: Pocket Ice Melon
+The Cave Of The Bandits: Stars: Pocket Melon
+The Cave Of The Bandits: Level Clear: Flashing Eggs
+Beware The Spinning Logs: Red Coins: Pocket Fire Melon
+Beware The Spinning Logs: Flowers: Tulip
+Beware The Spinning Logs: Stars: 3-Up
+Beware The Spinning Logs: Level Clear: 3-Up
+Tap-Tap The Red Nose's Fort: Red Coins: +10 Stars
+Tap-Tap The Red Nose's Fort: Flowers: Magnifying Glass
+Tap-Tap The Red Nose's Fort: Stars: Anywhere Pow
+Tap-Tap The Red Nose's Fort: Level Clear: 2-Up
+Tap-Tap The Red Nose's Boss Room: Boss Clear
+The Very Loooooong Cave: Red Coins: Winged Cloud Maker
+The Very Loooooong Cave: Flowers: Skis
+The Very Loooooong Cave: Stars: Fire Melon
+The Very Loooooong Cave: Level Clear: Anytime Egg
+The Deep, Underground Maze: Red Coins: +20 Stars
+The Deep, Underground Maze: Flowers: 2-Up
+The Deep, Underground Maze: Stars: Pocket Ice Melon
+The Deep, Underground Maze: Level Clear: Egg Capacity Upgrade
+KEEP MOVING!!!!: Red Coins: Anytime Egg
+KEEP MOVING!!!!: Flowers: Bonus Panels
+KEEP MOVING!!!!: Stars: Anywhere Pow
+KEEP MOVING!!!!: Level Clear: Pocket Melon
+King Bowser's Castle: Red Coins: Bucket
+King Bowser's Castle: Flowers: 1-Up
+King Bowser's Castle: Stars: Anywhere Pow
+King Bowser's Castle: Level Clear: Saved Baby Luigi
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Burt The Bashful's Boss Room: Boss Clear
+  Hop! Hop! Donut Lifts: Level Clear: Dashed Platform
+  Hop! Hop! Donut Lifts: Red Coins: Chomp Rock
+  Hop! Hop! Donut Lifts: Stars: World 6 Gate
+  Salvo The Slime's Boss Room: Boss Clear
+  The Cave Of Chomp Rock: Stars: Egg Capacity Upgrade
+  Touch Fuzzy Get Dizzy: Flowers: Spring Ball
+  Touch Fuzzy Get Dizzy: Gather Coins: Bandit Consumables
+}
+2: {
+  Beware The Spinning Logs: Flowers: Tulip
+  Burt The Bashful's Fort: Stars: ! Switch
+  King Bowser's Castle: Level Clear: Saved Baby Luigi
+  Tap-Tap The Red Nose's Boss Room: Boss Clear
+  The Cave Of Chomp Rock: Flowers: World 4 Gate
+  The Very Loooooong Cave: Flowers: Skis
+  The Very Loooooong Cave: Stars: Fire Melon
+}
+3: {
+  Chomp Rock Zone: Level Clear: Watermelon
+  Chomp Rock Zone: Stars: Platform Ghost
+  Don't Look Back!: Stars: Egg Launcher
+  Hookbill The Koopa's Boss Room: Boss Clear
+  Marching Milde's Boss Room: Boss Clear
+  Ride Like The Wind: Gather Coins: Bandit Consumables
+}
+4: {
+  Salvo The Slime's Castle: Red Coins: Large Spring Ball
+}
+5: {
+  Chomp Rock Zone: Red Coins: Train Morph
+  Ride Like The Wind: Level Clear: Ice Melon
+  The Cave Of The Lakitus: Stars: Key
+  Watch Out Below!: Stars: Egg Capacity Upgrade
+}
+6: {
+  Burt The Bashful's Fort: Flowers: World 3 Gate
+  The Deep, Underground Maze: Level Clear: Egg Capacity Upgrade
+}
+7: {
+  Naval Piranha's Boss Room: Boss Clear
+  Naval Piranha's Castle: Flowers: Dashed Stairs
+  Prince Froggy's Boss Room: Boss Clear
+  Welcome To Monkey World!: Level Clear: World 5 Gate
+}
+8: {
+  Danger - Icy Conditions Ahead: Stars: Arrow Wheel
+  Raphael The Raven's Boss Room: Boss Clear
+  Sluggy The Unshaven's Boss Room: Boss Clear
+  Welcome To Cloud World: Red Coins: Car Morph
+  Welcome To Cloud World: Stars: Helicopter Morph
+}
+9: {
+  Goonie Rides!: Flowers: World 2 Gate
+  Goonie Rides!: Level Clear: Egg Capacity Upgrade
+  Watch Out Below!: Red Coins: Vanishing Arrow Wheel
+}
+10: {
+  Bigger Boo's Boss Room: Boss Clear
+  Bigger Boo's Fort: Level Clear: Egg Plant
+  Bigger Boo's Fort: Red Coins: Egg Capacity Upgrade
+  Hookbill The Koopa's Castle: Flowers: Super Star
+  Lakitu's Wall: Gather Coins: Bandit Consumables
+  Roger The Ghost's Boss Room: Boss Clear
+  The Cave Of the Mystery Maze: Seed Spitting Contest: Bandit Watermelons
+  Watch Out For Lakitu: Red Coins: Beanstalk
+}
+11: {
+  GO! GO! MARIO!!: Flowers: Mole Tank Morph
+  King Bowser's Castle: Red Coins: Bucket
+  Make Eggs, Throw Eggs: Flowers: Giant Eggs
+  The Baseball Boys: Stars: Submarine Morph
+  The Cave Of The Bandits: Level Clear: Flashing Eggs
+}
+12: {
+  The Cave Of Harry Hedgehog: Red Coins: Poochy
+}

@@ -44186,6 +44186,30 @@
                       "type": "constant",
                       "value": [
                         "<function BlasRules.load_rule.<locals>.<lambda>>",
+                        "<bound method BlasRules.can_survive_poison_2 of <worlds.blasphemous.Rules.BlasRules object>",
+                        "<bound method BlasRules.double_jump of <worlds.blasphemous.Rules.BlasRules object>",
+                        "<bound method BlasRules.can_enemy_bounce of <worlds.blasphemous.Rules.BlasRules object>"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "type": "all_of",
+                  "element_rule": {
+                    "type": "helper",
+                    "name": "req",
+                    "args": []
+                  },
+                  "iterator_info": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "req"
+                    },
+                    "iterator": {
+                      "type": "constant",
+                      "value": [
+                        "<function BlasRules.load_rule.<locals>.<lambda>>",
                         "<bound method BlasRules.wall_climb of <worlds.blasphemous.Rules.BlasRules object>",
                         "<bound method BlasRules.can_survive_poison_2 of <worlds.blasphemous.Rules.BlasRules object>",
                         "<bound method BlasRules.dash of <worlds.blasphemous.Rules.BlasRules object>"
@@ -44410,30 +44434,6 @@
                         "<function BlasRules.load_rule.<locals>.<lambda>>",
                         "<bound method BlasRules.can_survive_poison_2 of <worlds.blasphemous.Rules.BlasRules object>",
                         "<bound method BlasRules.can_cross_gap_9 of <worlds.blasphemous.Rules.BlasRules object>"
-                      ]
-                    }
-                  }
-                },
-                {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "helper",
-                    "name": "req",
-                    "args": []
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "req"
-                    },
-                    "iterator": {
-                      "type": "constant",
-                      "value": [
-                        "<function BlasRules.load_rule.<locals>.<lambda>>",
-                        "<bound method BlasRules.can_survive_poison_2 of <worlds.blasphemous.Rules.BlasRules object>",
-                        "<bound method BlasRules.double_jump of <worlds.blasphemous.Rules.BlasRules object>",
-                        "<bound method BlasRules.can_enemy_bounce of <worlds.blasphemous.Rules.BlasRules object>"
                       ]
                     }
                   }

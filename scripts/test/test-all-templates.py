@@ -146,6 +146,16 @@ def main():
         help='List of template files to test (if specified, only these files will be tested, overrides skip-list)'
     )
     parser.add_argument(
+        '--include-pattern',
+        type=str,
+        help='Only include template files matching this pattern (e.g., "WorldGen" to only test WorldGen templates)'
+    )
+    parser.add_argument(
+        '--exclude-pattern',
+        type=str,
+        help='Exclude template files matching this pattern (e.g., "WorldGen" to exclude WorldGen templates)'
+    )
+    parser.add_argument(
         '--export-only',
         action='store_true',
         help='Only run the generation (export) step, skip spoiler tests'
@@ -406,6 +416,10 @@ def main():
 
     if args.test_consistency and args.export_only:
         print("Error: --test-consistency cannot be used with --export-only")
+        sys.exit(1)
+
+    if args.include_pattern and args.exclude_pattern:
+        print("Error: --include-pattern and --exclude-pattern are mutually exclusive")
         sys.exit(1)
 
     # Determine project root early (needed for setup scripts)
@@ -768,12 +782,34 @@ def main():
         # Skip list mode: exclude specified files
         yaml_files = [f for f in all_yaml_files if f not in args.skip_list]
         skipped_files = [f for f in all_yaml_files if f in args.skip_list]
-        
+
         if not yaml_files:
             print(f"Error: No testable YAML files found after filtering (all files are in skip list)")
             sys.exit(1)
-        
+
         filter_description = f"skip list ({len(args.skip_list)} excluded)"
+
+    # Apply --include-pattern filtering if specified
+    if args.include_pattern:
+        before_pattern_filter = len(yaml_files)
+        yaml_files = [f for f in yaml_files if args.include_pattern in f]
+        pattern_excluded = before_pattern_filter - len(yaml_files)
+        if pattern_excluded > 0:
+            print(f"Pattern filter: included {len(yaml_files)} templates matching '{args.include_pattern}' (excluded {pattern_excluded})")
+        if not yaml_files:
+            print(f"Error: No testable YAML files found after pattern filtering (no files match '{args.include_pattern}')")
+            sys.exit(1)
+
+    # Apply --exclude-pattern filtering if specified
+    if args.exclude_pattern:
+        before_pattern_filter = len(yaml_files)
+        yaml_files = [f for f in yaml_files if args.exclude_pattern not in f]
+        pattern_excluded = before_pattern_filter - len(yaml_files)
+        if pattern_excluded > 0:
+            print(f"Pattern filter: excluded {pattern_excluded} templates matching '{args.exclude_pattern}' ({len(yaml_files)} remaining)")
+        if not yaml_files:
+            print(f"Error: No testable YAML files found after pattern filtering (all files match '{args.exclude_pattern}')")
+            sys.exit(1)
 
     # Initialize intermittent failures if not already done (non-retest mode)
     if not args.retest:

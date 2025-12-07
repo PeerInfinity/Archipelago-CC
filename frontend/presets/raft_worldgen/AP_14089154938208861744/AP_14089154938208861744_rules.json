@@ -1,0 +1,6248 @@
+{
+  "schema_version": 3,
+  "game_name": "Raft WorldGen",
+  "game_directory": "raft_worldgen",
+  "archipelago_version": "0.6.5",
+  "generation_seed": 1,
+  "player_names": {
+    "1": "Player1"
+  },
+  "world_classes": {
+    "1": "RaftWorldGenWorld"
+  },
+  "regions": {
+    "1": {
+      "Raft": {
+        "name": "Raft",
+        "exits": [
+          {
+            "name": "RaftToResearchTable",
+            "connected_region": "ResearchTable",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "RaftToRadioTower",
+            "connected_region": "RadioTower",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "RaftToVasagatan",
+            "connected_region": "Vasagatan",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "RaftToBalboaIsland",
+            "connected_region": "BalboaIsland",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "RaftToCaravanIsland",
+            "connected_region": "CaravanIsland",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "RaftToTangaroa",
+            "connected_region": "Tangaroa",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "RaftToVaruna Point",
+            "connected_region": "Varuna Point",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "RaftToTemperance",
+            "connected_region": "Temperance",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "RaftToUtopia",
+            "connected_region": "Utopia",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      },
+      "ResearchTable": {
+        "name": "ResearchTable",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Honey",
+            "id": 48001,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Recycler",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Flippers",
+            "id": 48002,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Fuel tank",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Birds nest",
+            "id": 48003,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-grill",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Battery",
+            "id": 48004,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-anchor",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Circuit board",
+            "id": 48005,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 2 CopperOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Bolt",
+            "id": 48006,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-biofuel",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Hinge",
+            "id": 48007,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-crop-plot",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Shear",
+            "id": 48008,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 2 Raw_Beet",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Net launcher",
+            "id": 48009,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-battery",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Drinking glass",
+            "id": 48010,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Hinge",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Clay bowl",
+            "id": 48011,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-spear",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Net canister",
+            "id": 48012,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 2 Plastic",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Binoculars",
+            "id": 48013,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 1 TitaniumOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Metal fishing rod",
+            "id": 48014,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 5 Sand",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Oxygen bottle",
+            "id": 48015,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Water pipe",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sprinkler",
+            "id": 48016,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-engine",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Empty bottle",
+            "id": 48017,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-spear",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Cookingpot",
+            "id": 48018,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 5 Stone",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Juicer",
+            "id": 48019,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-biofuel",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Stationary anchor",
+            "id": 48020,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 3 TitaniumOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Advanced grill",
+            "id": 48021,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Antenna",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Metal Spear",
+            "id": 48022,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-headlight",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Storage",
+            "id": 48023,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 1 SeaVine",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Smelter",
+            "id": 48024,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 3 Scrap",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Paint mill",
+            "id": 48025,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Circuit board",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Hammock",
+            "id": 48026,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Bucket",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Metal axe",
+            "id": 48027,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 1 CopperOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Scrap hook",
+            "id": 48028,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 4 CopperOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Large crop plot",
+            "id": 48029,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 2 TitaniumOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Sweep net",
+            "id": 48030,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 2 Scrap",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Basic bow",
+            "id": 48031,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Receiver",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Scarecrow",
+            "id": 48032,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 3 Plank",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Metal arrow",
+            "id": 48033,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-bottle",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Shovel",
+            "id": 48034,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 1 TitaniumOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Advanced collection net",
+            "id": 48035,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-battery",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Bucket",
+            "id": 48036,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-crop-plot",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Collection net",
+            "id": 48037,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Trashcan",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Paint brush",
+            "id": 48038,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-metals",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Advanced purifier",
+            "id": 48039,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Beehive",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Grass plot",
+            "id": 48040,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Net canister",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Stone arrow",
+            "id": 48041,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Firework",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Medium crop plot",
+            "id": 48042,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-metals",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Lantern",
+            "id": 48043,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-bow",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Small trophy board",
+            "id": 48044,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-engine",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Medium trophy board",
+            "id": 48045,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Bolt",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Large trophy board",
+            "id": 48046,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 5 CopperOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Backpack",
+            "id": 48047,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-battery",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Leather helmet",
+            "id": 48048,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 1 Scrap",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Leather body armor",
+            "id": 48049,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 3 Raw_Beet",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Leather greaves",
+            "id": 48050,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 4 Clay",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Beehive",
+            "id": 48051,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Honey",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Good healing salve",
+            "id": 48052,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 3 CopperOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Healing salve",
+            "id": 48053,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 1 Plank",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "RadioTower": {
+        "name": "RadioTower",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Tala (Radio Tower)",
+            "id": 48054,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-anchor",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Head light blueprint",
+            "id": 48055,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-metals",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Recycler blueprint",
+            "id": 48056,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Metal fishing rod",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Radio Tower Briefcase",
+            "id": 48057,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Sprinkler",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Radio Tower Frequency to Vasagatan",
+            "id": 48058,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Vasagatan Frequency",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Radio Tower Notepad 1",
+            "id": 48059,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 2 Sand",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Radio Tower Notepad 2",
+            "id": 48060,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 2 Plank",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Radio Tower Signalboard Trace",
+            "id": 48061,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Hammock",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Vasagatan": {
+        "name": "Vasagatan",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Hannes Letter 1",
+            "id": 48062,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Net launcher",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Hannes Letter 2",
+            "id": 48063,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 1 MetalOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Hannes Letter 3",
+            "id": 48064,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 2 Thatch",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Olof Log 1",
+            "id": 48065,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-bow",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Olof Log 2",
+            "id": 48066,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-storage",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Olof Log 3",
+            "id": 48067,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-hook",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Vasagatan Recording 1",
+            "id": 48068,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 2 MetalOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Vasagatan Recording 2",
+            "id": 48069,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-crop-plot",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Vasagatan Recording 3",
+            "id": 48070,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Juicer",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Vasagatan Magazine Clipping",
+            "id": 48071,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-salve",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Vasagatan Frequency to Balboa",
+            "id": 48072,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Balboa Island Frequency",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Engine blueprint",
+            "id": 48073,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 2 SeaVine",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Steering Wheel blueprint",
+            "id": 48074,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-crop-plot",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "BalboaIsland": {
+        "name": "BalboaIsland",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Machete blueprint",
+            "id": 48075,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 5 MetalOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Correa twins picture",
+            "id": 48076,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 5 Scrap",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Schedule of engineers",
+            "id": 48077,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Water tank",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Biofuel refiner blueprint",
+            "id": 48078,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 1 Plank",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Note from Henry",
+            "id": 48079,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-salve",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Correas diary 3",
+            "id": 48080,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-storage",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Fuel tank blueprint",
+            "id": 48081,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 4 Raw_Potato",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Correas diary 1",
+            "id": 48082,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 2 Stone",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Correas diary 2",
+            "id": 48083,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Flippers",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Fuel pipe blueprint",
+            "id": 48084,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 4 Thatch",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Bear map",
+            "id": 48085,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Shovel",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Johnny (Balboa Island)",
+            "id": 48086,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-bottle",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Doll murderer 4",
+            "id": 48087,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Leather greaves",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Doll murderer 1",
+            "id": 48088,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 3 Scrap",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Doll murderer 3",
+            "id": 48089,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 2 MetalOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Doll murderer 5",
+            "id": 48090,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-battery",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Balboa Island Doll murderer 2",
+            "id": 48091,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Cookingpot",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Relay Station quest",
+            "id": 48155,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Tangaroa Frequency",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "CaravanIsland": {
+        "name": "CaravanIsland",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Caravan Island Detto journal 1",
+            "id": 48092,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 5 ExplosiveGoo",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caravan Island Detto journal 2",
+            "id": 48093,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-hook",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caravan Island Detto journal 3",
+            "id": 48094,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 5 Stone",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caravan Island Detto journal 4",
+            "id": 48095,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-zipline",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caravan Island Detto journal 5",
+            "id": 48096,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 2 CopperOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caravan Island Detto journal 6",
+            "id": 48097,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Leather body armor",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caravan Island Olaf speech",
+            "id": 48098,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Fuel pipe",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caravan Island Raft town article",
+            "id": 48099,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 5 SeaVine",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caravan Island Doctor's note",
+            "id": 48100,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 3 Scrap",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Firework blueprint",
+            "id": 48101,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 2 TitaniumOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Battery Charger quest",
+            "id": 48102,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-bow",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Zipline quest",
+            "id": 48103,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-zipline",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Caravan Island Frequency to Tangaroa",
+            "id": 48104,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Varuna Point Frequency",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Engine controls blueprint",
+            "id": 48105,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-scarecrow",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Metal detector blueprint",
+            "id": 48106,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-backpack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Tangaroa": {
+        "name": "Tangaroa",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Tangaroa Ruben 1",
+            "id": 48107,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Birds nest",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tangaroa Ruben 2",
+            "id": 48108,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 3 MetalOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tangaroa Ruben 3",
+            "id": 48109,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-bow",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tangaroa Ruben 4",
+            "id": 48110,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 4 Raw_Beet",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tangaroa Ruben 5",
+            "id": 48111,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Oxygen bottle",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tangaroa Gardener Diary",
+            "id": 48112,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 1 Stone",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tangaroa Riot Log",
+            "id": 48113,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 2 Clay",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tangaroa Tulley Note",
+            "id": 48114,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-purifier",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tangaroa Cipher",
+            "id": 48115,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-grill",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Tangaroa Frequency to Varuna Point",
+            "id": 48116,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Caravan Island Frequency",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Water pipe blueprint",
+            "id": 48117,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-net",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Electric purifier blueprint",
+            "id": 48118,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 1 Plank",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Water tank blueprint",
+            "id": 48119,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 2 Plastic",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Large Storage blueprint",
+            "id": 48120,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 2 Thatch",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Elaine (Tangaroa)",
+            "id": 48121,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 4 Stone",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Varuna Point": {
+        "name": "Varuna Point",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Varuna Point Grabber diary 1",
+            "id": 48122,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 1 Plastic",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varuna Point Grabber diary 2",
+            "id": 48123,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 4 Thatch",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varuna Point Grabber diary 3",
+            "id": 48124,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 1 TitaniumOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varuna Point Grabber diary 4",
+            "id": 48125,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-containers",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varuna Point Grabber diary 5",
+            "id": 48126,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-zipline",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varuna Point Grabber diary 6",
+            "id": 48127,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-headlight",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Varuna Point Frequency to Temperance",
+            "id": 48128,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Temperance Frequency",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Wind Turbine blueprint",
+            "id": 48129,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 1 Clay",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Advanced Battery blueprint",
+            "id": 48130,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-axe",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Advanced Headlight blueprint",
+            "id": 48131,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Leather helmet",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Electric Grill blueprint",
+            "id": 48132,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 3 Clay",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Temperance": {
+        "name": "Temperance",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Temperance Bruno diary 1",
+            "id": 48133,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 1 SeaVine",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Temperance Bruno diary 2",
+            "id": 48134,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-axe",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Temperance Bruno diary 3",
+            "id": 48135,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 4 Clay",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Temperance Bruno diary 4",
+            "id": 48136,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 2 CopperOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Temperance Bruno diary 5",
+            "id": 48137,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-spear",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Temperance Sparrow note 1",
+            "id": 48138,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-crop-plot",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Temperance Sparrow note 2",
+            "id": 48139,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-purifier",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Temperance Frequency to Utopia",
+            "id": 48140,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Utopia Frequency",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Temperance Star sign 1",
+            "id": 48141,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-containers",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Temperance Star sign 2",
+            "id": 48142,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Shear",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Temperance Star sign 3",
+            "id": 48143,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 5 TitaniumOre",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Temperance Star sign 4",
+            "id": 48144,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 2 Plank",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Electric Smelter blueprint",
+            "id": 48145,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-net",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Advanced Biofuel Extractor blueprint",
+            "id": 48146,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 2 Scrap",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Advanced Stationary Anchor blueprint",
+            "id": 48147,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Resource Pack: 3 Plastic",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Shogo (Temperance)",
+            "id": 48148,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-scarecrow",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Utopia": {
+        "name": "Utopia",
+        "exits": [],
+        "locations": [
+          {
+            "name": "Electric Zipline blueprint",
+            "id": 48149,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Binoculars",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Advanced Backpack blueprint",
+            "id": 48150,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Sweep net",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Titanium Tools blueprint",
+            "id": 48151,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-backpack",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Utopia Captives note",
+            "id": 48152,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Grass plot",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Utopia Detto map",
+            "id": 48153,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "progressive-engine",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          },
+          {
+            "name": "Utopia Complete",
+            "id": null,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true
+          }
+        ]
+      },
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "MenuToRaft",
+            "connected_region": "Raft",
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            }
+          }
+        ],
+        "locations": []
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "Backpack": {
+        "name": "Backpack",
+        "id": 47001,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Big backpack": {
+        "name": "Big backpack",
+        "id": 47002,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Leather helmet": {
+        "name": "Leather helmet",
+        "id": 47003,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Leather body armor": {
+        "name": "Leather body armor",
+        "id": 47004,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Leather greaves": {
+        "name": "Leather greaves",
+        "id": 47005,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Flippers": {
+        "name": "Flippers",
+        "id": 47006,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Head light": {
+        "name": "Head light",
+        "id": 47007,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Advanced head light": {
+        "name": "Advanced head light",
+        "id": 47008,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Oxygen bottle": {
+        "name": "Oxygen bottle",
+        "id": 47009,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Zipline tool": {
+        "name": "Zipline tool",
+        "id": 47010,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Electric zipline tool": {
+        "name": "Electric zipline tool",
+        "id": 47011,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Empty bottle": {
+        "name": "Empty bottle",
+        "id": 47012,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Empty canteen": {
+        "name": "Empty canteen",
+        "id": 47013,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Bucket": {
+        "name": "Bucket",
+        "id": 47014,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Clay bowl": {
+        "name": "Clay bowl",
+        "id": 47015,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Drinking glass": {
+        "name": "Drinking glass",
+        "id": 47016,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Healing salve": {
+        "name": "Healing salve",
+        "id": 47017,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Good healing salve": {
+        "name": "Good healing salve",
+        "id": 47018,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Cookingpot": {
+        "name": "Cookingpot",
+        "id": 47019,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Juicer": {
+        "name": "Juicer",
+        "id": 47020,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Advanced grill": {
+        "name": "Advanced grill",
+        "id": 47021,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Electric grill": {
+        "name": "Electric grill",
+        "id": 47022,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Advanced purifier": {
+        "name": "Advanced purifier",
+        "id": 47023,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Electric purifier": {
+        "name": "Electric purifier",
+        "id": 47024,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Advanced small crop plot": {
+        "name": "Advanced small crop plot",
+        "id": 47025,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Advanced medium crop plot": {
+        "name": "Advanced medium crop plot",
+        "id": 47026,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Advanced large crop plot": {
+        "name": "Advanced large crop plot",
+        "id": 47027,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Grass plot": {
+        "name": "Grass plot",
+        "id": 47028,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Medium crop plot": {
+        "name": "Medium crop plot",
+        "id": 47029,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Large crop plot": {
+        "name": "Large crop plot",
+        "id": 47030,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Scarecrow": {
+        "name": "Scarecrow",
+        "id": 47031,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Advanced Scarecrow": {
+        "name": "Advanced Scarecrow",
+        "id": 47032,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Sprinkler": {
+        "name": "Sprinkler",
+        "id": 47033,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Honey": {
+        "name": "Honey",
+        "id": 47034,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Battery": {
+        "name": "Battery",
+        "id": 47035,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Advanced Battery": {
+        "name": "Advanced Battery",
+        "id": 47036,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Bolt": {
+        "name": "Bolt",
+        "id": 47037,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Circuit board": {
+        "name": "Circuit board",
+        "id": 47038,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Hinge": {
+        "name": "Hinge",
+        "id": 47039,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Stationary anchor": {
+        "name": "Stationary anchor",
+        "id": 47040,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Advanced stationary anchor": {
+        "name": "Advanced stationary anchor",
+        "id": 47041,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Engine controls": {
+        "name": "Engine controls",
+        "id": 47042,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Engine": {
+        "name": "Engine",
+        "id": 47043,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Receiver": {
+        "name": "Receiver",
+        "id": 47044,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Antenna": {
+        "name": "Antenna",
+        "id": 47045,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Steering Wheel": {
+        "name": "Steering Wheel",
+        "id": 47046,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Battery charger": {
+        "name": "Battery charger",
+        "id": 47047,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Wind turbine": {
+        "name": "Wind turbine",
+        "id": 47048,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Hammock": {
+        "name": "Hammock",
+        "id": 47049,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Beehive": {
+        "name": "Beehive",
+        "id": 47050,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Biofuel refiner": {
+        "name": "Biofuel refiner",
+        "id": 47051,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Advanced biofuel refiner": {
+        "name": "Advanced biofuel refiner",
+        "id": 47052,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Birds nest": {
+        "name": "Birds nest",
+        "id": 47053,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Simple collection net": {
+        "name": "Simple collection net",
+        "id": 47054,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Advanced collection net": {
+        "name": "Advanced collection net",
+        "id": 47055,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Smelter": {
+        "name": "Smelter",
+        "id": 47056,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Electric Smelter": {
+        "name": "Electric Smelter",
+        "id": 47057,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Fuel tank": {
+        "name": "Fuel tank",
+        "id": 47058,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Water tank": {
+        "name": "Water tank",
+        "id": 47059,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Fuel pipe": {
+        "name": "Fuel pipe",
+        "id": 47060,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Water pipe": {
+        "name": "Water pipe",
+        "id": 47061,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Recycler": {
+        "name": "Recycler",
+        "id": 47062,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Storage": {
+        "name": "Storage",
+        "id": 47063,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Large Storage": {
+        "name": "Large Storage",
+        "id": 47064,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Trashcan": {
+        "name": "Trashcan",
+        "id": 47065,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Zipline": {
+        "name": "Zipline",
+        "id": 47066,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Firework": {
+        "name": "Firework",
+        "id": 47067,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Metal axe": {
+        "name": "Metal axe",
+        "id": 47068,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Titanium axe": {
+        "name": "Titanium axe",
+        "id": 47069,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Binoculars": {
+        "name": "Binoculars",
+        "id": 47070,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Metal fishing rod": {
+        "name": "Metal fishing rod",
+        "id": 47071,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Scrap hook": {
+        "name": "Scrap hook",
+        "id": 47072,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Titanium hook": {
+        "name": "Titanium hook",
+        "id": 47073,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Metal detector": {
+        "name": "Metal detector",
+        "id": 47074,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Shear": {
+        "name": "Shear",
+        "id": 47075,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Shovel": {
+        "name": "Shovel",
+        "id": 47076,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Sweep net": {
+        "name": "Sweep net",
+        "id": 47077,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Basic bow": {
+        "name": "Basic bow",
+        "id": 47078,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Stone arrow": {
+        "name": "Stone arrow",
+        "id": 47079,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Metal arrow": {
+        "name": "Metal arrow",
+        "id": 47080,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Titanium arrow": {
+        "name": "Titanium arrow",
+        "id": 47081,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Metal spear": {
+        "name": "Metal spear",
+        "id": 47082,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Machete": {
+        "name": "Machete",
+        "id": 47083,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Titanium sword": {
+        "name": "Titanium sword",
+        "id": 47084,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Net launcher": {
+        "name": "Net launcher",
+        "id": 47085,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Net canister": {
+        "name": "Net canister",
+        "id": 47086,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Vasagatan Frequency": {
+        "name": "Vasagatan Frequency",
+        "id": 47087,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Balboa Island Frequency": {
+        "name": "Balboa Island Frequency",
+        "id": 47088,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Tangaroa Frequency": {
+        "name": "Tangaroa Frequency",
+        "id": 47089,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Varuna Point Frequency": {
+        "name": "Varuna Point Frequency",
+        "id": 47090,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Temperance Frequency": {
+        "name": "Temperance Frequency",
+        "id": 47091,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Utopia Frequency": {
+        "name": "Utopia Frequency",
+        "id": 47092,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Caravan Island Frequency": {
+        "name": "Caravan Island Frequency",
+        "id": 47093,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "progressive-salve": {
+        "name": "progressive-salve",
+        "hint_text": "progressive salve",
+        "id": 47094,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "progressive-backpack": {
+        "name": "progressive-backpack",
+        "hint_text": "progressive backpack",
+        "id": 47095,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "progressive-containers": {
+        "name": "progressive-containers",
+        "hint_text": "progressive containers",
+        "id": 47096,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "progressive-headlight": {
+        "name": "progressive-headlight",
+        "hint_text": "progressive headlight",
+        "id": 47097,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "progressive-biofuel": {
+        "name": "progressive-biofuel",
+        "hint_text": "progressive biofuel",
+        "id": 47098,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "progressive-bottle": {
+        "name": "progressive-bottle",
+        "hint_text": "progressive bottle",
+        "id": 47099,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "progression"
+      },
+      "progressive-grill": {
+        "name": "progressive-grill",
+        "hint_text": "progressive grill",
+        "id": 47100,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "progressive-purifier": {
+        "name": "progressive-purifier",
+        "hint_text": "progressive purifier",
+        "id": 47101,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "progressive-crop-plot": {
+        "name": "progressive-crop-plot",
+        "hint_text": "progressive crop plot",
+        "id": 47102,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 5,
+        "classification": "filler"
+      },
+      "progressive-battery": {
+        "name": "progressive-battery",
+        "hint_text": "progressive battery",
+        "id": 47103,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 4,
+        "classification": "progression"
+      },
+      "progressive-anchor": {
+        "name": "progressive-anchor",
+        "hint_text": "progressive anchor",
+        "id": 47104,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "progressive-engine": {
+        "name": "progressive-engine",
+        "hint_text": "progressive engine",
+        "id": 47105,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "progression"
+      },
+      "progressive-scarecrow": {
+        "name": "progressive-scarecrow",
+        "hint_text": "progressive scarecrow",
+        "id": 47106,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "progressive-net": {
+        "name": "progressive-net",
+        "hint_text": "progressive net",
+        "id": 47107,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "progressive-storage": {
+        "name": "progressive-storage",
+        "hint_text": "progressive storage",
+        "id": 47108,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "progressive-zipline": {
+        "name": "progressive-zipline",
+        "hint_text": "progressive zipline",
+        "id": 47109,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "progression"
+      },
+      "progressive-metals": {
+        "name": "progressive-metals",
+        "hint_text": "progressive metals",
+        "id": 47110,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "progression"
+      },
+      "progressive-bow": {
+        "name": "progressive-bow",
+        "hint_text": "progressive bow",
+        "id": 47111,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 4,
+        "classification": "filler"
+      },
+      "progressive-axe": {
+        "name": "progressive-axe",
+        "hint_text": "progressive axe",
+        "id": 47112,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "progressive-hook": {
+        "name": "progressive-hook",
+        "hint_text": "progressive hook",
+        "id": 47113,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "progressive-spear": {
+        "name": "progressive-spear",
+        "hint_text": "progressive spear",
+        "id": 47114,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "progression"
+      },
+      "progressive-frequency": {
+        "name": "progressive-frequency",
+        "id": 47115,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 1 Plank": {
+        "name": "Resource Pack: 1 Plank",
+        "id": 47116,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "filler"
+      },
+      "Resource Pack: 2 Plank": {
+        "name": "Resource Pack: 2 Plank",
+        "id": 47117,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "Resource Pack: 3 Plank": {
+        "name": "Resource Pack: 3 Plank",
+        "id": 47118,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 4 Plank": {
+        "name": "Resource Pack: 4 Plank",
+        "id": 47119,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 5 Plank": {
+        "name": "Resource Pack: 5 Plank",
+        "id": 47120,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 6 Plank": {
+        "name": "Resource Pack: 6 Plank",
+        "id": 47121,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 7 Plank": {
+        "name": "Resource Pack: 7 Plank",
+        "id": 47122,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 8 Plank": {
+        "name": "Resource Pack: 8 Plank",
+        "id": 47123,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 9 Plank": {
+        "name": "Resource Pack: 9 Plank",
+        "id": 47124,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 10 Plank": {
+        "name": "Resource Pack: 10 Plank",
+        "id": 47125,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 11 Plank": {
+        "name": "Resource Pack: 11 Plank",
+        "id": 47126,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 12 Plank": {
+        "name": "Resource Pack: 12 Plank",
+        "id": 47127,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 13 Plank": {
+        "name": "Resource Pack: 13 Plank",
+        "id": 47128,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 14 Plank": {
+        "name": "Resource Pack: 14 Plank",
+        "id": 47129,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 15 Plank": {
+        "name": "Resource Pack: 15 Plank",
+        "id": 47130,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 1 Plastic": {
+        "name": "Resource Pack: 1 Plastic",
+        "id": 47131,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 2 Plastic": {
+        "name": "Resource Pack: 2 Plastic",
+        "id": 47132,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "Resource Pack: 3 Plastic": {
+        "name": "Resource Pack: 3 Plastic",
+        "id": 47133,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 4 Plastic": {
+        "name": "Resource Pack: 4 Plastic",
+        "id": 47134,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 5 Plastic": {
+        "name": "Resource Pack: 5 Plastic",
+        "id": 47135,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 6 Plastic": {
+        "name": "Resource Pack: 6 Plastic",
+        "id": 47136,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 7 Plastic": {
+        "name": "Resource Pack: 7 Plastic",
+        "id": 47137,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 8 Plastic": {
+        "name": "Resource Pack: 8 Plastic",
+        "id": 47138,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 9 Plastic": {
+        "name": "Resource Pack: 9 Plastic",
+        "id": 47139,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 10 Plastic": {
+        "name": "Resource Pack: 10 Plastic",
+        "id": 47140,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 11 Plastic": {
+        "name": "Resource Pack: 11 Plastic",
+        "id": 47141,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 12 Plastic": {
+        "name": "Resource Pack: 12 Plastic",
+        "id": 47142,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 13 Plastic": {
+        "name": "Resource Pack: 13 Plastic",
+        "id": 47143,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 14 Plastic": {
+        "name": "Resource Pack: 14 Plastic",
+        "id": 47144,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 15 Plastic": {
+        "name": "Resource Pack: 15 Plastic",
+        "id": 47145,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 1 Clay": {
+        "name": "Resource Pack: 1 Clay",
+        "id": 47146,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 2 Clay": {
+        "name": "Resource Pack: 2 Clay",
+        "id": 47147,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 3 Clay": {
+        "name": "Resource Pack: 3 Clay",
+        "id": 47148,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 4 Clay": {
+        "name": "Resource Pack: 4 Clay",
+        "id": 47149,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "Resource Pack: 5 Clay": {
+        "name": "Resource Pack: 5 Clay",
+        "id": 47150,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 6 Clay": {
+        "name": "Resource Pack: 6 Clay",
+        "id": 47151,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 7 Clay": {
+        "name": "Resource Pack: 7 Clay",
+        "id": 47152,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 8 Clay": {
+        "name": "Resource Pack: 8 Clay",
+        "id": 47153,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 9 Clay": {
+        "name": "Resource Pack: 9 Clay",
+        "id": 47154,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 10 Clay": {
+        "name": "Resource Pack: 10 Clay",
+        "id": 47155,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 11 Clay": {
+        "name": "Resource Pack: 11 Clay",
+        "id": 47156,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 12 Clay": {
+        "name": "Resource Pack: 12 Clay",
+        "id": 47157,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 13 Clay": {
+        "name": "Resource Pack: 13 Clay",
+        "id": 47158,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 14 Clay": {
+        "name": "Resource Pack: 14 Clay",
+        "id": 47159,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 15 Clay": {
+        "name": "Resource Pack: 15 Clay",
+        "id": 47160,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 1 Stone": {
+        "name": "Resource Pack: 1 Stone",
+        "id": 47161,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 2 Stone": {
+        "name": "Resource Pack: 2 Stone",
+        "id": 47162,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 3 Stone": {
+        "name": "Resource Pack: 3 Stone",
+        "id": 47163,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 4 Stone": {
+        "name": "Resource Pack: 4 Stone",
+        "id": 47164,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 5 Stone": {
+        "name": "Resource Pack: 5 Stone",
+        "id": 47165,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "Resource Pack: 6 Stone": {
+        "name": "Resource Pack: 6 Stone",
+        "id": 47166,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 7 Stone": {
+        "name": "Resource Pack: 7 Stone",
+        "id": 47167,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 8 Stone": {
+        "name": "Resource Pack: 8 Stone",
+        "id": 47168,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 9 Stone": {
+        "name": "Resource Pack: 9 Stone",
+        "id": 47169,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 10 Stone": {
+        "name": "Resource Pack: 10 Stone",
+        "id": 47170,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 11 Stone": {
+        "name": "Resource Pack: 11 Stone",
+        "id": 47171,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 12 Stone": {
+        "name": "Resource Pack: 12 Stone",
+        "id": 47172,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 13 Stone": {
+        "name": "Resource Pack: 13 Stone",
+        "id": 47173,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 14 Stone": {
+        "name": "Resource Pack: 14 Stone",
+        "id": 47174,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 15 Stone": {
+        "name": "Resource Pack: 15 Stone",
+        "id": 47175,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 1 Scrap": {
+        "name": "Resource Pack: 1 Scrap",
+        "id": 47176,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 2 Scrap": {
+        "name": "Resource Pack: 2 Scrap",
+        "id": 47177,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "Resource Pack: 3 Scrap": {
+        "name": "Resource Pack: 3 Scrap",
+        "id": 47178,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "filler"
+      },
+      "Resource Pack: 4 Scrap": {
+        "name": "Resource Pack: 4 Scrap",
+        "id": 47179,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 5 Scrap": {
+        "name": "Resource Pack: 5 Scrap",
+        "id": 47180,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 6 Scrap": {
+        "name": "Resource Pack: 6 Scrap",
+        "id": 47181,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 7 Scrap": {
+        "name": "Resource Pack: 7 Scrap",
+        "id": 47182,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 8 Scrap": {
+        "name": "Resource Pack: 8 Scrap",
+        "id": 47183,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 9 Scrap": {
+        "name": "Resource Pack: 9 Scrap",
+        "id": 47184,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 10 Scrap": {
+        "name": "Resource Pack: 10 Scrap",
+        "id": 47185,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 11 Scrap": {
+        "name": "Resource Pack: 11 Scrap",
+        "id": 47186,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 12 Scrap": {
+        "name": "Resource Pack: 12 Scrap",
+        "id": 47187,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 13 Scrap": {
+        "name": "Resource Pack: 13 Scrap",
+        "id": 47188,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 14 Scrap": {
+        "name": "Resource Pack: 14 Scrap",
+        "id": 47189,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 15 Scrap": {
+        "name": "Resource Pack: 15 Scrap",
+        "id": 47190,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 1 SeaVine": {
+        "name": "Resource Pack: 1 SeaVine",
+        "id": 47191,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "Resource Pack: 2 SeaVine": {
+        "name": "Resource Pack: 2 SeaVine",
+        "id": 47192,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 3 SeaVine": {
+        "name": "Resource Pack: 3 SeaVine",
+        "id": 47193,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 4 SeaVine": {
+        "name": "Resource Pack: 4 SeaVine",
+        "id": 47194,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 5 SeaVine": {
+        "name": "Resource Pack: 5 SeaVine",
+        "id": 47195,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 6 SeaVine": {
+        "name": "Resource Pack: 6 SeaVine",
+        "id": 47196,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 7 SeaVine": {
+        "name": "Resource Pack: 7 SeaVine",
+        "id": 47197,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 8 SeaVine": {
+        "name": "Resource Pack: 8 SeaVine",
+        "id": 47198,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 9 SeaVine": {
+        "name": "Resource Pack: 9 SeaVine",
+        "id": 47199,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 10 SeaVine": {
+        "name": "Resource Pack: 10 SeaVine",
+        "id": 47200,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 11 SeaVine": {
+        "name": "Resource Pack: 11 SeaVine",
+        "id": 47201,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 12 SeaVine": {
+        "name": "Resource Pack: 12 SeaVine",
+        "id": 47202,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 13 SeaVine": {
+        "name": "Resource Pack: 13 SeaVine",
+        "id": 47203,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 14 SeaVine": {
+        "name": "Resource Pack: 14 SeaVine",
+        "id": 47204,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 15 SeaVine": {
+        "name": "Resource Pack: 15 SeaVine",
+        "id": 47205,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 1 Thatch": {
+        "name": "Resource Pack: 1 Thatch",
+        "id": 47206,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 2 Thatch": {
+        "name": "Resource Pack: 2 Thatch",
+        "id": 47207,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "Resource Pack: 3 Thatch": {
+        "name": "Resource Pack: 3 Thatch",
+        "id": 47208,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 4 Thatch": {
+        "name": "Resource Pack: 4 Thatch",
+        "id": 47209,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "Resource Pack: 5 Thatch": {
+        "name": "Resource Pack: 5 Thatch",
+        "id": 47210,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 6 Thatch": {
+        "name": "Resource Pack: 6 Thatch",
+        "id": 47211,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 7 Thatch": {
+        "name": "Resource Pack: 7 Thatch",
+        "id": 47212,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 8 Thatch": {
+        "name": "Resource Pack: 8 Thatch",
+        "id": 47213,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 9 Thatch": {
+        "name": "Resource Pack: 9 Thatch",
+        "id": 47214,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 10 Thatch": {
+        "name": "Resource Pack: 10 Thatch",
+        "id": 47215,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 11 Thatch": {
+        "name": "Resource Pack: 11 Thatch",
+        "id": 47216,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 12 Thatch": {
+        "name": "Resource Pack: 12 Thatch",
+        "id": 47217,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 13 Thatch": {
+        "name": "Resource Pack: 13 Thatch",
+        "id": 47218,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 14 Thatch": {
+        "name": "Resource Pack: 14 Thatch",
+        "id": 47219,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 15 Thatch": {
+        "name": "Resource Pack: 15 Thatch",
+        "id": 47220,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 1 Sand": {
+        "name": "Resource Pack: 1 Sand",
+        "id": 47221,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 2 Sand": {
+        "name": "Resource Pack: 2 Sand",
+        "id": 47222,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 3 Sand": {
+        "name": "Resource Pack: 3 Sand",
+        "id": 47223,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 4 Sand": {
+        "name": "Resource Pack: 4 Sand",
+        "id": 47224,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 5 Sand": {
+        "name": "Resource Pack: 5 Sand",
+        "id": 47225,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 6 Sand": {
+        "name": "Resource Pack: 6 Sand",
+        "id": 47226,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 7 Sand": {
+        "name": "Resource Pack: 7 Sand",
+        "id": 47227,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 8 Sand": {
+        "name": "Resource Pack: 8 Sand",
+        "id": 47228,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 9 Sand": {
+        "name": "Resource Pack: 9 Sand",
+        "id": 47229,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 10 Sand": {
+        "name": "Resource Pack: 10 Sand",
+        "id": 47230,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 11 Sand": {
+        "name": "Resource Pack: 11 Sand",
+        "id": 47231,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 12 Sand": {
+        "name": "Resource Pack: 12 Sand",
+        "id": 47232,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 13 Sand": {
+        "name": "Resource Pack: 13 Sand",
+        "id": 47233,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 14 Sand": {
+        "name": "Resource Pack: 14 Sand",
+        "id": 47234,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 15 Sand": {
+        "name": "Resource Pack: 15 Sand",
+        "id": 47235,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 1 Raw_Beet": {
+        "name": "Resource Pack: 1 Raw_Beet",
+        "id": 47236,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 2 Raw_Beet": {
+        "name": "Resource Pack: 2 Raw_Beet",
+        "hint_text": "Resource Pack: 2 Raw Beet",
+        "id": 47237,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 3 Raw_Beet": {
+        "name": "Resource Pack: 3 Raw_Beet",
+        "hint_text": "Resource Pack: 3 Raw Beet",
+        "id": 47238,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 4 Raw_Beet": {
+        "name": "Resource Pack: 4 Raw_Beet",
+        "hint_text": "Resource Pack: 4 Raw Beet",
+        "id": 47239,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 5 Raw_Beet": {
+        "name": "Resource Pack: 5 Raw_Beet",
+        "id": 47240,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 6 Raw_Beet": {
+        "name": "Resource Pack: 6 Raw_Beet",
+        "id": 47241,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 7 Raw_Beet": {
+        "name": "Resource Pack: 7 Raw_Beet",
+        "id": 47242,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 8 Raw_Beet": {
+        "name": "Resource Pack: 8 Raw_Beet",
+        "id": 47243,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 9 Raw_Beet": {
+        "name": "Resource Pack: 9 Raw_Beet",
+        "id": 47244,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 10 Raw_Beet": {
+        "name": "Resource Pack: 10 Raw_Beet",
+        "id": 47245,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 11 Raw_Beet": {
+        "name": "Resource Pack: 11 Raw_Beet",
+        "id": 47246,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 12 Raw_Beet": {
+        "name": "Resource Pack: 12 Raw_Beet",
+        "id": 47247,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 13 Raw_Beet": {
+        "name": "Resource Pack: 13 Raw_Beet",
+        "id": 47248,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 14 Raw_Beet": {
+        "name": "Resource Pack: 14 Raw_Beet",
+        "id": 47249,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 15 Raw_Beet": {
+        "name": "Resource Pack: 15 Raw_Beet",
+        "id": 47250,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 1 Raw_Potato": {
+        "name": "Resource Pack: 1 Raw_Potato",
+        "id": 47251,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 2 Raw_Potato": {
+        "name": "Resource Pack: 2 Raw_Potato",
+        "id": 47252,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 3 Raw_Potato": {
+        "name": "Resource Pack: 3 Raw_Potato",
+        "id": 47253,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 4 Raw_Potato": {
+        "name": "Resource Pack: 4 Raw_Potato",
+        "hint_text": "Resource Pack: 4 Raw Potato",
+        "id": 47254,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 5 Raw_Potato": {
+        "name": "Resource Pack: 5 Raw_Potato",
+        "id": 47255,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 6 Raw_Potato": {
+        "name": "Resource Pack: 6 Raw_Potato",
+        "id": 47256,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 7 Raw_Potato": {
+        "name": "Resource Pack: 7 Raw_Potato",
+        "id": 47257,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 8 Raw_Potato": {
+        "name": "Resource Pack: 8 Raw_Potato",
+        "id": 47258,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 9 Raw_Potato": {
+        "name": "Resource Pack: 9 Raw_Potato",
+        "id": 47259,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 10 Raw_Potato": {
+        "name": "Resource Pack: 10 Raw_Potato",
+        "id": 47260,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 11 Raw_Potato": {
+        "name": "Resource Pack: 11 Raw_Potato",
+        "id": 47261,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 12 Raw_Potato": {
+        "name": "Resource Pack: 12 Raw_Potato",
+        "id": 47262,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 13 Raw_Potato": {
+        "name": "Resource Pack: 13 Raw_Potato",
+        "id": 47263,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 14 Raw_Potato": {
+        "name": "Resource Pack: 14 Raw_Potato",
+        "id": 47264,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 15 Raw_Potato": {
+        "name": "Resource Pack: 15 Raw_Potato",
+        "id": 47265,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 1 MetalOre": {
+        "name": "Resource Pack: 1 MetalOre",
+        "id": 47266,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 2 MetalOre": {
+        "name": "Resource Pack: 2 MetalOre",
+        "id": 47267,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "Resource Pack: 3 MetalOre": {
+        "name": "Resource Pack: 3 MetalOre",
+        "id": 47268,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 4 MetalOre": {
+        "name": "Resource Pack: 4 MetalOre",
+        "id": 47269,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 5 MetalOre": {
+        "name": "Resource Pack: 5 MetalOre",
+        "id": 47270,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 6 MetalOre": {
+        "name": "Resource Pack: 6 MetalOre",
+        "id": 47271,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 7 MetalOre": {
+        "name": "Resource Pack: 7 MetalOre",
+        "id": 47272,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 8 MetalOre": {
+        "name": "Resource Pack: 8 MetalOre",
+        "id": 47273,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 9 MetalOre": {
+        "name": "Resource Pack: 9 MetalOre",
+        "id": 47274,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 10 MetalOre": {
+        "name": "Resource Pack: 10 MetalOre",
+        "id": 47275,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 11 MetalOre": {
+        "name": "Resource Pack: 11 MetalOre",
+        "id": 47276,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 12 MetalOre": {
+        "name": "Resource Pack: 12 MetalOre",
+        "id": 47277,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 13 MetalOre": {
+        "name": "Resource Pack: 13 MetalOre",
+        "id": 47278,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 14 MetalOre": {
+        "name": "Resource Pack: 14 MetalOre",
+        "id": 47279,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 15 MetalOre": {
+        "name": "Resource Pack: 15 MetalOre",
+        "id": 47280,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 1 TitaniumOre": {
+        "name": "Resource Pack: 1 TitaniumOre",
+        "id": 47281,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "filler"
+      },
+      "Resource Pack: 2 TitaniumOre": {
+        "name": "Resource Pack: 2 TitaniumOre",
+        "id": 47282,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "Resource Pack: 3 TitaniumOre": {
+        "name": "Resource Pack: 3 TitaniumOre",
+        "id": 47283,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 4 TitaniumOre": {
+        "name": "Resource Pack: 4 TitaniumOre",
+        "id": 47284,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 5 TitaniumOre": {
+        "name": "Resource Pack: 5 TitaniumOre",
+        "id": 47285,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 6 TitaniumOre": {
+        "name": "Resource Pack: 6 TitaniumOre",
+        "id": 47286,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 7 TitaniumOre": {
+        "name": "Resource Pack: 7 TitaniumOre",
+        "id": 47287,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 8 TitaniumOre": {
+        "name": "Resource Pack: 8 TitaniumOre",
+        "id": 47288,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 9 TitaniumOre": {
+        "name": "Resource Pack: 9 TitaniumOre",
+        "id": 47289,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 10 TitaniumOre": {
+        "name": "Resource Pack: 10 TitaniumOre",
+        "id": 47290,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 11 TitaniumOre": {
+        "name": "Resource Pack: 11 TitaniumOre",
+        "id": 47291,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 12 TitaniumOre": {
+        "name": "Resource Pack: 12 TitaniumOre",
+        "id": 47292,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 13 TitaniumOre": {
+        "name": "Resource Pack: 13 TitaniumOre",
+        "id": 47293,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 14 TitaniumOre": {
+        "name": "Resource Pack: 14 TitaniumOre",
+        "id": 47294,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 15 TitaniumOre": {
+        "name": "Resource Pack: 15 TitaniumOre",
+        "id": 47295,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 1 CopperOre": {
+        "name": "Resource Pack: 1 CopperOre",
+        "id": 47296,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 2 CopperOre": {
+        "name": "Resource Pack: 2 CopperOre",
+        "id": 47297,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "filler"
+      },
+      "Resource Pack: 3 CopperOre": {
+        "name": "Resource Pack: 3 CopperOre",
+        "id": 47298,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 4 CopperOre": {
+        "name": "Resource Pack: 4 CopperOre",
+        "id": 47299,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 5 CopperOre": {
+        "name": "Resource Pack: 5 CopperOre",
+        "id": 47300,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 6 CopperOre": {
+        "name": "Resource Pack: 6 CopperOre",
+        "id": 47301,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 7 CopperOre": {
+        "name": "Resource Pack: 7 CopperOre",
+        "id": 47302,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 8 CopperOre": {
+        "name": "Resource Pack: 8 CopperOre",
+        "id": 47303,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 9 CopperOre": {
+        "name": "Resource Pack: 9 CopperOre",
+        "id": 47304,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 10 CopperOre": {
+        "name": "Resource Pack: 10 CopperOre",
+        "id": 47305,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 11 CopperOre": {
+        "name": "Resource Pack: 11 CopperOre",
+        "id": 47306,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 12 CopperOre": {
+        "name": "Resource Pack: 12 CopperOre",
+        "id": 47307,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 13 CopperOre": {
+        "name": "Resource Pack: 13 CopperOre",
+        "id": 47308,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 14 CopperOre": {
+        "name": "Resource Pack: 14 CopperOre",
+        "id": 47309,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 15 CopperOre": {
+        "name": "Resource Pack: 15 CopperOre",
+        "id": 47310,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 1 ExplosiveGoo": {
+        "name": "Resource Pack: 1 ExplosiveGoo",
+        "id": 47311,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 2 ExplosiveGoo": {
+        "name": "Resource Pack: 2 ExplosiveGoo",
+        "id": 47312,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 3 ExplosiveGoo": {
+        "name": "Resource Pack: 3 ExplosiveGoo",
+        "id": 47313,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 4 ExplosiveGoo": {
+        "name": "Resource Pack: 4 ExplosiveGoo",
+        "id": 47314,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 5 ExplosiveGoo": {
+        "name": "Resource Pack: 5 ExplosiveGoo",
+        "id": 47315,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 6 ExplosiveGoo": {
+        "name": "Resource Pack: 6 ExplosiveGoo",
+        "id": 47316,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 7 ExplosiveGoo": {
+        "name": "Resource Pack: 7 ExplosiveGoo",
+        "id": 47317,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 8 ExplosiveGoo": {
+        "name": "Resource Pack: 8 ExplosiveGoo",
+        "id": 47318,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 9 ExplosiveGoo": {
+        "name": "Resource Pack: 9 ExplosiveGoo",
+        "id": 47319,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 10 ExplosiveGoo": {
+        "name": "Resource Pack: 10 ExplosiveGoo",
+        "id": 47320,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 11 ExplosiveGoo": {
+        "name": "Resource Pack: 11 ExplosiveGoo",
+        "id": 47321,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 12 ExplosiveGoo": {
+        "name": "Resource Pack: 12 ExplosiveGoo",
+        "id": 47322,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 13 ExplosiveGoo": {
+        "name": "Resource Pack: 13 ExplosiveGoo",
+        "id": 47323,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 14 ExplosiveGoo": {
+        "name": "Resource Pack: 14 ExplosiveGoo",
+        "id": 47324,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Resource Pack: 15 ExplosiveGoo": {
+        "name": "Resource Pack: 15 ExplosiveGoo",
+        "id": 47325,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "event": true,
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Event",
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "Antenna": 1,
+      "Balboa Island Frequency": 1,
+      "Beehive": 1,
+      "Binoculars": 1,
+      "Birds nest": 1,
+      "Bolt": 1,
+      "Bucket": 1,
+      "Caravan Island Frequency": 1,
+      "Circuit board": 1,
+      "Cookingpot": 1,
+      "Firework": 1,
+      "Flippers": 1,
+      "Fuel pipe": 1,
+      "Fuel tank": 1,
+      "Grass plot": 1,
+      "Hammock": 1,
+      "Hinge": 1,
+      "Honey": 1,
+      "Juicer": 1,
+      "Leather body armor": 1,
+      "Leather greaves": 1,
+      "Leather helmet": 1,
+      "Metal fishing rod": 1,
+      "Net canister": 1,
+      "Net launcher": 1,
+      "Oxygen bottle": 1,
+      "Receiver": 1,
+      "Recycler": 1,
+      "Resource Pack: 1 Clay": 1,
+      "Resource Pack: 1 CopperOre": 1,
+      "Resource Pack: 1 MetalOre": 1,
+      "Resource Pack: 1 Plank": 3,
+      "Resource Pack: 1 Plastic": 1,
+      "Resource Pack: 1 Scrap": 1,
+      "Resource Pack: 1 SeaVine": 2,
+      "Resource Pack: 1 Stone": 1,
+      "Resource Pack: 1 TitaniumOre": 3,
+      "Resource Pack: 2 Clay": 1,
+      "Resource Pack: 2 CopperOre": 3,
+      "Resource Pack: 2 MetalOre": 2,
+      "Resource Pack: 2 Plank": 2,
+      "Resource Pack: 2 Plastic": 2,
+      "Resource Pack: 2 Raw_Beet": 1,
+      "Resource Pack: 2 Sand": 1,
+      "Resource Pack: 2 Scrap": 2,
+      "Resource Pack: 2 SeaVine": 1,
+      "Resource Pack: 2 Stone": 1,
+      "Resource Pack: 2 Thatch": 2,
+      "Resource Pack: 2 TitaniumOre": 2,
+      "Resource Pack: 3 Clay": 1,
+      "Resource Pack: 3 CopperOre": 1,
+      "Resource Pack: 3 MetalOre": 1,
+      "Resource Pack: 3 Plank": 1,
+      "Resource Pack: 3 Plastic": 1,
+      "Resource Pack: 3 Raw_Beet": 1,
+      "Resource Pack: 3 Scrap": 3,
+      "Resource Pack: 3 TitaniumOre": 1,
+      "Resource Pack: 4 Clay": 2,
+      "Resource Pack: 4 CopperOre": 1,
+      "Resource Pack: 4 Raw_Beet": 1,
+      "Resource Pack: 4 Raw_Potato": 1,
+      "Resource Pack: 4 Stone": 1,
+      "Resource Pack: 4 Thatch": 2,
+      "Resource Pack: 5 CopperOre": 1,
+      "Resource Pack: 5 ExplosiveGoo": 1,
+      "Resource Pack: 5 MetalOre": 1,
+      "Resource Pack: 5 Sand": 1,
+      "Resource Pack: 5 Scrap": 1,
+      "Resource Pack: 5 SeaVine": 1,
+      "Resource Pack: 5 Stone": 2,
+      "Resource Pack: 5 TitaniumOre": 1,
+      "Shear": 1,
+      "Shovel": 1,
+      "Sprinkler": 1,
+      "Sweep net": 1,
+      "Tangaroa Frequency": 1,
+      "Temperance Frequency": 1,
+      "Trashcan": 1,
+      "Utopia Frequency": 1,
+      "Varuna Point Frequency": 1,
+      "Vasagatan Frequency": 1,
+      "Victory": 1,
+      "Water pipe": 1,
+      "Water tank": 1,
+      "progressive-anchor": 2,
+      "progressive-axe": 2,
+      "progressive-backpack": 2,
+      "progressive-battery": 4,
+      "progressive-biofuel": 2,
+      "progressive-bottle": 2,
+      "progressive-bow": 4,
+      "progressive-containers": 2,
+      "progressive-crop-plot": 5,
+      "progressive-engine": 3,
+      "progressive-grill": 2,
+      "progressive-headlight": 2,
+      "progressive-hook": 2,
+      "progressive-metals": 3,
+      "progressive-net": 2,
+      "progressive-purifier": 2,
+      "progressive-salve": 2,
+      "progressive-scarecrow": 2,
+      "progressive-spear": 3,
+      "progressive-storage": 2,
+      "progressive-zipline": 3
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "settings": {
+    "1": {
+      "game": "Raft WorldGen",
+      "assume_bidirectional_exits": false,
+      "use_resolved_items": false
+    }
+  },
+  "game_info": {
+    "1": {
+      "name": "Raft WorldGen",
+      "rule_format": {
+        "version": "1.0"
+      }
+    }
+  },
+  "helpers": {}
+}

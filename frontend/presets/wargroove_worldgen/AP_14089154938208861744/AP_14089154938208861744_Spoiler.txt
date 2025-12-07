@@ -1,0 +1,90 @@
+﻿Archipelago Version 0.6.5  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Wargroove WorldGen
+Location Count:                  38
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 No
+
+
+Locations:
+
+Humble Beginnings: Caesar: Ballista
+Humble Beginnings: Chest 1: Final Bridges
+Humble Beginnings: Chest 2: Commander Defense Boost
+Humble Beginnings: Victory: Commander Defense Boost
+Best Friendssss: Find Sedge: Commander Defense Boost
+Best Friendssss: Victory: Dragon
+A Knight's Folly: Caesar: Merfolk
+A Knight's Folly: Victory: Warship
+Denrunaway: Chest: Income Boost
+Denrunaway: Victory: Witch
+Dragon Freeway: Victory: Barge
+Deep Thicket: Find Sedge: Turtle
+Deep Thicket: Victory: Income Boost
+Corrupted Inlet: Victory: Eastern Bridges
+Mage Mayhem: Caesar: Balloon
+Mage Mayhem: Victory: Southern Walls
+Endless Knight: Victory: Knight
+Ambushed in the Middle: Victory (Blue): Commander Defense Boost
+Ambushed in the Middle: Victory (Green): Income Boost
+The Churning Sea: Victory: Spearman
+Frigid Archery: Light the Torch: Mage
+Frigid Archery: Victory: Rifleman
+Archery Lessons: Chest: Harpoon Ship
+Archery Lessons: Victory: Income Boost
+Surrounded: Caesar: Thief
+Surrounded: Victory: Golem
+Darkest Knight: Victory: Harpy
+Robbed: Victory: Wagon
+Open Season: Caesar: Final Walls
+Open Season: Victory: Commander Defense Boost
+Doggo Mountain: Find all the Dogs: Income Boost
+Doggo Mountain: Victory: Commander Defense Boost
+Tenri's Fall: Victory: Final Sickle
+Foolish Canal: Victory: Income Boost
+Master of the Lake: Victory: Income Boost
+A Ballista's Revenge: Victory: Commander Defense Boost
+Rebel Village: Victory (Pink): Commander Defense Boost
+Rebel Village: Victory (Red): Archer
+Wargroove Finale: Victory: Wargroove Victory
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  A Knight's Folly: Caesar: Merfolk
+  A Knight's Folly: Victory: Warship
+  Archery Lessons: Chest: Harpoon Ship
+  Best Friendssss: Victory: Dragon
+  Corrupted Inlet: Victory: Eastern Bridges
+  Darkest Knight: Victory: Harpy
+  Deep Thicket: Find Sedge: Turtle
+  Dragon Freeway: Victory: Barge
+  Endless Knight: Victory: Knight
+  Frigid Archery: Light the Torch: Mage
+  Frigid Archery: Victory: Rifleman
+  Humble Beginnings: Caesar: Ballista
+  Humble Beginnings: Chest 1: Final Bridges
+  Mage Mayhem: Victory: Southern Walls
+  Open Season: Caesar: Final Walls
+  Rebel Village: Victory (Red): Archer
+  Surrounded: Caesar: Thief
+  Tenri's Fall: Victory: Final Sickle
+  The Churning Sea: Victory: Spearman
+  Wargroove Finale: Victory: Wargroove Victory
+}

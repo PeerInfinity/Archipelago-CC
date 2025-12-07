@@ -2279,7 +2279,7 @@
                     "value": [
                       "The Tenacious - Achievement",
                       444491,
-                      "rooms={'Dread Hallway', 'Crossroads', 'Outside The Agreeable', 'Hub Room'}, doors=set("
+                      "rooms={'Hub Room', 'Outside The Agreeable', 'Dread Hallway', 'Crossroads'}, doors=set("
                     ]
                   },
                   "attr": "access"
@@ -3005,7 +3005,7 @@
                     "value": [
                       "Outside The Agreeable - Lookout Panels",
                       445271,
-                      "rooms={'Suits Area', 'Outside The Bold', 'Elements Area', 'Orange Tower Fifth Floor'}, doors=set("
+                      "rooms={'Suits Area', 'Elements Area', 'Orange Tower Fifth Floor', 'Outside The Bold'}, doors=set("
                     ]
                   },
                   "attr": "access"
@@ -4030,7 +4030,7 @@
                     "value": [
                       "The Incomparable - Achievement",
                       444585,
-                      "rooms={'Elements Area', 'Eight Room', 'Courtyard'}, doors=set("
+                      "rooms={'Elements Area', 'Courtyard', 'Eight Room'}, doors=set("
                     ]
                   },
                   "attr": "access"
@@ -6780,7 +6780,7 @@
                     "value": [
                       "The Colorful - Achievement",
                       444652,
-                      "rooms={'The Colorful (Orange"
+                      "rooms={'The Colorful (Red"
                     ]
                   },
                   "attr": "access"
@@ -7410,7 +7410,7 @@
                     "value": [
                       "Color Barriers - RED and BLUE",
                       445236,
-                      "rooms={'Color Hunt', 'Orange Tower Third Floor'}, doors=set("
+                      "rooms={'Orange Tower Third Floor', 'Color Hunt'}, doors=set("
                     ]
                   },
                   "attr": "access"
@@ -7451,7 +7451,7 @@
                     "value": [
                       "Color Barriers - GREEN, ORANGE and PURPLE",
                       445237,
-                      "rooms={'Color Hunt', 'Outside The Agreeable', 'Directional Gallery', 'Outside The Initiated', 'Courtyard', 'Orange Tower Third Floor'}, doors=set("
+                      "rooms={'Orange Tower Third Floor', 'Courtyard', 'Color Hunt', 'Outside The Agreeable', 'Outside The Initiated', 'Directional Gallery'}, doors=set("
                     ]
                   },
                   "attr": "access"
@@ -7565,7 +7565,7 @@
                     "value": [
                       "The Optimistic - Achievement",
                       444667,
-                      "rooms={'Directional Gallery', 'Yellow Backside Area', 'The Bearer', 'The Observant'}, doors=set("
+                      "rooms={'Yellow Backside Area', 'The Bearer', 'The Observant', 'Directional Gallery'}, doors=set("
                     ]
                   },
                   "attr": "access"
@@ -8301,7 +8301,7 @@
                     "value": [
                       "Outside The Undeterred - ZERO",
                       444751,
-                      "rooms={'Crossroads', 'The Bearer (East"
+                      "rooms={'Outside The Undeterred', 'Directional Gallery', 'Amen Name Area', 'Hub Room', 'The Bearer (East"
                     ]
                   },
                   "attr": "access"
@@ -8482,7 +8482,7 @@
                     "value": [
                       "Fours",
                       445240,
-                      "rooms={'Dead End Area', 'The Traveled', 'Outside The Undeterred', 'Hub Room'}, doors=set("
+                      "rooms={'Outside The Undeterred', 'Hub Room', 'Dead End Area', 'The Traveled'}, doors=set("
                     ]
                   },
                   "attr": "access"
@@ -8662,7 +8662,7 @@
                     "value": [
                       "Fives",
                       445241,
-                      "rooms={'Outside The Agreeable', 'Directional Gallery', 'Dead End Area', 'The Traveled', 'Outside The Undeterred', 'Hub Room'}, doors=set("
+                      "rooms={'Outside The Undeterred', 'Dead End Area', 'Directional Gallery', 'Hub Room', 'Outside The Agreeable', 'The Traveled'}, doors=set("
                     ]
                   },
                   "attr": "access"
@@ -8710,7 +8710,7 @@
                     "value": [
                       "Sixes",
                       445242,
-                      "rooms={'The Bearer (East"
+                      "rooms={'Outside The Undeterred', 'Dead End Area', 'Directional Gallery', 'Number Hunt', 'Hub Room', 'The Bearer (East"
                     ]
                   },
                   "attr": "access"
@@ -8762,7 +8762,7 @@
                     "value": [
                       "Sevens",
                       445243,
-                      "rooms={'The Bearer (East"
+                      "rooms={'Outside The Undeterred', 'Hub Room', 'The Bearer (East"
                     ]
                   },
                   "attr": "access"
@@ -8816,7 +8816,7 @@
                     "value": [
                       "Eights",
                       445244,
-                      "rooms={'Crossroads', 'The Bearer (East"
+                      "rooms={'Outside The Undeterred', 'Directional Gallery', 'Hub Room', 'The Bearer (East"
                     ]
                   },
                   "attr": "access"
@@ -8874,7 +8874,7 @@
                     "value": [
                       "Nines",
                       445245,
-                      "rooms={'Crossroads', 'The Bearer (East"
+                      "rooms={'Outside The Undeterred', 'Amen Name Area', 'Hub Room', 'The Bearer (East"
                     ]
                   },
                   "attr": "access"
@@ -9076,7 +9076,7 @@
                     "value": [
                       "Directional Gallery - 834283054",
                       444792,
-                      "rooms={'Directional Gallery', 'Number Hunt', 'Dead End Area', 'The Traveled', 'Outside The Undeterred', 'Outside The Agreeable', 'Hub Room'}, doors=set("
+                      "rooms={'Outside The Undeterred', 'Hub Room', 'Dead End Area', 'Number Hunt', 'Outside The Agreeable', 'The Traveled', 'Directional Gallery'}, doors=set("
                     ]
                   },
                   "attr": "access"
@@ -9126,7 +9126,7 @@
                     "value": [
                       "Directional Gallery - PARANOID",
                       444793,
-                      "rooms={'Directional Gallery', 'Number Hunt', 'Dead End Area', 'The Traveled', 'Outside The Undeterred', 'Outside The Agreeable', 'Hub Room'}, doors=set("
+                      "rooms={'Outside The Undeterred', 'Hub Room', 'Dead End Area', 'Number Hunt', 'Outside The Agreeable', 'The Traveled', 'Directional Gallery'}, doors=set("
                     ]
                   },
                   "attr": "access"
@@ -9465,7 +9465,7 @@
                     "value": [
                       "Color Hunt - GREEN",
                       444811,
-                      "rooms={'Directional Gallery', 'Outside The Initiated', 'Color Hunt'}, doors=set("
+                      "rooms={'Outside The Initiated', 'Directional Gallery', 'Color Hunt'}, doors=set("
                     ]
                   },
                   "attr": "access"
@@ -9507,7 +9507,7 @@
                     "value": [
                       "Color Hunt - PURPLE",
                       444812,
-                      "rooms={'Outside The Initiated', 'Color Hunt', 'Orange Tower Third Floor'}, doors=set("
+                      "rooms={'Outside The Initiated', 'Orange Tower Third Floor', 'Color Hunt'}, doors=set("
                     ]
                   },
                   "attr": "access"
@@ -9549,7 +9549,7 @@
                     "value": [
                       "Color Hunt - ORANGE",
                       444813,
-                      "rooms={'Directional Gallery', 'Color Hunt', 'Orange Tower Third Floor'}, doors=set("
+                      "rooms={'Orange Tower Third Floor', 'Directional Gallery', 'Color Hunt'}, doors=set("
                     ]
                   },
                   "attr": "access"
@@ -9771,7 +9771,7 @@
                     "value": [
                       "The Bearer - Achievement",
                       444819,
-                      "rooms={'Cross Tower (East"
+                      "rooms={'Bearer Side Area', 'Suits Area', 'Cross Tower (North"
                     ]
                   },
                   "attr": "access"
@@ -11399,7 +11399,7 @@
                     "value": [
                       "The Steady - Achievement",
                       444859,
-                      "rooms={'The Steady (Orange"
+                      "rooms={'The Steady (Rose"
                     ]
                   },
                   "attr": "access"
