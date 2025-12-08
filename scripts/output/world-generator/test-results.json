@@ -1,34 +1,34 @@
 {
   "metadata": {
-    "timestamp": "2025-12-08T07:01:39.922623",
+    "timestamp": "2025-12-08T07:10:08.989628",
     "seed": 1,
     "phase": "test",
     "canonical_seed1": false,
-    "total_templates": 1,
+    "total_templates": 2,
     "successful_generations": 0,
     "failed_generations": 0,
     "successful_test_worlds": 0,
     "failed_test_worlds": 0,
-    "cross_validation_passed": 0,
+    "cross_validation_passed": 2,
     "cross_validation_failed": 0
   },
   "results": {
-    "DLCQuest": {
-      "template": "DLCQuest.yaml",
-      "game_name": "DLCQuest",
-      "timestamp": "2025-12-08T07:01:40.466171",
+    "Adventure": {
+      "template": "Adventure.yaml",
+      "game_name": "Adventure",
+      "timestamp": "2025-12-08T07:10:09.533010",
       "original": {
         "generation": {
           "success": true,
           "note": "Phase 1"
         },
         "spoiler_test": {
-          "success": false,
-          "pass_fail": "unknown",
+          "success": true,
+          "pass_fail": "pass",
           "sphere_reached": 0,
           "total_spheres": 0,
-          "error": "Unknown test result: return code 1",
-          "processing_time_seconds": 2.55
+          "error": null,
+          "processing_time_seconds": 8.83
         }
       },
       "test_world": {
@@ -39,36 +39,90 @@
         "seed_generation": {
           "success": true,
           "seed_id": "AP_14089154938208861744",
-          "rules_path": "/home/user/Archipelago-CC/frontend/presets/dlcquest_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/dlcquest_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
-          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/dlcquest_worldgen/AP_14089154938208861744",
+          "rules_path": "/home/user/Archipelago-CC/frontend/presets/adventure_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/adventure_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/adventure_worldgen/AP_14089154938208861744",
           "error": null,
-          "processing_time_seconds": 6.54
+          "processing_time_seconds": 6.75
         },
         "spoiler_test": {
-          "success": false,
-          "pass_fail": "unknown",
+          "success": true,
+          "pass_fail": "pass",
           "sphere_reached": 0,
           "total_spheres": 0,
-          "error": "Unknown test result: return code 1",
-          "processing_time_seconds": 2.55
+          "error": null,
+          "processing_time_seconds": 8.96
         },
         "cross_validation": {
-          "success": false,
-          "pass_fail": "unknown",
+          "success": true,
+          "pass_fail": "pass",
           "sphere_reached": 0,
           "total_spheres": 0,
-          "error": "Unknown test result: return code 1",
-          "processing_time_seconds": 2.49
+          "error": null,
+          "processing_time_seconds": 8.73
         },
-        "test_template_name": "DLCQuest WorldGen.yaml",
-        "test_game_name": "DLCQuest WorldGen"
+        "test_template_name": "Adventure WorldGen.yaml",
+        "test_game_name": "Adventure WorldGen"
       },
       "errors": {
         "generation": [],
-        "testing": [
-          "Cross-validation failed"
-        ]
+        "testing": []
+      }
+    },
+    "ChocolateChipCookies": {
+      "template": "ChocolateChipCookies.yaml",
+      "game_name": "ChocolateChipCookies",
+      "timestamp": "2025-12-08T07:10:43.650183",
+      "original": {
+        "generation": {
+          "success": true,
+          "note": "Phase 1"
+        },
+        "spoiler_test": {
+          "success": true,
+          "pass_fail": "pass",
+          "sphere_reached": 0,
+          "total_spheres": 0,
+          "error": null,
+          "processing_time_seconds": 8.88
+        }
+      },
+      "test_world": {
+        "world_generation": {
+          "success": true,
+          "note": "Phase 1"
+        },
+        "seed_generation": {
+          "success": true,
+          "seed_id": "AP_14089154938208861744",
+          "rules_path": "/home/user/Archipelago-CC/frontend/presets/bakingadventure_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/bakingadventure_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/bakingadventure_worldgen/AP_14089154938208861744",
+          "error": null,
+          "processing_time_seconds": 6.6
+        },
+        "spoiler_test": {
+          "success": true,
+          "pass_fail": "pass",
+          "sphere_reached": 0,
+          "total_spheres": 0,
+          "error": null,
+          "processing_time_seconds": 8.83
+        },
+        "cross_validation": {
+          "success": true,
+          "pass_fail": "pass",
+          "sphere_reached": 0,
+          "total_spheres": 0,
+          "error": null,
+          "processing_time_seconds": 8.86
+        },
+        "test_template_name": "ChocolateChipCookies WorldGen.yaml",
+        "test_game_name": "ChocolateChipCookies WorldGen"
+      },
+      "errors": {
+        "generation": [],
+        "testing": []
       }
     }
   }
