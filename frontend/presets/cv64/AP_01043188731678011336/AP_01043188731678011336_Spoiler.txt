@@ -1,0 +1,499 @@
+﻿Archipelago Version 0.6.5  -  Seed: 2
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Castlevania 64
+Location Count:                  213
+Progression Balancing:           50
+Accessibility:                   Items
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Start Inventory from Pool:       
+Character Stages:                Both
+Stage Shuffle:                   No
+Starting Stage:                  Tower Of Sorcery
+Warp Order:                      Seed Stage Order
+Sub-weapon Shuffle:              Off
+Spare Keys:                      Off
+Hard Item Pool:                  No
+Special1s Per Warp:              1
+Total Special1s:                 7
+Dracula's Condition:             Crystal
+Percent Special2s Required:      80
+Total Special2s:                 25
+Bosses Required:                 12
+Carrie Logic:                    No
+Hard Logic:                      No
+Multi-hit Breakables:            No
+Empty Breakables:                No
+Lizard Locker Items:             No
+Shopsanity:                      No
+Shop Prices:                     Vanilla
+Minimum Gold Price:              2
+Maximum Gold Price:              30
+Post-Behemoth Boss:              Vanilla
+Room of Clocks Boss:             Vanilla
+Renon Fight Condition:           Spend 30K
+Vincent Fight Condition:         Wait 16 Days
+Bad Ending Condition:            Kill Vincent
+Increase Item Limit:             Yes
+Nerf Healing Items:              No
+Loading Zone Heals:              Yes
+Invisible Items:                 Vanilla
+Drop Previous Sub-weapon:        No
+Permanent PowerUps:              No
+Ice Trap Percentage:             0
+Ice Trap Appearance:             Major Only
+Disable Time Requirements:       No
+Skip Gondolas:                   No
+Skip Waterway Blocks:            No
+Countdown:                       None
+Big Toss:                        No
+Panther Dash:                    Off
+Increase Shimmy Speed:           No
+Window Color R:                  1
+Window Color G:                  5
+Window Color B:                  15
+Window Color A:                  8
+Background Music:                Normal
+Map Lighting:                    Normal
+Fall Guard:                      No
+Cinematic Experience:            No
+Death Link:                      Off
+
+Castlevania 64 stage & warp orders for Player1:
+Stage 01 :	Forest of Silence
+Stage 02 :	Castle Wall
+Stage 03 :	Villa
+Stage 04 :	Tunnel
+Stage 04':	Underground Waterway
+Stage 05 :	Castle Center
+Stage 06 :	Duel Tower
+Stage 07 :	Tower of Execution
+Stage 06':	Tower of Science
+Stage 07':	Tower of Sorcery
+Stage 08 :	Room of Clocks
+Stage 09 :	Clock Tower
+Stage 10 :	Castle Keep
+
+Start :	Forest of Silence
+Warp 1:	Castle Wall
+Warp 2:	Tunnel
+Warp 3:	Underground Waterway
+Warp 4:	Duel Tower
+Warp 5:	Tower of Sorcery
+Warp 6:	Room of Clocks
+Warp 7:	Castle Keep
+
+
+Locations:
+
+Forest of Silence: Grab practice pillars - Right: Roast chicken
+Forest of Silence: Grab practice pillars - Top: 500 GOLD
+Forest of Silence: King Skeleton's bridge: 300 GOLD
+Forest of Silence: Moon gazebo inside: Red jewel(S)
+Forest of Silence: Moon gazebo roof: Purifying
+Forest of Silence: Sun gazebo inside: Special1
+Forest of Silence: Sun gazebo roof: PowerUp
+Forest of Silence: Were-tiger switch: 500 GOLD
+Forest of Silence: Dirge maiden gate: Roast chicken
+Forest of Silence: Dirge maiden crypt - Upper: Sun card
+Forest of Silence: Dirge maiden pedestal plaque: Sun card
+Forest of Silence: Tri-corpse save junction: 500 GOLD
+Forest of Silence: Descending bridge wall side: Red jewel(L)
+Forest of Silence: Descending bridge switch side: Roast beef
+Forest of Silence: Tri-corpse gate - Right: Roast chicken
+Forest of Silence: Three-crypt plaza main path crypt - Upper-front: Roast chicken
+Forest of Silence: Three-crypt plaza back-facing crypt - Lower-front: Roast chicken
+Forest of Silence: Three-crypt plaza back-facing crypt - Upper: Roast beef
+Forest of Silence: Invisible bridge platform: Storeroom Key
+Forest of Silence: Werewolf crypt - Right: Red jewel(S)
+Forest of Silence: Werewolf statue plaque: 500 GOLD
+Forest of Silence: Werewolf path near tree: Special1
+Forest of Silence: Three-crypt plaza switch: Cure ampoule
+Castle Wall: Above bottom right tower door: 100 GOLD
+Castle Wall: White Dragons switch door: Roast chicken
+Castle Wall: Central rampart near right tower: 300 GOLD
+Castle Wall: Central rampart near left tower: Red jewel(L)
+Castle Wall: Sandbag shelf - Visible: Red jewel(L)
+Castle Wall: Sandbag shelf - Invisible: Red jewel(S)
+Castle Wall: Ground gatehouse - Middle: Roast beef
+Castle Wall: Above bottom left tower door: Science Key3
+Castle Wall: Left tower child ledge: Purifying
+Castle Wall: Dracula cutscene switch door: Red jewel(L)
+Villa: Outer front gate - Left: Mandragora
+Villa: Outer front gate - Right: Sun card
+Villa: Outer front gate platform: 300 GOLD
+Villa: Inner front gate dog food: Red jewel(S)
+Villa: Front yard cross grave near gates: Healing kit
+Villa: Front yard cross grave near porch: Special1
+Villa: Front yard visitor's tombstone: Garden Key
+Villa: Midnight fountain - Front-left: Red jewel(L)
+Villa: Midnight fountain - Front-right: Roast chicken
+Villa: Midnight fountain - Middle-left: Purifying
+Villa: Midnight fountain - Middle-right: Red jewel(L)
+Villa: Midnight fountain - Rear-left: 500 GOLD
+Villa: Midnight fountain - Rear-right: Purifying
+Villa: Foyer lower level - Front-right: 500 GOLD
+Villa: Foyer lower level - Front-left: 500 GOLD
+Villa: Foyer lower level - Middle-left: Moon card
+Villa: Foyer lower level - Rear-right: 500 GOLD
+Villa: Foyer lower level - Rear-left: Red jewel(S)
+Villa: Foyer upper-right pot: Cure ampoule
+Villa: Foyer upper-left pot: PowerUp
+Villa: Foyer sofa: Moon card
+Villa: Rose garden staircase bottom: Moon card
+Villa: Bedroom near chairs: Red jewel(L)
+Villa: Bedroom near bed: Red jewel(L)
+Villa: Vincent: 500 GOLD
+Villa: Mary's room table: Red jewel(L)
+Villa: Dining room rose vase: Red jewel(L)
+Villa: Living room - Right pot: Red jewel(S)
+Villa: Living room - Left pot: Red jewel(L)
+Villa: Living room clawed painting: PowerUp
+Villa: Living room ceiling light: 300 GOLD
+Villa: Living room lion head: Red jewel(S)
+Villa: Maze garden exit knight: Red jewel(L)
+Villa: Storeroom - Left: Roast beef
+Villa: Storeroom - Right: Red jewel(S)
+Villa: Storeroom statue: Red jewel(L)
+Villa: Archives table: PowerUp
+Villa: Archives rear corner: Red jewel(L)
+Villa: Front maze garden - Malus start torch: Cure ampoule
+Villa: Front maze garden - Malus's hiding bush: 300 GOLD
+Villa: Front maze garden - Frankie's left dead-end: Sun card
+Villa: Front maze garden - Frankie's right dead-end urn: Red jewel(L)
+Villa: Rear maze garden - Iron Thorn Fenced area - Front: Moon card
+Villa: Rear maze garden - Iron Thorn Fenced area - Mid-front: Red jewel(L)
+Villa: Rear maze garden - Iron Thorn Fenced area - Mid-rear: Roast beef
+Villa: Rear maze garden - Iron Thorn Fenced area - Rear: Red jewel(L)
+Villa: Rear maze garden - Viewing platform dead-end: Roast chicken
+Villa: Rear maze garden - Past-exit dead-end: 500 GOLD
+Villa: Servants' path small alcove: Red jewel(S)
+Villa: Servants' entrance: Sun card
+Villa: Crypt entrance: Roast beef
+Villa: Crypt bridge upstream: Red jewel(L)
+Villa: Crypt - Left from entrance: Roast chicken
+Villa: Crypt - Right from entrance: 500 GOLD
+Villa: Crypt - Left wall: 300 GOLD
+Villa: Crypt - Right wall: Roast chicken
+Villa: Crypt - Right of coffin: Red jewel(S)
+Tunnel: Landing point: PowerUp
+Tunnel: Landing point rock crusher: Red jewel(L)
+Tunnel: Stepping stone alcove - Left: Roast beef
+Tunnel: Twin arrow signs: Science Key1
+Tunnel: Near lonesome bucket: Red jewel(L)
+Tunnel: Lonesome bucket poison pit: Red jewel(S)
+Tunnel: Lonesome bucket-Albert junction: Science Key2
+Tunnel: Albert's campsite: Red jewel(L)
+Tunnel: Albert's poison pit: Roast chicken
+Tunnel: Gondola rock crusher sun door - Middle: Roast chicken
+Tunnel: Gondola rock crusher sun door - Right: Roast chicken
+Tunnel: Gondola rock crusher: PowerUp
+Tunnel: Red gondola station: PowerUp
+Tunnel: Gondola transfer point: Purifying
+Tunnel: Corpse bucket poison pit: PowerUp
+Tunnel: Corpse bucket moon door - Right: Red jewel(S)
+Tunnel: Shovel poison pit start: Red jewel(L)
+Tunnel: Exit door poison pit start: 100 GOLD
+Tunnel: Shovel poison pit end: Red jewel(L)
+Tunnel: Exit door poison pit end: Red jewel(L)
+Tunnel: Shovel: Roast beef
+Tunnel: Shovel zone save junction: Moon card
+Tunnel: Shovel zone moon door - Left: Mandragora
+Tunnel: Shovel zone sun door - Left: Roast beef
+Tunnel: Shovel zone sun door - Middle: Magical Nitro
+Underground Waterway: Near entrance corridor: Magical Nitro
+Underground Waterway: Across from entrance: Red jewel(S)
+Underground Waterway: Across poison parkour ledges: Red jewel(S)
+Underground Waterway: Waterfall alcove ledge: Sun card
+Underground Waterway: Brick platforms save corridor: Healing kit
+Underground Waterway: Above skeleton crusher ledge: Special1
+Castle Center: Entrance hallway: Roast chicken
+Castle Center: Basement hallway junction: Red jewel(S)
+Castle Center: Torture chamber hallway: Purifying
+Castle Center: Behemoth arena - Left far-front torch: Purifying
+Castle Center: Behemoth arena - Left mid-front torch: Red jewel(L)
+Castle Center: Behemoth arena - Left mid-rear torch: Purifying
+Castle Center: Behemoth arena - Left far-rear torch: Roast chicken
+Castle Center: Behemoth arena - Right far-front torch: Purifying
+Castle Center: Behemoth arena - Right mid-front torch: Purifying
+Castle Center: Behemoth arena - Right mid-rear torch: Roast beef
+Castle Center: Behemoth arena - Right far-rear torch: Red jewel(S)
+Castle Center: Near elevator room machine: Roast beef
+Castle Center: Atop elevator room machine: Red jewel(S)
+Castle Center: Elevator pipe device: Execution Key
+Castle Center: Elevator room staircase: Roast beef
+Castle Center: Red carpet hall knight: 500 GOLD
+Castle Center: Gear room side: Sun card
+Castle Center: Gear room center: Left Tower Key
+Castle Center: Gear room corner: Sun card
+Castle Center: Lizard locker knight: Roast chicken
+Castle Center: Lizard locker room near pit: Red jewel(L)
+Castle Center: Lizard locker room corner: Red jewel(S)
+Castle Center: Broken staircase floor: Clocktower Key1
+Castle Center: Broken staircase knight: Clocktower Key2
+Castle Center: Above broken staircase savepoint: Roast beef
+Castle Center: Stained Glass Knight room - Left: 500 GOLD
+Castle Center: Stained Glass Knight room - Right: Roast beef
+Castle Center: Butler bros. room near door: PowerUp
+Castle Center: Butler bros. room inner: Red jewel(S)
+Castle Center: Past butler room flamethrowers: Roast beef
+Castle Center: Inside cracked wall hallway flamethrower: 100 GOLD
+Castle Center: Past upper cracked wall flamethrowers: 500 GOLD
+Castle Center: Heinrich Meyer: Roast chicken
+Castle Center: Nitro room crates: Red jewel(L)
+Castle Center: Magical Nitro shelf - Heinrich side: Red jewel(S)
+Castle Center: Hell Knight landing corner knight: Purifying
+Castle Center: Maid sisters room vase: PowerUp
+Castle Center: Maid sisters room outer table: Moon card
+Castle Center: Maid sisters room inner table: Healing kit
+Castle Center: Invention room maid sisters door: Chamber Key
+Castle Center: Invention room spike crusher door: Roast beef
+Castle Center: Invention room giant Famicart: 500 GOLD
+Castle Center: Invention room zeppelin: Red jewel(S)
+Castle Center: Invention room round machine: Roast beef
+Castle Center: Inside nitro hallway flamethrower: 500 GOLD
+Castle Center: Past nitro room flamethrowers: Red jewel(L)
+Castle Center: Magical Nitro shelf - Invention side: Roast beef
+Castle Center: Mandragora shelf - Left: Red jewel(S)
+Castle Center: Mandragora shelf - Right: Red jewel(S)
+Castle Center: Torture chamber instrument rack: Special1
+Castle Center: Torture chamber rafters: Clocktower Key3
+Castle Center: Inside upper cracked wall: 500 GOLD
+Castle Center: Library bookshelf: Roast beef
+Castle Center: Behind the seal: Crystal
+Duel Tower: Invisible bridge balcony - Left: Special1
+Duel Tower: Invisible bridge balcony - Right: Red jewel(S)
+Duel Tower: Stepping stone path start: 300 GOLD
+Duel Tower: Above Were-bull arena: 500 GOLD
+Tower of Execution: Past mid-savepoint spikes - Right: Red jewel(L)
+Tower of Execution: Past mid-savepoint spikes - Left: Red jewel(L)
+Tower of Execution: Electric grate ledge: Archives Key
+Tower of Execution: Invisible bridge ledge: Roast chicken
+Tower of Execution: Guillotine tower top level: Purifying
+Tower of Execution: Key gate alcove - Left: 500 GOLD
+Tower of Science: Elevator hallway: Red jewel(L)
+Tower of Science: Plain sight side room: Red jewel(L)
+Tower of Science: Staircase side room: Red jewel(S)
+Tower of Science: Pick-a-door hallway locked middle room: Red jewel(S)
+Tower of Science: Invisible bridge platform torch: Copper Key
+Tower of Science: Spiky conveyor side room: Red jewel(S)
+Tower of Science: Exit hallway: Cure ampoule
+Tower of Science: Locked Key3 room - Right: Purifying
+Tower of Science: Locked Key3 room - Left: Roast beef
+Tower of Sorcery: Stained glass tower: Roast chicken
+Tower of Sorcery: Mid-savepoint platform: Red jewel(L)
+Tower of Sorcery: Trick shot from mid-savepoint platform: Red jewel(S)
+Tower of Sorcery: Above yellow bubble: Roast beef
+Tower of Sorcery: Above tiny blue platforms start: Roast chicken
+Tower of Sorcery: Lone red platform side island: Moon card
+Tower of Sorcery: Invisible bridge platform: Special1
+Room of Clocks: Left from entrance hallway: Roast beef
+Room of Clocks: Right from entrance hallway: Roast beef
+Room of Clocks: Right of Contract: Red jewel(L)
+Clock Tower: Gear climb room side: Moon card
+Clock Tower: Gear climb room corner: 500 GOLD
+Clock Tower: Bone Pillar chasm room - Front-left: Healing kit
+Clock Tower: Bone Pillar chasm room - Front-right: Roast beef
+Clock Tower: Bone Pillar chasm room key alcove: Purifying
+Clock Tower: Final room key ledge: Cure ampoule
+Castle Keep: Left Dracula door flame: Sun card
+Castle Keep: Right Dracula door flame: Roast chicken
+Castle Keep: Behind Dracula's chamber: 100 GOLD
+Castle Keep: Dracula's floating cube: Red jewel(S)
+Dracula: The Count Downed
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Forest of Silence: Invisible bridge platform: Storeroom Key
+  Forest of Silence: Sun gazebo inside: Special1
+  Forest of Silence: Werewolf path near tree: Special1
+}
+2: {
+  Castle Center: Broken staircase floor: Clocktower Key1
+  Castle Center: Broken staircase knight: Clocktower Key2
+  Castle Center: Elevator pipe device: Execution Key
+  Castle Center: Gear room center: Left Tower Key
+  Castle Center: Invention room maid sisters door: Chamber Key
+  Tunnel: Shovel zone moon door - Left: Mandragora
+  Tunnel: Shovel zone sun door - Middle: Magical Nitro
+}
+3: {
+  Castle Center: Torture chamber instrument rack: Special1
+  Castle Center: Torture chamber rafters: Clocktower Key3
+  Castle Wall: Above bottom left tower door: Science Key3
+  Villa: Front yard cross grave near porch: Special1
+  Villa: Front yard visitor's tombstone: Garden Key
+  Villa: Outer front gate - Left: Mandragora
+}
+4: {
+  Duel Tower: Invisible bridge balcony - Left: Special1
+  Tower of Execution: Electric grate ledge: Archives Key
+  Underground Waterway: Above skeleton crusher ledge: Special1
+  Underground Waterway: Near entrance corridor: Magical Nitro
+}
+5: {
+  Castle Center: Behind the seal: Crystal
+  Tower of Science: Invisible bridge platform torch: Copper Key
+  Tower of Sorcery: Invisible bridge platform: Special1
+}
+6: {
+  Dracula: The Count Downed
+  Tunnel: Lonesome bucket-Albert junction: Science Key2
+  Tunnel: Twin arrow signs: Science Key1
+}
+
+Paths:
+
+Castle Center: Behind the seal
+        Menu -> Warp 2
+   =>   Tunnel: second half -> End Tunnel door
+   =>   Castle Center: main area -> Lower sealed cracked wall
+   =>   Castle Center: big crystal
+Castle Center: Broken staircase floor
+        Menu -> Warp 2
+   =>   Tunnel: second half -> End Tunnel door
+   =>   Castle Center: main area
+Castle Center: Broken staircase knight
+        Menu -> Warp 2
+   =>   Tunnel: second half -> End Tunnel door
+   =>   Castle Center: main area
+Castle Center: Elevator pipe device
+        Menu -> Warp 2
+   =>   Tunnel: second half -> End Tunnel door
+   =>   Castle Center: main area
+Castle Center: Gear room center
+        Menu -> Warp 2
+   =>   Tunnel: second half -> End Tunnel door
+   =>   Castle Center: main area
+Castle Center: Invention room maid sisters door
+        Menu -> Warp 2
+   =>   Tunnel: second half -> End Tunnel door
+   =>   Castle Center: main area
+Castle Center: Torture chamber instrument rack
+        Menu -> Warp 2
+   =>   Tunnel: second half -> End Tunnel door
+   =>   Castle Center: main area -> Torture Chamber door
+   =>   Castle Center: torture chamber
+Castle Center: Torture chamber rafters
+        Menu -> Warp 2
+   =>   Tunnel: second half -> End Tunnel door
+   =>   Castle Center: main area -> Torture Chamber door
+   =>   Castle Center: torture chamber
+Castle Wall: Above bottom left tower door
+        Menu -> Start stage
+   =>   Forest of Silence: first half -> Descending bridge gate
+   =>   Forest of Silence: second half -> Werewolf gate
+   =>   Forest of Silence: end area -> Dracula's drawbridge
+   =>   Castle Wall: main area -> Left Tower door
+   =>   Castle Wall: left tower
+Dracula
+        Menu -> Warp 4
+   =>   Duel Tower -> Duel Tower end passage
+   =>   Tower of Execution: main area -> Tower of Execution end staircase
+   =>   Room of Clocks -> Defeat boss gate
+   =>   Clock Tower: start -> To Clocktower Door 1
+   =>   Clock Tower: middle -> To Clocktower Door 2
+   =>   Clock Tower: end -> Clocktower Door 3
+   =>   Castle Keep: exterior -> Dracula's door
+   =>   Castle Keep: Dracula's chamber
+Duel Tower: Invisible bridge balcony - Left
+        Menu -> Warp 4
+   =>   Duel Tower
+Forest of Silence: Invisible bridge platform
+        Menu -> Start stage
+   =>   Forest of Silence: first half -> Descending bridge gate
+   =>   Forest of Silence: second half
+Forest of Silence: Sun gazebo inside
+        Menu -> Start stage
+   =>   Forest of Silence: first half
+Forest of Silence: Werewolf path near tree
+        Menu -> Start stage
+   =>   Forest of Silence: first half -> Descending bridge gate
+   =>   Forest of Silence: second half
+Tower of Execution: Electric grate ledge
+        Menu -> Warp 4
+   =>   Duel Tower -> Duel Tower end passage
+   =>   Tower of Execution: main area
+Tower of Science: Invisible bridge platform torch
+        Menu -> Warp 5
+   =>   Tower of Sorcery -> Tower of Sorcery start passage
+   =>   Tower of Science: spiky conveyors
+Tower of Sorcery: Invisible bridge platform
+        Menu -> Warp 5
+   =>   Tower of Sorcery
+Tunnel: Lonesome bucket-Albert junction
+        Menu -> Start stage
+   =>   Forest of Silence: first half -> Descending bridge gate
+   =>   Forest of Silence: second half -> Werewolf gate
+   =>   Forest of Silence: end area -> Dracula's drawbridge
+   =>   Castle Wall: main area -> Left Tower door
+   =>   Castle Wall: left tower -> End portcullis
+   =>   Villa: dog gates -> Front dog gates
+   =>   Villa: main interior -> To maze gate
+   =>   Villa: maze -> Copper door
+   =>   Villa: crypt -> Villa Reinhardt (daytime) exit
+   =>   Tunnel: first half
+Tunnel: Shovel zone moon door - Left
+        Menu -> Warp 2
+   =>   Tunnel: second half
+Tunnel: Shovel zone sun door - Middle
+        Menu -> Warp 2
+   =>   Tunnel: second half
+Tunnel: Twin arrow signs
+        Menu -> Start stage
+   =>   Forest of Silence: first half -> Descending bridge gate
+   =>   Forest of Silence: second half -> Werewolf gate
+   =>   Forest of Silence: end area -> Dracula's drawbridge
+   =>   Castle Wall: main area -> Left Tower door
+   =>   Castle Wall: left tower -> End portcullis
+   =>   Villa: dog gates -> Front dog gates
+   =>   Villa: main interior -> To maze gate
+   =>   Villa: maze -> Copper door
+   =>   Villa: crypt -> Villa Reinhardt (daytime) exit
+   =>   Tunnel: first half
+Underground Waterway: Above skeleton crusher ledge
+        Menu -> Warp 3
+   =>   Underground Waterway: main area
+Underground Waterway: Near entrance corridor
+        Menu -> Warp 3
+   =>   Underground Waterway: main area
+Villa: Front yard cross grave near porch
+        Menu -> Start stage
+   =>   Forest of Silence: first half -> Descending bridge gate
+   =>   Forest of Silence: second half -> Werewolf gate
+   =>   Forest of Silence: end area -> Dracula's drawbridge
+   =>   Castle Wall: main area -> Left Tower door
+   =>   Castle Wall: left tower -> End portcullis
+   =>   Villa: dog gates -> Front dog gates
+   =>   Villa: main interior
+Villa: Front yard visitor's tombstone
+        Menu -> Start stage
+   =>   Forest of Silence: first half -> Descending bridge gate
+   =>   Forest of Silence: second half -> Werewolf gate
+   =>   Forest of Silence: end area -> Dracula's drawbridge
+   =>   Castle Wall: main area -> Left Tower door
+   =>   Castle Wall: left tower -> End portcullis
+   =>   Villa: dog gates -> Front dog gates
+   =>   Villa: main interior
+Villa: Outer front gate - Left
+        Menu -> Start stage
+   =>   Forest of Silence: first half -> Descending bridge gate
+   =>   Forest of Silence: second half -> Werewolf gate
+   =>   Forest of Silence: end area -> Dracula's drawbridge
+   =>   Castle Wall: main area -> Left Tower door
+   =>   Castle Wall: left tower -> End portcullis
+   =>   Villa: dog gates
