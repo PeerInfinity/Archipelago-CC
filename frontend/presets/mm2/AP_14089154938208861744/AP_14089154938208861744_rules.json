@@ -1134,21 +1134,25 @@
             "name": "Wily Machine 2 - Defeated",
             "id": 8912909,
             "access_rule": {
-              "type": "block",
-              "statements": [
+              "type": "helper",
+              "name": "can_defeat_enough_rbms",
+              "args": [
                 {
-                  "type": "assign",
-                  "name": "can_defeat",
-                  "value": {
-                    "type": "constant",
-                    "value": 0
-                  }
+                  "type": "constant",
+                  "value": 8
                 },
                 {
-                  "type": "return",
+                  "type": "constant",
                   "value": {
-                    "type": "constant",
-                    "value": false
+                    "0": [],
+                    "1": [],
+                    "2": [],
+                    "3": [],
+                    "4": [],
+                    "5": [],
+                    "6": [],
+                    "7": [],
+                    "12": []
                   }
                 }
               ]
@@ -1165,21 +1169,25 @@
             "name": "Wily Stage 5 - Completed",
             "id": null,
             "access_rule": {
-              "type": "block",
-              "statements": [
+              "type": "helper",
+              "name": "can_defeat_enough_rbms",
+              "args": [
                 {
-                  "type": "assign",
-                  "name": "can_defeat",
-                  "value": {
-                    "type": "constant",
-                    "value": 0
-                  }
+                  "type": "constant",
+                  "value": 8
                 },
                 {
-                  "type": "return",
+                  "type": "constant",
                   "value": {
-                    "type": "constant",
-                    "value": false
+                    "0": [],
+                    "1": [],
+                    "2": [],
+                    "3": [],
+                    "4": [],
+                    "5": [],
+                    "6": [],
+                    "7": [],
+                    "12": []
                   }
                 }
               ]
