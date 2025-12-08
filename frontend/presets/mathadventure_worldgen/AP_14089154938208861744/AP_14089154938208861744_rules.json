@@ -539,12 +539,7 @@
           ]
         }
       ],
-      "world_description": "Math Adventure: Proof that 2+2=4\n\nA logical adventure through mathematical proofs where you must collect\ndefinitions, axioms, and theorems to prove that 2+2=4.\nNavigate through the regions of mathematical logic, gathering the\nnecessary components to complete your proof.",
-      "slot_data": {
-        "proof_complexity": 1,
-        "hint_complexity": 1,
-        "require_all_proofs": 0
-      }
+      "world_description": "Math Adventure: Proof that 2+2=4\n\nA logical adventure through mathematical proofs where you must collect\ndefinitions, axioms, and theorems to prove that 2+2=4.\nNavigate through the regions of mathematical logic, gathering the\nnecessary components to complete your proof."
     }
   },
   "helpers": {}

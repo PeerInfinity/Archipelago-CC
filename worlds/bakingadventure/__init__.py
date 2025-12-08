@@ -36,6 +36,11 @@ class ChocolateChipCookiesWorld(World):
     item_name_to_id = {name: data.code for name, data in item_table.items() if data.code is not None}
     location_name_to_id = {name: data.id for name, data in location_table.items() if data.id is not None}
 
+    item_name_groups: ClassVar[Dict[str, frozenset]] = {
+        "Everything": frozenset(["Mixing Bowls", "Electric Mixer", "Measuring Tools", "Preheated Oven", "Prepared Sheets", "Softened Butter", "Butter Sugar Base", "Egg Mixture", "Creamed Mixture", "Measured Flour", "Flour Mixture", "Basic Dough", "Cookie Dough", "Shaped Cookies", "Baked Cookies"]),
+        "Event": frozenset(["Victory"]),
+    }
+
     # Canonical item placements - where items belong in the "vanilla" game
     # Used by exporter to distinguish canonical placements from always-locked items
     canonical_placements: ClassVar[Dict[str, str]] = {
@@ -93,9 +98,12 @@ class ChocolateChipCookiesWorld(World):
         """Generate basic elements including victory condition."""
         # Place the Victory event at the Cool on Wire Rack location
         victory_location = self.multiworld.get_location("Cool on Wire Rack", self.player)
-        victory_item = ChocolateChipCookiesItem("Victory", item_table["Victory"].classification, None, self.player)
-        victory_location.place_locked_item(victory_item)
-        
+
+        # Only place if not already filled (e.g., by _place_original_items)
+        if victory_location.item is None:
+            victory_item = ChocolateChipCookiesItem("Victory", item_table["Victory"].classification, None, self.player)
+            victory_location.place_locked_item(victory_item)
+
         # Set completion condition
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Victory", self.player)
     

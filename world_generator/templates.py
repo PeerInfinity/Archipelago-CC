@@ -243,6 +243,8 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
         )
 
         # Apply location properties from location_data
+        if location_data.event:
+            location.event = True
         if location_data.progress_type is not None:
             location.progress_type = location_data.progress_type
         if not location_data.show_in_spoiler:
@@ -441,35 +443,38 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
         if self.multiworld.seed == 1:
             self.options.randomize_items.value = False
 '''
+        # Use pre_fill() for canonical placements like the original bakingadventure does
+        # This ensures items are created first, then placed/removed from pool later
         create_items_section = f'''
     def create_items(self) -> None:
-        """Create the item pool."""
+'''
+        # Add pre_fill section for canonical placement
+        pre_fill_section = f'''
+    def pre_fill(self) -> None:
+        """Pre-fill items if not randomizing."""
         if not self.options.randomize_items.value:
             self._place_original_items()
-        else:
-            self._create_item_pool()
 
     def _place_original_items(self) -> None:
-        """Place items in their original locations (for seed=1)."""
-        original_placements = {{
-{placements_content}
-        }}
+        """Place items in their canonical locations when not randomized."""
+        for location_name, item_name in self.canonical_placements.items():
+            location = self.multiworld.get_location(location_name, self.player)
 
-        for location_name, item_name in original_placements.items():
-            if item_name and item_name in item_table:
-                location = self.multiworld.get_location(location_name, self.player)
-                item_data = item_table[item_name]
-                item = {class_name}Item(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                location.place_locked_item(item)
+            # Skip if already filled (e.g., by _place_locked_items or generate_basic)
+            if location.item is not None:
+                continue
 
-    def _create_item_pool(self) -> None:
+            item = self.create_item(item_name)
+            location.place_locked_item(item)
+
+            # Remove the item from the pool if it exists
+            for pool_item in self.multiworld.itempool[:]:
+                if pool_item.name == item_name and pool_item.player == self.player:
+                    self.multiworld.itempool.remove(pool_item)
+                    break
 '''
     else:
+        pre_fill_section = ''
         generate_early_section = '''
     def generate_early(self) -> None:
         """Push starting items as precollected."""
@@ -819,7 +824,7 @@ class {world_class}(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
-{victory_section}
+{victory_section}{pre_fill_section}
     def create_item(self, name: str) -> Item:
         """Create an item by name."""
         data = item_table[name]

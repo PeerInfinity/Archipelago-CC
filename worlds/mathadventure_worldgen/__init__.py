@@ -119,40 +119,6 @@ class MathProof2p2e4WorldGenWorld(RuleWorldMixin, World):
         set_rules(self)
 
     def create_items(self) -> None:
-        """Create the item pool."""
-        if not self.options.randomize_items.value:
-            self._place_original_items()
-        else:
-            self._create_item_pool()
-
-    def _place_original_items(self) -> None:
-        """Place items in their original locations (for seed=1)."""
-        original_placements = {
-        "Definition of 2": "df-2",
-        "Definition of 3": "df-3",
-        "Definition of 4": "df-4",
-        "1 is Complex": "ax-1cn",
-        "2 is Complex": "2cn",
-        "Equality Substitution Right": "oveq2i",
-        "Equality Substitution Left": "oveq1i",
-        "Addition Associativity": "addassi",
-        "Triple Equality Transitivity": "3eqtri",
-        "Final Equality": "eqtr4i",
-        }
-
-        for location_name, item_name in original_placements.items():
-            if item_name and item_name in item_table:
-                location = self.multiworld.get_location(location_name, self.player)
-                item_data = item_table[item_name]
-                item = MathProof2p2e4WorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                location.place_locked_item(item)
-
-    def _create_item_pool(self) -> None:
         """Create randomized item pool."""
         # First, place any locked items
         self._place_locked_items()
@@ -217,6 +183,24 @@ class MathProof2p2e4WorldGenWorld(RuleWorldMixin, World):
         self.multiworld.completion_condition[self.player] = \
             lambda state: state.has("Victory", self.player)
 
+    def pre_fill(self) -> None:
+        """Pre-fill items if not randomizing."""
+        if not self.options.randomize_items.value:
+            self._place_original_items()
+
+    def _place_original_items(self) -> None:
+        """Place items in their canonical locations when not randomized."""
+        for location_name, item_name in self.canonical_placements.items():
+            location = self.multiworld.get_location(location_name, self.player)
+            item = self.create_item(item_name)
+            location.place_locked_item(item)
+
+            # Remove the item from the pool if it exists
+            for pool_item in self.multiworld.itempool[:]:
+                if pool_item.name == item_name and pool_item.player == self.player:
+                    self.multiworld.itempool.remove(pool_item)
+                    break
+
     def create_item(self, name: str) -> Item:
         """Create an item by name."""
         data = item_table[name]
@@ -225,8 +209,4 @@ class MathProof2p2e4WorldGenWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {
-            "proof_complexity": 1,
-            "hint_complexity": 1,
-            "require_all_proofs": 0,
-        }
+        return {}

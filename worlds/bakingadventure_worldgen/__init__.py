@@ -127,45 +127,6 @@ class ChocolateChipCookiesWorldGenWorld(RuleWorldMixin, World):
         set_rules(self)
 
     def create_items(self) -> None:
-        """Create the item pool."""
-        if not self.options.randomize_items.value:
-            self._place_original_items()
-        else:
-            self._create_item_pool()
-
-    def _place_original_items(self) -> None:
-        """Place items in their original locations (for seed=1)."""
-        original_placements = {
-        "Gather Mixing Bowls": "Mixing Bowls",
-        "Get Electric Mixer": "Electric Mixer",
-        "Find Measuring Tools": "Measuring Tools",
-        "Preheat Oven to 375F": "Preheated Oven",
-        "Line Baking Sheets": "Prepared Sheets",
-        "Soften Butter": "Softened Butter",
-        "Cream Butter and Sugars": "Butter Sugar Base",
-        "Add Eggs": "Egg Mixture",
-        "Add Vanilla": "Creamed Mixture",
-        "Measure Flour": "Measured Flour",
-        "Add Baking Soda and Salt": "Flour Mixture",
-        "Gradually Mix Dry into Wet": "Basic Dough",
-        "Fold in Chocolate Chips": "Cookie Dough",
-        "Scoop Dough onto Sheets": "Shaped Cookies",
-        "Bake for 9-11 Minutes": "Baked Cookies",
-        }
-
-        for location_name, item_name in original_placements.items():
-            if item_name and item_name in item_table:
-                location = self.multiworld.get_location(location_name, self.player)
-                item_data = item_table[item_name]
-                item = ChocolateChipCookiesWorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                location.place_locked_item(item)
-
-    def _create_item_pool(self) -> None:
         """Create randomized item pool."""
         # First, place any locked items
         self._place_locked_items()
@@ -229,6 +190,24 @@ class ChocolateChipCookiesWorldGenWorld(RuleWorldMixin, World):
         # Set completion condition
         self.multiworld.completion_condition[self.player] = \
             lambda state: state.has("Victory", self.player)
+
+    def pre_fill(self) -> None:
+        """Pre-fill items if not randomizing."""
+        if not self.options.randomize_items.value:
+            self._place_original_items()
+
+    def _place_original_items(self) -> None:
+        """Place items in their canonical locations when not randomized."""
+        for location_name, item_name in self.canonical_placements.items():
+            location = self.multiworld.get_location(location_name, self.player)
+            item = self.create_item(item_name)
+            location.place_locked_item(item)
+
+            # Remove the item from the pool if it exists
+            for pool_item in self.multiworld.itempool[:]:
+                if pool_item.name == item_name and pool_item.player == self.player:
+                    self.multiworld.itempool.remove(pool_item)
+                    break
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

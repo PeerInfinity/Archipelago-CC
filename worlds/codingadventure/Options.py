@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from Options import Toggle, Choice, PerGameCommonOptions
+from Options import Toggle, PerGameCommonOptions
 
 class RandomizeItems(Toggle):
     """Enable item randomization. When disabled, all items will remain in their original locations."""

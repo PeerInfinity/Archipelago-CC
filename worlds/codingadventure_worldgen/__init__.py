@@ -199,91 +199,6 @@ class WebDevJourneyWorldGenWorld(RuleWorldMixin, World):
         set_rules(self)
 
     def create_items(self) -> None:
-        """Create the item pool."""
-        if not self.options.randomize_items.value:
-            self._place_original_items()
-        else:
-            self._create_item_pool()
-
-    def _place_original_items(self) -> None:
-        """Place items in their original locations (for seed=1)."""
-        original_placements = {
-        "Learn HTML": "HTML",
-        "Learn CSS": "CSS",
-        "Learn Design Systems": "Design Systems",
-        "Learn JavaScript": "JavaScript Basics",
-        "Learn DOM Manipulation": "DOM Manipulation",
-        "Learn Algorithms": "Algorithms",
-        "Choose Server Language": "Server Basics",
-        "Learn File I/O": "File I/O",
-        "Learn HTTP Basics": "HTTP Basics",
-        "Learn Git": "Git",
-        "Learn Command Line": "Command Line",
-        "Learn Package Managers": "Package Managers",
-        "Static Website Milestone": "Static Website Complete",
-        "Learn React": "React",
-        "React Components": "Frontend Framework",
-        "Redux": "State Management",
-        "Learn Vue": "Vue",
-        "Vue Components": "Frontend Framework",
-        "Vuex": "State Management",
-        "Advanced Vanilla JS": "Frontend Framework",
-        "Custom State System": "State Management",
-        "Learn Express": "Express",
-        "Build REST APIs": "REST APIs",
-        "MongoDB Integration": "Database Integration",
-        "Learn Django": "Django",
-        "Django REST Framework": "REST APIs",
-        "Django ORM": "Database Integration",
-        "Learn Flask": "Flask",
-        "Flask-RESTful": "REST APIs",
-        "SQLAlchemy": "Database Integration",
-        "UI/UX Principles": "UI/UX",
-        "Responsive Design": "Responsive Design",
-        "Accessibility": "Accessibility",
-        "Learn SQL": "SQL",
-        "PostgreSQL": "Database Basics",
-        "Query Optimization": "Query Optimization",
-        "Learn NoSQL": "NoSQL",
-        "MongoDB": "Database Basics",
-        "Indexing Strategies": "Query Optimization",
-        "Interactive App Milestone": "Interactive App Complete",
-        "Sessions": "Sessions",
-        "JWT": "JWT",
-        "OAuth": "Authentication",
-        "Caching": "Caching",
-        "CDN": "CDN",
-        "Load Balancing": "Performance",
-        "Unit Tests": "Unit Tests",
-        "Integration Tests": "Integration Tests",
-        "E2E Tests": "Testing",
-        "Docker": "Docker",
-        "CI/CD": "CI/CD",
-        "Monitoring": "DevOps",
-        "Full-Stack Integration Milestone": "Full-Stack Complete",
-        "HTTPS": "HTTPS",
-        "CORS": "CORS",
-        "Input Validation": "Security Complete",
-        "Horizontal Scaling": "Horizontal Scaling",
-        "Microservices": "Scaling Complete",
-        "Cloud Provider": "Cloud Provider",
-        "Domain Setup": "Domain",
-        "SSL Certificate": "Deployment Complete",
-        }
-
-        for location_name, item_name in original_placements.items():
-            if item_name and item_name in item_table:
-                location = self.multiworld.get_location(location_name, self.player)
-                item_data = item_table[item_name]
-                item = WebDevJourneyWorldGenItem(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                location.place_locked_item(item)
-
-    def _create_item_pool(self) -> None:
         """Create randomized item pool."""
         # First, place any locked items
         self._place_locked_items()
@@ -347,6 +262,24 @@ class WebDevJourneyWorldGenWorld(RuleWorldMixin, World):
         # Set completion condition
         self.multiworld.completion_condition[self.player] = \
             lambda state: state.has("Victory", self.player)
+
+    def pre_fill(self) -> None:
+        """Pre-fill items if not randomizing."""
+        if not self.options.randomize_items.value:
+            self._place_original_items()
+
+    def _place_original_items(self) -> None:
+        """Place items in their canonical locations when not randomized."""
+        for location_name, item_name in self.canonical_placements.items():
+            location = self.multiworld.get_location(location_name, self.player)
+            item = self.create_item(item_name)
+            location.place_locked_item(item)
+
+            # Remove the item from the pool if it exists
+            for pool_item in self.multiworld.itempool[:]:
+                if pool_item.name == item_name and pool_item.player == self.player:
+                    self.multiworld.itempool.remove(pool_item)
+                    break
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

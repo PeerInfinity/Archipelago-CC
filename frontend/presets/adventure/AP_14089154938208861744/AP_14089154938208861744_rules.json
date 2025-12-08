@@ -876,6 +876,9 @@
       "Yellow Key": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -886,7 +889,35 @@
     "1": {
       "game": "Adventure",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "bat_logic": 1,
+        "connector_multi_slot": 0,
+        "death_link": 0,
+        "difficulty_switch_a": 2,
+        "difficulty_switch_b": 2,
+        "dragon_rando_type": 1,
+        "dragon_slay_check": 1,
+        "exclude_locations": [],
+        "freeincarnate_max": 17,
+        "grundle_min_speed": 1,
+        "grundle_speed": 2,
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "rhindle_min_speed": 2,
+        "rhindle_speed": 3,
+        "start_castle": 0,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "yorgle_min_speed": 1,
+        "yorgle_speed": 2
+      }
     }
   },
   "game_info": {
@@ -894,7 +925,31 @@
       "name": "Adventure",
       "rule_format": {
         "version": "1.0"
-      }
+      },
+      "web_theme": "dirt",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up Adventure for MultiWorld.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "JusticePS"
+          ]
+        },
+        {
+          "name": "Guide de configuration Multimonde",
+          "description": "Un guide pour configurer Adventure MultiWorld",
+          "language": "Fran\u00e7ais",
+          "file_name": "setup_fr.md",
+          "link": "setup/fr",
+          "authors": [
+            "TheLynk"
+          ]
+        }
+      ],
+      "world_description": "Adventure for the Atari 2600 is an early graphical adventure game.\nFind the enchanted chalice and return it to the yellow castle,\nusing magic items to enter hidden rooms, retrieve out of\nreach items, or defeat the three dragons.  Beware the bat\nwho likes to steal your equipment!"
     }
   },
   "helpers": {}
