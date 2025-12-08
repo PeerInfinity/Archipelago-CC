@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-07T01:28:17.933269",
-    "last_updated": "2025-12-07T01:28:17.933274",
+    "last_updated": "2025-12-08T10:51:42.421799",
     "script_version": "1.0.0"
   },
   "results": {
@@ -4459,39 +4459,27 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "f2b4d0c34f78a0bb55a2fd566e9a6ea0f52748cb061a213da783c55e41a9c012",
-          "new_sphere_log_hash": "21e18e3835641b6a7fef5e9c3c027688f72006e59c5b76ad3458d17ddb69bff1",
-          "original_rules_hash": "9cbfdac17378ca0f5c9c75ea45dd210ee30eeeacc14d00a144564264d2946c7b",
-          "original_sphere_log_hash": "21e18e3835641b6a7fef5e9c3c027688f72006e59c5b76ad3458d17ddb69bff1",
-          "rules_identical": false,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-07T01:25:34.131746"
-        }
-      },
       "game_name_from_filename": "shapez",
       "game_name_from_yaml": "shapez",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.82,
+        "processing_time_seconds": 5.9,
         "return_code": 0,
         "success": true,
         "warning_count": 1
       },
       "rules_file": {
         "path": "frontend/presets/shapez/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 176692,
-        "size_mb": 0.17
+        "size_bytes": 138860,
+        "size_mb": 0.13
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.79,
+        "processing_time_seconds": 6.15,
         "return_code": 0,
         "sphere_reached": 5.7,
         "success": true,
@@ -4499,14 +4487,16 @@
         "warning_count": 0
       },
       "template_filename": "shapez.yaml",
-      "timestamp": "2025-12-07T01:24:53.584662",
+      "timestamp": "2025-12-08T10:51:30.238072",
       "world_info": {
-        "exporter_path": "exporter/games/shapez.py",
-        "game_logic_path": "frontend/modules/shared/gameLogic/shapez/shapezLogic.js",
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
         "game_name_from_filename": "shapez",
         "game_name_from_yaml": "shapez",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
         "world_directory": "shapez"
       }
     }
