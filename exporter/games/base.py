@@ -723,19 +723,33 @@ class BaseGameExportHandler:
             for helper_name in new_helpers:
                 processed_helpers.add(helper_name)
 
-                # Check if we have a cached definition (from auto-preservation due to size)
-                cached_def = self.get_cached_helper(helper_name)
-                if cached_def is not None:
-                    helper_definitions[helper_name] = cached_def
-                    logger.debug(f"Using cached definition for helper '{helper_name}': {cached_def}")
-                    continue
-
                 # Find the helper function in one of the loaded modules
                 helper_func = None
                 for module in loaded_modules:
                     if hasattr(module, helper_name):
                         helper_func = getattr(module, helper_name)
                         break
+
+                # Check if we have a cached definition (from auto-preservation due to size)
+                cached_def = self.get_cached_helper(helper_name)
+                if cached_def is not None:
+                    # Extract parameter names from the function (excluding state, player, world)
+                    params = []
+                    if helper_func and hasattr(helper_func, '__code__'):
+                        all_params = helper_func.__code__.co_varnames[:helper_func.__code__.co_argcount]
+                        params = [p for p in all_params if p not in ('state', 'player', 'world')]
+
+                    # Store with params if the helper has parameters
+                    if params:
+                        helper_definitions[helper_name] = {
+                            'params': params,
+                            'body': cached_def
+                        }
+                        logger.debug(f"Using cached definition for helper '{helper_name}' with params {params}")
+                    else:
+                        helper_definitions[helper_name] = cached_def
+                        logger.debug(f"Using cached definition for helper '{helper_name}': {cached_def}")
+                    continue
 
                 if helper_func is None:
                     # Not found in helper modules - this is normal for built-in helpers
@@ -756,8 +770,22 @@ class BaseGameExportHandler:
                     rule = self._clean_helper_rule(rule, world)
 
                     if rule and rule.get('type') != 'error':
-                        helper_definitions[helper_name] = rule
-                        logger.debug(f"Exported helper '{helper_name}': {rule}")
+                        # Extract parameter names from the function (excluding state, player, world)
+                        params = []
+                        if hasattr(helper_func, '__code__'):
+                            all_params = helper_func.__code__.co_varnames[:helper_func.__code__.co_argcount]
+                            params = [p for p in all_params if p not in ('state', 'player', 'world')]
+
+                        # Store with params if the helper has parameters, otherwise just the rule
+                        if params:
+                            helper_definitions[helper_name] = {
+                                'params': params,
+                                'body': rule
+                            }
+                            logger.debug(f"Exported helper '{helper_name}' with params {params}: {rule}")
+                        else:
+                            helper_definitions[helper_name] = rule
+                            logger.debug(f"Exported helper '{helper_name}': {rule}")
                     else:
                         logger.warning(f"Failed to analyze helper '{helper_name}': {rule}")
                 except Exception as e:

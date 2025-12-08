@@ -8,6 +8,16 @@ class ShapezGameExportHandler(GenericGameExportHandler):
     """Export handler for shapez."""
     GAME_NAME = 'shapez'
 
+    # Where to find helper functions for export
+    HELPER_MODULES = ['worlds.shapez.regions']
+
+    # Enable export of discovered helpers
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+
+    # Automatic size-based helper preservation
+    # Helpers with more than this many nodes will be preserved as helper calls
+    HELPER_INLINE_THRESHOLD = 10
+
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """
         Extract shapez-specific settings including the 'floating' parameter.
