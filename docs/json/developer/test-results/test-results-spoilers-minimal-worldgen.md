@@ -6,7 +6,7 @@
 
 [View Original Template Results](./test-results-spoilers-minimal.md)
 
-**Generated:** 2025-12-08 23:04:48
+**Generated:** 2025-12-08 23:56:47
 
 **Source Data Created:** 2025-12-07T01:53:25.258929
 
