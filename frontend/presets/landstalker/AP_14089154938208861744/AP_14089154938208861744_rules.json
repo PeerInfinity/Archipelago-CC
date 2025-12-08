@@ -92,43 +92,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "item_check",
-                    "item": {
-                      "type": "binary_op",
-                      "left": {
-                        "type": "constant",
-                        "value": "event_visited_"
-                      },
-                      "op": "+",
-                      "right": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "region"
-                        },
-                        "attr": "code"
-                      }
-                    }
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "region"
-                    },
-                    "iterator": {
-                      "type": "constant",
-                      "value": [
-                        "Swamp Shrine"
-                      ]
-                    }
-                  }
-                },
-                {
                   "type": "constant",
                   "value": true
+                },
+                {
+                  "type": "item_check",
+                  "item": "event_visited_swamp_shrine"
                 }
               ]
             }
@@ -809,43 +778,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "item_check",
-                    "item": {
-                      "type": "binary_op",
-                      "left": {
-                        "type": "constant",
-                        "value": "event_visited_"
-                      },
-                      "op": "+",
-                      "right": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "region"
-                        },
-                        "attr": "code"
-                      }
-                    }
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "region"
-                    },
-                    "iterator": {
-                      "type": "constant",
-                      "value": [
-                        "Swamp Shrine"
-                      ]
-                    }
-                  }
-                },
-                {
                   "type": "constant",
                   "value": true
+                },
+                {
+                  "type": "item_check",
+                  "item": "event_visited_swamp_shrine"
                 }
               ]
             }
@@ -965,43 +903,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "item_check",
-                    "item": {
-                      "type": "binary_op",
-                      "left": {
-                        "type": "constant",
-                        "value": "event_visited_"
-                      },
-                      "op": "+",
-                      "right": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "region"
-                        },
-                        "attr": "code"
-                      }
-                    }
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "region"
-                    },
-                    "iterator": {
-                      "type": "constant",
-                      "value": [
-                        "Massan"
-                      ]
-                    }
-                  }
+                  "type": "item_check",
+                  "item": "Einstein Whistle"
                 },
                 {
                   "type": "item_check",
-                  "item": "Einstein Whistle"
+                  "item": "event_visited_massan"
                 }
               ]
             }
@@ -1211,43 +1118,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "item_check",
-                    "item": {
-                      "type": "binary_op",
-                      "left": {
-                        "type": "constant",
-                        "value": "event_visited_"
-                      },
-                      "op": "+",
-                      "right": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "region"
-                        },
-                        "attr": "code"
-                      }
-                    }
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "region"
-                    },
-                    "iterator": {
-                      "type": "constant",
-                      "value": [
-                        "after keydoor"
-                      ]
-                    }
-                  }
-                },
-                {
                   "type": "constant",
                   "value": true
+                },
+                {
+                  "type": "item_check",
+                  "item": "event_visited_thieves_hideout_post_key"
                 }
               ]
             }
@@ -1940,43 +1816,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "item_check",
-                    "item": {
-                      "type": "binary_op",
-                      "left": {
-                        "type": "constant",
-                        "value": "event_visited_"
-                      },
-                      "op": "+",
-                      "right": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "region"
-                        },
-                        "attr": "code"
-                      }
-                    }
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "region"
-                    },
-                    "iterator": {
-                      "type": "constant",
-                      "value": [
-                        "Massan"
-                      ]
-                    }
-                  }
+                  "type": "item_check",
+                  "item": "Einstein Whistle"
                 },
                 {
                   "type": "item_check",
-                  "item": "Einstein Whistle"
+                  "item": "event_visited_massan"
                 }
               ]
             }
@@ -2234,43 +2079,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "item_check",
-                    "item": {
-                      "type": "binary_op",
-                      "left": {
-                        "type": "constant",
-                        "value": "event_visited_"
-                      },
-                      "op": "+",
-                      "right": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "region"
-                        },
-                        "attr": "code"
-                      }
-                    }
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "region"
-                    },
-                    "iterator": {
-                      "type": "constant",
-                      "value": [
-                        "repaired lighthouse"
-                      ]
-                    }
-                  }
-                },
-                {
                   "type": "constant",
                   "value": true
+                },
+                {
+                  "type": "item_check",
+                  "item": "event_visited_ryuma_lighthouse_repaired"
                 }
               ]
             }
@@ -3067,43 +2881,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "item_check",
-                    "item": {
-                      "type": "binary_op",
-                      "left": {
-                        "type": "constant",
-                        "value": "event_visited_"
-                      },
-                      "op": "+",
-                      "right": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "region"
-                        },
-                        "attr": "code"
-                      }
-                    }
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "region"
-                    },
-                    "iterator": {
-                      "type": "constant",
-                      "value": [
-                        "Verla Mines"
-                      ]
-                    }
-                  }
-                },
-                {
                   "type": "constant",
                   "value": true
+                },
+                {
+                  "type": "item_check",
+                  "item": "event_visited_verla_mines"
                 }
               ]
             }
@@ -4272,43 +4055,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "item_check",
-                    "item": {
-                      "type": "binary_op",
-                      "left": {
-                        "type": "constant",
-                        "value": "event_visited_"
-                      },
-                      "op": "+",
-                      "right": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "region"
-                        },
-                        "attr": "code"
-                      }
-                    }
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "region"
-                    },
-                    "iterator": {
-                      "type": "constant",
-                      "value": [
-                        "Verla Mines"
-                      ]
-                    }
-                  }
-                },
-                {
                   "type": "constant",
                   "value": true
+                },
+                {
+                  "type": "item_check",
+                  "item": "event_visited_verla_mines"
                 }
               ]
             }
@@ -4420,43 +4172,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "item_check",
-                    "item": {
-                      "type": "binary_op",
-                      "left": {
-                        "type": "constant",
-                        "value": "event_visited_"
-                      },
-                      "op": "+",
-                      "right": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "region"
-                        },
-                        "attr": "code"
-                      }
-                    }
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "region"
-                    },
-                    "iterator": {
-                      "type": "constant",
-                      "value": [
-                        "Verla Mines"
-                      ]
-                    }
-                  }
-                },
-                {
                   "type": "constant",
                   "value": true
+                },
+                {
+                  "type": "item_check",
+                  "item": "event_visited_verla_mines"
                 }
               ]
             }
@@ -4536,43 +4257,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "item_check",
-                    "item": {
-                      "type": "binary_op",
-                      "left": {
-                        "type": "constant",
-                        "value": "event_visited_"
-                      },
-                      "op": "+",
-                      "right": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "region"
-                        },
-                        "attr": "code"
-                      }
-                    }
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "region"
-                    },
-                    "iterator": {
-                      "type": "constant",
-                      "value": [
-                        "Verla Mines"
-                      ]
-                    }
-                  }
-                },
-                {
                   "type": "constant",
                   "value": true
+                },
+                {
+                  "type": "item_check",
+                  "item": "event_visited_verla_mines"
                 }
               ]
             }
@@ -7170,43 +6860,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "all_of",
-                  "element_rule": {
-                    "type": "item_check",
-                    "item": {
-                      "type": "binary_op",
-                      "left": {
-                        "type": "constant",
-                        "value": "event_visited_"
-                      },
-                      "op": "+",
-                      "right": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "name",
-                          "name": "region"
-                        },
-                        "attr": "code"
-                      }
-                    }
-                  },
-                  "iterator_info": {
-                    "type": "comprehension_details",
-                    "target": {
-                      "type": "name",
-                      "name": "region"
-                    },
-                    "iterator": {
-                      "type": "constant",
-                      "value": [
-                        "raft entrance"
-                      ]
-                    }
-                  }
+                  "type": "item_check",
+                  "item": "Axe Magic"
                 },
                 {
                   "type": "item_check",
-                  "item": "Axe Magic"
+                  "item": "event_visited_king_nole_labyrinth_raft_entrance"
                 }
               ]
             }
@@ -8927,17 +8586,17 @@
         "seed": 2089113674,
         "dark_region": "Massan Cave",
         "hints": {
-          "Foxy (right after making Miro flee with Garlic in Mir Tower)": "I can sense Gola's Fang inside a tower.",
-          "Foxy (in room near white golems roundabout in Lake Shrine)": "I can sense Lithograph in the village of Massan.",
-          "Foxy (in sector with red orcs making an elevator appear in Greenmaze)": "I can sense Gola's Eye on a route.",
-          "Foxy (in Gumi boulder map)": "I can sense Lantern in the village of Massan.",
-          "Foxy (in room next to spiked floor and keydoor room in King Nole's Labyrinth)": "I can sense Sword of Gaia in Verla Mines.",
-          "Foxy (in empty isolated room inside King Nole's Cave)": "I can sense Blue Jewel in Twinkle village.",
-          "Foxy (in Destel)": "I can sense Purple Jewel in Destel region.",
-          "Foxy (in room next to green golem roundabout in Lake Shrine)": "I can sense Oracle Stone near a swamp.",
-          "Foxy (on Kazalt bridge)": "I can sense Casino Ticket close to a waterfall.",
-          "Foxy (inside Mercator Crypt)": "I can sense Key near a lake.",
-          "Foxy (at Waterfall Shrine crossroads)": "I can sense Buyer Card among the trees.",
+          "Foxy (right after making Miro flee with Garlic in Mir Tower)": "I can sense Gola's Eye on a route.",
+          "Foxy (in room near white golems roundabout in Lake Shrine)": "I can sense Key near a lake.",
+          "Foxy (in sector with red orcs making an elevator appear in Greenmaze)": "I can sense Fireproof near a lake.",
+          "Foxy (in Gumi boulder map)": "Did you know that your world contains 100 percent of all progression items?",
+          "Foxy (in room next to spiked floor and keydoor room in King Nole's Labyrinth)": "I can sense Buyer Card among the trees.",
+          "Foxy (in empty isolated room inside King Nole's Cave)": "I can sense Lithograph in the village of Massan.",
+          "Foxy (in Destel)": "I can sense Oracle Stone near a swamp.",
+          "Foxy (in room next to green golem roundabout in Lake Shrine)": "I can sense Gola's Nail on a route.",
+          "Foxy (on Kazalt bridge)": "I can sense Garlic in King Nole's domain.",
+          "Foxy (inside Mercator Crypt)": "I can sense Armlet near a swamp.",
+          "Foxy (at Waterfall Shrine crossroads)": "I can sense Sun Stone on a route.",
           "Foxy (in King Nole's Palace entrance room)": "I can sense Logs in Destel region.",
           "Lithograph": "It's barely readable:\nRED MERCATOR ITEM\nPURPLE ITEM DESTEL\nTOWER GREEN CHALLENGE\nFIRST GROUND BLUE\nYELLOW ROOM TOWER",
           "Oracle Stone": "It shows Massan Cave\nenshrouded in darkness."
