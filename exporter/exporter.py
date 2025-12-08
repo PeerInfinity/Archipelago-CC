@@ -659,7 +659,7 @@ def write_field_by_field(export_data, filepath):
     fields_written = []
     
     # Try each field separately
-    for field in ["regions", "items", "item_groups", "progression_mapping", "settings", "start_regions", "game_info", "itempool_counts"]:
+    for field in ["regions", "helpers", "items", "item_groups", "progression_mapping", "settings", "start_regions", "game_info", "itempool_counts"]:
         if field in export_data:
             try:
                 serializable_field = make_serializable(export_data[field])
@@ -711,6 +711,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         "world_classes": {player: multiworld.worlds[player].__class__.__name__
                            for player in multiworld.player_ids}, # Player ID -> World Class Name mapping
         'regions': {},  # Full region graph
+        'helpers': {},  # Helper function definitions by player
         'items': {},    # Item data by player
         'item_groups': {},  # Item groups by player
         'progression_mapping': {},  # Progressive item info
@@ -719,7 +720,6 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         'itempool_counts': {},  # Complete itempool counts by player
         'game_info': {},  # Game-specific information for frontend
         'starting_items': {}, # Starting items by player
-        'helpers': {},  # Helper function definitions by player
         'canonical_placements': {},  # Canonical item placements by player (vanilla/original locations)
     }
     

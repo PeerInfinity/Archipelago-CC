@@ -109,7 +109,7 @@
   },
   "Archipelago": {
     "exporter_path": "exporter/games/generic.py",
-    "exporter_size": 13167,
+    "exporter_size": 13661,
     "game_logic_path": "frontend/modules/shared/gameLogic/generic/genericLogic.js",
     "game_logic_size": 3036,
     "has_custom_exporter": true,
@@ -1476,12 +1476,12 @@
     "world_directory": "zillion"
   },
   "shapez": {
-    "exporter_path": "exporter/games/shapez.py",
-    "exporter_size": 4070,
-    "game_logic_path": "frontend/modules/shared/gameLogic/shapez/shapezLogic.js",
-    "game_logic_size": 224,
-    "has_custom_exporter": true,
-    "has_custom_game_logic": true,
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
     "world_directory": "shapez"
   },
   "shapez WorldGen": {
