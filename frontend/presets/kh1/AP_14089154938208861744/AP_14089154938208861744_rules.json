@@ -415,8 +415,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0.0
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 },
                 {
                   "type": "or",
@@ -539,8 +549,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0.0
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 },
                 {
                   "type": "or",
@@ -585,8 +605,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0.0
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 },
                 {
                   "type": "or",
@@ -631,8 +661,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0.0
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 },
                 {
                   "type": "or",
@@ -677,8 +717,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0.0
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 },
                 {
                   "type": "or",
@@ -723,8 +773,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0.0
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 },
                 {
                   "type": "or",
@@ -769,8 +829,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0.0
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 },
                 {
                   "type": "or",
@@ -815,8 +885,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0.0
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 },
                 {
                   "type": "or",
@@ -1044,40 +1124,12 @@
             "name": "Traverse Town Kairi Secret Waterway Oathkeeper Event",
             "id": 2656015,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": 0.0
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Emblem Piece (Chest)",
-                            "Emblem Piece (Flame)",
-                            "Emblem Piece (Fountain)",
-                            "Emblem Piece (Statue)",
-                            "Hollow Bastion"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "item_check",
-                  "item": "Hollow Bastion"
+                  "value": 0
                 }
               ]
             },
@@ -1138,8 +1190,18 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0.0
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 8
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     },
                     {
                       "type": "state_method",
@@ -2083,40 +2145,12 @@
             "name": "Traverse Town Secret Waterway Navi Gummi Event",
             "id": 2656113,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": 0.0
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Emblem Piece (Chest)",
-                            "Emblem Piece (Flame)",
-                            "Emblem Piece (Fountain)",
-                            "Emblem Piece (Statue)",
-                            "Hollow Bastion"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "item_check",
-                  "item": "Hollow Bastion"
+                  "value": 0
                 }
               ]
             },
@@ -4981,8 +5015,18 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "constant",
-                      "value": false
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 3
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     },
                     {
                       "type": "helper",
@@ -5822,28 +5866,16 @@
             "name": "Wonderland Rabbit Hole Defeat Heartless 3 Chest",
             "id": 2650934,
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": 0.0
-                    },
-                    {
-                      "type": "constant",
-                      "value": false
-                    }
-                  ]
+                  "type": "constant",
+                  "value": 6
                 },
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "constant",
-                  "value": false
+                  "value": 0
                 }
               ]
             },
@@ -6066,8 +6098,18 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "constant",
-                      "value": false
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 3
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     },
                     {
                       "type": "helper",
@@ -6291,8 +6333,18 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "constant",
-                      "value": false
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 3
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     },
                     {
                       "type": "helper",
@@ -6599,8 +6651,18 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "constant",
-                      "value": false
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 3
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     },
                     {
                       "type": "helper",
@@ -6638,8 +6700,18 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "constant",
-                      "value": false
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 3
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     },
                     {
                       "type": "helper",
@@ -6746,8 +6818,18 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "constant",
-                      "value": false
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 3
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     },
                     {
                       "type": "helper",
@@ -6854,8 +6936,18 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "constant",
-                      "value": false
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 3
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     },
                     {
                       "type": "helper",
@@ -6962,8 +7054,18 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "constant",
-                      "value": false
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 3
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     },
                     {
                       "type": "helper",
@@ -7070,8 +7172,18 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "constant",
-                      "value": false
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 3
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     },
                     {
                       "type": "helper",
@@ -7178,8 +7290,18 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "constant",
-                      "value": false
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 3
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     },
                     {
                       "type": "helper",
@@ -10676,8 +10798,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0.0
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 },
                 {
                   "type": "or",
@@ -10915,8 +11047,18 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "constant",
-                      "value": 0.0
+                      "type": "helper",
+                      "name": "has_x_worlds",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 3
+                        },
+                        {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      ]
                     },
                     {
                       "type": "or",
@@ -15795,27 +15937,12 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "helper",
+                  "name": "has_emblems",
+                  "args": [
                     {
                       "type": "constant",
-                      "value": 0.0
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Emblem Piece (Chest)",
-                            "Emblem Piece (Flame)",
-                            "Emblem Piece (Fountain)",
-                            "Emblem Piece (Statue)",
-                            "Hollow Bastion"
-                          ]
-                        }
-                      ]
+                      "value": 0
                     }
                   ]
                 },
@@ -15913,27 +16040,12 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "type": "helper",
+                      "name": "has_emblems",
+                      "args": [
                         {
                           "type": "constant",
-                          "value": 0.0
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_all",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Emblem Piece (Chest)",
-                                "Emblem Piece (Flame)",
-                                "Emblem Piece (Fountain)",
-                                "Emblem Piece (Statue)",
-                                "Hollow Bastion"
-                              ]
-                            }
-                          ]
+                          "value": 0
                         }
                       ]
                     },
@@ -16042,27 +16154,12 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "helper",
+                  "name": "has_emblems",
+                  "args": [
                     {
                       "type": "constant",
-                      "value": 0.0
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Emblem Piece (Chest)",
-                            "Emblem Piece (Flame)",
-                            "Emblem Piece (Fountain)",
-                            "Emblem Piece (Statue)",
-                            "Hollow Bastion"
-                          ]
-                        }
-                      ]
+                      "value": 0
                     }
                   ]
                 },
@@ -16154,27 +16251,12 @@
             "name": "Hollow Bastion Defeat Behemoth Omega Arts Event",
             "id": 2656105,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Emblem Piece (Chest)",
-                        "Emblem Piece (Flame)",
-                        "Emblem Piece (Fountain)",
-                        "Emblem Piece (Statue)",
-                        "Hollow Bastion"
-                      ]
-                    }
-                  ]
+                  "value": 0
                 }
               ]
             },
@@ -16190,27 +16272,12 @@
             "name": "Hollow Bastion Defeat Dragon Maleficent Fireglow Event",
             "id": 2656103,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Emblem Piece (Chest)",
-                        "Emblem Piece (Flame)",
-                        "Emblem Piece (Fountain)",
-                        "Emblem Piece (Statue)",
-                        "Hollow Bastion"
-                      ]
-                    }
-                  ]
+                  "value": 0
                 }
               ]
             },
@@ -16226,27 +16293,12 @@
             "name": "Hollow Bastion Defeat Maleficent Ansem's Report 5",
             "id": 2657014,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Emblem Piece (Chest)",
-                        "Emblem Piece (Flame)",
-                        "Emblem Piece (Fountain)",
-                        "Emblem Piece (Statue)",
-                        "Hollow Bastion"
-                      ]
-                    }
-                  ]
+                  "value": 0
                 }
               ]
             },
@@ -16262,27 +16314,12 @@
             "name": "Hollow Bastion Defeat Maleficent Donald Cheer Event",
             "id": 2656102,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Emblem Piece (Chest)",
-                        "Emblem Piece (Flame)",
-                        "Emblem Piece (Fountain)",
-                        "Emblem Piece (Statue)",
-                        "Hollow Bastion"
-                      ]
-                    }
-                  ]
+                  "value": 0
                 }
               ]
             },
@@ -16313,27 +16350,12 @@
             "name": "Hollow Bastion Defeat Riku II Ragnarok Event",
             "id": 2656104,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Emblem Piece (Chest)",
-                        "Emblem Piece (Flame)",
-                        "Emblem Piece (Fountain)",
-                        "Emblem Piece (Statue)",
-                        "Hollow Bastion"
-                      ]
-                    }
-                  ]
+                  "value": 0
                 }
               ]
             },
@@ -16397,27 +16419,12 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "helper",
+                  "name": "has_emblems",
+                  "args": [
                     {
                       "type": "constant",
-                      "value": 0.0
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Emblem Piece (Chest)",
-                            "Emblem Piece (Flame)",
-                            "Emblem Piece (Fountain)",
-                            "Emblem Piece (Statue)",
-                            "Hollow Bastion"
-                          ]
-                        }
-                      ]
+                      "value": 0
                     }
                   ]
                 },
@@ -16544,27 +16551,12 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "type": "helper",
+                      "name": "has_emblems",
+                      "args": [
                         {
                           "type": "constant",
-                          "value": 0.0
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_all",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Emblem Piece (Chest)",
-                                "Emblem Piece (Flame)",
-                                "Emblem Piece (Fountain)",
-                                "Emblem Piece (Statue)",
-                                "Hollow Bastion"
-                              ]
-                            }
-                          ]
+                          "value": 0
                         }
                       ]
                     },
@@ -16724,27 +16716,12 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "helper",
+                  "name": "has_emblems",
+                  "args": [
                     {
                       "type": "constant",
-                      "value": 0.0
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Emblem Piece (Chest)",
-                            "Emblem Piece (Flame)",
-                            "Emblem Piece (Fountain)",
-                            "Emblem Piece (Statue)",
-                            "Hollow Bastion"
-                          ]
-                        }
-                      ]
+                      "value": 0
                     }
                   ]
                 },
@@ -16871,27 +16848,12 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "type": "helper",
+                      "name": "has_emblems",
+                      "args": [
                         {
                           "type": "constant",
-                          "value": 0.0
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_all",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Emblem Piece (Chest)",
-                                "Emblem Piece (Flame)",
-                                "Emblem Piece (Fountain)",
-                                "Emblem Piece (Statue)",
-                                "Hollow Bastion"
-                              ]
-                            }
-                          ]
+                          "value": 0
                         }
                       ]
                     },
@@ -17024,27 +16986,12 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "type": "helper",
+                      "name": "has_emblems",
+                      "args": [
                         {
                           "type": "constant",
-                          "value": 0.0
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_all",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Emblem Piece (Chest)",
-                                "Emblem Piece (Flame)",
-                                "Emblem Piece (Fountain)",
-                                "Emblem Piece (Statue)",
-                                "Hollow Bastion"
-                              ]
-                            }
-                          ]
+                          "value": 0
                         }
                       ]
                     },
@@ -17085,27 +17032,12 @@
             "name": "Hollow Bastion Grand Hall Left of Gate Chest",
             "id": 2654492,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Emblem Piece (Chest)",
-                        "Emblem Piece (Flame)",
-                        "Emblem Piece (Fountain)",
-                        "Emblem Piece (Statue)",
-                        "Hollow Bastion"
-                      ]
-                    }
-                  ]
+                  "value": 0
                 }
               ]
             },
@@ -17121,27 +17053,12 @@
             "name": "Hollow Bastion Grand Hall Oblivion Chest",
             "id": 2654491,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Emblem Piece (Chest)",
-                        "Emblem Piece (Flame)",
-                        "Emblem Piece (Fountain)",
-                        "Emblem Piece (Statue)",
-                        "Hollow Bastion"
-                      ]
-                    }
-                  ]
+                  "value": 0
                 }
               ]
             },
@@ -17157,27 +17074,12 @@
             "name": "Hollow Bastion Grand Hall Steps Right Side Chest",
             "id": 2654454,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Emblem Piece (Chest)",
-                        "Emblem Piece (Flame)",
-                        "Emblem Piece (Fountain)",
-                        "Emblem Piece (Statue)",
-                        "Hollow Bastion"
-                      ]
-                    }
-                  ]
+                  "value": 0
                 }
               ]
             },
@@ -17193,27 +17095,12 @@
             "name": "Hollow Bastion Great Crest After Battle Platform Chest",
             "id": 2654172,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Emblem Piece (Chest)",
-                        "Emblem Piece (Flame)",
-                        "Emblem Piece (Fountain)",
-                        "Emblem Piece (Statue)",
-                        "Hollow Bastion"
-                      ]
-                    }
-                  ]
+                  "value": 0
                 }
               ]
             },
@@ -17232,27 +17119,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "helper",
+                  "name": "has_emblems",
+                  "args": [
                     {
                       "type": "constant",
-                      "value": 0.0
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Emblem Piece (Chest)",
-                            "Emblem Piece (Flame)",
-                            "Emblem Piece (Fountain)",
-                            "Emblem Piece (Statue)",
-                            "Hollow Bastion"
-                          ]
-                        }
-                      ]
+                      "value": 0
                     }
                   ]
                 },
@@ -17274,27 +17146,12 @@
             "name": "Hollow Bastion Great Crest Lower Chest",
             "id": 2654171,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Emblem Piece (Chest)",
-                        "Emblem Piece (Flame)",
-                        "Emblem Piece (Fountain)",
-                        "Emblem Piece (Statue)",
-                        "Hollow Bastion"
-                      ]
-                    }
-                  ]
+                  "value": 0
                 }
               ]
             },
@@ -17313,27 +17170,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "helper",
+                  "name": "has_emblems",
+                  "args": [
                     {
                       "type": "constant",
-                      "value": 0.0
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Emblem Piece (Chest)",
-                            "Emblem Piece (Flame)",
-                            "Emblem Piece (Fountain)",
-                            "Emblem Piece (Statue)",
-                            "Hollow Bastion"
-                          ]
-                        }
-                      ]
+                      "value": 0
                     }
                   ]
                 },
@@ -17358,27 +17200,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "helper",
+                  "name": "has_emblems",
+                  "args": [
                     {
                       "type": "constant",
-                      "value": 0.0
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Emblem Piece (Chest)",
-                            "Emblem Piece (Flame)",
-                            "Emblem Piece (Fountain)",
-                            "Emblem Piece (Statue)",
-                            "Hollow Bastion"
-                          ]
-                        }
-                      ]
+                      "value": 0
                     }
                   ]
                 },
@@ -17400,27 +17227,12 @@
             "name": "Hollow Bastion High Tower Above Sliding Blocks Chest",
             "id": 2654211,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Emblem Piece (Chest)",
-                        "Emblem Piece (Flame)",
-                        "Emblem Piece (Fountain)",
-                        "Emblem Piece (Statue)",
-                        "Hollow Bastion"
-                      ]
-                    }
-                  ]
+                  "value": 0
                 }
               ]
             },
@@ -17481,27 +17293,12 @@
             "name": "Hollow Bastion Library Speak to Aerith Cure",
             "id": 2656523,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Emblem Piece (Chest)",
-                        "Emblem Piece (Flame)",
-                        "Emblem Piece (Fountain)",
-                        "Emblem Piece (Statue)",
-                        "Hollow Bastion"
-                      ]
-                    }
-                  ]
+                  "value": 0
                 }
               ]
             },
@@ -17517,27 +17314,12 @@
             "name": "Hollow Bastion Library Speak to Belle Divine Rose",
             "id": 2656522,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Emblem Piece (Chest)",
-                        "Emblem Piece (Flame)",
-                        "Emblem Piece (Fountain)",
-                        "Emblem Piece (Statue)",
-                        "Hollow Bastion"
-                      ]
-                    }
-                  ]
+                  "value": 0
                 }
               ]
             },
@@ -17586,27 +17368,12 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "helper",
+                  "name": "has_emblems",
+                  "args": [
                     {
                       "type": "constant",
-                      "value": 0.0
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Emblem Piece (Chest)",
-                            "Emblem Piece (Flame)",
-                            "Emblem Piece (Fountain)",
-                            "Emblem Piece (Statue)",
-                            "Hollow Bastion"
-                          ]
-                        }
-                      ]
+                      "value": 0
                     }
                   ]
                 },
@@ -17712,27 +17479,12 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "type": "helper",
+                      "name": "has_emblems",
+                      "args": [
                         {
                           "type": "constant",
-                          "value": 0.0
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_all",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Emblem Piece (Chest)",
-                                "Emblem Piece (Flame)",
-                                "Emblem Piece (Fountain)",
-                                "Emblem Piece (Statue)",
-                                "Hollow Bastion"
-                              ]
-                            }
-                          ]
+                          "value": 0
                         }
                       ]
                     },
@@ -17841,27 +17593,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "helper",
+                  "name": "has_emblems",
+                  "args": [
                     {
                       "type": "constant",
-                      "value": 0.0
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Emblem Piece (Chest)",
-                            "Emblem Piece (Flame)",
-                            "Emblem Piece (Fountain)",
-                            "Emblem Piece (Statue)",
-                            "Hollow Bastion"
-                          ]
-                        }
-                      ]
+                      "value": 0
                     }
                   ]
                 },
@@ -17916,27 +17653,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "helper",
+                  "name": "has_emblems",
+                  "args": [
                     {
                       "type": "constant",
-                      "value": 0.0
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Emblem Piece (Chest)",
-                            "Emblem Piece (Flame)",
-                            "Emblem Piece (Fountain)",
-                            "Emblem Piece (Statue)",
-                            "Hollow Bastion"
-                          ]
-                        }
-                      ]
+                      "value": 0
                     }
                   ]
                 },
@@ -18033,27 +17755,12 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "type": "helper",
+                      "name": "has_emblems",
+                      "args": [
                         {
                           "type": "constant",
-                          "value": 0.0
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_all",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Emblem Piece (Chest)",
-                                "Emblem Piece (Flame)",
-                                "Emblem Piece (Fountain)",
-                                "Emblem Piece (Statue)",
-                                "Hollow Bastion"
-                              ]
-                            }
-                          ]
+                          "value": 0
                         }
                       ]
                     },
@@ -18139,27 +17846,12 @@
             "name": "Hollow Bastion Rising Falls Under Water 2nd Chest",
             "id": 2654092,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Emblem Piece (Chest)",
-                        "Emblem Piece (Flame)",
-                        "Emblem Piece (Fountain)",
-                        "Emblem Piece (Statue)",
-                        "Hollow Bastion"
-                      ]
-                    }
-                  ]
+                  "value": 0
                 }
               ]
             },
@@ -18205,27 +17897,12 @@
             "name": "Hollow Bastion Speak to Princesses Fire Event",
             "id": 2656106,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Emblem Piece (Chest)",
-                        "Emblem Piece (Flame)",
-                        "Emblem Piece (Fountain)",
-                        "Emblem Piece (Statue)",
-                        "Hollow Bastion"
-                      ]
-                    }
-                  ]
+                  "value": 0
                 }
               ]
             },
@@ -18241,27 +17918,12 @@
             "name": "Hollow Bastion Speak with Aerith Ansem's Report 10",
             "id": 2657027,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Emblem Piece (Chest)",
-                        "Emblem Piece (Flame)",
-                        "Emblem Piece (Fountain)",
-                        "Emblem Piece (Statue)",
-                        "Hollow Bastion"
-                      ]
-                    }
-                  ]
+                  "value": 0
                 }
               ]
             },
@@ -18277,27 +17939,12 @@
             "name": "Hollow Bastion Speak with Aerith Ansem's Report 2",
             "id": 2657017,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Emblem Piece (Chest)",
-                        "Emblem Piece (Flame)",
-                        "Emblem Piece (Fountain)",
-                        "Emblem Piece (Statue)",
-                        "Hollow Bastion"
-                      ]
-                    }
-                  ]
+                  "value": 0
                 }
               ]
             },
@@ -18313,27 +17960,12 @@
             "name": "Hollow Bastion Speak with Aerith Ansem's Report 4",
             "id": 2657015,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Emblem Piece (Chest)",
-                        "Emblem Piece (Flame)",
-                        "Emblem Piece (Fountain)",
-                        "Emblem Piece (Statue)",
-                        "Hollow Bastion"
-                      ]
-                    }
-                  ]
+                  "value": 0
                 }
               ]
             },
@@ -18349,27 +17981,12 @@
             "name": "Hollow Bastion Speak with Aerith Ansem's Report 6",
             "id": 2657013,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "has_emblems",
+              "args": [
                 {
                   "type": "constant",
-                  "value": 0.0
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Emblem Piece (Chest)",
-                        "Emblem Piece (Flame)",
-                        "Emblem Piece (Fountain)",
-                        "Emblem Piece (Statue)",
-                        "Hollow Bastion"
-                      ]
-                    }
-                  ]
+                  "value": 0
                 }
               ]
             },
@@ -19027,8 +18644,18 @@
             "name": "Level 002 (Slot 1)",
             "id": 2658002,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 0
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -19042,8 +18669,18 @@
             "name": "Level 003 (Slot 1)",
             "id": 2658003,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 0
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Accessory Slot Increase",
@@ -19057,8 +18694,18 @@
             "name": "Level 004 (Slot 1)",
             "id": 2658004,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 0
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -19072,8 +18719,18 @@
             "name": "Level 005 (Slot 1)",
             "id": 2658005,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 0
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -19087,8 +18744,18 @@
             "name": "Level 006 (Slot 1)",
             "id": 2658006,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 0
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -19102,8 +18769,18 @@
             "name": "Level 007 (Slot 1)",
             "id": 2658007,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 0
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -19117,8 +18794,18 @@
             "name": "Level 008 (Slot 1)",
             "id": 2658008,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 0
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -19132,8 +18819,18 @@
             "name": "Level 009 (Slot 1)",
             "id": 2658009,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 0
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -19147,8 +18844,18 @@
             "name": "Level 010 (Slot 1)",
             "id": 2658010,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 0
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max AP Increase",
@@ -19162,8 +18869,18 @@
             "name": "Level 011 (Slot 1)",
             "id": 2658011,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 2
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -19177,8 +18894,18 @@
             "name": "Level 012 (Slot 1)",
             "id": 2658012,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 2
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -19192,8 +18919,18 @@
             "name": "Level 013 (Slot 1)",
             "id": 2658013,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 2
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -19207,8 +18944,18 @@
             "name": "Level 014 (Slot 1)",
             "id": 2658014,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 2
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -19222,8 +18969,18 @@
             "name": "Level 015 (Slot 1)",
             "id": 2658015,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 2
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -19237,8 +18994,18 @@
             "name": "Level 016 (Slot 1)",
             "id": 2658016,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 2
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -19252,8 +19019,18 @@
             "name": "Level 017 (Slot 1)",
             "id": 2658017,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 2
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -19267,8 +19044,18 @@
             "name": "Level 018 (Slot 1)",
             "id": 2658018,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 2
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -19282,8 +19069,18 @@
             "name": "Level 019 (Slot 1)",
             "id": 2658019,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 2
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -19297,8 +19094,18 @@
             "name": "Level 020 (Slot 1)",
             "id": 2658020,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 2
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max MP Increase",
@@ -19312,8 +19119,18 @@
             "name": "Level 021 (Slot 1)",
             "id": 2658021,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 4
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -19327,8 +19144,18 @@
             "name": "Level 022 (Slot 1)",
             "id": 2658022,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 4
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max AP Increase",
@@ -19342,8 +19169,18 @@
             "name": "Level 023 (Slot 1)",
             "id": 2658023,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 4
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -19357,8 +19194,18 @@
             "name": "Level 024 (Slot 1)",
             "id": 2658024,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 4
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -19372,8 +19219,18 @@
             "name": "Level 025 (Slot 1)",
             "id": 2658025,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 4
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -19387,8 +19244,18 @@
             "name": "Level 026 (Slot 1)",
             "id": 2658026,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 4
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -19402,8 +19269,18 @@
             "name": "Level 027 (Slot 1)",
             "id": 2658027,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 4
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -19417,8 +19294,18 @@
             "name": "Level 028 (Slot 1)",
             "id": 2658028,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 4
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max MP Increase",
@@ -19432,8 +19319,18 @@
             "name": "Level 029 (Slot 1)",
             "id": 2658029,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 4
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Item Slot Increase",
@@ -19447,8 +19344,18 @@
             "name": "Level 030 (Slot 1)",
             "id": 2658030,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 4
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -19462,8 +19369,18 @@
             "name": "Level 031 (Slot 1)",
             "id": 2658031,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 6
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -19477,8 +19394,18 @@
             "name": "Level 032 (Slot 1)",
             "id": 2658032,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 6
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max AP Increase",
@@ -19492,8 +19419,18 @@
             "name": "Level 033 (Slot 1)",
             "id": 2658033,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 6
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Item Slot Increase",
@@ -19507,8 +19444,18 @@
             "name": "Level 034 (Slot 1)",
             "id": 2658034,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 6
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -19522,8 +19469,18 @@
             "name": "Level 035 (Slot 1)",
             "id": 2658035,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 6
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max AP Increase",
@@ -19537,8 +19494,18 @@
             "name": "Level 036 (Slot 1)",
             "id": 2658036,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 6
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max MP Increase",
@@ -19552,8 +19519,18 @@
             "name": "Level 037 (Slot 1)",
             "id": 2658037,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 6
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -19567,8 +19544,18 @@
             "name": "Level 038 (Slot 1)",
             "id": 2658038,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 6
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Item Slot Increase",
@@ -19582,8 +19569,18 @@
             "name": "Level 039 (Slot 1)",
             "id": 2658039,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 6
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max AP Increase",
@@ -19597,8 +19594,18 @@
             "name": "Level 040 (Slot 1)",
             "id": 2658040,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 6
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -19612,8 +19619,18 @@
             "name": "Level 041 (Slot 1)",
             "id": 2658041,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max AP Increase",
@@ -19627,8 +19644,18 @@
             "name": "Level 042 (Slot 1)",
             "id": 2658042,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max AP Increase",
@@ -19642,8 +19669,18 @@
             "name": "Level 043 (Slot 1)",
             "id": 2658043,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -19657,8 +19694,18 @@
             "name": "Level 044 (Slot 1)",
             "id": 2658044,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -19672,8 +19719,18 @@
             "name": "Level 045 (Slot 1)",
             "id": 2658045,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -19687,8 +19744,18 @@
             "name": "Level 046 (Slot 1)",
             "id": 2658046,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -19702,8 +19769,18 @@
             "name": "Level 047 (Slot 1)",
             "id": 2658047,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -19717,8 +19794,18 @@
             "name": "Level 048 (Slot 1)",
             "id": 2658048,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max AP Increase",
@@ -19732,8 +19819,18 @@
             "name": "Level 049 (Slot 1)",
             "id": 2658049,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -19747,8 +19844,18 @@
             "name": "Level 050 (Slot 1)",
             "id": 2658050,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -19762,8 +19869,18 @@
             "name": "Level 051 (Slot 1)",
             "id": 2658051,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -19777,8 +19894,18 @@
             "name": "Level 052 (Slot 1)",
             "id": 2658052,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max AP Increase",
@@ -19792,8 +19919,18 @@
             "name": "Level 053 (Slot 1)",
             "id": 2658053,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -19807,8 +19944,18 @@
             "name": "Level 054 (Slot 1)",
             "id": 2658054,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -19822,8 +19969,18 @@
             "name": "Level 055 (Slot 1)",
             "id": 2658055,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -19837,8 +19994,18 @@
             "name": "Level 056 (Slot 1)",
             "id": 2658056,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max MP Increase",
@@ -19852,8 +20019,18 @@
             "name": "Level 057 (Slot 1)",
             "id": 2658057,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max AP Increase",
@@ -19867,8 +20044,18 @@
             "name": "Level 058 (Slot 1)",
             "id": 2658058,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -19882,8 +20069,18 @@
             "name": "Level 059 (Slot 1)",
             "id": 2658059,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -19897,8 +20094,18 @@
             "name": "Level 060 (Slot 1)",
             "id": 2658060,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -19912,8 +20119,18 @@
             "name": "Level 061 (Slot 1)",
             "id": 2658061,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max AP Increase",
@@ -19927,8 +20144,18 @@
             "name": "Level 062 (Slot 1)",
             "id": 2658062,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max MP Increase",
@@ -19942,8 +20169,18 @@
             "name": "Level 063 (Slot 1)",
             "id": 2658063,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max AP Increase",
@@ -19957,8 +20194,18 @@
             "name": "Level 064 (Slot 1)",
             "id": 2658064,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -19972,8 +20219,18 @@
             "name": "Level 065 (Slot 1)",
             "id": 2658065,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -19987,8 +20244,18 @@
             "name": "Level 066 (Slot 1)",
             "id": 2658066,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max MP Increase",
@@ -20002,8 +20269,18 @@
             "name": "Level 067 (Slot 1)",
             "id": 2658067,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -20017,8 +20294,18 @@
             "name": "Level 068 (Slot 1)",
             "id": 2658068,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -20032,8 +20319,18 @@
             "name": "Level 069 (Slot 1)",
             "id": 2658069,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -20047,8 +20344,18 @@
             "name": "Level 070 (Slot 1)",
             "id": 2658070,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max AP Increase",
@@ -20062,8 +20369,18 @@
             "name": "Level 071 (Slot 1)",
             "id": 2658071,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -20077,8 +20394,18 @@
             "name": "Level 072 (Slot 1)",
             "id": 2658072,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -20092,8 +20419,18 @@
             "name": "Level 073 (Slot 1)",
             "id": 2658073,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -20107,8 +20444,18 @@
             "name": "Level 074 (Slot 1)",
             "id": 2658074,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -20122,8 +20469,18 @@
             "name": "Level 075 (Slot 1)",
             "id": 2658075,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -20137,8 +20494,18 @@
             "name": "Level 076 (Slot 1)",
             "id": 2658076,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -20152,8 +20519,18 @@
             "name": "Level 077 (Slot 1)",
             "id": 2658077,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -20167,8 +20544,18 @@
             "name": "Level 078 (Slot 1)",
             "id": 2658078,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -20182,8 +20569,18 @@
             "name": "Level 079 (Slot 1)",
             "id": 2658079,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -20197,8 +20594,18 @@
             "name": "Level 080 (Slot 1)",
             "id": 2658080,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -20212,8 +20619,18 @@
             "name": "Level 081 (Slot 1)",
             "id": 2658081,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -20227,8 +20644,18 @@
             "name": "Level 082 (Slot 1)",
             "id": 2658082,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -20242,8 +20669,18 @@
             "name": "Level 083 (Slot 1)",
             "id": 2658083,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -20257,8 +20694,18 @@
             "name": "Level 084 (Slot 1)",
             "id": 2658084,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -20272,8 +20719,18 @@
             "name": "Level 085 (Slot 1)",
             "id": 2658085,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max AP Increase",
@@ -20287,8 +20744,18 @@
             "name": "Level 086 (Slot 1)",
             "id": 2658086,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -20302,8 +20769,18 @@
             "name": "Level 087 (Slot 1)",
             "id": 2658087,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max AP Increase",
@@ -20317,8 +20794,18 @@
             "name": "Level 088 (Slot 1)",
             "id": 2658088,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -20332,8 +20819,18 @@
             "name": "Level 089 (Slot 1)",
             "id": 2658089,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -20347,8 +20844,18 @@
             "name": "Level 090 (Slot 1)",
             "id": 2658090,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -20362,8 +20869,18 @@
             "name": "Level 091 (Slot 1)",
             "id": 2658091,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max MP Increase",
@@ -20377,8 +20894,18 @@
             "name": "Level 092 (Slot 1)",
             "id": 2658092,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max AP Increase",
@@ -20392,8 +20919,18 @@
             "name": "Level 093 (Slot 1)",
             "id": 2658093,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -20407,8 +20944,18 @@
             "name": "Level 094 (Slot 1)",
             "id": 2658094,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -20422,8 +20969,18 @@
             "name": "Level 095 (Slot 1)",
             "id": 2658095,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -20437,8 +20994,18 @@
             "name": "Level 096 (Slot 1)",
             "id": 2658096,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max AP Increase",
@@ -20452,8 +21019,18 @@
             "name": "Level 097 (Slot 1)",
             "id": 2658097,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max HP Increase",
@@ -20467,8 +21044,18 @@
             "name": "Level 098 (Slot 1)",
             "id": 2658098,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Max AP Increase",
@@ -20482,8 +21069,18 @@
             "name": "Level 099 (Slot 1)",
             "id": 2658099,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Strength Increase",
@@ -20497,8 +21094,18 @@
             "name": "Level 100 (Slot 1)",
             "id": 2658100,
             "access_rule": {
-              "type": "constant",
-              "value": 0.0
+              "type": "helper",
+              "name": "has_x_worlds",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": 8
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                }
+              ]
             },
             "item": {
               "name": "Defense Increase",
@@ -20526,8 +21133,18 @@
                   "args": []
                 },
                 {
-                  "type": "constant",
-                  "value": 0.0
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 8
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 },
                 {
                   "type": "or",
@@ -20620,8 +21237,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0.0
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -20637,8 +21264,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0.0
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -20654,8 +21291,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0.0
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -20671,8 +21318,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0.0
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -20688,8 +21345,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0.0
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -20705,8 +21372,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0.0
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -20722,8 +21399,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0.0
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 4
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -20739,8 +21426,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0.0
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 6
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -20756,8 +21453,18 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "constant",
-                  "value": 0.0
+                  "type": "helper",
+                  "name": "has_x_worlds",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 8
+                    },
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 },
                 {
                   "type": "or",

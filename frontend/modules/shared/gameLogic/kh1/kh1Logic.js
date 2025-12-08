@@ -113,8 +113,8 @@ export const kh1Logic = {
             }
         }
 
-        // Also need 5 worlds
-        return this.has_x_worlds(snapshot, staticData, 5, keyblades_unlock_chests);
+        // Also need 6 worlds (matching Python's has_emblems function)
+        return this.has_x_worlds(snapshot, staticData, 6, keyblades_unlock_chests);
     },
 
     /**
