@@ -1479,7 +1479,7 @@
     "exporter_path": "exporter/games/shapez.py",
     "exporter_size": 4070,
     "game_logic_path": "frontend/modules/shared/gameLogic/shapez/shapezLogic.js",
-    "game_logic_size": 6517,
+    "game_logic_size": 224,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "shapez"

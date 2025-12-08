@@ -379,10 +379,22 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
           if (helperDefinition) {
             // Found a helper definition in rules.json - evaluate it recursively
-            log('debug', `[evaluateRule] Using exported helper definition for '${rule.name}'`);
-            result = evaluateRule(helperDefinition, context, depth + 1);
+            // Helper definitions may have params and body, or just be a rule directly
+            const params = helperDefinition.params || [];
+            const body = helperDefinition.body || helperDefinition;
+            const args = rule.args || [];
+
+            // Create localScope mapping parameter names to evaluated argument values
+            let helperLocalScope = localScope ? { ...localScope } : {};
+            for (let i = 0; i < params.length && i < args.length; i++) {
+              helperLocalScope[params[i]] = evaluateRule(args[i], context, depth + 1, localScope);
+            }
+
+            result = evaluateRule(body, context, depth + 1, helperLocalScope);
             break;
           }
+        } else {
+          // No static data available for helper lookup
         }
 
         // Handle Python built-in functions
@@ -551,7 +563,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         let hasSMBool = false;
         let totalDifficulty = 0;
         for (const condition of rule.conditions || []) {
-          const conditionResult = evaluateRule(condition, context, depth + 1);
+          const conditionResult = evaluateRule(condition, context, depth + 1, localScope);
 
           // Handle SMBool objects from Super Metroid
           // Track difficulty to properly check against maxDiff at depth 0
@@ -591,7 +603,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         let hasSMBool = false;
         let minDifficulty = Infinity;
         for (const condition of rule.conditions || []) {
-          const conditionResult = evaluateRule(condition, context, depth + 1);
+          const conditionResult = evaluateRule(condition, context, depth + 1, localScope);
 
           // Handle SMBool objects from Super Metroid
           // Track minimum difficulty among passing conditions for proper maxDiff check
@@ -632,17 +644,17 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       case 'conditional': {
         // Conditional expression (ternary) - evaluates test and returns if_true or if_false branch
         // Pattern: test ? if_true : if_false
-        const testResult = evaluateRule(rule.test, context, depth + 1);
+        const testResult = evaluateRule(rule.test, context, depth + 1, localScope);
 
         // If test result is undefined, we can't determine which branch to take
         if (testResult === undefined) {
           result = undefined;
         } else if (testResult) {
           // Test is truthy - evaluate if_true branch
-          result = evaluateRule(rule.if_true, context, depth + 1);
+          result = evaluateRule(rule.if_true, context, depth + 1, localScope);
         } else {
           // Test is falsy - evaluate if_false branch
-          result = evaluateRule(rule.if_false, context, depth + 1);
+          result = evaluateRule(rule.if_false, context, depth + 1, localScope);
         }
         break;
       }
@@ -669,7 +681,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         let undefinedCount = 0;
 
         for (const condition of conditions) {
-          const conditionResult = evaluateRule(condition, context, depth + 1);
+          const conditionResult = evaluateRule(condition, context, depth + 1, localScope);
           if (conditionResult === true) {
             trueCount++;
           } else if (conditionResult === undefined) {
@@ -712,7 +724,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           const operandResult = evaluateRule(
             conditionToNegate,
             context,
-            depth + 1
+            depth + 1,
+            localScope
           );
           // Negation of undefined is undefined
           result = operandResult === undefined ? undefined : !operandResult;
@@ -752,7 +765,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'attribute': {
-        const baseObject = evaluateRule(rule.object, context, depth + 1);
+        const baseObject = evaluateRule(rule.object, context, depth + 1, localScope);
 
         // Special case: if baseObject is undefined and the object was "self",
         // try to resolve from game settings (self in Python rules = world/rules class instance with options)
@@ -864,6 +877,22 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           // First try direct property access
           let attrValue = baseObject[rule.attr];
 
+          // If not found and baseObject is an array, try Python-to-JavaScript method mapping
+          // Python list methods have different names in JavaScript
+          if (attrValue === undefined && Array.isArray(baseObject)) {
+            const pythonToJsArrayMethods = {
+              'index': 'indexOf',      // list.index(x) -> array.indexOf(x)
+              'append': 'push',         // list.append(x) -> array.push(x)
+              'remove': 'splice',       // list.remove(x) needs custom handling, but map for now
+              'count': null,            // Needs custom implementation
+              '__contains__': 'includes', // 'x in list' -> array.includes(x)
+            };
+            const jsMethodName = pythonToJsArrayMethods[rule.attr];
+            if (jsMethodName) {
+              attrValue = baseObject[jsMethodName];
+            }
+          }
+
           // If not found, try resolveAttribute for mapping/transformation
           if (
             attrValue === undefined &&
@@ -903,7 +932,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
           const methodName = rule.function.attr;
           const args = (rule.args || []).map(
-            (arg) => evaluateRule(arg, context, depth + 1)
+            (arg) => evaluateRule(arg, context, depth + 1, localScope)
           );
 
           // If any argument evaluation results in undefined, return undefined
@@ -947,7 +976,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             rule.function.object?.type === 'attribute' &&
             rule.function.object.attr === 'multiworld') {
           
-          const args = rule.args ? rule.args.map(arg => evaluateRule(arg, context, depth + 1)) : [];
+          const args = rule.args ? rule.args.map(arg => evaluateRule(arg, context, depth + 1, localScope)) : [];
           const locationName = args[0];
           
           // If we're evaluating a rule for the same location, return the current location
@@ -993,7 +1022,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             rule.function.object?.type === 'attribute' &&
             rule.function.object.attr === 'multiworld') {
           
-          const args = rule.args ? rule.args.map(arg => evaluateRule(arg, context, depth + 1)) : [];
+          const args = rule.args ? rule.args.map(arg => evaluateRule(arg, context, depth + 1, localScope)) : [];
           const exitName = args[0];
           
           // When evaluating an exit rule, the context has parent_region set
@@ -1069,11 +1098,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             const bossObject = evaluateRule(
               rule.function.object,
               context,
-              depth + 1
+              depth + 1,
+              localScope
             );
 
             if (bossObject && bossObject.defeat_rule) {
-              result = evaluateRule(bossObject.defeat_rule, context, depth + 1);
+              result = evaluateRule(bossObject.defeat_rule, context, depth + 1, localScope);
               break;
             } else {
               result = undefined;
@@ -1091,7 +1121,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         ) {
           const helperName = rule.function.attr;
           const args = (rule.args || []).map(
-            (arg) => evaluateRule(arg, context, depth + 1)
+            (arg) => evaluateRule(arg, context, depth + 1, localScope)
           );
 
           // If any argument evaluation results in undefined, return undefined
@@ -1124,7 +1154,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           }
         }
 
-        const func = evaluateRule(rule.function, context, depth + 1);
+        const func = evaluateRule(rule.function, context, depth + 1, localScope);
 
         if (typeof func === 'undefined') {
           result = undefined;
@@ -1141,7 +1171,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           typeof func.type === 'string'
         ) {
           // Evaluate the rule object directly
-          result = evaluateRule(func, context, depth + 1);
+          result = evaluateRule(func, context, depth + 1, localScope);
           break;
         }
 
@@ -1156,7 +1186,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         const args = (rule.args || []).map(
-          (arg) => evaluateRule(arg, context, depth + 1) // Evaluate args recursively
+          (arg) => evaluateRule(arg, context, depth + 1, localScope) // Evaluate args recursively
         );
 
         // If any argument evaluation results in undefined, the function call result is undefined
@@ -1228,8 +1258,9 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'subscript': {
-        const list = evaluateRule(rule.value, context, depth + 1);
-        const index = evaluateRule(rule.index, context, depth + 1);
+        // Pass localScope to resolve parameter references like buildings[index]
+        const list = evaluateRule(rule.value, context, depth + 1, localScope);
+        const index = evaluateRule(rule.index, context, depth + 1, localScope);
 
         if (list === undefined || index === undefined) {
           result = undefined; // If array/object or index is unknown, result is unknown
@@ -1256,7 +1287,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
         // If left is an item_check without a count field, get the item count directly
         if (left && left.type === 'item_check' && left.count === undefined) {
-          const itemName = evaluateRule(left.item, context, depth + 1);
+          const itemName = evaluateRule(left.item, context, depth + 1, localScope);
           if (itemName === undefined) {
             left = undefined;
           } else if (typeof context.countItem === 'function') {
@@ -1266,12 +1297,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             left = undefined;
           }
         } else {
-          left = evaluateRule(left, context, depth + 1);
+          left = evaluateRule(left, context, depth + 1, localScope);
         }
 
         // If right is an item_check without a count field, get the item count directly
         if (right && right.type === 'item_check' && right.count === undefined) {
-          const itemName = evaluateRule(right.item, context, depth + 1);
+          const itemName = evaluateRule(right.item, context, depth + 1, localScope);
           if (itemName === undefined) {
             right = undefined;
           } else if (typeof context.countItem === 'function') {
@@ -1281,7 +1312,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             right = undefined;
           }
         } else {
-          right = evaluateRule(right, context, depth + 1);
+          right = evaluateRule(right, context, depth + 1, localScope);
         }
 
         const op = rule.op;

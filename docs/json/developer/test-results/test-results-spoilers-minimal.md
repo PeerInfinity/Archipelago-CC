@@ -6,17 +6,17 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-08 16:15:50
+**Generated:** 2025-12-07 10:18:06
 
-**Source Data Created:** 2025-12-08T16:15:49.508929
+**Source Data Created:** 2025-12-07T01:28:17.933269
 
-**Source Data Last Updated:** 2025-12-08T16:15:49.508937
+**Source Data Last Updated:** 2025-12-07T01:28:17.933274
 
 ## Summary
 
 - **Total Games:** 79
-- **Passed:** 71 (89.9%)
-- **Failed:** 8 (10.1%)
+- **Passed:** 72 (91.1%)
+- **Failed:** 7 (8.9%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
@@ -37,7 +37,7 @@
 | Celeste (Open World) | ✅ Passed | 0 | 16.2 | 16.2 | 🟢 Complete | 7.1KB | ✅ |
 | Celeste 64 | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 4.2KB | 5.9KB |
 | ChecksFinder | ✅ Passed | 0 | 4.5 | 4.5 | 🟢 Complete | 1.7KB | ✅ |
-| ChocolateChipCookies | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
+| ChocolateChipCookies | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 0.6KB | ✅ |
 | Choo-Choo Charles | ✅ Passed | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ✅ |
 | Civilization VI | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | 6.2KB | 5.1KB |
 | DLCQuest | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 9.6KB | 9.4KB |
@@ -52,10 +52,10 @@
 | Hylics 2 | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | 0.9KB | 6.6KB |
 | Inscryption | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | 11.3KB | 6.2KB |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | 13.0KB | 4.2KB |
-| Kingdom Hearts | ❌ Failed | 0 | 0 | 10.3 | 🔴 0.0% | 35.6KB | 19.4KB |
+| Kingdom Hearts | ✅ Passed | 0 | 10.3 | 10.3 | 🟢 Complete | 35.6KB | 19.4KB |
 | Kingdom Hearts 2 | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 11.2KB | 112.6KB |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 9.8KB | 14.9KB |
-| Landstalker - The Treasures of King Nole | ❌ Failed | 2 | 0 | 0 | 🔴 0.0% | 14.2KB | 9.1KB |
+| Landstalker - The Treasures of King Nole | ❌ Failed | 0 | 1.2 | 10.1 | 🟡 11.9% | 14.2KB | 9.1KB |
 | Lingo | ❌ Failed | 0 | 0 | 5.1 | 🔴 0.0% | 29.9KB | 11.3KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 15.8KB | 5.3KB |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.11 | 4.11 | 🟢 Complete | ✅ | ✅ |
