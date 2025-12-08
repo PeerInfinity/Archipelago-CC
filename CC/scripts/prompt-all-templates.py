@@ -445,6 +445,10 @@ def main():
                        help='Check multiclient test results and generate prompts for failing multiclient tests')
     parser.add_argument('--multiworld', action='store_true',
                        help='Check multiworld test results and generate prompts for failing multiworld tests (uses bisection results)')
+    parser.add_argument('--exclude-pattern', type=str,
+                       help='Exclude template files matching this pattern (e.g., "WorldGen" to exclude WorldGen templates)')
+    parser.add_argument('--include-pattern', type=str,
+                       help='Only include template files matching this pattern (e.g., "WorldGen" to only test WorldGen templates)')
 
     args = parser.parse_args()
 
@@ -465,6 +469,10 @@ def main():
         print("Error: --multiworld and --multiclient are mutually exclusive")
         sys.exit(1)
 
+    if args.include_pattern and args.exclude_pattern:
+        print("Error: --include-pattern and --exclude-pattern are mutually exclusive")
+        sys.exit(1)
+
     # Determine project root
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 
@@ -481,6 +489,28 @@ def main():
         if not quiet_mode:
             print("No template files found!", file=sys.stderr)
         return 1
+
+    # Apply --include-pattern filtering if specified
+    if args.include_pattern:
+        before_pattern_filter = len(template_files)
+        template_files = [f for f in template_files if args.include_pattern in f]
+        pattern_excluded = before_pattern_filter - len(template_files)
+        if pattern_excluded > 0 and not quiet_mode:
+            print(f"Pattern filter: included {len(template_files)} templates matching '{args.include_pattern}' (excluded {pattern_excluded})")
+        if not template_files:
+            print(f"Error: No template files found after pattern filtering (no files match '{args.include_pattern}')")
+            return 1
+
+    # Apply --exclude-pattern filtering if specified
+    if args.exclude_pattern:
+        before_pattern_filter = len(template_files)
+        template_files = [f for f in template_files if args.exclude_pattern not in f]
+        pattern_excluded = before_pattern_filter - len(template_files)
+        if pattern_excluded > 0 and not quiet_mode:
+            print(f"Pattern filter: excluded {pattern_excluded} templates matching '{args.exclude_pattern}' ({len(template_files)} remaining)")
+        if not template_files:
+            print(f"Error: No template files found after pattern filtering (all files match '{args.exclude_pattern}')")
+            return 1
 
     if not quiet_mode:
         print(f"Found {len(template_files)} template files")
