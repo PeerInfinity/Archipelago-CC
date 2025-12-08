@@ -21,6 +21,7 @@ class Yugioh06GameExportHandler(GenericGameExportHandler):
 
     # List of custom helper functions defined in worlds/yugioh06/rules.py and fusions.py
     CUSTOM_HELPERS = {
+        'yugioh06_difficulty',  # Wraps has_from_list with core_booster
         'only_light',
         'only_dark',
         'only_earth',
