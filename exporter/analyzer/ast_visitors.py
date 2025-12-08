@@ -32,7 +32,7 @@ class ASTVisitorMixin:
         - binary_op_processor: BinaryOpProcessor instance
     """
 
-    def _register_helper_usage(self, helper_name: str) -> None:
+    def _register_helper_usage(self, helper_name: str, helper_func: Any = None) -> None:
         """
         Register that a helper function is used, for automatic discovery.
 
@@ -41,11 +41,12 @@ class ASTVisitorMixin:
 
         Args:
             helper_name: The name of the helper function being used
+            helper_func: Optional - the actual function object (for auto-detecting module)
         """
         if (hasattr(self, 'game_handler') and
             self.game_handler is not None and
             hasattr(self.game_handler, 'register_helper_usage')):
-            self.game_handler.register_helper_usage(helper_name)
+            self.game_handler.register_helper_usage(helper_name, helper_func)
             logging.debug(f"Registered helper usage: {helper_name}")
 
     def visit_Module(self, node):
@@ -338,6 +339,29 @@ class ASTVisitorMixin:
                                                               game_handler=self.game_handler,
                                                               player_context=self.player_context)
                                 if recursive_result.get('type') != 'error':
+                                    # Check if the result is too large to inline
+                                    # If so, discard the analyzed result and treat like manual preservation
+                                    auto_preserve = getattr(self.game_handler, 'AUTO_PRESERVE_LARGE_HELPERS', False) if self.game_handler else False
+                                    threshold = getattr(self.game_handler, 'HELPER_INLINE_THRESHOLD', 0) if self.game_handler else 0
+                                    if auto_preserve and actual_func_name:
+                                        from exporter.games.base import BaseGameExportHandler
+                                        size = BaseGameExportHandler.count_rule_nodes(recursive_result)
+                                        if size > threshold:
+                                            logging.debug(f"Helper {actual_func_name} has {size} nodes (threshold {threshold}), preserving as helper")
+                                            # DON'T use the analyzed result - it has closure params baked in
+                                            # Instead, register for export and return a helper call node
+                                            # get_helper_definitions() will analyze the function fresh,
+                                            # producing a parameterized definition
+                                            if hasattr(self.game_handler, 'register_helper_usage'):
+                                                self.game_handler.register_helper_usage(actual_func_name, resolved_func)
+                                            if hasattr(self.game_handler, 'register_auto_preserved_helper'):
+                                                self.game_handler.register_auto_preserved_helper(actual_func_name)
+                                            # Return a helper call with original args (like manual preservation)
+                                            return {
+                                                'type': 'helper',
+                                                'name': actual_func_name,
+                                                'args': filtered_args
+                                            }
                                     logging.debug(f"Recursive analysis successful for {func_name}. Result: {recursive_result}")
                                     return recursive_result
                                 else:
@@ -393,6 +417,30 @@ class ASTVisitorMixin:
                                                           game_handler=self.game_handler,
                                                           player_context=self.player_context)
                           if recursive_result.get('type') != 'error':
+                              # Check if the result is too large to inline
+                              # If so, discard the analyzed result and treat like manual preservation
+                              auto_preserve = getattr(self.game_handler, 'AUTO_PRESERVE_LARGE_HELPERS', False) if self.game_handler else False
+                              threshold = getattr(self.game_handler, 'HELPER_INLINE_THRESHOLD', 0) if self.game_handler else 0
+                              closure_func_name = getattr(actual_func, '__name__', func_name)
+                              if auto_preserve and closure_func_name:
+                                  from exporter.games.base import BaseGameExportHandler
+                                  size = BaseGameExportHandler.count_rule_nodes(recursive_result)
+                                  if size > threshold:
+                                      logging.debug(f"Helper {closure_func_name} has {size} nodes (threshold {threshold}), preserving as helper")
+                                      # DON'T use the analyzed result - it has closure params baked in
+                                      # Instead, register for export and return a helper call node
+                                      # get_helper_definitions() will analyze the function fresh,
+                                      # producing a parameterized definition
+                                      if hasattr(self.game_handler, 'register_helper_usage'):
+                                          self.game_handler.register_helper_usage(closure_func_name, actual_func)
+                                      if hasattr(self.game_handler, 'register_auto_preserved_helper'):
+                                          self.game_handler.register_auto_preserved_helper(closure_func_name)
+                                      # Return a helper call with original args (like manual preservation)
+                                      return {
+                                          'type': 'helper',
+                                          'name': closure_func_name,
+                                          'args': filtered_args
+                                      }
                               logging.debug(f"Recursive analysis successful for {func_name}. Result: {recursive_result}")
                               return recursive_result # Return the detailed analysis result
                           else:
@@ -1629,6 +1677,11 @@ class ASTVisitorMixin:
             }
             op_symbol = op_map.get(op_name, op_name) # Use original name if not in map
 
+            # Try constant folding - if both sides are constants, evaluate at export time
+            folded_result = self._try_fold_comparison(left_result, op_symbol, right_result)
+            if folded_result is not None:
+                return folded_result
+
             return {
                 'type': 'compare',
                 'left': left_result,
@@ -1638,6 +1691,70 @@ class ASTVisitorMixin:
 
         except Exception as e:
             logging.error("Error in visit_Compare", e)
+            return None
+
+    def _try_fold_comparison(self, left_result, op_symbol, right_result):
+        """
+        Try to fold a comparison at export time if both sides are constants.
+
+        This handles cases like `early_useful == OPTIONS.buildings_3` where both
+        values are known closure variables that can be resolved at export time.
+
+        Args:
+            left_result: The left operand result dict
+            op_symbol: The comparison operator ('==', '!=', '<', '>', etc.)
+            right_result: The right operand result dict
+
+        Returns:
+            A constant result dict if folding succeeded, None otherwise
+        """
+        try:
+            # Check if both sides are constants
+            if not (left_result and left_result.get('type') == 'constant' and
+                    right_result and right_result.get('type') == 'constant'):
+                return None
+
+            left_val = left_result.get('value')
+            right_val = right_result.get('value')
+
+            # Evaluate the comparison based on the operator
+            result = None
+            if op_symbol == '==':
+                result = left_val == right_val
+            elif op_symbol == '!=':
+                result = left_val != right_val
+            elif op_symbol == '<':
+                result = left_val < right_val
+            elif op_symbol == '<=':
+                result = left_val <= right_val
+            elif op_symbol == '>':
+                result = left_val > right_val
+            elif op_symbol == '>=':
+                result = left_val >= right_val
+            elif op_symbol == 'in':
+                # For 'in' operator, right side should be a collection
+                if isinstance(right_val, (list, tuple, set, str)):
+                    result = left_val in right_val
+            elif op_symbol == 'not in':
+                if isinstance(right_val, (list, tuple, set, str)):
+                    result = left_val not in right_val
+            elif op_symbol == 'is':
+                result = left_val is right_val
+            elif op_symbol == 'is not':
+                result = left_val is not right_val
+
+            if result is not None:
+                logging.debug(f"Folded comparison: {left_val!r} {op_symbol} {right_val!r} = {result}")
+                return {'type': 'constant', 'value': result}
+
+            return None
+
+        except (TypeError, ValueError) as e:
+            # Comparison not possible (e.g., comparing incompatible types)
+            logging.debug(f"Could not fold comparison: {e}")
+            return None
+        except Exception as e:
+            logging.warning(f"Error during comparison folding: {e}")
             return None
 
     def visit_Tuple(self, node: ast.Tuple):
