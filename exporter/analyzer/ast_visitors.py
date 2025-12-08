@@ -1227,13 +1227,39 @@ class ASTVisitorMixin:
         try:
             attr_name = node.attr
             logging.debug(f"visit_Attribute: Trying to access .{attr_name} on object of type {type(node.value).__name__}")
-            logging.debug(f"visit_Attribute: Visiting object {type(node.value).__name__}")
-            obj_result = self.visit(node.value) # Get returned result
-            # attr_name = node.attr # Moved up
 
             # Specifically log if we are processing self.player
             if isinstance(node.value, ast.Name) and node.value.id == 'self' and attr_name == 'player':
                  logging.debug("visit_Attribute: Detected access to self.player")
+
+            # OPTIMIZATION: If the object is a simple Name node in closure_vars, try to resolve
+            # the attribute directly BEFORE visiting the object. This handles NamedTuples and
+            # other complex objects that would lose their attribute access capability when serialized.
+            if isinstance(node.value, ast.Name):
+                var_name = node.value.id
+                if var_name in self.closure_vars:
+                    obj_value = self.closure_vars[var_name]
+                    try:
+                        resolved_attr = getattr(obj_value, attr_name)
+                        # If the attribute resolves to a simple value, return it directly
+                        if isinstance(resolved_attr, (int, float, str, bool)):
+                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} to constant: {resolved_attr}")
+                            return {'type': 'constant', 'value': resolved_attr}
+                        elif resolved_attr is None:
+                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} to None")
+                            return {'type': 'constant', 'value': None}
+                        elif isinstance(resolved_attr, (list, tuple)):
+                            # Handle list/tuple values - convert to list for JSON serialization
+                            list_value = list(resolved_attr) if isinstance(resolved_attr, tuple) else resolved_attr
+                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} to list: {list_value}")
+                            return {'type': 'constant', 'value': list_value}
+                    except AttributeError:
+                        # If attribute doesn't exist, fall through to normal processing
+                        logging.debug(f"visit_Attribute: Could not directly resolve {var_name}.{attr_name}")
+                        pass
+
+            logging.debug(f"visit_Attribute: Visiting object {type(node.value).__name__}")
+            obj_result = self.visit(node.value) # Get returned result
 
             if obj_result:
                  # Try to resolve the attribute access to a constant value
@@ -1276,6 +1302,13 @@ class ASTVisitorMixin:
                 elif isinstance(value, (int, float, str, bool)):
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to constant value: {value}")
                     return {'type': 'constant', 'value': value}
+                # Handle NamedTuples - keep them as name references so attribute access still works
+                # The attributes will be resolved later in visit_Attribute
+                # IMPORTANT: This check MUST come BEFORE the tuple check since NamedTuples are tuples
+                elif hasattr(value, '_fields'):
+                    logging.debug(f"visit_Name: Found NamedTuple '{name}' in closure, keeping as name reference for attribute access")
+                    # Don't convert to list here - let attribute access resolve the fields
+                    pass
                 # Handle list/tuple values - resolve to constant for method calls like .index()
                 elif isinstance(value, (list, tuple)):
                     # Convert to list for JSON serialization
@@ -1293,12 +1326,6 @@ class ASTVisitorMixin:
                 elif hasattr(value, 'name') and hasattr(value, 'entrances') and isinstance(value.name, str):
                     logging.debug(f"visit_Name: Found Region object '{name}' in closure, keeping as name reference for attribute access")
                     # Don't convert to string here - let attribute access or other operations handle it
-                    pass
-                # Handle NamedTuples - keep them as name references so attribute access still works
-                # The attributes will be resolved later in visit_Attribute
-                elif hasattr(value, '_fields'):
-                    logging.debug(f"visit_Name: Found NamedTuple '{name}' in closure, keeping as name reference for attribute access")
-                    # Don't convert to list here - let attribute access resolve the fields
                     pass
 
             # Also check function defaults for lambda parameters

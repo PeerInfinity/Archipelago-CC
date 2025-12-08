@@ -126,6 +126,55 @@ class LingoGameExportHandler(GenericGameExportHandler):
         result = re.sub(r'\{([^{}]*)\}', sort_set, s)
         return result
 
+    def get_custom_location_access_rule(self, location, world) -> Dict[str, Any]:
+        """
+        Generate a custom access rule for Lingo locations.
+
+        Instead of trying to analyze the lambda `lingo_can_use_location(state, location, world)`,
+        we generate a rule that references the location's exported `access` attribute directly.
+
+        The rule engine has access to `location` in the context (set in reachabilityEngine.js:597),
+        so we can reference `location.access` and pass it to `_lingo_can_satisfy_requirements`.
+
+        Special cases:
+        - Mastery location: uses lingo_can_use_mastery_location helper
+        - Level 2 location: uses lingo_can_use_level_2_location helper
+        """
+        location_name = location.name
+
+        # Check for mastery location
+        if hasattr(world, 'player_logic') and hasattr(world.player_logic, 'mastery_location'):
+            if location_name == world.player_logic.mastery_location:
+                return {
+                    'type': 'helper',
+                    'name': 'lingo_can_use_mastery_location',
+                    'args': []
+                }
+
+        # Check for level 2 location
+        if hasattr(world, 'options') and hasattr(world.options, 'level_2_requirement'):
+            if world.options.level_2_requirement.value > 1:
+                if hasattr(world, 'player_logic') and hasattr(world.player_logic, 'level_2_location'):
+                    if location_name == "Second Room - ANOTHER TRY" or location_name == world.player_logic.level_2_location:
+                        return {
+                            'type': 'helper',
+                            'name': 'lingo_can_use_level_2_location',
+                            'args': []
+                        }
+
+        # Standard location: reference location.access (which is exported via get_location_attributes)
+        return {
+            'type': 'helper',
+            'name': '_lingo_can_satisfy_requirements',
+            'args': [
+                {
+                    'type': 'attribute',
+                    'object': {'type': 'name', 'name': 'location'},
+                    'attr': 'access'
+                }
+            ]
+        }
+
     def get_location_attributes(self, location, world) -> Dict[str, Any]:
         """
         Add AccessRequirements data to Lingo locations.

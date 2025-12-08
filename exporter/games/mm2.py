@@ -29,6 +29,10 @@ class MM2GameExportHandler(GenericGameExportHandler):
     AUTO_EXPORT_DISCOVERED_HELPERS = False
     AUTO_PRESERVE_LARGE_HELPERS = False
 
+    # Preserve can_defeat_enough_rbms as a helper - it contains a for loop over
+    # boss_requirements.items() that the analyzer cannot inline
+    HELPERS_TO_PRESERVE = {'can_defeat_enough_rbms'}
+
 
     def get_settings_data(self, world, multiworld, player):
         """Extract Mega Man 2 settings including wily_5 requirement and weapon data."""

@@ -8,12 +8,12 @@ import importlib
 logger = logging.getLogger(__name__)
 
 class KDL3GameExportHandler(BaseGameExportHandler):
-    GAME_NAME = "Kirby'
+    """Handle KDL3-specific rule expansions and f-string conversions."""
+
+    GAME_NAME = "Kirby's Dream Land 3"
     # Disable automatic helper export (use old behavior)
     AUTO_EXPORT_DISCOVERED_HELPERS = False
     AUTO_PRESERVE_LARGE_HELPERS = False
-s Dream Land 3"
-    """Handle KDL3-specific rule expansions and f-string conversions."""
 
     def __init__(self):
         """Initialize the KDL3 export handler and load location_name module."""
@@ -200,7 +200,13 @@ s Dream Land 3"
             logger.warning(f"Unknown binary operator: {op}")
             return f"{left_val} {op} {right_val}"
     
-    def process_regions(self, regions: Dict[str, Any]) -> Dict[str, Any]:
+    def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Post-process the exported data to resolve f-strings in rules."""
+        if 'regions' in data:
+            data['regions'] = self._process_regions(data['regions'])
+        return data
+
+    def _process_regions(self, regions: Dict[str, Any]) -> Dict[str, Any]:
         """Process all regions and their locations/entrances/exits."""
         for player_id, player_regions in regions.items():
             for region_name, region_data in player_regions.items():
@@ -209,17 +215,17 @@ s Dream Land 3"
                     for location in region_data['locations']:
                         if 'access_rule' in location:
                             location['access_rule'] = self.expand_rule(location['access_rule'])
-                            
+
                 # Process entrances
                 if 'entrances' in region_data:
                     for entrance in region_data['entrances']:
                         if 'access_rule' in entrance:
                             entrance['access_rule'] = self.expand_rule(entrance['access_rule'])
-                            
+
                 # Process exits
                 if 'exits' in region_data:
                     for exit_data in region_data['exits']:
                         if 'access_rule' in exit_data:
                             exit_data['access_rule'] = self.expand_rule(exit_data['access_rule'])
-                            
+
         return regions

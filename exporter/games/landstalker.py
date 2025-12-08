@@ -147,6 +147,8 @@ class LandstalkerGameExportHandler(GenericGameExportHandler):
           "element_rule": {"type": "item_check", "item": {"type": "binary_op", ...}},
           "iterator_info": {
             "iterator": {"type": "name", "name": "regions"}  <-- unresolved
+            OR
+            "iterator": {"type": "constant", "value": ["Massan", ...]}  <-- already resolved
           }
         }
 
@@ -154,53 +156,104 @@ class LandstalkerGameExportHandler(GenericGameExportHandler):
         """
         iterator_info = rule.get('iterator_info', {})
         iterator = iterator_info.get('iterator', {})
+        element_rule = rule.get('element_rule', {})
 
-        logger.debug(f"_resolve_all_of_iterator called, iterator type: {iterator.get('type')}, stack size: {len(self._regions_stack)}")
+        logger.debug(f"_resolve_all_of_iterator called, iterator type: {iterator.get('type') if isinstance(iterator, dict) else type(iterator)}, stack size: {len(self._regions_stack)}")
 
-        # Check if iterator is an unresolved name reference
-        if isinstance(iterator, dict) and iterator.get('type') == 'name':
-            iter_name = iterator.get('name')
+        # Check if this is the event_visited_ + region.code pattern
+        is_event_visited_pattern = self._is_event_visited_pattern(element_rule)
 
-            # Check if this is the 'regions' variable we need to resolve
-            if iter_name == 'regions' and self._regions_stack:
-                # Pop the most recent regions list from our stack
-                region_codes = self._regions_stack.pop() if self._regions_stack else None
+        if isinstance(iterator, dict):
+            # Check if iterator is an unresolved name reference
+            if iterator.get('type') == 'name':
+                iter_name = iterator.get('name')
 
-                if region_codes is not None:
-                    logger.debug(f"Resolving all_of iterator 'regions' to: {region_codes}")
+                # Check if this is the 'regions' variable we need to resolve
+                if iter_name == 'regions' and self._regions_stack:
+                    # Pop the most recent regions list from our stack
+                    region_codes = self._regions_stack.pop() if self._regions_stack else None
 
-                    # Build individual conditions for each region
-                    # The element_rule is: state.has("event_visited_" + region.code, player)
-                    # Which exports as: {"type": "item_check", "item": {"type": "binary_op", ...}}
-                    element_rule = rule.get('element_rule', {})
+                    if region_codes is not None:
+                        logger.debug(f"Resolving all_of iterator 'regions' to: {region_codes}")
+                        return self._build_event_visited_conditions(region_codes)
 
-                    # Create a condition for each region by substituting region.code
-                    conditions = []
-                    for region_code in region_codes:
-                        # Build the item name: "event_visited_" + region_code
-                        event_name = f"event_visited_{region_code}"
-                        condition = {
-                            "type": "item_check",
-                            "item": event_name
-                        }
-                        conditions.append(condition)
-
-                    # Convert to AND of all conditions
-                    if len(conditions) == 0:
-                        # Empty list, always true
-                        return {"type": "constant", "value": True}
-                    elif len(conditions) == 1:
-                        # Single condition
-                        return conditions[0]
-                    else:
-                        # Multiple conditions, AND them
-                        return {
-                            "type": "and",
-                            "conditions": conditions
-                        }
+            # Check if iterator is a constant list (already resolved)
+            elif iterator.get('type') == 'constant' and is_event_visited_pattern:
+                iterator_value = iterator.get('value', [])
+                if isinstance(iterator_value, list) and len(iterator_value) > 0:
+                    # The values are region names/codes - convert to codes if needed
+                    region_codes = self._normalize_region_codes(iterator_value)
+                    logger.debug(f"Resolving all_of with constant iterator to: {region_codes}")
+                    return self._build_event_visited_conditions(region_codes)
 
         # Couldn't resolve, return as-is
         return rule
+
+    def _is_event_visited_pattern(self, element_rule: Dict[str, Any]) -> bool:
+        """Check if element_rule matches the event_visited_ + region.code pattern."""
+        if element_rule.get('type') != 'item_check':
+            return False
+
+        item = element_rule.get('item', {})
+        if not isinstance(item, dict) or item.get('type') != 'binary_op':
+            return False
+
+        if item.get('op') != '+':
+            return False
+
+        left = item.get('left', {})
+        if left.get('type') == 'constant' and left.get('value') == 'event_visited_':
+            return True
+
+        return False
+
+    def _normalize_region_codes(self, values: List) -> List[str]:
+        """Convert region names/objects to region codes.
+
+        Region codes are lowercase identifiers like 'massan', 'helga_hut', etc.
+        Region names are human-readable like 'Massan', "Witch Helga's Hut", etc.
+        """
+        result = []
+        for val in values:
+            if hasattr(val, 'code'):
+                # It's a Region object
+                result.append(val.code)
+            elif isinstance(val, str):
+                # It's a string - could be name or code
+                # Convert to code format: lowercase, replace spaces with underscores,
+                # remove special characters
+                code = val.lower().replace(' ', '_').replace("'", "").replace('-', '_')
+                result.append(code)
+            else:
+                # Unknown type, try str conversion
+                result.append(str(val).lower())
+        return result
+
+    def _build_event_visited_conditions(self, region_codes: List[str]) -> Dict[str, Any]:
+        """Build AND conditions for event_visited_ checks."""
+        conditions = []
+        for region_code in region_codes:
+            # Build the item name: "event_visited_" + region_code
+            event_name = f"event_visited_{region_code}"
+            condition = {
+                "type": "item_check",
+                "item": event_name
+            }
+            conditions.append(condition)
+
+        # Convert to AND of all conditions
+        if len(conditions) == 0:
+            # Empty list, always true
+            return {"type": "constant", "value": True}
+        elif len(conditions) == 1:
+            # Single condition
+            return conditions[0]
+        else:
+            # Multiple conditions, AND them
+            return {
+                "type": "and",
+                "conditions": conditions
+            }
 
     def _simplify_region_event_binary_op(self, binary_op: Dict[str, Any]) -> Optional[str]:
         """Simplify binary_op pattern for region event names.

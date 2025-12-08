@@ -481,7 +481,7 @@ class KH1GameExportHandler(BaseGameExportHandler):
         """
         Detect the broken has_x_worlds conditional pattern.
 
-        The pattern is:
+        Pattern 1 (full conditional):
         {
             "type": "conditional",
             "test": {"type": "compare", "left": {"type": "constant", "value": X}, "op": ">=", "right": {"type": "constant", "value": 15}},
@@ -489,9 +489,21 @@ class KH1GameExportHandler(BaseGameExportHandler):
             "if_false": {"type": "constant", "value": 0.0}
         }
 
+        Pattern 2 (simplified to constant 0.0):
+        {"type": "constant", "value": 0.0}
+
         Where X is the difficulty value (typically 5) and 15 is LOGIC_MINIMAL.
         """
-        if not isinstance(rule, dict) or rule.get('type') != 'conditional':
+        if not isinstance(rule, dict):
+            return False
+
+        # Pattern 2: Simplified to just constant 0.0
+        # This happens when the analyzer simplifies the broken conditional to just its falsy result
+        if rule.get('type') == 'constant' and rule.get('value') == 0.0:
+            return True
+
+        # Pattern 1: Full conditional structure
+        if rule.get('type') != 'conditional':
             return False
 
         test = rule.get('test', {})
@@ -611,6 +623,226 @@ class KH1GameExportHandler(BaseGameExportHandler):
                     'args': []
                 }
 
+            # Check for has_parasite_cage pattern:
+            # AND with:
+            #   - constant 0.0 (broken worlds parameter from has_x_worlds)
+            #   - OR with High Jump / Progressive Glide
+            #   - item_check for Monstro
+            # This is the pattern for locations that require has_parasite_cage
+            has_constant_zero = any(
+                isinstance(c, dict) and c.get('type') == 'constant' and c.get('value') == 0.0
+                for c in conditions
+            )
+            has_monstro_check = any(
+                isinstance(c, dict) and c.get('type') == 'item_check' and c.get('item') == 'Monstro'
+                for c in conditions
+            )
+            has_glide_highjump_or = any(
+                isinstance(c, dict) and c.get('type') == 'or' and 'conditions' in c
+                for c in conditions
+            )
+
+            if has_constant_zero and has_monstro_check and has_glide_highjump_or:
+                # This is the has_parasite_cage pattern - replace constant 0.0 with has_x_worlds(3)
+                logger.info(f"Detected has_parasite_cage pattern in {location_name}, fixing worlds parameter")
+                new_conditions = []
+                for c in conditions:
+                    if isinstance(c, dict) and c.get('type') == 'constant' and c.get('value') == 0.0:
+                        # Replace with has_x_worlds(3)
+                        new_conditions.append({
+                            'type': 'helper',
+                            'name': 'has_x_worlds',
+                            'args': [
+                                {'type': 'constant', 'value': 3},
+                                {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                            ]
+                        })
+                    else:
+                        new_conditions.append(c)
+                return {
+                    'type': 'and',
+                    'conditions': new_conditions
+                }
+
+            # Check for has_emblems pattern:
+            # AND with:
+            #   - Inner AND with constant 0.0 and has_all for emblem pieces
+            #   - constant 0.0 (broken has_x_worlds)
+            #   - item_check for Hollow Bastion
+            has_hollow_bastion_check = any(
+                isinstance(c, dict) and c.get('type') == 'item_check' and c.get('item') == 'Hollow Bastion'
+                for c in conditions
+            )
+
+            def _has_emblem_piece_in_args(args):
+                """Check if args contain Emblem Piece strings."""
+                if not args:
+                    return False
+                for arg in args:
+                    if isinstance(arg, dict):
+                        value = arg.get('value', [])
+                        if isinstance(value, list):
+                            for item in value:
+                                if isinstance(item, str) and 'Emblem Piece' in item:
+                                    return True
+                    elif isinstance(arg, str) and 'Emblem Piece' in arg:
+                        return True
+                return False
+
+            has_inner_and_with_emblems = any(
+                isinstance(c, dict) and c.get('type') == 'and' and 'conditions' in c and
+                any(
+                    isinstance(sc, dict) and sc.get('type') == 'state_method' and
+                    sc.get('method') == 'has_all' and
+                    _has_emblem_piece_in_args(sc.get('args', []))
+                    for sc in c.get('conditions', [])
+                )
+                for c in conditions
+            )
+
+            if has_constant_zero and has_hollow_bastion_check and has_inner_and_with_emblems:
+                # This is the has_emblems pattern - replace entire AND with has_emblems helper
+                logger.info(f"Detected has_emblems pattern in {location_name}, converting to helper call")
+                return {
+                    'type': 'helper',
+                    'name': 'has_emblems',
+                    'args': [
+                        {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                    ]
+                }
+
+            # Check for simpler has_emblems pattern (no separate item_check):
+            # AND with just constant 0.0 and has_all for emblem pieces + Hollow Bastion
+            has_direct_emblems_has_all = any(
+                isinstance(c, dict) and c.get('type') == 'state_method' and
+                c.get('method') == 'has_all' and
+                _has_emblem_piece_in_args(c.get('args', []))
+                for c in conditions
+            )
+
+            if has_constant_zero and has_direct_emblems_has_all and len(conditions) == 2:
+                # This is the simpler has_emblems pattern
+                logger.info(f"Detected direct has_emblems pattern in {location_name}, converting to helper call")
+                return {
+                    'type': 'helper',
+                    'name': 'has_emblems',
+                    'args': [
+                        {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                    ]
+                }
+
+            # Check for has_emblems with redundant checks pattern:
+            # AND with has_emblems helper + constant 0.0 + item_check for Hollow Bastion
+            # This happens when the Python has: has_emblems(...) AND state.has("HB") AND has_x_worlds(6)
+            # The has_x_worlds(6) becomes constant 0.0, but has_emblems already includes these
+            has_emblems_helper = any(
+                isinstance(c, dict) and c.get('type') == 'helper' and c.get('name') == 'has_emblems'
+                for c in conditions
+            )
+
+            if has_emblems_helper and has_constant_zero and has_hollow_bastion_check:
+                # has_emblems already includes has_x_worlds(6) and Hollow Bastion check
+                # So we can simplify the entire AND to just has_emblems
+                logger.info(f"Simplifying redundant has_emblems pattern in {location_name}")
+                for c in conditions:
+                    if isinstance(c, dict) and c.get('type') == 'helper' and c.get('name') == 'has_emblems':
+                        return c
+
+            # Check for Final Ansem pattern:
+            # AND with has_defensive_tools helper + constant 0.0 (broken has_x_worlds(8)) + complex OR
+            has_defensive_tools_helper = any(
+                isinstance(c, dict) and c.get('type') == 'helper' and c.get('name') == 'has_defensive_tools'
+                for c in conditions
+            )
+            has_or_condition = any(
+                isinstance(c, dict) and c.get('type') == 'or'
+                for c in conditions
+            )
+
+            if has_defensive_tools_helper and has_constant_zero and has_or_condition:
+                # This is the Final Ansem pattern - fix the constant 0.0 to has_x_worlds(8)
+                logger.info(f"Detected Final Ansem pattern in {location_name}, fixing has_x_worlds(8)")
+                new_conditions = []
+                for c in conditions:
+                    if isinstance(c, dict) and c.get('type') == 'constant' and c.get('value') == 0.0:
+                        # Replace with has_x_worlds(8)
+                        new_conditions.append({
+                            'type': 'helper',
+                            'name': 'has_x_worlds',
+                            'args': [
+                                {'type': 'constant', 'value': 8},
+                                {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                            ]
+                        })
+                    else:
+                        new_conditions.append(c)
+                return {
+                    'type': 'and',
+                    'conditions': new_conditions
+                }
+
+            # Check for has_all_magic_lvx + constant 0.0 pattern:
+            # AND with has_all_magic_lvx helper + constant 0.0 (broken has_x_worlds(8))
+            # This happens with "Obtained All Arts Items" and similar locations
+            has_all_magic_lvx_helper = any(
+                isinstance(c, dict) and c.get('type') == 'helper' and c.get('name') == 'has_all_magic_lvx'
+                for c in conditions
+            )
+
+            if has_all_magic_lvx_helper and has_constant_zero:
+                # This is a has_all_magic_lvx + has_x_worlds pattern - fix the constant 0.0
+                # Infer the num_of_worlds from location name
+                num_worlds = self._infer_num_of_worlds_general(location_name)
+                logger.info(f"Detected has_all_magic_lvx pattern with broken has_x_worlds in {location_name}, fixing -> has_x_worlds({num_worlds})")
+                new_conditions = []
+                for c in conditions:
+                    if isinstance(c, dict) and c.get('type') == 'constant' and c.get('value') == 0.0:
+                        # Replace with has_x_worlds
+                        new_conditions.append({
+                            'type': 'helper',
+                            'name': 'has_x_worlds',
+                            'args': [
+                                {'type': 'constant', 'value': num_worlds},
+                                {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                            ]
+                        })
+                    else:
+                        new_conditions.append(c)
+                return {
+                    'type': 'and',
+                    'conditions': new_conditions
+                }
+
+        # Check for broken has_x_worlds OR pattern:
+        # OR with all falsy conditions (constant 0.0 or false)
+        # This happens when has_x_worlds or difficulty checks weren't properly analyzed
+        if rule.get('type') == 'or' and 'conditions' in rule:
+            conditions = rule['conditions']
+            all_falsy = all(
+                isinstance(c, dict) and (
+                    (c.get('type') == 'constant' and c.get('value') in [0.0, False, 0]) or
+                    (c.get('type') == 'and' and all(
+                        isinstance(sc, dict) and sc.get('type') == 'constant' and sc.get('value') in [0.0, False, 0]
+                        for sc in c.get('conditions', [])
+                    ))
+                )
+                for c in conditions
+            )
+
+            if all_falsy:
+                # Check if this location is known to require has_x_worlds
+                num_of_worlds = self._get_has_x_worlds_requirement(location_name)
+                if num_of_worlds is not None:
+                    logger.info(f"Fixing broken has_x_worlds OR in {location_name} -> has_x_worlds({num_of_worlds})")
+                    return {
+                        'type': 'helper',
+                        'name': 'has_x_worlds',
+                        'args': [
+                            {'type': 'constant', 'value': num_of_worlds},
+                            {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
+                        ]
+                    }
+
         # Fix "name" type references to functions like has_basic_tools
         # In Python, function references used without calling them are truthy,
         # so "or has_basic_tools" (without parentheses) is effectively "or True"
@@ -639,20 +871,10 @@ class KH1GameExportHandler(BaseGameExportHandler):
                     ]
                 }
 
-        # Fix any remaining broken has_x_worlds conditionals (not in special regions)
-        # These occur in various locations with rules like "has_x_worlds(6) or ..."
-        if self._is_broken_has_x_worlds_conditional(rule):
-            # Infer num_of_worlds from the location name context
-            num_of_worlds = self._infer_num_of_worlds_general(location_name)
-            logger.info(f"Fixing broken has_x_worlds conditional in {location_name} -> has_x_worlds({num_of_worlds})")
-            return {
-                'type': 'helper',
-                'name': 'has_x_worlds',
-                'args': [
-                    {'type': 'constant', 'value': num_of_worlds},
-                    {'type': 'constant', 'value': self.options_cache.get('keyblades_unlock_chests', False)}
-                ]
-            }
+        # Note: The catch-all for _is_broken_has_x_worlds_conditional was removed because
+        # it was too broad. It was matching {"type": "constant", "value": 0.0} which also
+        # appears when "difficulty > LOGIC_NORMAL" evaluates to False.
+        # World Map exits and Level locations have their own specific handlers.
 
         return rule
 
@@ -663,17 +885,37 @@ class KH1GameExportHandler(BaseGameExportHandler):
         This is used for locations that aren't World Map exits or Level locations.
         Based on the Python code, most locations use 3 or 6 worlds.
         """
+        # Locations that require 8 worlds
+        if any(keyword in location_name for keyword in [
+            'Final Ansem', 'All Arts Items'
+        ]):
+            return 8
         # Locations that typically require 6 worlds
         if any(keyword in location_name for keyword in [
             'Hollow Bastion', 'End of the World', 'Defeat Heartless 3',
             'Secret Waterway Navi', 'Kairi Secret Waterway Oathkeeper'
         ]):
             return 6
-        # Locations that typically require 8 worlds
-        if 'Final Ansem' in location_name or 'End of the World' in location_name:
-            return 8
         # Default to 3 for most other locations
         return 3
+
+    def _get_has_x_worlds_requirement(self, location_name: str) -> int:
+        """
+        Get the has_x_worlds requirement for a location if known.
+
+        Returns None if the location doesn't have a known has_x_worlds requirement,
+        or the number of worlds required if it does.
+        """
+        # Locations that specifically require has_x_worlds(6)
+        # From worlds/kh1/Rules.py
+        if 'Defeat Heartless 3' in location_name:
+            return 6
+
+        # Locations that require has_x_worlds(3)
+        # These are typically locations that use has_parasite_cage or similar
+        # Already handled by has_parasite_cage pattern detection
+
+        return None
 
     def _is_world_map_exit(self, location_name: str) -> bool:
         """Check if this is a World Map exit to a world region."""

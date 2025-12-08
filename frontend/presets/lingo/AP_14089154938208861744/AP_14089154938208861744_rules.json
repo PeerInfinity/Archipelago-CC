@@ -288,12 +288,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Starting Room - HI",
-                      444400,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -326,12 +322,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Starting Room - HIDDEN",
-                      444401,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -484,12 +476,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Hidden Room - DEAD END",
-                      444406,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -522,12 +510,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Hidden Room - OPEN",
-                      444407,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -609,12 +593,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Seeker - Achievement",
-                      444409,
-                      "rooms={'Hidden Room'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -723,12 +703,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Second Room - Good Luck",
-                      445203,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -981,12 +957,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Hub Room - ORDER",
-                      444432,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -1021,12 +993,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Hub Room - SLAUGHTER",
-                      444433,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -1061,12 +1029,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Hub Room - TRACE",
-                      444436,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -1099,12 +1063,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Hub Room - RAT",
-                      444437,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -1139,12 +1099,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Hub Room - OPEN",
-                      444438,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -1177,12 +1133,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Hub Room - LOST",
-                      444440,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -1306,12 +1258,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Pilgrim Antechamber - PILGRIM",
-                      444447,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -1346,12 +1294,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Pilgrim Room - HOT CRUST",
-                      445205,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -1414,12 +1358,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Pilgrim Room - THIS",
-                      444449,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -1695,12 +1635,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Crossroads - DECAY",
-                      444462,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -1735,12 +1671,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Crossroads - NOPE",
-                      444463,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -1775,12 +1707,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Crossroads - WE ROT",
-                      444465,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -1815,12 +1743,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Crossroads - BEND HI",
-                      444469,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -1855,12 +1779,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Crossroads - THE EYES",
-                      444470,
-                      "rooms={'Crossroads'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -1897,12 +1817,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Crossroads - TURN/RUNT",
-                      445206,
-                      "rooms={'Orange Tower Fourth Floor'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -1939,12 +1855,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Crossroads - WORDS, SWORD",
-                      445207,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -2007,12 +1919,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Crossroads - LOST Pair",
-                      445208,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -2096,12 +2004,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Amen Name Area - AMEN, NAME",
-                      445209,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -2275,12 +2179,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Tenacious - Achievement",
-                      444491,
-                      "rooms={'Outside The Agreeable', 'Hub Room', 'Crossroads', 'Dread Hallway'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -2321,12 +2221,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Tenacious - Palindromes",
-                      445210,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -2361,12 +2257,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Tenacious - White Palindromes",
-                      445211,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -2435,12 +2327,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Symmetry Room - NEAR, FAR",
-                      445204,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -2524,12 +2412,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Symmetry Room - WARTS, STRAW",
-                      445212,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -2613,12 +2497,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Symmetry Room - LEAF, FEEL",
-                      445213,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -2797,12 +2677,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Outside The Agreeable - MASSACRED",
-                      444496,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -2837,12 +2713,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Outside The Agreeable - BLACK",
-                      444497,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -2877,12 +2749,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Outside The Agreeable - CLOSE",
-                      444498,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -2917,12 +2785,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Outside The Agreeable - RIGHT",
-                      444501,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -3001,12 +2865,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Outside The Agreeable - Lookout Panels",
-                      445271,
-                      "rooms={'Elements Area', 'Orange Tower Fifth Floor', 'Suits Area', 'Outside The Bold'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -3098,12 +2958,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Dread Hallway - DREAD",
-                      444516,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -3187,12 +3043,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Agreeable - Achievement",
-                      444517,
-                      "rooms={'Outside The Agreeable'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -3229,12 +3081,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Agreeable - BYE",
-                      444518,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -3418,12 +3266,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Hedge Maze - DOWN",
-                      444530,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -3458,12 +3302,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Hedge Maze - Hide and Seek",
-                      445215,
-                      "rooms={'Outside The Agreeable'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -3523,12 +3363,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Perceptive - Achievement",
-                      444546,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -3563,12 +3399,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Perceptive - GAZE",
-                      444547,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -3650,12 +3482,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Fearless - First Floor Puzzles",
-                      445216,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -3696,12 +3524,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Fearless - Second Floor Puzzles",
-                      445217,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -3742,12 +3566,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Fearless - Achievement",
-                      444560,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -3847,12 +3667,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Observant - Achievement",
-                      444565,
-                      "rooms={'The Observant'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -3889,12 +3705,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Observant - SIX",
-                      444569,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -3929,12 +3741,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Observant - FOUR (1), FOUR (2)",
-                      445218,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -4026,12 +3834,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Incomparable - Achievement",
-                      444585,
-                      "rooms={'Elements Area', 'Eight Room', 'Courtyard'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -4070,12 +3874,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Giant Sevens",
-                      445219,
-                      "rooms={'Elements Area', 'Courtyard'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -4287,12 +4087,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Orange Tower First Floor - SECRET",
-                      444602,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -4325,12 +4121,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Orange Tower First Floor - DADS + ALE",
-                      444603,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -4365,12 +4157,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Orange Tower First Floor - Salt Pepper Door",
-                      445220,
-                      "rooms={'Directional Gallery'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -4599,12 +4387,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Orange Tower Third Floor - DEER + WREN",
-                      444606,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -4639,12 +4423,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Color Barriers - RED and YELLOW",
-                      445221,
-                      "rooms={'Directional Gallery', 'Color Hunt'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -4824,12 +4604,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Orange Tower Fourth Floor - LEARNS + UNSEW",
-                      444609,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -4864,12 +4640,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Orange Tower Fourth Floor - HOT CRUSTS",
-                      444610,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -4904,12 +4676,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Orange Tower Fourth Floor - IRK HORN",
-                      444611,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -5099,12 +4867,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Orange Tower Fifth Floor - DRAWL + RUNS",
-                      444615,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -5139,12 +4903,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Orange Tower Fifth Floor - SIZE (Small), SIZE (Big)",
-                      445222,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -5324,12 +5084,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The End (Solved)",
-                      null,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -5827,12 +5583,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Courtyard - FIRST, SECOND, THIRD, FOURTH",
-                      445224,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -5901,12 +5653,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Colorful - White",
-                      445225,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -5988,12 +5736,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Colorful - Black",
-                      445226,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -6077,12 +5821,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Colorful - Red",
-                      445227,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -6166,12 +5906,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Colorful - Yellow",
-                      445228,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -6255,12 +5991,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Colorful - Blue",
-                      445229,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -6344,12 +6076,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Colorful - Purple",
-                      445230,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -6433,12 +6161,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Colorful - Orange",
-                      445231,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -6522,12 +6246,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Colorful - Green",
-                      445232,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -6611,12 +6331,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Colorful - Brown",
-                      445233,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -6700,12 +6416,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Colorful - Gray",
-                      445234,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -6776,12 +6488,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Colorful - Achievement",
-                      444652,
-                      "rooms={'The Colorful (Yellow"
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -6905,12 +6613,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Welcome Back Area - WELCOME BACK",
-                      444653,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -6943,12 +6647,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Welcome Back Area - CLOCKWISE",
-                      444655,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -7027,12 +6727,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Owl Hallway - STRAYS",
-                      444656,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -7067,12 +6763,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Owl Hallway - READS + RUST",
-                      444657,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -7285,12 +6977,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Outside The Initiated - UNCOVER",
-                      444664,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -7325,12 +7013,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Outside The Initiated - OXEN",
-                      444665,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -7365,12 +7049,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Color Barriers - BLUE and YELLOW",
-                      445235,
-                      "rooms={'Directional Gallery', 'Color Hunt'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -7406,12 +7086,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Color Barriers - RED and BLUE",
-                      445236,
-                      "rooms={'Orange Tower Third Floor', 'Color Hunt'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -7447,12 +7123,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Color Barriers - GREEN, ORANGE and PURPLE",
-                      445237,
-                      "rooms={'Directional Gallery', 'Courtyard', 'Orange Tower Third Floor', 'Outside The Agreeable', 'Color Hunt', 'Outside The Initiated'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -7498,12 +7170,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Initiated - Achievement",
-                      444676,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -7561,12 +7229,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Optimistic - Achievement",
-                      444667,
-                      "rooms={'Yellow Backside Area', 'Directional Gallery', 'The Bearer', 'The Observant'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -7656,12 +7320,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Traveled - Achievement",
-                      444693,
-                      "rooms={'Hub Room'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -7696,12 +7356,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Traveled - HELLO",
-                      444698,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -7934,12 +7590,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Outside The Bold - UNOPEN",
-                      444711,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -7974,12 +7626,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Outside The Bold - BEGIN",
-                      444712,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -8018,12 +7666,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Bold - Achievement",
-                      444725,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -8173,12 +7817,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Outside The Undeterred - ART + ART",
-                      444743,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -8213,12 +7853,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Outside The Undeterred - PEN",
-                      444744,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -8253,12 +7889,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Outside The Undeterred - RAINY",
-                      444750,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -8297,12 +7929,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Outside The Undeterred - ZERO",
-                      444751,
-                      "rooms={'Orange Tower Fifth Floor', 'Outside The Undeterred', 'Directional Gallery', 'Crossroads', 'Outside The Bold', 'Rhyme Room (Cross"
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -8360,12 +7988,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Outside The Undeterred - ONE",
-                      444752,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -8398,12 +8022,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Twos",
-                      445238,
-                      "rooms={'Outside The Undeterred'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -8438,12 +8058,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Threes",
-                      445239,
-                      "rooms={'Outside The Undeterred'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -8478,12 +8094,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Fours",
-                      445240,
-                      "rooms={'Outside The Undeterred', 'Dead End Area', 'Hub Room', 'The Traveled'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -8527,12 +8139,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Undeterred - Achievement",
-                      444759,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -8658,12 +8266,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Fives",
-                      445241,
-                      "rooms={'Outside The Undeterred', 'Directional Gallery', 'Outside The Agreeable', 'Dead End Area', 'Hub Room', 'The Traveled'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -8706,12 +8310,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Sixes",
-                      445242,
-                      "rooms={'Outside The Undeterred', 'Directional Gallery', 'Outside The Bold', 'The Bearer (South"
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -8758,12 +8358,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Sevens",
-                      445243,
-                      "rooms={'Outside The Undeterred', 'Directional Gallery', 'Outside The Bold', 'The Bearer (South"
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -8812,12 +8408,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Eights",
-                      445244,
-                      "rooms={'Outside The Undeterred', 'Directional Gallery', 'Crossroads', 'Outside The Bold', 'The Eyes They See', 'The Bearer (South"
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -8870,12 +8462,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Nines",
-                      445245,
-                      "rooms={'Orange Tower Fifth Floor', 'Outside The Undeterred', 'Directional Gallery', 'Crossroads', 'Outside The Bold', 'Rhyme Room (Cross"
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -9072,12 +8660,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Directional Gallery - 834283054",
-                      444792,
-                      "rooms={'Outside The Undeterred', 'Directional Gallery', 'Outside The Agreeable', 'Dead End Area', 'Number Hunt', 'Hub Room', 'The Traveled'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -9122,12 +8706,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Directional Gallery - PARANOID",
-                      444793,
-                      "rooms={'Outside The Undeterred', 'Directional Gallery', 'Outside The Agreeable', 'Dead End Area', 'Number Hunt', 'Hub Room', 'The Traveled'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -9171,12 +8751,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Directional Gallery - WADED + WEE",
-                      444795,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -9211,12 +8787,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Directional Gallery - TURN, LEARN",
-                      445246,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -9309,12 +8881,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Color Hunt - EXIT",
-                      444806,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -9347,12 +8915,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Color Hunt - RED",
-                      444808,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -9385,12 +8949,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Color Hunt - BLUE",
-                      444809,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -9423,12 +8983,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Color Hunt - YELLOW",
-                      444810,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -9461,12 +9017,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Color Hunt - GREEN",
-                      444811,
-                      "rooms={'Directional Gallery', 'Color Hunt', 'Outside The Initiated'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -9503,12 +9055,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Color Hunt - PURPLE",
-                      444812,
-                      "rooms={'Orange Tower Third Floor', 'Color Hunt', 'Outside The Initiated'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -9545,12 +9093,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Color Hunt - ORANGE",
-                      444813,
-                      "rooms={'Orange Tower Third Floor', 'Directional Gallery', 'Color Hunt'}, doors=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -9615,12 +9159,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Champion's Rest - YOU",
-                      444814,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -9767,12 +9307,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Bearer - Achievement",
-                      444819,
-                      "rooms={'Cross Tower (West"
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -9824,12 +9360,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Bearer - MIDDLE",
-                      444820,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -9862,12 +9394,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Bearer - FARTHER",
-                      444821,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -10196,12 +9724,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Bearer - SHORTCUT",
-                      445247,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -11395,12 +10919,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Steady - Achievement",
-                      444859,
-                      "rooms={'The Steady (Carnation"
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -11648,12 +11168,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Knight Night Room - TRUSTED",
-                      445248,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -11846,12 +11362,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Artistic - Achievement",
-                      444885,
-                      "rooms={'The Artistic (Lattice"
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -11893,12 +11405,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Artistic - Smiley and Panda",
-                      445249,
-                      "rooms={'The Artistic (Panda"
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -11994,12 +11502,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Artistic - Panda and Lattice",
-                      445250,
-                      "rooms={'The Artistic (Lattice"
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -12116,12 +11620,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Artistic - Lattice and Apple",
-                      445251,
-                      "rooms={'The Artistic (Apple"
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -12217,12 +11717,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Artistic - Apple and Smiley",
-                      445252,
-                      "rooms={'The Artistic (Smiley"
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -12272,12 +11768,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Discerning - Achievement",
-                      444920,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -12356,12 +11848,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Eyes They See - NEAR",
-                      444937,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -12478,12 +11966,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Outside The Wondrous - SHRINK",
-                      444940,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -12688,12 +12172,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Wondrous - Achievement",
-                      444947,
-                      "rooms={'The Wondrous (Chandelier"
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -12815,12 +12295,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Hallway Room (1) - OUT",
-                      444505,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -12853,12 +12329,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Hallway Room - First Room",
-                      445214,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -12929,12 +12401,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Hallway Room - Second Room",
-                      445253,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -13005,12 +12473,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Hallway Room - Third Room",
-                      445254,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -13081,12 +12545,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Hallway Room - Fourth Room",
-                      445255,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -13165,12 +12625,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Elements Area - UNDISTRACTED",
-                      444961,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -13260,12 +12716,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Outside The Wanderer - WANDERLUST",
-                      444966,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -13306,12 +12758,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Wanderer - Achievement",
-                      444967,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -13469,12 +12917,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Art Gallery - ORDER",
-                      444981,
-                      "rooms={'Art Gallery (Fourth Floor"
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -13530,12 +12974,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Art Gallery - First Floor Puzzles",
-                      445256,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -13588,12 +13028,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Art Gallery - Second Floor Puzzles",
-                      445257,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -13646,12 +13082,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Art Gallery - Third Floor Puzzles",
-                      445258,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -13701,12 +13133,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Art Gallery - Fourth Floor Puzzles",
-                      445259,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -13814,12 +13242,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Rhyme Room (Smiley) - Puzzles Toward Target",
-                      445260,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -13911,12 +13335,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Rhyme Room (Cross) - Exit Puzzles",
-                      445261,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -14008,12 +13428,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Rhyme Room - Circle/Smiley Wall",
-                      445262,
-                      "rooms={'Rhyme Room (Smiley"
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -14142,12 +13558,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Rhyme Room - Circle/Looped Square Wall",
-                      445263,
-                      "rooms={'Rhyme Room (Circle"
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -14185,12 +13597,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Rhyme Room - Cross/Looped Square Wall",
-                      445264,
-                      "rooms={'Rhyme Room (Cross"
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -14228,12 +13636,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Rhyme Room - Target/Looped Square Wall",
-                      445265,
-                      "rooms={'Rhyme Room (Target"
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -14327,12 +13731,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Rhyme Room (Target) - Puzzles Toward Cross",
-                      445266,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -14403,12 +13803,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Room Room - BASE",
-                      445076,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -14538,12 +13934,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Outside The Wise - KITTEN, CAT",
-                      445267,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -14585,12 +13977,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "The Wise - Achievement",
-                      445086,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -14755,12 +14143,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Challenge Room - WELCOME",
-                      445176,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
@@ -14793,12 +14177,8 @@
                 {
                   "type": "attribute",
                   "object": {
-                    "type": "constant",
-                    "value": [
-                      "Challenge Room - Achievement",
-                      445178,
-                      "rooms=set("
-                    ]
+                    "type": "name",
+                    "name": "location"
                   },
                   "attr": "access"
                 }
