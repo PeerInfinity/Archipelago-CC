@@ -2779,27 +2779,8 @@
             "name": "Hideout: BMX garage skateboard",
             "id": 2308008,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": 1
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "group_check",
-                "group": "bmx"
-              }
+              "type": "group_check",
+              "group": "bmx"
             },
             "item": {
               "name": "Skateboard (Terrence)",
@@ -2944,27 +2925,8 @@
             "name": "Versum Hill: BMX gate outfit",
             "id": 2308031,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": 1
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "group_check",
-                "group": "bmx"
-              }
+              "type": "group_check",
+              "group": "bmx"
             },
             "item": {
               "name": "24 REP",
@@ -3221,27 +3183,8 @@
             "name": "Versum Hill: Glass floor skates",
             "id": 2308032,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": 3
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "group_check",
-                "group": "skates"
-              }
+              "type": "group_check",
+              "group": "skates"
             },
             "item": {
               "name": "8 REP",
@@ -3994,27 +3937,8 @@
             "name": "Brink Terminal: BMX gate graffiti",
             "id": 2308063,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": 1
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "group_check",
-                "group": "bmx"
-              }
+              "type": "group_check",
+              "group": "bmx"
             },
             "item": {
               "name": "Skateboard (Devon)",
@@ -4374,27 +4298,8 @@
             "name": "Brink Terminal: Rooftop glass CD",
             "id": 2308073,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": 3
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "group_check",
-                "group": "skates"
-              }
+              "type": "group_check",
+              "group": "skates"
             },
             "item": {
               "name": "8 REP",
@@ -4557,27 +4462,8 @@
             "name": "Millennium Mall: Glass cylinder CD",
             "id": 2308086,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": 3
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "group_check",
-                "group": "skates"
-              }
+              "type": "group_check",
+              "group": "skates"
             },
             "item": {
               "name": "Vinyl",
@@ -4815,27 +4701,8 @@
             "name": "Millennium Mall: Atrium BMX gate BMX",
             "id": 2308097,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": 1
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "group_check",
-                "group": "bmx"
-              }
+              "type": "group_check",
+              "group": "bmx"
             },
             "item": {
               "name": "Tryce",
@@ -5132,27 +4999,8 @@
             "name": "Pyramid Island: BMX gate BMX",
             "id": 2308110,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": 1
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "group_check",
-                "group": "bmx"
-              }
+              "type": "group_check",
+              "group": "bmx"
             },
             "item": {
               "name": "Outfit (Rise - Autumn)",
@@ -5423,27 +5271,8 @@
             "name": "Pyramid Island: Maze outfit",
             "id": 2308128,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": 2
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "group_check",
-                "group": "skateboard"
-              }
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Graffiti (XL - Web Spitter)",
@@ -5596,27 +5425,8 @@
             "name": "Pyramid Island: Shortcut glass CD",
             "id": 2308121,
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "constant",
-                  "value": 2
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": 3
-                }
-              },
-              "if_true": {
-                "type": "constant",
-                "value": true
-              },
-              "if_false": {
-                "type": "group_check",
-                "group": "skates"
-              }
+              "type": "group_check",
+              "group": "skates"
             },
             "item": {
               "name": "Music (Trinitron)",
@@ -8344,6 +8154,9 @@
       "Vinyl": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {
       "rep": {
@@ -8365,7 +8178,34 @@
     "1": {
       "game": "Bomb Rush Cyberfunk",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "damage_multiplier": 1,
+        "death_link": 0,
+        "dont_save_photos": 0,
+        "exclude_locations": [],
+        "extra_rep_required": 0,
+        "item_links": [],
+        "limited_graffiti": 0,
+        "local_items": [],
+        "logic": 0,
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "score_difficulty": 0,
+        "skip_dreams": 0,
+        "skip_intro": 1,
+        "skip_polo_photos": 0,
+        "skip_statue_hands": 0,
+        "small_graffiti_uses": 0,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "starting_movestyle": 2,
+        "total_rep": 1400
+      }
     }
   },
   "game_info": {

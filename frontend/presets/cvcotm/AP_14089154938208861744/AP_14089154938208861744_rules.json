@@ -521,16 +521,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "compare",
-                  "left": {
-                    "type": "constant",
-                    "value": 0
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": 1
-                  }
+                  "type": "constant",
+                  "value": false
                 },
                 {
                   "type": "item_check",
@@ -1304,16 +1296,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "compare",
-                  "left": {
-                    "type": "constant",
-                    "value": 0
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": 1
-                  }
+                  "type": "constant",
+                  "value": false
                 },
                 {
                   "type": "item_check",
@@ -1665,16 +1649,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "compare",
-                  "left": {
-                    "type": "constant",
-                    "value": 0
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": 1
-                  }
+                  "type": "constant",
+                  "value": false
                 },
                 {
                   "type": "item_check",
@@ -3252,6 +3228,9 @@
       "Venus Card": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -3263,6 +3242,44 @@
       "game": "Castlevania - Circle of the Moon",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "always_allow_speed_dash": 0,
+        "auto_run": 0,
+        "available_last_keys": 1,
+        "battle_arena_music": 0,
+        "buff_ranged_familiars": 0,
+        "buff_shooter_strength": 0,
+        "buff_sub_weapons": 0,
+        "completion_goal": 0,
+        "countdown": 0,
+        "death_link": 0,
+        "disable_battle_arena_mp_drain": 0,
+        "dss_patch": 0,
+        "early_escape_item": 1,
+        "exclude_locations": [],
+        "halve_dss_cards_placed": 0,
+        "ignore_cleansing": 0,
+        "iron_maiden_behavior": 0,
+        "item_drop_randomization": 1,
+        "item_links": [],
+        "local_items": [],
+        "nerf_roc_wing": 0,
+        "non_local_items": [],
+        "plando_items": [],
+        "pluto_griffin_air_speed": 0,
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "required_last_keys": 1,
+        "required_skirmishes": 0,
+        "skip_dialogues": 0,
+        "skip_tutorials": 0,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_inventory_from_pool": {},
+        "start_location_hints": [],
+        "sub_weapon_shuffle": 0
+      },
       "nerf_roc_wing": 0,
       "ignore_cleansing": 0,
       "iron_maiden_behavior": 0,
@@ -3275,6 +3292,29 @@
       "name": "Castlevania - Circle of the Moon",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "stone",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Archipelago Castlevania: Circle of the Moon randomizer on your computer and connecting it to a multiworld.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Liquid Cat"
+          ]
+        }
+      ],
+      "world_description": "Castlevania: Circle of the Moon is a launch title for the Game Boy Advance and the first of three Castlevania games\nreleased for the handheld in the \"Metroidvania\" format. As Nathan Graves, wielding the Hunter Whip and utilizing the\nDual Set-Up System for new possibilities, you must battle your way through Camilla's castle and rescue your master\nfrom a demonic ritual to restore the Count's power...",
+      "slot_data": {
+        "death_link": 0,
+        "iron_maiden_behavior": 0,
+        "ignore_cleansing": 0,
+        "skip_tutorials": 0,
+        "required_last_keys": 1,
+        "completion_goal": 0,
+        "nerf_roc_wing": 0
       }
     }
   },

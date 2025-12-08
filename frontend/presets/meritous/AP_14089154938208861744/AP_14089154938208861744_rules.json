@@ -2240,6 +2240,9 @@
       "Victory": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -2250,7 +2253,25 @@
     "1": {
       "game": "Meritous",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "death_link": 0,
+        "exclude_locations": [],
+        "goal": 0,
+        "include_evolution_traps": 0,
+        "include_psi_keys": 1,
+        "item_cache_cost": 0,
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      }
     }
   },
   "game_info": {
@@ -2258,6 +2279,29 @@
       "name": "Meritous",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "ice",
+      "web_tutorials": [
+        {
+          "name": "Meritous Setup Guide",
+          "description": "A guide to setting up the Archipelago Meritous software on your computer.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "KewlioMZX"
+          ]
+        }
+      ],
+      "world_description": "Meritous Gaiden is a procedurally generated bullet-hell dungeon crawl game.\nFive generations after the Orcus Dome incident, strange experiments conducted in a new\nstructure on the moon are tearing at the very fabric of reality...",
+      "slot_data": {
+        "goal": 0,
+        "cost_scale": [
+          80,
+          5,
+          4
+        ],
+        "death_link": 0
       }
     }
   },

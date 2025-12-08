@@ -7478,6 +7478,9 @@
       "progressive-zipline": 3
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {
       "progressive-salve": {
@@ -7839,7 +7842,31 @@
     "1": {
       "game": "Raft",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "big_island_early_crafting": 0,
+        "death_link": 0,
+        "duplicate_items": 2,
+        "exclude_locations": [],
+        "expensive_research": 0,
+        "filler_item_types": 0,
+        "island_frequency_locations": 2,
+        "island_generation_distance": 8,
+        "item_links": [],
+        "local_items": [],
+        "maximum_resource_pack_amount": 5,
+        "minimum_resource_pack_amount": 1,
+        "non_local_items": [],
+        "paddleboard_mode": 0,
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "progressive_items": 1,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      }
     }
   },
   "game_info": {
@@ -7847,6 +7874,26 @@
       "name": "Raft",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "ocean",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up Raft integration for Archipelago multiworld games.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "SunnyBat",
+            "Awareqwx"
+          ]
+        }
+      ],
+      "world_description": "Raft is a flooded world exploration game. You're stranded on a small raft in the middle of the\nocean, and you must survive on trash floating by you on the top of the water and around/on any\nislands that you come across.",
+      "slot_data": {
+        "IslandGenerationDistance": 8,
+        "ExpensiveResearch": false,
+        "DeathLink": false
       }
     }
   },

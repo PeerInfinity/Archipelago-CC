@@ -9827,6 +9827,9 @@
       "Zuuna's Perogi": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -9837,7 +9840,36 @@
     "1": {
       "game": "Aquaria",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "aquarian_translation": 0,
+        "big_bosses_to_beat": 0,
+        "bind_song_needed_to_get_under_rock_bulb": 1,
+        "blind_goal": 0,
+        "dish_randomizer": 0,
+        "early_bind_song": 1,
+        "early_energy_form": 1,
+        "exclude_locations": [],
+        "ingredient_randomizer": 0,
+        "item_links": [],
+        "light_needed_to_get_to_dark_places": 1,
+        "local_items": [],
+        "mini_bosses_to_beat": 0,
+        "no_progression_hard_or_hidden_locations": 0,
+        "non_local_items": [],
+        "objective": 0,
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "skip_first_vision": 0,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_inventory_from_pool": {},
+        "start_location_hints": [],
+        "turtle_randomizer": 2,
+        "unconfine_home_water": 0
+      }
     }
   },
   "game_info": {
@@ -9845,6 +9877,123 @@
       "name": "Aquaria",
       "rule_format": {
         "version": "1.0"
+      },
+      "base_id": 698000,
+      "web_theme": "ocean",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up Aquaria for MultiWorld.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Tioui"
+          ]
+        },
+        {
+          "name": "Guide de configuration Multimonde",
+          "description": "Un guide pour configurer Aquaria MultiWorld",
+          "language": "Fran\u00e7ais",
+          "file_name": "setup_fr.md",
+          "link": "setup/fr",
+          "authors": [
+            "Tioui"
+          ]
+        }
+      ],
+      "world_description": "Aquaria is a side-scrolling action-adventure game. It follows Naija, an\naquatic humanoid woman, as she explores the underwater world of Aquaria.\nAlong her journey, she learns about the history of the world she inhabits\nas well as her own past. The gameplay focuses on a combination of swimming,\nsinging, and combat, through which Naija can interact with the world. Her\nsongs can move items, affect plants and animals, and change her physical\nappearance into other forms that have different abilities, like firing\nprojectiles at hostile creatures, or passing through barriers inaccessible\nto her in her natural form.\nFrom: https://en.wikipedia.org/wiki/Aquaria_(video_game)",
+      "slot_data": {
+        "ingredientReplacement": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75
+        ],
+        "aquarian_translate": false,
+        "blind_goal": false,
+        "secret_needed": false,
+        "minibosses_to_kill": 0,
+        "bigbosses_to_kill": 0,
+        "skip_first_vision": false,
+        "unconfine_home_water_energy_door": false,
+        "unconfine_home_water_transturtle": false,
+        "bind_song_needed_to_get_under_rock_bulb": true,
+        "no_progression_hard_or_hidden_locations": false,
+        "light_needed_to_get_to_dark_places": true,
+        "turtle_randomizer": 2
       }
     }
   },

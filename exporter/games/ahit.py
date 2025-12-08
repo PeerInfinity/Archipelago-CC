@@ -8,6 +8,10 @@ logger = logging.getLogger(__name__)
 
 class AHitGameExportHandler(BaseGameExportHandler):
     GAME_NAME = 'A Hat in Time'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
     """A Hat in Time specific rule expander with game-specific helper functions."""
 
     def __init__(self):

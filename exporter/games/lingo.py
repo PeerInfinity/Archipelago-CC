@@ -10,6 +10,10 @@ logger = logging.getLogger(__name__)
 
 class LingoGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'Lingo'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
     """Export handler for Lingo that handles AccessRequirements string sorting, door variable resolution,
     and exporting door-related data structures for rule evaluation."""
 

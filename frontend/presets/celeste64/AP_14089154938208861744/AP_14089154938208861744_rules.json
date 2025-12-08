@@ -1851,6 +1851,9 @@
       "Traffic Blocks": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -1867,6 +1870,36 @@
       "game": "Celeste 64",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "badeline_chaser_frequency": 0,
+        "badeline_chaser_source": 0,
+        "badeline_chaser_speed": 3,
+        "carsanity": 0,
+        "checkpointsanity": 0,
+        "death_link": 0,
+        "death_link_amnesty": 10,
+        "exclude_locations": [],
+        "friendsanity": 0,
+        "item_links": [],
+        "local_items": [],
+        "logic_difficulty": 0,
+        "madeline_feather_hair_color": 15914064,
+        "madeline_no_dash_hair_color": 7258367,
+        "madeline_one_dash_hair_color": 14363648,
+        "madeline_two_dash_hair_color": 16421375,
+        "move_shuffle": 0,
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "signsanity": 0,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "strawberries_required_percentage": 80,
+        "total_strawberries": 20
+      },
       "location_standard_moves_logic": {
         "First Strawberry": [
           [
@@ -2705,6 +2738,37 @@
       "name": "Celeste 64",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "ice",
+      "web_tutorials": [
+        {
+          "name": "Start Guide",
+          "description": "A guide to playing Celeste 64 in Archipelago.",
+          "language": "English",
+          "file_name": "guide_en.md",
+          "link": "guide/en",
+          "authors": [
+            "PoryGone"
+          ]
+        }
+      ],
+      "world_description": "Relive the magic of Celeste Mountain alongside Madeline in this small, heartfelt 3D platformer.\nCreated in a week(ish) by the Celeste team to celebrate the game\u2019s sixth anniversary \ud83c\udf53\u2728",
+      "slot_data": {
+        "death_link": 0,
+        "death_link_amnesty": 10,
+        "strawberries_required": 16,
+        "move_shuffle": 0,
+        "friendsanity": 0,
+        "signsanity": 0,
+        "carsanity": 0,
+        "checkpointsanity": 0,
+        "madeline_one_dash_hair_color": 14363648,
+        "madeline_two_dash_hair_color": 16421375,
+        "madeline_no_dash_hair_color": 7258367,
+        "madeline_feather_hair_color": 15914064,
+        "badeline_chaser_source": 0,
+        "badeline_chaser_frequency": 0,
+        "badeline_chaser_speed": 3
       }
     }
   },

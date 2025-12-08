@@ -9,6 +9,10 @@ logger = logging.getLogger(__name__)
 
 class FFMQGameExportHandler(BaseGameExportHandler):
     GAME_NAME = 'Final Fantasy Mystic Quest'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
     """Export handler for Final Fantasy Mystic Quest"""
     
     def __init__(self, world):

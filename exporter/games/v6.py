@@ -10,6 +10,10 @@ class V6GameExportHandler(GenericGameExportHandler):
     """Export handler for VVVVVV that exports door_cost and area_cost_map."""
 
     GAME_NAME = 'VVVVVV'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Extracts VVVVVV-specific settings including door_cost and area_cost_map."""

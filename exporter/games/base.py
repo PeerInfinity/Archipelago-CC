@@ -34,9 +34,10 @@ class BaseGameExportHandler:
     ITEM_NAME_MODULES: List[str] = []
 
     # Whether to automatically export discovered helpers as definitions
-    # When False, only whitelisted helpers are exported
-    # When True (default), discovered helpers are exported (minus blacklist)
-    AUTO_EXPORT_DISCOVERED_HELPERS: bool = True
+    # When False (default), only whitelisted helpers are exported
+    # When True, discovered helpers are exported (minus blacklist)
+    # Games must explicitly set this to True to enable automatic helper export
+    AUTO_EXPORT_DISCOVERED_HELPERS: bool = False
 
     # Set of helper function names to export as definitions (manual whitelist)
     # These helpers are always exported regardless of AUTO_EXPORT_DISCOVERED_HELPERS
@@ -55,7 +56,7 @@ class BaseGameExportHandler:
     # Enable automatic helper preservation based on size
     # When enabled, helpers with more nodes than HELPER_INLINE_THRESHOLD will be
     # preserved as helper calls instead of inlined, reducing rules.json size
-    AUTO_PRESERVE_LARGE_HELPERS: bool = True
+    AUTO_PRESERVE_LARGE_HELPERS: bool = False  # Disabled by default
 
     # Threshold for automatic helper preservation (only used if AUTO_PRESERVE_LARGE_HELPERS is True)
     # Helpers with more than this many nodes will be preserved as helper calls
@@ -838,8 +839,7 @@ class BaseGameExportHandler:
         else:
             logger.warning(f"Helper discovery reached max iterations ({max_iterations}), may have circular dependencies")
 
-        # Sort alphabetically for consistent output
-        return dict(sorted(helper_definitions.items()))
+        return helper_definitions
 
     def _clean_helper_rule(self, rule: Dict[str, Any], world) -> Dict[str, Any]:
         """

@@ -19657,6 +19657,9 @@
       "__max_progressive_bottle": 4
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {
       "Progressive Sword": {

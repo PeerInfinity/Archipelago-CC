@@ -8,6 +8,10 @@ logger = logging.getLogger(__name__)
 
 class TUNICGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'TUNIC'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
     """Export handler for TUNIC.
 
     Handles ability_unlocks resolution for Holy Cross, Prayer, and Icebolt abilities.

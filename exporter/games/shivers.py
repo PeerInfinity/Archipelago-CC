@@ -8,6 +8,10 @@ logger = logging.getLogger(__name__)
 
 class ShiversGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'Shivers'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
     """Export handler for Shivers."""
 
     def expand_helper(self, helper_name: str):

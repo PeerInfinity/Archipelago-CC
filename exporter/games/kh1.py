@@ -9,6 +9,10 @@ logger = logging.getLogger(__name__)
 
 class KH1GameExportHandler(BaseGameExportHandler):
     GAME_NAME = 'Kingdom Hearts'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
     """KH1-specific expander that handles Kingdom Hearts 1 rules."""
 
     def __init__(self, world=None):

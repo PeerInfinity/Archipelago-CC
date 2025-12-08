@@ -9703,6 +9703,9 @@
       "umpopoff": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -9719,7 +9722,38 @@
     "1": {
       "game": "Muse Dash",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "additional_song_count": 40,
+        "allow_just_as_planned_dlc_songs": "",
+        "available_trap_types": "",
+        "chosen_traps": [],
+        "death_link": 0,
+        "dlc_packs": [],
+        "exclude_locations": [],
+        "exclude_songs": [],
+        "goal_song": [],
+        "grade_needed": 0,
+        "include_songs": [],
+        "item_links": [],
+        "local_items": [],
+        "music_sheet_count_percentage": 20,
+        "music_sheet_win_count_percentage": 80,
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "song_difficulty_max": 8,
+        "song_difficulty_min": 4,
+        "song_difficulty_mode": 0,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "starting_song_count": 5,
+        "streamer_mode_enabled": 0,
+        "trap_count_percentage": 15
+      }
     }
   },
   "game_info": {
@@ -9727,6 +9761,36 @@
       "name": "Muse Dash",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "partyTime",
+      "web_tutorials": [
+        {
+          "name": "Mod Setup and Use Guide",
+          "description": "A guide to setting up the Muse Dash Archipelago Mod on your computer.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "DeamonHunter"
+          ]
+        },
+        {
+          "name": "Mod Setup and Use Guide",
+          "description": "A guide to setting up the Muse Dash Archipelago Mod on your computer.",
+          "language": "Espa\u00f1ol",
+          "file_name": "setup_es.md",
+          "link": "setup/es",
+          "authors": [
+            "Shiny"
+          ]
+        }
+      ],
+      "world_description": "Muse Dash is a rhythm game where you hit objects to the beat of one of 400+ songs.\nPlay through a selection of randomly chosen songs, collecting music sheets\nuntil you have enough to play and complete the goal song!",
+      "slot_data": {
+        "victoryLocation": "Magical Wonderland",
+        "deathLink": 0,
+        "musicSheetWinCount": 7,
+        "gradeNeeded": 0
       }
     }
   },

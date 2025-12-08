@@ -9,6 +9,10 @@ logger = logging.getLogger(__name__)
 
 class AquariaGameExportHandler(BaseGameExportHandler):
     GAME_NAME = 'Aquaria'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
     """Aquaria-specific expander for handling game-specific rules."""
     
     def postprocess_regions(self, multiworld, player):

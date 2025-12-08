@@ -2343,10 +2343,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "progression"
       },
       "Progressive Armor": {
         "name": "Progressive Armor",
@@ -2354,10 +2354,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 3
+        "max_count": 3,
+        "classification": "progression"
       },
       "Progressive Shield": {
         "name": "Progressive Shield",
@@ -2365,10 +2365,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "useful"
       },
       "Spring Elixir": {
         "name": "Spring Elixir",
@@ -2376,10 +2376,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Mattock": {
         "name": "Mattock",
@@ -2387,10 +2387,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Unlock Wingboots": {
         "name": "Unlock Wingboots",
@@ -2398,10 +2398,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key Jack": {
         "name": "Key Jack",
@@ -2409,10 +2409,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key Queen": {
         "name": "Key Queen",
@@ -2420,10 +2420,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key King": {
         "name": "Key King",
@@ -2431,10 +2431,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key Joker": {
         "name": "Key Joker",
@@ -2442,10 +2442,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Key Ace": {
         "name": "Key Ace",
@@ -2453,10 +2453,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ring of Ruby": {
         "name": "Ring of Ruby",
@@ -2464,10 +2464,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Ring of Dworf": {
         "name": "Ring of Dworf",
@@ -2475,10 +2475,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Demons Ring": {
         "name": "Demons Ring",
@@ -2486,10 +2486,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Black Onyx": {
         "name": "Black Onyx",
@@ -2497,10 +2497,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Deluge": {
         "name": "Deluge",
@@ -2508,10 +2508,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Thunder": {
         "name": "Thunder",
@@ -2519,10 +2519,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Fire": {
         "name": "Fire",
@@ -2530,10 +2530,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Death": {
         "name": "Death",
@@ -2541,10 +2541,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Tilte": {
         "name": "Tilte",
@@ -2552,10 +2552,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Ring of Elf": {
         "name": "Ring of Elf",
@@ -2563,10 +2563,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Magical Rod": {
         "name": "Magical Rod",
@@ -2574,10 +2574,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pendant": {
         "name": "Pendant",
@@ -2585,10 +2585,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Hourglass": {
         "name": "Hourglass",
@@ -2596,10 +2596,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 10
+        "max_count": 10,
+        "classification": "filler"
       },
       "Red Potion": {
         "name": "Red Potion",
@@ -2607,10 +2607,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 35
+        "max_count": 35,
+        "classification": "progression"
       },
       "Elixir": {
         "name": "Elixir",
@@ -2618,10 +2618,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "filler"
       },
       "Glove": {
         "name": "Glove",
@@ -2629,10 +2629,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "filler"
       },
       "Ointment": {
         "name": "Ointment",
@@ -2640,10 +2640,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 8
+        "max_count": 8,
+        "classification": "filler"
       },
       "Poison": {
         "name": "Poison",
@@ -2651,10 +2651,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 17
+        "max_count": 17,
+        "classification": "trap"
       },
       "Wingboots": {
         "name": "Wingboots",
@@ -2662,46 +2662,54 @@
         "groups": [
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 4
+        "max_count": 4,
+        "classification": "useful"
       },
       "Sky Spring Flow": {
         "name": "Sky Spring Flow",
         "id": null,
-        "groups": [],
-        "classification": "progression",
+        "groups": [
+          "Event"
+        ],
         "event": true,
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
       },
       "Joker Spring Flow": {
         "name": "Joker Spring Flow",
         "id": null,
-        "groups": [],
-        "classification": "progression",
+        "groups": [
+          "Event"
+        ],
         "event": true,
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
       },
       "Tower of Fortress Spring Flow": {
         "name": "Tower of Fortress Spring Flow",
         "id": null,
-        "groups": [],
-        "classification": "progression",
+        "groups": [
+          "Event"
+        ],
         "event": true,
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
       },
       "Killed Evil One": {
         "name": "Killed Evil One",
         "id": null,
-        "groups": [],
-        "classification": "progression",
+        "groups": [
+          "Event"
+        ],
         "event": true,
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -2747,6 +2755,9 @@
       "Wingboots": 4
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -2757,7 +2768,30 @@
     "1": {
       "game": "Faxanadu",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "include_pendant": 0,
+        "include_poisons": 1,
+        "item_links": [],
+        "keep_shop_red_potions": 0,
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "random_monsters": 0,
+        "random_musics": 0,
+        "random_npcs": 0,
+        "random_rewards": 0,
+        "random_sounds": 0,
+        "require_dragon_slayer": 0,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_inventory_from_pool": {},
+        "start_location_hints": []
+      }
     }
   },
   "game_info": {
@@ -2765,6 +2799,29 @@
       "name": "Faxanadu",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "dirt",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Faxanadu randomizer connected to an Archipelago Multiworld",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Daivuk"
+          ]
+        }
+      ],
+      "world_description": "Faxanadu is an action role-playing platform video game developed by Hudson Soft for the Nintendo Entertainment System",
+      "slot_data": {
+        "keep_shop_red_potions": 0,
+        "random_musics": 0,
+        "random_sounds": 0,
+        "random_npcs": 0,
+        "random_monsters": 0,
+        "random_rewards": 0,
+        "daxanadu_version": "0.3.0"
       }
     }
   },

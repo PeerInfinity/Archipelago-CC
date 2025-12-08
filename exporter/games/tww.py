@@ -8,6 +8,10 @@ logger = logging.getLogger(__name__)
 
 class TWWGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'The Wind Waker'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Extract The Wind Waker settings including logic configuration values."""

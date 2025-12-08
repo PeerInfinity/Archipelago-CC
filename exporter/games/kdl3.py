@@ -8,7 +8,11 @@ import importlib
 logger = logging.getLogger(__name__)
 
 class KDL3GameExportHandler(BaseGameExportHandler):
-    GAME_NAME = "Kirby's Dream Land 3"
+    GAME_NAME = "Kirby'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+s Dream Land 3"
     """Handle KDL3-specific rule expansions and f-string conversions."""
 
     def __init__(self):

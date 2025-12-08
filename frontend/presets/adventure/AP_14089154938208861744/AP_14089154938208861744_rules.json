@@ -675,6 +675,39 @@
   },
   "items": {
     "1": {
+      "nothing": {
+        "name": "nothing",
+        "id": 118000000,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Sword": {
+        "name": "Sword",
+        "id": 118000009,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Bridge": {
+        "name": "Bridge",
+        "id": 118000010,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
       "Yellow Key": {
         "name": "Yellow Key",
         "id": 118000011,
@@ -708,16 +741,16 @@
         "max_count": 1,
         "classification": "progression"
       },
-      "Bridge": {
-        "name": "Bridge",
-        "id": 118000010,
+      "Chalice": {
+        "name": "Chalice",
+        "id": 118000016,
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "classification": "progression_skip_balancing"
       },
       "Magnet": {
         "name": "Magnet",
@@ -729,28 +762,6 @@
         "type": null,
         "max_count": 1,
         "classification": "progression"
-      },
-      "Sword": {
-        "name": "Sword",
-        "id": 118000009,
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "progression"
-      },
-      "Chalice": {
-        "name": "Chalice",
-        "id": 118000016,
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "progression_skip_balancing"
       },
       "Left Difficulty Switch": {
         "name": "Left Difficulty Switch",
@@ -821,17 +832,6 @@
       "Revive Dragons": {
         "name": "Revive Dragons",
         "id": 118000262,
-        "groups": [
-          "Everything"
-        ],
-        "event": false,
-        "type": null,
-        "max_count": 1,
-        "classification": "trap"
-      },
-      "nothing": {
-        "name": "nothing",
-        "id": 118000000,
         "groups": [
           "Everything"
         ],
