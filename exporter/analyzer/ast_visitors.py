@@ -1629,6 +1629,11 @@ class ASTVisitorMixin:
             }
             op_symbol = op_map.get(op_name, op_name) # Use original name if not in map
 
+            # Try constant folding - if both sides are constants, evaluate at export time
+            folded_result = self._try_fold_comparison(left_result, op_symbol, right_result)
+            if folded_result is not None:
+                return folded_result
+
             return {
                 'type': 'compare',
                 'left': left_result,
@@ -1638,6 +1643,70 @@ class ASTVisitorMixin:
 
         except Exception as e:
             logging.error("Error in visit_Compare", e)
+            return None
+
+    def _try_fold_comparison(self, left_result, op_symbol, right_result):
+        """
+        Try to fold a comparison at export time if both sides are constants.
+
+        This handles cases like `early_useful == OPTIONS.buildings_3` where both
+        values are known closure variables that can be resolved at export time.
+
+        Args:
+            left_result: The left operand result dict
+            op_symbol: The comparison operator ('==', '!=', '<', '>', etc.)
+            right_result: The right operand result dict
+
+        Returns:
+            A constant result dict if folding succeeded, None otherwise
+        """
+        try:
+            # Check if both sides are constants
+            if not (left_result and left_result.get('type') == 'constant' and
+                    right_result and right_result.get('type') == 'constant'):
+                return None
+
+            left_val = left_result.get('value')
+            right_val = right_result.get('value')
+
+            # Evaluate the comparison based on the operator
+            result = None
+            if op_symbol == '==':
+                result = left_val == right_val
+            elif op_symbol == '!=':
+                result = left_val != right_val
+            elif op_symbol == '<':
+                result = left_val < right_val
+            elif op_symbol == '<=':
+                result = left_val <= right_val
+            elif op_symbol == '>':
+                result = left_val > right_val
+            elif op_symbol == '>=':
+                result = left_val >= right_val
+            elif op_symbol == 'in':
+                # For 'in' operator, right side should be a collection
+                if isinstance(right_val, (list, tuple, set, str)):
+                    result = left_val in right_val
+            elif op_symbol == 'not in':
+                if isinstance(right_val, (list, tuple, set, str)):
+                    result = left_val not in right_val
+            elif op_symbol == 'is':
+                result = left_val is right_val
+            elif op_symbol == 'is not':
+                result = left_val is not right_val
+
+            if result is not None:
+                logging.debug(f"Folded comparison: {left_val!r} {op_symbol} {right_val!r} = {result}")
+                return {'type': 'constant', 'value': result}
+
+            return None
+
+        except (TypeError, ValueError) as e:
+            # Comparison not possible (e.g., comparing incompatible types)
+            logging.debug(f"Could not fold comparison: {e}")
+            return None
+        except Exception as e:
+            logging.warning(f"Error during comparison folding: {e}")
             return None
 
     def visit_Tuple(self, node: ast.Tuple):
