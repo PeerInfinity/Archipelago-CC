@@ -1276,6 +1276,13 @@ class ASTVisitorMixin:
                 elif isinstance(value, (int, float, str, bool)):
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to constant value: {value}")
                     return {'type': 'constant', 'value': value}
+                # Handle NamedTuples - keep them as name references so attribute access still works
+                # The attributes will be resolved later in visit_Attribute
+                # IMPORTANT: This check MUST come BEFORE the tuple check since NamedTuples are tuples
+                elif hasattr(value, '_fields'):
+                    logging.debug(f"visit_Name: Found NamedTuple '{name}' in closure, keeping as name reference for attribute access")
+                    # Don't convert to list here - let attribute access resolve the fields
+                    pass
                 # Handle list/tuple values - resolve to constant for method calls like .index()
                 elif isinstance(value, (list, tuple)):
                     # Convert to list for JSON serialization
@@ -1293,12 +1300,6 @@ class ASTVisitorMixin:
                 elif hasattr(value, 'name') and hasattr(value, 'entrances') and isinstance(value.name, str):
                     logging.debug(f"visit_Name: Found Region object '{name}' in closure, keeping as name reference for attribute access")
                     # Don't convert to string here - let attribute access or other operations handle it
-                    pass
-                # Handle NamedTuples - keep them as name references so attribute access still works
-                # The attributes will be resolved later in visit_Attribute
-                elif hasattr(value, '_fields'):
-                    logging.debug(f"visit_Name: Found NamedTuple '{name}' in closure, keeping as name reference for attribute access")
-                    # Don't convert to list here - let attribute access resolve the fields
                     pass
 
             # Also check function defaults for lambda parameters
