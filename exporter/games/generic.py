@@ -55,9 +55,10 @@ class GenericGameExportHandler(BaseGameExportHandler):
             return self._infer_rule_type(rule)
             
         # Special handling for helper nodes with common pattern names
+        # Skip expansion if the helper should be preserved (game explicitly wants it as a helper call)
         if rule.get('type') == 'helper':
             helper_name = rule.get('name', '')
-            if self._is_common_helper_pattern(helper_name):
+            if not self.should_preserve_as_helper(helper_name) and self._is_common_helper_pattern(helper_name):
                 return self._expand_common_helper(helper_name, rule.get('args', []))
             
         # Standard processing from base class

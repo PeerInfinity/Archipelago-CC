@@ -41,6 +41,12 @@ class BaseGameExportHandler:
     # These helpers are too complex and need JavaScript implementations
     HELPERS_TO_EXPORT_BLACKLIST: Set[str] = set()
 
+    # Set of helper function names that should be preserved as helper calls
+    # during rule analysis (not inlined/expanded by generic pattern matching)
+    # This is used by should_preserve_as_helper() - games can set this instead
+    # of overriding the method
+    HELPERS_TO_PRESERVE: Set[str] = set()
+
     def __init__(self):
         """Initialize the handler with an empty set of discovered helpers."""
         # Set of helper names discovered during rule analysis
@@ -127,15 +133,18 @@ class BaseGameExportHandler:
         This prevents the analyzer from recursively analyzing closure variables that
         should remain as helper functions in the exported rules.
 
+        Games can either:
+        1. Set the HELPERS_TO_PRESERVE class attribute with a set of helper names
+        2. Override this method for custom logic
+
         Args:
             func_name: The name of the function being analyzed
 
         Returns:
             True if the function should be preserved as a helper, False otherwise
         """
-        # Default implementation: don't preserve any functions as helpers
-        # Games can override this to preserve specific helpers
-        return False
+        # Check the class attribute for preserved helpers
+        return func_name in self.HELPERS_TO_PRESERVE
 
     def should_process_multistatement_if_bodies(self) -> bool:
         """
