@@ -1042,6 +1042,9 @@
       "Trinket 20": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -1053,6 +1056,25 @@
       "game": "VVVVVV",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "area_cost": 0,
+        "area_rando": 0,
+        "death_link": 0,
+        "death_link_amnesty": 15,
+        "door_cost": 3,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "music_rando": 0,
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      },
       "door_cost": 3,
       "area_cost_map": {
         "1": 1,
@@ -1068,6 +1090,48 @@
       "name": "VVVVVV",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "grass",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up VVVVVV for Multiworld.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "N00byKing"
+          ]
+        }
+      ],
+      "world_description": "VVVVVV is a platform game all about exploring one simple mechanical idea - what if you reversed gravity instead of jumping?",
+      "slot_data": {
+        "MusicRando": {
+          "1": 1,
+          "2": 2,
+          "3": 3,
+          "4": 4,
+          "9": 9,
+          "11": 11,
+          "12": 12
+        },
+        "AreaRando": {
+          "1": 1,
+          "2": 2,
+          "3": 3,
+          "4": 4,
+          "0": 0
+        },
+        "DoorCost": 3,
+        "AreaCostRando": {
+          "1": 1,
+          "2": 2,
+          "3": 3,
+          "4": 4,
+          "0": 0
+        },
+        "DeathLink": 0,
+        "DeathLink_Amnesty": 15
       }
     }
   },

@@ -8,6 +8,10 @@ logger = logging.getLogger(__name__)
 
 class DarkSouls3GameExportHandler(BaseGameExportHandler):
     GAME_NAME = 'Dark Souls III'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
     """Dark Souls III-specific export handler."""
     
     def __init__(self, world):

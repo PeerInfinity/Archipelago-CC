@@ -668,9 +668,9 @@ export function detectGameFromWorldClass(worldClass) {
 export function getGameLogic(gameName) {
   let config = GAME_REGISTRY[gameName];
 
-  // Try to find config for " Test" suffixed game names (e.g., "DLCQuest Test" -> "DLCQuest")
-  if (!config && gameName && gameName.endsWith(' Test')) {
-    const baseGameName = gameName.slice(0, -5); // Remove " Test" suffix
+  // Try to find config for " WorldGen" suffixed game names (e.g., "DLCQuest WorldGen" -> "DLCQuest")
+  if (!config && gameName && gameName.endsWith(' WorldGen')) {
+    const baseGameName = gameName.slice(0, -9); // Remove " WorldGen" suffix
     config = GAME_REGISTRY[baseGameName];
   }
 
@@ -710,7 +710,15 @@ export function getSupportedGames() {
  * @returns {boolean} True if the game is supported
  */
 export function isGameSupported(gameName) {
-  return GAME_REGISTRY.hasOwnProperty(gameName);
+  if (GAME_REGISTRY.hasOwnProperty(gameName)) {
+    return true;
+  }
+  // Also check for " WorldGen" suffixed game names (e.g., "DLCQuest WorldGen" -> "DLCQuest")
+  if (gameName && gameName.endsWith(' WorldGen')) {
+    const baseGameName = gameName.slice(0, -9); // Remove " WorldGen" suffix
+    return GAME_REGISTRY.hasOwnProperty(baseGameName);
+  }
+  return false;
 }
 
 /**

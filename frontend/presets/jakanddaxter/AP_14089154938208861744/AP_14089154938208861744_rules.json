@@ -10213,6 +10213,9 @@
       "Yellow Eco Switch": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -10235,7 +10238,52 @@
     "1": {
       "game": "Jak and Daxter: The Precursor Legacy",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "citizen_orb_trade_amount": 90,
+        "enable_move_randomizer": 0,
+        "enable_orbsanity": 0,
+        "enable_ordered_cell_counts": 1,
+        "exclude_locations": [],
+        "filler_orb_bundles_replaced_with_traps": 0,
+        "filler_power_cells_replaced_with_traps": 0,
+        "fire_canyon_cell_count": 20,
+        "global_orbsanity_bundle_size": 20,
+        "item_links": [],
+        "jak_completion_condition": 112,
+        "lava_tube_cell_count": 72,
+        "level_orbsanity_bundle_size": 25,
+        "local_items": [],
+        "mountain_pass_cell_count": 45,
+        "non_local_items": [],
+        "oracle_orb_trade_amount": 120,
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "require_punch_for_klaww": 1,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_inventory_from_pool": {},
+        "start_location_hints": [],
+        "trap_effect_duration": 30,
+        "trap_weights": {
+          "Camera Trap": 1,
+          "Darkness Trap": 1,
+          "Despair Trap": 1,
+          "Earthquake Trap": 1,
+          "Ecoless Trap": 1,
+          "Gravity Trap": 1,
+          "Health Trap": 1,
+          "Ledge Trap": 1,
+          "Mirror Trap": 1,
+          "Pacifism Trap": 1,
+          "Slippery Trap": 1,
+          "Teleport Trap": 1,
+          "Trip Trap": 1,
+          "Zoomer Trap": 1
+        }
+      }
     }
   },
   "game_info": {
@@ -10243,6 +10291,52 @@
       "name": "Jak and Daxter: The Precursor Legacy",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "grass",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up ArchipelaGOAL (Archipelago on OpenGOAL).",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "markustulliuscicero"
+          ]
+        }
+      ],
+      "world_description": "Jak and Daxter: The Precursor Legacy is a 2001 action platformer developed by Naughty Dog\nfor the PlayStation 2. The game follows the eponymous protagonists, a young boy named Jak\nand his friend Daxter, who has been transformed into an ottsel. With the help of Samos\nthe Sage of Green Eco and his daughter Keira, the pair travel north in search of a cure for Daxter,\ndiscovering artifacts created by an ancient race known as the Precursors along the way. When the\nrogue sages Gol and Maia Acheron plan to flood the world with Dark Eco, they must stop their evil plan\nand save the world.",
+      "slot_data": {
+        "enable_move_randomizer": 0,
+        "enable_orbsanity": 0,
+        "global_orbsanity_bundle_size": 20,
+        "level_orbsanity_bundle_size": 25,
+        "fire_canyon_cell_count": 20,
+        "mountain_pass_cell_count": 45,
+        "lava_tube_cell_count": 72,
+        "citizen_orb_trade_amount": 90,
+        "oracle_orb_trade_amount": 120,
+        "filler_power_cells_replaced_with_traps": 0,
+        "filler_orb_bundles_replaced_with_traps": 0,
+        "trap_effect_duration": 30,
+        "trap_weights": {
+          "Camera Trap": 1,
+          "Darkness Trap": 1,
+          "Despair Trap": 1,
+          "Earthquake Trap": 1,
+          "Ecoless Trap": 1,
+          "Gravity Trap": 1,
+          "Health Trap": 1,
+          "Ledge Trap": 1,
+          "Mirror Trap": 1,
+          "Pacifism Trap": 1,
+          "Slippery Trap": 1,
+          "Teleport Trap": 1,
+          "Trip Trap": 1,
+          "Zoomer Trap": 1
+        },
+        "jak_completion_condition": 112,
+        "require_punch_for_klaww": 1
       }
     }
   },

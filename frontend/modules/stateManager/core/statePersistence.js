@@ -315,6 +315,7 @@ export function _createSelfSnapshotInterface(sm) {
             settings: sm.settings,
             playerId: sm.playerId
           };
+
           return sm.helperFunctions.count(snapshot, staticData, itemName);
         } catch (e) {
           sm.logger?.warn?.('StatePersistence', `Error using game-specific count helper for ${itemName}:`, e);

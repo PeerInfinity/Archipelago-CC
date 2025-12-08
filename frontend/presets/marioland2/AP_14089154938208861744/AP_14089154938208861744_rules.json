@@ -32566,6 +32566,9 @@
       "Water Physics": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -32579,6 +32582,35 @@
       "game": "Super Mario Land 2",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
+      "options": {
+        "accessibility": 1,
+        "auto_scroll_chances": -1,
+        "auto_scroll_mode": 0,
+        "coinsanity": 0,
+        "coinsanity_checks": 150,
+        "difficulty_mode": 0,
+        "energy_link": 1,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "mario_coin_fragment_percentage": 20,
+        "mario_coin_fragments_required_percentage": 75,
+        "marios_castle_midway_bell": 0,
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_enemies": 0,
+        "randomize_music": 0,
+        "randomize_platforms": 0,
+        "required_golden_coins": 6,
+        "shuffle_golden_coins": 0,
+        "shuffle_midway_bells": 0,
+        "shuffle_pipe_traversal": 0,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      },
       "required_golden_coins": 6,
       "shuffle_midway_bells": 0
     }
@@ -32588,6 +32620,23 @@
       "name": "Super Mario Land 2",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "grass",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to playing Super Mario Land 2 with Archipelago.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Alchav"
+          ]
+        }
+      ],
+      "world_description": "Super Mario Land 2 is a classic platformer that follows Mario on a quest to reclaim his castle from the\nvillainous Wario. This iconic game features 32 levels, unique power-ups, and introduces Wario as Mario's\narch-rival.",
+      "slot_data": {
+        "energy_link": 1
       }
     }
   },

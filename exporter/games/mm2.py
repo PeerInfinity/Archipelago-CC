@@ -25,6 +25,10 @@ class MM2GameExportHandler(GenericGameExportHandler):
     Override methods only when custom behavior is needed.
     """
     GAME_NAME = 'Mega Man 2'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
 
     def get_settings_data(self, world, multiworld, player):
         """Extract Mega Man 2 settings including wily_5 requirement and weapon data."""

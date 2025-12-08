@@ -9,6 +9,10 @@ logger = logging.getLogger(__name__)
 
 class SavingPrincessGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'Saving Princess'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
     """Export handler for Saving Princess with custom handling for world.is_pool_expanded conditionals."""
 
     def __init__(self, world=None):

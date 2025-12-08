@@ -15,6 +15,10 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
     We inherit from GenericGameExportHandler to preserve these helpers.
     """
     GAME_NAME = 'Super Mario Land 2'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
 
     # Functions that should be exported as helper calls rather than analyzed
     HELPER_FUNCTIONS = {

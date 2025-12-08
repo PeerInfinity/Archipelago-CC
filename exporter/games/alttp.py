@@ -12,6 +12,10 @@ logger = logging.getLogger(__name__) # Add logger if needed later
 
 class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritance
     GAME_NAME = 'A Link to the Past'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
     """No longer expands helpers - just validates they're known ALTTP helpers"""
     
     # Items that are always events, regardless of their static item_code in item_table

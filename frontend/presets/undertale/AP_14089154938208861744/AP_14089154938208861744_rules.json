@@ -1248,81 +1248,8 @@
             "name": "Core Exit",
             "connected_region": "New Home",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "compare",
-                "left": {
-                  "type": "constant",
-                  "value": "Mettaton Plush"
-                },
-                "op": "==",
-                "right": {
-                  "type": "constant",
-                  "value": "Complete Skeleton"
-                }
-              },
-              "if_true": {
-                "type": "item_check",
-                "item": "Complete Skeleton"
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "compare",
-                  "left": {
-                    "type": "constant",
-                    "value": "Mettaton Plush"
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": "Fish"
-                  }
-                },
-                "if_true": {
-                  "type": "item_check",
-                  "item": "Fish"
-                },
-                "if_false": {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "constant",
-                      "value": "Mettaton Plush"
-                    },
-                    "op": "==",
-                    "right": {
-                      "type": "constant",
-                      "value": "Mettaton Plush"
-                    }
-                  },
-                  "if_true": {
-                    "type": "item_check",
-                    "item": "Mettaton Plush"
-                  },
-                  "if_false": {
-                    "type": "conditional",
-                    "test": {
-                      "type": "compare",
-                      "left": {
-                        "type": "constant",
-                        "value": "Mettaton Plush"
-                      },
-                      "op": "==",
-                      "right": {
-                        "type": "constant",
-                        "value": "DT Extractor"
-                      }
-                    },
-                    "if_true": {
-                      "type": "item_check",
-                      "item": "DT Extractor"
-                    },
-                    "if_false": null
-                  }
-                }
-              }
+              "type": "item_check",
+              "item": "Mettaton Plush"
             }
           }
         ],
@@ -2565,6 +2492,9 @@
       "temy armor": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -2581,7 +2511,32 @@
     "1": {
       "game": "Undertale",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "key_hunt": 0,
+        "key_pieces": 5,
+        "local_items": [],
+        "no_equips": 0,
+        "non_local_items": [],
+        "only_flakes": 0,
+        "plando_items": [],
+        "priority_locations": [],
+        "prog_armor": 0,
+        "prog_weapons": 0,
+        "progression_balancing": 50,
+        "rando_item_button": 0,
+        "rando_love": 0,
+        "rando_stats": 0,
+        "route_required": 0,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "starting_area": 0,
+        "temy_include": 1
+      }
     }
   },
   "game_info": {
@@ -2589,6 +2544,46 @@
       "name": "Undertale",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "grass",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Archipelago Undertale software on your computer. This guide covers single-player, multiworld, and related software.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Mewlif"
+          ]
+        }
+      ],
+      "world_description": "Undertale is an RPG where every choice you make matters. You could choose to hurt all the enemies, eventually\ncausing genocide of the monster species. Or you can spare all the enemies, befriending them and freeing them\nfrom their underground prison.",
+      "slot_data": {
+        "world_seed": 3777206549,
+        "seed_name": "14089154938208861744",
+        "player_name": "Player1",
+        "player_id": 1,
+        "client_version": [
+          0,
+          1,
+          6
+        ],
+        "race": false,
+        "route": "neutral",
+        "starting_area": "ruins",
+        "temy_armor_include": true,
+        "only_flakes": false,
+        "no_equips": false,
+        "key_hunt": false,
+        "key_pieces": 5,
+        "rando_love": false,
+        "rando_stats": false,
+        "prog_armor": false,
+        "prog_weapons": false,
+        "rando_item_button": false,
+        "route_required": 0,
+        "temy_include": 1
       }
     }
   },

@@ -17,6 +17,10 @@ class SMGameExportHandler(GenericGameExportHandler):
     helper calls that the frontend can execute.
     """
     GAME_NAME = 'Super Metroid'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
 
     def __init__(self, world=None):
         super().__init__()  # Base class doesn't take arguments

@@ -8416,6 +8416,9 @@
       "Wyrm Brooch": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -8427,6 +8430,394 @@
       "game": "Timespinner",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
+      "options": {
+        "BossHealing": 1,
+        "BossRando": 0,
+        "Cantoran": 0,
+        "DadPercent": 0,
+        "DamageRando": 0,
+        "DamageRandoOverrides": {
+          "Blue": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Blade": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Fire": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Plasma": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Iron": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Ice": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Wind": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Gun": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Umbra": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Empire": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Eye": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Blood": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "ForbiddenTome": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Shattered": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Nether": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Radiant": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          }
+        },
+        "DeathLink": 0,
+        "DownloadableItems": 1,
+        "DropRateCategory": 0,
+        "EnemyRando": 0,
+        "EnterSandman": 0,
+        "ExtraEarringsXP": 0,
+        "EyeSpy": 0,
+        "FixedDropRate": 5,
+        "GyreArchives": 0,
+        "HpCap": 999,
+        "Inverted": 0,
+        "LevelCap": 99,
+        "LootPool": 0,
+        "LootTierDistro": 0,
+        "LoreChecks": 0,
+        "PresentAccessWithWheelAndSpindle": 0,
+        "QuickSeed": 0,
+        "RisingTides": 0,
+        "RisingTidesOverrides": {
+          "Xarion": {
+            "Dry": 67,
+            "Flooded": 33
+          },
+          "Maw": {
+            "Dry": 67,
+            "Flooded": 33
+          },
+          "AncientPyramidShaft": {
+            "Dry": 67,
+            "Flooded": 33
+          },
+          "Sandman": {
+            "Dry": 67,
+            "Flooded": 33
+          },
+          "CastleMoat": {
+            "Dry": 67,
+            "Flooded": 33
+          },
+          "CastleBasement": {
+            "Dry": 66,
+            "Flooded": 17,
+            "FloodedWithSavePointAvailable": 17
+          },
+          "CastleCourtyard": {
+            "Dry": 67,
+            "Flooded": 33
+          },
+          "LakeDesolation": {
+            "Dry": 67,
+            "Flooded": 33
+          },
+          "LakeSerene": {
+            "Dry": 33,
+            "Flooded": 67
+          },
+          "LakeSereneBridge": {
+            "Dry": 67,
+            "Flooded": 33
+          },
+          "Lab": {
+            "Dry": 67,
+            "Flooded": 33
+          }
+        },
+        "ShopFill": 0,
+        "ShopMultiplier": 1,
+        "ShopWarpShards": 1,
+        "ShowBestiary": 0,
+        "ShowDrops": 0,
+        "SpecificKeycards": 0,
+        "StartWithJewelryBox": 0,
+        "StartWithMeyef": 0,
+        "TrapChance": 10,
+        "Traps": [
+          "Meteor Sparrow Trap",
+          "Poison Trap",
+          "Chaos Trap",
+          "Neurotoxin Trap",
+          "Bee Trap",
+          "Throw Stun Trap",
+          "Spider Trap",
+          "Lights Out Trap",
+          "Palm Punch Trap"
+        ],
+        "UnchainedKeys": 0,
+        "accessibility": 0,
+        "aura_cap": 999,
+        "back_to_the_future": 0,
+        "boss_healing": 1,
+        "boss_rando": 0,
+        "boss_rando_overrides": {
+          "Aelana": "Aelana",
+          "AzureQueen": "AzureQueen",
+          "Cantoran": "Cantoran",
+          "FelineSentry": "FelineSentry",
+          "Genza": "Genza",
+          "GoldenIdol": "GoldenIdol",
+          "Ifrit": "Ifrit",
+          "Maw": "Maw",
+          "Nightmare": "Nightmare",
+          "Nuvius": "Nuvius",
+          "Prince": "Prince",
+          "Ravenlord": "Ravenlord",
+          "Sandman": "Sandman",
+          "Varndagroth": "Varndagroth",
+          "Vol": "Vol",
+          "Xarion": "Xarion"
+        },
+        "boss_rando_type": 0,
+        "cantoran": 0,
+        "dad_percent": 0,
+        "damage_rando": 0,
+        "damage_rando_overrides": {
+          "Blade": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Blood": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Blue": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Empire": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Eye": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Fire": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "ForbiddenTome": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Gun": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Ice": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Iron": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Nether": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Plasma": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Radiant": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Shattered": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Umbra": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Wind": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          }
+        },
+        "death_link": 0,
+        "downloadable_items": 1,
+        "drop_rate_category": 0,
+        "enemy_rando": 0,
+        "enter_sandman": 0,
+        "exclude_locations": [],
+        "extra_earrings_xp": 0,
+        "eye_spy": 0,
+        "find_the_flame": 0,
+        "fixed_drop_rate": 5,
+        "gate_keep": 0,
+        "gyre_archives": 0,
+        "has_replaced_options": 0,
+        "hp_cap": 999,
+        "inverted": 0,
+        "item_links": [],
+        "level_cap": 99,
+        "local_items": [],
+        "lock_key_amadeus": 0,
+        "loot_pool": 0,
+        "loot_tier_distro": 0,
+        "lore_checks": 0,
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "prism_break": 0,
+        "progression_balancing": 50,
+        "pure_torcher": 0,
+        "pyramid_start": 0,
+        "quick_seed": 0,
+        "rising_tides": 0,
+        "rising_tides_overrides": {
+          "AncientPyramidShaft": {
+            "Dry": 67,
+            "Flooded": 33
+          },
+          "CastleBasement": {
+            "Dry": 66,
+            "Flooded": 17,
+            "FloodedWithSavePointAvailable": 17
+          },
+          "CastleCourtyard": {
+            "Dry": 67,
+            "Flooded": 33
+          },
+          "CastleMoat": {
+            "Dry": 67,
+            "Flooded": 33
+          },
+          "Lab": {
+            "Dry": 67,
+            "Flooded": 33
+          },
+          "LakeDesolation": {
+            "Dry": 67,
+            "Flooded": 33
+          },
+          "LakeSerene": {
+            "Dry": 33,
+            "Flooded": 67
+          },
+          "LakeSereneBridge": {
+            "Dry": 67,
+            "Flooded": 33
+          },
+          "Maw": {
+            "Dry": 67,
+            "Flooded": 33
+          },
+          "Sandman": {
+            "Dry": 67,
+            "Flooded": 33
+          },
+          "Xarion": {
+            "Dry": 67,
+            "Flooded": 33
+          }
+        },
+        "risky_warps": 0,
+        "royal_roadblock": 0,
+        "shop_fill": 0,
+        "shop_multiplier": 1,
+        "shop_warp_shards": 1,
+        "show_bestiary": 0,
+        "show_drops": 0,
+        "specific_keycards": 0,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "start_with_jewelry_box": 0,
+        "start_with_meyef": 0,
+        "trap_chance": 10,
+        "traps": [
+          "Meteor Sparrow Trap",
+          "Poison Trap",
+          "Chaos Trap",
+          "Neurotoxin Trap",
+          "Bee Trap",
+          "Throw Stun Trap",
+          "Spider Trap",
+          "Lights Out Trap",
+          "Palm Punch Trap"
+        ],
+        "unchained_keys": 0
+      },
       "specific_keycards": 0,
       "eye_spy": 0,
       "unchained_keys": 0,
@@ -8442,6 +8833,385 @@
       "name": "Timespinner",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "ice",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Timespinner randomizer connected to an Archipelago Multiworld",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Jarno"
+          ]
+        },
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Timespinner randomizer connected to an Archipelago Multiworld",
+          "language": "Deutsch",
+          "file_name": "setup_de.md",
+          "link": "setup/de",
+          "authors": [
+            "Grrmo",
+            "Fynxes",
+            "Blaze0168"
+          ]
+        }
+      ],
+      "world_description": "Timespinner is a beautiful metroidvania inspired by classic 90s action-platformers.\nTravel back in time to change fate itself. Join timekeeper Lunais on her quest for revenge against the empire that killed her family.",
+      "slot_data": {
+        "StartWithJewelryBox": 0,
+        "DownloadableItems": 1,
+        "EyeSpy": 0,
+        "StartWithMeyef": 0,
+        "QuickSeed": 0,
+        "SpecificKeycards": 0,
+        "Inverted": 0,
+        "GyreArchives": 0,
+        "Cantoran": 0,
+        "LoreChecks": 0,
+        "BossRando": 0,
+        "BossRandoType": 0,
+        "BossRandoOverrides": {
+          "FelineSentry": "FelineSentry",
+          "Varndagroth": "Varndagroth",
+          "AzureQueen": "AzureQueen",
+          "GoldenIdol": "GoldenIdol",
+          "Aelana": "Aelana",
+          "Maw": "Maw",
+          "Cantoran": "Cantoran",
+          "Genza": "Genza",
+          "Nuvius": "Nuvius",
+          "Vol": "Vol",
+          "Prince": "Prince",
+          "Xarion": "Xarion",
+          "Ravenlord": "Ravenlord",
+          "Ifrit": "Ifrit",
+          "Sandman": "Sandman",
+          "Nightmare": "Nightmare"
+        },
+        "EnemyRando": 0,
+        "DamageRando": 0,
+        "DamageRandoOverrides": {
+          "Blade": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Blood": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Blue": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Empire": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Eye": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Fire": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "ForbiddenTome": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Gun": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Ice": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Iron": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Nether": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Plasma": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Radiant": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Shattered": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Umbra": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          },
+          "Wind": {
+            "MinusOdds": 1,
+            "NormalOdds": 1,
+            "PlusOdds": 1
+          }
+        },
+        "HpCap": 999,
+        "AuraCap": 999,
+        "LevelCap": 99,
+        "ExtraEarringsXP": 0,
+        "BossHealing": 1,
+        "ShopFill": 0,
+        "ShopWarpShards": 1,
+        "ShopMultiplier": 1,
+        "LootPool": 0,
+        "DropRateCategory": 0,
+        "FixedDropRate": 5,
+        "LootTierDistro": 0,
+        "ShowBestiary": 0,
+        "ShowDrops": 0,
+        "EnterSandman": 0,
+        "DadPercent": 0,
+        "RisingTides": 0,
+        "UnchainedKeys": 0,
+        "PresentAccessWithWheelAndSpindle": 0,
+        "PrismBreak": 0,
+        "LockKeyAmadeus": 0,
+        "RiskyWarps": 0,
+        "PyramidStart": 0,
+        "GateKeep": 0,
+        "RoyalRoadblock": 0,
+        "PureTorcher": 0,
+        "FindTheFlame": 0,
+        "Traps": [
+          "Meteor Sparrow Trap",
+          "Poison Trap",
+          "Chaos Trap",
+          "Neurotoxin Trap",
+          "Bee Trap",
+          "Throw Stun Trap",
+          "Spider Trap",
+          "Lights Out Trap",
+          "Palm Punch Trap"
+        ],
+        "DeathLink": 0,
+        "StinkyMaw": true,
+        "PersonalItems": {
+          "1337000": 1337136,
+          "1337001": 1337149,
+          "1337002": 1337180,
+          "1337003": 1337054,
+          "1337004": 1337113,
+          "1337005": 1337163,
+          "1337006": 1337055,
+          "1337007": 1337011,
+          "1337010": 1337135,
+          "1337011": 1337116,
+          "1337012": 1337150,
+          "1337013": 1337061,
+          "1337014": 1337249,
+          "1337015": 1337015,
+          "1337016": 1337123,
+          "1337017": 1337180,
+          "1337008": 1337139,
+          "1337009": 1337249,
+          "1337018": 1337143,
+          "1337019": 1337137,
+          "1337020": 1337128,
+          "1337021": 1337090,
+          "1337022": 1337131,
+          "1337023": 1337055,
+          "1337024": 1337164,
+          "1337025": 1337071,
+          "1337156": 1337043,
+          "1337157": 1337045,
+          "1337159": 1337066,
+          "1337160": 1337152,
+          "1337161": 1337120,
+          "1337162": 1337126,
+          "1337026": 1337034,
+          "1337027": 1337119,
+          "1337028": 1337249,
+          "1337029": 1337145,
+          "1337030": 1337051,
+          "1337163": 1337249,
+          "1337031": 1337093,
+          "1337032": 1337118,
+          "1337033": 1337031,
+          "1337034": 1337084,
+          "1337035": 1337173,
+          "1337036": 1337165,
+          "1337038": 1337179,
+          "1337039": 1337249,
+          "1337040": 1337134,
+          "1337041": 1337059,
+          "1337037": 1337151,
+          "1337042": 1337174,
+          "1337043": 1337112,
+          "1337164": 1337249,
+          "1337053": 1337110,
+          "1337054": 1337144,
+          "1337055": 1337048,
+          "1337056": 1337066,
+          "1337057": 1337052,
+          "1337058": 1337140,
+          "1337059": 1337037,
+          "1337060": 1337180,
+          "1337061": 1337066,
+          "1337062": 1337056,
+          "1337063": 1337168,
+          "1337064": 1337160,
+          "1337065": 1337155,
+          "1337066": 1337156,
+          "1337067": 1337016,
+          "1337068": 1337044,
+          "1337069": 1337057,
+          "1337070": 1337249,
+          "1337073": 1337017,
+          "1337167": 1337176,
+          "1337168": 1337172,
+          "1337169": 1337166,
+          "1337071": 1337049,
+          "1337076": 1337127,
+          "1337166": 1337059,
+          "1337170": 1337249,
+          "1337072": 1337186,
+          "1337074": 1337179,
+          "1337075": 1337014,
+          "1337165": 1337179,
+          "1337077": 1337009,
+          "1337078": 1337148,
+          "1337079": 1337013,
+          "1337080": 1337025,
+          "1337081": 1337249,
+          "1337082": 1337041,
+          "1337083": 1337060,
+          "1337084": 1337047,
+          "1337085": 1337060,
+          "1337044": 1337180,
+          "1337045": 1337056,
+          "1337046": 1337092,
+          "1337047": 1337125,
+          "1337048": 1337146,
+          "1337049": 1337138,
+          "1337050": 1337067,
+          "1337051": 1337179,
+          "1337052": 1337162,
+          "1337086": 1337141,
+          "1337087": 1337179,
+          "1337088": 1337005,
+          "1337089": 1337249,
+          "1337090": 1337180,
+          "1337091": 1337007,
+          "1337092": 1337169,
+          "1337093": 1337179,
+          "1337094": 1337111,
+          "1337095": 1337053,
+          "1337096": 1337180,
+          "1337097": 1337142,
+          "1337098": 1337167,
+          "1337106": 1337153,
+          "1337110": 1337058,
+          "1337099": 1337158,
+          "1337100": 1337062,
+          "1337101": 1337177,
+          "1337102": 1337021,
+          "1337175": 1337180,
+          "1337103": 1337115,
+          "1337104": 1337027,
+          "1337174": 1337175,
+          "1337105": 1337056,
+          "1337107": 1337132,
+          "1337108": 1337161,
+          "1337109": 1337249,
+          "1337111": 1337147,
+          "1337112": 1337180,
+          "1337113": 1337056,
+          "1337114": 1337078,
+          "1337115": 1337050,
+          "1337116": 1337058,
+          "1337117": 1337085,
+          "1337118": 1337179,
+          "1337119": 1337039,
+          "1337120": 1337157,
+          "1337121": 1337109,
+          "1337173": 1337180,
+          "1337122": 1337030,
+          "1337123": 1337178,
+          "1337124": 1337154,
+          "1337125": 1337124,
+          "1337126": 1337012,
+          "1337172": 1337249,
+          "1337127": 1337063,
+          "1337128": 1337062,
+          "1337129": 1337029,
+          "1337130": 1337108,
+          "1337131": 1337107,
+          "1337132": 1337117,
+          "1337139": 1337249,
+          "1337171": 1337028,
+          "1337140": 1337171,
+          "1337141": 1337249,
+          "1337133": 1337170,
+          "1337134": 1337081,
+          "1337136": 1337121,
+          "1337137": 1337058,
+          "1337138": 1337129,
+          "1337135": 1337179,
+          "1337142": 1337184,
+          "1337143": 1337180,
+          "1337144": 1337179,
+          "1337145": 1337130,
+          "1337146": 1337180,
+          "1337149": 1337180,
+          "1337147": 1337180,
+          "1337148": 1337000,
+          "1337150": 1337179,
+          "1337151": 1337023,
+          "1337152": 1337114,
+          "1337153": 1337179,
+          "1337154": 1337046,
+          "1337155": 1337179,
+          "1337246": 1337159,
+          "1337247": 1337098,
+          "1337248": 1337060,
+          "1337249": 1337122,
+          "1337236": 1337133
+        },
+        "PyramidKeysGate": "GateLakeSereneRight",
+        "PresentGate": "GateSealedSirensCave",
+        "PastGate": "GateLakeSereneRight",
+        "TimeGate": "GateRightPyramid",
+        "Basement": 0,
+        "Xarion": false,
+        "Maw": false,
+        "PyramidShaft": false,
+        "BackPyramid": false,
+        "CastleMoat": false,
+        "CastleCourtyard": false,
+        "LakeDesolation": false,
+        "DryLakeSerene": false,
+        "LakeSereneBridge": false,
+        "Lab": false
       }
     }
   },

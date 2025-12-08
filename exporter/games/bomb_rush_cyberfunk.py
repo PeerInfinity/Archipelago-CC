@@ -9,6 +9,10 @@ logger = logging.getLogger(__name__)
 
 class BombRushCyberfunkGameExportHandler(BaseGameExportHandler):
     GAME_NAME = 'Bomb Rush Cyberfunk'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
     """Bomb Rush Cyberfunk expander that handles game-specific rules."""
 
     def __init__(self, world=None):

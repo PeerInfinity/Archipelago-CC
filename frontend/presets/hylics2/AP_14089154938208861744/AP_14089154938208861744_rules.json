@@ -3976,6 +3976,9 @@
       "WORM ROOM KEY": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -3986,7 +3989,27 @@
     "1": {
       "game": "Hylics 2",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "death_link": 0,
+        "exclude_locations": [],
+        "extra_items_in_logic": 1,
+        "gesture_shuffle": 0,
+        "item_links": [],
+        "local_items": [],
+        "medallion_shuffle": 0,
+        "non_local_items": [],
+        "party_shuffle": 0,
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "random_start": "",
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location": 0,
+        "start_location_hints": []
+      }
     }
   },
   "game_info": {
@@ -3994,6 +4017,27 @@
       "name": "Hylics 2",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "ocean",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to settings up the Hylics 2 randomizer connected to an Archipelago Multiworld",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "TRPG"
+          ]
+        }
+      ],
+      "world_description": "Hylics 2 is a surreal and unusual RPG, with a bizarre yet unique visual style. Play as Wayne,\ntravel the world, and gather your allies to defeat the nefarious Gibby in his Hylemxylem!",
+      "slot_data": {
+        "party_shuffle": 0,
+        "medallion_shuffle": 0,
+        "random_start": 0,
+        "start_location": "Waynehouse",
+        "death_link": 0
       }
     }
   },

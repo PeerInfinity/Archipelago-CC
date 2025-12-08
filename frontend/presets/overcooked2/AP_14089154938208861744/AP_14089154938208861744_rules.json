@@ -8359,6 +8359,9 @@
       "Yellow Ramp": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -8370,6 +8373,38 @@
       "game": "Overcooked! 2",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "always_preserve_cooking_progress": 1,
+        "always_serve_oldest_order": 1,
+        "deathlink": 0,
+        "display_leaderboard_scores": 0,
+        "exclude_locations": [],
+        "fix_bugs": 1,
+        "include_dlcs": [
+          "Seasonal",
+          "Story"
+        ],
+        "include_horde_levels": 1,
+        "item_links": [],
+        "kevin_levels": 1,
+        "local_items": [],
+        "location_balancing": 1,
+        "non_local_items": [],
+        "plando_items": [],
+        "prep_levels": 1,
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "ramp_tricks": 0,
+        "short_horde_levels": 1,
+        "shorter_level_duration": 1,
+        "shuffle_level_order": 1,
+        "star_threshold_scale": 35,
+        "stars_to_win": 60,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      },
       "ramp_tricks": false
     }
   },
@@ -8378,6 +8413,683 @@
       "name": "Overcooked! 2",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "partyTime",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Overcooked! 2 randomizer on your computer.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "toasterparty"
+          ]
+        }
+      ],
+      "world_description": "Overcooked! 2 is a frantically paced arcade cooking game where\nplayers race against the clock to complete orders for points. Bring\npeace to the Onion Kingdom once again by recovering lost items and abilities,\nearning stars to unlock levels, and defeating the unbread horde. Levels are\nrandomized to increase gameplay variety. Play with up to 4 friends.",
+      "slot_data": {
+        "DisableAllMods": false,
+        "UnlockAllChefs": true,
+        "UnlockAllDLC": true,
+        "DisplayFPS": true,
+        "SkipTutorial": true,
+        "SkipAllOnionKing": true,
+        "SkipTutorialPopups": true,
+        "RevealAllLevels": false,
+        "PurchaseAllLevels": false,
+        "CheatsEnabled": false,
+        "ImpossibleTutorial": true,
+        "ForbidDLC": true,
+        "ForceSingleSaveSlot": true,
+        "DisableNGP": true,
+        "LevelForceReveal": [
+          1,
+          7,
+          13,
+          19,
+          25,
+          31
+        ],
+        "SaveFolderName": "AP-14089154938208861744-P1-Player1",
+        "CustomOrderTimeoutPenalty": 10,
+        "LevelForceHide": [
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44
+        ],
+        "LocalDeathLink": false,
+        "BurnTriggersDeath": false,
+        "LevelPurchaseRequirements": {
+          "1": 0,
+          "7": 0,
+          "13": 0,
+          "19": 0,
+          "25": 1,
+          "31": 1,
+          "2": 2,
+          "8": 2,
+          "14": 3,
+          "20": 4,
+          "26": 5,
+          "32": 6,
+          "3": 7,
+          "9": 9,
+          "15": 10,
+          "21": 11,
+          "27": 13,
+          "33": 15,
+          "4": 16,
+          "10": 18,
+          "16": 20,
+          "22": 22,
+          "28": 24,
+          "34": 26,
+          "5": 28,
+          "11": 31,
+          "17": 33,
+          "23": 36,
+          "29": 38,
+          "35": 41,
+          "6": 44,
+          "12": 47,
+          "18": 50,
+          "24": 53,
+          "30": 56,
+          "36": 60,
+          "37": 0,
+          "38": 0,
+          "39": 0,
+          "40": 0,
+          "41": 0,
+          "42": 0,
+          "43": 0,
+          "44": 0,
+          "45": 0
+        },
+        "Custom66TimerScale": 0.64,
+        "ShortHordeLevels": true,
+        "CustomLevelOrder": {
+          "Story": {
+            "1": {
+              "DLC": "Story",
+              "LevelID": 35
+            },
+            "2": {
+              "DLC": "Story",
+              "LevelID": 18
+            },
+            "3": {
+              "DLC": "Story",
+              "LevelID": 6
+            },
+            "4": {
+              "DLC": "Seasonal",
+              "LevelID": 8
+            },
+            "5": {
+              "DLC": "Story",
+              "LevelID": 15
+            },
+            "6": {
+              "DLC": "Story",
+              "LevelID": 16
+            },
+            "7": {
+              "DLC": "Seasonal",
+              "LevelID": 7
+            },
+            "8": {
+              "DLC": "Story",
+              "LevelID": 30
+            },
+            "9": {
+              "DLC": "Seasonal",
+              "LevelID": 4
+            },
+            "10": {
+              "DLC": "Seasonal",
+              "LevelID": 28
+            },
+            "11": {
+              "DLC": "Story",
+              "LevelID": 26
+            },
+            "12": {
+              "DLC": "Story",
+              "LevelID": 32
+            },
+            "13": {
+              "DLC": "Story",
+              "LevelID": 17
+            },
+            "14": {
+              "DLC": "Story",
+              "LevelID": 7
+            },
+            "15": {
+              "DLC": "Story",
+              "LevelID": 9
+            },
+            "16": {
+              "DLC": "Story",
+              "LevelID": 25
+            },
+            "17": {
+              "DLC": "Story",
+              "LevelID": 22
+            },
+            "18": {
+              "DLC": "Story",
+              "LevelID": 43
+            },
+            "19": {
+              "DLC": "Seasonal",
+              "LevelID": 31
+            },
+            "20": {
+              "DLC": "Seasonal",
+              "LevelID": 26
+            },
+            "21": {
+              "DLC": "Story",
+              "LevelID": 34
+            },
+            "22": {
+              "DLC": "Seasonal",
+              "LevelID": 11
+            },
+            "23": {
+              "DLC": "Story",
+              "LevelID": 42
+            },
+            "24": {
+              "DLC": "Story",
+              "LevelID": 29
+            },
+            "25": {
+              "DLC": "Story",
+              "LevelID": 19
+            },
+            "26": {
+              "DLC": "Seasonal",
+              "LevelID": 2
+            },
+            "27": {
+              "DLC": "Story",
+              "LevelID": 44
+            },
+            "28": {
+              "DLC": "Seasonal",
+              "LevelID": 9
+            },
+            "29": {
+              "DLC": "Story",
+              "LevelID": 39
+            },
+            "30": {
+              "DLC": "Seasonal",
+              "LevelID": 19
+            },
+            "31": {
+              "DLC": "Seasonal",
+              "LevelID": 3
+            },
+            "32": {
+              "DLC": "Story",
+              "LevelID": 27
+            },
+            "33": {
+              "DLC": "Seasonal",
+              "LevelID": 15
+            },
+            "34": {
+              "DLC": "Story",
+              "LevelID": 21
+            },
+            "35": {
+              "DLC": "Story",
+              "LevelID": 24
+            },
+            "37": {
+              "DLC": "Seasonal",
+              "LevelID": 20
+            },
+            "38": {
+              "DLC": "Story",
+              "LevelID": 3
+            },
+            "39": {
+              "DLC": "Story",
+              "LevelID": 37
+            },
+            "40": {
+              "DLC": "Seasonal",
+              "LevelID": 13
+            },
+            "41": {
+              "DLC": "Story",
+              "LevelID": 4
+            },
+            "42": {
+              "DLC": "Seasonal",
+              "LevelID": 21
+            },
+            "43": {
+              "DLC": "Story",
+              "LevelID": 11
+            },
+            "44": {
+              "DLC": "Story",
+              "LevelID": 20
+            },
+            "36": {
+              "DLC": "Story",
+              "LevelID": 36
+            }
+          }
+        },
+        "CustomOrderLifetime": 70.0,
+        "DisableWood": true,
+        "DisableCoal": true,
+        "DisableOnePlate": true,
+        "DisableFireExtinguisher": true,
+        "DisableBellows": true,
+        "PlatesStartDirty": true,
+        "MaxTipCombo": 2,
+        "DisableDash": true,
+        "WeakDash": true,
+        "DisableThrow": true,
+        "DisableCatch": true,
+        "DisableControlStick": true,
+        "DisableWokDrag": true,
+        "DisableGreenRampButton": true,
+        "DisableYellowRampButton": true,
+        "DisableBlueRampButton": true,
+        "DisablePinkRampButton": true,
+        "DisableGreyRampButton": true,
+        "DisableRedRampButton": true,
+        "DisablePurpleRampButton": true,
+        "WashTimeMultiplier": 1.4,
+        "BurnSpeedMultiplier": 1.43,
+        "MaxOrdersOnScreenOffset": -2,
+        "ChoppingTimeScale": 1.4,
+        "BackpackMovementScale": 0.75,
+        "RespawnTime": 10.0,
+        "CarnivalDispenserRefactoryTime": 4.0,
+        "LevelUnlockRequirements": {
+          "2": 1,
+          "3": 2,
+          "4": 3,
+          "5": 4,
+          "6": 5,
+          "8": 7,
+          "9": 8,
+          "10": 9,
+          "11": 10,
+          "12": 11,
+          "14": 13,
+          "15": 14,
+          "16": 15,
+          "17": 16,
+          "18": 17,
+          "20": 19,
+          "21": 20,
+          "22": 21,
+          "23": 22,
+          "24": 23,
+          "26": 25,
+          "27": 26,
+          "28": 27,
+          "29": 28,
+          "30": 29,
+          "32": 31,
+          "33": 32,
+          "34": 33,
+          "35": 34,
+          "36": 35,
+          "37": 20,
+          "38": 31,
+          "39": 11,
+          "40": 41,
+          "41": 18,
+          "42": 38,
+          "43": 17,
+          "44": 4
+        },
+        "LockedEmotes": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "StarOffset": 0,
+        "AggressiveHorde": true,
+        "DisableEarnHordeMoney": true,
+        "OnLevelCompleted": {
+          "1": [
+            {
+              "message": "Progressive Dash Acquired!",
+              "action": "INC_DASH",
+              "payload": ""
+            }
+          ],
+          "2": [
+            {
+              "message": "Coin Purse Acquired!",
+              "action": "SET_VALUE",
+              "payload": "DisableEarnHordeMoney=False"
+            }
+          ],
+          "3": [
+            {
+              "message": "Larger Tip Jar Acquired!",
+              "action": "INC_TIP_COMBO",
+              "payload": ""
+            }
+          ],
+          "4": [
+            {
+              "message": "Kevin-8 Acquired!",
+              "action": "UNLOCK_LEVEL",
+              "payload": "44"
+            }
+          ],
+          "5": [
+            {
+              "message": "Progressive Throw/Catch Acquired!",
+              "action": "INC_THROW",
+              "payload": ""
+            }
+          ],
+          "6": [
+            {
+              "message": "Faster Condiment/Drink Switch Acquired!",
+              "action": "SET_VALUE",
+              "payload": "CarnivalDispenserRefactoryTime=0.0"
+            }
+          ],
+          "7": [
+            {
+              "message": "Fire Extinguisher Acquired!",
+              "action": "SET_VALUE",
+              "payload": "DisableFireExtinguisher=False"
+            }
+          ],
+          "8": [
+            {
+              "message": "Emote Wheel Acquired!",
+              "action": "UNLOCK_EMOTES",
+              "payload": ""
+            }
+          ],
+          "9": [
+            {
+              "message": "Sharp Knife Acquired!",
+              "action": "SET_VALUE",
+              "payload": "ChoppingTimeScale=1.0"
+            }
+          ],
+          "10": [
+            {
+              "message": "Wok Wheels Acquired!",
+              "action": "SET_VALUE",
+              "payload": "DisableWokDrag=False"
+            }
+          ],
+          "11": [
+            {
+              "message": "Kevin-3 Acquired!",
+              "action": "UNLOCK_LEVEL",
+              "payload": "39"
+            }
+          ],
+          "12": [
+            {
+              "message": "Yellow Ramp Acquired!",
+              "action": "SET_VALUE",
+              "payload": "DisableYellowRampButton=False"
+            }
+          ],
+          "13": [
+            {
+              "message": "Bonus Star Acquired!",
+              "action": "INC_STAR_COUNT",
+              "payload": "1"
+            }
+          ],
+          "14": [
+            {
+              "message": "Progressive Throw/Catch Acquired!",
+              "action": "INC_THROW",
+              "payload": ""
+            }
+          ],
+          "15": [
+            {
+              "message": "Dish Scrubber Acquired!",
+              "action": "SET_VALUE",
+              "payload": "WashTimeMultiplier=1.0"
+            }
+          ],
+          "16": [
+            {
+              "message": "Bonus Star Acquired!",
+              "action": "INC_STAR_COUNT",
+              "payload": "1"
+            }
+          ],
+          "17": [
+            {
+              "message": "Kevin-7 Acquired!",
+              "action": "UNLOCK_LEVEL",
+              "payload": "43"
+            }
+          ],
+          "18": [
+            {
+              "message": "Kevin-5 Acquired!",
+              "action": "UNLOCK_LEVEL",
+              "payload": "41"
+            }
+          ],
+          "19": [
+            {
+              "message": "Green Ramp Acquired!",
+              "action": "SET_VALUE",
+              "payload": "DisableGreenRampButton=False"
+            }
+          ],
+          "20": [
+            {
+              "message": "Kevin-1 Acquired!",
+              "action": "UNLOCK_LEVEL",
+              "payload": "37"
+            }
+          ],
+          "21": [
+            {
+              "message": "Spare Plate Acquired!",
+              "action": "SET_VALUE",
+              "payload": "DisableOnePlate=False"
+            }
+          ],
+          "22": [
+            {
+              "message": "Order Lookahead Acquired!",
+              "action": "INC_ORDERS_ON_SCREEN",
+              "payload": ""
+            }
+          ],
+          "23": [
+            {
+              "message": "Purple Ramp Acquired!",
+              "action": "SET_VALUE",
+              "payload": "DisablePurpleRampButton=False"
+            }
+          ],
+          "24": [
+            {
+              "message": "Faster Respawn Time Acquired!",
+              "action": "SET_VALUE",
+              "payload": "RespawnTime=5.0"
+            }
+          ],
+          "25": [
+            {
+              "message": "Dark Green Ramp Acquired!",
+              "action": "SET_VALUE",
+              "payload": "DisableGreyRampButton=False"
+            }
+          ],
+          "26": [
+            {
+              "message": "Control Stick Batteries Acquired!",
+              "action": "SET_VALUE",
+              "payload": "DisableControlStick=False"
+            }
+          ],
+          "27": [
+            {
+              "message": "Blue Ramp Acquired!",
+              "action": "SET_VALUE",
+              "payload": "DisableBlueRampButton=False"
+            }
+          ],
+          "28": [
+            {
+              "message": "Bonus Star Acquired!",
+              "action": "INC_STAR_COUNT",
+              "payload": "1"
+            }
+          ],
+          "29": [
+            {
+              "message": "Red Ramp Acquired!",
+              "action": "SET_VALUE",
+              "payload": "DisableRedRampButton=False"
+            }
+          ],
+          "30": [
+            {
+              "message": "Calmer Unbread Acquired!",
+              "action": "SET_VALUE",
+              "payload": "AggressiveHorde=False"
+            }
+          ],
+          "31": [
+            {
+              "message": "Kevin-2 Acquired!",
+              "action": "UNLOCK_LEVEL",
+              "payload": "38"
+            }
+          ],
+          "32": [
+            {
+              "message": "Burn Leniency Acquired!",
+              "action": "SET_VALUE",
+              "payload": "BurnSpeedMultiplier=1.0"
+            }
+          ],
+          "33": [
+            {
+              "message": "Order Lookahead Acquired!",
+              "action": "INC_ORDERS_ON_SCREEN",
+              "payload": ""
+            }
+          ],
+          "34": [
+            {
+              "message": "Guest Patience Acquired!",
+              "action": "SET_VALUE",
+              "payload": "CustomOrderLifetime=100.0"
+            }
+          ],
+          "35": [
+            {
+              "message": "Clean Dishes Acquired!",
+              "action": "SET_VALUE",
+              "payload": "PlatesStartDirty=False"
+            }
+          ],
+          "37": [
+            {
+              "message": "Pink Ramp Acquired!",
+              "action": "SET_VALUE",
+              "payload": "DisablePinkRampButton=False"
+            }
+          ],
+          "38": [
+            {
+              "message": "Kevin-6 Acquired!",
+              "action": "UNLOCK_LEVEL",
+              "payload": "42"
+            }
+          ],
+          "39": [
+            {
+              "message": "Larger Tip Jar Acquired!",
+              "action": "INC_TIP_COMBO",
+              "payload": ""
+            }
+          ],
+          "40": [
+            {
+              "message": "Bonus Star Acquired!",
+              "action": "INC_STAR_COUNT",
+              "payload": "1"
+            }
+          ],
+          "41": [
+            {
+              "message": "Kevin-4 Acquired!",
+              "action": "UNLOCK_LEVEL",
+              "payload": "40"
+            }
+          ],
+          "42": [
+            {
+              "message": "Bonus Star Acquired!",
+              "action": "INC_STAR_COUNT",
+              "payload": "1"
+            }
+          ],
+          "43": [
+            {
+              "message": "Progressive Dash Acquired!",
+              "action": "INC_DASH",
+              "payload": ""
+            }
+          ],
+          "44": [
+            {
+              "message": "Bonus Star Acquired!",
+              "action": "INC_STAR_COUNT",
+              "payload": "1"
+            }
+          ]
+        },
+        "FixDoubleServing": true,
+        "FixSinkBug": true,
+        "FixControlStickThrowBug": true,
+        "FixEmptyBurnerThrow": true,
+        "PreserveCookingProgress": true,
+        "TimerAlwaysStarts": false,
+        "LevelTimerScale": 0.666,
+        "LeaderboardScoreScale": {
+          "FourStars": 1.0,
+          "ThreeStars": 0.35,
+          "TwoStars": 0.26249999999999996,
+          "OneStar": 0.12249999999999998
+        },
+        "AlwaysServeOldestOrder": true
       },
       "level_logic": {
         "*": [

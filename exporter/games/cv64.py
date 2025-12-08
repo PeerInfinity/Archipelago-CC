@@ -9,6 +9,10 @@ logger = logging.getLogger(__name__)
 
 class Cv64GameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'Castlevania 64'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
     """Export handler for Castlevania 64."""
     
     def __init__(self, world):

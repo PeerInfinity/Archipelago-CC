@@ -1626,6 +1626,9 @@
       "Wood Man Access Codes": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -1639,6 +1642,34 @@
       "game": "Mega Man 2",
       "assume_bidirectional_exits": false,
       "use_resolved_items": true,
+      "options": {
+        "accessibility": 0,
+        "consumables": 1,
+        "death_link": 0,
+        "enable_lasers": 0,
+        "enemy_weakness": 0,
+        "energy_link": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "palette_shuffle": 0,
+        "plando_items": [],
+        "plando_weakness": {},
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "quickswap": 1,
+        "random_music": 0,
+        "random_weakness": 0,
+        "reduce_flashing": 1,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "starting_robot_master": 1,
+        "strict_weakness": 0,
+        "wily_5_requirement": 8,
+        "yoku_jumps": 0
+      },
       "wily_5_requirement": 8,
       "wily_5_weapons": {
         "0": [],
@@ -1658,6 +1689,180 @@
       "name": "Mega Man 2",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "partyTime",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Mega Man 2 randomizer connected to an Archipelago Multiworld.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Silvris"
+          ]
+        }
+      ],
+      "world_description": "In the year 200X, following his prior defeat by Mega Man, the evil Dr. Wily has returned to take over the world with\nhis own group of Robot Masters. Mega Man once again sets out to defeat the eight Robot Masters and stop Dr. Wily.",
+      "slot_data": {
+        "death_link": 0,
+        "weapon_damage": {
+          "0": [
+            2,
+            2,
+            1,
+            1,
+            2,
+            2,
+            1,
+            1,
+            1,
+            7,
+            1,
+            0,
+            1,
+            -1
+          ],
+          "1": [
+            -1,
+            6,
+            14,
+            0,
+            10,
+            6,
+            4,
+            6,
+            8,
+            13,
+            8,
+            0,
+            14,
+            -1
+          ],
+          "2": [
+            2,
+            0,
+            4,
+            0,
+            2,
+            0,
+            0,
+            10,
+            0,
+            0,
+            0,
+            0,
+            1,
+            -1
+          ],
+          "3": [
+            0,
+            8,
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            -1
+          ],
+          "4": [
+            6,
+            0,
+            0,
+            -1,
+            0,
+            2,
+            0,
+            1,
+            0,
+            14,
+            1,
+            0,
+            0,
+            1
+          ],
+          "5": [
+            2,
+            2,
+            0,
+            2,
+            0,
+            0,
+            4,
+            1,
+            1,
+            7,
+            2,
+            0,
+            1,
+            -1
+          ],
+          "6": [
+            -1,
+            0,
+            2,
+            2,
+            4,
+            3,
+            0,
+            0,
+            1,
+            0,
+            1,
+            20,
+            1,
+            -1
+          ],
+          "7": [
+            1,
+            0,
+            2,
+            4,
+            0,
+            4,
+            14,
+            0,
+            0,
+            7,
+            0,
+            0,
+            1,
+            -1
+          ],
+          "8": [
+            0,
+            0,
+            0,
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "wily_5_weapons": {
+          "0": [],
+          "1": [],
+          "2": [],
+          "3": [],
+          "4": [],
+          "5": [],
+          "6": [],
+          "7": [],
+          "12": []
+        }
       }
     }
   },

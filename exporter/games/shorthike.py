@@ -8,6 +8,10 @@ logger = logging.getLogger(__name__)
 
 class ShortHikeGameExportHandler(BaseGameExportHandler):
     GAME_NAME = 'A Short Hike'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
     """A Short Hike specific export handler based on game mechanics."""
     
     def expand_helper(self, helper_name: str):

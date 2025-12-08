@@ -17,6 +17,10 @@ logger = logging.getLogger(__name__)
 
 class OSRSGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'Old School Runescape'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
 
     def __init__(self):
         super().__init__()

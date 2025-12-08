@@ -10,6 +10,10 @@ class TLoZGameExportHandler(GenericGameExportHandler):
     """Export handler for The Legend of Zelda."""
 
     GAME_NAME = 'The Legend of Zelda'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

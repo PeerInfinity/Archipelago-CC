@@ -13349,6 +13349,9 @@
       "Wings": 5
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -13359,7 +13362,48 @@
     "1": {
       "game": "Secret of Evermore",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": true
+      "use_resolved_items": true,
+      "options": {
+        "accessibility": 0,
+        "available_fragments": 11,
+        "callbeadamizer": 1,
+        "death_link": 0,
+        "difficulty": 1,
+        "doggomizer": 0,
+        "energy_core": 1,
+        "exclude_locations": [],
+        "exp_modifier": 200,
+        "fix_atlas_glitch": 0,
+        "fix_cheats": 1,
+        "fix_infinite_ammo": 0,
+        "fix_wings_glitch": 0,
+        "ingredienizer": 1,
+        "item_links": [],
+        "local_items": [],
+        "money_modifier": 200,
+        "musicmizer": 0,
+        "non_local_items": [],
+        "out_of_bounds": 0,
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 30,
+        "required_fragments": 10,
+        "sequence_breaks": 0,
+        "short_boss_rush": 1,
+        "shorter_dialogs": 1,
+        "sniff_ingredients": 0,
+        "sniffamizer": 1,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "trap_chance_confound": 20,
+        "trap_chance_hud": 20,
+        "trap_chance_ohko": 20,
+        "trap_chance_poison": 20,
+        "trap_chance_quake": 20,
+        "trap_count": 0,
+        "turdo_mode": 0
+      }
     }
   },
   "game_info": {
@@ -13367,7 +13411,21 @@
       "name": "Secret of Evermore",
       "rule_format": {
         "version": "1.0"
-      }
+      },
+      "web_theme": "jungle",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to playing Secret of Evermore randomizer. This guide covers single-player, multiworld and related software.",
+          "language": "English",
+          "file_name": "multiworld_en.md",
+          "link": "multiworld/en",
+          "authors": [
+            "Black Sliver"
+          ]
+        }
+      ],
+      "world_description": "Secret of Evermore is a SNES action RPG. You learn alchemy spells, fight bosses and gather rocket parts to visit a\nspace station where the final boss must be defeated."
     }
   },
   "helpers": {}

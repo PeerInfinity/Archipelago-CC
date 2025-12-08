@@ -5869,6 +5869,9 @@
       "Victory": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -5885,6 +5888,38 @@
       "game": "Yacht Dice",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "add_bonus_points": 2,
+        "add_story_chapters": 3,
+        "allow_manual_input": 1,
+        "alternative_categories": 0,
+        "exclude_locations": [],
+        "game_difficulty": 2,
+        "item_links": [],
+        "local_items": [],
+        "minimal_number_of_dice_and_rolls": 2,
+        "minimize_extra_items": 1,
+        "non_local_items": [],
+        "number_of_dice_fragments_per_dice": 4,
+        "number_of_roll_fragments_per_roll": 4,
+        "plando_items": [],
+        "points_size": 2,
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "score_for_goal": 777,
+        "score_for_last_check": 1000,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "weight_of_dice": 5,
+        "weight_of_double_category": 50,
+        "weight_of_fixed_score_multiplier": 30,
+        "weight_of_points": 20,
+        "weight_of_roll": 20,
+        "weight_of_step_score_multiplier": 0,
+        "which_story": -1
+      },
       "add_sphere_items_upfront": true
     }
   },
@@ -5893,6 +5928,54 @@
       "name": "Yacht Dice",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "grass",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up Yacht Dice. This guide covers single-player, multiworld, and website.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Spineraks"
+          ]
+        }
+      ],
+      "world_description": "Yacht Dice is a straightforward game, custom-made for Archipelago,\nwhere you cast your dice to chart a course for high scores,\nunlocking valuable treasures along the way.\nDiscover more dice, extra rolls, multipliers,\nand unlockable categories to navigate the depths of the game.\nRoll your way to victory by reaching the target score!",
+      "slot_data": {
+        "seed_name": "14089154938208861744",
+        "player_name": "Player1",
+        "player_id": 1,
+        "race": false,
+        "game_difficulty": 2,
+        "score_for_last_check": 1000,
+        "score_for_goal": 777,
+        "number_of_dice_fragments_per_dice": 4,
+        "number_of_roll_fragments_per_roll": 4,
+        "which_story": -1,
+        "allow_manual_input": 1,
+        "goal_score": 777,
+        "last_check_score": 1000,
+        "allowed_categories": [
+          "Category Choice",
+          "Category Inverse Choice",
+          "Category Ones",
+          "Category Twos",
+          "Category Threes",
+          "Category Fours",
+          "Category Fives",
+          "Category Sixes",
+          "Category Pair",
+          "Category Three of a Kind",
+          "Category Four of a Kind",
+          "Category Tiny Straight",
+          "Category Small Straight",
+          "Category Large Straight",
+          "Category Full House",
+          "Category Yacht"
+        ],
+        "ap_world_version": "2.1.4"
       }
     }
   },

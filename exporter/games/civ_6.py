@@ -8,6 +8,10 @@ logger = logging.getLogger(__name__)
 
 class Civ6GameExportHandler(BaseGameExportHandler):
     GAME_NAME = 'Civilization VI'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
     """Handler for Civilization VI-specific rules."""
     
     def get_game_info(self, world) -> Dict[str, Any]:

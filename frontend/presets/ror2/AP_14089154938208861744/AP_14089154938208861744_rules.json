@@ -4853,6 +4853,9 @@
       "Wetland Aspect": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -4866,7 +4869,59 @@
     "1": {
       "game": "Risk of Rain 2",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "altars_per_stage": 1,
+        "boss_item": 4,
+        "chests_per_stage": 10,
+        "combat_trap": 20,
+        "common_item": 64,
+        "death_link": 0,
+        "dlc_sotv": 0,
+        "enable_lunar": 1,
+        "enable_trap": 0,
+        "equipment": 32,
+        "exclude_locations": [],
+        "experience": 40,
+        "final_stage_death": 0,
+        "goal": 1,
+        "green_scrap": 16,
+        "item_links": [],
+        "item_pickup_step": 1,
+        "item_pool_presets": 0,
+        "item_weights": 0,
+        "legendary_item": 8,
+        "local_items": [],
+        "lunar_coin": 20,
+        "lunar_item": 16,
+        "money": 64,
+        "mountain_trap": 5,
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "progressive_stages": 1,
+        "red_scrap": 4,
+        "require_stages": 1,
+        "scanner_per_stage": 1,
+        "scavengers_per_stage": 0,
+        "shrine_use_step": 0,
+        "shrines_per_stage": 5,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "start_with_revive": 1,
+        "teleport_trap": 20,
+        "time_warp_trap": 20,
+        "total_locations": 40,
+        "total_revivals": 4,
+        "uncommon_item": 32,
+        "victory": 0,
+        "void_item": 16,
+        "white_scrap": 32,
+        "yellow_scrap": 1
+      }
     }
   },
   "game_info": {
@@ -4874,6 +4929,41 @@
       "name": "Risk of Rain 2",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "grass",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Risk of Rain 2 integration for Archipelago multiworld games.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Ijwu",
+            "Kindasneaki"
+          ]
+        }
+      ],
+      "world_description": "Escape a chaotic alien planet by fighting through hordes of frenzied monsters \u2013 with your friends, or on your own.\nCombine loot in surprising ways and master each character until you become the havoc you feared upon your\nfirst crash landing.",
+      "slot_data": {
+        "itemPickupStep": 1,
+        "shrineUseStep": 0,
+        "goal": 1,
+        "victory": 0,
+        "totalLocations": 40,
+        "chestsPerStage": 10,
+        "shrinesPerStage": 5,
+        "scavengersPerStage": 0,
+        "scannerPerStage": 1,
+        "altarsPerStage": 1,
+        "totalRevivals": 4,
+        "startWithRevive": 1,
+        "finalStageDeath": 0,
+        "deathLink": 0,
+        "requireStages": 1,
+        "progressiveStages": 1,
+        "seed": "3991975562123098",
+        "offset": 37000
       }
     }
   },

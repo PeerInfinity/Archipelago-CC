@@ -8,6 +8,10 @@ logger = logging.getLogger(__name__)
 
 class MMBN3GameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'MegaMan Battle Network 3'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
     """Export handler for MegaMan Battle Network 3."""
 
     def expand_helper(self, helper_name: str):

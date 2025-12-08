@@ -28865,6 +28865,9 @@
       "Vintage": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -28876,6 +28879,50 @@
       "game": "TUNIC",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
+      "options": {
+        "ability_shuffling": 1,
+        "accessibility": 0,
+        "all_random": 0,
+        "breakable_shuffle": 0,
+        "combat_logic": 0,
+        "decoupled": 0,
+        "entrance_layout": 0,
+        "entrance_rando": 0,
+        "exclude_locations": [],
+        "extra_hexagon_percentage": 50,
+        "fixed_shop": "",
+        "fool_traps": 1,
+        "grass_randomizer": 0,
+        "hexagon_goal": 20,
+        "hexagon_quest": 0,
+        "hexagon_quest_ability_type": 0,
+        "ice_grappling": 0,
+        "item_links": [],
+        "keys_behind_bosses": 0,
+        "ladder_storage": 0,
+        "ladder_storage_without_items": 0,
+        "lanternless": 0,
+        "laurels_location": 0,
+        "laurels_zips": 0,
+        "local_fill": 0,
+        "local_items": [],
+        "logic_rules": "",
+        "maskless": 0,
+        "non_local_items": [],
+        "plando_connections": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "shuffle_bells": 0,
+        "shuffle_fuses": 0,
+        "shuffle_ladders": 0,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_inventory_from_pool": {},
+        "start_location_hints": [],
+        "start_with_sword": 0,
+        "sword_progression": 1
+      },
       "ability_unlocks": {
         "Pages 42-43 (Holy Cross)": 1,
         "Pages 52-53 (Icebolt)": 1,
@@ -28898,6 +28945,156 @@
       "name": "TUNIC",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "grassFlowers",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the TUNIC Randomizer for Archipelago multiworld games.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "SilentDestroyer"
+          ]
+        }
+      ],
+      "world_description": "Explore a land filled with lost legends, ancient powers, and ferocious monsters in TUNIC, an isometric action game\nabout a small fox on a big adventure. Stranded on a mysterious beach, armed with only your own curiosity, you will\nconfront colossal beasts, collect strange and powerful items, and unravel long-lost secrets. Be brave, tiny fox!",
+      "slot_data": {
+        "seed": 749489738,
+        "start_with_sword": 0,
+        "keys_behind_bosses": 0,
+        "sword_progression": 1,
+        "ability_shuffling": 1,
+        "hexagon_quest": 0,
+        "hexagon_quest_ability_type": 0,
+        "fool_traps": 1,
+        "laurels_zips": 0,
+        "ice_grappling": 0,
+        "ladder_storage": 0,
+        "ladder_storage_without_items": 0,
+        "lanternless": 0,
+        "maskless": 0,
+        "entrance_rando": 0,
+        "decoupled": 0,
+        "shuffle_ladders": 0,
+        "shuffle_fuses": 0,
+        "shuffle_bells": 0,
+        "grass_randomizer": 0,
+        "combat_logic": 0,
+        "Hexagon Quest Prayer": 1,
+        "Hexagon Quest Holy Cross": 1,
+        "Hexagon Quest Icebolt": 1,
+        "Hexagon Quest Goal": 20,
+        "Entrance Rando": {},
+        "disable_local_spoiler": 0,
+        "breakable_shuffle": 0,
+        "Sword Upgrade": [
+          "Beneath the Well - [Back Corridor] Left Secret",
+          1,
+          "Beneath the Well - [Save Room] Upper Floor Chest 1",
+          1,
+          "Changing Room - Normal Chest",
+          1,
+          "Swamp - [South Graveyard] Obscured Beneath Telescope",
+          1
+        ],
+        "Magic Wand": [
+          "Southeast Cross Door - Chest 1",
+          1
+        ],
+        "Magic Dagger": [
+          "Cube Cave - Holy Cross Chest",
+          1
+        ],
+        "Magic Orb": [
+          "Fortress Courtyard - Chest Near Cave",
+          1
+        ],
+        "Hero's Laurels": [
+          "Swamp - [Upper Graveyard] Near Telescope",
+          1
+        ],
+        "Lantern": [
+          "Rooted Ziggurat Lower - After Guarded Fuse",
+          1
+        ],
+        "Gun": [
+          "Fortress East Shortcut - Chest Near Slimes",
+          1
+        ],
+        "Shield": [
+          "Overworld - [Northwest] Fire Wand Pickup",
+          1
+        ],
+        "Dath Stone": [
+          "Beneath the Well - [Back Corridor] Right Secret",
+          1
+        ],
+        "Hourglass": [
+          "West Garden - [West] In Flooded Walkway",
+          1
+        ],
+        "Old House Key": [
+          "Caustic Light Cave - Holy Cross Chest",
+          1
+        ],
+        "Fortress Vault Key": [
+          "Cathedral Gauntlet - Gauntlet Reward",
+          1
+        ],
+        "Red Questagon": [
+          "Quarry - [East] Bombable Wall",
+          1
+        ],
+        "Green Questagon": [
+          "West Garden - [Central Lowlands] Chest Beneath Faeries",
+          1
+        ],
+        "Blue Questagon": [
+          "West Garden - [Central Highlands] Behind Guard Captain",
+          1
+        ],
+        "Hero Relic - ATT": [
+          "West Garden - [Central Lowlands] Passage Beneath Bridge",
+          1
+        ],
+        "Hero Relic - DEF": [
+          "Coins in the Well - 6 Coins",
+          1
+        ],
+        "Hero Relic - HP": [
+          "Beneath the Well - [Second Room] Obscured Behind Waterfall",
+          1
+        ],
+        "Hero Relic - MP": [
+          "Overworld - [Southwest] From West Garden",
+          1
+        ],
+        "Hero Relic - POTION": [
+          "Quarry - [West] Upper Area Bombable Wall",
+          1
+        ],
+        "Hero Relic - SP": [
+          "Quarry - [West] Lower Area After Bridge",
+          1
+        ],
+        "Scavenger Mask": [
+          "Library Lab - Chest By Shrine 2",
+          1
+        ],
+        "Pages 24-25 (Prayer)": [
+          "Overworld - [Southwest] Fountain Holy Cross",
+          1
+        ],
+        "Pages 42-43 (Holy Cross)": [
+          "Ruined Atoll - [Northeast] Chest On Brick Walkway",
+          1
+        ],
+        "Pages 52-53 (Icebolt)": [
+          "Quarry - [West] Near Shooting Range",
+          1
+        ]
       }
     }
   },

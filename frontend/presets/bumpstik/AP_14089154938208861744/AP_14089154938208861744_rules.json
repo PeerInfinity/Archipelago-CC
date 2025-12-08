@@ -1811,109 +1811,145 @@
   "items": {
     "1": {
       "Nothing": {
-        "classification": "filler",
-        "type": "Other",
+        "name": "Nothing",
         "id": 595000,
         "groups": [
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "Score Bonus": {
-        "classification": "filler",
-        "type": "Other",
+        "name": "Score Bonus",
         "id": 595001,
         "groups": [
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 22,
+        "classification": "filler"
       },
       "Task Advance": {
-        "classification": "useful",
-        "type": "Helper",
+        "name": "Task Advance",
         "id": 595002,
         "groups": [
           "Everything",
           "Helpers"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 4,
+        "classification": "useful"
       },
       "Starting Turner": {
-        "classification": "useful",
-        "type": "Helper",
+        "name": "Starting Turner",
         "id": 595003,
         "groups": [
           "Everything",
           "Helpers"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "useful"
       },
       "Reserved": {
-        "classification": "filler",
-        "type": "Other",
+        "name": "Reserved",
         "id": 595004,
         "groups": [
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "Starting Paint Can": {
-        "classification": "useful",
-        "type": "Helper",
+        "name": "Starting Paint Can",
         "id": 595005,
         "groups": [
           "Everything",
           "Helpers"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "useful"
       },
       "Booster Bumper": {
-        "classification": "progression",
-        "type": "Target",
+        "name": "Booster Bumper",
         "id": 595006,
         "groups": [
           "Everything",
           "Targets"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 5,
+        "classification": "progression"
       },
       "Hazard Bumper": {
-        "classification": "progression",
-        "type": "Target",
+        "name": "Hazard Bumper",
         "id": 595007,
         "groups": [
           "Everything",
           "Targets"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 25,
+        "classification": "progression"
       },
       "Treasure Bumper": {
-        "classification": "progression",
-        "type": "Target",
+        "name": "Treasure Bumper",
         "id": 595008,
         "groups": [
           "Everything",
           "Targets"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 33,
+        "classification": "progression"
       },
       "Rainbow Trap": {
-        "classification": "trap",
-        "type": "Trap",
+        "name": "Rainbow Trap",
         "id": 595009,
         "groups": [
           "Everything",
           "Traps"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "trap"
       },
       "Spinner Trap": {
-        "classification": "trap",
-        "type": "Trap",
+        "name": "Spinner Trap",
         "id": 595010,
         "groups": [
           "Everything",
           "Traps"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "trap"
       },
       "Killer Trap": {
-        "classification": "trap",
-        "type": "Trap",
+        "name": "Killer Trap",
         "id": 595011,
         "groups": [
           "Everything",
           "Traps"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       }
     }
   },
@@ -1938,6 +1974,9 @@
       "Treasure Bumper": 33
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -1948,7 +1987,27 @@
     "1": {
       "game": "Bumper Stickers",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "killer_trap_weight": 0,
+        "local_items": [],
+        "non_local_items": [],
+        "paint_cans": 3,
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "rainbow_trap_weight": 50,
+        "spinner_trap_weight": 50,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "task_advances": 4,
+        "trap_count": 5,
+        "turners": 3
+      }
     }
   },
   "game_info": {
@@ -1956,7 +2015,21 @@
       "name": "Bumper Stickers",
       "rule_format": {
         "version": "1.0"
-      }
+      },
+      "web_theme": "stone",
+      "web_tutorials": [
+        {
+          "name": "Bumper Stickers Setup Guide",
+          "description": "A guide to setting up the Archipelago Bumper Stickers software on your computer.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "KewlioMZX"
+          ]
+        }
+      ],
+      "world_description": "Bumper Stickers is a match-three puzzle game unlike any you've seen.\nLaunch Bumpers onto the field, and match them in sets of three of the same color.\nHow long can you go without getting Jammed?"
     }
   },
   "helpers": {}

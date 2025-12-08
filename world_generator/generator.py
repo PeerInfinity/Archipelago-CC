@@ -102,11 +102,11 @@ class WorldGenerator:
         # Update game name
         self.data.metadata.game_name = new_name
 
-        # Update world class name: "My Game Test" -> "MyGameTestWorld"
+        # Update world class name: "My Game WorldGen" -> "MyGameWorldGenWorld"
         class_base = sanitize_identifier(new_name)
         self.data.metadata.world_class_name = class_base + 'World'
 
-        # Update game directory: "My Game Test" -> "my_game_test"
+        # Update game directory: "My Game WorldGen" -> "my_game_worldgen"
         # First remove non-alphanumeric chars except spaces and dashes, then convert to snake_case
         import re
         clean_name = re.sub(r"[^a-zA-Z0-9 -]", '', new_name)
