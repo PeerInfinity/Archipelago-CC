@@ -340,8 +340,9 @@ class ASTVisitorMixin:
                                 if recursive_result.get('type') != 'error':
                                     # Check if the result is too large to inline
                                     # If so, discard the analyzed result and treat like manual preservation
+                                    auto_preserve = getattr(self.game_handler, 'AUTO_PRESERVE_LARGE_HELPERS', False) if self.game_handler else False
                                     threshold = getattr(self.game_handler, 'HELPER_INLINE_THRESHOLD', 0) if self.game_handler else 0
-                                    if threshold > 0 and actual_func_name:
+                                    if auto_preserve and actual_func_name:
                                         from exporter.games.base import BaseGameExportHandler
                                         size = BaseGameExportHandler.count_rule_nodes(recursive_result)
                                         if size > threshold:
@@ -417,9 +418,10 @@ class ASTVisitorMixin:
                           if recursive_result.get('type') != 'error':
                               # Check if the result is too large to inline
                               # If so, discard the analyzed result and treat like manual preservation
+                              auto_preserve = getattr(self.game_handler, 'AUTO_PRESERVE_LARGE_HELPERS', False) if self.game_handler else False
                               threshold = getattr(self.game_handler, 'HELPER_INLINE_THRESHOLD', 0) if self.game_handler else 0
                               closure_func_name = getattr(actual_func, '__name__', func_name)
-                              if threshold > 0 and closure_func_name:
+                              if auto_preserve and closure_func_name:
                                   from exporter.games.base import BaseGameExportHandler
                                   size = BaseGameExportHandler.count_rule_nodes(recursive_result)
                                   if size > threshold:

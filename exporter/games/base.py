@@ -47,11 +47,14 @@ class BaseGameExportHandler:
     # of overriding the method
     HELPERS_TO_PRESERVE: Set[str] = set()
 
-    # Threshold for automatic helper preservation based on size
-    # If a helper's analyzed rule tree has more nodes than this, it will be
-    # preserved as a helper call instead of inlined. Set to 0 to disable.
-    # This helps reduce rules.json size when helpers are large and used multiple times.
-    HELPER_INLINE_THRESHOLD: int = 0  # Disabled by default
+    # Enable automatic helper preservation based on size
+    # When enabled, helpers with more nodes than HELPER_INLINE_THRESHOLD will be
+    # preserved as helper calls instead of inlined, reducing rules.json size
+    AUTO_PRESERVE_LARGE_HELPERS: bool = False  # Disabled by default
+
+    # Threshold for automatic helper preservation (only used if AUTO_PRESERVE_LARGE_HELPERS is True)
+    # Helpers with more than this many nodes will be preserved as helper calls
+    HELPER_INLINE_THRESHOLD: int = 0
 
     def __init__(self):
         """Initialize the handler with an empty set of discovered helpers."""
