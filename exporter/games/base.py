@@ -8,7 +8,7 @@ defaults for rule analysis, item data discovery, and common helper patterns.
 See exporter/games/generic.py for details on the enhanced functionality.
 """
 
-from typing import Dict, Any, List, Set, Optional
+from typing import Dict, Any, List, Set, Optional, Callable
 import collections
 import importlib
 import logging
@@ -22,6 +22,12 @@ class BaseGameExportHandler:
 
     # List of module paths containing helper functions (e.g., ['worlds.shapez.regions'])
     HELPER_MODULES: List[str] = []
+
+    # Dict mapping setting names to callables that compute them
+    # Callable signature: (world, multiworld, player) -> value
+    # Example: {'floating': lambda w, m, p: w.options.allow_floating_layers.value}
+    # These settings are automatically added to the exported settings by get_settings_data
+    COMPUTED_SETTINGS: Dict[str, Callable] = {}
 
     # List of module paths containing item name constants (e.g., ['worlds.shapez.data.strings'])
     # The exporter will look for classes like ITEMS with attributes that map to item names
@@ -449,6 +455,15 @@ class BaseGameExportHandler:
                     pass
             if options_dict:
                 settings_dict['options'] = options_dict
+
+        # Process computed settings from COMPUTED_SETTINGS class attribute
+        if self.COMPUTED_SETTINGS:
+            for setting_name, compute_func in self.COMPUTED_SETTINGS.items():
+                try:
+                    value = compute_func(world, multiworld, player)
+                    settings_dict[setting_name] = value
+                except Exception as e:
+                    logger.warning(f"Failed to compute setting '{setting_name}': {e}")
 
         return settings_dict
         
