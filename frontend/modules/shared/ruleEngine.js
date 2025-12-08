@@ -1623,6 +1623,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
         // Build the string by evaluating each part
         let resultStr = '';
+        let hasError = false;
         for (const part of rule.parts) {
           if (part.type === 'constant') {
             resultStr += part.value;
@@ -1631,21 +1632,19 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             const value = evaluateRule(part.value, context, depth + 1);
             if (value === undefined) {
               log('warn', '[evaluateRule] f_string formatted_value evaluated to undefined', { part });
-              result = undefined;
+              hasError = true;
               break;
             }
             resultStr += String(value);
           } else {
             log('warn', '[evaluateRule] Unknown f_string part type', { part });
-            result = undefined;
+            hasError = true;
             break;
           }
         }
 
-        // If we successfully built the string, return it
-        if (result !== undefined) {
-          result = resultStr;
-        }
+        // If we successfully built the string, return it; otherwise undefined
+        result = hasError ? undefined : resultStr;
         break;
       }
 
