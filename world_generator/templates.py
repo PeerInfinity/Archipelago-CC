@@ -243,6 +243,8 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
         )
 
         # Apply location properties from location_data
+        if location_data.event:
+            location.event = True
         if location_data.progress_type is not None:
             location.progress_type = location_data.progress_type
         if not location_data.show_in_spoiler:
@@ -382,16 +384,22 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     class_name = sanitize_class_name(game_name)
     world_class = data.metadata.world_class_name
 
-    # Build original placements dict (only needed if canonical_seed1 is enabled)
+    # Build canonical placements dict (only needed if canonical_seed1 is enabled)
+    # Use canonical_placements if available, otherwise fall back to original_placements
     placement_entries = []
+    canonical_class_attr_entries = []  # For the class attribute (exporter to read)
     if canonical_seed1:
-        for loc_name, item_name in data.original_placements.items():
+        # Prefer canonical_placements (from world class attribute) over original_placements
+        placements_source = data.canonical_placements if data.canonical_placements else data.original_placements
+        for loc_name, item_name in placements_source.items():
             if item_name:  # Skip empty placements
                 loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
                 item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
                 placement_entries.append(f'        "{loc_escaped}": "{item_escaped}",')
+                canonical_class_attr_entries.append(f'        "{loc_escaped}": "{item_escaped}",')
 
     placements_content = '\n'.join(placement_entries)
+    canonical_class_attr_content = '\n'.join(canonical_class_attr_entries)
 
     # Find victory location and item
     victory_location = None
@@ -435,35 +443,38 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
         if self.multiworld.seed == 1:
             self.options.randomize_items.value = False
 '''
+        # Use pre_fill() for canonical placements like the original bakingadventure does
+        # This ensures items are created first, then placed/removed from pool later
         create_items_section = f'''
     def create_items(self) -> None:
-        """Create the item pool."""
+'''
+        # Add pre_fill section for canonical placement
+        pre_fill_section = f'''
+    def pre_fill(self) -> None:
+        """Pre-fill items if not randomizing."""
         if not self.options.randomize_items.value:
             self._place_original_items()
-        else:
-            self._create_item_pool()
 
     def _place_original_items(self) -> None:
-        """Place items in their original locations (for seed=1)."""
-        original_placements = {{
-{placements_content}
-        }}
+        """Place items in their canonical locations when not randomized."""
+        for location_name, item_name in self.canonical_placements.items():
+            location = self.multiworld.get_location(location_name, self.player)
 
-        for location_name, item_name in original_placements.items():
-            if item_name and item_name in item_table:
-                location = self.multiworld.get_location(location_name, self.player)
-                item_data = item_table[item_name]
-                item = {class_name}Item(
-                    item_name,
-                    item_data.classification,
-                    item_data.id,
-                    self.player
-                )
-                location.place_locked_item(item)
+            # Skip if already filled (e.g., by _place_locked_items or generate_basic)
+            if location.item is not None:
+                continue
 
-    def _create_item_pool(self) -> None:
+            item = self.create_item(item_name)
+            location.place_locked_item(item)
+
+            # Remove the item from the pool if it exists
+            for pool_item in self.multiworld.itempool[:]:
+                if pool_item.name == item_name and pool_item.player == self.player:
+                    self.multiworld.itempool.remove(pool_item)
+                    break
 '''
     else:
+        pre_fill_section = ''
         generate_early_section = '''
     def generate_early(self) -> None:
         """Push starting items as precollected."""
@@ -473,13 +484,29 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     def create_items(self) -> None:
 '''
 
-    # Build locked_placements dictionary (preserve original order)
+    # Build locked_placements dictionary
+    # When canonical_placements is available, LOCKED_PLACEMENTS should only contain
+    # items that are ALWAYS locked (like Victory events), not items that are
+    # canonical but should be randomizable.
+    # We determine this by checking if the item is an event (id=None).
     locked_entries = []
-    for loc_name, item_name in data.locked_placements.items():
-        if item_name:
-            loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
-            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
-            locked_entries.append(f'    "{loc_escaped}": "{item_escaped}",')
+    if data.canonical_placements:
+        # Only include truly locked items (events) - not canonical placements
+        for loc_name, item_name in data.locked_placements.items():
+            if item_name:
+                # Check if this is an event item (id=None)
+                item_data = data.items.get(item_name)
+                if item_data and item_data.is_event:
+                    loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
+                    item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+                    locked_entries.append(f'    "{loc_escaped}": "{item_escaped}",')
+    else:
+        # No canonical_placements - use all locked placements as before
+        for loc_name, item_name in data.locked_placements.items():
+            if item_name:
+                loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
+                item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+                locked_entries.append(f'    "{loc_escaped}": "{item_escaped}",')
 
     locked_content = '\n'.join(locked_entries)
 
@@ -537,20 +564,55 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
     else:
         prog_items_init_section = ''
 
-    # Count locked items to subtract from itempool_counts
-    locked_item_counts: Dict[str, int] = {}
-    for loc_name, item_name in data.locked_placements.items():
-        if item_name:
-            locked_item_counts[item_name] = locked_item_counts.get(item_name, 0) + 1
+    # Generate canonical_placements class attribute (for exporter to read)
+    if canonical_seed1 and canonical_class_attr_content:
+        canonical_placements_section = f'''
+    # Canonical item placements - where items belong in the "vanilla" game
+    # Used by exporter to distinguish canonical placements from always-locked items
+    canonical_placements: ClassVar[Dict[str, str]] = {{
+{canonical_class_attr_content}
+    }}
+'''
+    else:
+        canonical_placements_section = ''
 
-    # Build itempool_counts dictionary (preserve original order, excluding locked items)
+    # Build itempool_counts dictionary
+    # When canonical_placements is available, we use the full itempool_counts
+    # (items are either in the pool for randomization, or placed canonically for seed=1).
+    # Only subtract truly locked items (events) from the pool.
     itempool_entries = []
-    for item_name, count in data.itempool_counts.items():
-        # Subtract locked items from the count
-        adjusted_count = count - locked_item_counts.get(item_name, 0)
-        if adjusted_count > 0:
-            item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
-            itempool_entries.append(f'    "{item_escaped}": {adjusted_count},')
+    if data.canonical_placements:
+        # Count only event items that are locked (these are subtracted from pool)
+        event_item_counts: Dict[str, int] = {}
+        for loc_name, item_name in data.locked_placements.items():
+            if item_name:
+                item_data = data.items.get(item_name)
+                if item_data and item_data.is_event:
+                    event_item_counts[item_name] = event_item_counts.get(item_name, 0) + 1
+
+        for item_name, count in data.itempool_counts.items():
+            # Subtract event items from the count
+            adjusted_count = count - event_item_counts.get(item_name, 0)
+            if adjusted_count > 0:
+                # Skip event items entirely (they shouldn't be in the pool)
+                item_data = data.items.get(item_name)
+                if item_data and item_data.is_event:
+                    continue
+                item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+                itempool_entries.append(f'    "{item_escaped}": {adjusted_count},')
+    else:
+        # No canonical_placements - subtract all locked items as before
+        locked_item_counts: Dict[str, int] = {}
+        for loc_name, item_name in data.locked_placements.items():
+            if item_name:
+                locked_item_counts[item_name] = locked_item_counts.get(item_name, 0) + 1
+
+        for item_name, count in data.itempool_counts.items():
+            # Subtract locked items from the count
+            adjusted_count = count - locked_item_counts.get(item_name, 0)
+            if adjusted_count > 0:
+                item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+                itempool_entries.append(f'    "{item_escaped}": {adjusted_count},')
 
     itempool_content = '\n'.join(itempool_entries)
 
@@ -563,13 +625,95 @@ def generate_init_py(data: ExtractedData, canonical_seed1: bool = False) -> str:
 
     item_name_groups_content = '\n'.join(item_name_groups_entries)
 
+    # Build web theme
+    web_theme = data.metadata.web_theme or "ocean"
+
+    # Build tutorials content
+    tutorials_content = "[]"
+    if data.metadata.web_tutorials:
+        tutorial_entries = []
+        for t in data.metadata.web_tutorials:
+            name_escaped = t.name.replace('\\', '\\\\').replace('"', '\\"')
+            desc_escaped = t.description.replace('\\', '\\\\').replace('"', '\\"')
+            lang_escaped = t.language.replace('\\', '\\\\').replace('"', '\\"')
+            file_escaped = t.file_name.replace('\\', '\\\\').replace('"', '\\"')
+            link_escaped = t.link.replace('\\', '\\\\').replace('"', '\\"')
+            authors_list = ', '.join(f'"{a}"' for a in t.authors)
+            tutorial_entries.append(
+                f'        Tutorial(\n'
+                f'            "{name_escaped}",\n'
+                f'            "{desc_escaped}",\n'
+                f'            "{lang_escaped}",\n'
+                f'            "{file_escaped}",\n'
+                f'            "{link_escaped}",\n'
+                f'            [{authors_list}]\n'
+                f'        )'
+            )
+        if tutorial_entries:
+            tutorials_content = "[\n" + ",\n".join(tutorial_entries) + "\n    ]"
+
+    # Build world docstring
+    if data.metadata.world_description:
+        # Format as a proper docstring
+        world_docstring = '    """\n'
+        for line in data.metadata.world_description.split('\n'):
+            world_docstring += f'    {line}\n'
+        world_docstring += '    """'
+    else:
+        world_docstring = f'    """\n    {game_name} for Archipelago.\n\n    Auto-generated world implementation.\n    """'
+
+    # Build base_id section
+    if data.metadata.base_id is not None:
+        base_id_section = f'\n    base_id: ClassVar[int] = {data.metadata.base_id}'
+    else:
+        base_id_section = ''
+
+    # Build fill_slot_data content
+    # Check if slot_data fields match option names - if so, generate dynamic references
+    # NOTE: We only dynamically reference 'randomize_items' since that's the only option
+    # the world generator creates. Other options from the original game are not available.
+    slot_data_fields = data.metadata.slot_data_fields
+    # Only these options are generated by the world generator
+    generated_options = {'randomize_items'}
+    if slot_data_fields:
+        slot_data_entries = []
+        for key, value in slot_data_fields.items():
+            key_escaped = key.replace('\\', '\\\\').replace('"', '\\"')
+            # Check if this key matches an option we generate - if so, reference it dynamically
+            if key in generated_options:
+                slot_data_entries.append(f'            "{key_escaped}": self.options.{key}.value,')
+            elif isinstance(value, bool):
+                slot_data_entries.append(f'            "{key_escaped}": {str(value)},')
+            elif isinstance(value, (int, float)):
+                slot_data_entries.append(f'            "{key_escaped}": {value},')
+            elif isinstance(value, str):
+                value_escaped = value.replace('\\', '\\\\').replace('"', '\\"')
+                slot_data_entries.append(f'            "{key_escaped}": "{value_escaped}",')
+            else:
+                # For complex types, try to represent as string
+                slot_data_entries.append(f'            "{key_escaped}": {repr(value)},')
+        slot_data_content = '\n'.join(slot_data_entries)
+        fill_slot_data_section = f'''
+    def fill_slot_data(self) -> Dict[str, Any]:
+        """Return data for the client."""
+        return {{
+{slot_data_content}
+        }}
+'''
+    else:
+        fill_slot_data_section = '''
+    def fill_slot_data(self) -> Dict[str, Any]:
+        """Return data for the client."""
+        return {}
+'''
+
     return f'''"""
 {game_name} world implementation for Archipelago.
 
 Auto-generated by world_generator.
 """
 
-from typing import ClassVar, Dict
+from typing import ClassVar, Dict, Any
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from rule_builder import RuleWorldMixin
@@ -599,23 +743,19 @@ STARTING_ITEMS: Dict[str, int] = {{
 
 class {class_name}Web(WebWorld):
     """Web interface for {game_name}."""
-    theme = "ocean"
-    tutorials = []
+    theme = "{web_theme}"
+    tutorials = {tutorials_content}
 
 
 class {world_class}(RuleWorldMixin, World):
-    """
-    {game_name} for Archipelago.
-
-    Auto-generated world implementation.
-    """
+{world_docstring}
 
     game: ClassVar[str] = "{game_name}"
     web: ClassVar[WebWorld] = {class_name}Web()
 
     options_dataclass = {class_name}Options
     options: {class_name}Options
-
+{base_id_section}
     # Disable rule caching - requires CollectionState.rule_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
 
@@ -631,7 +771,7 @@ class {world_class}(RuleWorldMixin, World):
     item_name_groups: ClassVar[Dict[str, frozenset]] = {{
 {item_name_groups_content}
     }}
-{accumulator_rules_section}{prog_items_init_section}{generate_early_section}
+{accumulator_rules_section}{prog_items_init_section}{canonical_placements_section}{generate_early_section}
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
@@ -684,16 +824,13 @@ class {world_class}(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
-{victory_section}
+{victory_section}{pre_fill_section}
     def create_item(self, name: str) -> Item:
         """Create an item by name."""
         data = item_table[name]
         return {class_name}Item(name, data.classification, data.id, self.player)
 
-    def fill_slot_data(self) -> Dict[str, object]:
-        """Return data for the client."""
-        return {{}}
-'''
+{fill_slot_data_section}'''
 
 
 def _classification_to_enum(classification: str) -> str:

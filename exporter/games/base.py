@@ -277,6 +277,28 @@ class BaseGameExportHandler:
         # Games that need resolved_items should override get_settings_data and set this to True
         settings_dict['use_resolved_items'] = False
 
+        # Export all game-specific options from the world
+        # This allows the world generator to recreate fill_slot_data behavior
+        if hasattr(world, 'options') and world.options:
+            options_dict = {}
+            for option_name in dir(world.options):
+                if option_name.startswith('_'):
+                    continue
+                try:
+                    option = getattr(world.options, option_name)
+                    # Check if it's an Option object with a value attribute
+                    if hasattr(option, 'value'):
+                        value = option.value
+                        # Only export simple types (int, bool, str, list, dict)
+                        if isinstance(value, (int, bool, str, list, dict)):
+                            options_dict[option_name] = value
+                        elif isinstance(value, set):
+                            options_dict[option_name] = list(value)
+                except Exception:
+                    pass
+            if options_dict:
+                settings_dict['options'] = options_dict
+
         return settings_dict
         
     def get_game_info(self, world) -> Dict[str, Any]:
@@ -305,6 +327,57 @@ class BaseGameExportHandler:
         # Check if the world defines initial values for prog_items accumulators
         if hasattr(world, 'prog_items_init') and world.prog_items_init:
             game_info['prog_items_init'] = world.prog_items_init
+
+        # Export base_id if available (used for ID allocation)
+        if hasattr(world, 'base_id') and world.base_id is not None:
+            game_info['base_id'] = world.base_id
+
+        # Export WebWorld metadata if available
+        if hasattr(world, 'web') and world.web:
+            web = world.web
+            # Theme
+            if hasattr(web, 'theme') and web.theme:
+                game_info['web_theme'] = web.theme
+            # Tutorials
+            if hasattr(web, 'tutorials') and web.tutorials:
+                tutorials_data = []
+                for tutorial in web.tutorials:
+                    tutorial_info = {}
+                    if hasattr(tutorial, 'tutorial_name'):
+                        tutorial_info['name'] = tutorial.tutorial_name
+                    if hasattr(tutorial, 'description'):
+                        tutorial_info['description'] = tutorial.description
+                    if hasattr(tutorial, 'language'):
+                        tutorial_info['language'] = tutorial.language
+                    if hasattr(tutorial, 'file_name'):
+                        tutorial_info['file_name'] = tutorial.file_name
+                    if hasattr(tutorial, 'link'):
+                        tutorial_info['link'] = tutorial.link
+                    if hasattr(tutorial, 'authors'):
+                        tutorial_info['authors'] = tutorial.authors
+                    if tutorial_info:
+                        tutorials_data.append(tutorial_info)
+                if tutorials_data:
+                    game_info['web_tutorials'] = tutorials_data
+
+        # Export world class docstring if available
+        world_class = world.__class__
+        if world_class.__doc__:
+            # Clean up the docstring (strip leading/trailing whitespace from each line)
+            docstring = world_class.__doc__
+            # Normalize whitespace
+            lines = [line.strip() for line in docstring.strip().split('\n')]
+            game_info['world_description'] = '\n'.join(lines)
+
+        # Export fill_slot_data return value if available
+        # This captures the data the world sends to the client
+        if hasattr(world, 'fill_slot_data') and callable(world.fill_slot_data):
+            try:
+                slot_data = world.fill_slot_data()
+                if slot_data and isinstance(slot_data, dict):
+                    game_info['slot_data'] = slot_data
+            except Exception as e:
+                logger.debug(f"Could not call fill_slot_data for {world.game}: {e}")
 
         return game_info
         

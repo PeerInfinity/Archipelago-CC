@@ -1,9 +1,8 @@
 from BaseClasses import MultiWorld, Region, Entrance
-from Options import PerGameCommonOptions
 from .Locations import location_table, MathProofLocation
 
 
-def create_regions(options: PerGameCommonOptions, multiworld: MultiWorld, player: int) -> None:
+def create_regions(multiworld: MultiWorld, player: int) -> None:
     # Create all regions
     menu = Region("Menu", player, multiworld)
     menu.exits.append(Entrance(player, "StartProof", menu))
