@@ -234,7 +234,10 @@ def run_generation(
     ]
 
     start_time = time.time()
-    return_code, stdout, stderr = run_command(cmd, cwd=project_root, timeout=600)
+    # Use SKIP_REQUIREMENTS_UPDATE to prevent interactive prompts for missing dependencies
+    env = os.environ.copy()
+    env['SKIP_REQUIREMENTS_UPDATE'] = '1'
+    return_code, stdout, stderr = run_command(cmd, cwd=project_root, timeout=600, env=env)
     result['processing_time_seconds'] = round(time.time() - start_time, 2)
 
     if return_code != 0:

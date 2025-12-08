@@ -472,6 +472,7 @@ export function createStateSnapshotInterface(
       // Also check prog_items for counter items (e.g., " coins")
       // This allows item_check rules to work with accumulator_rules targets
       const playerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
+
       const progItemsCount = snapshot?.prog_items?.[playerId]?.[itemName] ||
                              snapshot?.prog_items?.[String(playerId)]?.[itemName] ||
                              snapshot?.prog_items?.[parseInt(playerId)]?.[itemName] || 0;

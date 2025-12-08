@@ -306,11 +306,13 @@ export function _addItemToInventory(sm, itemName, count = 1) {
 
   // Handle prog_items accumulation based on game metadata (generic for all games)
   const gameInfo = sm.gameInfo?.[sm.playerId]; // gameInfo uses string keys from Python export
+
   if (gameInfo?.accumulator_rules && sm.prog_items) {
     const playerId = sm.playerId; // prog_items uses string keys
 
     for (const rule of gameInfo.accumulator_rules) {
       const match = itemName.match(new RegExp(rule.pattern));
+
       if (match) {
         // Extract value (default to count if not extracting from pattern)
         const extractedValue = rule.extract_value && match[1]
@@ -488,6 +490,16 @@ export function countItem(sm, itemName) {
   const directCount = sm.inventory[itemName] || 0;
   if (directCount > 0) {
     return directCount;
+  }
+
+  // Check if this item is an accumulator target (like " coins")
+  // Accumulators are stored in prog_items and updated when matching items are collected
+  if (sm.prog_items) {
+    const playerId = sm.playerId; // prog_items uses string keys
+    const progItemsForPlayer = sm.prog_items[playerId];
+    if (progItemsForPlayer && progItemsForPlayer[itemName] !== undefined) {
+      return progItemsForPlayer[itemName];
+    }
   }
 
   // Check if this item is part of a progressive item sequence

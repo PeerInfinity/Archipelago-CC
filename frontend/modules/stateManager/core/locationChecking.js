@@ -105,6 +105,7 @@ export function checkLocation(sm, locationName, addItems = true, forceCheck = fa
     } else {
       // Validate that the location is accessible before checking (unless forceCheck is true)
       const isAccessible = sm.isLocationAccessible(location);
+
       if (!isAccessible && !forceCheck) {
         sm._logDebug(`[StateManager Class] Location ${locationName} is not accessible, cannot check.`);
         rejectionReason = 'not_accessible';

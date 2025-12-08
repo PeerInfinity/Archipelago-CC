@@ -718,7 +718,15 @@ export function getSupportedGames() {
  * @returns {boolean} True if the game is supported
  */
 export function isGameSupported(gameName) {
-  return GAME_REGISTRY.hasOwnProperty(gameName);
+  if (GAME_REGISTRY.hasOwnProperty(gameName)) {
+    return true;
+  }
+  // Also check for " WorldGen" suffixed game names (e.g., "DLCQuest WorldGen" -> "DLCQuest")
+  if (gameName && gameName.endsWith(' WorldGen')) {
+    const baseGameName = gameName.slice(0, -9); // Remove " WorldGen" suffix
+    return GAME_REGISTRY.hasOwnProperty(baseGameName);
+  }
+  return false;
 }
 
 /**
