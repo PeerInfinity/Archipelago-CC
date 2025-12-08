@@ -681,7 +681,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         let undefinedCount = 0;
 
         for (const condition of conditions) {
-          const conditionResult = evaluateRule(condition, context, depth + 1);
+          const conditionResult = evaluateRule(condition, context, depth + 1, localScope);
           if (conditionResult === true) {
             trueCount++;
           } else if (conditionResult === undefined) {
@@ -724,7 +724,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           const operandResult = evaluateRule(
             conditionToNegate,
             context,
-            depth + 1
+            depth + 1,
+            localScope
           );
           // Negation of undefined is undefined
           result = operandResult === undefined ? undefined : !operandResult;

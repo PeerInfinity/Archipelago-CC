@@ -18,13 +18,3 @@ class ShapezGameExportHandler(GenericGameExportHandler):
 
     # Helpers with more than this many nodes will be preserved as helper calls
     HELPER_INLINE_THRESHOLD = 0
-
-    # Computed settings that are derived from multiple options
-    # 'floating' (has_floating) is used by helpers like can_make_stitched_shape and can_build_mam
-    COMPUTED_SETTINGS = {
-        'floating': lambda world, multiworld, player: (
-            world.options.allow_floating_layers.value or
-            not (world.options.randomize_level_requirements and
-                 world.options.randomize_upgrade_requirements)
-        )
-    }
