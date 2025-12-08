@@ -32,7 +32,7 @@ class ASTVisitorMixin:
         - binary_op_processor: BinaryOpProcessor instance
     """
 
-    def _register_helper_usage(self, helper_name: str) -> None:
+    def _register_helper_usage(self, helper_name: str, helper_func: Any = None) -> None:
         """
         Register that a helper function is used, for automatic discovery.
 
@@ -41,11 +41,12 @@ class ASTVisitorMixin:
 
         Args:
             helper_name: The name of the helper function being used
+            helper_func: Optional - the actual function object (for auto-detecting module)
         """
         if (hasattr(self, 'game_handler') and
             self.game_handler is not None and
             hasattr(self.game_handler, 'register_helper_usage')):
-            self.game_handler.register_helper_usage(helper_name)
+            self.game_handler.register_helper_usage(helper_name, helper_func)
             logging.debug(f"Registered helper usage: {helper_name}")
 
     def visit_Module(self, node):
@@ -352,7 +353,7 @@ class ASTVisitorMixin:
                                             # get_helper_definitions() will analyze the function fresh,
                                             # producing a parameterized definition
                                             if hasattr(self.game_handler, 'register_helper_usage'):
-                                                self.game_handler.register_helper_usage(actual_func_name)
+                                                self.game_handler.register_helper_usage(actual_func_name, resolved_func)
                                             if hasattr(self.game_handler, 'register_auto_preserved_helper'):
                                                 self.game_handler.register_auto_preserved_helper(actual_func_name)
                                             # Return a helper call with original args (like manual preservation)
@@ -431,7 +432,7 @@ class ASTVisitorMixin:
                                       # get_helper_definitions() will analyze the function fresh,
                                       # producing a parameterized definition
                                       if hasattr(self.game_handler, 'register_helper_usage'):
-                                          self.game_handler.register_helper_usage(closure_func_name)
+                                          self.game_handler.register_helper_usage(closure_func_name, actual_func)
                                       if hasattr(self.game_handler, 'register_auto_preserved_helper'):
                                           self.game_handler.register_auto_preserved_helper(closure_func_name)
                                       # Return a helper call with original args (like manual preservation)

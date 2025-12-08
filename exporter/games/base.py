@@ -61,13 +61,15 @@ class BaseGameExportHandler:
         # Set of helper names discovered during rule analysis
         # Populated automatically by register_helper_usage()
         self._discovered_helpers: Set[str] = set()
+        # Dict mapping helper names to their source modules (auto-detected)
+        self._discovered_helper_modules: Dict[str, str] = {}
         # Set of helper names that were auto-preserved due to HELPER_INLINE_THRESHOLD
         # These helpers should not be expanded by common pattern matching
         self._auto_preserved_helpers: Set[str] = set()
         # Cache of analyzed helper definitions (for auto-preserved large helpers)
         self._analyzed_helper_cache: Dict[str, Any] = {}
 
-    def register_helper_usage(self, helper_name: str) -> None:
+    def register_helper_usage(self, helper_name: str, helper_func: Any = None) -> None:
         """
         Register that a helper function is used in the rules.
 
@@ -77,10 +79,20 @@ class BaseGameExportHandler:
 
         Args:
             helper_name: The name of the helper function
+            helper_func: Optional - the actual function object (used to auto-detect module)
         """
         if not hasattr(self, '_discovered_helpers'):
             self._discovered_helpers = set()
+        if not hasattr(self, '_discovered_helper_modules'):
+            self._discovered_helper_modules = {}
         self._discovered_helpers.add(helper_name)
+
+        # Auto-detect the module from the function object
+        if helper_func is not None and hasattr(helper_func, '__module__'):
+            module_name = helper_func.__module__
+            if module_name and helper_name not in self._discovered_helper_modules:
+                self._discovered_helper_modules[helper_name] = module_name
+                logger.debug(f"Auto-detected module for helper '{helper_name}': {module_name}")
 
     def get_discovered_helpers(self) -> Set[str]:
         """
@@ -92,6 +104,17 @@ class BaseGameExportHandler:
         if not hasattr(self, '_discovered_helpers'):
             self._discovered_helpers = set()
         return self._discovered_helpers
+
+    def get_discovered_helper_modules(self) -> Dict[str, str]:
+        """
+        Return the dict mapping helper names to their auto-detected modules.
+
+        Returns:
+            Dict mapping helper function names to module paths
+        """
+        if not hasattr(self, '_discovered_helper_modules'):
+            self._discovered_helper_modules = {}
+        return self._discovered_helper_modules
 
     def register_auto_preserved_helper(self, helper_name: str) -> None:
         """
@@ -124,6 +147,7 @@ class BaseGameExportHandler:
     def clear_discovered_helpers(self) -> None:
         """Clear the set of discovered helpers. Called between player exports."""
         self._discovered_helpers = set()
+        self._discovered_helper_modules = {}
         self._auto_preserved_helpers = set()
         self._analyzed_helper_cache = {}
 
@@ -685,12 +709,16 @@ class BaseGameExportHandler:
         else:
             helpers_to_export = whitelist
 
-        if not helpers_to_export or not helper_modules:
+        # Collect modules to load - both manually specified and auto-discovered
+        auto_discovered_modules = set(self.get_discovered_helper_modules().values())
+        all_module_paths = set(helper_modules) | auto_discovered_modules
+
+        if not helpers_to_export or not all_module_paths:
             return helper_definitions
 
         # Load helper modules
         loaded_modules = []
-        for module_path in helper_modules:
+        for module_path in all_module_paths:
             try:
                 module = importlib.import_module(module_path)
                 loaded_modules.append(module)
