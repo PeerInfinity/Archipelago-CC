@@ -1,0 +1,75 @@
+{
+  "metadata": {
+    "timestamp": "2025-12-08T06:50:53.673186",
+    "seed": 1,
+    "phase": "test",
+    "canonical_seed1": false,
+    "total_templates": 1,
+    "successful_generations": 0,
+    "failed_generations": 0,
+    "successful_test_worlds": 0,
+    "failed_test_worlds": 0,
+    "cross_validation_passed": 0,
+    "cross_validation_failed": 0
+  },
+  "results": {
+    "DLCQuest": {
+      "template": "DLCQuest.yaml",
+      "game_name": "DLCQuest",
+      "timestamp": "2025-12-08T06:50:54.215333",
+      "original": {
+        "generation": {
+          "success": true,
+          "note": "Phase 1"
+        },
+        "spoiler_test": {
+          "success": false,
+          "pass_fail": "unknown",
+          "sphere_reached": 0,
+          "total_spheres": 0,
+          "error": "Unknown test result: return code 1",
+          "processing_time_seconds": 3.91
+        }
+      },
+      "test_world": {
+        "world_generation": {
+          "success": true,
+          "note": "Phase 1"
+        },
+        "seed_generation": {
+          "success": true,
+          "seed_id": "AP_14089154938208861744",
+          "rules_path": "/home/user/Archipelago-CC/frontend/presets/dlcquest_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/dlcquest_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/user/Archipelago-CC/frontend/presets/dlcquest_worldgen/AP_14089154938208861744",
+          "error": null,
+          "processing_time_seconds": 6.74
+        },
+        "spoiler_test": {
+          "success": false,
+          "pass_fail": "unknown",
+          "sphere_reached": 0,
+          "total_spheres": 0,
+          "error": "Unknown test result: return code 1",
+          "processing_time_seconds": 2.5
+        },
+        "cross_validation": {
+          "success": false,
+          "pass_fail": "unknown",
+          "sphere_reached": 0,
+          "total_spheres": 0,
+          "error": "Unknown test result: return code 1",
+          "processing_time_seconds": 2.55
+        },
+        "test_template_name": "DLCQuest WorldGen.yaml",
+        "test_game_name": "DLCQuest WorldGen"
+      },
+      "errors": {
+        "generation": [],
+        "testing": [
+          "Cross-validation failed"
+        ]
+      }
+    }
+  }
+}
