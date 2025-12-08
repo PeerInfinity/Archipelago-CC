@@ -47,11 +47,19 @@ class BaseGameExportHandler:
     # of overriding the method
     HELPERS_TO_PRESERVE: Set[str] = set()
 
+    # Threshold for automatic helper preservation based on size
+    # If a helper's analyzed rule tree has more nodes than this, it will be
+    # preserved as a helper call instead of inlined. Set to 0 to disable.
+    # This helps reduce rules.json size when helpers are large and used multiple times.
+    HELPER_INLINE_THRESHOLD: int = 0  # Disabled by default
+
     def __init__(self):
         """Initialize the handler with an empty set of discovered helpers."""
         # Set of helper names discovered during rule analysis
         # Populated automatically by register_helper_usage()
         self._discovered_helpers: Set[str] = set()
+        # Cache of analyzed helper definitions (for auto-preserved large helpers)
+        self._analyzed_helper_cache: Dict[str, Any] = {}
 
     def register_helper_usage(self, helper_name: str) -> None:
         """
@@ -82,6 +90,81 @@ class BaseGameExportHandler:
     def clear_discovered_helpers(self) -> None:
         """Clear the set of discovered helpers. Called between player exports."""
         self._discovered_helpers = set()
+        self._analyzed_helper_cache = {}
+
+    def cache_analyzed_helper(self, helper_name: str, definition: Dict[str, Any]) -> None:
+        """
+        Cache an analyzed helper definition for later export.
+
+        This is called by the analyzer when a helper is automatically preserved
+        due to exceeding HELPER_INLINE_THRESHOLD. The cached definition will be
+        used by get_helper_definitions() instead of re-analyzing the helper.
+
+        Args:
+            helper_name: The name of the helper function
+            definition: The analyzed rule definition for the helper
+        """
+        if not hasattr(self, '_analyzed_helper_cache'):
+            self._analyzed_helper_cache = {}
+        self._analyzed_helper_cache[helper_name] = definition
+
+    def get_cached_helper(self, helper_name: str) -> Optional[Dict[str, Any]]:
+        """
+        Get a cached helper definition if available.
+
+        Args:
+            helper_name: The name of the helper function
+
+        Returns:
+            The cached rule definition, or None if not cached
+        """
+        if not hasattr(self, '_analyzed_helper_cache'):
+            self._analyzed_helper_cache = {}
+        return self._analyzed_helper_cache.get(helper_name)
+
+    @staticmethod
+    def count_rule_nodes(rule: Dict[str, Any]) -> int:
+        """
+        Count the number of nodes in a rule tree.
+
+        This is used to decide whether to inline a helper or preserve it as a
+        helper call based on HELPER_INLINE_THRESHOLD.
+
+        Args:
+            rule: The rule structure to count nodes in
+
+        Returns:
+            The number of nodes in the rule tree
+        """
+        if not rule or not isinstance(rule, dict):
+            return 0
+
+        count = 1  # Count this node
+        rule_type = rule.get('type')
+
+        if rule_type in ['and', 'or']:
+            for condition in rule.get('conditions', []):
+                count += BaseGameExportHandler.count_rule_nodes(condition)
+        elif rule_type == 'not':
+            count += BaseGameExportHandler.count_rule_nodes(rule.get('condition'))
+        elif rule_type == 'conditional':
+            count += BaseGameExportHandler.count_rule_nodes(rule.get('test'))
+            count += BaseGameExportHandler.count_rule_nodes(rule.get('if_true'))
+            count += BaseGameExportHandler.count_rule_nodes(rule.get('if_false'))
+        elif rule_type == 'helper':
+            for arg in rule.get('args', []):
+                if isinstance(arg, dict):
+                    count += BaseGameExportHandler.count_rule_nodes(arg)
+        elif rule_type == 'state_method':
+            for arg in rule.get('args', []):
+                if isinstance(arg, dict):
+                    count += BaseGameExportHandler.count_rule_nodes(arg)
+        elif rule_type == 'block':
+            for stmt in rule.get('statements', []):
+                if isinstance(stmt, dict):
+                    count += BaseGameExportHandler.count_rule_nodes(stmt)
+
+        return count
 
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Recursively expand helper functions in a rule structure."""
@@ -607,6 +690,13 @@ class BaseGameExportHandler:
 
             for helper_name in new_helpers:
                 processed_helpers.add(helper_name)
+
+                # Check if we have a cached definition (from auto-preservation due to size)
+                cached_def = self.get_cached_helper(helper_name)
+                if cached_def is not None:
+                    helper_definitions[helper_name] = cached_def
+                    logger.debug(f"Using cached definition for helper '{helper_name}': {cached_def}")
+                    continue
 
                 # Find the helper function in one of the loaded modules
                 helper_func = None
