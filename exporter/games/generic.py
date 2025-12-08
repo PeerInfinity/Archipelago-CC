@@ -59,9 +59,9 @@ class GenericGameExportHandler(BaseGameExportHandler):
         # Also skip if the helper was auto-preserved due to HELPER_INLINE_THRESHOLD
         if rule.get('type') == 'helper':
             helper_name = rule.get('name', '')
-            # Check if helper was auto-preserved (cached) or explicitly preserved
-            is_auto_preserved = (hasattr(self, 'get_cached_helper') and
-                                 self.get_cached_helper(helper_name) is not None)
+            # Check if helper was auto-preserved or explicitly preserved
+            is_auto_preserved = (hasattr(self, 'is_auto_preserved_helper') and
+                                 self.is_auto_preserved_helper(helper_name))
             if not is_auto_preserved and not self.should_preserve_as_helper(helper_name) and self._is_common_helper_pattern(helper_name):
                 return self._expand_common_helper(helper_name, rule.get('args', []))
             

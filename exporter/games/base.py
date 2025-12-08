@@ -58,6 +58,9 @@ class BaseGameExportHandler:
         # Set of helper names discovered during rule analysis
         # Populated automatically by register_helper_usage()
         self._discovered_helpers: Set[str] = set()
+        # Set of helper names that were auto-preserved due to HELPER_INLINE_THRESHOLD
+        # These helpers should not be expanded by common pattern matching
+        self._auto_preserved_helpers: Set[str] = set()
         # Cache of analyzed helper definitions (for auto-preserved large helpers)
         self._analyzed_helper_cache: Dict[str, Any] = {}
 
@@ -87,9 +90,38 @@ class BaseGameExportHandler:
             self._discovered_helpers = set()
         return self._discovered_helpers
 
+    def register_auto_preserved_helper(self, helper_name: str) -> None:
+        """
+        Register that a helper was auto-preserved due to HELPER_INLINE_THRESHOLD.
+
+        Auto-preserved helpers should not be expanded by common pattern matching
+        in expand_rule() because they will have proper definitions exported.
+
+        Args:
+            helper_name: The name of the helper function
+        """
+        if not hasattr(self, '_auto_preserved_helpers'):
+            self._auto_preserved_helpers = set()
+        self._auto_preserved_helpers.add(helper_name)
+
+    def is_auto_preserved_helper(self, helper_name: str) -> bool:
+        """
+        Check if a helper was auto-preserved due to HELPER_INLINE_THRESHOLD.
+
+        Args:
+            helper_name: The name of the helper function
+
+        Returns:
+            True if the helper was auto-preserved
+        """
+        if not hasattr(self, '_auto_preserved_helpers'):
+            self._auto_preserved_helpers = set()
+        return helper_name in self._auto_preserved_helpers
+
     def clear_discovered_helpers(self) -> None:
         """Clear the set of discovered helpers. Called between player exports."""
         self._discovered_helpers = set()
+        self._auto_preserved_helpers = set()
         self._analyzed_helper_cache = {}
 
     def cache_analyzed_helper(self, helper_name: str, definition: Dict[str, Any]) -> None:

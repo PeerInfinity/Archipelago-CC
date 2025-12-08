@@ -339,21 +339,22 @@ class ASTVisitorMixin:
                                                               player_context=self.player_context)
                                 if recursive_result.get('type') != 'error':
                                     # Check if the result is too large to inline
-                                    # Only auto-preserve if helper has no closure parameters (beyond state/player)
-                                    # Otherwise the parameters would be baked into the cached definition
+                                    # If so, discard the analyzed result and treat like manual preservation
                                     threshold = getattr(self.game_handler, 'HELPER_INLINE_THRESHOLD', 0) if self.game_handler else 0
-                                    has_closure_params = len(filtered_args) > 0
-                                    if threshold > 0 and actual_func_name and not has_closure_params:
+                                    if threshold > 0 and actual_func_name:
                                         from exporter.games.base import BaseGameExportHandler
                                         size = BaseGameExportHandler.count_rule_nodes(recursive_result)
                                         if size > threshold:
                                             logging.debug(f"Helper {actual_func_name} has {size} nodes (threshold {threshold}), preserving as helper")
-                                            # Cache the analyzed result for export
-                                            if hasattr(self.game_handler, 'cache_analyzed_helper'):
-                                                self.game_handler.cache_analyzed_helper(actual_func_name, recursive_result)
+                                            # DON'T use the analyzed result - it has closure params baked in
+                                            # Instead, register for export and return a helper call node
+                                            # get_helper_definitions() will analyze the function fresh,
+                                            # producing a parameterized definition
                                             if hasattr(self.game_handler, 'register_helper_usage'):
                                                 self.game_handler.register_helper_usage(actual_func_name)
-                                            # Return a helper call instead of inlining
+                                            if hasattr(self.game_handler, 'register_auto_preserved_helper'):
+                                                self.game_handler.register_auto_preserved_helper(actual_func_name)
+                                            # Return a helper call with original args (like manual preservation)
                                             return {
                                                 'type': 'helper',
                                                 'name': actual_func_name,
@@ -415,22 +416,23 @@ class ASTVisitorMixin:
                                                           player_context=self.player_context)
                           if recursive_result.get('type') != 'error':
                               # Check if the result is too large to inline
-                              # Only auto-preserve if helper has no closure parameters (beyond state/player)
-                              # Otherwise the parameters would be baked into the cached definition
+                              # If so, discard the analyzed result and treat like manual preservation
                               threshold = getattr(self.game_handler, 'HELPER_INLINE_THRESHOLD', 0) if self.game_handler else 0
                               closure_func_name = getattr(actual_func, '__name__', func_name)
-                              has_closure_params = len(filtered_args) > 0
-                              if threshold > 0 and closure_func_name and not has_closure_params:
+                              if threshold > 0 and closure_func_name:
                                   from exporter.games.base import BaseGameExportHandler
                                   size = BaseGameExportHandler.count_rule_nodes(recursive_result)
                                   if size > threshold:
                                       logging.debug(f"Helper {closure_func_name} has {size} nodes (threshold {threshold}), preserving as helper")
-                                      # Cache the analyzed result for export
-                                      if hasattr(self.game_handler, 'cache_analyzed_helper'):
-                                          self.game_handler.cache_analyzed_helper(closure_func_name, recursive_result)
+                                      # DON'T use the analyzed result - it has closure params baked in
+                                      # Instead, register for export and return a helper call node
+                                      # get_helper_definitions() will analyze the function fresh,
+                                      # producing a parameterized definition
                                       if hasattr(self.game_handler, 'register_helper_usage'):
                                           self.game_handler.register_helper_usage(closure_func_name)
-                                      # Return a helper call instead of inlining
+                                      if hasattr(self.game_handler, 'register_auto_preserved_helper'):
+                                          self.game_handler.register_auto_preserved_helper(closure_func_name)
+                                      # Return a helper call with original args (like manual preservation)
                                       return {
                                           'type': 'helper',
                                           'name': closure_func_name,
