@@ -16,7 +16,7 @@ class ShapezGameExportHandler(GenericGameExportHandler):
 
     # Automatic size-based helper preservation
     # Helpers with more than this many nodes will be preserved as helper calls
-    HELPER_INLINE_THRESHOLD = 3
+    HELPER_INLINE_THRESHOLD = 1
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """
