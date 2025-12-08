@@ -563,7 +563,14 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         let hasSMBool = false;
         let totalDifficulty = 0;
         for (const condition of rule.conditions || []) {
-          const conditionResult = evaluateRule(condition, context, depth + 1, localScope);
+          let conditionResult = evaluateRule(condition, context, depth + 1, localScope);
+
+          // Unwrap __isReturn markers from block rules
+          // This is needed because blocks with return statements produce markers
+          // that need to be unwrapped before checking truthiness
+          if (conditionResult && typeof conditionResult === 'object' && conditionResult.__isReturn) {
+            conditionResult = conditionResult.value;
+          }
 
           // Handle SMBool objects from Super Metroid
           // Track difficulty to properly check against maxDiff at depth 0
@@ -603,7 +610,14 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         let hasSMBool = false;
         let minDifficulty = Infinity;
         for (const condition of rule.conditions || []) {
-          const conditionResult = evaluateRule(condition, context, depth + 1, localScope);
+          let conditionResult = evaluateRule(condition, context, depth + 1, localScope);
+
+          // Unwrap __isReturn markers from block rules
+          // This is needed because blocks with return statements produce markers
+          // that need to be unwrapped before checking truthiness
+          if (conditionResult && typeof conditionResult === 'object' && conditionResult.__isReturn) {
+            conditionResult = conditionResult.value;
+          }
 
           // Handle SMBool objects from Super Metroid
           // Track minimum difficulty among passing conditions for proper maxDiff check
@@ -2339,6 +2353,14 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       isSnapshot: isValidContext,
     });
     result = undefined;
+  }
+
+  // At depth 0 (top-level rule), unwrap return markers from block rules
+  // Block rules with return statements produce {__isReturn: true, value: X}
+  // which needs to be unwrapped to get the actual value
+  // Note: This MUST only happen at depth 0 to preserve nested block return behavior
+  if (depth === 0 && result && typeof result === 'object' && result.__isReturn) {
+    result = result.value;
   }
 
   // At depth 0 (top-level rule), convert SMBool to boolean with difficulty check
