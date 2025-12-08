@@ -268,6 +268,7 @@ export const helperFunctions = {
     // Also check prog_items for counter items (e.g., " coins")
     // This is used by spoiler tests where precollected coins are in prog_items
     const playerId = snapshot?.player?.id || snapshot?.player?.slot || 1;
+
     const progItemsCount = snapshot?.prog_items?.[playerId]?.[itemName] ||
                            snapshot?.prog_items?.[String(playerId)]?.[itemName] ||
                            snapshot?.prog_items?.[parseInt(playerId)]?.[itemName] || 0;

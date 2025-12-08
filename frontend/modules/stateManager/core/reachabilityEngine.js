@@ -595,6 +595,7 @@ export function isLocationAccessible(sm, location) {
     // Add the current location to the context so rules can access it
     snapshotInterface.currentLocation = location;
     snapshotInterface.location = location; // Also set as 'location' for resolveName()
+
     return sm.evaluateRuleFromEngine(
       location.access_rule,
       snapshotInterface
