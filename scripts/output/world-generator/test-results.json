@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2025-12-08T06:50:53.673186",
+    "timestamp": "2025-12-08T07:01:39.922623",
     "seed": 1,
     "phase": "test",
     "canonical_seed1": false,
@@ -16,7 +16,7 @@
     "DLCQuest": {
       "template": "DLCQuest.yaml",
       "game_name": "DLCQuest",
-      "timestamp": "2025-12-08T06:50:54.215333",
+      "timestamp": "2025-12-08T07:01:40.466171",
       "original": {
         "generation": {
           "success": true,
@@ -28,7 +28,7 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": "Unknown test result: return code 1",
-          "processing_time_seconds": 3.91
+          "processing_time_seconds": 2.55
         }
       },
       "test_world": {
@@ -43,7 +43,7 @@
           "sphere_log_path": "/home/user/Archipelago-CC/frontend/presets/dlcquest_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
           "preset_dir": "/home/user/Archipelago-CC/frontend/presets/dlcquest_worldgen/AP_14089154938208861744",
           "error": null,
-          "processing_time_seconds": 6.74
+          "processing_time_seconds": 6.54
         },
         "spoiler_test": {
           "success": false,
@@ -51,7 +51,7 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": "Unknown test result: return code 1",
-          "processing_time_seconds": 2.5
+          "processing_time_seconds": 2.55
         },
         "cross_validation": {
           "success": false,
@@ -59,7 +59,7 @@
           "sphere_reached": 0,
           "total_spheres": 0,
           "error": "Unknown test result: return code 1",
-          "processing_time_seconds": 2.55
+          "processing_time_seconds": 2.49
         },
         "test_template_name": "DLCQuest WorldGen.yaml",
         "test_game_name": "DLCQuest WorldGen"

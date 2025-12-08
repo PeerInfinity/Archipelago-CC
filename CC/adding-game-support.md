@@ -400,7 +400,7 @@ python scripts/test/test-world-generator.py --include-list "Game Name.yaml" --ph
 Then run the full test to verify it works:
 
 ```bash
-python scripts/test/test-world-generator.py --include-list "Game Name Test.yaml" --phase test
+python scripts/test/test-world-generator.py --include-list "Game Name WorldGen.yaml" --phase test
 ```
 
 ---

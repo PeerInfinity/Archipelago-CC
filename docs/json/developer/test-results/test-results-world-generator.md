@@ -5,7 +5,7 @@
 **Mode:** Both (Canonical and Random)
 
 This report shows the results of round-trip testing the world generator.
-Each game's rules.json is converted to a `_test` world, and the generated
+Each game's rules.json is converted to a `_worldgen` world, and the generated
 world is validated to produce equivalent game logic.
 
 Tests are run in two modes:
@@ -24,10 +24,10 @@ Tests are run in two modes:
 
 - **Original Gen**: Original world seed generation
 - **Original Test**: Spoiler test on original world
-- **World Gen**: World generator created _test world from rules.json
-- **Test Gen**: _test world seed generation
-- **Test Spoiler**: Spoiler test on _test world
-- **Cross-Validation**: Original sphere log validates against _test world
+- **World Gen**: World generator created _worldgen world from rules.json
+- **Test Gen**: _worldgen world seed generation
+- **Test Spoiler**: Spoiler test on _worldgen world
+- **Cross-Validation**: Original sphere log validates against _worldgen world
 
 ---
 
@@ -141,12 +141,12 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 ### A Hat in Time
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### A Link to the Past
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### APQuest
 
@@ -156,17 +156,17 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 ### Aquaria
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Blasphemous
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Bomb Rush Cyberfunk
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Castlevania - Circle of the Moon
 
@@ -176,23 +176,23 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 ### Castlevania 64
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Celeste 64
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### DLCQuest
 
 **Testing phase:**
 - Test world spoiler test failed: Spoiler test failed
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Donkey Kong Country 3
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Factorio
 
@@ -207,22 +207,22 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 ### Kingdom Hearts
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Kingdom Hearts 2
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Kirby's Dream Land 3
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Lingo
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Links Awakening DX
 
@@ -232,7 +232,7 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 ### Mario & Luigi Superstar Saga
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Mega Man 2
 
@@ -242,7 +242,7 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 ### MegaMan Battle Network 3
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Muse Dash
 
@@ -257,13 +257,13 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 ### Overcooked! 2
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Paint
 
 **Testing phase:**
 - Test world spoiler test failed: Spoiler test failed
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Pokemon Red and Blue
 
@@ -273,12 +273,12 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 ### Raft
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Risk of Rain 2
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### SMZ3
 
@@ -294,22 +294,22 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 
 **Testing phase:**
 - Test world spoiler test failed: Spoiler test failed
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Shivers
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Sonic Adventure 2 Battle
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Starcraft 2
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Stardew Valley
 
@@ -319,17 +319,17 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 ### Subnautica
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Super Mario 64
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Super Mario Land 2
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Super Metroid
 
@@ -339,12 +339,12 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 ### TOEM original
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### TOEM rule builder
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### TUNIC
 
@@ -354,12 +354,12 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 ### Terraria
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### The Legend of Zelda
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### The Messenger
 
@@ -369,7 +369,7 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 ### The Wind Waker
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### The Witness
 
@@ -379,17 +379,17 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 ### Timespinner
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### VVVVVV
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Wargroove
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Yacht Dice
 
@@ -399,12 +399,12 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 ### Yoshi's Island
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Yu-Gi-Oh! 2006
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### shapez
 
@@ -523,12 +523,12 @@ Tests run with standard randomized item placement.
 ### A Hat in Time
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### A Link to the Past
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### APQuest
 
@@ -538,27 +538,27 @@ Tests run with standard randomized item placement.
 ### Adventure
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Aquaria
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Blasphemous
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Bomb Rush Cyberfunk
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Bumper Stickers
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Castlevania - Circle of the Moon
 
@@ -568,12 +568,12 @@ Tests run with standard randomized item placement.
 ### Castlevania 64
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Celeste (Open World)
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Celeste 64
 
@@ -583,33 +583,33 @@ Tests run with standard randomized item placement.
 ### Civilization VI
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### DLCQuest
 
 **Testing phase:**
 - Test world spoiler test failed: Spoiler test failed
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### DOOM 1993
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### DOOM II
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Dark Souls III
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Donkey Kong Country 3
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Factorio
 
@@ -619,17 +619,17 @@ Tests run with standard randomized item placement.
 ### Faxanadu
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Final Fantasy Mystic Quest
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Heretic
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Jak and Daxter The Precursor Legacy
 
@@ -639,27 +639,27 @@ Tests run with standard randomized item placement.
 ### Kingdom Hearts
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Kingdom Hearts 2
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Kirby's Dream Land 3
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Landstalker - The Treasures of King Nole
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Lingo
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Links Awakening DX
 
@@ -669,7 +669,7 @@ Tests run with standard randomized item placement.
 ### Mario & Luigi Superstar Saga
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Mega Man 2
 
@@ -679,12 +679,12 @@ Tests run with standard randomized item placement.
 ### MegaMan Battle Network 3
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Meritous
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Metamath
 
@@ -704,13 +704,13 @@ Tests run with standard randomized item placement.
 ### Overcooked! 2
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Paint
 
 **Testing phase:**
 - Test world spoiler test failed: Spoiler test failed
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Pokemon Red and Blue
 
@@ -720,12 +720,12 @@ Tests run with standard randomized item placement.
 ### Raft
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Risk of Rain 2
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### SMZ3
 
@@ -741,22 +741,22 @@ Tests run with standard randomized item placement.
 
 **Testing phase:**
 - Test world spoiler test failed: Spoiler test failed
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Shivers
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Sonic Adventure 2 Battle
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Starcraft 2
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Stardew Valley
 
@@ -766,17 +766,17 @@ Tests run with standard randomized item placement.
 ### Subnautica
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Super Mario 64
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Super Mario Land 2
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Super Metroid
 
@@ -786,12 +786,12 @@ Tests run with standard randomized item placement.
 ### TOEM original
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### TOEM rule builder
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### TUNIC
 
@@ -801,12 +801,12 @@ Tests run with standard randomized item placement.
 ### Terraria
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### The Legend of Zelda
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### The Messenger
 
@@ -816,7 +816,7 @@ Tests run with standard randomized item placement.
 ### The Wind Waker
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### The Witness
 
@@ -826,22 +826,22 @@ Tests run with standard randomized item placement.
 ### Timespinner
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Undertale
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### VVVVVV
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Wargroove
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Yacht Dice
 
@@ -851,12 +851,12 @@ Tests run with standard randomized item placement.
 ### Yoshi's Island
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### Yu-Gi-Oh! 2006
 
 **Testing phase:**
-- Cross-validation failed: original sphere log incompatible with _test world
+- Cross-validation failed: original sphere log incompatible with _worldgen world
 
 ### shapez
 
