@@ -1,11 +1,10 @@
 /**
  * shapez game logic
+ *
+ * All shapez helper functions are exported as definitions in rules.json
+ * and evaluated by the rule engine directly. This file only contains
+ * constants used by rule evaluation.
  */
-
-import * as helpers from './helpers.js';
-
-// Export helpers for the game logic registry
-export { helpers };
 
 /**
  * OPTIONS constants from worlds/shapez/data/strings.py
@@ -32,6 +31,5 @@ export const OPTIONS = {
 export default {
     gameName: 'shapez',
     gameDirectory: 'shapez',
-    helpers: helpers,
     constants: { OPTIONS }
 };

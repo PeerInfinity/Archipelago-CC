@@ -542,7 +542,7 @@ const GAME_REGISTRY = {
   },
   'shapez': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: shapezLogic.helpers,
+    helperFunctions: genericLogic.helperFunctions, // All shapez helpers are in rules.json
     constants: shapezLogic.default.constants,
     worldClasses: ['ShapezWorld'],
     aliases: ['shapez']
