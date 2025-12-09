@@ -6,19 +6,19 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-09 05:09:12
+**Generated:** 2025-12-09 08:10:56
 
-**Source Data Created:** 2025-12-08T23:04:48.119239
+**Source Data Created:** 2025-12-09T06:27:25.422785
 
-**Source Data Last Updated:** 2025-12-08T23:04:48.119244
+**Source Data Last Updated:** 2025-12-09T06:27:25.422793
 
 ## Summary
 
 - **Total Games:** 79
-- **Passed:** 75 (94.9%)
-- **Failed:** 4 (5.1%)
-- **Games with Intermittent Failures:** 2
-- **Total Intermittent Failures:** 2
+- **Passed:** 73 (92.4%)
+- **Failed:** 6 (7.6%)
+- **Games with Intermittent Failures:** 4
+- **Total Intermittent Failures:** 4
 
 ## Test Results
 
@@ -33,7 +33,7 @@
 | Bomb Rush Cyberfunk | ✅ Passed seeds 1-10 | 0 | 10.9 | 10.9 | 🟢 Complete | 16.2KB | 38.2KB |
 | Bumper Stickers | ✅ Passed seeds 1-10 | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed seeds 1-10 | 0 | 4.4 | 4.4 | 🟢 Complete | 10.2KB | 5.7KB |
-| Castlevania 64 | ❌ Failed seed 2 | 0 | 2.4 | 5.3 | 🟡 45.3% | 13.1KB | 2.0KB |
+| Castlevania 64 | ❌ Failed seed 10 | 0 | 1.7 | 4.1 | 🟡 41.5% | 13.1KB | 2.0KB |
 | Celeste (Open World) | ✅ Passed seeds 1-10 | 0 | 16.2 | 16.2 | 🟢 Complete | 7.1KB | ✅ |
 | Celeste 64 | ✅ Passed seeds 1-10 | 0 | 5.2 | 5.2 | 🟢 Complete | 4.2KB | 5.9KB |
 | ChecksFinder | ✅ Passed seeds 1-10 | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ✅ |
@@ -45,14 +45,14 @@
 | DOOM II | ✅ Passed seeds 1-10 | 0 | 21.2 | 21.2 | 🟢 Complete | ✅ | ✅ |
 | Dark Souls III | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | 10.8KB | 4.4KB |
 | Donkey Kong Country 3 | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
-| Factorio | ✅ Passed seeds 1-10 | 0 | 12.1 | 12.1 | 🟢 Complete | 11.2KB | 4.2KB |
+| Factorio | ✅ Passed seeds 1-10 | 0 | 12.1 | 12.1 | 🟢 Complete | 11.4KB | 4.2KB |
 | Faxanadu | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed seeds 1-10 | 0 | 18.2 | 18.2 | 🟢 Complete | 11.2KB | ✅ |
 | Heretic | ✅ Passed seeds 1-10 | 0 | 24.1 | 24.1 | 🟢 Complete | ✅ | ✅ |
 | Hylics 2 | ✅ Passed seeds 1-10 | 0 | 7.2 | 7.2 | 🟢 Complete | 1.0KB | 6.6KB |
 | Inscryption | ✅ Passed seeds 1-10 | 0 | 9.2 | 9.2 | 🟢 Complete | 11.3KB | 6.2KB |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed seeds 1-10 | 0 | 13.1 | 13.1 | 🟢 Complete | 13.2KB | 4.2KB |
-| Kingdom Hearts | ❌ Failed seed 2 | 0 | 7.7 | 13.3 | 🟡 57.9% | 49.5KB | 19.5KB |
+| Kingdom Hearts | ❌ Failed seed 1 | 0 | 0.13 | 10.3 | 🟠 1.3% | 49.5KB | 19.5KB |
 | Kingdom Hearts 2 | ✅ Passed seeds 1-10 | 0 | 15.1 | 15.1 | 🟢 Complete | 11.2KB | 112.6KB |
 | Kirby's Dream Land 3 | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | 10.1KB | 14.9KB |
 | Landstalker - The Treasures of King Nole | ❌ Failed seed 1 | 2 | 0 | 0 | 🔴 0.0% | 16.4KB | 9.1KB |
@@ -69,7 +69,7 @@
 | Noita | ✅ Passed seeds 1-10 | 0 | 0.15 | 0.15 | 🟢 Complete | ✅ | ✅ |
 | Old School Runescape | ✅ Passed seeds 1-10 | 0 | 7.5 | 7.5 | 🟢 Complete | 3.0KB | 1.2KB |
 | Overcooked! 2 | ✅ Passed seeds 1-10 | 0 | 18.2 | 18.2 | 🟢 Complete | 26.5KB | 7.2KB |
-| Paint | ✅ Passed seeds 1-10 | 0 | 12.1 | 12.1 | 🟢 Complete | 5.8KB | 4.3KB |
+| Paint | ❌ Failed seed 1 | 0 | 11.2 | 12.1 | 🟡 92.6% | 5.8KB | 4.3KB |
 | Pokemon Emerald | ✅ Passed seeds 1-10 | 0 | 19.2 | 19.2 | 🟢 Complete | 6.2KB | 8.7KB |
 | Pokemon Red and Blue | ✅ Passed seeds 1-10 | 0 | 10.2 | 10.2 | 🟢 Complete | 12.2KB | 13.0KB |
 | Raft | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | 6.8KB | 16.4KB |
@@ -92,16 +92,16 @@
 | Terraria | ✅ Passed seeds 1-10 | 0 | 9.5 | 9.5 | 🟢 Complete | 11.8KB | 4.6KB |
 | The Legend of Zelda | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | 6.9KB | 1.7KB |
 | The Messenger | ✅ Passed seeds 1-10 | 0 | 6.3 | 6.3 | 🟢 Complete | 13.3KB | 3.3KB |
-| The Wind Waker | ✅ Passed seeds 1-10 | 0 | 18.1 | 18.1 | 🟢 Complete | 3.5KB | 40.7KB |
+| The Wind Waker | ❌ Failed seed 1 | 0 | 12.2 | 18.1 | 🟡 67.4% | 3.5KB | 40.7KB |
 | The Witness | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | 23.7KB | 0.9KB |
 | Timespinner | ✅ Passed seeds 1-10 | 0 | 7.1 | 7.1 | 🟢 Complete | 5.4KB | 10.5KB |
-| Undertale | ✅ Passed seeds 1-10 | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ✅ |
+| Undertale | ❌ Failed seed 1 | 0 | 3.2 | 4.3 | 🟡 74.4% | ✅ | ✅ |
 | VVVVVV | ✅ Passed seeds 1-10 | 0 | 2.4 | 2.4 | 🟢 Complete | 5.2KB | 2.1KB |
 | Wargroove | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | 5.7KB | 2.6KB |
 | WebDevJourney | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Yacht Dice | ✅ Passed seeds 1-10 | 0 | 21.1 | 21.1 | 🟢 Complete | 2.3KB | 285.0KB |
 | Yoshi's Island | ✅ Passed seeds 1-10 | 0 | 12.4 | 12.4 | 🟢 Complete | 8.1KB | 33.2KB |
-| Yu-Gi-Oh! 2006 | ❌ Failed seed 2 | 0 | 0 | 15.2 | 🔴 0.0% | 1.6KB | 21.4KB |
+| Yu-Gi-Oh! 2006 | ✅ Passed seeds 1-10 | 0 | 21.23 | 21.23 | 🟢 Complete | 1.6KB | 21.4KB |
 | shapez | ✅ Passed seeds 1-10 | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
 
 ## Intermittent Failures
@@ -110,8 +110,10 @@ These seeds were previously failing but passed during a retest run:
 
 | Template | Seed | Timestamp | Notes |
 |----------|------|-----------|-------|
-| Metamath | 4 | 2025-12-08 22:56 | Previously failed, now passing |
-| Raft | 1 | 2025-12-08 22:57 | Previously failed, now passing |
+| Inscryption | 9 | 2025-12-09 06:12 | Previously failed, now passing |
+| Noita | 10 | 2025-12-09 06:14 | Previously failed, now passing |
+| WebDevJourney | 3 | 2025-12-09 06:13 | Previously failed, now passing |
+| Yacht Dice | 8 | 2025-12-09 06:14 | Previously failed, now passing |
 
 
 ## Notes

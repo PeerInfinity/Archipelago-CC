@@ -6,13 +6,13 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-09 05:09:12
+**Generated:** 2025-12-09 08:10:56
 
 ## Summary
 
 - **Total Games:** 79
-- **Passed:** 76 (96.2%)
-- **Failed:** 3 (3.8%)
+- **Passed:** 71 (89.9%)
+- **Failed:** 8 (10.1%)
 
 ## Test Results
 
@@ -39,14 +39,14 @@
 | DOOM II | ✅ Passed | 0 | ✅ | 453/453 | 453/453 | 0/0 | ✅ | 453/453 | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | 0 | ✅ | 1194/1194 | 1190/1190 | 4/4 | ✅ | 1194/1194 | 10.8KB | 4.4KB |
 | Donkey Kong Country 3 | ✅ Passed | 0 | ✅ | 180/180 | 180/180 | 0/0 | ✅ | 180/180 | ✅ | ✅ |
-| Factorio | ✅ Passed | 0 | ✅ | 186/186 | 179/179 | 7/7 | ✅ | 186/186 | 11.2KB | 4.2KB |
+| Factorio | ✅ Passed | 0 | ✅ | 186/186 | 179/179 | 7/7 | ✅ | 186/186 | 11.4KB | 4.2KB |
 | Faxanadu | ✅ Passed | 0 | ✅ | 114/114 | 110/110 | 4/4 | ✅ | 114/114 | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | 0 | ✅ | 299/299 | 251/251 | 48/48 | ✅ | 299/299 | 11.2KB | ✅ |
 | Heretic | ✅ Passed | 0 | ✅ | 502/502 | 502/502 | 0/0 | ✅ | 502/502 | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | ✅ | 134/134 | 133/133 | 1/1 | ✅ | 134/134 | 1.0KB | 6.6KB |
 | Inscryption | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | 11.3KB | 6.2KB |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | ✅ | 239/239 | 239/239 | 0/0 | ✅ | 239/239 | 13.2KB | 4.2KB |
-| Kingdom Hearts | ✅ Passed | 0 | ✅ | 512/512 | 511/511 | 1/1 | ✅ | 512/512 | 49.5KB | 19.5KB |
+| Kingdom Hearts | ❌ Failed | 0 | ❌ | 496/512 | 495/511 | 1/1 | ❌ | 495/512 | 49.5KB | 19.5KB |
 | Kingdom Hearts 2 | ✅ Passed | 0 | ✅ | 705/705 | 643/643 | 62/62 | ✅ | 705/705 | 11.2KB | 112.6KB |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | ✅ | 567/567 | 65/65 | 502/502 | ✅ | 567/567 | 10.1KB | 14.9KB |
 | Landstalker - The Treasures of King Nole | ❌ Failed | 2 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 16.4KB | 9.1KB |
@@ -63,7 +63,7 @@
 | Noita | ✅ Passed | 0 | ✅ | 117/117 | 109/109 | 8/8 | ✅ | 117/117 | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | 0 | ✅ | 76/76 | 76/76 | 22/22 | ✅ | 76/76 | 3.0KB | 1.2KB |
 | Overcooked! 2 | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | 26.5KB | 7.2KB |
-| Paint | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | 5.8KB | 4.3KB |
+| Paint | ❌ Failed | 0 | ❌ | 127/130 | 127/130 | 0/0 | ❌ | 125/130 | 5.8KB | 4.3KB |
 | Pokemon Emerald | ✅ Passed | 0 | ✅ | 1061/1061 | 203/203 | 867/867 | ✅ | 1061/1061 | 6.2KB | 8.7KB |
 | Pokemon Red and Blue | ✅ Passed | 0 | ✅ | 1010/1010 | 161/161 | 845/845 | ✅ | 1010/1010 | 12.2KB | 13.0KB |
 | Raft | ✅ Passed | 0 | ✅ | 155/155 | 154/154 | 1/1 | ✅ | 155/155 | 6.8KB | 16.4KB |
@@ -86,14 +86,14 @@
 | Terraria | ✅ Passed | 0 | ✅ | 244/244 | 63/63 | 181/181 | ✅ | 244/244 | 11.8KB | 4.6KB |
 | The Legend of Zelda | ✅ Passed | 0 | ✅ | 165/165 | 155/155 | 10/10 | ✅ | 165/165 | 6.9KB | 1.7KB |
 | The Messenger | ✅ Passed | 0 | ✅ | 113/113 | 106/106 | 7/7 | ✅ | 113/113 | 13.3KB | 3.3KB |
-| The Wind Waker | ✅ Passed | 0 | ✅ | 109/109 | 108/108 | 1/1 | ✅ | 109/109 | 3.5KB | 40.7KB |
+| The Wind Waker | ❌ Failed | 0 | ❌ | 80/109 | 80/108 | 0/1 | ❌ | 80/109 | 3.5KB | 40.7KB |
 | The Witness | ❌ Failed | 0 | ❌ | 138/147 | 125/132 | 13/15 | ❌ | 135/147 | 23.7KB | 0.9KB |
 | Timespinner | ✅ Passed | 0 | ✅ | 185/185 | 180/180 | 5/5 | ✅ | 185/185 | 5.4KB | 10.5KB |
-| Undertale | ✅ Passed | 0 | ✅ | 51/51 | 48/48 | 3/3 | ✅ | 51/51 | ✅ | ✅ |
+| Undertale | ❌ Failed | 0 | ❌ | 49/51 | 46/48 | 3/3 | ❌ | 45/51 | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | ✅ | 20/20 | 20/20 | 0/0 | ✅ | 20/20 | 5.2KB | 2.1KB |
 | Wargroove | ✅ Passed | 0 | ✅ | 39/39 | 38/38 | 1/1 | ✅ | 39/39 | 5.7KB | 2.6KB |
 | WebDevJourney | ✅ Passed | 0 | ✅ | 62/62 | 61/61 | 1/1 | ✅ | 62/62 | ✅ | ✅ |
-| Yacht Dice | ✅ Passed | 0 | ✅ | 90/90 | 90/90 | 1/1 | ✅ | 90/90 | 2.3KB | 285.0KB |
+| Yacht Dice | ❌ Failed | 0 | ❌ | 5/90 | 5/90 | 0/1 | ❌ | 5/90 | 2.3KB | 285.0KB |
 | Yoshi's Island | ✅ Passed | 0 | ✅ | 207/207 | 191/191 | 16/16 | ✅ | 207/207 | 8.1KB | 33.2KB |
 | Yu-Gi-Oh! 2006 | ✅ Passed | 0 | ✅ | 981/981 | 84/84 | 897/897 | ✅ | 981/981 | 1.6KB | 21.4KB |
 | shapez | ✅ Passed | 0 | ✅ | 140/140 | 139/139 | 1/1 | ✅ | 140/140 | ✅ | ✅ |
