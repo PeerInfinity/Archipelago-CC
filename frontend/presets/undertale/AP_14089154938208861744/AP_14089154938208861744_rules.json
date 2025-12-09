@@ -1248,8 +1248,14 @@
             "name": "Core Exit",
             "connected_region": "New Home",
             "access_rule": {
-              "type": "item_check",
-              "item": "Mettaton Plush"
+              "type": "helper",
+              "name": "_undertale_has_plot",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Mettaton Plush"
+                }
+              ]
             }
           }
         ],
@@ -1283,8 +1289,18 @@
             "name": "Mettaton Plot",
             "id": 79062,
             "access_rule": {
-              "type": "can_reach_entrance",
-              "entrance": "Core Exit"
+              "type": "state_method",
+              "method": "can_reach",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Core Exit"
+                },
+                {
+                  "type": "constant",
+                  "value": "Entrance"
+                }
+              ]
             },
             "item": {
               "name": "1000G",
@@ -2587,5 +2603,90 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "_undertale_has_plot": {
+        "params": [
+          "item"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "name",
+              "name": "item"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Complete Skeleton"
+            }
+          },
+          "if_true": {
+            "type": "item_check",
+            "item": "Complete Skeleton"
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "name",
+                "name": "item"
+              },
+              "op": "==",
+              "right": {
+                "type": "constant",
+                "value": "Fish"
+              }
+            },
+            "if_true": {
+              "type": "item_check",
+              "item": "Fish"
+            },
+            "if_false": {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "item"
+                },
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": "Mettaton Plush"
+                }
+              },
+              "if_true": {
+                "type": "item_check",
+                "item": "Mettaton Plush"
+              },
+              "if_false": {
+                "type": "conditional",
+                "test": {
+                  "type": "compare",
+                  "left": {
+                    "type": "name",
+                    "name": "item"
+                  },
+                  "op": "==",
+                  "right": {
+                    "type": "constant",
+                    "value": "DT Extractor"
+                  }
+                },
+                "if_true": {
+                  "type": "item_check",
+                  "item": "DT Extractor"
+                },
+                "if_false": null
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
