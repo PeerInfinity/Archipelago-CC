@@ -24,8 +24,10 @@ class FactorioGameExportHandler(BaseGameExportHandler):
         # Get base settings
         settings = super().get_settings_data(world, multiworld, player)
 
-        # Factorio uses base settings, no special overrides needed
-        # Event items should be added naturally when checking locations
+        # Factorio rules use resolved technology names (e.g., "steel-processing", "military-2")
+        # which come from progressive items (e.g., "progressive-processing", "progressive-military").
+        # The test must use resolved_items to match these technology names in inventory checks.
+        settings['use_resolved_items'] = True
 
         return settings
 

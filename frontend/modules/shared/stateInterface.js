@@ -396,8 +396,10 @@ export function createStateSnapshotInterface(
         default:
           // Check if this is a game-specific variable (e.g., required_technologies for Factorio)
           const currentPlayerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
-          if (staticData?.game_info?.[currentPlayerId]?.variables && staticData.game_info[currentPlayerId].variables[name]) {
-            return staticData.game_info[currentPlayerId].variables[name];
+          // Normalize to string for JSON object key lookup (JSON keys are always strings)
+          const currentPlayerIdStr = String(currentPlayerId);
+          if (staticData?.game_info?.[currentPlayerIdStr]?.variables && staticData.game_info[currentPlayerIdStr].variables[name]) {
+            return staticData.game_info[currentPlayerIdStr].variables[name];
           }
 
           // Check if this is a game-specific constant (e.g., OPTIONS for shapez)
