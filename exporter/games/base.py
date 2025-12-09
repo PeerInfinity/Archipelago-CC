@@ -393,10 +393,12 @@ class BaseGameExportHandler:
             for item in multiworld.precollected_items.get(player, []):
                 itempool_counts[item.name] += 1
 
-        # Count items placed in locations
+        # Count items placed in locations (across ALL locations in multiworld)
         # Note: We don't count from multiworld.itempool because after fill it still contains
         # the original items (fill operates on a copy), which would cause double-counting.
-        for location in multiworld.get_locations(player):
+        # In multiworld, a player's items may be placed in other players' locations,
+        # so we iterate over all filled locations and check if item.player matches.
+        for location in multiworld.get_filled_locations():
             if location.item and location.item.player == player:
                 itempool_counts[location.item.name] += 1
 
