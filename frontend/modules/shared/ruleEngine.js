@@ -392,7 +392,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             }
 
             result = evaluateRule(body, context, depth + 1, helperLocalScope);
-            break;
+            // If definition evaluation succeeded (not undefined), use that result
+            // Otherwise, fall through to try JavaScript helpers as a fallback
+            if (result !== undefined) {
+              break;
+            }
+            log('debug', `[evaluateRule] Helper definition for '${rule.name}' returned undefined, trying JavaScript fallback`);
           }
         } else {
           // No static data available for helper lookup
