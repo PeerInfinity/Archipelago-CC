@@ -63,7 +63,7 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             'can_shoot_arrows',
             'can_use_bombs',
             # 'has_beam_sword',  # Removed - multiple item checks, can be inlined
-            'has_crystals',
+            'has_crystals',  # Preserved as helper call, definition exported to helpers section
             'has_crystals_for_ganon',
             # 'has_fire_source',  # Removed - simple item checks, can be inlined
             'has_hearts',

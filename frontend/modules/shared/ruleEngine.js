@@ -122,7 +122,8 @@ import { DEFAULT_PLAYER_ID } from './playerIdUtils.js';
  * - state_method: Calls StateManager methods (can_reach, etc.)
  * - item_check: Checks if player has item
  * - count_check: Checks item quantity
- * - group_check: Checks item group count
+ * - group_check: Checks item group count (returns boolean)
+ * - group_count: Returns item group count (returns number)
  * - location_check: Checks if location is accessible
  * - locations_checked: Checks total locations checked
  * - total_items_count: Checks total items collected
@@ -1606,6 +1607,25 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           log(
             'warn',
             '[evaluateRule SnapshotIF] context.countGroup is not a function for group_check.'
+          );
+          result = undefined;
+        }
+        break;
+      }
+
+      case 'group_count': {
+        // Returns the count of items in a group (unlike group_check which returns a boolean)
+        const groupName = evaluateRule(rule.group, context, depth + 1);
+
+        if (groupName === undefined) {
+          result = undefined;
+        } else if (typeof context.countGroup === 'function') {
+          const currentCount = context.countGroup(groupName);
+          result = currentCount === undefined ? 0 : currentCount;
+        } else {
+          log(
+            'warn',
+            '[evaluateRule SnapshotIF] context.countGroup is not a function for group_count.'
           );
           result = undefined;
         }

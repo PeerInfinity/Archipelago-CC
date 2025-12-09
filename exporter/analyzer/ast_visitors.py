@@ -959,6 +959,19 @@ class ASTVisitorMixin:
                                 # Could not resolve to a constant value, keep as-is
                                 logging.debug(f"Found unresolved group count parameter: {second_arg}")
                                 result['count'] = second_arg
+                elif method == 'count_group' and len(filtered_args) >= 1:
+                    # state.count_group(group_name, player) -> returns the count of items in a group
+                    # Unwrap group name if it's a constant
+                    group_arg = filtered_args[0]
+                    if isinstance(group_arg, dict) and group_arg.get('type') == 'constant' and isinstance(group_arg.get('value'), str):
+                        group_value = group_arg.get('value')
+                    elif isinstance(group_arg, str):
+                        group_value = group_arg
+                    else:
+                        group_value = group_arg
+                    # Create a group_count rule that returns the count (not a boolean check)
+                    result = {'type': 'group_count', 'group': group_value}
+                    logging.debug(f"Converted count_group to group_count: {result}")
                 elif method == 'has_any' and len(filtered_args) >= 1 and isinstance(filtered_args[0], list):
                     # Unwrap each item if it's a constant
                     items = []
