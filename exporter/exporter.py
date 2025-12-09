@@ -2207,6 +2207,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     clear_rule_cache()
     from .games import clear_handler_cache
     clear_handler_cache()
+    from .analyzer import clear_caches as clear_analyzer_caches
+    clear_analyzer_caches()
 
     return results
 
