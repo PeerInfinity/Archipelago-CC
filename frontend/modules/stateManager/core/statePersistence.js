@@ -538,9 +538,11 @@ export function _createSelfSnapshotInterface(sm) {
       // These are stored in game_info[playerId].variables in the rules.json
       const staticData = getStaticGameData(sm);
       const currentPlayerId = sm.playerId || DEFAULT_PLAYER_ID;
-      if (staticData?.game_info?.[currentPlayerId]?.variables &&
-          staticData.game_info[currentPlayerId].variables[name]) {
-        return staticData.game_info[currentPlayerId].variables[name];
+      // Normalize to string for JSON object key lookup (JSON keys are always strings)
+      const currentPlayerIdStr = String(currentPlayerId);
+      if (staticData?.game_info?.[currentPlayerIdStr]?.variables &&
+          staticData.game_info[currentPlayerIdStr].variables[name]) {
+        return staticData.game_info[currentPlayerIdStr].variables[name];
       }
 
       // Check if there's a helper function that computes this value
