@@ -6,19 +6,19 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-08 22:15:15
+**Generated:** 2025-12-08 23:56:47
 
-**Source Data Created:** 2025-12-08T21:16:07.131832
+**Source Data Created:** 2025-12-08T23:04:48.119239
 
-**Source Data Last Updated:** 2025-12-08T21:16:07.131836
+**Source Data Last Updated:** 2025-12-08T23:04:48.119244
 
 ## Summary
 
 - **Total Games:** 79
-- **Passed:** 69 (87.3%)
-- **Failed:** 10 (12.7%)
-- **Games with Intermittent Failures:** 5
-- **Total Intermittent Failures:** 5
+- **Passed:** 75 (94.9%)
+- **Failed:** 4 (5.1%)
+- **Games with Intermittent Failures:** 2
+- **Total Intermittent Failures:** 2
 
 ## Test Results
 
@@ -52,22 +52,22 @@
 | Hylics 2 | ✅ Passed seeds 1-10 | 0 | 7.2 | 7.2 | 🟢 Complete | 1.0KB | 6.6KB |
 | Inscryption | ✅ Passed seeds 1-10 | 0 | 9.2 | 9.2 | 🟢 Complete | 11.3KB | 6.2KB |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed seeds 1-10 | 0 | 13.1 | 13.1 | 🟢 Complete | 13.2KB | 4.2KB |
-| Kingdom Hearts | ❌ Failed seed 1 | 0 | 0 | 10.3 | 🔴 0.0% | 35.7KB | 19.4KB |
+| Kingdom Hearts | ❌ Failed seed 2 | 0 | 7.7 | 13.3 | 🟡 57.9% | 47.3KB | 19.5KB |
 | Kingdom Hearts 2 | ✅ Passed seeds 1-10 | 0 | 15.1 | 15.1 | 🟢 Complete | 11.2KB | 112.6KB |
-| Kirby's Dream Land 3 | ❌ Failed seed 1 | 0 | 0.21 | 11.1 | 🟠 1.9% | 9.9KB | 14.9KB |
-| Landstalker - The Treasures of King Nole | ❌ Failed seed 1 | 2 | 0 | 0 | 🔴 0.0% | 14.3KB | 9.1KB |
-| Lingo | ❌ Failed seed 1 | 0 | 0 | 5.1 | 🔴 0.0% | 30.0KB | 11.3KB |
+| Kirby's Dream Land 3 | ✅ Passed seeds 1-10 | 0 | 11.1 | 11.1 | 🟢 Complete | 10.1KB | 14.9KB |
+| Landstalker - The Treasures of King Nole | ❌ Failed seed 1 | 2 | 0 | 0 | 🔴 0.0% | 16.4KB | 9.1KB |
+| Lingo | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | 32.2KB | 11.3KB |
 | Links Awakening DX | ✅ Passed seeds 1-10 | 0 | 15.1 | 15.1 | 🟢 Complete | 15.8KB | 5.3KB |
 | Lufia II Ancient Cave | ✅ Passed seeds 1-10 | 0 | 4.11 | 4.11 | 🟢 Complete | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed seeds 1-10 | 0 | 7.3 | 7.3 | 🟢 Complete | 0.5KB | 8.9KB |
 | MathProof2p2e4 | ✅ Passed seeds 1-10 | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ✅ |
-| Mega Man 2 | ❌ Failed seed 1 | 0 | 7.2 | 9.1 | 🟡 79.1% | 3.5KB | 3.2KB |
+| Mega Man 2 | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | 3.7KB | 3.2KB |
 | MegaMan Battle Network 3 | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | 0.7KB | 2.7KB |
 | Meritous | ✅ Passed seeds 1-10 | 0 | 7.2 | 7.2 | 🟢 Complete | ✅ | ✅ |
 | Metamath | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Muse Dash | ✅ Passed seeds 1-10 | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | Noita | ✅ Passed seeds 1-10 | 0 | 0.15 | 0.15 | 🟢 Complete | ✅ | ✅ |
-| Old School Runescape | ❌ Failed seed 1 | 0 | 2.7 | 7.5 | 🟡 36.0% | 3.0KB | 1.2KB |
+| Old School Runescape | ✅ Passed seeds 1-10 | 0 | 7.5 | 7.5 | 🟢 Complete | 3.0KB | 1.2KB |
 | Overcooked! 2 | ✅ Passed seeds 1-10 | 0 | 18.2 | 18.2 | 🟢 Complete | 26.5KB | 7.2KB |
 | Paint | ✅ Passed seeds 1-10 | 0 | 12.1 | 12.1 | 🟢 Complete | 5.8KB | 4.3KB |
 | Pokemon Emerald | ✅ Passed seeds 1-10 | 0 | 19.2 | 19.2 | 🟢 Complete | 6.2KB | 8.7KB |
@@ -88,7 +88,7 @@
 | Super Metroid | ✅ Passed seeds 1-10 | 0 | 8.3 | 8.3 | 🟢 Complete | 71.5KB | 114.6KB |
 | TOEM original | ✅ Passed seeds 1-10 | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed seeds 1-10 | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
-| TUNIC | ❌ Failed seed 1 | 0 | 0 | 5.1 | 🔴 0.0% | 6.4KB | ✅ |
+| TUNIC | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | 6.4KB | ✅ |
 | Terraria | ✅ Passed seeds 1-10 | 0 | 9.5 | 9.5 | 🟢 Complete | 11.8KB | 4.6KB |
 | The Legend of Zelda | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | 6.9KB | 1.7KB |
 | The Messenger | ✅ Passed seeds 1-10 | 0 | 6.3 | 6.3 | 🟢 Complete | 13.3KB | 3.3KB |
@@ -96,12 +96,12 @@
 | The Witness | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | 23.7KB | 0.9KB |
 | Timespinner | ✅ Passed seeds 1-10 | 0 | 7.1 | 7.1 | 🟢 Complete | 5.4KB | 10.5KB |
 | Undertale | ✅ Passed seeds 1-10 | 0 | 4.3 | 4.3 | 🟢 Complete | 1.5KB | ✅ |
-| VVVVVV | ❌ Failed seed 1 | 0 | 0 | 2.4 | 🔴 0.0% | 1.7KB | 2.1KB |
+| VVVVVV | ✅ Passed seeds 1-10 | 0 | 2.4 | 2.4 | 🟢 Complete | 5.2KB | 2.1KB |
 | Wargroove | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | 5.7KB | 2.6KB |
 | WebDevJourney | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Yacht Dice | ✅ Passed seeds 1-10 | 0 | 21.1 | 21.1 | 🟢 Complete | 2.3KB | 285.0KB |
 | Yoshi's Island | ✅ Passed seeds 1-10 | 0 | 12.4 | 12.4 | 🟢 Complete | 8.1KB | 33.2KB |
-| Yu-Gi-Oh! 2006 | ❌ Failed seed 1 | 0 | 0 | 21.23 | 🔴 0.0% | 1.5KB | 21.3KB |
+| Yu-Gi-Oh! 2006 | ❌ Failed seed 2 | 0 | 0 | 15.2 | 🔴 0.0% | 1.6KB | 21.3KB |
 | shapez | ✅ Passed seeds 1-10 | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
 
 ## Intermittent Failures
@@ -110,11 +110,8 @@ These seeds were previously failing but passed during a retest run:
 
 | Template | Seed | Timestamp | Notes |
 |----------|------|-----------|-------|
-| Kingdom Hearts 2 | 4 | 2025-12-08 21:00 | Previously failed, now passing |
-| MathProof2p2e4 | 1 | 2025-12-08 20:59 | Previously failed, now passing |
-| MegaMan Battle Network 3 | 9 | 2025-12-08 21:01 | Previously failed, now passing |
-| Pokemon Emerald | 2 | 2025-12-08 21:04 | Previously failed, now passing |
-| The Legend of Zelda | 5 | 2025-12-08 21:01 | Previously failed, now passing |
+| Metamath | 4 | 2025-12-08 22:56 | Previously failed, now passing |
+| Raft | 1 | 2025-12-08 22:57 | Previously failed, now passing |
 
 
 ## Notes
