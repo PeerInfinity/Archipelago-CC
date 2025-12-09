@@ -274,7 +274,6 @@ import * as overcooked2Logic from './overcooked2/overcooked2Logic.js';
 import { overcooked2StateModule } from './overcooked2/overcooked2Logic.js';
 import * as paintLogic from './paint/paintLogic.js';
 import * as soeLogic from './soe/soeLogic.js';
-import * as shiversLogic from './shivers/shiversLogic.js';
 import * as smz3Logic from './smz3/smz3Logic.js';
 import * as sc2Logic from './sc2/sc2Logic.js';
 import * as subnauticaLogic from './subnautica/subnauticaLogic.js';
@@ -538,12 +537,6 @@ const GAME_REGISTRY = {
     helperFunctions: stardewValleyLogic.helperFunctions,
     worldClasses: ['StardewValleyWorld'],
     aliases: ['Stardew Valley', 'SDV', 'stardew_valley']
-  },
-  'Shivers': {
-    logicModule: genericLogic.genericStateModule,
-    helperFunctions: shiversLogic.helperFunctions,
-    worldClasses: ['ShiversWorld'],
-    aliases: ['Shivers']
   },
   'SMZ3': {
     logicModule: genericLogic.genericStateModule,

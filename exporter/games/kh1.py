@@ -576,6 +576,15 @@ class KH1GameExportHandler(BaseGameExportHandler):
             rule.get('method') == 'has_all_counts' and
             not rule.get('args')):
 
+            # Skip conversion for Wonderland locations that use non-magic has_all_counts
+            # These locations have: difficulty > LOGIC_PROUD and has_all_counts({"Combo Master": 1, "High Jump": 3, "Air Combo Plus": 2})
+            # Since default difficulty is LOGIC_NORMAL (5) and LOGIC_PROUD is 10, this branch should be unreachable
+            # We should NOT convert this to has_all_magic_lvx
+            if self._is_wonderland_advanced_logic_location(location_name):
+                logger.info(f"Skipping has_all_counts conversion for Wonderland advanced logic location: {location_name}")
+                # Return constant false since this branch is guarded by difficulty > LOGIC_PROUD which is false
+                return {'type': 'constant', 'value': False}
+
             # Extract level from location name
             # Level 3 locations
             if 'LV3 Magic' in location_name or 'All LV3 Magic' in location_name:
@@ -1049,3 +1058,30 @@ class KH1GameExportHandler(BaseGameExportHandler):
             }
 
         return rule
+
+    def _is_wonderland_advanced_logic_location(self, location_name: str) -> bool:
+        """
+        Check if this is a Wonderland location that uses non-magic has_all_counts.
+
+        These locations have rules like:
+        difficulty > LOGIC_PROUD and state.has_all_counts({"Combo Master": 1, "High Jump": 3, "Air Combo Plus": 2}, player)
+
+        This is NOT for magic items, so we should not convert to has_all_magic_lvx.
+        The difficulty check makes this branch unreachable in default settings.
+        """
+        # List of Wonderland locations that use the advanced logic has_all_counts
+        # These are from worlds/kh1/Rules.py - locations using the LOGIC_PROUD difficulty branch
+        wonderland_advanced_logic_locations = [
+            "Wonderland Lotus Forest Glide Chest",
+            "Wonderland Tea Party Garden Above Lotus Forest Entrance 1st Chest",
+            "Wonderland Tea Party Garden Above Lotus Forest Entrance 2nd Chest",
+            "Wonderland Tea Party Garden Across From Bizarre Room Entrance Chest",
+            "Wonderland Tea Party Garden Bear and Clock Puzzle Chest",
+            "Wonderland Tea Party Garden Left Cushioned Chair",
+            "Wonderland Tea Party Garden Left Gray Chair",
+            "Wonderland Tea Party Garden Left Pink Chair",
+            "Wonderland Tea Party Garden Right Brown Chair",
+            "Wonderland Tea Party Garden Right Yellow Chair",
+        ]
+
+        return location_name in wonderland_advanced_logic_locations
