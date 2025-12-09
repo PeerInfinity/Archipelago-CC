@@ -19,119 +19,45 @@
             "name": "Dungeon Entrance on Dragon Roost Island -> Dragon Roost Cavern",
             "connected_region": "Dragon Roost Cavern",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "can_access_dungeon_entrance_on_dragon_roost_island",
+              "args": []
             }
           },
           {
             "name": "Dungeon Entrance in Forest Haven Sector -> Forbidden Woods",
             "connected_region": "Forbidden Woods",
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "can_access_forest_haven",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "can_fly_with_deku_leaf_outdoors",
-                  "args": []
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "helper",
-                          "name": "can_fly_with_deku_leaf_indoors",
-                          "args": []
-                        },
-                        {
-                          "type": "helper",
-                          "name": "can_fly_with_deku_leaf_outdoors",
-                          "args": []
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "_tww_obscure_1",
-                          "args": []
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "_tww_precise_1",
-                          "args": []
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Grappling Hook"
-                    }
-                  ]
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "can_cut_grass",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "has_magic_meter_upgrade",
-                      "args": []
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_dungeon_entrance_in_forest_haven_sector",
+              "args": []
             }
           },
           {
             "name": "Dungeon Entrance in Tower of the Gods Sector -> Tower of the Gods",
             "connected_region": "Tower of the Gods",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_group_unique",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Pearls"
-                },
-                {
-                  "type": "constant",
-                  "value": 3
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_dungeon_entrance_in_tower_of_the_gods_sector",
+              "args": []
             }
           },
           {
             "name": "Dungeon Entrance on Headstone Island -> Earth Temple",
             "connected_region": "Earth Temple",
             "access_rule": {
-              "type": "item_check",
-              "item": "Power Bracelets"
+              "type": "helper",
+              "name": "can_access_dungeon_entrance_on_headstone_island",
+              "args": []
             }
           },
           {
             "name": "Dungeon Entrance on Gale Isle -> Wind Temple",
             "connected_region": "Wind Temple",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Iron Boots",
-                    "Skull Hammer"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_dungeon_entrance_on_gale_isle",
+              "args": []
             }
           },
           {
@@ -139,7 +65,7 @@
             "connected_region": "Master Sword Chamber",
             "access_rule": {
               "type": "helper",
-              "name": "can_access_hyrule",
+              "name": "can_access_miniboss_entrance_in_hyrule_castle",
               "args": []
             }
           },
@@ -147,103 +73,18 @@
             "name": "Boss Entrance in Forsaken Fortress -> Helmaroc King Boss Arena",
             "connected_region": "Helmaroc King Boss Arena",
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "can_get_inside_forsaken_fortress",
-                  "args": []
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "state_method",
-                          "method": "_tww_obscure_2",
-                          "args": []
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "_tww_precise_2",
-                          "args": []
-                        }
-                      ]
-                    },
-                    {
-                      "type": "helper",
-                      "name": "can_fly_with_deku_leaf_indoors",
-                      "args": []
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Hookshot"
-                    }
-                  ]
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "can_defeat_bokoblins",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "can_fly_with_deku_leaf_outdoors",
-                      "args": []
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Grappling Hook"
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Skull Hammer"
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_boss_entrance_in_forsaken_fortress",
+              "args": []
             }
           },
           {
             "name": "Secret Cave Entrance on Outset Island -> Savage Labyrinth",
             "connected_region": "Savage Labyrinth",
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "helper",
-                          "name": "can_fly_with_deku_leaf_outdoors",
-                          "args": []
-                        },
-                        {
-                          "type": "helper",
-                          "name": "can_reach_outset_island_upper_level",
-                          "args": []
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Hookshot"
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Power Bracelets"
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_secret_cave_entrance_on_outset_island",
+              "args": []
             }
           },
           {
@@ -251,7 +92,7 @@
             "connected_region": "Dragon Roost Island Secret Cave",
             "access_rule": {
               "type": "helper",
-              "name": "can_move_boulders",
+              "name": "can_access_secret_cave_entrance_on_dragon_roost_island",
               "args": []
             }
           },
@@ -260,7 +101,7 @@
             "connected_region": "Fire Mountain Secret Cave",
             "access_rule": {
               "type": "helper",
-              "name": "has_ice_arrows",
+              "name": "can_access_secret_cave_entrance_on_fire_mountain",
               "args": []
             }
           },
@@ -269,7 +110,7 @@
             "connected_region": "Ice Ring Isle Secret Cave",
             "access_rule": {
               "type": "helper",
-              "name": "has_fire_arrows",
+              "name": "can_access_secret_cave_entrance_on_ice_ring_isle",
               "args": []
             }
           },
@@ -277,18 +118,9 @@
             "name": "Secret Cave Entrance on Private Oasis -> Cabana Labyrinth",
             "connected_region": "Cabana Labyrinth",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Cabana Deed",
-                    "Delivery Bag",
-                    "Grappling Hook"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_secret_cave_entrance_on_private_oasis",
+              "args": []
             }
           },
           {
@@ -296,7 +128,7 @@
             "connected_region": "Needle Rock Isle Secret Cave",
             "access_rule": {
               "type": "helper",
-              "name": "has_fire_arrows",
+              "name": "can_access_secret_cave_entrance_on_needle_rock_isle",
               "args": []
             }
           },
@@ -304,84 +136,72 @@
             "name": "Secret Cave Entrance on Angular Isles -> Angular Isles Secret Cave",
             "connected_region": "Angular Isles Secret Cave",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "can_fly_with_deku_leaf_outdoors",
-                  "args": []
-                },
-                {
-                  "type": "item_check",
-                  "item": "Hookshot"
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_secret_cave_entrance_on_angular_isles",
+              "args": []
             }
           },
           {
             "name": "Secret Cave Entrance on Boating Course -> Boating Course Secret Cave",
             "connected_region": "Boating Course Secret Cave",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "can_fly_with_deku_leaf_outdoors",
-                  "args": []
-                },
-                {
-                  "type": "item_check",
-                  "item": "Hookshot"
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_secret_cave_entrance_on_boating_course",
+              "args": []
             }
           },
           {
             "name": "Secret Cave Entrance on Stone Watcher Island -> Stone Watcher Island Secret Cave",
             "connected_region": "Stone Watcher Island Secret Cave",
             "access_rule": {
-              "type": "item_check",
-              "item": "Power Bracelets"
+              "type": "helper",
+              "name": "can_access_secret_cave_entrance_on_stone_watcher_island",
+              "args": []
             }
           },
           {
             "name": "Secret Cave Entrance on Overlook Island -> Overlook Island Secret Cave",
             "connected_region": "Overlook Island Secret Cave",
             "access_rule": {
-              "type": "item_check",
-              "item": "Hookshot"
+              "type": "helper",
+              "name": "can_access_secret_cave_entrance_on_overlook_island",
+              "args": []
             }
           },
           {
             "name": "Secret Cave Entrance on Bird's Peak Rock -> Bird's Peak Rock Secret Cave",
             "connected_region": "Bird's Peak Rock Secret Cave",
             "access_rule": {
-              "type": "item_check",
-              "item": "Bait Bag"
+              "type": "helper",
+              "name": "can_access_secret_cave_entrance_on_birds_peak_rock",
+              "args": []
             }
           },
           {
             "name": "Secret Cave Entrance on Pawprint Isle -> Pawprint Isle Chuchu Cave",
             "connected_region": "Pawprint Isle Chuchu Cave",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "can_access_secret_cave_entrance_on_pawprint_isle",
+              "args": []
             }
           },
           {
             "name": "Secret Cave Entrance on Pawprint Isle Side Isle -> Pawprint Isle Wizzrobe Cave",
             "connected_region": "Pawprint Isle Wizzrobe Cave",
             "access_rule": {
-              "type": "item_check",
-              "item": "Hookshot"
+              "type": "helper",
+              "name": "can_access_secret_cave_entrance_on_pawprint_isle_side_isle",
+              "args": []
             }
           },
           {
             "name": "Secret Cave Entrance on Diamond Steppe Island -> Diamond Steppe Island Warp Maze Cave",
             "connected_region": "Diamond Steppe Island Warp Maze Cave",
             "access_rule": {
-              "type": "item_check",
-              "item": "Hookshot"
+              "type": "helper",
+              "name": "can_access_secret_cave_entrance_on_diamond_steppe_island",
+              "args": []
             }
           },
           {
@@ -389,7 +209,7 @@
             "connected_region": "Bomb Island Secret Cave",
             "access_rule": {
               "type": "helper",
-              "name": "can_move_boulders",
+              "name": "can_access_secret_cave_entrance_on_bomb_island",
               "args": []
             }
           },
@@ -397,33 +217,27 @@
             "name": "Secret Cave Entrance on Rock Spire Isle -> Rock Spire Isle Secret Cave",
             "connected_region": "Rock Spire Isle Secret Cave",
             "access_rule": {
-              "type": "item_check",
-              "item": "Bombs"
+              "type": "helper",
+              "name": "can_access_secret_cave_entrance_on_rock_spire_isle",
+              "args": []
             }
           },
           {
             "name": "Secret Cave Entrance on Shark Island -> Shark Island Secret Cave",
             "connected_region": "Shark Island Secret Cave",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Iron Boots",
-                    "Skull Hammer"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_secret_cave_entrance_on_shark_island",
+              "args": []
             }
           },
           {
             "name": "Secret Cave Entrance on Cliff Plateau Isles -> Cliff Plateau Isles Secret Cave",
             "connected_region": "Cliff Plateau Isles Secret Cave",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "can_access_secret_cave_entrance_on_cliff_plateau_isles",
+              "args": []
             }
           },
           {
@@ -431,7 +245,7 @@
             "connected_region": "Horseshoe Island Secret Cave",
             "access_rule": {
               "type": "helper",
-              "name": "can_fan_with_deku_leaf",
+              "name": "can_access_secret_cave_entrance_on_horseshoe_island",
               "args": []
             }
           },
@@ -440,7 +254,7 @@
             "connected_region": "Star Island Secret Cave",
             "access_rule": {
               "type": "helper",
-              "name": "can_move_boulders",
+              "name": "can_access_secret_cave_entrance_on_star_island",
               "args": []
             }
           },
@@ -448,27 +262,18 @@
             "name": "Fairy Fountain Entrance on Outset Island -> Outset Fairy Fountain",
             "connected_region": "Outset Fairy Fountain",
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "can_access_forest_of_fairies",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "can_move_boulders",
-                  "args": []
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_fairy_fountain_entrance_on_outset_island",
+              "args": []
             }
           },
           {
             "name": "Fairy Fountain Entrance on Thorned Fairy Island -> Thorned Fairy Fountain",
             "connected_region": "Thorned Fairy Fountain",
             "access_rule": {
-              "type": "item_check",
-              "item": "Skull Hammer"
+              "type": "helper",
+              "name": "can_access_fairy_fountain_entrance_on_thorned_fairy_island",
+              "args": []
             }
           },
           {
@@ -476,7 +281,7 @@
             "connected_region": "Eastern Fairy Fountain",
             "access_rule": {
               "type": "helper",
-              "name": "can_move_boulders",
+              "name": "can_access_fairy_fountain_entrance_on_eastern_fairy_island",
               "args": []
             }
           },
@@ -484,34 +289,27 @@
             "name": "Fairy Fountain Entrance on Western Fairy Island -> Western Fairy Fountain",
             "connected_region": "Western Fairy Fountain",
             "access_rule": {
-              "type": "item_check",
-              "item": "Skull Hammer"
+              "type": "helper",
+              "name": "can_access_fairy_fountain_entrance_on_western_fairy_island",
+              "args": []
             }
           },
           {
             "name": "Fairy Fountain Entrance on Southern Fairy Island -> Southern Fairy Fountain",
             "connected_region": "Southern Fairy Fountain",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "has_fire_arrows",
-                  "args": []
-                },
-                {
-                  "type": "item_check",
-                  "item": "Bombs"
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_fairy_fountain_entrance_on_southern_fairy_island",
+              "args": []
             }
           },
           {
             "name": "Fairy Fountain Entrance on Northern Fairy Island -> Northern Fairy Fountain",
             "connected_region": "Northern Fairy Fountain",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "helper",
+              "name": "can_access_fairy_fountain_entrance_on_northern_fairy_island",
+              "args": []
             }
           }
         ],
@@ -815,18 +613,9 @@
             "name": "Boss Entrance in Dragon Roost Cavern -> Gohma Boss Arena",
             "connected_region": "Gohma Boss Arena",
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "can_reach_dragon_roost_cavern_boss_stairs",
-                  "args": []
-                },
-                {
-                  "type": "item_check",
-                  "item": "DRC Big Key"
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_boss_entrance_in_dragon_roost_cavern",
+              "args": []
             }
           }
         ],
@@ -1159,74 +948,18 @@
             "name": "Miniboss Entrance in Forbidden Woods -> Forbidden Woods Miniboss Arena",
             "connected_region": "Forbidden Woods Miniboss Arena",
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "can_defeat_boko_babas",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "can_fly_with_deku_leaf_indoors",
-                  "args": []
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "FW Small Key",
-                        "Grappling Hook"
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_miniboss_entrance_in_forbidden_woods",
+              "args": []
             }
           },
           {
             "name": "Boss Entrance in Forbidden Woods -> Kalle Demos Boss Arena",
             "connected_region": "Kalle Demos Boss Arena",
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "can_defeat_boko_babas",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "can_defeat_mothulas",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "can_fly_with_deku_leaf_indoors",
-                  "args": []
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "can_defeat_door_flowers",
-                      "args": []
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Grappling Hook"
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "FW Big Key"
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_boss_entrance_in_forbidden_woods",
+              "args": []
             }
           }
         ],
@@ -1698,66 +1431,18 @@
             "name": "Miniboss Entrance in Tower of the Gods -> Tower of the Gods Miniboss Arena",
             "connected_region": "Tower of the Gods Miniboss Arena",
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "can_reach_tower_of_the_gods_second_floor",
-                  "args": []
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "can_fly_with_deku_leaf_indoors",
-                      "args": []
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Grappling Hook"
-                    }
-                  ]
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "can_play_command_melody",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "has_heros_bow",
-                      "args": []
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_miniboss_entrance_in_tower_of_the_gods",
+              "args": []
             }
           },
           {
             "name": "Boss Entrance in Tower of the Gods -> Gohdan Boss Arena",
             "connected_region": "Gohdan Boss Arena",
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "can_defeat_armos",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "can_reach_tower_of_the_gods_third_floor",
-                  "args": []
-                },
-                {
-                  "type": "item_check",
-                  "item": "TotG Big Key"
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_boss_entrance_in_tower_of_the_gods",
+              "args": []
             }
           }
         ],
@@ -2039,40 +1724,18 @@
             "name": "Miniboss Entrance in Earth Temple -> Earth Temple Miniboss Arena",
             "connected_region": "Earth Temple Miniboss Arena",
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "can_reach_earth_temple_moblins_and_poes_room",
-                  "args": []
-                },
-                {
-                  "type": "item_check",
-                  "item": "ET Small Key",
-                  "count": {
-                    "type": "constant",
-                    "value": 3
-                  }
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_miniboss_entrance_in_earth_temple",
+              "args": []
             }
           },
           {
             "name": "Boss Entrance in Earth Temple -> Jalhalla Boss Arena",
             "connected_region": "Jalhalla Boss Arena",
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "can_reach_earth_temple_tall_vine_room",
-                  "args": []
-                },
-                {
-                  "type": "item_check",
-                  "item": "ET Big Key"
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_boss_entrance_in_earth_temple",
+              "args": []
             }
           }
         ],
@@ -2549,60 +2212,18 @@
             "name": "Miniboss Entrance in Wind Temple -> Wind Temple Miniboss Arena",
             "connected_region": "Wind Temple Miniboss Arena",
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "can_open_wind_temple_upper_giant_grate",
-                  "args": []
-                },
-                {
-                  "type": "item_check",
-                  "item": "WT Small Key",
-                  "count": {
-                    "type": "constant",
-                    "value": 2
-                  }
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_miniboss_entrance_in_wind_temple",
+              "args": []
             }
           },
           {
             "name": "Boss Entrance in Wind Temple -> Molgera Boss Arena",
             "connected_region": "Molgera Boss Arena",
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "can_play_command_melody",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "can_play_wind_gods_aria",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "can_reach_wind_temple_tall_basement_room",
-                  "args": []
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Hookshot",
-                        "Iron Boots",
-                        "WT Big Key"
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_boss_entrance_in_wind_temple",
+              "args": []
             }
           }
         ],
@@ -3259,8 +2880,9 @@
             "name": "Inner Entrance in Ice Ring Isle Secret Cave -> Ice Ring Isle Inner Cave",
             "connected_region": "Ice Ring Isle Inner Cave",
             "access_rule": {
-              "type": "item_check",
-              "item": "Iron Boots"
+              "type": "helper",
+              "name": "can_access_inner_entrance_in_ice_ring_isle_secret_cave",
+              "args": []
             }
           }
         ],
@@ -3576,19 +3198,9 @@
             "name": "Inner Entrance in Cliff Plateau Isles Secret Cave -> Cliff Plateau Isles Inner Cave",
             "connected_region": "Cliff Plateau Isles Inner Cave",
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "can_defeat_boko_babas",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "can_fly_with_deku_leaf_indoors",
-                  "args": []
-                }
-              ]
+              "type": "helper",
+              "name": "can_access_inner_entrance_in_cliff_plateau_isles_secret_cave",
+              "args": []
             }
           }
         ],
@@ -4409,7 +4021,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 4,
+        "max_count": 3,
         "classification": "progression"
       },
       "Progressive Shield": {
