@@ -9,9 +9,14 @@ logger = logging.getLogger(__name__)
 
 class Cv64GameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'Castlevania 64'
-    # Disable automatic helper export (use old behavior)
-    AUTO_EXPORT_DISCOVERED_HELPERS = False
-    AUTO_PRESERVE_LARGE_HELPERS = False
+    # Enable automatic helper export
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    AUTO_PRESERVE_LARGE_HELPERS = True
+
+    # Blacklist location_item_name - it's from worlds.generic.Rules and uses
+    # state.multiworld.get_location() which isn't available in JavaScript.
+    # The JavaScript implementation in helpers.js uses staticData.locationItems instead.
+    HELPERS_TO_EXPORT_BLACKLIST = {'location_item_name'}
 
     """Export handler for Castlevania 64."""
     
@@ -24,10 +29,56 @@ class Cv64GameExportHandler(GenericGameExportHandler):
         # Get world properties for warp calculations
         self.s1s_per_warp = getattr(world, 's1s_per_warp', 1)
     
+    def _extract_location_from_block(self, block: Dict[str, Any]) -> str:
+        """Extract location name from a block pattern produced by allow_self_locking_items.
+
+        The block pattern looks like:
+        {
+            "type": "block",
+            "statements": [
+                {"type": "assign", "name": "location", "value": {"type": "function_call", ... "args": [{"type": "constant", "value": "location_name"}]}},
+                {"type": "conditional", ...},
+                {"type": "return", ...}
+            ]
+        }
+
+        Returns the location name or None if pattern doesn't match.
+        """
+        statements = block.get('statements', [])
+        if not statements:
+            return None
+
+        # Look for the assign statement that calls get_location
+        for stmt in statements:
+            if stmt.get('type') == 'assign' and stmt.get('name') == 'location':
+                value = stmt.get('value', {})
+                if value.get('type') == 'function_call':
+                    func = value.get('function', {})
+                    # Check if it's state.multiworld.get_location
+                    if (func.get('type') == 'attribute' and
+                        func.get('attr') == 'get_location'):
+                        args = value.get('args', [])
+                        if args and args[0].get('type') == 'constant':
+                            return args[0].get('value')
+
+        return None
+
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Expand CV64-specific rules."""
         if not rule:
             return rule
+
+        # Handle block type - this is produced by allow_self_locking_items logic with walrus operator
+        # Pattern: block with assign, conditional, return that computes location_item_name
+        if rule.get('type') == 'block':
+            location_name = self._extract_location_from_block(rule)
+            if location_name:
+                # Convert the entire block to a simple helper call
+                return {
+                    'type': 'helper',
+                    'name': 'location_item_name',
+                    'args': [{'type': 'constant', 'value': location_name}]
+                }
 
         # Handle attribute access on location name constants (for allow_self_locking_items logic)
         # Convert location.item to location_item_name(location) helper call
