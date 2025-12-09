@@ -36,7 +36,7 @@
       ],
       "last_updated": "2025-12-09T06:27:25.422795"
     },
-    "last_updated": "2025-12-09T06:27:25.422793",
+    "last_updated": "2025-12-09T20:56:31.847706",
     "script_version": "1.0.0"
   },
   "results": {
@@ -53449,7 +53449,7 @@
         "success": true,
         "warning_count": 0
       },
-      "consecutive_passes_before_failure": 0,
+      "consecutive_passes_before_failure": 1,
       "consistency_tests": {
         "1": {
           "new_rules_hash": "92dcb57404bd7140a0a2b0201c771e1dd5d6444c70bd3313f9b6e0ec654bad09",
@@ -53552,8 +53552,8 @@
           "timestamp": "2025-12-09T06:21:48.328037"
         }
       },
-      "first_failure_reason": "Test failed at sphere 3.2",
-      "first_failure_seed": 1,
+      "first_failure_reason": "Test failed at sphere 2.2",
+      "first_failure_seed": 2,
       "game_name_from_filename": "undertale",
       "game_name_from_yaml": "Undertale",
       "generation": {
@@ -53571,47 +53571,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "1": {
-              "new_rules_hash": "92dcb57404bd7140a0a2b0201c771e1dd5d6444c70bd3313f9b6e0ec654bad09",
-              "new_sphere_log_hash": "01fdf597f989f97df024cf4abf24e1ad242ccc124d733e6b06dc51416e782a63",
-              "original_rules_hash": "92dcb57404bd7140a0a2b0201c771e1dd5d6444c70bd3313f9b6e0ec654bad09",
-              "original_sphere_log_hash": "01fdf597f989f97df024cf4abf24e1ad242ccc124d733e6b06dc51416e782a63",
-              "rules_identical": true,
-              "seed": "1",
-              "spoilers_identical": true,
-              "timestamp": "2025-12-09T06:21:50.406353"
-            }
-          },
           "game_name_from_filename": "undertale",
           "game_name_from_yaml": "Undertale",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 3.45,
+            "processing_time_seconds": 6.7,
             "return_code": 0,
             "success": true,
-            "warning_count": 1
+            "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/undertale/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-            "size_bytes": 63222,
+            "size_bytes": 65596,
             "size_mb": 0.06
           },
           "seed": "1",
           "seed_id": "AP_14089154938208861744",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 14.81,
-            "return_code": 1,
-            "sphere_reached": 3.2,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 8.96,
+            "return_code": 0,
+            "sphere_reached": 4.3,
+            "success": true,
             "total_spheres": 4.3,
             "warning_count": 0
           },
           "template_filename": "Undertale.yaml",
-          "timestamp": "2025-12-09T06:16:03.778856",
+          "timestamp": "2025-12-09T20:56:15.675586",
           "world_info": {
             "exporter_path": null,
             "exporter_size": 0,
@@ -54164,8 +54152,8 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 10,
-      "seeds_passed": 0,
+      "seeds_failed": 9,
+      "seeds_passed": 1,
       "spoiler_test": {
         "error_count": 8,
         "pass_fail": "failed",
@@ -54179,10 +54167,10 @@
       "summary": {
         "all_passed": false,
         "any_failed": true,
-        "failure_rate": 1.0
+        "failure_rate": 0.9
       },
       "template_filename": "Undertale.yaml",
-      "timestamp": "2025-12-09T06:16:03.778856",
+      "timestamp": "2025-12-09T20:56:15.675586",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": null,
