@@ -4,7 +4,7 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-12-09 01:12:54
+**Generated:** 2025-12-09 04:23:10
 
 ## Summary
 
@@ -29,7 +29,7 @@
 | Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | 1 | 1 | 16.2KB | 38.2KB |
 | Bumper Stickers | ✅ Passed | ❌ Failed | 1 | 1 | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | 1 | 1 | 10.2KB | 5.7KB |
-| Castlevania 64 | ⚫ Skipped | — | 1 | N/A | 13.0KB | 2.0KB |
+| Castlevania 64 | ⚫ Skipped | — | 1 | N/A | 13.1KB | 2.0KB |
 | Celeste (Open World) | ❌ Failed | — | 2 | 2 | 7.1KB | ✅ |
 | Celeste 64 | ✅ Passed | ❌ Failed | 2 | 2 | 4.2KB | 5.9KB |
 | ChecksFinder | ❌ Failed | — | 2 | 2 | ✅ | ✅ |
@@ -48,7 +48,7 @@
 | Hylics 2 | ❌ Failed | — | 2 | 2 | 1.0KB | 6.6KB |
 | Inscryption | ❌ Failed | — | 3 | 3 | 11.3KB | 6.2KB |
 | Jak and Daxter: The Precursor Legacy | ❌ Failed | — | 3 | 3 | 13.2KB | 4.2KB |
-| Kingdom Hearts | ⚫ Skipped | — | 2 | N/A | 47.3KB | 19.5KB |
+| Kingdom Hearts | ⚫ Skipped | — | 2 | N/A | 49.5KB | 19.5KB |
 | Kingdom Hearts 2 | ❌ Failed | — | 3 | 3 | 11.2KB | 112.6KB |
 | Kirby's Dream Land 3 | ❌ Failed | — | 2 | 2 | 10.1KB | 14.9KB |
 | Landstalker - The Treasures of King Nole | ⚫ Skipped | — | 3 | N/A | 16.4KB | 9.1KB |
@@ -73,8 +73,8 @@
 | SMZ3 | ⚫ Skipped | — | 3 | N/A | 59.5KB | 51.2KB |
 | Saving Princess | ❌ Failed | — | 4 | 4 | 3.1KB | ✅ |
 | Secret of Evermore | ❌ Failed | — | 4 | 4 | 13.7KB | 6.9KB |
-| Shivers | ✅ Passed | ✅ Passed | 5 | 5 | 0.7KB | 9.4KB |
-| Sonic Adventure 2 Battle | ❌ Failed | — | 6 | 6 | 0.5KB | ✅ |
+| Shivers | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
+| Sonic Adventure 2 Battle | ❌ Failed | — | 6 | 6 | ✅ | ✅ |
 | Starcraft 2 | ❌ Failed | — | 2 | 2 | 19.3KB | 86.3KB |
 | Stardew Valley | ❌ Failed | — | 5 | 5 | 15.9KB | 10.7KB |
 | Subnautica | ❌ Failed | — | 5 | 5 | 5.2KB | 14.7KB |
@@ -91,13 +91,13 @@
 | The Wind Waker | ❌ Failed | — | 3 | 3 | 3.5KB | 40.7KB |
 | The Witness | ⚫ Skipped | — | 3 | N/A | 23.7KB | 0.9KB |
 | Timespinner | ✅ Passed | ✅ Passed | 3 | 3 | 5.4KB | 10.5KB |
-| Undertale | ❌ Failed | — | 4 | 4 | 1.5KB | ✅ |
+| Undertale | ❌ Failed | — | 4 | 4 | ✅ | ✅ |
 | VVVVVV | ✅ Passed | ✅ Passed | 4 | 4 | 5.2KB | 2.1KB |
 | Wargroove | ✅ Passed | ✅ Passed | 6 | 6 | 5.7KB | 2.6KB |
 | WebDevJourney | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Yacht Dice | ❌ Failed | — | 3 | 3 | 2.3KB | 285.0KB |
 | Yoshi's Island | ❌ Failed | — | 5 | 5 | 8.1KB | 33.2KB |
-| Yu-Gi-Oh! 2006 | ⚫ Skipped | — | 6 | N/A | 1.6KB | 21.3KB |
+| Yu-Gi-Oh! 2006 | ⚫ Skipped | — | 6 | N/A | 1.6KB | 21.4KB |
 | shapez | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 
 ## Templates in Multiworld

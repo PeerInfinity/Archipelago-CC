@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2025-12-09 01:12:54
+**Generated:** 2025-12-09 04:23:10
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -14,104 +14,104 @@ This summary combines results from 3 types of tests:
 ### Individual Test Results
 
 - **Minimal Test:** 59/79 passed (74.7%)
-- **Full Test:** 58/79 passed (73.4%)
-- **Multiclient Test:** 59/79 passed (74.7%)
+- **Full Test:** 0/0 passed (0.0%)
+- **Multiclient Test:** 0/0 passed (0.0%)
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 0 game(s), 0 total failure(s)
+- **Minimal Spoilers Test:** 7 game(s), 7 total failure(s)
 - **Full Spoilers Test:** 0 game(s), 0 total failure(s)
 
 ### Combined Test Results
 
-- **Templates passing all 3 tests:** 58/79 (73.4%)
-- **Templates passing 2 tests:** 1/79 (1.3%)
-- **Templates passing 1 test:** 0/79 (0.0%)
+- **Templates passing all 3 tests:** 0/79 (0.0%)
+- **Templates passing 2 tests:** 0/79 (0.0%)
+- **Templates passing 1 test:** 59/79 (74.7%)
 - **Templates passing 0 tests:** 20/79 (25.3%)
 
 ## Test Results
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic |
 |-----------|--------------|-----------|------------------|------------------|---------------------|----------|----------|
-| A Hat in Time WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| A Link to the Past WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| A Short Hike WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| APQuest WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ |
-| Adventure WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Aquaria WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Bomb Rush Cyberfunk WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Bumper Stickers WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Castlevania - Circle of the Moon WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ |
-| Castlevania 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Celeste (Open World) WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Celeste 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| ChecksFinder WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| ChocolateChipCookies WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Choo-Choo Charles WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Civilization VI WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| DLCQuest WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ |
-| DOOM 1993 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| DOOM II WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Dark Souls III WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Donkey Kong Country 3 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Factorio WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ |
-| Faxanadu WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Final Fantasy Mystic Quest WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Heretic WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Hylics 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Inscryption WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Jak and Daxter The Precursor Legacy WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ |
-| Kingdom Hearts 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Kingdom Hearts WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Kirby's Dream Land 3 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Landstalker - The Treasures of King Nole WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Lingo WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Links Awakening DX WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ |
-| Lufia II Ancient Cave WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Mario & Luigi Superstar Saga WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| MathProof2p2e4 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Mega Man 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ |
-| MegaMan Battle Network 3 WorldGen | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Meritous WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Metamath WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Muse Dash WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ |
-| Noita WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Old School Runescape WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ |
-| Overcooked! 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Paint WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Pokemon Emerald WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Pokemon Red and Blue WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ |
-| Raft WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Risk of Rain 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| SMZ3 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ |
-| Saving Princess WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ |
-| Secret of Evermore WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Shivers WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Sonic Adventure 2 Battle WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Starcraft 2 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Stardew Valley WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ |
-| Subnautica WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Super Mario 64 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Super Mario Land 2 WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ |
-| Super Mario World WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Super Metroid WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ |
-| TOEM original WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| TOEM rule builder WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| TUNIC WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ |
-| Terraria WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| The Legend of Zelda WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| The Messenger WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ |
-| The Wind Waker WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| The Witness WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ |
-| Timespinner WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Undertale WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| VVVVVV WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Wargroove WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| WebDevJourney WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Yacht Dice WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ |
-| Yoshi's Island WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Yu-Gi-Oh! 2006 WorldGen | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| shapez WorldGen | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | ✅ | ✅ |
+| A Hat in Time WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| A Link to the Past WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| A Short Hike WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| APQuest WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ |
+| Adventure WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Aquaria WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Bomb Rush Cyberfunk WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Bumper Stickers WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Castlevania - Circle of the Moon WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ |
+| Castlevania 64 WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Celeste (Open World) WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Celeste 64 WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ |
+| ChecksFinder WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| ChocolateChipCookies WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Choo-Choo Charles WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Civilization VI WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| DLCQuest WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| DOOM 1993 WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| DOOM II WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Dark Souls III WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Donkey Kong Country 3 WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Factorio WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ |
+| Faxanadu WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Final Fantasy Mystic Quest WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Heretic WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Hylics 2 WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Inscryption WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Jak and Daxter The Precursor Legacy WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ |
+| Kingdom Hearts 2 WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Kingdom Hearts WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Kirby's Dream Land 3 WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Landstalker - The Treasures of King Nole WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Lingo WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Links Awakening DX WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ |
+| Lufia II Ancient Cave WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Mario & Luigi Superstar Saga WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| MathProof2p2e4 WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Mega Man 2 WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ |
+| MegaMan Battle Network 3 WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Meritous WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Metamath WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ |
+| Muse Dash WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ |
+| Noita WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Old School Runescape WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ |
+| Overcooked! 2 WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Paint WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Pokemon Emerald WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Pokemon Red and Blue WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ |
+| Raft WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Risk of Rain 2 WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| SMZ3 WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ |
+| Saving Princess WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ |
+| Secret of Evermore WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Shivers WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Sonic Adventure 2 Battle WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Starcraft 2 WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Stardew Valley WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ |
+| Subnautica WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Super Mario 64 WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Super Mario Land 2 WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Super Mario World WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Super Metroid WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ |
+| TOEM original WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| TOEM rule builder WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| TUNIC WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ |
+| Terraria WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| The Legend of Zelda WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| The Messenger WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ |
+| The Wind Waker WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| The Witness WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ |
+| Timespinner WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Undertale WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| VVVVVV WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Wargroove WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| WebDevJourney WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Yacht Dice WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ |
+| Yoshi's Island WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| Yu-Gi-Oh! 2006 WorldGen | ✅ Passed | ❓ N/A | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| shapez WorldGen | ❌ Failed | ❓ N/A | ❓ N/A | ⚫ | ⚫ | ✅ | ✅ |
 
 ## Excluded Games
 
