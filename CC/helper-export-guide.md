@@ -157,19 +157,43 @@ class MyGameExportHandler(GenericGameExportHandler):
 
 Note: `HELPER_MODULES` and `ITEM_NAME_MODULES` are omitted because they are automatically detected. Only specify them if helpers are in modules not referenced during rule analysis.
 
+## Default Settings
+
+The base class (`BaseGameExportHandler`) defines these defaults:
+
+```python
+# Module paths - empty by default (auto-detected during analysis)
+HELPER_MODULES: List[str] = []
+ITEM_NAME_MODULES: List[str] = []
+
+# Auto-export configuration
+AUTO_EXPORT_DISCOVERED_HELPERS: bool = False  # Must enable explicitly
+HELPERS_TO_EXPORT_WHITELIST: Set[str] = set()  # Manual whitelist (always exported)
+HELPERS_TO_EXPORT_BLACKLIST: Set[str] = set()  # Manual blacklist (never exported)
+
+# Helper preservation
+HELPERS_TO_PRESERVE: Set[str] = set()        # Preserve as helper calls
+AUTO_PRESERVE_LARGE_HELPERS: bool = False    # Auto-preserve large helpers
+HELPER_INLINE_THRESHOLD: int = 0             # Node count threshold
+
+# Computed settings - game-specific option mappings
+COMPUTED_SETTINGS: Dict[str, Callable] = {}
+```
+
 ## Success Stories
 
-Several games have successfully removed their custom JavaScript helper files entirely by using automatic helper export:
+The following games have successfully removed their custom JavaScript helper files entirely by using automatic helper export:
 
-**Games with no JavaScript helpers** (rules fully exported):
-- shapez
-- Pokemon Emerald
-- Hollow Knight
-- The Witness
-- SMZ3
-- Raft
-- Wargroove
-- And 30+ other games
+- **shapez** - Complex shape-building logic now fully exported
+- **Adventure** - Classic Atari game rules exported
+- **Bumper Stickers** - Puzzle game logic exported
+- **ChecksFinder** - All rules exported
+- **DOOM 1993** - FPS game logic exported
+- **DOOM II** - FPS game logic exported
+- **Donkey Kong Country 3** - Platformer rules exported
+- **Faxanadu** - Action RPG rules exported
+- **Metamath** - Mathematical puzzle logic exported
+- **Super Mario World** - Platformer rules exported
 
 These games now use `GenericGameExportHandler` with minimal or no customization. The frontend evaluates all rules directly from `rules.json` without needing game-specific JavaScript logic.
 
