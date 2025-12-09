@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-09 07:32:05
+**Generated:** 2025-12-09 07:42:17
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -18,7 +18,7 @@ Additional test results:
 
 - **Minimal Test:** 73/79 passed (92.4%)
 - **Full Test:** 73/79 passed (92.4%)
-- **Multiclient Test:** 0/0 passed (0.0%)
+- **Multiclient Test:** 71/79 passed (89.9%)
 
 ### Intermittent Failures
 
@@ -27,94 +27,94 @@ Additional test results:
 
 ### Combined Test Results
 
-- **Templates passing all 3 tests:** 0/79 (0.0%)
-- **Templates passing 2 tests:** 73/79 (92.4%)
-- **Templates passing 1 test:** 0/79 (0.0%)
-- **Templates passing 0 tests:** 6/79 (7.6%)
+- **Templates passing all 3 tests:** 70/79 (88.6%)
+- **Templates passing 2 tests:** 3/79 (3.8%)
+- **Templates passing 1 test:** 1/79 (1.3%)
+- **Templates passing 0 tests:** 5/79 (6.3%)
 
 ## Test Results
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic |
 |-----------|--------------|-----------|------------------|------------------|---------------------|----------|----------|
-| A Hat in Time | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 23.2KB | 23.2KB |
-| A Link to the Past | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 31.2KB | 59.8KB |
-| A Short Hike | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 7.0KB | ✅ |
-| APQuest | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
-| Adventure | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
-| Aquaria | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 10.8KB | 8.3KB |
-| Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 16.2KB | 38.2KB |
-| Bumper Stickers | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
-| Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 10.2KB | 5.7KB |
-| Castlevania 64 | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 13.1KB | 2.0KB |
-| Celeste (Open World) | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 7.1KB | ✅ |
-| Celeste 64 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 4.2KB | 5.9KB |
-| ChecksFinder | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
-| ChocolateChipCookies | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
-| Choo-Choo Charles | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
-| Civilization VI | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 6.3KB | 5.1KB |
-| DLCQuest | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 9.6KB | 9.4KB |
-| DOOM 1993 | ✅ Passed | ✅ Passed | ❓ N/A | ⚫ | ✅ | ✅ | ✅ |
-| DOOM II | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
-| Dark Souls III | ✅ Passed | ✅ Passed | ❓ N/A | ⚫ | ✅ | 10.8KB | 4.4KB |
-| Donkey Kong Country 3 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
-| Factorio | ✅ Passed | ✅ Passed | ❓ N/A | ⚫ | ✅ | 11.4KB | 4.2KB |
-| Faxanadu | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
-| Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 11.2KB | ✅ |
-| Heretic | ✅ Passed | ✅ Passed | ❓ N/A | ⚫ | ✅ | ✅ | ✅ |
-| Hylics 2 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 1.0KB | 6.6KB |
-| Inscryption | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 11.3KB | 6.2KB |
-| Jak and Daxter: The Precursor Legacy | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 13.2KB | 4.2KB |
-| Kingdom Hearts | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 49.5KB | 19.5KB |
-| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ❓ N/A | ⚫ | ✅ | 11.2KB | 112.6KB |
-| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 10.1KB | 14.9KB |
-| Landstalker - The Treasures of King Nole | ❌ Failed | ❌ Failed | ❓ N/A | ⚫ | ⚫ | 16.4KB | 9.1KB |
-| Lingo | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 32.2KB | 11.3KB |
-| Links Awakening DX | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 15.8KB | 5.3KB |
-| Lufia II Ancient Cave | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
-| Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 0.5KB | 8.9KB |
-| MathProof2p2e4 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
-| Mega Man 2 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 3.7KB | 3.2KB |
-| MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 0.7KB | 2.7KB |
-| Meritous | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
-| Metamath | ✅ Passed | ✅ Passed | ❓ N/A | ⚫ | ✅ | ✅ | ✅ |
-| Muse Dash | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
-| Noita | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
-| Old School Runescape | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 3.0KB | 1.2KB |
-| Overcooked! 2 | ✅ Passed | ✅ Passed | ❓ N/A | ⚫ | ✅ | 26.5KB | 7.2KB |
-| Paint | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 5.8KB | 4.3KB |
-| Pokemon Emerald | ✅ Passed | ✅ Passed | ❓ N/A | ⚫ | ✅ | 6.2KB | 8.7KB |
-| Pokemon Red and Blue | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 12.2KB | 13.0KB |
-| Raft | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 6.8KB | 16.4KB |
-| Risk of Rain 2 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
-| SMZ3 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 59.5KB | 51.2KB |
-| Saving Princess | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 3.1KB | ✅ |
-| Secret of Evermore | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 13.7KB | 6.9KB |
-| Shivers | ✅ Passed | ✅ Passed | ❓ N/A | ⚫ | ✅ | ✅ | ✅ |
-| Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | ✅ Passed | ❓ N/A | ⚫ | ✅ | 19.3KB | 86.3KB |
-| Stardew Valley | ✅ Passed | ✅ Passed | ❓ N/A | ⚫ | ✅ | 15.9KB | 10.7KB |
-| Subnautica | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 5.2KB | 14.7KB |
-| Super Mario 64 | ✅ Passed | ✅ Passed | ❓ N/A | ⚫ | ✅ | 14.6KB | 3.3KB |
-| Super Mario Land 2 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 15.7KB | 15.3KB |
-| Super Mario World | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
-| Super Metroid | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 71.5KB | 114.6KB |
-| TOEM original | ✅ Passed | ✅ Passed | ❓ N/A | ⚫ | ✅ | ✅ | ✅ |
-| TOEM rule builder | ✅ Passed | ✅ Passed | ❓ N/A | ⚫ | ✅ | ✅ | ✅ |
-| TUNIC | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 6.4KB | ✅ |
-| Terraria | ✅ Passed | ✅ Passed | ❓ N/A | ⚫ | ✅ | 11.8KB | 4.6KB |
-| The Legend of Zelda | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 6.9KB | 1.7KB |
-| The Messenger | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 13.3KB | 3.3KB |
-| The Wind Waker | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | 3.5KB | 40.7KB |
-| The Witness | ✅ Passed | ✅ Passed | ❓ N/A | ⚫ | ✅ | 23.7KB | 0.9KB |
-| Timespinner | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 5.4KB | 10.5KB |
-| Undertale | ❌ Failed | ❌ Failed | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
-| VVVVVV | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 5.2KB | 2.1KB |
-| Wargroove | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 5.7KB | 2.6KB |
-| WebDevJourney | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
-| Yacht Dice | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 2.3KB | 285.0KB |
-| Yoshi's Island | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 8.1KB | 33.2KB |
-| Yu-Gi-Oh! 2006 | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | 1.6KB | 21.4KB |
-| shapez | ✅ Passed | ✅ Passed | ❓ N/A | ✅ | ✅ | ✅ | ✅ |
+| A Hat in Time | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 23.2KB | 23.2KB |
+| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 31.2KB | 59.8KB |
+| A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.0KB | ✅ |
+| APQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Aquaria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 10.8KB | 8.3KB |
+| Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 16.2KB | 38.2KB |
+| Bumper Stickers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 10.2KB | 5.7KB |
+| Castlevania 64 | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 13.1KB | 2.0KB |
+| Celeste (Open World) | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.1KB | ✅ |
+| Celeste 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.2KB | 5.9KB |
+| ChecksFinder | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| ChocolateChipCookies | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Choo-Choo Charles | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Civilization VI | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 6.3KB | 5.1KB |
+| DLCQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 9.6KB | 9.4KB |
+| DOOM 1993 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ |
+| DOOM II | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Dark Souls III | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 10.8KB | 4.4KB |
+| Donkey Kong Country 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Factorio | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 11.4KB | 4.2KB |
+| Faxanadu | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 11.2KB | ✅ |
+| Heretic | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ |
+| Hylics 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.0KB | 6.6KB |
+| Inscryption | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 11.3KB | 6.2KB |
+| Jak and Daxter: The Precursor Legacy | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.2KB | 4.2KB |
+| Kingdom Hearts | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 49.5KB | 19.5KB |
+| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 11.2KB | 112.6KB |
+| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 10.1KB | 14.9KB |
+| Landstalker - The Treasures of King Nole | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ | ⚫ | 16.4KB | 9.1KB |
+| Lingo | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 32.2KB | 11.3KB |
+| Links Awakening DX | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 15.8KB | 5.3KB |
+| Lufia II Ancient Cave | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.5KB | 8.9KB |
+| MathProof2p2e4 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Mega Man 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.7KB | 3.2KB |
+| MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.7KB | 2.7KB |
+| Meritous | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Metamath | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ |
+| Muse Dash | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Noita | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Old School Runescape | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.0KB | 1.2KB |
+| Overcooked! 2 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 26.5KB | 7.2KB |
+| Paint | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 5.8KB | 4.3KB |
+| Pokemon Emerald | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 6.2KB | 8.7KB |
+| Pokemon Red and Blue | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.2KB | 13.0KB |
+| Raft | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 6.8KB | 16.4KB |
+| Risk of Rain 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| SMZ3 | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 59.5KB | 51.2KB |
+| Saving Princess | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.1KB | ✅ |
+| Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.7KB | 6.9KB |
+| Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ |
+| Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Starcraft 2 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 19.3KB | 86.3KB |
+| Stardew Valley | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 15.9KB | 10.7KB |
+| Subnautica | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.2KB | 14.7KB |
+| Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 14.6KB | 3.3KB |
+| Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 15.7KB | 15.3KB |
+| Super Mario World | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Super Metroid | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 71.5KB | 114.6KB |
+| TOEM original | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ |
+| TOEM rule builder | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ |
+| TUNIC | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 6.4KB | ✅ |
+| Terraria | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 11.8KB | 4.6KB |
+| The Legend of Zelda | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 6.9KB | 1.7KB |
+| The Messenger | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.3KB | 3.3KB |
+| The Wind Waker | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 3.5KB | 40.7KB |
+| The Witness | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ✅ | 23.7KB | 0.9KB |
+| Timespinner | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.4KB | 10.5KB |
+| Undertale | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | ✅ | ✅ |
+| VVVVVV | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.2KB | 2.1KB |
+| Wargroove | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.7KB | 2.6KB |
+| WebDevJourney | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Yacht Dice | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 2.3KB | 285.0KB |
+| Yoshi's Island | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.1KB | 33.2KB |
+| Yu-Gi-Oh! 2006 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.6KB | 21.4KB |
+| shapez | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 
 ## Multi-Template Test Results
 
