@@ -81,9 +81,17 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_lift_rocks",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Power Glove"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Titans Mitts"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -96,9 +104,8 @@
             "name": "Kings Grave Outer Rocks",
             "connected_region": "Kings Grave Area",
             "access_rule": {
-              "type": "helper",
-              "name": "can_lift_heavy_rocks",
-              "args": []
+              "type": "item_check",
+              "item": "Titans Mitts"
             }
           },
           {
@@ -340,18 +347,34 @@
             "name": "Sanctuary Grave",
             "connected_region": "Sewer Drop",
             "access_rule": {
-              "type": "helper",
-              "name": "can_lift_rocks",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Power Glove"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Titans Mitts"
+                }
+              ]
             }
           },
           {
             "name": "Death Mountain Entrance Rock",
             "connected_region": "Death Mountain Entrance",
             "access_rule": {
-              "type": "helper",
-              "name": "can_lift_rocks",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Power Glove"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Titans Mitts"
+                }
+              ]
             }
           },
           {
@@ -369,13 +392,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_lift_heavy_rocks",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Activated Flute"
                 },
                 {
                   "type": "item_check",
-                  "item": "Activated Flute"
+                  "item": "Titans Mitts"
                 }
               ]
             }
@@ -387,9 +409,17 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_lift_rocks",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Power Glove"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Titans Mitts"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -409,9 +439,17 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_lift_rocks",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Power Glove"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Titans Mitts"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -437,9 +475,17 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "helper",
-                          "name": "can_lift_rocks",
-                          "args": []
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": "Power Glove"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Titans Mitts"
+                            }
+                          ]
                         },
                         {
                           "type": "item_check",
@@ -448,9 +494,8 @@
                       ]
                     },
                     {
-                      "type": "helper",
-                      "name": "can_lift_heavy_rocks",
-                      "args": []
+                      "type": "item_check",
+                      "item": "Titans Mitts"
                     }
                   ]
                 },
@@ -570,9 +615,17 @@
             "name": "20 Rupee Cave",
             "connected_region": "20 Rupee Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_lift_rocks",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Power Glove"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Titans Mitts"
+                }
+              ]
             }
           },
           {
@@ -611,9 +664,17 @@
             "name": "50 Rupee Cave",
             "connected_region": "50 Rupee Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_lift_rocks",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Power Glove"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Titans Mitts"
+                }
+              ]
             }
           },
           {
@@ -824,9 +885,8 @@
             "name": "Lake Hylia Central Island Teleporter",
             "connected_region": "Dark Lake Hylia Central Island",
             "access_rule": {
-              "type": "helper",
-              "name": "can_lift_heavy_rocks",
-              "args": []
+              "type": "item_check",
+              "item": "Titans Mitts"
             }
           }
         ],
@@ -1072,9 +1132,8 @@
             "name": "Kings Grave Inner Rocks",
             "connected_region": "Light World",
             "access_rule": {
-              "type": "helper",
-              "name": "can_lift_heavy_rocks",
-              "args": []
+              "type": "item_check",
+              "item": "Titans Mitts"
             }
           }
         ],
@@ -1500,9 +1559,18 @@
             "name": "Sahasrahla's Hut - Left",
             "id": 60034,
             "access_rule": {
-              "type": "helper",
-              "name": "can_bomb_or_bonk",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "can_use_bombs",
+                  "args": []
+                },
+                {
+                  "type": "item_check",
+                  "item": "Pegasus Boots"
+                }
+              ]
             },
             "item": {
               "name": "Rupees (20)",
@@ -1517,9 +1585,18 @@
             "name": "Sahasrahla's Hut - Middle",
             "id": 60037,
             "access_rule": {
-              "type": "helper",
-              "name": "can_bomb_or_bonk",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "can_use_bombs",
+                  "args": []
+                },
+                {
+                  "type": "item_check",
+                  "item": "Pegasus Boots"
+                }
+              ]
             },
             "item": {
               "name": "Hookshot",
@@ -1534,9 +1611,18 @@
             "name": "Sahasrahla's Hut - Right",
             "id": 60040,
             "access_rule": {
-              "type": "helper",
-              "name": "can_bomb_or_bonk",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "can_use_bombs",
+                  "args": []
+                },
+                {
+                  "type": "item_check",
+                  "item": "Pegasus Boots"
+                }
+              ]
             },
             "item": {
               "name": "Rupees (50)",
@@ -2514,18 +2600,36 @@
             "name": "Two Brothers House Exit (East)",
             "connected_region": "Light World",
             "access_rule": {
-              "type": "helper",
-              "name": "can_bomb_or_bonk",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "can_use_bombs",
+                  "args": []
+                },
+                {
+                  "type": "item_check",
+                  "item": "Pegasus Boots"
+                }
+              ]
             }
           },
           {
             "name": "Two Brothers House Exit (West)",
             "connected_region": "Maze Race Ledge",
             "access_rule": {
-              "type": "helper",
-              "name": "can_bomb_or_bonk",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "can_use_bombs",
+                  "args": []
+                },
+                {
+                  "type": "item_check",
+                  "item": "Pegasus Boots"
+                }
+              ]
             }
           }
         ],
@@ -2583,9 +2687,17 @@
             "name": "Desert Palace Entrance (North) Rocks",
             "connected_region": "Desert Palace Entrance (North) Spot",
             "access_rule": {
-              "type": "helper",
-              "name": "can_lift_rocks",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Power Glove"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Titans Mitts"
+                }
+              ]
             }
           },
           {
@@ -2626,9 +2738,17 @@
             "name": "Checkerboard Cave",
             "connected_region": "Checkerboard Cave",
             "access_rule": {
-              "type": "helper",
-              "name": "can_lift_rocks",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Power Glove"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Titans Mitts"
+                }
+              ]
             }
           }
         ],
@@ -2694,9 +2814,17 @@
             "name": "Desert Ledge Return Rocks",
             "connected_region": "Desert Ledge",
             "access_rule": {
-              "type": "helper",
-              "name": "can_lift_rocks",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Power Glove"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Titans Mitts"
+                }
+              ]
             }
           }
         ],
@@ -3029,9 +3157,17 @@
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_fire_source",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Fire Rod"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Lamp"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -3107,9 +3243,17 @@
                       "args": []
                     },
                     {
-                      "type": "helper",
-                      "name": "has_fire_source",
-                      "args": []
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Fire Rod"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Lamp"
+                        }
+                      ]
                     },
                     {
                       "type": "item_check",
@@ -3608,9 +3752,21 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_beam_sword",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Golden Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Master Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Tempered Sword"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -4144,9 +4300,18 @@
             "name": "Sewers Secret Room",
             "connected_region": "Sewers Secret Room",
             "access_rule": {
-              "type": "helper",
-              "name": "can_bomb_or_bonk",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "can_use_bombs",
+                  "args": []
+                },
+                {
+                  "type": "item_check",
+                  "item": "Pegasus Boots"
+                }
+              ]
             }
           }
         ],
@@ -4269,9 +4434,25 @@
                       }
                     },
                     {
-                      "type": "helper",
-                      "name": "has_sword",
-                      "args": []
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Fighter Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Golden Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Master Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Tempered Sword"
+                        }
+                      ]
                     }
                   ]
                 },
@@ -4836,9 +5017,8 @@
             "name": "East Death Mountain Teleporter",
             "connected_region": "Dark Death Mountain (East Bottom)",
             "access_rule": {
-              "type": "helper",
-              "name": "can_lift_heavy_rocks",
-              "args": []
+              "type": "item_check",
+              "item": "Titans Mitts"
             }
           },
           {
@@ -4853,9 +5033,8 @@
             "name": "Fairy Ascension Rocks",
             "connected_region": "Fairy Ascension Plateau",
             "access_rule": {
-              "type": "helper",
-              "name": "can_lift_heavy_rocks",
-              "args": []
+              "type": "item_check",
+              "item": "Titans Mitts"
             }
           },
           {
@@ -4952,9 +5131,21 @@
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_beam_sword",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Golden Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Master Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Tempered Sword"
+                    }
+                  ]
                 },
                 {
                   "type": "state_method",
@@ -4997,9 +5188,21 @@
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_beam_sword",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Golden Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Master Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Tempered Sword"
+                    }
+                  ]
                 },
                 {
                   "type": "state_method",
@@ -5042,9 +5245,21 @@
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_beam_sword",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Golden Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Master Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Tempered Sword"
+                    }
+                  ]
                 },
                 {
                   "type": "state_method",
@@ -5087,9 +5302,21 @@
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_beam_sword",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Golden Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Master Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Tempered Sword"
+                    }
+                  ]
                 },
                 {
                   "type": "state_method",
@@ -5132,9 +5359,21 @@
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_beam_sword",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Golden Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Master Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Tempered Sword"
+                    }
+                  ]
                 },
                 {
                   "type": "state_method",
@@ -5311,13 +5550,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_lift_heavy_rocks",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Hammer"
                 },
                 {
                   "type": "item_check",
-                  "item": "Hammer"
+                  "item": "Titans Mitts"
                 }
               ]
             }
@@ -5570,9 +5808,71 @@
             "name": "Ether Tablet",
             "id": 1572886,
             "access_rule": {
-              "type": "helper",
-              "name": "can_retrieve_tablet",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "attribute",
+                          "object": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "subscript",
+                              "value": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "name",
+                                    "name": "state"
+                                  },
+                                  "attr": "multiworld"
+                                },
+                                "attr": "worlds"
+                              },
+                              "index": {
+                                "type": "constant",
+                                "value": 1
+                              }
+                            },
+                            "attr": "options"
+                          },
+                          "attr": "swordless"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Hammer"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Golden Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Master Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Tempered Sword"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Book of Mudora"
+                }
+              ]
             },
             "item": {
               "name": "Arrows (10)",
@@ -5632,11 +5932,6 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_activate_crystal_switch",
-                  "args": []
-                },
-                {
                   "type": "or",
                   "conditions": [
                     {
@@ -5675,6 +5970,69 @@
                       }
                     }
                   ]
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "can_shoot_arrows",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "can_use_bombs",
+                      "args": []
+                    },
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": "Fighter Sword"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Golden Sword"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Master Sword"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Tempered Sword"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Hammer"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Blue Boomerang",
+                            "Cane of Byrna",
+                            "Cane of Somaria",
+                            "Fire Rod",
+                            "Hookshot",
+                            "Ice Rod",
+                            "Red Boomerang"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -5689,9 +6047,67 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "can_activate_crystal_switch",
-                      "args": []
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "can_shoot_arrows",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "can_use_bombs",
+                          "args": []
+                        },
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "or",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": "Fighter Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Golden Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Master Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Tempered Sword"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Hammer"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "state_method",
+                          "method": "has_any",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": [
+                                "Blue Boomerang",
+                                "Cane of Byrna",
+                                "Cane of Somaria",
+                                "Fire Rod",
+                                "Hookshot",
+                                "Ice Rod",
+                                "Red Boomerang"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
                     },
                     {
                       "type": "item_check",
@@ -5717,9 +6133,34 @@
                       ]
                     },
                     {
-                      "type": "helper",
-                      "name": "has_melee_weapon",
-                      "args": []
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": "Fighter Sword"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Golden Sword"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Master Sword"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Tempered Sword"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Hammer"
+                        }
+                      ]
                     },
                     {
                       "type": "item_check",
@@ -5748,9 +6189,67 @@
             "name": "Tower of Hera - Basement Cage",
             "id": 1573218,
             "access_rule": {
-              "type": "helper",
-              "name": "can_activate_crystal_switch",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "can_shoot_arrows",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "can_use_bombs",
+                  "args": []
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Fighter Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Golden Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Master Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Tempered Sword"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Hammer"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Blue Boomerang",
+                        "Cane of Byrna",
+                        "Cane of Somaria",
+                        "Fire Rod",
+                        "Hookshot",
+                        "Ice Rod",
+                        "Red Boomerang"
+                      ]
+                    }
+                  ]
+                }
+              ]
             },
             "item": {
               "name": "Compass (Tower of Hera)",
@@ -5765,9 +6264,67 @@
             "name": "Tower of Hera - Map Chest",
             "id": 59821,
             "access_rule": {
-              "type": "helper",
-              "name": "can_activate_crystal_switch",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "can_shoot_arrows",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "can_use_bombs",
+                  "args": []
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Fighter Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Golden Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Master Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Tempered Sword"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Hammer"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Blue Boomerang",
+                        "Cane of Byrna",
+                        "Cane of Somaria",
+                        "Fire Rod",
+                        "Hookshot",
+                        "Ice Rod",
+                        "Red Boomerang"
+                      ]
+                    }
+                  ]
+                }
+              ]
             },
             "item": {
               "name": "Big Key (Tower of Hera)",
@@ -5792,9 +6349,17 @@
             "name": "Tower of Hera - Big Key Chest",
             "id": 59878,
             "access_rule": {
-              "type": "helper",
-              "name": "has_fire_source",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Fire Rod"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Lamp"
+                }
+              ]
             },
             "item": {
               "name": "Bombs (3)",
@@ -6137,9 +6702,17 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "can_lift_rocks",
-                      "args": []
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Power Glove"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Titans Mitts"
+                        }
+                      ]
                     },
                     {
                       "type": "item_check",
@@ -6188,9 +6761,17 @@
             "name": "Catfish Exit Rock",
             "connected_region": "Northeast Dark World",
             "access_rule": {
-              "type": "helper",
-              "name": "can_lift_rocks",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Power Glove"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Titans Mitts"
+                }
+              ]
             }
           }
         ],
@@ -6254,9 +6835,17 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "can_lift_rocks",
-                      "args": []
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Power Glove"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Titans Mitts"
+                        }
+                      ]
                     },
                     {
                       "type": "item_check",
@@ -6275,9 +6864,17 @@
             "name": "Catfish Entrance Rock",
             "connected_region": "Catfish",
             "access_rule": {
-              "type": "helper",
-              "name": "can_lift_rocks",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Power Glove"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Titans Mitts"
+                }
+              ]
             }
           },
           {
@@ -6372,13 +6969,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_lift_heavy_rocks",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Moon Pearl"
                 },
                 {
                   "type": "item_check",
-                  "item": "Moon Pearl"
+                  "item": "Titans Mitts"
                 }
               ]
             }
@@ -6566,9 +7162,71 @@
             "name": "Bombos Tablet",
             "id": 1572887,
             "access_rule": {
-              "type": "helper",
-              "name": "can_retrieve_tablet",
-              "args": []
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "attribute",
+                          "object": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "subscript",
+                              "value": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "name",
+                                    "name": "state"
+                                  },
+                                  "attr": "multiworld"
+                                },
+                                "attr": "worlds"
+                              },
+                              "index": {
+                                "type": "constant",
+                                "value": 1
+                              }
+                            },
+                            "attr": "options"
+                          },
+                          "attr": "swordless"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Hammer"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Golden Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Master Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Tempered Sword"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Book of Mudora"
+                }
+              ]
             },
             "item": {
               "name": "Hammer",
@@ -6724,9 +7382,17 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_lift_rocks",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Power Glove"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Titans Mitts"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -6997,9 +7663,17 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_lift_rocks",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Power Glove"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Titans Mitts"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -7040,13 +7714,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_lift_heavy_rocks",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Moon Pearl"
                 },
                 {
                   "type": "item_check",
-                  "item": "Moon Pearl"
+                  "item": "Titans Mitts"
                 }
               ]
             }
@@ -7116,13 +7789,12 @@
                                               "type": "and",
                                               "conditions": [
                                                 {
-                                                  "type": "helper",
-                                                  "name": "can_lift_heavy_rocks",
-                                                  "args": []
+                                                  "type": "item_check",
+                                                  "item": "Moon Pearl"
                                                 },
                                                 {
                                                   "type": "item_check",
-                                                  "item": "Moon Pearl"
+                                                  "item": "Titans Mitts"
                                                 }
                                               ]
                                             },
@@ -7257,13 +7929,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_lift_heavy_rocks",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Moon Pearl"
                 },
                 {
                   "type": "item_check",
-                  "item": "Moon Pearl"
+                  "item": "Titans Mitts"
                 }
               ]
             }
@@ -7874,9 +8545,25 @@
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_sword",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Fighter Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Golden Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Master Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Tempered Sword"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -8100,9 +8787,17 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_lift_rocks",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Power Glove"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Titans Mitts"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -8127,13 +8822,29 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "has_sword",
+                  "name": "has_turtle_rock_medallion",
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_turtle_rock_medallion",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Fighter Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Golden Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Master Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Tempered Sword"
+                    }
+                  ]
                 },
                 {
                   "type": "state_method",
@@ -8376,11 +9087,6 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "can_lift_rocks",
-                      "args": []
-                    },
-                    {
                       "type": "or",
                       "conditions": [
                         {
@@ -8461,6 +9167,19 @@
                               "item": "Cane of Byrna"
                             }
                           ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Power Glove"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Titans Mitts"
                         }
                       ]
                     },
@@ -8866,9 +9585,21 @@
                       "args": []
                     },
                     {
-                      "type": "helper",
-                      "name": "has_beam_sword",
-                      "args": []
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Golden Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Master Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Tempered Sword"
+                        }
+                      ]
                     },
                     {
                       "type": "item_check",
@@ -10358,9 +11089,25 @@
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "has_sword",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Fighter Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Golden Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Master Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Tempered Sword"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -10562,13 +11309,79 @@
                 },
                 {
                   "type": "helper",
-                  "name": "can_melt_things",
+                  "name": "can_use_bombs",
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "can_use_bombs",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "attribute",
+                              "object": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "subscript",
+                                  "value": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "attribute",
+                                      "object": {
+                                        "type": "name",
+                                        "name": "state"
+                                      },
+                                      "attr": "multiworld"
+                                    },
+                                    "attr": "worlds"
+                                  },
+                                  "index": {
+                                    "type": "constant",
+                                    "value": 1
+                                  }
+                                },
+                                "attr": "options"
+                              },
+                              "attr": "swordless"
+                            },
+                            {
+                              "type": "or",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": "Fighter Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Golden Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Master Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Tempered Sword"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Bombos"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Fire Rod"
+                    }
+                  ]
                 }
               ]
             }
@@ -10590,9 +11403,75 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_melt_things",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "attribute",
+                              "object": {
+                                "type": "attribute",
+                                "object": {
+                                  "type": "subscript",
+                                  "value": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "attribute",
+                                      "object": {
+                                        "type": "name",
+                                        "name": "state"
+                                      },
+                                      "attr": "multiworld"
+                                    },
+                                    "attr": "worlds"
+                                  },
+                                  "index": {
+                                    "type": "constant",
+                                    "value": 1
+                                  }
+                                },
+                                "attr": "options"
+                              },
+                              "attr": "swordless"
+                            },
+                            {
+                              "type": "or",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": "Fighter Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Golden Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Master Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Tempered Sword"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Bombos"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Fire Rod"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -10627,9 +11506,75 @@
                       }
                     },
                     {
-                      "type": "helper",
-                      "name": "can_melt_things",
-                      "args": []
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "or",
+                              "conditions": [
+                                {
+                                  "type": "attribute",
+                                  "object": {
+                                    "type": "attribute",
+                                    "object": {
+                                      "type": "subscript",
+                                      "value": {
+                                        "type": "attribute",
+                                        "object": {
+                                          "type": "attribute",
+                                          "object": {
+                                            "type": "name",
+                                            "name": "state"
+                                          },
+                                          "attr": "multiworld"
+                                        },
+                                        "attr": "worlds"
+                                      },
+                                      "index": {
+                                        "type": "constant",
+                                        "value": 1
+                                      }
+                                    },
+                                    "attr": "options"
+                                  },
+                                  "attr": "swordless"
+                                },
+                                {
+                                  "type": "or",
+                                  "conditions": [
+                                    {
+                                      "type": "item_check",
+                                      "item": "Fighter Sword"
+                                    },
+                                    {
+                                      "type": "item_check",
+                                      "item": "Golden Sword"
+                                    },
+                                    {
+                                      "type": "item_check",
+                                      "item": "Master Sword"
+                                    },
+                                    {
+                                      "type": "item_check",
+                                      "item": "Tempered Sword"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Bombos"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Fire Rod"
+                        }
+                      ]
                     }
                   ]
                 },
@@ -10828,11 +11773,6 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_lift_rocks",
-                  "args": []
-                },
-                {
                   "type": "or",
                   "conditions": [
                     {
@@ -10859,6 +11799,19 @@
                         "type": "constant",
                         "value": 6
                       }
+                    }
+                  ]
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Power Glove"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Titans Mitts"
                     }
                   ]
                 },
@@ -10964,9 +11917,17 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_lift_rocks",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Power Glove"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Titans Mitts"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -11175,9 +12136,25 @@
                       "args": []
                     },
                     {
-                      "type": "helper",
-                      "name": "has_sword",
-                      "args": []
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Fighter Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Golden Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Master Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Tempered Sword"
+                        }
+                      ]
                     },
                     {
                       "type": "item_check",
@@ -11379,9 +12356,67 @@
                           }
                         },
                         {
-                          "type": "helper",
-                          "name": "can_activate_crystal_switch",
-                          "args": []
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "helper",
+                              "name": "can_shoot_arrows",
+                              "args": []
+                            },
+                            {
+                              "type": "helper",
+                              "name": "can_use_bombs",
+                              "args": []
+                            },
+                            {
+                              "type": "or",
+                              "conditions": [
+                                {
+                                  "type": "or",
+                                  "conditions": [
+                                    {
+                                      "type": "item_check",
+                                      "item": "Fighter Sword"
+                                    },
+                                    {
+                                      "type": "item_check",
+                                      "item": "Golden Sword"
+                                    },
+                                    {
+                                      "type": "item_check",
+                                      "item": "Master Sword"
+                                    },
+                                    {
+                                      "type": "item_check",
+                                      "item": "Tempered Sword"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Hammer"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "state_method",
+                              "method": "has_any",
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": [
+                                    "Blue Boomerang",
+                                    "Cane of Byrna",
+                                    "Cane of Somaria",
+                                    "Fire Rod",
+                                    "Hookshot",
+                                    "Ice Rod",
+                                    "Red Boomerang"
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
                         }
                       ]
                     },
@@ -11431,9 +12466,67 @@
                           }
                         },
                         {
-                          "type": "helper",
-                          "name": "can_activate_crystal_switch",
-                          "args": []
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "helper",
+                              "name": "can_shoot_arrows",
+                              "args": []
+                            },
+                            {
+                              "type": "helper",
+                              "name": "can_use_bombs",
+                              "args": []
+                            },
+                            {
+                              "type": "or",
+                              "conditions": [
+                                {
+                                  "type": "or",
+                                  "conditions": [
+                                    {
+                                      "type": "item_check",
+                                      "item": "Fighter Sword"
+                                    },
+                                    {
+                                      "type": "item_check",
+                                      "item": "Golden Sword"
+                                    },
+                                    {
+                                      "type": "item_check",
+                                      "item": "Master Sword"
+                                    },
+                                    {
+                                      "type": "item_check",
+                                      "item": "Tempered Sword"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Hammer"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "state_method",
+                              "method": "has_any",
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": [
+                                    "Blue Boomerang",
+                                    "Cane of Byrna",
+                                    "Cane of Somaria",
+                                    "Fire Rod",
+                                    "Hookshot",
+                                    "Ice Rod",
+                                    "Red Boomerang"
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
                         }
                       ]
                     },
@@ -11728,9 +12821,17 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_fire_source",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Fire Rod"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Lamp"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -11754,9 +12855,17 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_fire_source",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Fire Rod"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Lamp"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -12319,9 +13428,21 @@
                           "args": []
                         },
                         {
-                          "type": "helper",
-                          "name": "has_beam_sword",
-                          "args": []
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": "Golden Sword"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Master Sword"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Tempered Sword"
+                            }
+                          ]
                         },
                         {
                           "type": "state_method",
@@ -12391,16 +13512,25 @@
                   "conditions": [
                     {
                       "type": "helper",
-                      "name": "can_bomb_or_bonk",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
                       "name": "can_kill_most_things",
                       "args": [
                         {
                           "type": "constant",
                           "value": 10
+                        }
+                      ]
+                    },
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "can_use_bombs",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Pegasus Boots"
                         }
                       ]
                     },
@@ -13249,13 +14379,22 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "can_bomb_or_bonk",
+                  "name": "can_shoot_arrows",
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "can_shoot_arrows",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "can_use_bombs",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Pegasus Boots"
+                    }
+                  ]
                 }
               ]
             }
@@ -15900,9 +17039,17 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_fire_source",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Fire Rod"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Lamp"
+                    }
+                  ]
                 }
               ]
             }
@@ -16201,9 +17348,21 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_beam_sword",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Golden Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Master Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Tempered Sword"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -16346,9 +17505,34 @@
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_melee_weapon",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Fighter Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Golden Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Master Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Tempered Sword"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Hammer"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -16465,9 +17649,34 @@
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_melee_weapon",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Fighter Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Golden Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Master Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Tempered Sword"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Hammer"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -16508,9 +17717,25 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_sword",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Fighter Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Golden Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Master Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Tempered Sword"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -16537,9 +17762,34 @@
           "None": {
             "name": "Moldorm",
             "defeat_rule": {
-              "type": "helper",
-              "name": "has_melee_weapon",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Fighter Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Golden Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Master Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Tempered Sword"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Hammer"
+                }
+              ]
             }
           }
         }
@@ -16574,9 +17824,34 @@
               "if_false": {
                 "type": "conditional",
                 "test": {
-                  "type": "helper",
-                  "name": "has_melee_weapon",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Fighter Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Golden Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Master Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Tempered Sword"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Hammer"
+                    }
+                  ]
                 },
                 "if_true": {
                   "type": "constant",
@@ -16665,9 +17940,34 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_melee_weapon",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Fighter Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Golden Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Master Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Tempered Sword"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Hammer"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -16764,9 +18064,34 @@
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_melee_weapon",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Fighter Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Golden Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Master Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Tempered Sword"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Hammer"
+                    }
+                  ]
                 }
               ]
             }
@@ -16863,9 +18188,34 @@
                       ]
                     },
                     {
-                      "type": "helper",
-                      "name": "has_melee_weapon",
-                      "args": []
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": "Fighter Sword"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Golden Sword"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Master Sword"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Tempered Sword"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Hammer"
+                        }
+                      ]
                     }
                   ]
                 },
@@ -16906,9 +18256,25 @@
                               "attr": "swordless"
                             },
                             {
-                              "type": "helper",
-                              "name": "has_sword",
-                              "args": []
+                              "type": "or",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": "Fighter Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Golden Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Master Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Tempered Sword"
+                                }
+                              ]
                             }
                           ]
                         },
@@ -16976,9 +18342,34 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_melee_weapon",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Fighter Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Golden Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Master Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Tempered Sword"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Hammer"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -17065,9 +18456,25 @@
                         ]
                       },
                       {
-                        "type": "helper",
-                        "name": "has_sword",
-                        "args": []
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "Fighter Sword"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Golden Sword"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Master Sword"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Tempered Sword"
+                          }
+                        ]
                       }
                     ]
                   },
@@ -17117,9 +18524,25 @@
                       "args": []
                     },
                     {
-                      "type": "helper",
-                      "name": "has_sword",
-                      "args": []
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Fighter Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Golden Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Master Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Tempered Sword"
+                        }
+                      ]
                     }
                   ]
                 },
@@ -17171,9 +18594,25 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_sword",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Fighter Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Golden Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Master Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Tempered Sword"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -17273,9 +18712,34 @@
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_melee_weapon",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Fighter Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Golden Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Master Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Tempered Sword"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Hammer"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -17299,9 +18763,34 @@
                   "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "has_melee_weapon",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Fighter Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Golden Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Master Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Tempered Sword"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Hammer"
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -17325,9 +18814,34 @@
           "top": {
             "name": "Moldorm",
             "defeat_rule": {
-              "type": "helper",
-              "name": "has_melee_weapon",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Fighter Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Golden Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Master Sword"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Tempered Sword"
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Hammer"
+                }
+              ]
             }
           }
         }
@@ -17420,7 +18934,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Hammer": {
@@ -17433,7 +18947,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Hookshot": {
@@ -17446,7 +18960,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Magic Mirror": {
@@ -17459,7 +18973,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Flute": {
@@ -17472,7 +18986,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Pegasus Boots": {
@@ -17485,7 +18999,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Power Glove": {
@@ -17511,7 +19025,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Mushroom": {
@@ -17524,7 +19038,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Shovel": {
@@ -17537,7 +19051,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Lamp": {
@@ -17550,7 +19064,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Magic Powder": {
@@ -17563,7 +19077,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Moon Pearl": {
@@ -17576,7 +19090,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Cane of Somaria": {
@@ -17590,7 +19104,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Fire Rod": {
@@ -17604,7 +19118,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Flippers": {
@@ -17617,7 +19131,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Ice Rod": {
@@ -17631,7 +19145,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Titans Mitts": {
@@ -17657,7 +19171,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Ether": {
@@ -17670,7 +19184,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Quake": {
@@ -17683,7 +19197,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Bottle": {
@@ -18041,7 +19555,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "filler"
       },
       "Arrows (10)": {
@@ -18054,7 +19568,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 24,
+        "max_count": 12,
         "classification": "filler"
       },
       "Arrow Upgrade (+10)": {
@@ -18118,7 +19632,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 32,
+        "max_count": 16,
         "classification": "filler"
       },
       "Bombs (10)": {
@@ -18131,7 +19645,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "filler"
       },
       "Bomb Upgrade (+10)": {
@@ -18224,7 +19738,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Red Boomerang": {
@@ -18238,7 +19752,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Blue Shield": {
@@ -18304,7 +19818,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Cane of Byrna": {
@@ -18318,7 +19832,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Boss Heart Container": {
@@ -18344,7 +19858,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "useful"
       },
       "Piece of Heart": {
@@ -18371,7 +19885,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 4,
+        "max_count": 2,
         "classification": "filler"
       },
       "Rupees (5)": {
@@ -18385,7 +19899,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 8,
+        "max_count": 4,
         "classification": "filler"
       },
       "Rupees (20)": {
@@ -18399,7 +19913,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 56,
+        "max_count": 28,
         "classification": "filler"
       },
       "Rupees (50)": {
@@ -18413,7 +19927,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 14,
+        "max_count": 7,
         "classification": "filler"
       },
       "Rupees (100)": {
@@ -18427,7 +19941,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "filler"
       },
       "Rupees (300)": {
@@ -18441,7 +19955,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 10,
+        "max_count": 5,
         "classification": "filler"
       },
       "Rupoor": {
@@ -18530,7 +20044,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Magic Upgrade (1/4)": {
