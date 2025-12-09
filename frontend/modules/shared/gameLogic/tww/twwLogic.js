@@ -153,13 +153,36 @@ export function hasGroupUnique(snapshot, staticData, groupName, player, countNee
 
   const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
 
-  // Get the items data - check multiple possible locations
-  const items = staticData?.itemsByPlayer?.[playerSlot] || staticData?.itemData || staticData?.items?.[playerSlot];
+  // Get the items data - check multiple possible locations with proper empty check
+  let items = null;
+
+  // Try itemsByPlayer first (if it exists and has content for this player)
+  if (staticData?.itemsByPlayer?.[playerSlot] && Object.keys(staticData.itemsByPlayer[playerSlot]).length > 0) {
+    items = staticData.itemsByPlayer[playerSlot];
+  }
+  // Try itemData (if it exists and has content)
+  else if (staticData?.itemData && Object.keys(staticData.itemData).length > 0) {
+    items = staticData.itemData;
+  }
+  // Try items[playerSlot] (if items exists and has content for this player)
+  else if (staticData?.items?.[playerSlot] && Object.keys(staticData.items[playerSlot]).length > 0) {
+    items = staticData.items[playerSlot];
+  }
+  // Finally try items directly (flat structure)
+  else if (staticData?.items && Object.keys(staticData.items).length > 0) {
+    // Check if items is keyed by player ID or directly contains items
+    const firstKey = Object.keys(staticData.items)[0];
+    if (firstKey && staticData.items[firstKey]?.name) {
+      // Flat structure - items directly contains item definitions
+      items = staticData.items;
+    }
+  }
+
   if (!items) return false;
 
   // Find all items that belong to this group
   const groupItems = Object.values(items).filter(item =>
-    item.groups && item.groups.includes(groupName)
+    item && item.groups && item.groups.includes(groupName)
   );
 
   // Count how many unique items from this group the player has
