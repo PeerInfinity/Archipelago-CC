@@ -12,9 +12,10 @@ logger = logging.getLogger(__name__) # Add logger if needed later
 
 class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritance
     GAME_NAME = 'A Link to the Past'
-    # Disable automatic helper export (use old behavior)
+    # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = False
-    AUTO_PRESERVE_LARGE_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = True  # Closure functions are cached during analysis and exported
+    # HELPER_MODULES = ['worlds.alttp.StateHelpers']  # Disabled - helper defs need more work
 
     """No longer expands helpers - just validates they're known ALTTP helpers"""
     
@@ -50,26 +51,26 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         # Define ALTTP-specific helpers that should NOT be expanded
         self.known_helpers = {
             'GanonDefeatRule',
-            'basement_key_rule',
-            'can_activate_crystal_switch',
-            'can_bomb_or_bonk',
+            # 'basement_key_rule',  # Removed - can be inlined, JS impl is incorrect
+            # 'can_activate_crystal_switch',  # Removed - item checks + helper calls
+            # 'can_bomb_or_bonk',  # Removed - item check + can_use_bombs, may need to preserve can_use_bombs
             'can_extend_magic',
             'can_get_good_bee',
             'can_kill_most_things',
-            'can_lift_heavy_rocks',
-            'can_lift_rocks',
-            'can_melt_things',
-            'can_retrieve_tablet',
+            # 'can_lift_heavy_rocks',  # Removed - simple item check, can be inlined
+            # 'can_lift_rocks',  # Removed - simple item checks, can be inlined
+            # 'can_melt_things',  # Removed - item checks + settings check
+            # 'can_retrieve_tablet',  # Removed - item checks + settings check
             'can_shoot_arrows',
             'can_use_bombs',
-            'has_beam_sword',
-            'has_crystals',
+            # 'has_beam_sword',  # Removed - multiple item checks, can be inlined
+            'has_crystals',  # Preserved as helper call, definition exported to helpers section
             'has_crystals_for_ganon',
-            'has_fire_source',
+            # 'has_fire_source',  # Removed - simple item checks, can be inlined
             'has_hearts',
-            'has_melee_weapon',
-            'has_misery_mire_medallion',
-            'has_sword',
+            # 'has_melee_weapon',  # Removed - calls has_sword + item check, can be inlined
+            'has_misery_mire_medallion',  # Keep - dynamic medallion lookup needs JS
+            # 'has_sword',  # Removed - multiple item checks, can be inlined
             'has_turtle_rock_medallion',
             'item_name_in_location_names',
             'tr_big_key_chest_keys_needed',
@@ -149,18 +150,19 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             return rule
             
         # Check if this is a has_crystals helper with complex arguments
-        if (rule.get('type') == 'helper' and 
-            rule.get('name') == 'has_crystals' and 
+        if (rule.get('type') == 'helper' and
+            rule.get('name') == 'has_crystals' and
             rule.get('args')):
-            
+
             # Check if the argument is trying to access crystals_needed_for_ganon
             if len(rule['args']) == 1:
                 arg = rule['args'][0]
                 # Check for the complex chain: state.multiworld.worlds[player].options.crystals_needed_for_ganon
-                if (isinstance(arg, dict) and 
-                    arg.get('type') == 'attribute' and 
-                    arg.get('attr') == 'crystals_needed_for_ganon'):
-                    
+                # Also check for setting_value type (from analyzer pattern detection)
+                if (isinstance(arg, dict) and
+                    ((arg.get('type') == 'attribute' and arg.get('attr') == 'crystals_needed_for_ganon') or
+                     (arg.get('type') == 'setting_value' and arg.get('setting') == 'crystals_needed_for_ganon'))):
+
                     # Replace with the simpler helper
                     return {
                         'type': 'helper',

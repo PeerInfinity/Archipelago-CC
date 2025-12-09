@@ -19,7 +19,7 @@
   },
   "A Link to the Past": {
     "exporter_path": "exporter/games/alttp.py",
-    "exporter_size": 31921,
+    "exporter_size": 32889,
     "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
     "game_logic_size": 61286,
     "has_custom_exporter": true,
@@ -181,7 +181,7 @@
   },
   "Castlevania 64": {
     "exporter_path": "exporter/games/cv64.py",
-    "exporter_size": 13340,
+    "exporter_size": 13366,
     "game_logic_path": "frontend/modules/shared/gameLogic/cv64/cv64Logic.js",
     "game_logic_size": 2020,
     "has_custom_exporter": true,
@@ -309,7 +309,7 @@
     "exporter_path": "exporter/games/dlcquest.py",
     "exporter_size": 9846,
     "game_logic_path": "frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js",
-    "game_logic_size": 9575,
+    "game_logic_size": 9576,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "dlcquest"
@@ -397,7 +397,7 @@
   },
   "Factorio": {
     "exporter_path": "exporter/games/factorio.py",
-    "exporter_size": 11422,
+    "exporter_size": 11623,
     "game_logic_path": "frontend/modules/shared/gameLogic/factorio/factorioLogic.js",
     "game_logic_size": 4269,
     "has_custom_exporter": true,
@@ -541,9 +541,9 @@
   },
   "Kingdom Hearts": {
     "exporter_path": "exporter/games/kh1.py",
-    "exporter_size": 36556,
+    "exporter_size": 50690,
     "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
-    "game_logic_size": 19885,
+    "game_logic_size": 19926,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "kh1"
@@ -577,7 +577,7 @@
   },
   "Kirby's Dream Land 3": {
     "exporter_path": "exporter/games/kdl3.py",
-    "exporter_size": 10180,
+    "exporter_size": 10366,
     "game_logic_path": "frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js",
     "game_logic_size": 15283,
     "has_custom_exporter": true,
@@ -595,7 +595,7 @@
   },
   "Landstalker - The Treasures of King Nole": {
     "exporter_path": "exporter/games/landstalker.py",
-    "exporter_size": 14645,
+    "exporter_size": 16807,
     "game_logic_path": "frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js",
     "game_logic_size": 9354,
     "has_custom_exporter": true,
@@ -613,7 +613,7 @@
   },
   "Lingo": {
     "exporter_path": "exporter/games/lingo.py",
-    "exporter_size": 30735,
+    "exporter_size": 32935,
     "game_logic_path": "frontend/modules/shared/gameLogic/lingo/lingoLogic.js",
     "game_logic_size": 11523,
     "has_custom_exporter": true,
@@ -703,7 +703,7 @@
   },
   "Mega Man 2": {
     "exporter_path": "exporter/games/mm2.py",
-    "exporter_size": 3561,
+    "exporter_size": 3759,
     "game_logic_path": "frontend/modules/shared/gameLogic/mm2/mm2Logic.js",
     "game_logic_size": 3286,
     "has_custom_exporter": true,
@@ -999,12 +999,12 @@
     "world_directory": "soe_worldgen"
   },
   "Shivers": {
-    "exporter_path": "exporter/games/shivers.py",
-    "exporter_size": 715,
-    "game_logic_path": "frontend/modules/shared/gameLogic/shivers/shiversLogic.js",
-    "game_logic_size": 9636,
-    "has_custom_exporter": true,
-    "has_custom_game_logic": true,
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
     "world_directory": "shivers"
   },
   "Shivers WorldGen": {
@@ -1017,11 +1017,11 @@
     "world_directory": "shivers_worldgen"
   },
   "Sonic Adventure 2 Battle": {
-    "exporter_path": "exporter/games/sa2b.py",
-    "exporter_size": 555,
+    "exporter_path": null,
+    "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": true,
+    "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "sa2b"
   },
@@ -1332,11 +1332,11 @@
     "world_directory": "timespinner_worldgen"
   },
   "Undertale": {
-    "exporter_path": "exporter/games/undertale.py",
-    "exporter_size": 1548,
+    "exporter_path": null,
+    "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": true,
+    "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "undertale"
   },
@@ -1360,7 +1360,7 @@
   },
   "VVVVVV": {
     "exporter_path": "exporter/games/v6.py",
-    "exporter_size": 1728,
+    "exporter_size": 5287,
     "game_logic_path": "frontend/modules/shared/gameLogic/v6/v6Logic.js",
     "game_logic_size": 2198,
     "has_custom_exporter": true,
@@ -1450,9 +1450,9 @@
   },
   "Yu-Gi-Oh! 2006": {
     "exporter_path": "exporter/games/yugioh06.py",
-    "exporter_size": 1567,
+    "exporter_size": 1639,
     "game_logic_path": "frontend/modules/shared/gameLogic/yugioh06/yugioh06Logic.js",
-    "game_logic_size": 21832,
+    "game_logic_size": 21951,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "yugioh06"

@@ -93,8 +93,15 @@ Helpers that work well:
 Helpers that need blacklisting:
 - **Loops**: `for item in items: if state.has(item)...`
 - **Complex math**: Float calculations, counters with non-trivial logic
-- **Closure variables**: Helpers that capture variables from their call site
 - **Dynamic data**: Logic that depends on runtime state beyond items/settings
+
+### Closure Functions
+
+Closure functions (functions defined inside other functions that capture variables from their scope) are automatically handled:
+
+- **Parameterless closures** (e.g., `def basement_key_rule(state): ...` inside another function): These are analyzed during rule analysis with their captured variables already resolved, and the result is cached for export. The exported definition is "fully resolved" with concrete values.
+
+- **Closures with parameters**: These cannot be cached because different call sites may pass different arguments. They must either be defined at module level (so they can be re-analyzed) or fall back to JavaScript implementations.
 
 ## Frontend Requirements
 
@@ -233,7 +240,7 @@ HELPERS_TO_EXPORT_BLACKLIST: Set[str] = set()  # Manual blacklist (never exporte
 
 # Helper preservation
 HELPERS_TO_PRESERVE: Set[str] = set()        # Preserve as helper calls
-AUTO_PRESERVE_LARGE_HELPERS: bool = False    # Auto-preserve large helpers
+AUTO_PRESERVE_LARGE_HELPERS: bool = True     # Auto-preserve large helpers (default: True)
 HELPER_INLINE_THRESHOLD: int = 0             # Node count threshold
 
 # Computed settings - game-specific option mappings

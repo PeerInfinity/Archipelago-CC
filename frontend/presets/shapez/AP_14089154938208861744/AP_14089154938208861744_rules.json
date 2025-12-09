@@ -183,8 +183,9 @@
             "name": "Cutting with half cutter",
             "connected_region": "Achievements with half cutter",
             "access_rule": {
-              "type": "item_check",
-              "item": "Cutter"
+              "type": "helper",
+              "name": "can_cut_half",
+              "args": []
             }
           },
           {
@@ -199,8 +200,9 @@
             "name": "Stacking shapes",
             "connected_region": "Achievements with stacker",
             "access_rule": {
-              "type": "item_check",
-              "item": "Stacker"
+              "type": "helper",
+              "name": "can_stack",
+              "args": []
             }
           },
           {
@@ -249,110 +251,28 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "helper",
+                  "name": "can_make_stitched_shape",
+                  "args": [
                     {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "constant",
-                              "value": true
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Quad Cutter"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_any",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Rotator",
-                                    "Rotator (CCW)"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Cutter"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Stacker"
+                      "type": "constant",
+                      "value": false
                     }
                   ]
                 },
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "state_method",
-                          "method": "has_all",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Quad Painter",
-                                "Wires"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Constant Signal",
-                                "Switch"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Double Painter",
-                            "Painter"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "helper",
+                  "name": "can_mix_colors",
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "can_paint",
+                  "args": []
                 },
                 {
                   "type": "item_check",
                   "item": "Blueprints"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Color Mixer"
                 }
               ]
             }
@@ -361,161 +281,12 @@
             "name": "Building a MAM",
             "connected_region": "Achievements needing a MAM",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "can_build_mam",
+              "args": [
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "constant",
-                              "value": true
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Quad Cutter"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_any",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Rotator",
-                                    "Rotator (CCW)"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Cutter"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Stacker"
-                    }
-                  ]
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "state_method",
-                          "method": "has_all",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Quad Painter",
-                                "Wires"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Constant Signal",
-                                "Switch"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Double Painter",
-                            "Painter"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Compact Merger",
-                            "Compact Splitter"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Balancer"
-                    }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Belt Reader",
-                        "Item Filter",
-                        "Logic Gates",
-                        "Storage",
-                        "Virtual Processing",
-                        "Wires"
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Tunnel",
-                        "Tunnel Tier II"
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Color Mixer"
+                  "type": "constant",
+                  "value": false
                 }
               ]
             }
@@ -527,106 +298,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "helper",
+                  "name": "can_make_stitched_shape",
+                  "args": [
                     {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "constant",
-                              "value": true
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Quad Cutter"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_any",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Rotator",
-                                    "Rotator (CCW)"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Cutter"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Stacker"
+                      "type": "constant",
+                      "value": false
                     }
                   ]
                 },
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "state_method",
-                          "method": "has_all",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Quad Painter",
-                                "Wires"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Constant Signal",
-                                "Switch"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Double Painter",
-                            "Painter"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "helper",
+                  "name": "can_mix_colors",
+                  "args": []
                 },
                 {
-                  "type": "item_check",
-                  "item": "Color Mixer"
+                  "type": "helper",
+                  "name": "can_paint",
+                  "args": []
                 }
               ]
             }
@@ -635,171 +324,64 @@
             "name": "Using first level building",
             "connected_region": "Levels with 1 building",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": false
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Compact Merger",
-                                    "Compact Splitter"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Balancer"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Tunnel",
-                                "Tunnel Tier II"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Trash"
-                        }
-                      ]
-                    }
-                  }
-                ]
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": false
-                    },
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
+              "type": "helper",
+              "name": "has_logic_list_building",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Cutter",
+                    "Rotator",
+                    "Painter",
+                    "Color Mixer",
+                    "Stacker"
                   ]
                 },
-                "if_true": {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Cutter",
-                        "Quad Cutter"
-                      ]
-                    }
-                  ]
+                {
+                  "type": "constant",
+                  "value": 0
                 },
-                "if_false": {
-                  "type": "item_check",
-                  "item": "Cutter"
+                {
+                  "type": "constant",
+                  "value": false
+                },
+                {
+                  "type": "constant",
+                  "value": false
                 }
-              }
+              ]
             }
           },
           {
             "name": "Using first upgrade building",
             "connected_region": "Upgrades with 1 building",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": false
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Compact Merger",
-                                    "Compact Splitter"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Balancer"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Tunnel",
-                                "Tunnel Tier II"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Trash"
-                        }
-                      ]
-                    }
-                  }
-                ]
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "item_check",
-                "item": "Stacker"
-              }
+              "type": "helper",
+              "name": "has_logic_list_building",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Stacker",
+                    "Cutter",
+                    "Rotator",
+                    "Painter",
+                    "Color Mixer"
+                  ]
+                },
+                {
+                  "type": "constant",
+                  "value": 0
+                },
+                {
+                  "type": "constant",
+                  "value": false
+                },
+                {
+                  "type": "constant",
+                  "value": false
+                }
+              ]
             }
           },
           {
@@ -814,26 +396,9 @@
             "name": "Cutting in single half",
             "connected_region": "Shapesanity Half Uncolored",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Quad Cutter",
-                        "Stacker"
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Cutter"
-                }
-              ]
+              "type": "helper",
+              "name": "can_make_half_shape",
+              "args": []
             }
           },
           {
@@ -846,21 +411,14 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Rotator",
-                            "Rotator (CCW)"
-                          ]
-                        }
-                      ]
+                      "type": "helper",
+                      "name": "can_cut_half",
+                      "args": []
                     },
                     {
-                      "type": "item_check",
-                      "item": "Cutter"
+                      "type": "helper",
+                      "name": "can_rotate_90",
+                      "args": []
                     }
                   ]
                 },
@@ -875,77 +433,21 @@
             "name": "Cutting and stacking into two halves",
             "connected_region": "Shapesanity Half-Half Uncolored",
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Cutter",
-                        "Quad Cutter"
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Stacker"
-                }
-              ]
+              "type": "helper",
+              "name": "can_make_half_half_shape",
+              "args": []
             }
           },
           {
             "name": "Stitching complex shapes",
             "connected_region": "Shapesanity Stitched Uncolored",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "type": "helper",
+              "name": "can_make_stitched_shape",
+              "args": [
                 {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "constant",
-                          "value": true
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Quad Cutter"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Rotator",
-                                "Rotator (CCW)"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Cutter"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Stacker"
+                  "type": "constant",
+                  "value": false
                 }
               ]
             }
@@ -954,45 +456,9 @@
             "name": "Rotating and stitching a single windmill half",
             "connected_region": "Shapesanity East Windmill Uncolored",
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Rotator",
-                                "Rotator (180\u00b0)",
-                                "Rotator (CCW)"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Cutter"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Quad Cutter"
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Stacker"
-                }
-              ]
+              "type": "helper",
+              "name": "can_make_east_windmill",
+              "args": []
             }
           },
           {
@@ -1002,84 +468,19 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "helper",
+                  "name": "can_make_stitched_shape",
+                  "args": [
                     {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "constant",
-                              "value": true
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Quad Cutter"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_any",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Rotator",
-                                    "Rotator (CCW)"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Cutter"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Stacker"
+                      "type": "constant",
+                      "value": false
                     }
                   ]
                 },
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Quad Painter",
-                            "Wires"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Constant Signal",
-                            "Switch"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "helper",
+                  "name": "can_use_quad_painter",
+                  "args": []
                 }
               ]
             }
@@ -1094,125 +495,24 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "and",
-                              "conditions": [
-                                {
-                                  "type": "state_method",
-                                  "method": "has_any",
-                                  "args": [
-                                    {
-                                      "type": "constant",
-                                      "value": [
-                                        "Rotator",
-                                        "Rotator (180\u00b0)",
-                                        "Rotator (CCW)"
-                                      ]
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Cutter"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Quad Cutter"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Stacker"
-                        }
-                      ]
+                      "type": "helper",
+                      "name": "can_make_east_windmill",
+                      "args": []
                     },
                     {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "state_method",
-                          "method": "has_all",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Quad Painter",
-                                "Wires"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Constant Signal",
-                                "Switch"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
+                      "type": "helper",
+                      "name": "can_use_quad_painter",
+                      "args": []
                     }
                   ]
                 },
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "helper",
+                  "name": "can_make_stitched_shape",
+                  "args": [
                     {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "constant",
-                              "value": true
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Quad Cutter"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_any",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Rotator",
-                                    "Rotator (CCW)"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Cutter"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Stacker"
+                      "type": "constant",
+                      "value": false
                     }
                   ]
                 }
@@ -1229,106 +529,24 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "state_method",
-                          "method": "has_all",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Quad Painter",
-                                "Wires"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Constant Signal",
-                                "Switch"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
+                      "type": "helper",
+                      "name": "can_make_half_half_shape",
+                      "args": []
                     },
                     {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Cutter",
-                                "Quad Cutter"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Stacker"
-                        }
-                      ]
+                      "type": "helper",
+                      "name": "can_use_quad_painter",
+                      "args": []
                     }
                   ]
                 },
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "helper",
+                  "name": "can_make_stitched_shape",
+                  "args": [
                     {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "constant",
-                              "value": true
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Quad Cutter"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_any",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Rotator",
-                                    "Rotator (CCW)"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Cutter"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Stacker"
+                      "type": "constant",
+                      "value": false
                     }
                   ]
                 }
@@ -1345,106 +563,24 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "state_method",
-                          "method": "has_all",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Quad Painter",
-                                "Wires"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Constant Signal",
-                                "Switch"
-                              ]
-                            }
-                          ]
-                        }
-                      ]
+                      "type": "helper",
+                      "name": "can_make_half_shape",
+                      "args": []
                     },
                     {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "state_method",
-                          "method": "has_all",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Quad Cutter",
-                                "Stacker"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Cutter"
-                        }
-                      ]
+                      "type": "helper",
+                      "name": "can_use_quad_painter",
+                      "args": []
                     }
                   ]
                 },
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "helper",
+                  "name": "can_make_stitched_shape",
+                  "args": [
                     {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "constant",
-                              "value": true
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Quad Cutter"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_any",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Rotator",
-                                    "Rotator (CCW)"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Cutter"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Stacker"
+                      "type": "constant",
+                      "value": false
                     }
                   ]
                 }
@@ -1614,80 +750,32 @@
             "name": "Using second level building",
             "connected_region": "Levels with 2 buildings",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": false
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Compact Merger",
-                                    "Compact Splitter"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Balancer"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Tunnel",
-                                "Tunnel Tier II"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Trash"
-                        }
-                      ]
-                    }
-                  }
-                ]
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "state_method",
-                "method": "has_any",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Rotator",
-                      "Rotator (CCW)"
-                    ]
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "has_logic_list_building",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Cutter",
+                    "Rotator",
+                    "Painter",
+                    "Color Mixer",
+                    "Stacker"
+                  ]
+                },
+                {
+                  "type": "constant",
+                  "value": 1
+                },
+                {
+                  "type": "constant",
+                  "value": false
+                },
+                {
+                  "type": "constant",
+                  "value": false
+                }
+              ]
             }
           }
         ],
@@ -1761,116 +849,32 @@
             "name": "Using third level building",
             "connected_region": "Levels with 3 buildings",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Compact Merger",
-                                    "Compact Splitter"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Balancer"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Tunnel",
-                                "Tunnel Tier II"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Trash"
-                        }
-                      ]
-                    }
-                  }
-                ]
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Quad Painter",
-                              "Wires"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Constant Signal",
-                              "Switch"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "has_any",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Double Painter",
-                          "Painter"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "has_logic_list_building",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Cutter",
+                    "Rotator",
+                    "Painter",
+                    "Color Mixer",
+                    "Stacker"
+                  ]
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                },
+                {
+                  "type": "constant",
+                  "value": true
+                },
+                {
+                  "type": "constant",
+                  "value": false
+                }
+              ]
             }
           }
         ],
@@ -1944,71 +948,32 @@
             "name": "Using fourth level building",
             "connected_region": "Levels with 4 buildings",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": false
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Compact Merger",
-                                    "Compact Splitter"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Balancer"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Tunnel",
-                                "Tunnel Tier II"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Trash"
-                        }
-                      ]
-                    }
-                  }
-                ]
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "item_check",
-                "item": "Color Mixer"
-              }
+              "type": "helper",
+              "name": "has_logic_list_building",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Cutter",
+                    "Rotator",
+                    "Painter",
+                    "Color Mixer",
+                    "Stacker"
+                  ]
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                },
+                {
+                  "type": "constant",
+                  "value": false
+                },
+                {
+                  "type": "constant",
+                  "value": false
+                }
+              ]
             }
           }
         ],
@@ -2082,71 +1047,32 @@
             "name": "Using fifth level building",
             "connected_region": "Levels with 5 buildings",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": false
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Compact Merger",
-                                    "Compact Splitter"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Balancer"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Tunnel",
-                                "Tunnel Tier II"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Trash"
-                        }
-                      ]
-                    }
-                  }
-                ]
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "item_check",
-                "item": "Stacker"
-              }
+              "type": "helper",
+              "name": "has_logic_list_building",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Cutter",
+                    "Rotator",
+                    "Painter",
+                    "Color Mixer",
+                    "Stacker"
+                  ]
+                },
+                {
+                  "type": "constant",
+                  "value": 4
+                },
+                {
+                  "type": "constant",
+                  "value": false
+                },
+                {
+                  "type": "constant",
+                  "value": false
+                }
+              ]
             }
           }
         ],
@@ -2376,100 +1302,32 @@
             "name": "Using second upgrade building",
             "connected_region": "Upgrades with 2 buildings",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": false
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Compact Merger",
-                                    "Compact Splitter"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Balancer"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Tunnel",
-                                "Tunnel Tier II"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Trash"
-                        }
-                      ]
-                    }
-                  }
-                ]
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "conditional",
-                "test": {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    },
-                    {
-                      "type": "constant",
-                      "value": true
-                    }
+              "type": "helper",
+              "name": "has_logic_list_building",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Stacker",
+                    "Cutter",
+                    "Rotator",
+                    "Painter",
+                    "Color Mixer"
                   ]
                 },
-                "if_true": {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Cutter",
-                        "Quad Cutter"
-                      ]
-                    }
-                  ]
+                {
+                  "type": "constant",
+                  "value": 1
                 },
-                "if_false": {
-                  "type": "item_check",
-                  "item": "Cutter"
+                {
+                  "type": "constant",
+                  "value": false
+                },
+                {
+                  "type": "constant",
+                  "value": false
                 }
-              }
+              ]
             }
           }
         ],
@@ -2543,80 +1401,32 @@
             "name": "Using third upgrade building",
             "connected_region": "Upgrades with 3 buildings",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": true
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Compact Merger",
-                                    "Compact Splitter"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Balancer"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Tunnel",
-                                "Tunnel Tier II"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Trash"
-                        }
-                      ]
-                    }
-                  }
-                ]
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "state_method",
-                "method": "has_any",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": [
-                      "Rotator",
-                      "Rotator (CCW)"
-                    ]
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "has_logic_list_building",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Stacker",
+                    "Cutter",
+                    "Rotator",
+                    "Painter",
+                    "Color Mixer"
+                  ]
+                },
+                {
+                  "type": "constant",
+                  "value": 2
+                },
+                {
+                  "type": "constant",
+                  "value": true
+                },
+                {
+                  "type": "constant",
+                  "value": false
+                }
+              ]
             }
           }
         ],
@@ -2690,116 +1500,32 @@
             "name": "Using fourth upgrade building",
             "connected_region": "Upgrades with 4 buildings",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": false
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Compact Merger",
-                                    "Compact Splitter"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Balancer"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Tunnel",
-                                "Tunnel Tier II"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Trash"
-                        }
-                      ]
-                    }
-                  }
-                ]
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "state_method",
-                        "method": "has_all",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Quad Painter",
-                              "Wires"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "state_method",
-                        "method": "has_any",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": [
-                              "Constant Signal",
-                              "Switch"
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "state_method",
-                    "method": "has_any",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": [
-                          "Double Painter",
-                          "Painter"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "has_logic_list_building",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Stacker",
+                    "Cutter",
+                    "Rotator",
+                    "Painter",
+                    "Color Mixer"
+                  ]
+                },
+                {
+                  "type": "constant",
+                  "value": 3
+                },
+                {
+                  "type": "constant",
+                  "value": false
+                },
+                {
+                  "type": "constant",
+                  "value": false
+                }
+              ]
             }
           }
         ],
@@ -2888,71 +1614,32 @@
             "name": "Using fifth upgrade building",
             "connected_region": "Upgrades with 5 buildings",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "constant",
-                    "value": false
-                  },
-                  {
-                    "type": "not",
-                    "condition": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "state_method",
-                              "method": "has_all",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Compact Merger",
-                                    "Compact Splitter"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Balancer"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "state_method",
-                          "method": "has_any",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Tunnel",
-                                "Tunnel Tier II"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Trash"
-                        }
-                      ]
-                    }
-                  }
-                ]
-              },
-              "if_true": {
-                "type": "constant",
-                "value": false
-              },
-              "if_false": {
-                "type": "item_check",
-                "item": "Color Mixer"
-              }
+              "type": "helper",
+              "name": "has_logic_list_building",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Stacker",
+                    "Cutter",
+                    "Rotator",
+                    "Painter",
+                    "Color Mixer"
+                  ]
+                },
+                {
+                  "type": "constant",
+                  "value": 4
+                },
+                {
+                  "type": "constant",
+                  "value": false
+                },
+                {
+                  "type": "constant",
+                  "value": false
+                }
+              ]
             }
           }
         ],
@@ -3401,116 +2088,12 @@
             "name": "Delivering per second with 1.6x belt speed",
             "connected_region": "Achievements with x1.6 belt speed",
             "access_rule": {
-              "type": "block",
-              "statements": [
+              "type": "helper",
+              "name": "has_x_belt_multiplier",
+              "args": [
                 {
-                  "type": "assign",
-                  "name": "multiplier",
-                  "value": {
-                    "type": "constant",
-                    "value": 1.0
-                  }
-                },
-                {
-                  "type": "for_range",
-                  "var": "_",
-                  "count": {
-                    "type": "state_method",
-                    "method": "count",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": "Rising Belt Upgrade"
-                      }
-                    ]
-                  },
-                  "body": [
-                    {
-                      "type": "assign",
-                      "name": "multiplier",
-                      "op": "*=",
-                      "value": {
-                        "type": "constant",
-                        "value": 2
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "assign",
-                  "name": "multiplier",
-                  "op": "+=",
-                  "value": {
-                    "type": "binary_op",
-                    "left": {
-                      "type": "state_method",
-                      "method": "count",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Gigantic Belt Upgrade"
-                        }
-                      ]
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 10
-                    }
-                  }
-                },
-                {
-                  "type": "assign",
-                  "name": "multiplier",
-                  "op": "+=",
-                  "value": {
-                    "type": "state_method",
-                    "method": "count",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": "Big Belt Upgrade"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type": "assign",
-                  "name": "multiplier",
-                  "op": "+=",
-                  "value": {
-                    "type": "binary_op",
-                    "left": {
-                      "type": "state_method",
-                      "method": "count",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Small Belt Upgrade"
-                        }
-                      ]
-                    },
-                    "op": "*",
-                    "right": {
-                      "type": "constant",
-                      "value": 0.1
-                    }
-                  }
-                },
-                {
-                  "type": "return",
-                  "value": {
-                    "type": "compare",
-                    "left": {
-                      "type": "name",
-                      "name": "multiplier"
-                    },
-                    "op": ">=",
-                    "right": {
-                      "type": "constant",
-                      "value": 1.6
-                    }
-                  }
+                  "type": "constant",
+                  "value": 1.6
                 }
               ]
             }
@@ -3712,53 +2295,9 @@
             "name": "Painting a full shape",
             "connected_region": "Shapesanity Full Painted",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Quad Painter",
-                            "Wires"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Constant Signal",
-                            "Switch"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Double Painter",
-                        "Painter"
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_paint",
+              "args": []
             }
           }
         ],
@@ -3817,8 +2356,9 @@
             "name": "Mixing colors for a full shape",
             "connected_region": "Shapesanity Full Mixed",
             "access_rule": {
-              "type": "item_check",
-              "item": "Color Mixer"
+              "type": "helper",
+              "name": "can_mix_colors",
+              "args": []
             }
           }
         ],
@@ -3868,53 +2408,9 @@
             "name": "Painting a half shape",
             "connected_region": "Shapesanity Half Painted",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Quad Painter",
-                            "Wires"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Constant Signal",
-                            "Switch"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Double Painter",
-                        "Painter"
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_paint",
+              "args": []
             }
           }
         ],
@@ -3927,8 +2423,9 @@
             "name": "Mixing colors for a half shape",
             "connected_region": "Shapesanity Half Mixed",
             "access_rule": {
-              "type": "item_check",
-              "item": "Color Mixer"
+              "type": "helper",
+              "name": "can_mix_colors",
+              "args": []
             }
           }
         ],
@@ -4008,53 +2505,9 @@
             "name": "Painting a piece shape",
             "connected_region": "Shapesanity Piece Painted",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Quad Painter",
-                            "Wires"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Constant Signal",
-                            "Switch"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Double Painter",
-                        "Painter"
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_paint",
+              "args": []
             }
           }
         ],
@@ -4067,8 +2520,9 @@
             "name": "Mixing colors for a piece shape",
             "connected_region": "Shapesanity Piece Mixed",
             "access_rule": {
-              "type": "item_check",
-              "item": "Color Mixer"
+              "type": "helper",
+              "name": "can_mix_colors",
+              "args": []
             }
           }
         ],
@@ -4178,53 +2632,9 @@
             "name": "Painting a stitched shape",
             "connected_region": "Shapesanity Stitched Painted",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Quad Painter",
-                            "Wires"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Constant Signal",
-                            "Switch"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Double Painter",
-                        "Painter"
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_paint",
+              "args": []
             }
           }
         ],
@@ -4253,8 +2663,9 @@
             "name": "Mixing colors for a stitched shape",
             "connected_region": "Shapesanity Stitched Mixed",
             "access_rule": {
-              "type": "item_check",
-              "item": "Color Mixer"
+              "type": "helper",
+              "name": "can_mix_colors",
+              "args": []
             }
           }
         ],
@@ -4649,53 +3060,9 @@
             "name": "Painting a east windmill shape",
             "connected_region": "Shapesanity East Windmill Painted",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Quad Painter",
-                            "Wires"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Constant Signal",
-                            "Switch"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Double Painter",
-                        "Painter"
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_paint",
+              "args": []
             }
           }
         ],
@@ -4724,8 +3091,9 @@
             "name": "Mixing colors for a east windmill shape",
             "connected_region": "Shapesanity East Windmill Mixed",
             "access_rule": {
-              "type": "item_check",
-              "item": "Color Mixer"
+              "type": "helper",
+              "name": "can_mix_colors",
+              "args": []
             }
           }
         ],
@@ -4775,53 +3143,9 @@
             "name": "Painting a half-half shape",
             "connected_region": "Shapesanity Half-Half Painted",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Quad Painter",
-                            "Wires"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Constant Signal",
-                            "Switch"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Double Painter",
-                        "Painter"
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_paint",
+              "args": []
             }
           }
         ],
@@ -4834,8 +3158,9 @@
             "name": "Mixing colors for a half-half shape",
             "connected_region": "Shapesanity Half-Half Mixed",
             "access_rule": {
-              "type": "item_check",
-              "item": "Color Mixer"
+              "type": "helper",
+              "name": "can_mix_colors",
+              "args": []
             }
           }
         ],
@@ -4869,53 +3194,9 @@
             "name": "Painting a colorful east windmill shape",
             "connected_region": "Shapesanity Colorful East Windmill Painted",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Quad Painter",
-                            "Wires"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Constant Signal",
-                            "Switch"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Double Painter",
-                        "Painter"
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_paint",
+              "args": []
             }
           }
         ],
@@ -4928,8 +3209,9 @@
             "name": "Mixing colors for a colorful east windmill shape",
             "connected_region": "Shapesanity Colorful East Windmill Mixed",
             "access_rule": {
-              "type": "item_check",
-              "item": "Color Mixer"
+              "type": "helper",
+              "name": "can_mix_colors",
+              "args": []
             }
           }
         ],
@@ -4942,53 +3224,9 @@
             "name": "Painting a colorful half-half shape",
             "connected_region": "Shapesanity Colorful Half-Half Painted",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Quad Painter",
-                            "Wires"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Constant Signal",
-                            "Switch"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Double Painter",
-                        "Painter"
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_paint",
+              "args": []
             }
           }
         ],
@@ -5001,8 +3239,9 @@
             "name": "Mixing colors for a colorful half-half shape",
             "connected_region": "Shapesanity Colorful Half-Half Mixed",
             "access_rule": {
-              "type": "item_check",
-              "item": "Color Mixer"
+              "type": "helper",
+              "name": "can_mix_colors",
+              "args": []
             }
           }
         ],
@@ -5051,53 +3290,9 @@
             "name": "Painting a colorful full shape",
             "connected_region": "Shapesanity Colorful Full Painted",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Quad Painter",
-                            "Wires"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Constant Signal",
-                            "Switch"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Double Painter",
-                        "Painter"
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_paint",
+              "args": []
             }
           }
         ],
@@ -5110,8 +3305,9 @@
             "name": "Mixing colors for a colorful full shape",
             "connected_region": "Shapesanity Colorful Full Mixed",
             "access_rule": {
-              "type": "item_check",
-              "item": "Color Mixer"
+              "type": "helper",
+              "name": "can_mix_colors",
+              "args": []
             }
           }
         ],
@@ -5175,53 +3371,9 @@
             "name": "Painting a colorful half shape",
             "connected_region": "Shapesanity Colorful Half Painted",
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Quad Painter",
-                            "Wires"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Constant Signal",
-                            "Switch"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Double Painter",
-                        "Painter"
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_paint",
+              "args": []
             }
           }
         ],
@@ -5234,8 +3386,9 @@
             "name": "Mixing colors for a colorful half shape",
             "connected_region": "Shapesanity Colorful Half Mixed",
             "access_rule": {
-              "type": "item_check",
-              "item": "Color Mixer"
+              "type": "helper",
+              "name": "can_mix_colors",
+              "args": []
             }
           }
         ],
@@ -6378,5 +4531,690 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "can_stack": {
+        "type": "item_check",
+        "item": "Stacker"
+      },
+      "has_logic_list_building": {
+        "params": [
+          "buildings",
+          "index",
+          "includeuseful",
+          "floating"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "name",
+                "name": "includeuseful"
+              },
+              {
+                "type": "not",
+                "condition": {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Trash"
+                    },
+                    {
+                      "type": "helper",
+                      "name": "has_balancer",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "has_tunnel",
+                      "args": []
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "if_true": {
+            "type": "constant",
+            "value": false
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "subscript",
+                "value": {
+                  "type": "name",
+                  "name": "buildings"
+                },
+                "index": {
+                  "type": "name",
+                  "name": "index"
+                }
+              },
+              "op": "==",
+              "right": {
+                "type": "constant",
+                "value": "Cutter"
+              }
+            },
+            "if_true": {
+              "type": "conditional",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "compare",
+                    "left": {
+                      "type": "function_call",
+                      "function": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "buildings"
+                        },
+                        "attr": "index"
+                      },
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Stacker"
+                        }
+                      ]
+                    },
+                    "op": "<",
+                    "right": {
+                      "type": "name",
+                      "name": "index"
+                    }
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "name",
+                      "name": "floating"
+                    }
+                  }
+                ]
+              },
+              "if_true": {
+                "type": "state_method",
+                "method": "has_any",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Cutter",
+                      "Quad Cutter"
+                    ]
+                  }
+                ]
+              },
+              "if_false": {
+                "type": "helper",
+                "name": "can_cut_half",
+                "args": []
+              }
+            },
+            "if_false": {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "name",
+                    "name": "buildings"
+                  },
+                  "index": {
+                    "type": "name",
+                    "name": "index"
+                  }
+                },
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": "Rotator"
+                }
+              },
+              "if_true": {
+                "type": "helper",
+                "name": "can_rotate_90",
+                "args": []
+              },
+              "if_false": {
+                "type": "conditional",
+                "test": {
+                  "type": "compare",
+                  "left": {
+                    "type": "subscript",
+                    "value": {
+                      "type": "name",
+                      "name": "buildings"
+                    },
+                    "index": {
+                      "type": "name",
+                      "name": "index"
+                    }
+                  },
+                  "op": "==",
+                  "right": {
+                    "type": "constant",
+                    "value": "Stacker"
+                  }
+                },
+                "if_true": {
+                  "type": "helper",
+                  "name": "can_stack",
+                  "args": []
+                },
+                "if_false": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "subscript",
+                      "value": {
+                        "type": "name",
+                        "name": "buildings"
+                      },
+                      "index": {
+                        "type": "name",
+                        "name": "index"
+                      }
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": "Painter"
+                    }
+                  },
+                  "if_true": {
+                    "type": "helper",
+                    "name": "can_paint",
+                    "args": []
+                  },
+                  "if_false": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "compare",
+                      "left": {
+                        "type": "subscript",
+                        "value": {
+                          "type": "name",
+                          "name": "buildings"
+                        },
+                        "index": {
+                          "type": "name",
+                          "name": "index"
+                        }
+                      },
+                      "op": "==",
+                      "right": {
+                        "type": "constant",
+                        "value": "Color Mixer"
+                      }
+                    },
+                    "if_true": {
+                      "type": "helper",
+                      "name": "can_mix_colors",
+                      "args": []
+                    },
+                    "if_false": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "can_paint": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "state_method",
+            "method": "has_any",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Double Painter",
+                  "Painter"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "can_use_quad_painter",
+            "args": []
+          }
+        ]
+      },
+      "has_tunnel": {
+        "type": "state_method",
+        "method": "has_any",
+        "args": [
+          {
+            "type": "constant",
+            "value": [
+              "Tunnel",
+              "Tunnel Tier II"
+            ]
+          }
+        ]
+      },
+      "can_make_half_shape": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "can_cut_half",
+            "args": []
+          },
+          {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Quad Cutter",
+                  "Stacker"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "can_use_quad_painter": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Quad Painter",
+                  "Wires"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "state_method",
+            "method": "has_any",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Constant Signal",
+                  "Switch"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "can_cut_half": {
+        "type": "item_check",
+        "item": "Cutter"
+      },
+      "has_balancer": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Balancer"
+          },
+          {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Compact Merger",
+                  "Compact Splitter"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "has_x_belt_multiplier": {
+        "params": [
+          "needed"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "multiplier",
+              "value": {
+                "type": "constant",
+                "value": 1.0
+              }
+            },
+            {
+              "type": "for_range",
+              "var": "_",
+              "count": {
+                "type": "state_method",
+                "method": "count",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Rising Belt Upgrade"
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "assign",
+                  "name": "multiplier",
+                  "op": "*=",
+                  "value": {
+                    "type": "constant",
+                    "value": 2
+                  }
+                }
+              ]
+            },
+            {
+              "type": "assign",
+              "name": "multiplier",
+              "op": "+=",
+              "value": {
+                "type": "binary_op",
+                "left": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Gigantic Belt Upgrade"
+                    }
+                  ]
+                },
+                "op": "*",
+                "right": {
+                  "type": "constant",
+                  "value": 10
+                }
+              }
+            },
+            {
+              "type": "assign",
+              "name": "multiplier",
+              "op": "+=",
+              "value": {
+                "type": "state_method",
+                "method": "count",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Big Belt Upgrade"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "assign",
+              "name": "multiplier",
+              "op": "+=",
+              "value": {
+                "type": "binary_op",
+                "left": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Small Belt Upgrade"
+                    }
+                  ]
+                },
+                "op": "*",
+                "right": {
+                  "type": "constant",
+                  "value": 0.1
+                }
+              }
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "multiplier"
+                },
+                "op": ">=",
+                "right": {
+                  "type": "name",
+                  "name": "needed"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "can_make_east_windmill": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "can_stack",
+            "args": []
+          },
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Quad Cutter"
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "helper",
+                    "name": "can_cut_half",
+                    "args": []
+                  },
+                  {
+                    "type": "helper",
+                    "name": "can_rotate_180",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "can_make_stitched_shape": {
+        "params": [
+          "floating"
+        ],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "can_stack",
+              "args": []
+            },
+            {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Quad Cutter"
+                    },
+                    {
+                      "type": "not",
+                      "condition": {
+                        "type": "name",
+                        "name": "floating"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "can_cut_half",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "can_rotate_90",
+                      "args": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "can_rotate_90": {
+        "type": "state_method",
+        "method": "has_any",
+        "args": [
+          {
+            "type": "constant",
+            "value": [
+              "Rotator",
+              "Rotator (CCW)"
+            ]
+          }
+        ]
+      },
+      "can_build_mam": {
+        "params": [
+          "floating"
+        ],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "can_make_stitched_shape",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "floating"
+                }
+              ]
+            },
+            {
+              "type": "helper",
+              "name": "can_paint",
+              "args": []
+            },
+            {
+              "type": "helper",
+              "name": "can_mix_colors",
+              "args": []
+            },
+            {
+              "type": "helper",
+              "name": "has_balancer",
+              "args": []
+            },
+            {
+              "type": "helper",
+              "name": "has_tunnel",
+              "args": []
+            },
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Belt Reader"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Item Filter"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Logic Gates"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Storage"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Virtual Processing"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Wires"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "can_rotate_180": {
+        "type": "state_method",
+        "method": "has_any",
+        "args": [
+          {
+            "type": "constant",
+            "value": [
+              "Rotator",
+              "Rotator (180\u00b0)",
+              "Rotator (CCW)"
+            ]
+          }
+        ]
+      },
+      "can_mix_colors": {
+        "type": "item_check",
+        "item": "Color Mixer"
+      },
+      "can_make_half_half_shape": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "can_stack",
+            "args": []
+          },
+          {
+            "type": "state_method",
+            "method": "has_any",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Cutter",
+                  "Quad Cutter"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
 }

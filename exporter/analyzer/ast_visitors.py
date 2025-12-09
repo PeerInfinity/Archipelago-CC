@@ -341,21 +341,32 @@ class ASTVisitorMixin:
                                 if recursive_result.get('type') != 'error':
                                     # Check if the result is too large to inline
                                     # If so, discard the analyzed result and treat like manual preservation
+                                    # But only if we have a real function name (not <lambda>)
                                     auto_preserve = getattr(self.game_handler, 'AUTO_PRESERVE_LARGE_HELPERS', False) if self.game_handler else False
                                     threshold = getattr(self.game_handler, 'HELPER_INLINE_THRESHOLD', 0) if self.game_handler else 0
-                                    if auto_preserve and actual_func_name:
+                                    # Don't preserve lambdas - they have no useful name for export
+                                    if auto_preserve and actual_func_name and actual_func_name != '<lambda>':
                                         from exporter.games.base import BaseGameExportHandler
                                         size = BaseGameExportHandler.count_rule_nodes(recursive_result)
                                         if size > threshold:
                                             logging.debug(f"Helper {actual_func_name} has {size} nodes (threshold {threshold}), preserving as helper")
-                                            # DON'T use the analyzed result - it has closure params baked in
-                                            # Instead, register for export and return a helper call node
-                                            # get_helper_definitions() will analyze the function fresh,
-                                            # producing a parameterized definition
+                                            # Register the helper for export
                                             if hasattr(self.game_handler, 'register_helper_usage'):
                                                 self.game_handler.register_helper_usage(actual_func_name, resolved_func)
                                             if hasattr(self.game_handler, 'register_auto_preserved_helper'):
                                                 self.game_handler.register_auto_preserved_helper(actual_func_name)
+                                            # Only cache the analyzed result if the function has no extra parameters
+                                            # (besides state, player, world). If it takes parameters, the cached
+                                            # result would have specific argument values baked in, which is wrong.
+                                            if hasattr(self.game_handler, 'cache_analyzed_helper') and hasattr(resolved_func, '__code__'):
+                                                all_params = resolved_func.__code__.co_varnames[:resolved_func.__code__.co_argcount]
+                                                extra_params = [p for p in all_params if p not in ('state', 'player', 'world')]
+                                                if not extra_params:
+                                                    # No extra params - safe to cache the fully-resolved definition
+                                                    self.game_handler.cache_analyzed_helper(actual_func_name, recursive_result)
+                                                    logging.debug(f"Cached definition for parameterless helper {actual_func_name}")
+                                                else:
+                                                    logging.debug(f"Not caching {actual_func_name} - has params {extra_params}")
                                             # Return a helper call with original args (like manual preservation)
                                             return {
                                                 'type': 'helper',
@@ -373,6 +384,21 @@ class ASTVisitorMixin:
             # Check if the function name is in closure vars
             if func_name in self.closure_vars:
                  logging.debug(f"Identified call to known closure variable: {func_name}")
+
+                 # Get the actual function from the closure to check its name
+                 actual_func = self.closure_vars[func_name]
+                 closure_func_name = getattr(actual_func, '__name__', func_name)
+
+                 # Check if game handler wants to explicitly preserve this as a helper
+                 # (without recursive analysis - the JS implementation handles it)
+                 if self.game_handler and hasattr(self.game_handler, 'should_preserve_as_helper'):
+                     if closure_func_name and self.game_handler.should_preserve_as_helper(closure_func_name):
+                         logging.debug(f"Game handler requests preserving closure {closure_func_name} as helper, skipping recursive analysis")
+                         return {
+                             'type': 'helper',
+                             'name': closure_func_name,
+                             'args': filtered_args
+                         }
 
                  # --- Recursive analysis logic (enhanced for multiline lambdas) ---
                  try:
@@ -399,8 +425,7 @@ class ASTVisitorMixin:
                      if has_state_arg:
                           # Import analyze_rule locally to avoid forward reference issues
                           from .analysis import analyze_rule
-                          # Get the actual function from the closure
-                          actual_func = self.closure_vars[func_name]
+                          # actual_func and closure_func_name already set above
                           logging.debug(f"Recursively analyzing closure function: {func_name} -> {actual_func}")
 
                           # Build parameter mapping for function inlining
@@ -419,22 +444,33 @@ class ASTVisitorMixin:
                           if recursive_result.get('type') != 'error':
                               # Check if the result is too large to inline
                               # If so, discard the analyzed result and treat like manual preservation
+                              # But only if we have a real function name (not <lambda>)
                               auto_preserve = getattr(self.game_handler, 'AUTO_PRESERVE_LARGE_HELPERS', False) if self.game_handler else False
                               threshold = getattr(self.game_handler, 'HELPER_INLINE_THRESHOLD', 0) if self.game_handler else 0
-                              closure_func_name = getattr(actual_func, '__name__', func_name)
-                              if auto_preserve and closure_func_name:
+                              # closure_func_name already set above
+                              # Don't preserve lambdas - they have no useful name for export
+                              if auto_preserve and closure_func_name and closure_func_name != '<lambda>':
                                   from exporter.games.base import BaseGameExportHandler
                                   size = BaseGameExportHandler.count_rule_nodes(recursive_result)
                                   if size > threshold:
                                       logging.debug(f"Helper {closure_func_name} has {size} nodes (threshold {threshold}), preserving as helper")
-                                      # DON'T use the analyzed result - it has closure params baked in
-                                      # Instead, register for export and return a helper call node
-                                      # get_helper_definitions() will analyze the function fresh,
-                                      # producing a parameterized definition
+                                      # Register the helper for export
                                       if hasattr(self.game_handler, 'register_helper_usage'):
                                           self.game_handler.register_helper_usage(closure_func_name, actual_func)
                                       if hasattr(self.game_handler, 'register_auto_preserved_helper'):
                                           self.game_handler.register_auto_preserved_helper(closure_func_name)
+                                      # Only cache the analyzed result if the function has no extra parameters
+                                      # (besides state, player, world). If it takes parameters, the cached
+                                      # result would have specific argument values baked in, which is wrong.
+                                      if hasattr(self.game_handler, 'cache_analyzed_helper') and hasattr(actual_func, '__code__'):
+                                          all_params = actual_func.__code__.co_varnames[:actual_func.__code__.co_argcount]
+                                          extra_params = [p for p in all_params if p not in ('state', 'player', 'world')]
+                                          if not extra_params:
+                                              # No extra params - safe to cache the fully-resolved definition
+                                              self.game_handler.cache_analyzed_helper(closure_func_name, recursive_result)
+                                              logging.debug(f"Cached definition for parameterless helper {closure_func_name}")
+                                          else:
+                                              logging.debug(f"Not caching {closure_func_name} - has params {extra_params}")
                                       # Return a helper call with original args (like manual preservation)
                                       return {
                                           'type': 'helper',
@@ -959,6 +995,19 @@ class ASTVisitorMixin:
                                 # Could not resolve to a constant value, keep as-is
                                 logging.debug(f"Found unresolved group count parameter: {second_arg}")
                                 result['count'] = second_arg
+                elif method == 'count_group' and len(filtered_args) >= 1:
+                    # state.count_group(group_name, player) -> returns the count of items in a group
+                    # Unwrap group name if it's a constant
+                    group_arg = filtered_args[0]
+                    if isinstance(group_arg, dict) and group_arg.get('type') == 'constant' and isinstance(group_arg.get('value'), str):
+                        group_value = group_arg.get('value')
+                    elif isinstance(group_arg, str):
+                        group_value = group_arg
+                    else:
+                        group_value = group_arg
+                    # Create a group_count rule that returns the count (not a boolean check)
+                    result = {'type': 'group_count', 'group': group_value}
+                    logging.debug(f"Converted count_group to group_count: {result}")
                 elif method == 'has_any' and len(filtered_args) >= 1 and isinstance(filtered_args[0], list):
                     # Unwrap each item if it's a constant
                     items = []
@@ -1223,10 +1272,64 @@ class ASTVisitorMixin:
         logging.debug(f"Fallback call result: {result}")
         return result # Return generic function call result
 
+    def _is_world_options_pattern(self, node):
+        """
+        Detect the pattern: state.multiworld.worlds[player].options.<setting>
+        Returns the setting name if matched, None otherwise.
+
+        AST structure:
+        Attribute(attr='<setting>')
+          value=Attribute(attr='options')
+            value=Subscript
+              value=Attribute(attr='worlds')
+                value=Attribute(attr='multiworld')
+                  value=Name(id='state')
+              slice=Name(id='player')
+        """
+        if not isinstance(node, ast.Attribute):
+            return None
+
+        setting_name = node.attr
+
+        # Check .options
+        if not isinstance(node.value, ast.Attribute) or node.value.attr != 'options':
+            return None
+
+        # Check [player] subscript
+        subscript = node.value.value
+        if not isinstance(subscript, ast.Subscript):
+            return None
+        if not isinstance(subscript.slice, ast.Name) or subscript.slice.id != 'player':
+            return None
+
+        # Check .worlds
+        worlds_attr = subscript.value
+        if not isinstance(worlds_attr, ast.Attribute) or worlds_attr.attr != 'worlds':
+            return None
+
+        # Check .multiworld
+        multiworld_attr = worlds_attr.value
+        if not isinstance(multiworld_attr, ast.Attribute) or multiworld_attr.attr != 'multiworld':
+            return None
+
+        # Check state (or world)
+        state_name = multiworld_attr.value
+        if not isinstance(state_name, ast.Name) or state_name.id not in ('state', 'world'):
+            return None
+
+        return setting_name
+
     def visit_Attribute(self, node):
         try:
             attr_name = node.attr
             logging.debug(f"visit_Attribute: Trying to access .{attr_name} on object of type {type(node.value).__name__}")
+
+            # Check for state.multiworld.worlds[player].options.<setting> pattern
+            # Convert to setting_value rule type for frontend evaluation
+            setting_name = self._is_world_options_pattern(node)
+            if setting_name:
+                logging.debug(f"visit_Attribute: Detected world options pattern, setting: {setting_name}")
+                return {'type': 'setting_value', 'setting': setting_name}
 
             # Specifically log if we are processing self.player
             if isinstance(node.value, ast.Name) and node.value.id == 'self' and attr_name == 'player':
