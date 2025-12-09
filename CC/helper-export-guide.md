@@ -6,6 +6,17 @@ This guide explains how to minimize custom JavaScript code for game exporters by
 
 Many games use helper functions in their access rules (e.g., `can_cut_half`, `has_sword`). Previously, each helper required a corresponding JavaScript implementation in the frontend. With automatic helper export, the Python analyzer extracts helper function logic and exports it as rule definitions that the frontend can evaluate directly.
 
+### Goal: Complete Removal
+
+The ultimate goal is to **completely remove** all game-specific files:
+
+1. **Custom exporter** (`exporter/games/<game>.py`) - Delete entirely, letting the system fall back to `GenericGameExportHandler`
+2. **JavaScript helpers** (`frontend/modules/shared/gameLogic/<game>/helpers.js`) - Delete entirely
+3. **Game logic module** (`frontend/modules/shared/gameLogic/<game>/`) - Delete the entire directory
+4. **Registry entry** (`gameLogicRegistry.js`) - Remove the game from the registry
+
+When all four are removed, the game uses only generic infrastructure with rules fully inlined in `rules.json`.
+
 ## How It Works
 
 1. **During rule analysis**: When the analyzer encounters a helper function call, it registers the helper name and automatically detects its module path
@@ -231,7 +242,7 @@ COMPUTED_SETTINGS: Dict[str, Callable] = {}
 
 ## Success Stories
 
-The following games have successfully removed their custom JavaScript helper files entirely by using automatic helper export:
+The following games have achieved **complete removal** of all game-specific files (custom exporter, JavaScript helpers, game logic directory, and registry entry):
 
 - **shapez** - Complex shape-building logic now fully exported
 - **Shivers** - Ixupi capture helpers inlined as has_all patterns
@@ -245,7 +256,7 @@ The following games have successfully removed their custom JavaScript helper fil
 - **Metamath** - Mathematical puzzle logic exported
 - **Super Mario World** - Platformer rules exported
 
-These games now use `GenericGameExportHandler` with minimal or no customization. The frontend evaluates all rules directly from `rules.json` without needing game-specific JavaScript logic.
+These games use only the generic infrastructure. No custom Python exporter, no JavaScript helper files, no game logic directory, and no entry in the game logic registry.
 
 **Benefits achieved:**
 - Removed maintenance burden of keeping Python and JavaScript in sync
