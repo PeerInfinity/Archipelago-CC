@@ -5817,31 +5817,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "subscript",
-                              "value": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "name",
-                                    "name": "state"
-                                  },
-                                  "attr": "multiworld"
-                                },
-                                "attr": "worlds"
-                              },
-                              "index": {
-                                "type": "constant",
-                                "value": 1
-                              }
-                            },
-                            "attr": "options"
-                          },
-                          "attr": "swordless"
+                          "type": "setting_value",
+                          "setting": "swordless"
                         },
                         {
                           "type": "item_check",
@@ -7171,31 +7148,8 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "subscript",
-                              "value": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "name",
-                                    "name": "state"
-                                  },
-                                  "attr": "multiworld"
-                                },
-                                "attr": "worlds"
-                              },
-                              "index": {
-                                "type": "constant",
-                                "value": 1
-                              }
-                            },
-                            "attr": "options"
-                          },
-                          "attr": "swordless"
+                          "type": "setting_value",
+                          "setting": "swordless"
                         },
                         {
                           "type": "item_check",
@@ -8743,31 +8697,8 @@
               "name": "has_crystals",
               "args": [
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "subscript",
-                      "value": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "state"
-                          },
-                          "attr": "multiworld"
-                        },
-                        "attr": "worlds"
-                      },
-                      "index": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    },
-                    "attr": "options"
-                  },
-                  "attr": "crystals_needed_for_gt"
+                  "type": "setting_value",
+                  "setting": "crystals_needed_for_gt"
                 }
               ]
             }
@@ -9526,31 +9457,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "subscript",
-                                "value": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "state"
-                                    },
-                                    "attr": "multiworld"
-                                  },
-                                  "attr": "worlds"
-                                },
-                                "index": {
-                                  "type": "constant",
-                                  "value": 1
-                                }
-                              },
-                              "attr": "options"
-                            },
-                            "attr": "enemy_health"
+                            "type": "setting_value",
+                            "setting": "enemy_health"
                           },
                           "op": "in",
                           "right": {
@@ -11322,33 +11230,6 @@
                           "type": "or",
                           "conditions": [
                             {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "subscript",
-                                  "value": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "state"
-                                      },
-                                      "attr": "multiworld"
-                                    },
-                                    "attr": "worlds"
-                                  },
-                                  "index": {
-                                    "type": "constant",
-                                    "value": 1
-                                  }
-                                },
-                                "attr": "options"
-                              },
-                              "attr": "swordless"
-                            },
-                            {
                               "type": "or",
                               "conditions": [
                                 {
@@ -11368,6 +11249,10 @@
                                   "item": "Tempered Sword"
                                 }
                               ]
+                            },
+                            {
+                              "type": "setting_value",
+                              "setting": "swordless"
                             }
                           ]
                         },
@@ -11412,33 +11297,6 @@
                           "type": "or",
                           "conditions": [
                             {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "subscript",
-                                  "value": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "state"
-                                      },
-                                      "attr": "multiworld"
-                                    },
-                                    "attr": "worlds"
-                                  },
-                                  "index": {
-                                    "type": "constant",
-                                    "value": 1
-                                  }
-                                },
-                                "attr": "options"
-                              },
-                              "attr": "swordless"
-                            },
-                            {
                               "type": "or",
                               "conditions": [
                                 {
@@ -11458,6 +11316,10 @@
                                   "item": "Tempered Sword"
                                 }
                               ]
+                            },
+                            {
+                              "type": "setting_value",
+                              "setting": "swordless"
                             }
                           ]
                         },
@@ -11515,33 +11377,6 @@
                               "type": "or",
                               "conditions": [
                                 {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "subscript",
-                                      "value": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "attribute",
-                                          "object": {
-                                            "type": "name",
-                                            "name": "state"
-                                          },
-                                          "attr": "multiworld"
-                                        },
-                                        "attr": "worlds"
-                                      },
-                                      "index": {
-                                        "type": "constant",
-                                        "value": 1
-                                      }
-                                    },
-                                    "attr": "options"
-                                  },
-                                  "attr": "swordless"
-                                },
-                                {
                                   "type": "or",
                                   "conditions": [
                                     {
@@ -11561,6 +11396,10 @@
                                       "item": "Tempered Sword"
                                     }
                                   ]
+                                },
+                                {
+                                  "type": "setting_value",
+                                  "setting": "swordless"
                                 }
                               ]
                             },
@@ -18122,33 +17961,6 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "subscript",
-                              "value": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "name",
-                                    "name": "state"
-                                  },
-                                  "attr": "multiworld"
-                                },
-                                "attr": "worlds"
-                              },
-                              "index": {
-                                "type": "name",
-                                "name": "player"
-                              }
-                            },
-                            "attr": "options"
-                          },
-                          "attr": "swordless"
-                        },
-                        {
                           "type": "helper",
                           "name": "can_extend_magic",
                           "args": [
@@ -18157,6 +17969,10 @@
                               "value": 16
                             }
                           ]
+                        },
+                        {
+                          "type": "setting_value",
+                          "setting": "swordless"
                         },
                         {
                           "type": "item_check",
@@ -18229,33 +18045,6 @@
                           "type": "or",
                           "conditions": [
                             {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "subscript",
-                                  "value": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "state"
-                                      },
-                                      "attr": "multiworld"
-                                    },
-                                    "attr": "worlds"
-                                  },
-                                  "index": {
-                                    "type": "name",
-                                    "name": "player"
-                                  }
-                                },
-                                "attr": "options"
-                              },
-                              "attr": "swordless"
-                            },
-                            {
                               "type": "or",
                               "conditions": [
                                 {
@@ -18275,6 +18064,10 @@
                                   "item": "Tempered Sword"
                                 }
                               ]
+                            },
+                            {
+                              "type": "setting_value",
+                              "setting": "swordless"
                             }
                           ]
                         },

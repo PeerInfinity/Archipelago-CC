@@ -392,6 +392,10 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             }
 
             result = evaluateRule(body, context, depth + 1, helperLocalScope);
+            // Unwrap return marker if present (from block with return statement)
+            if (result && typeof result === 'object' && result.__isReturn) {
+              result = result.value;
+            }
             // If definition evaluation succeeded (not undefined), use that result
             // Otherwise, fall through to try JavaScript helpers as a fallback
             if (result !== undefined) {
@@ -438,6 +442,36 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           } else {
             const evalArgs = rule.args.map(arg => evaluateRule(arg, context, depth + 1));
             result = evalArgs.every(val => val === true);
+          }
+          break;
+        }
+
+        if (rule.name === 'min') {
+          // Python's min() returns the minimum of the arguments
+          if (!rule.args || rule.args.length === 0) {
+            result = undefined;
+            break;
+          }
+          const evalArgs = rule.args.map(arg => evaluateRule(arg, context, depth + 1, localScope));
+          if (evalArgs.some(val => val === undefined)) {
+            result = undefined;
+          } else {
+            result = Math.min(...evalArgs);
+          }
+          break;
+        }
+
+        if (rule.name === 'max') {
+          // Python's max() returns the maximum of the arguments
+          if (!rule.args || rule.args.length === 0) {
+            result = undefined;
+            break;
+          }
+          const evalArgs = rule.args.map(arg => evaluateRule(arg, context, depth + 1, localScope));
+          if (evalArgs.some(val => val === undefined)) {
+            result = undefined;
+          } else {
+            result = Math.max(...evalArgs);
           }
           break;
         }

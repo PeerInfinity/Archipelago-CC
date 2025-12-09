@@ -1236,10 +1236,64 @@ class ASTVisitorMixin:
         logging.debug(f"Fallback call result: {result}")
         return result # Return generic function call result
 
+    def _is_world_options_pattern(self, node):
+        """
+        Detect the pattern: state.multiworld.worlds[player].options.<setting>
+        Returns the setting name if matched, None otherwise.
+
+        AST structure:
+        Attribute(attr='<setting>')
+          value=Attribute(attr='options')
+            value=Subscript
+              value=Attribute(attr='worlds')
+                value=Attribute(attr='multiworld')
+                  value=Name(id='state')
+              slice=Name(id='player')
+        """
+        if not isinstance(node, ast.Attribute):
+            return None
+
+        setting_name = node.attr
+
+        # Check .options
+        if not isinstance(node.value, ast.Attribute) or node.value.attr != 'options':
+            return None
+
+        # Check [player] subscript
+        subscript = node.value.value
+        if not isinstance(subscript, ast.Subscript):
+            return None
+        if not isinstance(subscript.slice, ast.Name) or subscript.slice.id != 'player':
+            return None
+
+        # Check .worlds
+        worlds_attr = subscript.value
+        if not isinstance(worlds_attr, ast.Attribute) or worlds_attr.attr != 'worlds':
+            return None
+
+        # Check .multiworld
+        multiworld_attr = worlds_attr.value
+        if not isinstance(multiworld_attr, ast.Attribute) or multiworld_attr.attr != 'multiworld':
+            return None
+
+        # Check state (or world)
+        state_name = multiworld_attr.value
+        if not isinstance(state_name, ast.Name) or state_name.id not in ('state', 'world'):
+            return None
+
+        return setting_name
+
     def visit_Attribute(self, node):
         try:
             attr_name = node.attr
             logging.debug(f"visit_Attribute: Trying to access .{attr_name} on object of type {type(node.value).__name__}")
+
+            # Check for state.multiworld.worlds[player].options.<setting> pattern
+            # Convert to setting_value rule type for frontend evaluation
+            setting_name = self._is_world_options_pattern(node)
+            if setting_name:
+                logging.debug(f"visit_Attribute: Detected world options pattern, setting: {setting_name}")
+                return {'type': 'setting_value', 'setting': setting_name}
 
             # Specifically log if we are processing self.player
             if isinstance(node.value, ast.Name) and node.value.id == 'self' and attr_name == 'player':

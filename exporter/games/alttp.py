@@ -15,6 +15,7 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
+    # HELPER_MODULES = ['worlds.alttp.StateHelpers']  # Disabled - helper defs need more work
 
     """No longer expands helpers - just validates they're known ALTTP helpers"""
     
@@ -149,18 +150,19 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             return rule
             
         # Check if this is a has_crystals helper with complex arguments
-        if (rule.get('type') == 'helper' and 
-            rule.get('name') == 'has_crystals' and 
+        if (rule.get('type') == 'helper' and
+            rule.get('name') == 'has_crystals' and
             rule.get('args')):
-            
+
             # Check if the argument is trying to access crystals_needed_for_ganon
             if len(rule['args']) == 1:
                 arg = rule['args'][0]
                 # Check for the complex chain: state.multiworld.worlds[player].options.crystals_needed_for_ganon
-                if (isinstance(arg, dict) and 
-                    arg.get('type') == 'attribute' and 
-                    arg.get('attr') == 'crystals_needed_for_ganon'):
-                    
+                # Also check for setting_value type (from analyzer pattern detection)
+                if (isinstance(arg, dict) and
+                    ((arg.get('type') == 'attribute' and arg.get('attr') == 'crystals_needed_for_ganon') or
+                     (arg.get('type') == 'setting_value' and arg.get('setting') == 'crystals_needed_for_ganon'))):
+
                     # Replace with the simpler helper
                     return {
                         'type': 'helper',
