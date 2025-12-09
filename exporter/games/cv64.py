@@ -220,12 +220,12 @@ class Cv64GameExportHandler(GenericGameExportHandler):
 
         # Special handling for Dracula's door
         if entrance_name == "Dracula's door":
-            # Check if it's a null constant or a conditional with Dracula-related items
+            # Check if it's a null constant or a conditional/block with Dracula-related items
             if (rule.get('type') == 'constant' and rule.get('value') is None):
                 # Expand the Dracula helper directly
                 return self.expand_helper("Dracula")
-            elif rule.get('type') == 'conditional':
-                # The analyzer exported a complex conditional for Dracula's door
+            elif rule.get('type') in ('conditional', 'block'):
+                # The analyzer exported a complex conditional or block for Dracula's door
                 # Instead of trying to parse it, just use our helper which knows the correct logic
                 return self.expand_helper("Dracula")
         
