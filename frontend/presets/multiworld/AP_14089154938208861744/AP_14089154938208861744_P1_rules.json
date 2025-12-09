@@ -7,15 +7,11 @@
   "generation_seed": 1,
   "player_names": {
     "1": "Player1",
-    "2": "Player2",
-    "3": "Player3",
-    "4": "Player4"
+    "2": "Player2"
   },
   "world_classes": {
     "1": "HatInTimeWorld",
-    "2": "ALTTPWorld",
-    "3": "ShortHikeWorld",
-    "4": "AdventureWorld"
+    "2": "DKC3World"
   },
   "regions": {
     "1": {
@@ -144,9 +140,9 @@
               "value": true
             },
             "item": {
-              "name": "50 Pons",
-              "player": 1,
-              "advancement": false,
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -176,8 +172,8 @@
               ]
             },
             "item": {
-              "name": "Arrows (10)",
-              "player": 2,
+              "name": "50 Pons",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -203,8 +199,8 @@
               ]
             },
             "item": {
-              "name": "White Key",
-              "player": 4,
+              "name": "DK Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -224,8 +220,8 @@
               "value": true
             },
             "item": {
-              "name": "Seashell",
-              "player": 3,
+              "name": "Bonus Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -375,9 +371,9 @@
               "value": true
             },
             "item": {
-              "name": "100 Pons",
+              "name": "Relic (Train)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -465,9 +461,9 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -547,9 +543,9 @@
               "value": true
             },
             "item": {
-              "name": "Relic (Red Crayon)",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -699,9 +695,9 @@
               ]
             },
             "item": {
-              "name": "Boss Heart Container",
+              "name": "Bonus Coin",
               "player": 2,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -714,8 +710,8 @@
               "value": true
             },
             "item": {
-              "name": "Slow Grundle",
-              "player": 4,
+              "name": "50 Pons",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -735,8 +731,8 @@
               ]
             },
             "item": {
-              "name": "Piece of Heart",
-              "player": 2,
+              "name": "Random Cosmetic",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -750,9 +746,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
-              "player": 1,
-              "advancement": false,
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -765,9 +761,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -833,8 +829,8 @@
               "value": true
             },
             "item": {
-              "name": "Boss Heart Container",
-              "player": 2,
+              "name": "Random Cosmetic",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -929,8 +925,8 @@
               ]
             },
             "item": {
-              "name": "Piece of Heart",
-              "player": 2,
+              "name": "Health Pon",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -1019,9 +1015,9 @@
               "value": true
             },
             "item": {
-              "name": "Cane of Somaria",
-              "player": 2,
-              "advancement": true,
+              "name": "50 Pons",
+              "player": 1,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1179,9 +1175,9 @@
               ]
             },
             "item": {
-              "name": "50 Pons",
-              "player": 1,
-              "advancement": false,
+              "name": "DK Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1247,9 +1243,9 @@
               "value": true
             },
             "item": {
-              "name": "Relic (Burger Cushion)",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1262,9 +1258,9 @@
               "value": true
             },
             "item": {
-              "name": "Rupees (300)",
+              "name": "Bonus Coin",
               "player": 2,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1283,9 +1279,9 @@
               ]
             },
             "item": {
-              "name": "Baseball Cap",
-              "player": 3,
-              "advancement": false,
+              "name": "DK Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1298,9 +1294,9 @@
               "value": true
             },
             "item": {
-              "name": "Seashell",
-              "player": 3,
-              "advancement": true,
+              "name": "100 Pons",
+              "player": 1,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1313,7 +1309,7 @@
               "value": true
             },
             "item": {
-              "name": "50 Pons",
+              "name": "25 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1328,8 +1324,8 @@
               "value": true
             },
             "item": {
-              "name": "Compass",
-              "player": 3,
+              "name": "25 Pons",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -1427,9 +1423,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Badge Pin",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1442,8 +1438,8 @@
               "value": true
             },
             "item": {
-              "name": "Rupees (300)",
-              "player": 2,
+              "name": "Random Cosmetic",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -1539,9 +1535,9 @@
               "args": []
             },
             "item": {
-              "name": "A Stormy View Map",
-              "player": 3,
-              "advancement": false,
+              "name": "Relic (Crayon Box)",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1664,9 +1660,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
-              "player": 1,
-              "advancement": false,
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1694,8 +1690,8 @@
               "value": true
             },
             "item": {
-              "name": "Bombs (3)",
-              "player": 2,
+              "name": "Random Cosmetic",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -1811,9 +1807,9 @@
               "args": []
             },
             "item": {
-              "name": "50 Pons",
-              "player": 1,
-              "advancement": false,
+              "name": "DK Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1827,7 +1823,7 @@
               "args": []
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "25 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1843,9 +1839,9 @@
               "args": []
             },
             "item": {
-              "name": "Rupees (300)",
-              "player": 2,
-              "advancement": false,
+              "name": "Yarn",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1858,9 +1854,9 @@
               "value": true
             },
             "item": {
-              "name": "Piece of Heart",
-              "player": 2,
-              "advancement": false,
+              "name": "Yarn",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1874,8 +1870,8 @@
               "args": []
             },
             "item": {
-              "name": "Seashell",
-              "player": 3,
+              "name": "Time Piece",
+              "player": 1,
               "advancement": true,
               "type": "None"
             },
@@ -1889,9 +1885,9 @@
               "value": true
             },
             "item": {
-              "name": "13 Coins",
-              "player": 3,
-              "advancement": false,
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1904,8 +1900,8 @@
               "value": true
             },
             "item": {
-              "name": "Relic (Train)",
-              "player": 1,
+              "name": "DK Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -1920,7 +1916,7 @@
               "args": []
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Random Cosmetic",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1936,9 +1932,9 @@
               "args": []
             },
             "item": {
-              "name": "Golden Feather",
-              "player": 3,
-              "advancement": true,
+              "name": "25 Pons",
+              "player": 1,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1952,9 +1948,9 @@
               "args": []
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "DK Coin",
               "player": 2,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1968,8 +1964,8 @@
               "args": []
             },
             "item": {
-              "name": "Chalice",
-              "player": 4,
+              "name": "Bonus Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -1989,9 +1985,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
-              "player": 1,
-              "advancement": false,
+              "name": "Krematoa Cog",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2004,8 +2000,8 @@
               "value": true
             },
             "item": {
-              "name": "50 Coins",
-              "player": 3,
+              "name": "Random Cosmetic",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -2019,9 +2015,9 @@
               "value": true
             },
             "item": {
-              "name": "Seashell",
-              "player": 3,
-              "advancement": true,
+              "name": "25 Pons",
+              "player": 1,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2034,7 +2030,7 @@
               "value": true
             },
             "item": {
-              "name": "Arrows (10)",
+              "name": "Bear Coin",
               "player": 2,
               "advancement": false,
               "type": "None"
@@ -2049,9 +2045,9 @@
               "value": true
             },
             "item": {
-              "name": "Medal",
-              "player": 3,
-              "advancement": false,
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2064,9 +2060,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
-              "player": 1,
-              "advancement": false,
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2094,7 +2090,7 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Random Cosmetic",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2109,8 +2105,8 @@
               "value": true
             },
             "item": {
-              "name": "Seashell",
-              "player": 3,
+              "name": "Yarn",
+              "player": 1,
               "advancement": true,
               "type": "None"
             },
@@ -2130,9 +2126,9 @@
               "value": true
             },
             "item": {
-              "name": "Silver Feather",
-              "player": 3,
-              "advancement": false,
+              "name": "Yarn",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2151,8 +2147,8 @@
               "value": true
             },
             "item": {
-              "name": "Seashell",
-              "player": 3,
+              "name": "Bonus Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -2172,9 +2168,9 @@
               "value": true
             },
             "item": {
-              "name": "Golden Feather",
-              "player": 3,
-              "advancement": true,
+              "name": "25 Pons",
+              "player": 1,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2187,9 +2183,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2202,8 +2198,8 @@
               "value": true
             },
             "item": {
-              "name": "13 Coins",
-              "player": 3,
+              "name": "Health Pon",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -2217,9 +2213,9 @@
               "value": true
             },
             "item": {
-              "name": "Bombs (3)",
-              "player": 2,
-              "advancement": false,
+              "name": "Time Piece",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2253,8 +2249,8 @@
               ]
             },
             "item": {
-              "name": "Yarn",
-              "player": 1,
+              "name": "Bonus Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -2268,8 +2264,8 @@
               "value": true
             },
             "item": {
-              "name": "Golden Feather",
-              "player": 3,
+              "name": "Bonus Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -2298,8 +2294,8 @@
               ]
             },
             "item": {
-              "name": "50 Pons",
-              "player": 1,
+              "name": "Bear Coin",
+              "player": 2,
               "advancement": false,
               "type": "None"
             },
@@ -2328,8 +2324,8 @@
               ]
             },
             "item": {
-              "name": "Freeincarnate",
-              "player": 4,
+              "name": "1-Up Balloon",
+              "player": 2,
               "advancement": false,
               "type": "None"
             },
@@ -2464,8 +2460,8 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
-              "player": 1,
+              "name": "Bonus Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -2479,9 +2475,9 @@
               "value": true
             },
             "item": {
-              "name": "Piece of Heart",
-              "player": 2,
-              "advancement": false,
+              "name": "Time Piece",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2494,9 +2490,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "50 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2583,8 +2579,8 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
-              "player": 1,
+              "name": "DK Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -2599,8 +2595,8 @@
               "args": []
             },
             "item": {
-              "name": "Seashell",
-              "player": 3,
+              "name": "Bonus Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -2614,8 +2610,8 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
-              "player": 1,
+              "name": "Bonus Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -2630,9 +2626,9 @@
               "args": []
             },
             "item": {
-              "name": "15 Coins",
-              "player": 3,
-              "advancement": false,
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2798,9 +2794,9 @@
               ]
             },
             "item": {
-              "name": "Yarn",
-              "player": 1,
-              "advancement": true,
+              "name": "Bear Coin",
+              "player": 2,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2960,9 +2956,9 @@
               "value": true
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Bonus Coin",
               "player": 2,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2975,9 +2971,9 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2990,9 +2986,9 @@
               "value": true
             },
             "item": {
-              "name": "Rupees (50)",
+              "name": "Bonus Coin",
               "player": 2,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3005,8 +3001,8 @@
               "value": true
             },
             "item": {
-              "name": "Rupees (20)",
-              "player": 2,
+              "name": "Random Cosmetic",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -3020,9 +3016,9 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3166,9 +3162,9 @@
               ]
             },
             "item": {
-              "name": "Progressive Fishing Rod",
-              "player": 3,
-              "advancement": true,
+              "name": "Random Cosmetic",
+              "player": 1,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3485,8 +3481,8 @@
               "value": true
             },
             "item": {
-              "name": "Seashell",
-              "player": 3,
+              "name": "Bonus Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -3500,9 +3496,9 @@
               "value": true
             },
             "item": {
-              "name": "Arrows (10)",
+              "name": "Bonus Coin",
               "player": 2,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3536,7 +3532,7 @@
               ]
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Yarn",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3551,9 +3547,9 @@
               "value": true
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "DK Coin",
               "player": 2,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3572,8 +3568,8 @@
               ]
             },
             "item": {
-              "name": "Progressive Fishing Rod",
-              "player": 3,
+              "name": "Bonus Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -3602,8 +3598,8 @@
               "value": true
             },
             "item": {
-              "name": "Hookshot Badge",
-              "player": 1,
+              "name": "Bonus Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -3617,9 +3613,9 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
-              "player": 1,
-              "advancement": false,
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3662,9 +3658,9 @@
               ]
             },
             "item": {
-              "name": "13 Coins",
-              "player": 3,
-              "advancement": false,
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3678,7 +3674,7 @@
               "args": []
             },
             "item": {
-              "name": "Relic (Tin-foil Hat Cow)",
+              "name": "Yarn",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3709,9 +3705,9 @@
               ]
             },
             "item": {
-              "name": "Rupees (20)",
-              "player": 2,
-              "advancement": false,
+              "name": "Yarn",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3725,7 +3721,7 @@
               "args": []
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Health Pon",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3741,9 +3737,9 @@
               "args": []
             },
             "item": {
-              "name": "25 Pons",
-              "player": 1,
-              "advancement": false,
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3757,8 +3753,8 @@
               "args": []
             },
             "item": {
-              "name": "Time Piece",
-              "player": 1,
+              "name": "DK Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -3778,9 +3774,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Random Cosmetic",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3799,9 +3795,9 @@
               ]
             },
             "item": {
-              "name": "Hammer",
-              "player": 2,
-              "advancement": true,
+              "name": "50 Pons",
+              "player": 1,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3814,9 +3810,9 @@
               "value": true
             },
             "item": {
-              "name": "100 Pons",
-              "player": 1,
-              "advancement": false,
+              "name": "DK Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3829,7 +3825,7 @@
               "value": true
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "1-Up Balloon",
               "player": 2,
               "advancement": false,
               "type": "None"
@@ -3844,8 +3840,8 @@
               "value": true
             },
             "item": {
-              "name": "Seashell",
-              "player": 3,
+              "name": "DK Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -3859,8 +3855,8 @@
               "value": true
             },
             "item": {
-              "name": "21 Coins",
-              "player": 3,
+              "name": "Item Magnet Badge",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -3874,7 +3870,7 @@
               "value": true
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "1-Up Balloon",
               "player": 2,
               "advancement": false,
               "type": "None"
@@ -3911,9 +3907,9 @@
               "value": true
             },
             "item": {
-              "name": "7 Coins",
-              "player": 3,
-              "advancement": false,
+              "name": "Yarn",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3926,8 +3922,8 @@
               "value": true
             },
             "item": {
-              "name": "Seashell",
-              "player": 3,
+              "name": "Relic (Green Crayon)",
+              "player": 1,
               "advancement": true,
               "type": "None"
             },
@@ -3941,9 +3937,9 @@
               "value": true
             },
             "item": {
-              "name": "Freeincarnate",
-              "player": 4,
-              "advancement": false,
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3956,7 +3952,7 @@
               "value": true
             },
             "item": {
-              "name": "Relic (Burger Patty)",
+              "name": "Yarn",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3971,9 +3967,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
-              "player": 1,
-              "advancement": true,
+              "name": "1-Up Balloon",
+              "player": 2,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -4023,7 +4019,7 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Snatcher's Contract - Mail Delivery Service",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4038,8 +4034,8 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
-              "player": 1,
+              "name": "Bonus Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -4053,9 +4049,9 @@
               "value": true
             },
             "item": {
-              "name": "Freeincarnate",
-              "player": 4,
-              "advancement": false,
+              "name": "DK Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4068,7 +4064,7 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Yarn",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4105,9 +4101,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "50 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -4120,9 +4116,9 @@
               "value": true
             },
             "item": {
-              "name": "Badge Pin",
-              "player": 1,
-              "advancement": false,
+              "name": "DK Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4135,9 +4131,9 @@
               "value": true
             },
             "item": {
-              "name": "33 Coins",
-              "player": 3,
-              "advancement": false,
+              "name": "Yarn",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4196,7 +4192,7 @@
               "args": []
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Random Cosmetic",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4233,9 +4229,9 @@
               "value": true
             },
             "item": {
-              "name": "Seashell",
-              "player": 3,
-              "advancement": true,
+              "name": "25 Pons",
+              "player": 1,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -4248,8 +4244,8 @@
               "value": true
             },
             "item": {
-              "name": "Motorboat Key",
-              "player": 3,
+              "name": "DK Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -4263,9 +4259,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
-              "player": 1,
-              "advancement": true,
+              "name": "Bear Coin",
+              "player": 2,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -4278,9 +4274,9 @@
               "value": true
             },
             "item": {
-              "name": "Hover Badge",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4293,9 +4289,9 @@
               "value": true
             },
             "item": {
-              "name": "Bridge",
-              "player": 4,
-              "advancement": true,
+              "name": "Bear Coin",
+              "player": 2,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -4308,9 +4304,9 @@
               "value": true
             },
             "item": {
-              "name": "Sanctuary Heart Container",
+              "name": "Bonus Coin",
               "player": 2,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4335,9 +4331,9 @@
               ]
             },
             "item": {
-              "name": "Freeincarnate",
-              "player": 4,
-              "advancement": false,
+              "name": "Time Piece",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4362,9 +4358,9 @@
               ]
             },
             "item": {
-              "name": "In Her Shadow Map",
-              "player": 3,
-              "advancement": false,
+              "name": "Relic (Red Crayon)",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4471,8 +4467,8 @@
               ]
             },
             "item": {
-              "name": "Bait",
-              "player": 3,
+              "name": "1-Up Balloon",
+              "player": 2,
               "advancement": false,
               "type": "None"
             },
@@ -4557,8 +4553,8 @@
               ]
             },
             "item": {
-              "name": "Time Piece",
-              "player": 1,
+              "name": "DK Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -4572,7 +4568,7 @@
               "value": true
             },
             "item": {
-              "name": "Rupees (20)",
+              "name": "Bear Coin",
               "player": 2,
               "advancement": false,
               "type": "None"
@@ -4587,9 +4583,9 @@
               "value": true
             },
             "item": {
-              "name": "50 Pons",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4602,9 +4598,9 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
-              "player": 1,
-              "advancement": false,
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4623,9 +4619,9 @@
               ]
             },
             "item": {
-              "name": "Stick",
-              "player": 3,
-              "advancement": true,
+              "name": "1-Up Balloon",
+              "player": 2,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -4653,9 +4649,9 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
-              "player": 1,
-              "advancement": false,
+              "name": "DK Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4668,8 +4664,8 @@
               "value": true
             },
             "item": {
-              "name": "Magic Mirror",
-              "player": 2,
+              "name": "Time Piece",
+              "player": 1,
               "advancement": true,
               "type": "None"
             },
@@ -4683,9 +4679,9 @@
               "value": true
             },
             "item": {
-              "name": "Freeincarnate",
-              "player": 4,
-              "advancement": false,
+              "name": "DK Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4698,8 +4694,8 @@
               "value": true
             },
             "item": {
-              "name": "25 Coins",
-              "player": 3,
+              "name": "100 Pons",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -4713,7 +4709,7 @@
               "value": true
             },
             "item": {
-              "name": "Rupees (5)",
+              "name": "1-Up Balloon",
               "player": 2,
               "advancement": false,
               "type": "None"
@@ -4734,9 +4730,9 @@
               ]
             },
             "item": {
-              "name": "Yarn",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -4749,7 +4745,7 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "100 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4779,9 +4775,9 @@
               "value": true
             },
             "item": {
-              "name": "Rupees (20)",
-              "player": 2,
-              "advancement": false,
+              "name": "Yarn",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4794,9 +4790,9 @@
               "value": true
             },
             "item": {
-              "name": "Progressive Shield",
-              "player": 2,
-              "advancement": true,
+              "name": "25 Pons",
+              "player": 1,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -4809,9 +4805,9 @@
               "value": true
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Bonus Coin",
               "player": 2,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4824,9 +4820,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Random Cosmetic",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -4924,9 +4920,9 @@
               ]
             },
             "item": {
-              "name": "Magic Upgrade (1/2)",
-              "player": 2,
-              "advancement": true,
+              "name": "Badge Pin",
+              "player": 1,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -4939,9 +4935,9 @@
               "value": true
             },
             "item": {
-              "name": "13 Coins",
-              "player": 3,
-              "advancement": false,
+              "name": "Yarn",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4954,8 +4950,8 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
-              "player": 1,
+              "name": "DK Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -4969,8 +4965,8 @@
               "value": true
             },
             "item": {
-              "name": "Seashell",
-              "player": 3,
+              "name": "Bonus Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -4984,10 +4980,10 @@
               "value": true
             },
             "item": {
-              "name": "Progressive Sword",
-              "player": 2,
+              "name": "Snatcher's Contract - The Subcon Well",
+              "player": 1,
               "advancement": true,
-              "type": "Sword"
+              "type": "None"
             },
             "locked": false
           },
@@ -4999,9 +4995,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -5020,8 +5016,8 @@
               ]
             },
             "item": {
-              "name": "Piece of Heart",
-              "player": 2,
+              "name": "Random Cosmetic",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -5041,7 +5037,7 @@
               ]
             },
             "item": {
-              "name": "Yarn",
+              "name": "Time Piece",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5056,9 +5052,9 @@
               "value": true
             },
             "item": {
-              "name": "Flute",
+              "name": "1-Up Balloon",
               "player": 2,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -5071,9 +5067,9 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
-              "player": 1,
-              "advancement": false,
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5086,9 +5082,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
-              "player": 1,
-              "advancement": false,
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5116,7 +5112,7 @@
               ]
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "25 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5131,9 +5127,9 @@
               "value": true
             },
             "item": {
-              "name": "Rupee (1)",
-              "player": 2,
-              "advancement": false,
+              "name": "Relic (Tin-foil Hat Cow)",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5156,9 +5152,9 @@
               ]
             },
             "item": {
-              "name": "Medal",
-              "player": 3,
-              "advancement": false,
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5171,9 +5167,9 @@
               "value": true
             },
             "item": {
-              "name": "50 Pons",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5186,9 +5182,9 @@
               "value": true
             },
             "item": {
-              "name": "50 Pons",
-              "player": 1,
-              "advancement": false,
+              "name": "Krematoa Cog",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5202,8 +5198,8 @@
               "args": []
             },
             "item": {
-              "name": "Seashell",
-              "player": 3,
+              "name": "DK Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -5218,9 +5214,9 @@
               "args": []
             },
             "item": {
-              "name": "33 Coins",
-              "player": 3,
-              "advancement": false,
+              "name": "Relic (Cow)",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5318,8 +5314,8 @@
               ]
             },
             "item": {
-              "name": "Yarn",
-              "player": 1,
+              "name": "Bonus Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -5390,7 +5386,7 @@
               ]
             },
             "item": {
-              "name": "Relic (Mountain Set)",
+              "name": "Time Piece",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5411,8 +5407,8 @@
               "value": true
             },
             "item": {
-              "name": "Stick",
-              "player": 3,
+              "name": "DK Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -5426,7 +5422,7 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Time Piece",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5441,7 +5437,7 @@
               "value": true
             },
             "item": {
-              "name": "Relic (Cool Cow)",
+              "name": "Time Piece",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5456,9 +5452,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Health Pon",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -5471,7 +5467,7 @@
               "value": true
             },
             "item": {
-              "name": "Bombs (3)",
+              "name": "Bear Coin",
               "player": 2,
               "advancement": false,
               "type": "None"
@@ -5486,9 +5482,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5501,7 +5497,7 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Time Piece",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5522,8 +5518,8 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
-              "player": 1,
+              "name": "DK Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -5543,9 +5539,9 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
-              "player": 1,
-              "advancement": false,
+              "name": "DK Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5592,8 +5588,8 @@
               "value": true
             },
             "item": {
-              "name": "50 Pons",
-              "player": 1,
+              "name": "1-Up Balloon",
+              "player": 2,
               "advancement": false,
               "type": "None"
             },
@@ -5607,9 +5603,9 @@
               "value": true
             },
             "item": {
-              "name": "Golden Feather",
-              "player": 3,
-              "advancement": true,
+              "name": "Health Pon",
+              "player": 1,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -5622,9 +5618,9 @@
               "value": true
             },
             "item": {
-              "name": "Bombos",
-              "player": 2,
-              "advancement": true,
+              "name": "Random Cosmetic",
+              "player": 1,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -5637,8 +5633,8 @@
               "value": true
             },
             "item": {
-              "name": "25 Coins",
-              "player": 3,
+              "name": "Health Pon",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -5652,8 +5648,8 @@
               "value": true
             },
             "item": {
-              "name": "Fishing Journal",
-              "player": 3,
+              "name": "Random Cosmetic",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -5667,8 +5663,8 @@
               "value": true
             },
             "item": {
-              "name": "Seashell",
-              "player": 3,
+              "name": "Yarn",
+              "player": 1,
               "advancement": true,
               "type": "None"
             },
@@ -5682,8 +5678,8 @@
               "value": true
             },
             "item": {
-              "name": "Golden Feather",
-              "player": 3,
+              "name": "Bonus Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -5703,9 +5699,9 @@
               ]
             },
             "item": {
-              "name": "Bait",
-              "player": 3,
-              "advancement": false,
+              "name": "DK Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5718,9 +5714,9 @@
               "value": true
             },
             "item": {
-              "name": "Ice Rod",
-              "player": 2,
-              "advancement": true,
+              "name": "Fast Hatter Badge",
+              "player": 1,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -5733,9 +5729,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Coins",
-              "player": 3,
-              "advancement": false,
+              "name": "DK Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5748,8 +5744,8 @@
               "value": true
             },
             "item": {
-              "name": "7 Coins",
-              "player": 3,
+              "name": "1-Up Balloon",
+              "player": 2,
               "advancement": false,
               "type": "None"
             },
@@ -5763,8 +5759,8 @@
               "value": true
             },
             "item": {
-              "name": "13 Coins",
-              "player": 3,
+              "name": "50 Pons",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -5778,9 +5774,9 @@
               "value": true
             },
             "item": {
-              "name": "The King Map",
-              "player": 3,
-              "advancement": false,
+              "name": "Snatcher's Contract - Queen Vanessa's Manor",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5793,8 +5789,8 @@
               "value": true
             },
             "item": {
-              "name": "Rupees (20)",
-              "player": 2,
+              "name": "50 Pons",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -5808,8 +5804,8 @@
               "value": true
             },
             "item": {
-              "name": "Sunhat",
-              "player": 3,
+              "name": "Bear Coin",
+              "player": 2,
               "advancement": false,
               "type": "None"
             },
@@ -5823,9 +5819,9 @@
               "value": true
             },
             "item": {
-              "name": "Arrows (10)",
-              "player": 2,
-              "advancement": false,
+              "name": "Time Piece",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5838,8 +5834,8 @@
               "value": true
             },
             "item": {
-              "name": "Seashell",
-              "player": 3,
+              "name": "Yarn",
+              "player": 1,
               "advancement": true,
               "type": "None"
             },
@@ -5853,9 +5849,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5863,21 +5859,6 @@
           {
             "name": "Subcon Forest - Spider Bone Cage A",
             "id": 2000324462,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "25 Pons",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Subcon Forest - Spider Bone Cage B",
-            "id": 2000325080,
             "access_rule": {
               "type": "constant",
               "value": true
@@ -5891,6 +5872,21 @@
             "locked": false
           },
           {
+            "name": "Subcon Forest - Spider Bone Cage B",
+            "id": 2000325080,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "25 Pons",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
             "name": "Subcon Forest - Triple Spider Bounce",
             "id": 2000324765,
             "access_rule": {
@@ -5898,9 +5894,9 @@
               "value": true
             },
             "item": {
-              "name": "13 Coins",
-              "player": 3,
-              "advancement": false,
+              "name": "DK Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5914,9 +5910,9 @@
               "args": []
             },
             "item": {
-              "name": "Arrows (10)",
+              "name": "Bonus Coin",
               "player": 2,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5935,7 +5931,7 @@
               ]
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Bear Coin",
               "player": 2,
               "advancement": false,
               "type": "None"
@@ -5950,8 +5946,8 @@
               "value": true
             },
             "item": {
-              "name": "Golden Feather",
-              "player": 3,
+              "name": "Yarn",
+              "player": 1,
               "advancement": true,
               "type": "None"
             },
@@ -5971,9 +5967,9 @@
               ]
             },
             "item": {
-              "name": "21 Coins",
-              "player": 3,
-              "advancement": false,
+              "name": "Relic (Cool Cow)",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5992,9 +5988,9 @@
               ]
             },
             "item": {
-              "name": "Bucket",
-              "player": 3,
-              "advancement": true,
+              "name": "Bear Coin",
+              "player": 2,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -6013,9 +6009,9 @@
               ]
             },
             "item": {
-              "name": "Lamp",
-              "player": 2,
-              "advancement": true,
+              "name": "25 Pons",
+              "player": 1,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -6034,8 +6030,8 @@
               ]
             },
             "item": {
-              "name": "Yarn",
-              "player": 1,
+              "name": "DK Coin",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -6049,9 +6045,9 @@
               "value": true
             },
             "item": {
-              "name": "Progressive Glove",
+              "name": "Bear Coin",
               "player": 2,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -6070,9 +6066,9 @@
               ]
             },
             "item": {
-              "name": "Time Piece",
+              "name": "100 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -6085,9 +6081,9 @@
               "value": true
             },
             "item": {
-              "name": "Golden Feather",
-              "player": 3,
-              "advancement": true,
+              "name": "1-Up Balloon",
+              "player": 2,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -6100,8 +6096,8 @@
               "value": true
             },
             "item": {
-              "name": "Relic (UFO)",
-              "player": 1,
+              "name": "Progressive Boat Upgrade",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -6115,9 +6111,9 @@
               "value": true
             },
             "item": {
-              "name": "Freeincarnate",
-              "player": 4,
-              "advancement": false,
+              "name": "Time Piece",
+              "player": 1,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6136,9 +6132,9 @@
               ]
             },
             "item": {
-              "name": "25 Pons",
-              "player": 1,
-              "advancement": false,
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6152,9 +6148,9 @@
               "args": []
             },
             "item": {
-              "name": "13 Coins",
-              "player": 3,
-              "advancement": false,
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6167,9 +6163,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
-              "player": 1,
-              "advancement": false,
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6182,9 +6178,9 @@
               "value": true
             },
             "item": {
-              "name": "Stick",
-              "player": 3,
-              "advancement": true,
+              "name": "50 Pons",
+              "player": 1,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -6197,9 +6193,9 @@
               "value": true
             },
             "item": {
-              "name": "Shovel",
+              "name": "1-Up Balloon",
               "player": 2,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -6237,8 +6233,8 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
-              "player": 1,
+              "name": "Progressive Boat Upgrade",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -6258,7 +6254,7 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "100 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6279,7 +6275,7 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Time Piece",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6300,9 +6296,9 @@
               "value": true
             },
             "item": {
-              "name": "Piece of Heart",
+              "name": "Bonus Coin",
               "player": 2,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6310,36 +6306,6 @@
           {
             "name": "Sleepy Subcon - Page: Behind Entrance Area",
             "id": 2000345373,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Pickaxe",
-              "player": 3,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sleepy Subcon - Page: Near Wrecking Ball",
-            "id": 2000345327,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Time Piece",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Sleepy Subcon - Page: Behind Crane",
-            "id": 2000345371,
             "access_rule": {
               "type": "constant",
               "value": true
@@ -6353,6 +6319,36 @@
             "locked": false
           },
           {
+            "name": "Sleepy Subcon - Page: Near Wrecking Ball",
+            "id": 2000345327,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Sleepy Subcon - Page: Behind Crane",
+            "id": 2000345371,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "DK Coin",
+              "player": 2,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
             "name": "Sleepy Subcon - Page: Wrecked Treehouse",
             "id": 2000345326,
             "access_rule": {
@@ -6360,7 +6356,7 @@
               "value": true
             },
             "item": {
-              "name": "Quake",
+              "name": "Bonus Coin",
               "player": 2,
               "advancement": true,
               "type": "None"
@@ -6375,9 +6371,9 @@
               "value": true
             },
             "item": {
-              "name": "Badge Pin",
-              "player": 1,
-              "advancement": false,
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6390,9 +6386,9 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
-              "player": 1,
-              "advancement": false,
+              "name": "Bonus Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6405,8 +6401,8 @@
               "value": true
             },
             "item": {
-              "name": "Bucket",
-              "player": 3,
+              "name": "Relic (Burger Cushion)",
+              "player": 1,
               "advancement": true,
               "type": "None"
             },
@@ -6420,9 +6416,9 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6435,8 +6431,8 @@
               "value": true
             },
             "item": {
-              "name": "Arrows (10)",
-              "player": 2,
+              "name": "Random Cosmetic",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -6457,8 +6453,8 @@
               "args": []
             },
             "item": {
-              "name": "Rupees (20)",
-              "player": 2,
+              "name": "Random Cosmetic",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -6503,7 +6499,7 @@
               ]
             },
             "item": {
-              "name": "100 Pons",
+              "name": "50 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6524,9 +6520,9 @@
               "value": true
             },
             "item": {
-              "name": "Progressive Shield",
+              "name": "Bear Coin",
               "player": 2,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -6539,8 +6535,8 @@
               "value": true
             },
             "item": {
-              "name": "Bug Catching Net",
-              "player": 2,
+              "name": "Yarn",
+              "player": 1,
               "advancement": true,
               "type": "None"
             },
@@ -6554,9 +6550,9 @@
               "value": true
             },
             "item": {
-              "name": "Freeincarnate",
-              "player": 4,
-              "advancement": false,
+              "name": "DK Coin",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6569,9 +6565,9 @@
               "value": true
             },
             "item": {
-              "name": "Rupees (5)",
+              "name": "Bonus Coin",
               "player": 2,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6604,8 +6600,8 @@
               "value": true
             },
             "item": {
-              "name": "Bombs (3)",
-              "player": 2,
+              "name": "50 Pons",
+              "player": 1,
               "advancement": false,
               "type": "None"
             },
@@ -6635,8 +6631,8 @@
               ]
             },
             "item": {
-              "name": "Random Cosmetic",
-              "player": 1,
+              "name": "1-Up Balloon",
+              "player": 2,
               "advancement": false,
               "type": "None"
             },
@@ -6696,8 +6692,8 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 23,
-        "classification": "progression"
+        "max_count": 50,
+        "classification": "progression_skip_balancing"
       },
       "Time Piece": {
         "name": "Time Piece",
@@ -6707,7 +6703,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 17,
+        "max_count": 40,
         "classification": "progression_skip_balancing"
       },
       "Sprint Hat": {
@@ -7100,7 +7096,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 14,
+        "max_count": 39,
         "classification": "filler"
       },
       "50 Pons": {
@@ -7111,7 +7107,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 9,
+        "max_count": 17,
         "classification": "filler"
       },
       "100 Pons": {
@@ -7122,7 +7118,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 3,
+        "max_count": 6,
         "classification": "filler"
       },
       "Health Pon": {
@@ -7133,7 +7129,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 5,
+        "max_count": 15,
         "classification": "filler"
       },
       "Random Cosmetic": {
@@ -7144,7 +7140,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 14,
+        "max_count": 30,
         "classification": "filler"
       },
       "Baby Trap": {
@@ -7259,6 +7255,7 @@
       },
       "Snatcher's Contract - The Subcon Well": {
         "name": "Snatcher's Contract - The Subcon Well",
+        "hint_text": "Snatcher's Contract   The Subcon Well",
         "id": 2000300200,
         "groups": [
           "Everything"
@@ -7281,6 +7278,7 @@
       },
       "Snatcher's Contract - Queen Vanessa's Manor": {
         "name": "Snatcher's Contract - Queen Vanessa's Manor",
+        "hint_text": "Snatcher's Contract   Queen Vanessa's Manor",
         "id": 2000300202,
         "groups": [
           "Everything"
@@ -7292,6 +7290,7 @@
       },
       "Snatcher's Contract - Mail Delivery Service": {
         "name": "Snatcher's Contract - Mail Delivery Service",
+        "hint_text": "Snatcher's Contract   Mail Delivery Service",
         "id": 2000300203,
         "groups": [
           "Everything"
@@ -7444,499 +7443,55 @@
         "max_count": 1,
         "classification": "progression"
       },
-      "Arrows (10)": {
-        "name": "Arrows (10)",
-        "hint_text": "ten arrows",
-        "id": 68,
-        "groups": [],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "White Key": {
-        "name": "White Key",
-        "id": 118000012,
+      "Bonus Coin": {
+        "name": "Bonus Coin",
+        "id": 14430211,
         "groups": [],
         "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Seashell": {
-        "name": "Seashell",
-        "id": 82002,
-        "groups": [],
-        "classification": "progression_skip_balancing",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Boss Heart Container": {
-        "name": "Boss Heart Container",
-        "hint_text": "a heart",
-        "id": 62,
-        "groups": [],
-        "classification": "useful",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Slow Grundle": {
-        "name": "Slow Grundle",
-        "id": 118000260,
-        "groups": [],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Piece of Heart": {
-        "name": "Piece of Heart",
-        "hint_text": "a heart piece",
-        "id": 23,
-        "groups": [],
-        "classification": "useful",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Cane of Somaria": {
-        "name": "Cane of Somaria",
-        "hint_text": "the Red Cane",
-        "id": 21,
+      "DK Coin": {
+        "name": "DK Coin",
+        "id": 14430212,
         "groups": [],
         "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Rupees (300)": {
-        "name": "Rupees (300)",
-        "hint_text": "three hundred rupees",
-        "id": 70,
-        "groups": [],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Baseball Cap": {
-        "name": "Baseball Cap",
-        "id": 82022,
-        "groups": [],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Compass": {
-        "name": "Compass",
-        "id": 82010,
-        "groups": [],
-        "classification": "useful",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "A Stormy View Map": {
-        "name": "A Stormy View Map",
-        "id": 82017,
-        "groups": [],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Bombs (3)": {
-        "name": "Bombs (3)",
-        "hint_text": "three bombs",
-        "id": 40,
-        "groups": [],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "13 Coins": {
-        "name": "13 Coins",
-        "id": 82037,
-        "groups": [],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Golden Feather": {
-        "name": "Golden Feather",
-        "id": 82003,
+      "Krematoa Cog": {
+        "name": "Krematoa Cog",
+        "id": 14430214,
         "groups": [],
         "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Chalice": {
-        "name": "Chalice",
-        "id": 118000016,
-        "groups": [],
-        "classification": "progression_skip_balancing",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "50 Coins": {
-        "name": "50 Coins",
-        "id": 82036,
-        "groups": [],
-        "classification": "useful",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Medal": {
-        "name": "Medal",
-        "id": 82011,
+      "Bear Coin": {
+        "name": "Bear Coin",
+        "id": 14430210,
         "groups": [],
         "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "Silver Feather": {
-        "name": "Silver Feather",
-        "id": 82004,
-        "groups": [],
-        "classification": "useful",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Freeincarnate": {
-        "name": "Freeincarnate",
-        "id": 118000258,
+      "1-Up Balloon": {
+        "name": "1-Up Balloon",
+        "hint_text": "1 Up Balloon",
+        "id": 14430209,
         "groups": [],
         "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
       },
-      "15 Coins": {
-        "name": "15 Coins",
-        "id": 82029,
-        "groups": [],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Rupees (50)": {
-        "name": "Rupees (50)",
-        "hint_text": "fifty rupees",
-        "id": 65,
-        "groups": [],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Rupees (20)": {
-        "name": "Rupees (20)",
-        "hint_text": "a red rupee",
-        "id": 54,
-        "groups": [],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Fishing Rod": {
-        "name": "Progressive Fishing Rod",
-        "id": 82007,
-        "groups": [],
-        "classification": "progression",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Hammer": {
-        "name": "Hammer",
-        "hint_text": "the Hammer",
-        "id": 9,
-        "groups": [],
-        "classification": "progression",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "21 Coins": {
-        "name": "21 Coins",
-        "id": 82031,
-        "groups": [],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "7 Coins": {
-        "name": "7 Coins",
-        "id": 82028,
-        "groups": [],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "33 Coins": {
-        "name": "33 Coins",
-        "id": 82035,
-        "groups": [],
-        "classification": "useful",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Motorboat Key": {
-        "name": "Motorboat Key",
-        "id": 82014,
-        "groups": [],
-        "classification": "progression",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Bridge": {
-        "name": "Bridge",
-        "id": 118000010,
-        "groups": [],
-        "classification": "progression",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Sanctuary Heart Container": {
-        "name": "Sanctuary Heart Container",
-        "hint_text": "a heart",
-        "id": 63,
-        "groups": [],
-        "classification": "useful",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "In Her Shadow Map": {
-        "name": "In Her Shadow Map",
-        "id": 82020,
-        "groups": [],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Bait": {
-        "name": "Bait",
-        "id": 82006,
-        "groups": [],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Stick": {
-        "name": "Stick",
-        "id": 82001,
-        "groups": [],
-        "classification": "progression_skip_balancing",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Magic Mirror": {
-        "name": "Magic Mirror",
-        "hint_text": "the Mirror",
-        "id": 26,
-        "groups": [],
-        "classification": "progression",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "25 Coins": {
-        "name": "25 Coins",
-        "id": 82032,
-        "groups": [],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Rupees (5)": {
-        "name": "Rupees (5)",
-        "hint_text": "a blue rupee",
-        "id": 53,
-        "groups": [],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Shield": {
-        "name": "Progressive Shield",
-        "hint_text": "a shield",
-        "id": 95,
-        "groups": [],
-        "classification": "progression",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Magic Upgrade (1/2)": {
-        "name": "Magic Upgrade (1/2)",
-        "hint_text": "Half Magic",
-        "id": 78,
-        "groups": [],
-        "classification": "progression",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Sword": {
-        "name": "Progressive Sword",
-        "hint_text": "a Sword",
-        "id": 94,
-        "groups": [],
-        "classification": "progression",
-        "event": false,
-        "type": "Sword",
-        "max_count": 1
-      },
-      "Flute": {
-        "name": "Flute",
-        "hint_text": "the Flute",
-        "id": 20,
-        "groups": [],
-        "classification": "progression",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Rupee (1)": {
-        "name": "Rupee (1)",
-        "hint_text": "a green rupee",
-        "id": 52,
-        "groups": [],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Bombos": {
-        "name": "Bombos",
-        "id": 15,
-        "groups": [],
-        "classification": "progression",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Fishing Journal": {
-        "name": "Fishing Journal",
-        "id": 82016,
-        "groups": [],
-        "classification": "useful",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Ice Rod": {
-        "name": "Ice Rod",
-        "hint_text": "the Ice Rod",
-        "id": 8,
-        "groups": [],
-        "classification": "progression",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "The King Map": {
-        "name": "The King Map",
-        "id": 82018,
-        "groups": [],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Sunhat": {
-        "name": "Sunhat",
-        "id": 82021,
-        "groups": [],
-        "classification": "filler",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Bucket": {
-        "name": "Bucket",
-        "id": 82005,
-        "groups": [],
-        "classification": "progression",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Lamp": {
-        "name": "Lamp",
-        "hint_text": "the Lamp",
-        "id": 18,
-        "groups": [],
-        "classification": "progression",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Progressive Glove": {
-        "name": "Progressive Glove",
-        "hint_text": "a Glove",
-        "id": 97,
-        "groups": [],
-        "classification": "progression",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Shovel": {
-        "name": "Shovel",
-        "hint_text": "the Shovel",
-        "id": 19,
-        "groups": [],
-        "classification": "progression",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Pickaxe": {
-        "name": "Pickaxe",
-        "id": 82015,
-        "groups": [],
-        "classification": "useful",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Quake": {
-        "name": "Quake",
-        "id": 17,
-        "groups": [],
-        "classification": "progression",
-        "event": false,
-        "type": null,
-        "max_count": 1
-      },
-      "Bug Catching Net": {
-        "name": "Bug Catching Net",
-        "hint_text": "the Bug Net",
-        "id": 33,
+      "Progressive Boat Upgrade": {
+        "name": "Progressive Boat Upgrade",
+        "id": 14430215,
         "groups": [],
         "classification": "progression",
         "event": false,
@@ -7958,35 +7513,52 @@
   },
   "itempool_counts": {
     "1": {
-      "100 Pons": 3,
-      "25 Pons": 14,
-      "50 Pons": 9,
+      "100 Pons": 6,
+      "25 Pons": 39,
+      "50 Pons": 17,
       "AFR Access": 1,
       "Badge Pin": 2,
       "Birdhouse Cleared": 1,
       "Compass Badge": 1,
+      "Fast Hatter Badge": 1,
       "HUMT Access": 1,
-      "Health Pon": 5,
+      "Health Pon": 15,
       "Hookshot Badge": 1,
       "Hover Badge": 1,
+      "Item Magnet Badge": 1,
       "Lava Cake Cleared": 1,
-      "Random Cosmetic": 14,
+      "No Bonk Badge": 1,
+      "Projectile Badge": 1,
+      "Random Cosmetic": 30,
+      "Relic (Blue Crayon)": 1,
       "Relic (Burger Cushion)": 1,
       "Relic (Burger Patty)": 1,
       "Relic (Cool Cow)": 1,
+      "Relic (Cow)": 1,
+      "Relic (Crayon Box)": 1,
+      "Relic (Green Crayon)": 1,
       "Relic (Mountain Set)": 1,
       "Relic (Red Crayon)": 1,
       "Relic (Tin-foil Hat Cow)": 1,
       "Relic (Train)": 1,
       "Relic (UFO)": 1,
+      "Scooter Badge": 1,
+      "Snatcher's Contract - Mail Delivery Service": 1,
+      "Snatcher's Contract - Queen Vanessa's Manor": 1,
+      "Snatcher's Contract - The Subcon Well": 1,
+      "Snatcher's Contract - Toilet of Doom": 1,
       "TIHS Access": 1,
       "TOD Access": 1,
-      "Time Piece": 17,
+      "Time Piece": 40,
       "Time Piece Cluster": 1,
       "Twilight Bell Cleared": 1,
+      "Umbrella": 1,
       "Windmill Cleared": 1,
-      "Yarn": 23
+      "Yarn": 50
     }
+  },
+  "canonical_placements": {
+    "1": {}
   },
   "progression_mapping": {
     "1": {}
@@ -8001,6 +7573,86 @@
       "game": "A Hat in Time",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
+      "options": {
+        "ActBlacklist": {},
+        "ActPlando": {},
+        "ActRandomizer": 1,
+        "BabyTrapWeight": 40,
+        "BadgeSellerMaxItems": 8,
+        "BadgeSellerMinItems": 4,
+        "BaseballBat": 0,
+        "CTRLogic": 0,
+        "ChapterCostIncrement": 4,
+        "ChapterCostMinDifference": 4,
+        "CompassBadgeMode": 1,
+        "DWAutoCompleteBonuses": 1,
+        "DWEnableBonus": 0,
+        "DWExcludeAnnoyingBonuses": 1,
+        "DWExcludeAnnoyingContracts": 1,
+        "DWExcludeCandles": 1,
+        "DWShuffle": 0,
+        "DWShuffleCountMax": 25,
+        "DWShuffleCountMin": 18,
+        "DWTimePieceRequirement": 15,
+        "DeathWishOnly": 0,
+        "EnableDLC1": 0,
+        "EnableDLC2": 0,
+        "EnableDeathWish": 0,
+        "EndGoal": 1,
+        "ExcludeTour": 0,
+        "FinalChapterMaxCost": 35,
+        "FinalChapterMinCost": 30,
+        "FinaleShuffle": 0,
+        "HatItems": 0,
+        "HighestChapterCost": 25,
+        "LaserTrapWeight": 40,
+        "LogicDifficulty": -1,
+        "LowestChapterCost": 5,
+        "MaxExtraTimePieces": 16,
+        "MaxPonCost": 300,
+        "MetroMaxPonCost": 200,
+        "MetroMinPonCost": 50,
+        "MinExtraYarn": 10,
+        "MinPonCost": 75,
+        "NoPaintingSkips": 0,
+        "NoTicketSkips": 0,
+        "NyakuzaThugMaxShopItems": 4,
+        "NyakuzaThugMinShopItems": 2,
+        "ParadeTrapWeight": 20,
+        "RandomizeHatOrder": 1,
+        "ShipShapeCustomTaskGoal": 0,
+        "ShuffleActContracts": 1,
+        "ShuffleAlpineZiplines": 0,
+        "ShuffleStorybookPages": 1,
+        "ShuffleSubconPaintings": 0,
+        "StartWithCompassBadge": 1,
+        "StartingChapter": 1,
+        "Tasksanity": 0,
+        "TasksanityCheckCount": 18,
+        "TasksanityTaskStep": 1,
+        "TimePieceBalancePercent": 35,
+        "TrapChance": 0,
+        "UmbrellaLogic": 0,
+        "YarnAvailable": 50,
+        "YarnBalancePercent": 20,
+        "YarnCostMax": 8,
+        "YarnCostMin": 4,
+        "accessibility": 0,
+        "death_link": 0,
+        "death_link_amnesty": 0,
+        "dw_death_link_amnesty": 5,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_inventory_from_pool": {},
+        "start_location_hints": []
+      },
       "HatItems": false,
       "UmbrellaLogic": false,
       "ShuffleSubconPaintings": false,

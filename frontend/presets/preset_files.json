@@ -472,26 +472,13 @@
           {
             "player": 2,
             "name": "Player2",
-            "game": "A Link to the Past"
-          },
-          {
-            "player": 3,
-            "name": "Player3",
-            "game": "A Short Hike"
-          },
-          {
-            "player": 4,
-            "name": "Player4",
-            "game": "Adventure"
+            "game": "Donkey Kong Country 3"
           }
         ],
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_P1_rules.json",
           "AP_14089154938208861744_P2_rules.json",
-          "AP_14089154938208861744_P3_rules.json",
-          "AP_14089154938208861744_P4_Player4.apadvn",
-          "AP_14089154938208861744_P4_rules.json",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"
