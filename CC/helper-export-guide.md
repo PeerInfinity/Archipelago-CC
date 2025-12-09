@@ -8,43 +8,39 @@ Many games use helper functions in their access rules (e.g., `can_cut_half`, `ha
 
 ## How It Works
 
-1. **During rule analysis**: When the analyzer encounters a helper function call, it registers the helper name
+1. **During rule analysis**: When the analyzer encounters a helper function call, it registers the helper name and automatically detects its module path
 2. **After analysis**: The exporter analyzes each registered helper function and converts it to a rule structure
 3. **In rules.json**: Helper definitions are stored in the `helpers` section, keyed by player ID
 4. **At runtime**: The frontend rule engine looks up helper definitions before falling back to JavaScript
 
-## Configuring a Game Exporter
+## Testing Helper Export
 
-### Step 1: Set Module Paths
+To test helper export for a specific game, generate a multiworld and check the output:
 
-In your game's exporter class, specify where to find helper functions and item name constants:
-
-```python
-class MyGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'mygame'
-
-    # Module paths containing helper functions
-    HELPER_MODULES = ['worlds.mygame.regions']
-
-    # Module paths containing item name classes (e.g., ITEMS.sword)
-    ITEM_NAME_MODULES = ['worlds.mygame.data.strings']
+```bash
+source .venv/bin/activate
+python Generate.py --weights_file_path "Templates/shapez.yaml" --multi 1 --seed 1
 ```
 
-### Step 2: Enable Automatic Export
+Replace `shapez.yaml` with the template file for your game. The generated `rules.json` will contain the exported helper definitions.
+
+## Configuring a Game Exporter
+
+### Step 1: Enable Automatic Export
 
 Set `AUTO_EXPORT_DISCOVERED_HELPERS = True` to export discovered helpers:
 
 ```python
 class MyGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'mygame'
-    HELPER_MODULES = ['worlds.mygame.regions']
-    ITEM_NAME_MODULES = ['worlds.mygame.data.strings']
 
-    # Enable automatic helper export
+    # Enable automatic helper export (defaults to False)
     AUTO_EXPORT_DISCOVERED_HELPERS = True
 ```
 
-### Step 3: Blacklist Complex Helpers
+Module paths (`HELPER_MODULES` and `ITEM_NAME_MODULES`) are automatically detected during rule analysis. When the analyzer encounters a helper function call, it extracts the module path from the function object. You only need to specify these manually if helpers are defined in modules not referenced during normal rule analysis.
+
+### Step 2: Blacklist Complex Helpers
 
 Some helpers are too complex to analyze (loops, closures, dynamic logic). Add them to the blacklist:
 
@@ -58,7 +54,7 @@ HELPERS_TO_EXPORT_BLACKLIST = {
 
 These helpers will remain as helper calls in the rules, requiring JavaScript implementations.
 
-### Step 4: Export Required Settings (If Needed)
+### Step 3: Export Required Settings (If Needed)
 
 If a helper uses settings/options that aren't already exported, override `get_settings_data`:
 
@@ -139,12 +135,6 @@ class MyGameExportHandler(GenericGameExportHandler):
     """Export handler for My Game."""
     GAME_NAME = 'mygame'
 
-    # Where to find helper functions
-    HELPER_MODULES = ['worlds.mygame.regions', 'worlds.mygame.rules']
-
-    # Where to find item name constants (ITEMS.sword, etc.)
-    ITEM_NAME_MODULES = ['worlds.mygame.data.items']
-
     # Enable automatic export of discovered helpers
     AUTO_EXPORT_DISCOVERED_HELPERS = True
 
@@ -165,12 +155,36 @@ class MyGameExportHandler(GenericGameExportHandler):
         return settings
 ```
 
+Note: `HELPER_MODULES` and `ITEM_NAME_MODULES` are omitted because they are automatically detected. Only specify them if helpers are in modules not referenced during rule analysis.
+
+## Success Stories
+
+Several games have successfully removed their custom JavaScript helper files entirely by using automatic helper export:
+
+**Games with no JavaScript helpers** (rules fully exported):
+- shapez
+- Pokemon Emerald
+- Hollow Knight
+- The Witness
+- SMZ3
+- Raft
+- Wargroove
+- And 30+ other games
+
+These games now use `GenericGameExportHandler` with minimal or no customization. The frontend evaluates all rules directly from `rules.json` without needing game-specific JavaScript logic.
+
+**Benefits achieved:**
+- Removed maintenance burden of keeping Python and JavaScript in sync
+- Automatic discovery of helpers eliminates manual module configuration
+- Frontend rule evaluation is consistent with Python logic
+- New helpers are automatically exported without code changes
+
 ## Troubleshooting
 
 ### "Helper function X NOT FOUND in snapshotInterface"
 The helper definition lookup failed. Check:
 1. Is `AUTO_EXPORT_DISCOVERED_HELPERS = True`?
-2. Is the helper in `HELPER_MODULES`?
+2. Is the helper called during rule analysis? (auto-detection requires the helper to be referenced)
 3. Is it blacklisted? (should be if complex)
 4. Is `helpers` in `getStaticGameData()` in statePersistence.js?
 
