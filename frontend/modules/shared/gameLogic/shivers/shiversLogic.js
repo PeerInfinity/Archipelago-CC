@@ -1,47 +1,15 @@
 /**
  * Shivers Game Logic Module
  *
- * Provides game-specific logic for Shivers including helper functions
- * for checking Ixupi capture conditions.
+ * Helper functions are no longer needed - all Shivers rules are now
+ * inlined in rules.json using standard state_method calls (has_all, etc.)
  */
-
-import {
-    water_capturable,
-    wax_capturable,
-    ash_capturable,
-    oil_capturable,
-    cloth_capturable,
-    wood_capturable,
-    crystal_capturable,
-    sand_capturable,
-    metal_capturable,
-    lightning_capturable,
-    beths_body_available,
-    first_nine_ixupi_capturable,
-    all_skull_dials_set,
-    completion_condition
-} from './helpers.js';
 
 /**
  * Shivers Helper Functions
- * These can be called from rules using the helper type.
+ * Empty - helpers are inlined in rules.json during export.
  */
-export const helperFunctions = {
-    water_capturable,
-    wax_capturable,
-    ash_capturable,
-    oil_capturable,
-    cloth_capturable,
-    wood_capturable,
-    crystal_capturable,
-    sand_capturable,
-    metal_capturable,
-    lightning_capturable,
-    beths_body_available,
-    first_nine_ixupi_capturable,
-    all_skull_dials_set,
-    completion_condition
-};
+export const helperFunctions = {};
 
 /**
  * Initialize Shivers game logic.

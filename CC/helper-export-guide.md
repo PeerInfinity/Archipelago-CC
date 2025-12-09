@@ -115,14 +115,63 @@ Example of what to keep vs remove for shapez:
 - `has_logic_list_building` - Blacklisted (uses closures)
 - `can_cut_half`, `can_stack`, etc. - Called by `has_logic_list_building`
 
-## Testing
+## Testing Procedure
 
-After enabling helper export:
+Follow this iterative procedure when enabling helper export for a game:
 
-1. Regenerate the game's preset files
-2. Run the spoiler test: `npm test --mode=test-spoilers --game=mygame --seed=1`
-3. Check for mismatches between Python and frontend evaluation
-4. If helpers fail, add them to the blacklist and keep their JavaScript
+### Step 1: Establish Baseline (Before Changes)
+
+First, confirm tests pass with the existing implementation:
+
+```bash
+# Generate multiworld with current code
+source .venv/bin/activate
+python Generate.py --weights_file_path "Templates/GameName.yaml" --multi 1 --seed 1
+
+# Run spoiler test to confirm baseline passes
+npm test -- --mode=test-spoilers --game=gamename --seed=1
+```
+
+If the baseline test fails, fix those issues before proceeding.
+
+### Step 2: Make Experimental Changes
+
+Enable helper export in the game's exporter:
+
+```python
+AUTO_EXPORT_DISCOVERED_HELPERS = True
+```
+
+### Step 3: Test Changes
+
+Regenerate and run tests:
+
+```bash
+# Regenerate with helper export enabled
+python Generate.py --weights_file_path "Templates/GameName.yaml" --multi 1 --seed 1
+
+# Run spoiler test
+npm test -- --mode=test-spoilers --game=gamename --seed=1
+```
+
+### Step 4: Iterate
+
+If tests fail:
+1. Check which helpers caused mismatches
+2. Add problematic helpers to `HELPERS_TO_EXPORT_BLACKLIST`
+3. Re-run tests
+4. Repeat until tests pass
+
+### Step 5: Remove JavaScript Helpers
+
+Only after tests pass:
+1. Remove or simplify the game's `helpers.js` file
+2. Keep only blacklisted helpers and their dependencies
+3. Run tests again to confirm
+
+### Step 6: Commit
+
+Only commit when all tests pass. Never commit failing changes.
 
 ## Example: Complete Configuration
 
