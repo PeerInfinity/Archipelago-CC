@@ -234,6 +234,7 @@ COMPUTED_SETTINGS: Dict[str, Callable] = {}
 The following games have successfully removed their custom JavaScript helper files entirely by using automatic helper export:
 
 - **shapez** - Complex shape-building logic now fully exported
+- **Shivers** - Ixupi capture helpers inlined as has_all patterns
 - **Adventure** - Classic Atari game rules exported
 - **Bumper Stickers** - Puzzle game logic exported
 - **ChecksFinder** - All rules exported
