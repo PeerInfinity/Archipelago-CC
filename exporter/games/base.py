@@ -56,7 +56,7 @@ class BaseGameExportHandler:
     # Enable automatic helper preservation based on size
     # When enabled, helpers with more nodes than HELPER_INLINE_THRESHOLD will be
     # preserved as helper calls instead of inlined, reducing rules.json size
-    AUTO_PRESERVE_LARGE_HELPERS: bool = False  # Disabled by default
+    AUTO_PRESERVE_LARGE_HELPERS: bool = True
 
     # Threshold for automatic helper preservation (only used if AUTO_PRESERVE_LARGE_HELPERS is True)
     # Helpers with more than this many nodes will be preserved as helper calls
@@ -723,11 +723,13 @@ class BaseGameExportHandler:
         # Determine which helpers to export based on AUTO_EXPORT_DISCOVERED_HELPERS
         # When False (default), only whitelisted helpers are exported
         # When True, discovered helpers are also exported (minus blacklist)
+        # Auto-preserved helpers (from AUTO_PRESERVE_LARGE_HELPERS) are always exported
+        auto_preserved = self._auto_preserved_helpers if hasattr(self, '_auto_preserved_helpers') else set()
         if self.AUTO_EXPORT_DISCOVERED_HELPERS:
             discovered = self.get_discovered_helpers()
-            helpers_to_export = discovered | whitelist
+            helpers_to_export = discovered | whitelist | auto_preserved
         else:
-            helpers_to_export = whitelist
+            helpers_to_export = whitelist | auto_preserved
 
         # Collect modules to load - both manually specified and auto-discovered
         auto_discovered_modules = set(self.get_discovered_helper_modules().values())
@@ -756,11 +758,13 @@ class BaseGameExportHandler:
 
         for iteration in range(max_iterations):
             # Get current set of helpers to export (may grow as we discover new ones)
+            # Include auto-preserved helpers in each iteration (they may grow too)
+            auto_preserved = self._auto_preserved_helpers if hasattr(self, '_auto_preserved_helpers') else set()
             if self.AUTO_EXPORT_DISCOVERED_HELPERS:
                 discovered = self.get_discovered_helpers()
-                current_helpers = discovered | whitelist
+                current_helpers = discovered | whitelist | auto_preserved
             else:
-                current_helpers = whitelist
+                current_helpers = whitelist | auto_preserved
 
             # Find helpers that haven't been processed yet
             new_helpers = current_helpers - processed_helpers - blacklist

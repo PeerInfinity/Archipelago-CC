@@ -122,7 +122,8 @@ import { DEFAULT_PLAYER_ID } from './playerIdUtils.js';
  * - state_method: Calls StateManager methods (can_reach, etc.)
  * - item_check: Checks if player has item
  * - count_check: Checks item quantity
- * - group_check: Checks item group count
+ * - group_check: Checks item group count (returns boolean)
+ * - group_count: Returns item group count (returns number)
  * - location_check: Checks if location is accessible
  * - locations_checked: Checks total locations checked
  * - total_items_count: Checks total items collected
@@ -391,7 +392,16 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             }
 
             result = evaluateRule(body, context, depth + 1, helperLocalScope);
-            break;
+            // Unwrap return marker if present (from block with return statement)
+            if (result && typeof result === 'object' && result.__isReturn) {
+              result = result.value;
+            }
+            // If definition evaluation succeeded (not undefined), use that result
+            // Otherwise, fall through to try JavaScript helpers as a fallback
+            if (result !== undefined) {
+              break;
+            }
+            log('debug', `[evaluateRule] Helper definition for '${rule.name}' returned undefined, trying JavaScript fallback`);
           }
         } else {
           // No static data available for helper lookup
@@ -432,6 +442,36 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           } else {
             const evalArgs = rule.args.map(arg => evaluateRule(arg, context, depth + 1));
             result = evalArgs.every(val => val === true);
+          }
+          break;
+        }
+
+        if (rule.name === 'min') {
+          // Python's min() returns the minimum of the arguments
+          if (!rule.args || rule.args.length === 0) {
+            result = undefined;
+            break;
+          }
+          const evalArgs = rule.args.map(arg => evaluateRule(arg, context, depth + 1, localScope));
+          if (evalArgs.some(val => val === undefined)) {
+            result = undefined;
+          } else {
+            result = Math.min(...evalArgs);
+          }
+          break;
+        }
+
+        if (rule.name === 'max') {
+          // Python's max() returns the maximum of the arguments
+          if (!rule.args || rule.args.length === 0) {
+            result = undefined;
+            break;
+          }
+          const evalArgs = rule.args.map(arg => evaluateRule(arg, context, depth + 1, localScope));
+          if (evalArgs.some(val => val === undefined)) {
+            result = undefined;
+          } else {
+            result = Math.max(...evalArgs);
           }
           break;
         }
@@ -1606,6 +1646,25 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           log(
             'warn',
             '[evaluateRule SnapshotIF] context.countGroup is not a function for group_check.'
+          );
+          result = undefined;
+        }
+        break;
+      }
+
+      case 'group_count': {
+        // Returns the count of items in a group (unlike group_check which returns a boolean)
+        const groupName = evaluateRule(rule.group, context, depth + 1);
+
+        if (groupName === undefined) {
+          result = undefined;
+        } else if (typeof context.countGroup === 'function') {
+          const currentCount = context.countGroup(groupName);
+          result = currentCount === undefined ? 0 : currentCount;
+        } else {
+          log(
+            'warn',
+            '[evaluateRule SnapshotIF] context.countGroup is not a function for group_count.'
           );
           result = undefined;
         }
