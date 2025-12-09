@@ -36,7 +36,7 @@
       ],
       "last_updated": "2025-12-09T06:27:25.422795"
     },
-    "last_updated": "2025-12-09T06:27:25.422793",
+    "last_updated": "2025-12-09T21:11:06.392845",
     "script_version": "1.0.0"
   },
   "results": {
@@ -168,52 +168,40 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "1": {
-              "new_rules_hash": "1306131d4e995aa05f612167c613e5ab82c448bb7eeebe34fc0b78f53adabd00",
-              "new_sphere_log_hash": "1b423c75da4cbbd793f1a232a355e630c5d4d8f19afd2cee114b4f75eab6bf3c",
-              "original_rules_hash": "1306131d4e995aa05f612167c613e5ab82c448bb7eeebe34fc0b78f53adabd00",
-              "original_sphere_log_hash": "1b423c75da4cbbd793f1a232a355e630c5d4d8f19afd2cee114b4f75eab6bf3c",
-              "rules_identical": true,
-              "seed": "1",
-              "spoilers_identical": true,
-              "timestamp": "2025-12-09T06:16:28.368935"
-            }
-          },
           "game_name_from_filename": "ahit",
           "game_name_from_yaml": "A Hat in Time",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 4.5,
+            "processing_time_seconds": 8.57,
             "return_code": 0,
             "success": true,
-            "warning_count": 1
+            "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/ahit/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-            "size_bytes": 217712,
-            "size_mb": 0.21
+            "size_bytes": 227708,
+            "size_mb": 0.22
           },
           "seed": "1",
           "seed_id": "AP_14089154938208861744",
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 16.43,
-            "return_code": 0,
+            "processing_time_seconds": 300.02,
+            "return_code": -1,
             "sphere_reached": 5.11,
-            "success": true,
+            "success": false,
             "total_spheres": 5.11,
             "warning_count": 0
           },
           "template_filename": "A Hat in Time.yaml",
-          "timestamp": "2025-12-09T05:44:27.052817",
+          "timestamp": "2025-12-09T21:05:57.236130",
           "world_info": {
             "exporter_path": "exporter/games/ahit.py",
-            "exporter_size": 23761,
+            "exporter_size": 5839,
             "game_logic_path": "frontend/modules/shared/gameLogic/ahit/ahitLogic.js",
-            "game_logic_size": 23739,
+            "game_logic_size": 10533,
             "game_name_from_filename": "ahit",
             "game_name_from_yaml": "A Hat in Time",
             "has_custom_exporter": true,
@@ -779,7 +767,7 @@
         "failure_rate": 0.0
       },
       "template_filename": "A Hat in Time.yaml",
-      "timestamp": "2025-12-09T05:44:27.052817",
+      "timestamp": "2025-12-09T21:05:57.236130",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": "exporter/games/ahit.py",
