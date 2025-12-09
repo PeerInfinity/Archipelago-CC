@@ -6,13 +6,13 @@
 
 [View Original Template Results](./test-results-multiclient.md)
 
-**Generated:** 2025-12-09 01:12:54
+**Generated:** 2025-12-09 05:07:28
 
 ## Summary
 
 - **Total Games:** 79
-- **Passed:** 59 (74.7%)
-- **Failed:** 20 (25.3%)
+- **Passed:** 61 (77.2%)
+- **Failed:** 18 (22.8%)
 
 ## Test Results
 
@@ -34,7 +34,7 @@
 | ChocolateChipCookies WorldGen | ✅ Passed | 0 | ✅ | 16/16 | 15/15 | 1/1 | ✅ | 16/16 | ✅ | ✅ |
 | Choo-Choo Charles WorldGen | ✅ Passed | 0 | ✅ | 692/692 | 691/691 | 1/1 | ✅ | 692/692 | ✅ | ✅ |
 | Civilization VI WorldGen | ✅ Passed | 0 | ✅ | 149/149 | 148/148 | 1/1 | ✅ | 149/149 | ✅ | ✅ |
-| DLCQuest WorldGen | ❌ Failed | 0 | ❌ | 1/42 | 0/29 | 1/13 | ❌ | 0/42 | ✅ | ✅ |
+| DLCQuest WorldGen | ✅ Passed | 0 | ✅ | 42/42 | 29/29 | 13/13 | ✅ | 42/42 | ✅ | ✅ |
 | DOOM 1993 WorldGen | ✅ Passed | 0 | ✅ | 348/348 | 348/348 | 0/0 | ✅ | 348/348 | ✅ | ✅ |
 | DOOM II WorldGen | ✅ Passed | 0 | ✅ | 453/453 | 453/453 | 0/0 | ✅ | 453/453 | ✅ | ✅ |
 | Dark Souls III WorldGen | ✅ Passed | 0 | ✅ | 1194/1194 | 1190/1190 | 4/4 | ✅ | 1194/1194 | ✅ | ✅ |
@@ -77,7 +77,7 @@
 | Stardew Valley WorldGen | ❌ Failed | 3 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | Subnautica WorldGen | ✅ Passed | 0 | ✅ | 135/135 | 131/131 | 4/4 | ✅ | 135/135 | ✅ | ✅ |
 | Super Mario 64 WorldGen | ✅ Passed | 0 | ✅ | 149/149 | 149/149 | 0/0 | ✅ | 149/149 | ✅ | ✅ |
-| Super Mario Land 2 WorldGen | ❌ Failed | 0 | ❌ | 59/60 | 59/59 | 0/1 | ❌ | 55/60 | ✅ | ✅ |
+| Super Mario Land 2 WorldGen | ✅ Passed | 0 | ✅ | 60/60 | 59/59 | 1/1 | ✅ | 60/60 | ✅ | ✅ |
 | Super Mario World WorldGen | ✅ Passed | 0 | ✅ | 108/108 | 108/108 | 0/0 | ✅ | 108/108 | ✅ | ✅ |
 | Super Metroid WorldGen | ❌ Failed | 2 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | ✅ | ✅ |
 | TOEM original WorldGen | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ✅ | ✅ |
