@@ -590,6 +590,50 @@ export function createStateSnapshotInterface(
     isRegionAccessible: function (regionName) {
       return this.isRegionReachable(regionName);
     },
+    // Check if an entrance is reachable
+    // An entrance is reachable if its source region is reachable AND its access rule passes
+    isEntranceReachable: function (entranceName) {
+      if (!staticData || !staticData.regions) return undefined;
+
+      // Find the entrance in the regions data
+      let entrance = null;
+      let sourceRegion = null;
+
+      // staticData.regions is a Map of region name -> region data
+      for (const [regionName, regionData] of staticData.regions.entries()) {
+        const exits = regionData.exits || [];
+        const foundExit = exits.find(exit => exit.name === entranceName);
+        if (foundExit) {
+          entrance = foundExit;
+          sourceRegion = regionName;
+          break;
+        }
+      }
+
+      if (!entrance || !sourceRegion) {
+        // Entrance not found
+        return undefined;
+      }
+
+      // Check if source region is reachable
+      const sourceReachable = this.isRegionReachable(sourceRegion);
+      if (sourceReachable === undefined) return undefined;
+      if (sourceReachable === false) return false;
+
+      // Evaluate the entrance's access rule
+      if (entrance.access_rule) {
+        // Create a context for evaluating the entrance's access rule
+        const entranceContext = createStateSnapshotInterface(snapshot, staticData, {
+          ...contextVariables,
+          entrance: entrance,
+          currentEntrance: entrance
+        });
+        return evaluateRule(entrance.access_rule, entranceContext);
+      }
+
+      // No access rule means the entrance is accessible if the source region is reachable
+      return true;
+    },
     getPlayerSlot: () => snapshot?.player?.slot,
     getGameMode: () => snapshot?.gameMode,
     getDifficultyRequirements: () => snapshot?.difficultyRequirements,
@@ -730,6 +774,8 @@ export function createStateSnapshotInterface(
           return finalSnapshotInterface.isRegionReachable(targetName);
         if (targetType === 'Location')
           return finalSnapshotInterface.isLocationAccessible(targetName);
+        if (targetType === 'Entrance')
+          return finalSnapshotInterface.isEntranceReachable(targetName);
       }
 
       // Handle can_reach_region method (Python alias for can_reach with Region type)

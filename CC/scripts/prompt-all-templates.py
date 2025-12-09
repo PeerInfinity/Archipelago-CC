@@ -19,6 +19,19 @@ from lib.test_utils import read_host_yaml_config, load_template_exclude_list
 from lib.test_results import is_test_passing, load_existing_results
 
 
+def load_world_mapping(project_root):
+    """Load the world mapping JSON file."""
+    mapping_file = Path(project_root) / 'scripts' / 'data' / 'world-mapping.json'
+    if not mapping_file.exists():
+        return {}
+    try:
+        with open(mapping_file, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Error loading world mapping: {e}", file=sys.stderr)
+        return {}
+
+
 def get_test_results_path(project_root, use_full_spoilers=False, use_minimal_spoilers=False, use_multiclient=False, use_multiworld=False):
     """Determine the correct test results path based on host.yaml configuration or command-line flags."""
     # If --multiworld is set, use the multiworld results path
@@ -259,6 +272,178 @@ def get_multiworld_failure_details(template_file, test_results):
     }
 
 
+def is_basic_game(game_name, world_mapping):
+    """Check if a game is 'basic' - no custom exporter or JavaScript helpers.
+
+    Returns True if the game has neither a custom exporter nor custom game logic.
+    """
+    if game_name not in world_mapping:
+        # If not in mapping, assume it's basic (uses generic infrastructure)
+        return True
+
+    game_info = world_mapping[game_name]
+    has_custom_exporter = game_info.get('has_custom_exporter', False)
+    has_custom_game_logic = game_info.get('has_custom_game_logic', False)
+
+    return not has_custom_exporter and not has_custom_game_logic
+
+
+def has_custom_code(game_name, world_mapping):
+    """Check if a game has custom exporter or JavaScript helpers.
+
+    Returns True if the game has either a custom exporter or custom game logic.
+    """
+    if game_name not in world_mapping:
+        return False
+
+    game_info = world_mapping[game_name]
+    has_custom_exporter = game_info.get('has_custom_exporter', False)
+    has_custom_game_logic = game_info.get('has_custom_game_logic', False)
+
+    return has_custom_exporter or has_custom_game_logic
+
+
+def get_custom_code_info(game_name, world_mapping):
+    """Get information about custom code for a game.
+
+    Returns a dict with has_exporter, has_helpers, exporter_path, helpers_path.
+    """
+    if game_name not in world_mapping:
+        return {
+            'has_exporter': False,
+            'has_helpers': False,
+            'exporter_path': None,
+            'helpers_path': None,
+            'world_directory': None
+        }
+
+    game_info = world_mapping[game_name]
+    return {
+        'has_exporter': game_info.get('has_custom_exporter', False),
+        'has_helpers': game_info.get('has_custom_game_logic', False),
+        'exporter_path': game_info.get('exporter_path'),
+        'helpers_path': game_info.get('game_logic_path'),
+        'world_directory': game_info.get('world_directory')
+    }
+
+
+def generate_helper_export_prompt(template_file, game_name, custom_code_info, seed=1, use_cloud_docs=False):
+    """Generate a prompt for converting a game to use helper export.
+
+    This prompt refers to CC/helper-export-guide.md for games that have
+    custom exporters or JavaScript helpers that could potentially be removed.
+    """
+    doc_path = "CC/helper-export-guide.md"
+    setup_doc = "CC/cloud-setup.md"
+
+    # Build description of what custom code exists
+    custom_parts = []
+    if custom_code_info['has_exporter']:
+        custom_parts.append(f"- Custom exporter: `{custom_code_info['exporter_path']}`")
+    if custom_code_info['has_helpers']:
+        custom_parts.append(f"- JavaScript helpers: `{custom_code_info['helpers_path']}`")
+    custom_code_desc = "\n".join(custom_parts)
+
+    world_dir = custom_code_info.get('world_directory', '<game>')
+
+    return f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
+
+Then, please read
+{doc_path}
+
+The game we are working on is **{game_name}** (template: `{template_file}`).
+
+This game currently has custom code:
+{custom_code_desc}
+
+## Goal
+
+The goal is to eliminate the custom code by exporting helper function definitions to `rules.json`, allowing the frontend to evaluate them directly without JavaScript implementations.
+
+## Test Command
+
+To test the current state:
+
+```bash
+source .venv/bin/activate
+python scripts/test/test-all-templates.py --include-list "{template_file}" --minimal-spoilers
+```
+
+## Steps
+
+1. **Review the current implementation**
+   - Check the custom exporter (if any) for helper configurations
+   - Check the JavaScript helpers (if any) to understand what logic exists
+
+2. **Enable automatic helper export** (if not already enabled)
+   - Set `AUTO_EXPORT_DISCOVERED_HELPERS = True` in the exporter
+
+3. **Test and iterate**
+   - Regenerate and run tests
+   - Add complex helpers to `HELPERS_TO_EXPORT_BLACKLIST` if needed
+   - Repeat until tests pass
+
+4. **Remove JavaScript helpers**
+   - Once tests pass with exported helpers, remove the JavaScript implementations
+   - Keep only blacklisted helpers and their dependencies
+
+5. **Remove custom exporter** (if possible)
+   - If no custom logic remains, delete the exporter file entirely
+
+## Reference Files
+
+- Python world: `worlds/{world_dir}/`
+- Rules file: `worlds/{world_dir}/Rules.py`
+"""
+
+
+def generate_basic_spoiler_debug_prompt(template_file, game_name, seed=1, use_cloud_docs=False):
+    """Generate a debugging prompt for a basic game failing spoiler tests.
+
+    This prompt refers to CC/basic-spoiler-debugging.md for games that don't have
+    custom exporters or JavaScript helpers.
+    """
+    doc_path = "CC/basic-spoiler-debugging.md" if use_cloud_docs else "CC/basic-spoiler-debugging.md"
+    setup_doc = "CC/cloud-setup.md" if use_cloud_docs else "CC/cloud-setup.md"
+
+    return f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
+
+Then, please read
+{doc_path}
+
+The game we are debugging is **{game_name}** (template: `{template_file}`).
+
+This game uses only the generic export infrastructure - it has no custom exporter (`exporter/games/<game>.py`) and no JavaScript helpers (`frontend/modules/shared/gameLogic/<game>/`).
+
+## Test Command
+
+To run the spoiler test for this game:
+
+```bash
+source .venv/bin/activate
+python scripts/test/test-all-templates.py --include-list "{template_file}" --minimal-spoilers
+```
+
+Or to run generation and testing separately:
+
+```bash
+python Generate.py --weights_file_path "Templates/{template_file}" --multi 1 --seed {seed}
+npm test -- --mode=test-spoilers --game=<gamename> --seed={seed}
+```
+
+## Debugging Steps
+
+1. Run the test and analyze the failure
+2. Follow the debugging workflow in {doc_path}
+3. Identify whether the issue is in:
+   - Rule export (`exporter/analyzer.py`)
+   - Rule evaluation (`frontend/modules/shared/ruleEngine.js`)
+   - Missing helper that needs to be exported or implemented
+
+Since this is a basic game, focus on whether the generic infrastructure is handling this game's rules correctly.
+"""
+
+
 def generate_multiworld_prompt(template_file, game_name, bisection_info, failure_details, seed=1):
     """Generate a debugging prompt for a failing multiworld test.
 
@@ -445,10 +630,18 @@ def main():
                        help='Check multiclient test results and generate prompts for failing multiclient tests')
     parser.add_argument('--multiworld', action='store_true',
                        help='Check multiworld test results and generate prompts for failing multiworld tests (uses bisection results)')
+    parser.add_argument('--basic-spoiler-debug', action='store_true',
+                       help='Generate prompts for basic games (no custom exporter/helpers) failing minimal spoiler tests')
+    parser.add_argument('--helper-export', action='store_true',
+                       help='Generate prompts for games with custom exporter/helpers to convert them to use helper export')
     parser.add_argument('--exclude-pattern', type=str,
                        help='Exclude template files matching this pattern (e.g., "WorldGen" to exclude WorldGen templates)')
     parser.add_argument('--include-pattern', type=str,
                        help='Only include template files matching this pattern (e.g., "WorldGen" to only test WorldGen templates)')
+    parser.add_argument('--include-worldgen', action='store_true',
+                       help='Include WorldGen templates (they are excluded by default)')
+    parser.add_argument('--only-worldgen', action='store_true',
+                       help='Only include WorldGen templates (shorthand for --include-pattern "WorldGen")')
 
     args = parser.parse_args()
 
@@ -469,12 +662,56 @@ def main():
         print("Error: --multiworld and --multiclient are mutually exclusive")
         sys.exit(1)
 
+    if args.basic_spoiler_debug and (args.multiclient or args.multiworld):
+        print("Error: --basic-spoiler-debug cannot be combined with --multiclient or --multiworld")
+        sys.exit(1)
+
+    if args.basic_spoiler_debug and args.full_spoilers:
+        print("Error: --basic-spoiler-debug uses minimal spoilers by default, cannot combine with --full-spoilers")
+        sys.exit(1)
+
+    if args.helper_export and (args.multiclient or args.multiworld):
+        print("Error: --helper-export cannot be combined with --multiclient or --multiworld")
+        sys.exit(1)
+
+    if args.helper_export and args.basic_spoiler_debug:
+        print("Error: --helper-export and --basic-spoiler-debug are mutually exclusive")
+        sys.exit(1)
+
     if args.include_pattern and args.exclude_pattern:
         print("Error: --include-pattern and --exclude-pattern are mutually exclusive")
         sys.exit(1)
 
+    if args.include_worldgen and args.only_worldgen:
+        print("Error: --include-worldgen and --only-worldgen are mutually exclusive")
+        sys.exit(1)
+
+    if args.include_worldgen and args.exclude_pattern:
+        print("Error: --include-worldgen and --exclude-pattern are mutually exclusive")
+        sys.exit(1)
+
+    if args.only_worldgen and args.exclude_pattern:
+        print("Error: --only-worldgen and --exclude-pattern are mutually exclusive")
+        sys.exit(1)
+
+    # Apply WorldGen filtering (exclude by default unless --include-worldgen or --only-worldgen)
+    if args.only_worldgen:
+        args.include_pattern = "WorldGen"
+    elif not args.include_worldgen and not args.include_pattern:
+        # Exclude WorldGen by default (unless an include pattern is specified)
+        if not args.exclude_pattern:
+            args.exclude_pattern = "WorldGen"
+
     # Determine project root
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+
+    # Load world mapping for --basic-spoiler-debug and --helper-export modes
+    world_mapping = None
+    if args.basic_spoiler_debug or args.helper_export:
+        world_mapping = load_world_mapping(project_root)
+        if not world_mapping:
+            print("Error: Could not load world mapping")
+            sys.exit(1)
 
     # Determine if we're in quiet mode (just outputting prompt or command text)
     # --loud flag overrides quiet mode for testing
@@ -542,11 +779,79 @@ def main():
             print(f"Processing: {template_file} ({current_index + 1}/{len(template_files)})")
             print(f"{'='*60}")
 
-        # Load current test results
-        test_results = load_test_results(project_root, args.full_spoilers, args.minimal_spoilers, args.multiclient, args.multiworld)
+        # For --helper-export mode, we don't check test results - we look for games with custom code
+        if args.helper_export:
+            # Extract game name from template YAML
+            game_name_from_yaml = extract_game_name_from_yaml(template_path)
+            if not game_name_from_yaml:
+                if not quiet_mode:
+                    print(f"Could not extract game name from {template_file}, skipping...")
+            else:
+                if not quiet_mode:
+                    print(f"Game name: {game_name_from_yaml}")
 
-        # Check if we need to run the test (skip for multiclient/multiworld mode - tests must already exist)
-        if template_file not in test_results and not args.multiclient and not args.multiworld:
+                # Skip games without custom code
+                if not has_custom_code(game_name_from_yaml, world_mapping):
+                    if not quiet_mode:
+                        print(f"Skipping {game_name_from_yaml} - no custom exporter or helpers")
+                    current_index = (current_index + 1) % len(template_files)
+                    processed_count += 1
+                    if processed_count % len(template_files) == 0:
+                        cycle_num = processed_count // len(template_files)
+                        if cycle_num >= args.max_loops:
+                            break
+                    continue
+
+                custom_code_info = get_custom_code_info(game_name_from_yaml, world_mapping)
+
+                # Handle --promptfile mode
+                if args.promptfile:
+                    helper_prompt = generate_helper_export_prompt(
+                        template_file, game_name_from_yaml, custom_code_info, args.seed, args.CC
+                    )
+                    collected_prompts.append(helper_prompt)
+                else:
+                    # Output the prompt directly
+                    helper_prompt = generate_helper_export_prompt(
+                        template_file, game_name_from_yaml, custom_code_info, args.seed, args.CC
+                    )
+                    print(helper_prompt)
+
+                    # Exit immediately if -t or -p was specified
+                    if args.text or args.prompt:
+                        return 0
+
+                files_processed += 1
+
+            # Check if we've reached the max files limit
+            if args.max_files and files_processed >= args.max_files:
+                if not quiet_mode:
+                    print(f"\n✅ Reached maximum file limit ({args.max_files}), stopping...")
+                break
+
+            # Move to next template
+            current_index = (current_index + 1) % len(template_files)
+            processed_count += 1
+
+            # If we've completed a full cycle, show progress
+            if processed_count % len(template_files) == 0:
+                cycle_num = processed_count // len(template_files)
+                print(f"\n🔄 Completed cycle {cycle_num}")
+
+                # Check if we've reached the max loops limit
+                if cycle_num >= args.max_loops:
+                    print(f"✅ Reached maximum loop limit ({args.max_loops}), stopping...")
+                    break
+
+            continue  # Skip the normal test-based processing below
+
+        # Load current test results
+        # --basic-spoiler-debug implies minimal spoilers
+        use_minimal = args.minimal_spoilers or args.basic_spoiler_debug
+        test_results = load_test_results(project_root, args.full_spoilers, use_minimal, args.multiclient, args.multiworld)
+
+        # Check if we need to run the test (skip for multiclient/multiworld/basic-spoiler-debug mode - tests must already exist)
+        if template_file not in test_results and not args.multiclient and not args.multiworld and not args.basic_spoiler_debug:
             if not quiet_mode:
                 print("No test results found, running initial test...")
             run_template_test(template_file, args.seed)
@@ -574,6 +879,19 @@ def main():
                 if not quiet_mode:
                     print(f"Game name: {game_name_from_yaml}")
 
+                # For --basic-spoiler-debug, skip games that have custom exporters or helpers
+                if args.basic_spoiler_debug and not is_basic_game(game_name_from_yaml, world_mapping):
+                    if not quiet_mode:
+                        print(f"Skipping {game_name_from_yaml} - has custom exporter or helpers")
+                    # Move to next template without incrementing files_processed
+                    current_index = (current_index + 1) % len(template_files)
+                    processed_count += 1
+                    if processed_count % len(template_files) == 0:
+                        cycle_num = processed_count // len(template_files)
+                        if cycle_num >= args.max_loops:
+                            break
+                    continue
+
                 # Check if seed 1 passes but another seed fails
                 failing_seed = get_first_failing_seed(template_file, test_results)
                 seed_to_use = failing_seed if failing_seed is not None else args.seed
@@ -583,7 +901,13 @@ def main():
 
                 # Handle --promptfile mode
                 if args.promptfile:
-                    if args.multiworld:
+                    if args.basic_spoiler_debug:
+                        # Generate basic spoiler debug prompt
+                        basic_prompt = generate_basic_spoiler_debug_prompt(
+                            template_file, game_name_from_yaml, seed_to_use, args.CC
+                        )
+                        collected_prompts.append(basic_prompt)
+                    elif args.multiworld:
                         # Generate multiworld-specific prompt using bisection results
                         bisection_info = get_multiworld_bisection_info(template_file, test_results)
                         failure_details = get_multiworld_failure_details(template_file, test_results)
@@ -623,7 +947,17 @@ python scripts/test/test-all-templates.py --include-list "{template_file}" --mul
                                 print(f"Error getting prompt for {game_name_from_yaml}: {e}", file=sys.stderr)
                 else:
                     # Handle non-promptfile modes
-                    if args.multiworld:
+                    if args.basic_spoiler_debug:
+                        # For basic-spoiler-debug mode with -p or -t, generate and output the prompt directly
+                        basic_prompt = generate_basic_spoiler_debug_prompt(
+                            template_file, game_name_from_yaml, seed_to_use, args.CC
+                        )
+                        print(basic_prompt)
+
+                        # Exit immediately if -t or -p was specified
+                        if args.text or args.prompt:
+                            return 0
+                    elif args.multiworld:
                         # For multiworld mode with -p or -t, generate and output the prompt directly
                         bisection_info = get_multiworld_bisection_info(template_file, test_results)
                         failure_details = get_multiworld_failure_details(template_file, test_results)
