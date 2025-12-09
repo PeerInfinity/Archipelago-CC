@@ -1657,16 +1657,26 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
     except Exception as e:
         logger.error(f"Error getting game-specific max counts for {game_name}: {e}")
 
-    # Correct max_count for stackable items using itempool_counts
-    if itempool_counts and 'error' not in itempool_counts:
-        for item_name, item_data in items_data.items():
-            # If the item's max_count is the default of 1...
-            if item_data.get('max_count') == 1:
-                pool_count = itempool_counts.get(item_name)
-                # ... and the item appears more than once in the pool...
-                if pool_count and pool_count > 1:
-                    # ... then update max_count to match the pool count.
-                    item_data['max_count'] = pool_count
+    # Correct max_count for stackable items using actual item placements
+    # In multiworld, a player can receive more items than their pool contributes
+    # because items are distributed across all players' locations.
+    # Count items placed FOR this player across ALL locations in the multiworld.
+    placement_counts = {}
+    try:
+        for location in multiworld.get_locations():
+            if location.item and location.item.player == player:
+                item_name = location.item.name
+                placement_counts[item_name] = placement_counts.get(item_name, 0) + 1
+    except Exception as e:
+        logger.warning(f"Could not count item placements for player {player}: {e}")
+
+    # Update max_count based on actual placements (use max of current max_count and placements)
+    for item_name, item_data in items_data.items():
+        placement_count = placement_counts.get(item_name, 0)
+        current_max = item_data.get('max_count', 1)
+        # If there are more placements than current max_count, update it
+        if placement_count > current_max:
+            item_data['max_count'] = placement_count
 
     # 5. Add groups from item_name_groups to ALL items (including events)
     # This ensures event items and other items not in item_id_to_name get their groups
