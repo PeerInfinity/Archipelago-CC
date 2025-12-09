@@ -770,7 +770,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
                 'error': error_msg,
                 'details': "Failed to read itempool counts. Check logs for more information."
             }
-        
+
         # Process items and groups, passing the itempool counts
         export_data['items'][player_str] = process_items(multiworld, player, itempool_counts)
         export_data['item_groups'][player_str] = process_item_groups(multiworld, player)
@@ -1490,7 +1490,13 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
         raise
 
 def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> Dict[str, Any]:
-    """Process item data including progression flags and capacity information."""
+    """Process item data including progression flags and capacity information.
+
+    Args:
+        multiworld: The multiworld object
+        player: The player ID
+        itempool_counts: Item counts for this player's pool (used for itempool_counts export)
+    """
     items_data = {}
     world = multiworld.worlds[player]
     game_name = multiworld.game[player]
