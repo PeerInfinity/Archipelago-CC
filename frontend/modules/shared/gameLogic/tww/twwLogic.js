@@ -891,6 +891,266 @@ export function can_access_forest_haven(snapshot, staticData, player) {
   return has(snapshot, staticData, "Grappling Hook", player) || can_fly_with_deku_leaf_outdoors(snapshot, staticData, player);
 }
 
+// ============================================================================
+// Dungeon Entrance Functions
+// ============================================================================
+
+export function can_access_dungeon_entrance_on_dragon_roost_island(snapshot, staticData, player) {
+  return true;
+}
+
+export function can_access_dungeon_entrance_in_forest_haven_sector(snapshot, staticData, player) {
+  return (
+    can_access_forest_haven(snapshot, staticData, player) &&
+    (
+      has(snapshot, staticData, "Grappling Hook", player) ||
+      (
+        can_fly_with_deku_leaf_indoors(snapshot, staticData, player) &&
+        can_fly_with_deku_leaf_outdoors(snapshot, staticData, player) &&
+        _tww_obscure_1(snapshot, staticData, player) &&
+        _tww_precise_1(snapshot, staticData, player)
+      )
+    ) &&
+    can_fly_with_deku_leaf_outdoors(snapshot, staticData, player) &&
+    (can_cut_grass(snapshot, staticData, player) || has_magic_meter_upgrade(snapshot, staticData, player))
+  );
+}
+
+export function can_access_dungeon_entrance_in_tower_of_the_gods_sector(snapshot, staticData, player) {
+  return hasGroupUnique(snapshot, staticData, "Pearls", player, 3);
+}
+
+export function can_access_dungeon_entrance_in_forsaken_fortress_sector(snapshot, staticData, player) {
+  return false;
+}
+
+export function can_access_dungeon_entrance_on_headstone_island(snapshot, staticData, player) {
+  return has(snapshot, staticData, "Power Bracelets", player);
+}
+
+export function can_access_dungeon_entrance_on_gale_isle(snapshot, staticData, player) {
+  return hasAll(snapshot, staticData, ["Iron Boots", "Skull Hammer"], player);
+}
+
+// ============================================================================
+// Miniboss Entrance Functions
+// ============================================================================
+
+export function can_access_miniboss_entrance_in_forbidden_woods(snapshot, staticData, player) {
+  return (
+    can_fly_with_deku_leaf_indoors(snapshot, staticData, player) &&
+    can_defeat_boko_babas(snapshot, staticData, player) &&
+    hasAll(snapshot, staticData, ["Grappling Hook", "FW Small Key"], player)
+  );
+}
+
+export function can_access_miniboss_entrance_in_tower_of_the_gods(snapshot, staticData, player) {
+  return (
+    can_reach_tower_of_the_gods_second_floor(snapshot, staticData, player) &&
+    (has(snapshot, staticData, "Grappling Hook", player) || can_fly_with_deku_leaf_indoors(snapshot, staticData, player)) &&
+    (can_play_command_melody(snapshot, staticData, player) || has_heros_bow(snapshot, staticData, player))
+  );
+}
+
+export function can_access_miniboss_entrance_in_earth_temple(snapshot, staticData, player) {
+  return can_reach_earth_temple_moblins_and_poes_room(snapshot, staticData, player) &&
+         has(snapshot, staticData, "ET Small Key", player, 3);
+}
+
+export function can_access_miniboss_entrance_in_wind_temple(snapshot, staticData, player) {
+  return can_open_wind_temple_upper_giant_grate(snapshot, staticData, player) &&
+         has(snapshot, staticData, "WT Small Key", player, 2);
+}
+
+export function can_access_miniboss_entrance_in_hyrule_castle(snapshot, staticData, player) {
+  return can_access_hyrule(snapshot, staticData, player);
+}
+
+// ============================================================================
+// Boss Entrance Functions
+// ============================================================================
+
+export function can_access_boss_entrance_in_dragon_roost_cavern(snapshot, staticData, player) {
+  return can_reach_dragon_roost_cavern_boss_stairs(snapshot, staticData, player) &&
+         has(snapshot, staticData, "DRC Big Key", player);
+}
+
+export function can_access_boss_entrance_in_forbidden_woods(snapshot, staticData, player) {
+  return (
+    can_fly_with_deku_leaf_indoors(snapshot, staticData, player) &&
+    can_defeat_boko_babas(snapshot, staticData, player) &&
+    (can_defeat_door_flowers(snapshot, staticData, player) || has(snapshot, staticData, "Grappling Hook", player)) &&
+    can_defeat_mothulas(snapshot, staticData, player) &&
+    has(snapshot, staticData, "FW Big Key", player)
+  );
+}
+
+export function can_access_boss_entrance_in_tower_of_the_gods(snapshot, staticData, player) {
+  return (
+    can_reach_tower_of_the_gods_third_floor(snapshot, staticData, player) &&
+    can_defeat_armos(snapshot, staticData, player) &&
+    has(snapshot, staticData, "TotG Big Key", player)
+  );
+}
+
+export function can_access_boss_entrance_in_forsaken_fortress(snapshot, staticData, player) {
+  return (
+    can_get_inside_forsaken_fortress(snapshot, staticData, player) &&
+    has(snapshot, staticData, "Skull Hammer", player) &&
+    (
+      can_fly_with_deku_leaf_indoors(snapshot, staticData, player) ||
+      has(snapshot, staticData, "Hookshot", player) ||
+      (_tww_obscure_2(snapshot, staticData, player) && _tww_precise_2(snapshot, staticData, player))
+    ) &&
+    (
+      can_defeat_bokoblins(snapshot, staticData, player) ||
+      can_fly_with_deku_leaf_outdoors(snapshot, staticData, player) ||
+      has(snapshot, staticData, "Grappling Hook", player)
+    )
+  );
+}
+
+export function can_access_boss_entrance_in_earth_temple(snapshot, staticData, player) {
+  return can_reach_earth_temple_tall_vine_room(snapshot, staticData, player) &&
+         has(snapshot, staticData, "ET Big Key", player);
+}
+
+export function can_access_boss_entrance_in_wind_temple(snapshot, staticData, player) {
+  return (
+    can_reach_wind_temple_tall_basement_room(snapshot, staticData, player) &&
+    hasAll(snapshot, staticData, ["Hookshot", "Iron Boots", "WT Big Key"], player) &&
+    can_play_command_melody(snapshot, staticData, player) &&
+    can_play_wind_gods_aria(snapshot, staticData, player)
+  );
+}
+
+// ============================================================================
+// Secret Cave Entrance Functions
+// ============================================================================
+
+export function can_access_secret_cave_entrance_on_outset_island(snapshot, staticData, player) {
+  return (
+    (can_reach_outset_island_upper_level(snapshot, staticData, player) && can_fly_with_deku_leaf_outdoors(snapshot, staticData, player)) ||
+    has(snapshot, staticData, "Hookshot", player)
+  ) && has(snapshot, staticData, "Power Bracelets", player);
+}
+
+export function can_access_secret_cave_entrance_on_dragon_roost_island(snapshot, staticData, player) {
+  return can_move_boulders(snapshot, staticData, player);
+}
+
+export function can_access_secret_cave_entrance_on_fire_mountain(snapshot, staticData, player) {
+  return has_ice_arrows(snapshot, staticData, player);
+}
+
+export function can_access_secret_cave_entrance_on_ice_ring_isle(snapshot, staticData, player) {
+  return has_fire_arrows(snapshot, staticData, player);
+}
+
+export function can_access_secret_cave_entrance_on_private_oasis(snapshot, staticData, player) {
+  return hasAll(snapshot, staticData, ["Delivery Bag", "Cabana Deed", "Grappling Hook"], player);
+}
+
+export function can_access_secret_cave_entrance_on_needle_rock_isle(snapshot, staticData, player) {
+  return has_fire_arrows(snapshot, staticData, player);
+}
+
+export function can_access_secret_cave_entrance_on_angular_isles(snapshot, staticData, player) {
+  return can_fly_with_deku_leaf_outdoors(snapshot, staticData, player) || has(snapshot, staticData, "Hookshot", player);
+}
+
+export function can_access_secret_cave_entrance_on_boating_course(snapshot, staticData, player) {
+  return can_fly_with_deku_leaf_outdoors(snapshot, staticData, player) || has(snapshot, staticData, "Hookshot", player);
+}
+
+export function can_access_secret_cave_entrance_on_stone_watcher_island(snapshot, staticData, player) {
+  return has(snapshot, staticData, "Power Bracelets", player);
+}
+
+export function can_access_secret_cave_entrance_on_overlook_island(snapshot, staticData, player) {
+  return has(snapshot, staticData, "Hookshot", player);
+}
+
+export function can_access_secret_cave_entrance_on_birds_peak_rock(snapshot, staticData, player) {
+  return has(snapshot, staticData, "Bait Bag", player);
+}
+
+export function can_access_secret_cave_entrance_on_pawprint_isle(snapshot, staticData, player) {
+  return true;
+}
+
+export function can_access_secret_cave_entrance_on_pawprint_isle_side_isle(snapshot, staticData, player) {
+  return has(snapshot, staticData, "Hookshot", player);
+}
+
+export function can_access_secret_cave_entrance_on_diamond_steppe_island(snapshot, staticData, player) {
+  return has(snapshot, staticData, "Hookshot", player);
+}
+
+export function can_access_secret_cave_entrance_on_bomb_island(snapshot, staticData, player) {
+  return can_move_boulders(snapshot, staticData, player);
+}
+
+export function can_access_secret_cave_entrance_on_rock_spire_isle(snapshot, staticData, player) {
+  return has(snapshot, staticData, "Bombs", player);
+}
+
+export function can_access_secret_cave_entrance_on_shark_island(snapshot, staticData, player) {
+  return hasAll(snapshot, staticData, ["Iron Boots", "Skull Hammer"], player);
+}
+
+export function can_access_secret_cave_entrance_on_cliff_plateau_isles(snapshot, staticData, player) {
+  return true;
+}
+
+export function can_access_secret_cave_entrance_on_horseshoe_island(snapshot, staticData, player) {
+  return can_fan_with_deku_leaf(snapshot, staticData, player);
+}
+
+export function can_access_secret_cave_entrance_on_star_island(snapshot, staticData, player) {
+  return can_move_boulders(snapshot, staticData, player);
+}
+
+// ============================================================================
+// Inner Cave Entrance Functions
+// ============================================================================
+
+export function can_access_inner_entrance_in_ice_ring_isle_secret_cave(snapshot, staticData, player) {
+  return has(snapshot, staticData, "Iron Boots", player);
+}
+
+export function can_access_inner_entrance_in_cliff_plateau_isles_secret_cave(snapshot, staticData, player) {
+  return can_defeat_boko_babas(snapshot, staticData, player) && can_fly_with_deku_leaf_indoors(snapshot, staticData, player);
+}
+
+// ============================================================================
+// Fairy Fountain Entrance Functions
+// ============================================================================
+
+export function can_access_fairy_fountain_entrance_on_outset_island(snapshot, staticData, player) {
+  return can_access_forest_of_fairies(snapshot, staticData, player) && can_move_boulders(snapshot, staticData, player);
+}
+
+export function can_access_fairy_fountain_entrance_on_thorned_fairy_island(snapshot, staticData, player) {
+  return has(snapshot, staticData, "Skull Hammer", player);
+}
+
+export function can_access_fairy_fountain_entrance_on_eastern_fairy_island(snapshot, staticData, player) {
+  return can_move_boulders(snapshot, staticData, player);
+}
+
+export function can_access_fairy_fountain_entrance_on_western_fairy_island(snapshot, staticData, player) {
+  return has(snapshot, staticData, "Skull Hammer", player);
+}
+
+export function can_access_fairy_fountain_entrance_on_southern_fairy_island(snapshot, staticData, player) {
+  return has(snapshot, staticData, "Bombs", player) || has_fire_arrows(snapshot, staticData, player);
+}
+
+export function can_access_fairy_fountain_entrance_on_northern_fairy_island(snapshot, staticData, player) {
+  return true;
+}
+
 /**
  * Export all state methods and helper functions
  */
@@ -1019,4 +1279,61 @@ export default {
   can_cut_down_outset_trees,
   can_access_forest_of_fairies,
   can_access_forest_haven,
+
+  // Dungeon entrance functions
+  can_access_dungeon_entrance_on_dragon_roost_island,
+  can_access_dungeon_entrance_in_forest_haven_sector,
+  can_access_dungeon_entrance_in_tower_of_the_gods_sector,
+  can_access_dungeon_entrance_in_forsaken_fortress_sector,
+  can_access_dungeon_entrance_on_headstone_island,
+  can_access_dungeon_entrance_on_gale_isle,
+
+  // Miniboss entrance functions
+  can_access_miniboss_entrance_in_forbidden_woods,
+  can_access_miniboss_entrance_in_tower_of_the_gods,
+  can_access_miniboss_entrance_in_earth_temple,
+  can_access_miniboss_entrance_in_wind_temple,
+  can_access_miniboss_entrance_in_hyrule_castle,
+
+  // Boss entrance functions
+  can_access_boss_entrance_in_dragon_roost_cavern,
+  can_access_boss_entrance_in_forbidden_woods,
+  can_access_boss_entrance_in_tower_of_the_gods,
+  can_access_boss_entrance_in_forsaken_fortress,
+  can_access_boss_entrance_in_earth_temple,
+  can_access_boss_entrance_in_wind_temple,
+
+  // Secret cave entrance functions
+  can_access_secret_cave_entrance_on_outset_island,
+  can_access_secret_cave_entrance_on_dragon_roost_island,
+  can_access_secret_cave_entrance_on_fire_mountain,
+  can_access_secret_cave_entrance_on_ice_ring_isle,
+  can_access_secret_cave_entrance_on_private_oasis,
+  can_access_secret_cave_entrance_on_needle_rock_isle,
+  can_access_secret_cave_entrance_on_angular_isles,
+  can_access_secret_cave_entrance_on_boating_course,
+  can_access_secret_cave_entrance_on_stone_watcher_island,
+  can_access_secret_cave_entrance_on_overlook_island,
+  can_access_secret_cave_entrance_on_birds_peak_rock,
+  can_access_secret_cave_entrance_on_pawprint_isle,
+  can_access_secret_cave_entrance_on_pawprint_isle_side_isle,
+  can_access_secret_cave_entrance_on_diamond_steppe_island,
+  can_access_secret_cave_entrance_on_bomb_island,
+  can_access_secret_cave_entrance_on_rock_spire_isle,
+  can_access_secret_cave_entrance_on_shark_island,
+  can_access_secret_cave_entrance_on_cliff_plateau_isles,
+  can_access_secret_cave_entrance_on_horseshoe_island,
+  can_access_secret_cave_entrance_on_star_island,
+
+  // Inner cave entrance functions
+  can_access_inner_entrance_in_ice_ring_isle_secret_cave,
+  can_access_inner_entrance_in_cliff_plateau_isles_secret_cave,
+
+  // Fairy fountain entrance functions
+  can_access_fairy_fountain_entrance_on_outset_island,
+  can_access_fairy_fountain_entrance_on_thorned_fairy_island,
+  can_access_fairy_fountain_entrance_on_eastern_fairy_island,
+  can_access_fairy_fountain_entrance_on_western_fairy_island,
+  can_access_fairy_fountain_entrance_on_southern_fairy_island,
+  can_access_fairy_fountain_entrance_on_northern_fairy_island,
 };
