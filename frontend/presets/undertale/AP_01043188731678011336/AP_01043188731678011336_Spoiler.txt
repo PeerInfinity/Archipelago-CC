@@ -1,0 +1,125 @@
+﻿Archipelago Version 0.6.5  -  Seed: 2
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            Undertale
+Location Count:                  48
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Required Route:                  Neutral
+Starting Area:                   Ruins
+Key Piece Hunt:                  No
+Key Piece Amount:                5
+Randomize LOVE:                  No
+Randomize Stats:                 No
+Include Temy Armor:              Yes
+No Equippables:                  No
+Only Temmie Flakes:              No
+Progressive Armor:               No
+Progressive Weapons:             No
+Randomize Item Button:           No
+
+
+Starting Items:
+
+ITEM
+FIGHT
+ACT
+MERCY
+Ruins Key
+
+Locations:
+
+Candy 1: Face Steak
+Candy 2: Empty Gun
+Candy 3: 1000G
+Candy 4: Astronaut Food
+Donut Sale: Hotland Key
+Cider Sale: 1000G
+Ribbon Cracks: Spider Cider
+Toy Knife Edge: Tough Glove
+B.Scotch Pie Given: Spider Donut
+Snowman: Faded Ribbon
+Nicecream Snowdin: 500G
+Bunny 1: Butterscotch Pie
+Bunny 2: Right Home Key
+Bunny 3: Legendary Hero
+Bunny 4: Stained Apron
+Papyrus Date: Papyrus Date
+Nicecream Waterfall: 100G
+Nicecream Punch Card: Junk Food
+Quiche Bench: temy armor
+Tutu Hidden: Mettaton Plush
+Card Reward: Instant Noodles
+Grass Shoes: Toy Knife
+Astro 1: Ballet Shoes
+Astro 2: Sea Tea
+Gerson 1: Junk Food
+Gerson 2: Punch Card
+Gerson 3: Heart Locket
+Gerson 4: Snowman Piece
+TemmieShop 1: Worn Dagger
+TemmieShop 2: Astronaut Food
+TemmieShop 3: Bisicle
+TemmieShop 4: 100G
+Undyne Date: Undyne Date
+Noodles Fridge: Waterfall Key
+Pan Hidden: Punch Card
+Apron Hidden: 500G
+Bratty Catty 1: Punch Card
+Bratty Catty 2: Abandoned Quiche
+Bratty Catty 3: Core Key
+Bratty Catty 4: Old Tutu
+Burgerpants 1: Burnt Pan
+Burgerpants 2: Temmie Flakes
+Burgerpants 3: Manly Bandanna
+Burgerpants 4: Punch Card
+Alphys Date: Alphys Date
+Trash Burger: Cinnamon Bun
+Mettaton Plot: Snowdin Key
+Present Knife: Left Home Key
+Present Locket: Torn Notebook
+Left New Home Key: Cowboy Hat
+Right New Home Key: Cloudy Glasses
+
+Playthrough:
+
+0: {
+  Ruins Key
+}
+1: {
+  Candy 3: 1000G
+  Cider Sale: 1000G
+  Donut Sale: Hotland Key
+}
+2: {
+  Alphys Date: Alphys Date
+  Bratty Catty 1: Punch Card
+  Bratty Catty 3: Core Key
+  Burgerpants 4: Punch Card
+  Noodles Fridge: Waterfall Key
+  Pan Hidden: Punch Card
+}
+3: {
+  Gerson 2: Punch Card
+  Tutu Hidden: Mettaton Plush
+  Undyne Date: Undyne Date
+}
+4: {
+  Mettaton Plot: Snowdin Key
+  Present Knife: Left Home Key
+}
+5: {
+  Bunny 2: Right Home Key
+  Papyrus Date: Papyrus Date
+}

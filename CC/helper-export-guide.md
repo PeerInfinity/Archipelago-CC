@@ -256,6 +256,7 @@ The following games have achieved **complete removal** of all game-specific file
 - **Metamath** - Mathematical puzzle logic exported
 - **Sonic Adventure 2 Battle** - Platform game rules exported
 - **Super Mario World** - Platformer rules exported
+- **Undertale** - RPG game rules exported
 
 These games use only the generic infrastructure. No custom Python exporter, no JavaScript helper files, no game logic directory, and no entry in the game logic registry.
 
