@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-09 01:12:54
+**Generated:** 2025-12-09 05:09:12
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -48,7 +48,7 @@ Additional test results:
 | Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 16.2KB | 38.2KB |
 | Bumper Stickers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 10.2KB | 5.7KB |
-| Castlevania 64 | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | 13.0KB | 2.0KB |
+| Castlevania 64 | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | 13.1KB | 2.0KB |
 | Celeste (Open World) | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 7.1KB | ✅ |
 | Celeste 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.2KB | 5.9KB |
 | ChecksFinder | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ |
@@ -67,7 +67,7 @@ Additional test results:
 | Hylics 2 | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 1.0KB | 6.6KB |
 | Inscryption | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 11.3KB | 6.2KB |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 13.2KB | 4.2KB |
-| Kingdom Hearts | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | 47.3KB | 19.5KB |
+| Kingdom Hearts | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | 49.5KB | 19.5KB |
 | Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ✅ | 11.2KB | 112.6KB |
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 10.1KB | 14.9KB |
 | Landstalker - The Treasures of King Nole | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ⚫ | ⚫ | 16.4KB | 9.1KB |
@@ -92,8 +92,8 @@ Additional test results:
 | SMZ3 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | 59.5KB | 51.2KB |
 | Saving Princess | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 3.1KB | ✅ |
 | Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 13.7KB | 6.9KB |
-| Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 0.7KB | 9.4KB |
-| Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 0.5KB | ✅ |
+| Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ |
+| Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ✅ | 19.3KB | 86.3KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ | ✅ | 15.9KB | 10.7KB |
 | Subnautica | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 5.2KB | 14.7KB |
@@ -110,13 +110,13 @@ Additional test results:
 | The Wind Waker | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 3.5KB | 40.7KB |
 | The Witness | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ⚫ | ✅ | 23.7KB | 0.9KB |
 | Timespinner | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.4KB | 10.5KB |
-| Undertale | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 1.5KB | ✅ |
+| Undertale | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | ✅ | ✅ |
 | VVVVVV | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.2KB | 2.1KB |
 | Wargroove | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.7KB | 2.6KB |
 | WebDevJourney | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Yacht Dice | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 2.3KB | 285.0KB |
 | Yoshi's Island | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 8.1KB | 33.2KB |
-| Yu-Gi-Oh! 2006 | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | 1.6KB | 21.3KB |
+| Yu-Gi-Oh! 2006 | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | 1.6KB | 21.4KB |
 | shapez | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 
 ## Multi-Template Test Results

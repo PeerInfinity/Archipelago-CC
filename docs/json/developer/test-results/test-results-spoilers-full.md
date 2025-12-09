@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2025-12-09 01:12:54
+**Generated:** 2025-12-09 05:09:12
 
 **Source Data Created:** 2025-12-08T23:56:46.189285
 
@@ -33,7 +33,7 @@
 | Bomb Rush Cyberfunk | ✅ Passed seeds 1-10 | 0 | 10.18 | 10.18 | 🟢 Complete | 16.2KB | 38.2KB |
 | Bumper Stickers | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed seeds 1-10 | 0 | 4.41 | 4.41 | 🟢 Complete | 10.2KB | 5.7KB |
-| Castlevania 64 | ❌ Failed seed 2 | 0 | 2.22 | 6.1 | 🟡 36.4% | 13.0KB | 2.0KB |
+| Castlevania 64 | ❌ Failed seed 2 | 0 | 2.22 | 6.1 | 🟡 36.4% | 13.1KB | 2.0KB |
 | Celeste (Open World) | ✅ Passed seeds 1-10 | 0 | 16.5 | 16.5 | 🟢 Complete | 7.1KB | ✅ |
 | Celeste 64 | ✅ Passed seeds 1-10 | 0 | 5.2 | 5.2 | 🟢 Complete | 4.2KB | 5.9KB |
 | ChecksFinder | ✅ Passed seeds 1-10 | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ✅ |
@@ -52,7 +52,7 @@
 | Hylics 2 | ✅ Passed seeds 1-10 | 0 | 8.1 | 8.1 | 🟢 Complete | 1.0KB | 6.6KB |
 | Inscryption | ✅ Passed seeds 1-10 | 0 | 10.2 | 10.2 | 🟢 Complete | 11.3KB | 6.2KB |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed seeds 1-10 | 0 | 14.1 | 14.1 | 🟢 Complete | 13.2KB | 4.2KB |
-| Kingdom Hearts | ❌ Failed seed 2 | 0 | 7.15 | 13.5 | 🟡 53.0% | 47.3KB | 19.5KB |
+| Kingdom Hearts | ❌ Failed seed 2 | 0 | 7.15 | 13.5 | 🟡 53.0% | 49.5KB | 19.5KB |
 | Kingdom Hearts 2 | ✅ Passed seeds 1-10 | 0 | 15.2 | 15.2 | 🟢 Complete | 11.2KB | 112.6KB |
 | Kirby's Dream Land 3 | ✅ Passed seeds 1-10 | 0 | 11.3 | 11.3 | 🟢 Complete | 10.1KB | 14.9KB |
 | Landstalker - The Treasures of King Nole | ❌ Failed seed 1 | 2 | 0 | 0 | 🔴 0.0% | 16.4KB | 9.1KB |
@@ -77,8 +77,8 @@
 | SMZ3 | ✅ Passed seeds 1-10 | 0 | 16.1 | 16.1 | 🟢 Complete | 59.5KB | 51.2KB |
 | Saving Princess | ✅ Passed seeds 1-10 | 0 | 5.3 | 5.3 | 🟢 Complete | 3.1KB | ✅ |
 | Secret of Evermore | ✅ Passed seeds 1-10 | 0 | 5.19 | 5.19 | 🟢 Complete | 13.7KB | 6.9KB |
-| Shivers | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | 0.7KB | 9.4KB |
-| Sonic Adventure 2 Battle | ✅ Passed seeds 1-10 | 0 | 7.18 | 7.18 | 🟢 Complete | 0.5KB | ✅ |
+| Shivers | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
+| Sonic Adventure 2 Battle | ✅ Passed seeds 1-10 | 0 | 7.18 | 7.18 | 🟢 Complete | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed seeds 1-10 | 0 | 15.14 | 15.14 | 🟢 Complete | 19.3KB | 86.3KB |
 | Stardew Valley | ✅ Passed seeds 1-10 | 0 | 44.2 | 44.2 | 🟢 Complete | 15.9KB | 10.7KB |
 | Subnautica | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | 5.2KB | 14.7KB |
@@ -95,13 +95,13 @@
 | The Wind Waker | ✅ Passed seeds 1-10 | 0 | 18.2 | 18.2 | 🟢 Complete | 3.5KB | 40.7KB |
 | The Witness | ✅ Passed seeds 1-10 | 0 | 9.15 | 9.15 | 🟢 Complete | 23.7KB | 0.9KB |
 | Timespinner | ✅ Passed seeds 1-10 | 0 | 7.3 | 7.3 | 🟢 Complete | 5.4KB | 10.5KB |
-| Undertale | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | 1.5KB | ✅ |
+| Undertale | ✅ Passed seeds 1-10 | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
 | VVVVVV | ✅ Passed seeds 1-10 | 0 | 3.4 | 3.4 | 🟢 Complete | 5.2KB | 2.1KB |
 | Wargroove | ✅ Passed seeds 1-10 | 0 | 9.1 | 9.1 | 🟢 Complete | 5.7KB | 2.6KB |
 | WebDevJourney | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Yacht Dice | ✅ Passed seeds 1-10 | 0 | 21.1 | 21.1 | 🟢 Complete | 2.3KB | 285.0KB |
 | Yoshi's Island | ✅ Passed seeds 1-10 | 0 | 13.1 | 13.1 | 🟢 Complete | 8.1KB | 33.2KB |
-| Yu-Gi-Oh! 2006 | ❌ Failed seed 2 | 0 | 0 | 16.2 | 🔴 0.0% | 1.6KB | 21.3KB |
+| Yu-Gi-Oh! 2006 | ❌ Failed seed 2 | 0 | 0 | 16.2 | 🔴 0.0% | 1.6KB | 21.4KB |
 | shapez | ✅ Passed seeds 1-10 | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ✅ |
 
 ## Intermittent Failures

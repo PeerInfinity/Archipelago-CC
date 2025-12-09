@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-09 01:12:54
+**Generated:** 2025-12-09 05:09:12
 
 ## Summary
 
@@ -27,7 +27,7 @@
 | Bomb Rush Cyberfunk | ✅ Passed | 0 | ✅ | 252/252 | 247/247 | 5/5 | ✅ | 252/252 | 16.2KB | 38.2KB |
 | Bumper Stickers | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | 0 | ✅ | 125/125 | 124/124 | 1/1 | ✅ | 125/125 | 10.2KB | 5.7KB |
-| Castlevania 64 | ✅ Passed | 0 | ✅ | 215/215 | 213/213 | 2/2 | ✅ | 215/215 | 13.0KB | 2.0KB |
+| Castlevania 64 | ✅ Passed | 0 | ✅ | 215/215 | 213/213 | 2/2 | ✅ | 215/215 | 13.1KB | 2.0KB |
 | Celeste (Open World) | ✅ Passed | 0 | ✅ | 237/237 | 233/233 | 4/4 | ✅ | 237/237 | 7.1KB | ✅ |
 | Celeste 64 | ✅ Passed | 0 | ✅ | 40/40 | 40/40 | 0/0 | ✅ | 40/40 | 4.2KB | 5.9KB |
 | ChecksFinder | ✅ Passed | 0 | ✅ | 25/25 | 25/25 | 0/0 | ✅ | 25/25 | ✅ | ✅ |
@@ -46,7 +46,7 @@
 | Hylics 2 | ✅ Passed | 0 | ✅ | 134/134 | 133/133 | 1/1 | ✅ | 134/134 | 1.0KB | 6.6KB |
 | Inscryption | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | 11.3KB | 6.2KB |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | ✅ | 239/239 | 239/239 | 0/0 | ✅ | 239/239 | 13.2KB | 4.2KB |
-| Kingdom Hearts | ✅ Passed | 0 | ✅ | 512/512 | 511/511 | 1/1 | ✅ | 512/512 | 47.3KB | 19.5KB |
+| Kingdom Hearts | ✅ Passed | 0 | ✅ | 512/512 | 511/511 | 1/1 | ✅ | 512/512 | 49.5KB | 19.5KB |
 | Kingdom Hearts 2 | ✅ Passed | 0 | ✅ | 705/705 | 643/643 | 62/62 | ✅ | 705/705 | 11.2KB | 112.6KB |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | ✅ | 567/567 | 65/65 | 502/502 | ✅ | 567/567 | 10.1KB | 14.9KB |
 | Landstalker - The Treasures of King Nole | ❌ Failed | 2 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 16.4KB | 9.1KB |
@@ -71,8 +71,8 @@
 | SMZ3 | ❌ Failed | 0 | ❌ | 70/316 | 70/316 | 0/0 | ❌ | 70/316 | 59.5KB | 51.2KB |
 | Saving Princess | ✅ Passed | 0 | ✅ | 37/37 | 36/36 | 1/1 | ✅ | 37/37 | 3.1KB | ✅ |
 | Secret of Evermore | ✅ Passed | 0 | ✅ | 340/340 | 339/339 | 1/1 | ✅ | 340/340 | 13.7KB | 6.9KB |
-| Shivers | ✅ Passed | 0 | ✅ | 114/114 | 76/76 | 38/38 | ✅ | 114/114 | 0.7KB | 9.4KB |
-| Sonic Adventure 2 Battle | ✅ Passed | 0 | ✅ | 207/207 | 206/206 | 1/1 | ✅ | 207/207 | 0.5KB | ✅ |
+| Shivers | ✅ Passed | 0 | ✅ | 114/114 | 76/76 | 38/38 | ✅ | 114/114 | ✅ | ✅ |
+| Sonic Adventure 2 Battle | ✅ Passed | 0 | ✅ | 207/207 | 206/206 | 1/1 | ✅ | 207/207 | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | 0 | ✅ | 257/257 | 232/232 | 25/25 | ✅ | 257/257 | 19.3KB | 86.3KB |
 | Stardew Valley | ✅ Passed | 0 | ✅ | 500/500 | 491/491 | 9/9 | ✅ | 500/500 | 15.9KB | 10.7KB |
 | Subnautica | ✅ Passed | 0 | ✅ | 135/135 | 131/131 | 4/4 | ✅ | 135/135 | 5.2KB | 14.7KB |
@@ -89,13 +89,13 @@
 | The Wind Waker | ✅ Passed | 0 | ✅ | 109/109 | 108/108 | 1/1 | ✅ | 109/109 | 3.5KB | 40.7KB |
 | The Witness | ❌ Failed | 0 | ❌ | 138/147 | 125/132 | 13/15 | ❌ | 135/147 | 23.7KB | 0.9KB |
 | Timespinner | ✅ Passed | 0 | ✅ | 185/185 | 180/180 | 5/5 | ✅ | 185/185 | 5.4KB | 10.5KB |
-| Undertale | ✅ Passed | 0 | ✅ | 51/51 | 48/48 | 3/3 | ✅ | 51/51 | 1.5KB | ✅ |
+| Undertale | ✅ Passed | 0 | ✅ | 51/51 | 48/48 | 3/3 | ✅ | 51/51 | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | ✅ | 20/20 | 20/20 | 0/0 | ✅ | 20/20 | 5.2KB | 2.1KB |
 | Wargroove | ✅ Passed | 0 | ✅ | 39/39 | 38/38 | 1/1 | ✅ | 39/39 | 5.7KB | 2.6KB |
 | WebDevJourney | ✅ Passed | 0 | ✅ | 62/62 | 61/61 | 1/1 | ✅ | 62/62 | ✅ | ✅ |
 | Yacht Dice | ✅ Passed | 0 | ✅ | 90/90 | 90/90 | 1/1 | ✅ | 90/90 | 2.3KB | 285.0KB |
 | Yoshi's Island | ✅ Passed | 0 | ✅ | 207/207 | 191/191 | 16/16 | ✅ | 207/207 | 8.1KB | 33.2KB |
-| Yu-Gi-Oh! 2006 | ✅ Passed | 0 | ✅ | 981/981 | 84/84 | 897/897 | ✅ | 981/981 | 1.6KB | 21.3KB |
+| Yu-Gi-Oh! 2006 | ✅ Passed | 0 | ✅ | 981/981 | 84/84 | 897/897 | ✅ | 981/981 | 1.6KB | 21.4KB |
 | shapez | ✅ Passed | 0 | ✅ | 140/140 | 139/139 | 1/1 | ✅ | 140/140 | ✅ | ✅ |
 
 ## Notes
