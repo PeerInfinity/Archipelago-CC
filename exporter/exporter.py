@@ -1737,20 +1737,31 @@ def process_progression_mapping(multiworld, player: int) -> Dict[str, Any]:
         return {} # Return empty on error
 
 
-def sort_lists_for_consistency(data):
+def sort_lists_for_consistency(data, key_name=None):
     """
     Recursively sort lists of simple types (strings, numbers) for consistent JSON output.
 
-    This handles cases like slot_data containing lists that may be in arbitrary order
-    (e.g., Terraria's goal list). It only sorts lists where all elements are of
-    comparable simple types to avoid breaking structured data.
+    Uses a whitelist approach: only sorts lists under specific keys known to be safe.
+    This prevents accidentally breaking game logic where list order is semantically
+    meaningful (e.g., hat_craft_order in A Hat in Time, level_logic tuples in Overcooked).
 
     Args:
         data: The data structure to process
+        key_name: The key name from the parent dict (used to determine if sorting is safe)
 
     Returns:
-        The data structure with sortable lists sorted
+        The data structure with whitelisted lists sorted
     """
+    # Keys where sorting is safe (order is not semantically meaningful)
+    SAFE_TO_SORT_KEYS = {
+        'exclude_locations',
+        'allowed_legendary_hunt_encounters',
+        'move_rando_actions',
+        'enabled_filler_buffs',
+        'goal',
+        'disabled_entities',
+    }
+
     if data is None or isinstance(data, (bool, int, float, str)):
         return data
 
@@ -1758,19 +1769,19 @@ def sort_lists_for_consistency(data):
         # First, recursively process all items
         processed = [sort_lists_for_consistency(item) for item in data]
 
-        # Only sort if all items are simple comparable types (str, int, float)
-        # and the list is non-empty
-        if processed and all(isinstance(item, (str, int, float)) for item in processed):
-            # Sort strings and numbers (convert to string for consistent sorting of mixed types)
-            try:
-                return sorted(processed, key=lambda x: (type(x).__name__, x))
-            except TypeError:
-                # If comparison fails, return unsorted
-                return processed
+        # Only sort if this key is in the whitelist
+        if key_name in SAFE_TO_SORT_KEYS:
+            # Only sort if all items are simple comparable types (str, int, float)
+            if processed and all(isinstance(item, (str, int, float)) for item in processed):
+                try:
+                    return sorted(processed)
+                except TypeError:
+                    # If comparison fails, return unsorted
+                    return processed
         return processed
 
     if isinstance(data, dict):
-        return {k: sort_lists_for_consistency(v) for k, v in data.items()}
+        return {k: sort_lists_for_consistency(v, key_name=k) for k, v in data.items()}
 
     return data
 
