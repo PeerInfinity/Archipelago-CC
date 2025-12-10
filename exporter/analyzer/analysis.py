@@ -98,17 +98,13 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
             local_closure_vars = closure_vars.copy()
 
             # Attempt to add function's actual closure variables TO THE COPY
-            # Note: Don't overwrite values already in closure_vars - they may have been
-            # prepared/converted by a game handler's prepare_closure_vars method
             try:
                 if hasattr(rule_func, '__closure__') and rule_func.__closure__:
                     closure_cells = rule_func.__closure__
                     free_vars = rule_func.__code__.co_freevars
                     for var_name, cell in zip(free_vars, closure_cells):
                         try:
-                            # Only add if not already present - preserve prepared values
-                            if var_name not in local_closure_vars:
-                                local_closure_vars[var_name] = cell.cell_contents
+                            local_closure_vars[var_name] = cell.cell_contents
                         except ValueError:
                             # Cell is empty, skip
                             pass

@@ -19607,181 +19607,6 @@
   },
   "helpers": {
     "1": {
-      "cross_peg_bridge": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "item_check",
-            "item": "Hammer"
-          },
-          {
-            "type": "item_check",
-            "item": "Moon Pearl"
-          }
-        ]
-      },
-      "has_melee_weapon": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "has_sword",
-            "args": []
-          },
-          {
-            "type": "item_check",
-            "item": "Hammer"
-          }
-        ]
-      },
-      "can_bomb_or_bonk": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "item_check",
-            "item": "Pegasus Boots"
-          },
-          {
-            "type": "helper",
-            "name": "can_use_bombs",
-            "args": []
-          }
-        ]
-      },
-      "can_lift_rocks": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "item_check",
-            "item": "Power Glove"
-          },
-          {
-            "type": "item_check",
-            "item": "Titans Mitts"
-          }
-        ]
-      },
-      "can_activate_crystal_switch": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "has_melee_weapon",
-            "args": []
-          },
-          {
-            "type": "helper",
-            "name": "can_use_bombs",
-            "args": []
-          },
-          {
-            "type": "helper",
-            "name": "can_shoot_arrows",
-            "args": []
-          },
-          {
-            "type": "state_method",
-            "method": "has_any",
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Blue Boomerang",
-                  "Cane of Byrna",
-                  "Cane of Somaria",
-                  "Fire Rod",
-                  "Hookshot",
-                  "Ice Rod",
-                  "Red Boomerang"
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "has_sword": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "item_check",
-            "item": "Fighter Sword"
-          },
-          {
-            "type": "item_check",
-            "item": "Master Sword"
-          },
-          {
-            "type": "item_check",
-            "item": "Tempered Sword"
-          },
-          {
-            "type": "item_check",
-            "item": "Golden Sword"
-          }
-        ]
-      },
-      "can_melt_things": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "item_check",
-            "item": "Fire Rod"
-          },
-          {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Bombos"
-              },
-              {
-                "type": "or",
-                "conditions": [
-                  {
-                    "type": "setting_value",
-                    "setting": "swordless"
-                  },
-                  {
-                    "type": "helper",
-                    "name": "has_sword",
-                    "args": []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "has_fire_source": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "item_check",
-            "item": "Fire Rod"
-          },
-          {
-            "type": "item_check",
-            "item": "Lamp"
-          }
-        ]
-      },
-      "has_beam_sword": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "item_check",
-            "item": "Master Sword"
-          },
-          {
-            "type": "item_check",
-            "item": "Tempered Sword"
-          },
-          {
-            "type": "item_check",
-            "item": "Golden Sword"
-          }
-        ]
-      },
       "basement_key_rule": {
         "type": "conditional",
         "test": {
@@ -19828,9 +19653,106 @@
           }
         }
       },
+      "can_activate_crystal_switch": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "has_melee_weapon",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "can_use_bombs",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "can_shoot_arrows",
+            "args": []
+          },
+          {
+            "type": "state_method",
+            "method": "has_any",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Blue Boomerang",
+                  "Cane of Byrna",
+                  "Cane of Somaria",
+                  "Fire Rod",
+                  "Hookshot",
+                  "Ice Rod",
+                  "Red Boomerang"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "can_bomb_or_bonk": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Pegasus Boots"
+          },
+          {
+            "type": "helper",
+            "name": "can_use_bombs",
+            "args": []
+          }
+        ]
+      },
       "can_lift_heavy_rocks": {
         "type": "item_check",
         "item": "Titans Mitts"
+      },
+      "can_lift_rocks": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Power Glove"
+          },
+          {
+            "type": "item_check",
+            "item": "Titans Mitts"
+          }
+        ]
+      },
+      "can_melt_things": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Fire Rod"
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Bombos"
+              },
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "setting_value",
+                    "setting": "swordless"
+                  },
+                  {
+                    "type": "helper",
+                    "name": "has_sword",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       },
       "can_retrieve_tablet": {
         "type": "and",
@@ -19861,6 +19783,84 @@
                 ]
               }
             ]
+          }
+        ]
+      },
+      "cross_peg_bridge": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Hammer"
+          },
+          {
+            "type": "item_check",
+            "item": "Moon Pearl"
+          }
+        ]
+      },
+      "has_beam_sword": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Master Sword"
+          },
+          {
+            "type": "item_check",
+            "item": "Tempered Sword"
+          },
+          {
+            "type": "item_check",
+            "item": "Golden Sword"
+          }
+        ]
+      },
+      "has_fire_source": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Fire Rod"
+          },
+          {
+            "type": "item_check",
+            "item": "Lamp"
+          }
+        ]
+      },
+      "has_melee_weapon": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "has_sword",
+            "args": []
+          },
+          {
+            "type": "item_check",
+            "item": "Hammer"
+          }
+        ]
+      },
+      "has_sword": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Fighter Sword"
+          },
+          {
+            "type": "item_check",
+            "item": "Master Sword"
+          },
+          {
+            "type": "item_check",
+            "item": "Tempered Sword"
+          },
+          {
+            "type": "item_check",
+            "item": "Golden Sword"
           }
         ]
       }
