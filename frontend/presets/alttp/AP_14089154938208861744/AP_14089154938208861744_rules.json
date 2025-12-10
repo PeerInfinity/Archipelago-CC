@@ -19570,7 +19570,7 @@
       "retro_bow": false,
       "swordless": false,
       "enemy_shuffle": false,
-      "enemy_health": "easy",
+      "enemy_health": "default",
       "enemy_damage": "default",
       "bombless_start": false,
       "glitches_required": "none",

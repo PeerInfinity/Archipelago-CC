@@ -572,7 +572,11 @@ class BaseGameExportHandler:
         return []
         
     def cleanup_settings(self, settings_dict: Dict[str, Any]) -> Dict[str, Any]:
-        """Perform game-specific cleanup/mapping on exported settings."""
+        """Perform game-specific cleanup/mapping on exported settings.
+
+        Converts numeric option values to string names to match how Python
+        helpers compare against option values.
+        """
         common_setting_mappings = {
             'accessibility': {0: 'items', 1: 'locations', 2: 'none'},
         }

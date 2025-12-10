@@ -547,9 +547,10 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
          }
 
     # Define mappings within the class or load from a helper module
+    # These map numeric option values to the string names used in Python helpers
     alttp_setting_mappings = {
         'dark_room_logic': {0: 'lamp', 1: 'torches', 2: 'none'},
-        'enemy_health': {0: 'default', 1: 'easy', 2: 'hard', 3: 'expert'},
+        'enemy_health': {0: 'easy', 1: 'default', 2: 'hard', 3: 'expert'},
         'enemy_damage': {0: 'default', 1: 'shuffled', 2: 'chaos'},
         'glitches_required': {0: 'none', 1: 'overworld_glitches', 2: 'major_glitches', 3: 'no_logic'},
         'accessibility': {0: 'items', 1: 'locations', 2: 'none'},
@@ -557,7 +558,8 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         'pot_shuffle': {0: 'off', 1: 'on'},
         'mode': {0: 'standard', 1: 'open', 2: 'inverted', 3: 'retro'},
         'glitch_boots': {0: 'off', 1: 'on'},
-        'shuffle_capacity_upgrades': {0: 'off', 1: 'on', 2: 'progressive'} # Assuming numeric values
+        'item_functionality': {0: 'normal', 1: 'hard', 2: 'expert'},
+        'shuffle_capacity_upgrades': {0: 'off', 1: 'on', 2: 'progressive'}
     }
     alttp_boolean_settings = [
         'retro_bow', 'swordless', 'enemy_shuffle', 'bombless_start'
@@ -572,7 +574,7 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             if isinstance(value, str) and value.startswith("ERROR:"):
                 continue
 
-            # Apply numeric->string mapping
+            # Apply numeric->string mapping to match Python helper comparisons
             if setting_name in self.alttp_setting_mappings and isinstance(value, int):
                 if value in self.alttp_setting_mappings[setting_name]:
                     cleaned_settings[setting_name] = self.alttp_setting_mappings[setting_name][value]
