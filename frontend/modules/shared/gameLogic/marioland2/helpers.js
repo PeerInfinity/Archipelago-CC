@@ -169,18 +169,14 @@ export function turtle_zone_1_normal_exit(snapshot, staticData) {
 
 /**
  * Check if Mario Zone 1 normal exit is accessible.
- * Requires has_pipe_right and either power-ups or auto-scroll enabled.
+ * Requires has_pipe_right and either auto-scroll is NOT enabled or has power-ups/midway bell.
+ *
+ * Python logic: has_pipe_right AND (NOT is_auto_scroll OR has_any([powerups/midway bell]))
  */
 export function mario_zone_1_normal_exit(snapshot, staticData) {
-    if (has_pipe_right(snapshot, staticData)) {
-        if (hasAny(snapshot, ["Mushroom", "Fire Flower", "Carrot", "Mario Zone 1 Midway Bell"])) {
-            return true;
-        }
-        if (is_auto_scroll(snapshot, staticData, "Mario Zone 1")) {
-            return true;
-        }
-    }
-    return false;
+    return has_pipe_right(snapshot, staticData) &&
+           (!is_auto_scroll(snapshot, staticData, "Mario Zone 1") ||
+            hasAny(snapshot, ["Mushroom", "Fire Flower", "Carrot", "Mario Zone 1 Midway Bell"]));
 }
 
 /**
