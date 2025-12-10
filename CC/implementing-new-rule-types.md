@@ -352,6 +352,42 @@ def visit_Attribute(self, node):
 
 **Key insight:** Pattern detection is useful when Python code uses a common idiom that produces verbose output. By detecting the pattern early in the analyzer, you can emit a simpler, more semantic rule type that the frontend can easily evaluate.
 
+**Important: Two `getSetting` implementations must be updated**
+
+The frontend has two separate `getSetting` implementations that both need to handle `setting_value` rules:
+
+1. **`frontend/modules/stateManager/core/statePersistence.js`** - Used by StateManager during normal app operation (tracking game state)
+
+2. **`frontend/modules/shared/stateInterface.js`** - Used by ComparisonEngine during spoiler testing (via `createStateSnapshotInterface`)
+
+Both implementations need to handle:
+- **Player-keyed settings**: In multiworld, settings are stored as `{"1": {...settings...}}` keyed by player ID
+- **String normalization**: Python Choice options export `0` as `'off'`, which is truthy in JavaScript but should be falsy
+
+```javascript
+getSetting: (settingName) => {
+  // Settings may be keyed by player ID in multiworld
+  let settingsToUse = /* get settings object */;
+  const playerIdKey = String(playerId);
+  if (settingsToUse[playerIdKey] && typeof settingsToUse[playerIdKey] === 'object') {
+    settingsToUse = settingsToUse[playerIdKey];
+  }
+
+  const rawValue = settingsToUse?.[settingName];
+
+  // Normalize "off"/"none" type strings to falsy values
+  if (typeof rawValue === 'string') {
+    const lowerValue = rawValue.toLowerCase();
+    if (lowerValue === 'off' || lowerValue === 'none' || lowerValue === 'false' || lowerValue === '') {
+      return 0;
+    }
+  }
+  return rawValue;
+},
+```
+
+**Note:** The `stateInterface.js` version also needs to look in `staticData.settings` as a fallback, since the ComparisonEngine's snapshot may not have settings directly attached.
+
 ## Debugging Tips
 
 ### Print Analyzer Output
