@@ -1469,10 +1469,46 @@ def main():
 
                     # Store second pass result
                     # Merge into existing result, preserving first pass data
+                    second_pass_test_result = second_pass_result.get('multiworld_test', {})
                     if yaml_file in results['results']:
-                        results['results'][yaml_file]['second_pass'] = second_pass_result.get('multiworld_test', {})
+                        results['results'][yaml_file]['second_pass'] = second_pass_test_result
                     else:
                         results['results'][yaml_file] = second_pass_result
+
+                    # If bisection is enabled and the second pass test failed, run bisection tests
+                    if args.multiworld_bisect_failures and not second_pass_test_result.get('success', True):
+                        # Get the list of templates that were in the multiworld (excluding the current one)
+                        templates_in_multiworld = second_pass_test_result.get('templates_in_multiworld', {})
+                        other_templates = [t for t in templates_in_multiworld.values() if t != yaml_file]
+
+                        if other_templates:
+                            print(f"\n=== Running bisection tests for {yaml_file} (second pass) ===")
+                            bisection_result = test_template_multiworld_bisect(
+                                yaml_file, templates_dir, project_root, world_mapping,
+                                str(seed_list[0]), multiworld_dir, other_templates,
+                                headed=args.headed,
+                                include_error_details=args.include_error_details
+                            )
+                            results['results'][yaml_file]['second_pass']['bisection_results'] = bisection_result
+
+                            # After bisection, restore the multiworld directory to its previous state
+                            print(f"\nRestoring multiworld directory after bisection...")
+                            for f in os.listdir(multiworld_dir):
+                                if f.endswith('.yaml'):
+                                    try:
+                                        os.remove(os.path.join(multiworld_dir, f))
+                                    except Exception as e:
+                                        print(f"  Warning: Could not remove {f}: {e}")
+
+                            for other_template in other_templates:
+                                try:
+                                    source_path = os.path.join(templates_dir, other_template)
+                                    dest_path = os.path.join(multiworld_dir, other_template)
+                                    shutil.copy2(source_path, dest_path)
+                                except Exception as e:
+                                    print(f"  Warning: Could not restore {other_template}: {e}")
+                        else:
+                            print(f"\n=== Skipping bisection for {yaml_file} (no other templates to test with) ===")
 
                     # Save results incrementally
                     templates_tested_so_far = list(results['results'].keys())

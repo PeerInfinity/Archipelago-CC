@@ -811,6 +811,51 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
 
                 md_content += "\n"
 
+        # Add Second Pass Bisection Results subsection if any exist
+        entries_with_second_pass_bisection = [e for e in entries_with_second_pass
+                                               if e.get('second_pass', {}).get('bisection_results')]
+        if entries_with_second_pass_bisection:
+            md_content += "### Second Pass Bisection Results\n\n"
+            md_content += "When a second pass multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.\n\n"
+
+            for entry in entries_with_second_pass_bisection:
+                game_name = entry['game_name']
+                template_filename = entry.get('template_filename', game_name)
+                bisection = entry['second_pass']['bisection_results']
+
+                md_content += f"#### {game_name} ({template_filename})\n\n"
+
+                tested_pairs = bisection.get('tested_pairs', [])
+                failing_pairs = bisection.get('failing_pairs', [])
+
+                if failing_pairs:
+                    md_content += f"**Failing pairs found:** {len(failing_pairs)}\n\n"
+                else:
+                    md_content += "**No failing pairs found** (failure may be due to combination of 3+ templates)\n\n"
+
+                if tested_pairs:
+                    md_content += "| Partner Template | Result | Generation | Player 1 | Player 2 |\n"
+                    md_content += "|------------------|--------|------------|----------|----------|\n"
+
+                    for pair in tested_pairs:
+                        partner = pair.get('partner_template', 'Unknown')
+                        success = pair.get('success', False)
+                        gen_success = pair.get('generation_success', False)
+
+                        result_icon = "✅" if success else "❌"
+                        gen_icon = "✅" if gen_success else "❌"
+
+                        player_results = pair.get('player_results', {})
+                        p1_result = player_results.get('player_1', {})
+                        p2_result = player_results.get('player_2', {})
+
+                        p1_icon = "✅" if p1_result.get('passed', False) else ("❌" if p1_result else "—")
+                        p2_icon = "✅" if p2_result.get('passed', False) else ("❌" if p2_result else "—")
+
+                        md_content += f"| {partner} | {result_icon} | {gen_icon} | {p1_icon} | {p2_icon} |\n"
+
+                    md_content += "\n"
+
     md_content += "\n## Notes\n\n"
     md_content += "- **Player #:** The player number assigned to this template in the multiworld\n"
     md_content += "- **Total Players / MW Size:** Number of players in the multiworld configuration when this template was tested\n"

@@ -180,6 +180,59 @@ If tests fail:
 3. Re-run tests
 4. Repeat until tests pass
 
+### Step 4b: Add Support for New Rule Types (Alternative)
+
+If progress is stalled because blacklisting would require excluding too many helpers (defeating the purpose of automatic export), consider adding support for the missing rule type instead. This is a one-time infrastructure improvement that benefits all games.
+
+**Identifying the missing rule type:**
+1. Run the spoiler test and check browser console for: `[evaluateRule] Unknown rule type: <type>`
+2. Or examine the generated `rules.json` to find rule structures with unfamiliar `type` values
+3. Compare helper definitions in `rules.json` to the original Python code to understand what pattern isn't being handled
+
+**Files to modify (in order):**
+
+| File | Purpose |
+|------|---------|
+| `exporter/analyzer/ast_visitors.py` | Convert Python AST pattern to rule JSON |
+| `frontend/modules/shared/ruleEngine.js` | Evaluate the rule type at runtime |
+
+**Example: Adding `group_count` support (from commit c859b4cfe)**
+
+1. **Analyzer** - Handle `state.count_group(group_name, player)`:
+```python
+elif method == 'count_group' and len(filtered_args) >= 1:
+    group_arg = filtered_args[0]
+    if isinstance(group_arg, dict) and group_arg.get('type') == 'constant':
+        group_value = group_arg.get('value')
+    elif isinstance(group_arg, str):
+        group_value = group_arg
+    else:
+        group_value = group_arg
+    result = {'type': 'group_count', 'group': group_value}
+```
+
+2. **Frontend Rule Engine** - Evaluate the new type:
+```javascript
+case 'group_count': {
+  const groupName = evaluateRule(rule.group, context, depth + 1);
+  if (groupName === undefined) {
+    result = undefined;
+  } else if (typeof context.countGroup === 'function') {
+    result = context.countGroup(groupName) ?? 0;
+  } else {
+    result = undefined;
+  }
+  break;
+}
+```
+
+**Recent examples of rule type additions:**
+- `c859b4cfe` - Add `group_count` for `state.count_group()` method
+- `d14f7433d` - Add `block`, `assign`, `return`, `for_range` for imperative code
+- `84a156ebb` - Add Entrance type support to `can_reach` method
+
+After adding rule type support, return to Step 3 and re-test.
+
 ### Step 5: Remove JavaScript Helpers
 
 Only after tests pass:

@@ -12,6 +12,9 @@ class AHitGameExportHandler(BaseGameExportHandler):
 
     GAME_NAME = 'A Hat in Time'
 
+    # Module containing helper functions for definition export
+    HELPER_MODULES = ['worlds.ahit.Rules']
+
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
@@ -22,12 +25,16 @@ class AHitGameExportHandler(BaseGameExportHandler):
     # - get_hat_cost: Has loop through hat_craft_order
     # - has_relic_combo: Uses state.has_group which needs special handling
     # - get_relic_count: Uses state.count_group which needs special handling
+    # - painting_logic: Settings lookup (analyzer exports as world.options reference)
+    # - get_difficulty: Settings lookup (analyzer exports as world.options reference)
     HELPERS_TO_EXPORT_BLACKLIST: Set[str] = {
         'can_clear_required_act',
         'can_use_hat',
         'get_hat_cost',
         'has_relic_combo',
         'get_relic_count',
+        'painting_logic',
+        'get_difficulty',
     }
 
     # Preserve these helpers as helper calls (don't inline their bodies)
@@ -38,6 +45,8 @@ class AHitGameExportHandler(BaseGameExportHandler):
         'get_hat_cost',
         'has_relic_combo',
         'get_relic_count',
+        'painting_logic',
+        'get_difficulty',
     }
 
     def get_settings_data(self, world, multiworld, player):

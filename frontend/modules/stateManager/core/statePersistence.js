@@ -403,9 +403,19 @@ export function _createSelfSnapshotInterface(sm) {
 
       // World object (commonly used in helper functions)
       if (name === 'world') {
+        // sm.settings is typically the player-specific settings object directly (not keyed by player ID)
+        // The settings structure may have game options nested under settings.options
+        // (for games like Shivers with options like early_beth) or directly on settings
+        // Also handle case where settings might be keyed by player ID
+        let settingsToUse = sm.settings;
+        // Check if settings is keyed by player ID (multiworld case)
+        if (sm.settings?.[sm.playerId] && typeof sm.settings[sm.playerId] === 'object') {
+          settingsToUse = sm.settings[sm.playerId];
+        }
+        const gameOptions = settingsToUse?.options || settingsToUse || {};
         return {
           player: sm.playerId,
-          options: sm.settings?.[sm.playerId] || sm.settings || {}
+          options: gameOptions
         };
       }
 

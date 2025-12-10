@@ -705,13 +705,11 @@ def main():
     # Determine project root
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 
-    # Load world mapping for --basic-spoiler-debug and --helper-export modes
-    world_mapping = None
-    if args.basic_spoiler_debug or args.helper_export:
-        world_mapping = load_world_mapping(project_root)
-        if not world_mapping:
-            print("Error: Could not load world mapping")
-            sys.exit(1)
+    # Load world mapping (needed for filtering by custom code status)
+    # Used by: --basic-spoiler-debug, --helper-export, and normal mode (to exclude basic games)
+    world_mapping = load_world_mapping(project_root)
+    if not world_mapping:
+        print("Warning: Could not load world mapping, will not filter by custom code status", file=sys.stderr)
 
     # Determine if we're in quiet mode (just outputting prompt or command text)
     # --loud flag overrides quiet mode for testing
@@ -891,6 +889,21 @@ def main():
                         if cycle_num >= args.max_loops:
                             break
                     continue
+
+                # For normal mode (not multiclient/multiworld/basic-spoiler-debug), skip basic games
+                # Basic games should use --basic-spoiler-debug mode instead
+                if not args.basic_spoiler_debug and not args.multiclient and not args.multiworld and world_mapping:
+                    if not has_custom_code(game_name_from_yaml, world_mapping):
+                        if not quiet_mode:
+                            print(f"Skipping {game_name_from_yaml} - no custom exporter or helpers (use --basic-spoiler-debug for basic games)")
+                        # Move to next template without incrementing files_processed
+                        current_index = (current_index + 1) % len(template_files)
+                        processed_count += 1
+                        if processed_count % len(template_files) == 0:
+                            cycle_num = processed_count // len(template_files)
+                            if cycle_num >= args.max_loops:
+                                break
+                        continue
 
                 # Check if seed 1 passes but another seed fails
                 failing_seed = get_first_failing_seed(template_file, test_results)
