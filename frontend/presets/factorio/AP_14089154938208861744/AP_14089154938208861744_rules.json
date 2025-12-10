@@ -10398,11 +10398,11 @@
             "logistics-2"
           ],
           "lubricant": [
-            "advanced-oil-processing",
-            "lubricant",
-            "oil-gathering",
             "oil-processing",
-            "steel-processing"
+            "lubricant",
+            "advanced-oil-processing",
+            "steel-processing",
+            "oil-gathering"
           ],
           "assembling-machine-1": [
             "automation"
@@ -10420,11 +10420,11 @@
           ],
           "advanced-circuit": [
             "advanced-circuit",
-            "advanced-oil-processing",
-            "oil-gathering",
             "oil-processing",
+            "advanced-oil-processing",
             "plastics",
-            "steel-processing"
+            "steel-processing",
+            "oil-gathering"
           ],
           "fast-splitter": [
             "logistics",
@@ -10436,106 +10436,106 @@
           ],
           "copper-cable": [],
           "iron-stick": [
-            "circuit-network",
-            "concrete",
             "electric-energy-distribution-1",
-            "railway"
+            "circuit-network",
+            "railway",
+            "concrete"
           ],
           "pipe": [],
           "engine-unit": [
             "automation",
-            "engine",
-            "steel-processing"
+            "steel-processing",
+            "engine"
           ],
           "stone": [],
           "storage-tank": [
-            "fluid-handling",
-            "steel-processing"
+            "steel-processing",
+            "fluid-handling"
           ],
           "raw-fish": [],
           "processing-unit": [
             "advanced-circuit",
             "advanced-oil-processing",
+            "sulfur-processing",
             "automation",
             "oil-gathering",
             "oil-processing",
             "plastics",
             "processing-unit",
-            "steel-processing",
-            "sulfur-processing"
+            "steel-processing"
           ],
           "low-density-structure": [
-            "advanced-oil-processing",
             "low-density-structure",
-            "oil-gathering",
             "oil-processing",
+            "advanced-oil-processing",
             "plastics",
-            "steel-processing"
+            "steel-processing",
+            "oil-gathering"
           ],
           "efficiency-module-3": [
             "advanced-circuit",
             "advanced-oil-processing",
-            "automation",
             "efficiency-module",
-            "efficiency-module-2",
             "efficiency-module-3",
+            "sulfur-processing",
+            "automation",
+            "efficiency-module-2",
             "oil-gathering",
             "oil-processing",
             "plastics",
             "processing-unit",
-            "steel-processing",
-            "sulfur-processing"
+            "steel-processing"
           ],
           "rocket-launcher": [
             "rocketry"
           ],
           "fission-reactor-equipment": [
             "advanced-circuit",
-            "advanced-oil-processing",
-            "automation",
-            "concrete",
-            "fission-reactor-equipment",
             "low-density-structure",
+            "advanced-oil-processing",
+            "sulfur-processing",
+            "automation",
+            "uranium-mining",
+            "uranium-processing",
             "nuclear-power",
             "oil-gathering",
             "oil-processing",
-            "plastics",
+            "fission-reactor-equipment",
             "processing-unit",
-            "steel-processing",
-            "sulfur-processing",
-            "uranium-mining",
-            "uranium-processing"
+            "plastics",
+            "concrete",
+            "steel-processing"
           ],
           "exoskeleton-equipment": [
             "advanced-circuit",
+            "lubricant",
             "advanced-oil-processing",
+            "sulfur-processing",
             "automation",
             "electric-engine",
-            "engine",
-            "exoskeleton-equipment",
-            "lubricant",
             "oil-gathering",
+            "exoskeleton-equipment",
             "oil-processing",
+            "engine",
             "plastics",
             "processing-unit",
-            "steel-processing",
-            "sulfur-processing"
+            "steel-processing"
           ],
           "radar": [
             "radar"
           ],
           "flying-robot-frame": [
-            "advanced-oil-processing",
-            "automation",
-            "battery",
-            "electric-engine",
-            "engine",
             "lubricant",
+            "advanced-oil-processing",
+            "sulfur-processing",
+            "automation",
+            "electric-engine",
+            "battery",
             "oil-gathering",
             "oil-processing",
             "robotics",
-            "steel-processing",
-            "sulfur-processing"
+            "engine",
+            "steel-processing"
           ],
           "steel-chest": [
             "steel-processing"
@@ -10552,36 +10552,36 @@
             "concrete"
           ],
           "refined-concrete": [
+            "railway",
+            "electric-energy-distribution-1",
             "automation",
             "circuit-network",
             "concrete",
-            "electric-energy-distribution-1",
-            "railway",
             "steel-processing"
           ],
           "explosives": [
-            "advanced-oil-processing",
-            "explosives",
-            "oil-gathering",
             "oil-processing",
+            "explosives",
+            "advanced-oil-processing",
+            "sulfur-processing",
             "steel-processing",
-            "sulfur-processing"
+            "oil-gathering"
           ],
           "barrel": [
-            "fluid-handling",
-            "steel-processing"
+            "steel-processing",
+            "fluid-handling"
           ],
           "grenade": [
             "military-2"
           ],
           "copper-plate": [],
           "battery": [
-            "advanced-oil-processing",
-            "battery",
-            "oil-gathering",
             "oil-processing",
+            "advanced-oil-processing",
+            "sulfur-processing",
+            "battery",
             "steel-processing",
-            "sulfur-processing"
+            "oil-gathering"
           ],
           "assembling-machine-2": [
             "automation",
@@ -10590,104 +10590,104 @@
           ],
           "speed-module": [
             "advanced-circuit",
-            "advanced-oil-processing",
-            "oil-gathering",
             "oil-processing",
-            "plastics",
+            "advanced-oil-processing",
             "speed-module",
-            "steel-processing"
+            "plastics",
+            "steel-processing",
+            "oil-gathering"
           ],
           "speed-module-2": [
             "advanced-circuit",
             "advanced-oil-processing",
+            "sulfur-processing",
             "automation",
             "oil-gathering",
             "oil-processing",
-            "plastics",
-            "processing-unit",
             "speed-module",
             "speed-module-2",
-            "steel-processing",
-            "sulfur-processing"
+            "plastics",
+            "processing-unit",
+            "steel-processing"
           ],
           "efficiency-module": [
             "advanced-circuit",
-            "advanced-oil-processing",
-            "efficiency-module",
-            "oil-gathering",
             "oil-processing",
+            "efficiency-module",
+            "advanced-oil-processing",
             "plastics",
-            "steel-processing"
+            "steel-processing",
+            "oil-gathering"
           ],
           "efficiency-module-2": [
             "advanced-circuit",
             "advanced-oil-processing",
-            "automation",
-            "efficiency-module",
             "efficiency-module-2",
+            "sulfur-processing",
+            "efficiency-module",
+            "automation",
             "oil-gathering",
             "oil-processing",
             "plastics",
             "processing-unit",
-            "steel-processing",
-            "sulfur-processing"
+            "steel-processing"
           ],
           "productivity-module": [
             "advanced-circuit",
-            "advanced-oil-processing",
-            "oil-gathering",
             "oil-processing",
+            "advanced-oil-processing",
             "plastics",
-            "productivity-module",
-            "steel-processing"
+            "oil-gathering",
+            "steel-processing",
+            "productivity-module"
           ],
           "productivity-module-2": [
+            "productivity-module-2",
             "advanced-circuit",
             "advanced-oil-processing",
+            "sulfur-processing",
             "automation",
             "oil-gathering",
             "oil-processing",
             "plastics",
             "processing-unit",
-            "productivity-module",
-            "productivity-module-2",
             "steel-processing",
-            "sulfur-processing"
+            "productivity-module"
           ],
           "electric-engine-unit": [
+            "lubricant",
             "advanced-oil-processing",
             "automation",
             "electric-engine",
             "engine",
-            "lubricant",
-            "oil-gathering",
             "oil-processing",
+            "oil-gathering",
             "steel-processing"
           ],
           "rocket-fuel": [
-            "advanced-oil-processing",
-            "automation",
-            "oil-gathering",
             "oil-processing",
             "rocket-fuel",
-            "steel-processing"
+            "advanced-oil-processing",
+            "automation",
+            "steel-processing",
+            "oil-gathering"
           ],
           "solar-panel": [
             "solar-energy",
             "steel-processing"
           ],
           "accumulator": [
-            "advanced-oil-processing",
-            "battery",
-            "electric-energy-accumulators",
-            "oil-gathering",
             "oil-processing",
+            "advanced-oil-processing",
+            "sulfur-processing",
+            "electric-energy-accumulators",
+            "battery",
             "steel-processing",
-            "sulfur-processing"
+            "oil-gathering"
           ],
           "crude-oil": [
-            "oil-gathering",
-            "steel-processing"
+            "steel-processing",
+            "oil-gathering"
           ],
           "oil-refinery": [
             "oil-processing",
@@ -10695,10 +10695,10 @@
           ],
           "coal": [],
           "heavy-oil": [
-            "advanced-oil-processing",
-            "oil-gathering",
             "oil-processing",
-            "steel-processing"
+            "advanced-oil-processing",
+            "steel-processing",
+            "oil-gathering"
           ],
           "steam": [],
           "chemical-plant": [
@@ -10706,156 +10706,156 @@
             "steel-processing"
           ],
           "light-oil": [
-            "advanced-oil-processing",
-            "oil-gathering",
             "oil-processing",
-            "steel-processing"
+            "advanced-oil-processing",
+            "steel-processing",
+            "oil-gathering"
           ],
           "petroleum-gas": [
-            "advanced-oil-processing",
-            "oil-gathering",
             "oil-processing",
-            "steel-processing"
+            "advanced-oil-processing",
+            "steel-processing",
+            "oil-gathering"
           ],
           "sulfur": [
-            "advanced-oil-processing",
-            "oil-gathering",
             "oil-processing",
+            "advanced-oil-processing",
+            "sulfur-processing",
             "steel-processing",
-            "sulfur-processing"
+            "oil-gathering"
           ],
           "copper-ore": [],
           "sulfuric-acid": [
-            "advanced-oil-processing",
-            "oil-gathering",
             "oil-processing",
+            "advanced-oil-processing",
+            "sulfur-processing",
             "steel-processing",
-            "sulfur-processing"
+            "oil-gathering"
           ],
           "water-barrel": [
             "automation",
-            "fluid-handling",
-            "steel-processing"
+            "steel-processing",
+            "fluid-handling"
           ],
           "crude-oil-barrel": [
             "automation",
-            "fluid-handling",
             "oil-gathering",
-            "steel-processing"
+            "steel-processing",
+            "fluid-handling"
           ],
           "petroleum-gas-barrel": [
-            "advanced-oil-processing",
-            "automation",
-            "fluid-handling",
-            "oil-gathering",
             "oil-processing",
-            "steel-processing"
+            "advanced-oil-processing",
+            "fluid-handling",
+            "automation",
+            "steel-processing",
+            "oil-gathering"
           ],
           "light-oil-barrel": [
-            "advanced-oil-processing",
-            "automation",
-            "fluid-handling",
-            "oil-gathering",
             "oil-processing",
-            "steel-processing"
+            "advanced-oil-processing",
+            "fluid-handling",
+            "automation",
+            "steel-processing",
+            "oil-gathering"
           ],
           "heavy-oil-barrel": [
-            "advanced-oil-processing",
-            "automation",
-            "fluid-handling",
-            "oil-gathering",
             "oil-processing",
-            "steel-processing"
+            "advanced-oil-processing",
+            "fluid-handling",
+            "automation",
+            "steel-processing",
+            "oil-gathering"
           ],
           "lubricant-barrel": [
-            "advanced-oil-processing",
-            "automation",
-            "fluid-handling",
-            "lubricant",
-            "oil-gathering",
             "oil-processing",
-            "steel-processing"
+            "lubricant",
+            "advanced-oil-processing",
+            "fluid-handling",
+            "automation",
+            "steel-processing",
+            "oil-gathering"
           ],
           "sulfuric-acid-barrel": [
-            "advanced-oil-processing",
-            "automation",
-            "fluid-handling",
-            "oil-gathering",
             "oil-processing",
+            "advanced-oil-processing",
+            "sulfur-processing",
+            "fluid-handling",
+            "automation",
             "steel-processing",
-            "sulfur-processing"
+            "oil-gathering"
           ],
           "plastic-bar": [
-            "advanced-oil-processing",
-            "oil-gathering",
             "oil-processing",
+            "advanced-oil-processing",
             "plastics",
-            "steel-processing"
+            "steel-processing",
+            "oil-gathering"
           ],
           "solid-fuel": [
-            "advanced-oil-processing",
-            "oil-gathering",
             "oil-processing",
-            "steel-processing"
+            "advanced-oil-processing",
+            "steel-processing",
+            "oil-gathering"
           ],
           "rocket-silo": [
             "advanced-circuit",
-            "advanced-oil-processing",
-            "automation",
-            "concrete",
-            "electric-engine",
-            "engine",
             "lubricant",
+            "advanced-oil-processing",
+            "sulfur-processing",
+            "automation",
+            "electric-engine",
             "oil-gathering",
             "oil-processing",
+            "engine",
+            "concrete",
+            "rocket-silo",
             "plastics",
             "processing-unit",
-            "rocket-silo",
-            "steel-processing",
-            "sulfur-processing"
+            "steel-processing"
           ],
           "uranium-ore": [
-            "advanced-oil-processing",
-            "oil-gathering",
             "oil-processing",
-            "steel-processing",
+            "advanced-oil-processing",
             "sulfur-processing",
-            "uranium-mining"
+            "uranium-mining",
+            "steel-processing",
+            "oil-gathering"
           ],
           "centrifuge": [
             "advanced-circuit",
             "advanced-oil-processing",
             "automation",
-            "concrete",
+            "uranium-processing",
             "oil-gathering",
             "oil-processing",
             "plastics",
-            "steel-processing",
-            "uranium-processing"
+            "concrete",
+            "steel-processing"
           ],
           "uranium-235": [
             "advanced-circuit",
             "advanced-oil-processing",
-            "concrete",
+            "sulfur-processing",
+            "uranium-mining",
+            "uranium-processing",
             "oil-gathering",
             "oil-processing",
             "plastics",
-            "steel-processing",
-            "sulfur-processing",
-            "uranium-mining",
-            "uranium-processing"
+            "concrete",
+            "steel-processing"
           ],
           "uranium-238": [
             "advanced-circuit",
             "advanced-oil-processing",
-            "concrete",
+            "sulfur-processing",
+            "uranium-mining",
+            "uranium-processing",
             "oil-gathering",
             "oil-processing",
             "plastics",
-            "steel-processing",
-            "sulfur-processing",
-            "uranium-mining",
-            "uranium-processing"
+            "concrete",
+            "steel-processing"
           ],
           "depleted-uranium-fuel-cell": [],
           "piercing-rounds-magazine": [
@@ -10866,20 +10866,20 @@
             "stone-wall"
           ],
           "rail": [
+            "railway",
+            "electric-energy-distribution-1",
             "circuit-network",
             "concrete",
-            "electric-energy-distribution-1",
-            "railway",
             "steel-processing"
           ],
           "electric-furnace": [
             "advanced-circuit",
+            "oil-processing",
             "advanced-material-processing-2",
             "advanced-oil-processing",
-            "oil-gathering",
-            "oil-processing",
             "plastics",
-            "steel-processing"
+            "steel-processing",
+            "oil-gathering"
           ],
           "firearm-magazine": [],
           "shotgun-shell": [
@@ -10887,174 +10887,174 @@
           ],
           "cannon-shell": [
             "advanced-oil-processing",
-            "explosives",
+            "sulfur-processing",
+            "tank",
             "oil-gathering",
             "oil-processing",
+            "explosives",
             "plastics",
-            "steel-processing",
-            "sulfur-processing",
-            "tank"
+            "steel-processing"
           ],
           "explosive-cannon-shell": [
             "advanced-oil-processing",
-            "explosives",
+            "sulfur-processing",
+            "tank",
             "oil-gathering",
             "oil-processing",
+            "explosives",
             "plastics",
-            "steel-processing",
-            "sulfur-processing",
-            "tank"
+            "steel-processing"
           ],
           "rocket": [
-            "advanced-oil-processing",
-            "explosives",
-            "oil-gathering",
             "oil-processing",
+            "explosives",
             "rocketry",
+            "advanced-oil-processing",
+            "sulfur-processing",
             "steel-processing",
-            "sulfur-processing"
+            "oil-gathering"
           ],
           "defender-capsule": [
-            "defender",
             "military-2",
-            "steel-processing"
+            "steel-processing",
+            "defender"
           ],
           "distractor-capsule": [
             "advanced-circuit",
-            "advanced-oil-processing",
-            "defender",
             "distractor",
             "military-2",
+            "advanced-oil-processing",
             "oil-gathering",
             "oil-processing",
             "plastics",
-            "steel-processing"
+            "steel-processing",
+            "defender"
           ],
           "uranium-fuel-cell": [
             "advanced-circuit",
             "advanced-oil-processing",
-            "concrete",
+            "sulfur-processing",
+            "uranium-mining",
+            "uranium-processing",
             "nuclear-power",
             "oil-gathering",
             "oil-processing",
             "plastics",
-            "steel-processing",
-            "sulfur-processing",
-            "uranium-mining",
-            "uranium-processing"
+            "concrete",
+            "steel-processing"
           ],
           "battery-equipment": [
+            "oil-processing",
             "advanced-oil-processing",
+            "sulfur-processing",
+            "steel-processing",
             "battery",
             "battery-equipment",
-            "oil-gathering",
-            "oil-processing",
-            "steel-processing",
-            "sulfur-processing"
+            "oil-gathering"
           ],
           "personal-roboport-equipment": [
             "advanced-circuit",
             "advanced-oil-processing",
+            "sulfur-processing",
             "battery",
             "oil-gathering",
             "oil-processing",
             "personal-roboport-equipment",
             "plastics",
-            "steel-processing",
-            "sulfur-processing"
+            "steel-processing"
           ],
           "energy-shield-equipment": [
             "advanced-circuit",
-            "advanced-oil-processing",
-            "energy-shield-equipment",
-            "oil-gathering",
             "oil-processing",
+            "advanced-oil-processing",
             "plastics",
-            "steel-processing"
+            "energy-shield-equipment",
+            "steel-processing",
+            "oil-gathering"
           ],
           "laser-turret": [
-            "advanced-oil-processing",
-            "battery",
-            "laser-turret",
-            "oil-gathering",
             "oil-processing",
+            "laser-turret",
+            "advanced-oil-processing",
+            "sulfur-processing",
+            "battery",
             "steel-processing",
-            "sulfur-processing"
+            "oil-gathering"
           ],
           "electric-mining-drill": [],
           "pumpjack": [
-            "oil-gathering",
-            "steel-processing"
+            "steel-processing",
+            "oil-gathering"
           ],
           "night-vision-equipment": [
             "advanced-circuit",
-            "advanced-oil-processing",
-            "night-vision-equipment",
-            "oil-gathering",
             "oil-processing",
+            "advanced-oil-processing",
             "plastics",
-            "steel-processing"
+            "night-vision-equipment",
+            "steel-processing",
+            "oil-gathering"
           ],
           "flamethrower-turret": [
             "automation",
-            "engine",
             "flamethrower",
-            "steel-processing"
+            "steel-processing",
+            "engine"
           ],
           "automation-science-pack": [],
           "chemical-science-pack": [
             "advanced-circuit",
             "advanced-oil-processing",
+            "sulfur-processing",
             "automation",
-            "chemical-science-pack",
-            "engine",
             "oil-gathering",
             "oil-processing",
+            "engine",
+            "chemical-science-pack",
             "plastics",
-            "steel-processing",
-            "sulfur-processing"
+            "steel-processing"
           ],
           "logistic-science-pack": [
             "logistic-science-pack"
           ],
           "military-science-pack": [
+            "steel-processing",
             "military-2",
             "military-science-pack",
-            "steel-processing",
             "stone-wall"
           ],
           "production-science-pack": [
             "advanced-circuit",
+            "railway",
+            "production-science-pack",
             "advanced-material-processing-2",
             "advanced-oil-processing",
-            "circuit-network",
-            "concrete",
+            "plastics",
             "electric-energy-distribution-1",
             "oil-gathering",
             "oil-processing",
-            "plastics",
-            "production-science-pack",
-            "productivity-module",
-            "railway",
-            "steel-processing"
+            "circuit-network",
+            "concrete",
+            "steel-processing",
+            "productivity-module"
           ],
           "utility-science-pack": [
             "advanced-circuit",
             "advanced-oil-processing",
             "automation",
             "battery",
-            "electric-engine",
-            "engine",
-            "low-density-structure",
-            "lubricant",
-            "oil-gathering",
-            "oil-processing",
-            "plastics",
-            "processing-unit",
             "robotics",
             "steel-processing",
+            "low-density-structure",
+            "lubricant",
             "sulfur-processing",
-            "utility-science-pack"
+            "electric-engine",
+            "utility-science-pack",
+            "oil-gathering",
+            "oil-processing",
+            "engine",
+            "plastics",
+            "processing-unit"
           ]
         }
       }
