@@ -160,7 +160,10 @@ export function executeStateMethod(manager, method, ...args) {
     if (manager.stateMethods && typeof manager.stateMethods[method] === 'function') {
       const snapshot = manager.getSnapshot();
       const staticData = manager.getStaticGameData();
-      return manager.stateMethods[method](snapshot, staticData, ...args);
+      // Pass player ID as the last argument if not already provided
+      // State methods like _tww_rematch_bosses_skipped need the player ID to look up settings
+      const argsWithPlayer = args.length === 0 ? [manager.playerId] : args;
+      return manager.stateMethods[method](snapshot, staticData, ...argsWithPlayer);
     }
 
     // 4. Look in modern helperFunctions system
@@ -169,7 +172,10 @@ export function executeStateMethod(manager, method, ...args) {
       if (typeof manager.helperFunctions[method] === 'function') {
         const snapshot = manager.getSnapshot();
         const staticData = manager.getStaticGameData();
-        return manager.helperFunctions[method](snapshot, staticData, ...args);
+        // Pass player ID as the last argument if not already provided
+        // Helper functions called as state_methods need the player ID for multiworld support
+        const argsWithPlayer = args.length === 0 ? [manager.playerId] : args;
+        return manager.helperFunctions[method](snapshot, staticData, ...argsWithPlayer);
       }
     }
 

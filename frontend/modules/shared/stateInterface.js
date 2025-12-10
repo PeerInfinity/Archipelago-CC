@@ -942,14 +942,22 @@ export function createStateSnapshotInterface(
       const selectedStateMethods = getStateMethods(gameName);
 
       if (selectedStateMethods && selectedStateMethods[methodName]) {
-        return selectedStateMethods[methodName](snapshot, staticData, ...args);
+        // For state methods with no args, pass the player ID so they can look up
+        // player-specific settings (important for multiworld)
+        const playerId = snapshot?.player?.id || snapshot?.player?.slot || DEFAULT_PLAYER_ID;
+        const argsWithPlayer = args.length === 0 ? [playerId] : args;
+        return selectedStateMethods[methodName](snapshot, staticData, ...argsWithPlayer);
       }
 
       // Use game-specific agnostic helpers for all helper methods
       const selectedHelpers = getHelperFunctions(gameName);
 
       if (selectedHelpers[methodName]) {
-        return selectedHelpers[methodName](snapshot, staticData, ...args);
+        // For helper methods with no args, pass the player ID so they can look up
+        // player-specific data (important for multiworld)
+        const playerId = snapshot?.player?.id || snapshot?.player?.slot || DEFAULT_PLAYER_ID;
+        const argsWithPlayer = args.length === 0 ? [playerId] : args;
+        return selectedHelpers[methodName](snapshot, staticData, ...argsWithPlayer);
       }
 
       // Legacy helper system removed - all games should use agnostic helpers
