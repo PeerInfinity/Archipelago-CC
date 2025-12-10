@@ -1676,6 +1676,16 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
     except Exception as e:
         logger.warning(f"Could not count item placements for player {player}: {e}")
 
+    # Also count starting items (precollected_items) since they contribute to max_count
+    # This is important for games like Paint where progressive items start with 1 copy
+    try:
+        for starting_item in multiworld.precollected_items.get(player, []):
+            if hasattr(starting_item, 'name'):
+                item_name = starting_item.name
+                placement_counts[item_name] = placement_counts.get(item_name, 0) + 1
+    except Exception as e:
+        logger.warning(f"Could not count starting items for player {player}: {e}")
+
     # Update max_count based on actual placements (use max of current max_count and placements)
     for item_name, item_data in items_data.items():
         placement_count = placement_counts.get(item_name, 0)
