@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2025-12-10 20:24:36
+**Generated:** 2025-12-10 20:58:26
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -129,6 +129,7 @@ The following games are excluded from automated testing:
 | Ocarina of Time | The default yaml file fails to generate |
 | Sudoku | Cannot be used for generating worlds |
 | Universal Tracker | Not a game |
+| Yu-Gi-Oh! 2006 | Takes too long to process |
 | Zillion | Uses the external zilliandomizer tool for its logic, which is not compatible with this system |
 
 ## Notes
