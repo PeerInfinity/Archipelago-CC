@@ -3118,14 +3118,8 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_region",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Desert Palace Main (Outer)"
-                    }
-                  ]
+                  "type": "can_reach",
+                  "region": "Desert Palace Main (Outer)"
                 }
               ]
             },

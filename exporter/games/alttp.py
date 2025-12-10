@@ -35,8 +35,8 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         'tr_big_key_chest_keys_needed',
         'location_item_name',
         'can_defeat_boss',
-        'can_reach_region',
-        'can_take_damage',
+        # 'can_reach_region',  # Now uses native can_reach rule type
+        # 'can_take_damage',  # Now uses setting_value instead of helper
     }
 
     """No longer expands helpers - just validates they're known ALTTP helpers"""
@@ -99,8 +99,8 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             'location_item_name',
             # Added in postprocess_rule
             'can_defeat_boss',
-            'can_reach_region',
-            'can_take_damage',
+            # 'can_reach_region',  # Now uses native can_reach rule type
+            # 'can_take_damage',  # Now uses setting_value instead of helper
             # This function doesn't appear in the final export, but we get warning messages if we remove it from this list
             'orig_rule',
         }
@@ -172,27 +172,27 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         # to has_crystals_for_ganon()
 
         # Check for state.multiworld.get_region().can_reach() pattern
-        if (rule.get('type') == 'function_call' and 
+        # Convert to native can_reach rule type which frontend already supports
+        if (rule.get('type') == 'function_call' and
             isinstance(rule.get('function'), dict) and
             rule['function'].get('type') == 'attribute' and
             rule['function'].get('attr') == 'can_reach'):
-            
+
             # Check if object is a get_region call
             obj = rule['function'].get('object', {})
-            if (isinstance(obj, dict) and 
+            if (isinstance(obj, dict) and
                 obj.get('type') == 'function_call' and
                 isinstance(obj.get('function'), dict) and
                 obj['function'].get('attr') == 'get_region'):
-                
+
                 # Extract region name from args
                 args = obj.get('args', [])
                 if args and isinstance(args[0], dict) and args[0].get('type') == 'constant':
                     region_name = args[0].get('value')
-                    # Replace with a simpler region check
+                    # Replace with native can_reach rule type
                     return {
-                        'type': 'helper',
-                        'name': 'can_reach_region',
-                        'args': [{'type': 'constant', 'value': region_name}]
+                        'type': 'can_reach',
+                        'region': region_name
                     }
         
         # Check for state.multiworld.get_location().parent_region.dungeon.boss.can_defeat() pattern
@@ -229,18 +229,18 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
                             break
                     parent_obj = parent_obj.get('object') or parent_obj.get('value')
         
-        # Check for world.can_take_damage pattern
-        if (rule.get('type') == 'attribute' and 
+        # Check for world.can_take_damage pattern - convert to setting_value
+        # since can_take_damage is already exported in settings
+        if (rule.get('type') == 'attribute' and
             rule.get('attr') == 'can_take_damage' and
             isinstance(rule.get('object'), dict) and
             rule['object'].get('type') == 'name' and
             rule['object'].get('name') == 'world'):
-            
-            # Replace with a helper that checks if damage is allowed
+
+            # Replace with setting_value to use the exported setting
             return {
-                'type': 'helper',
-                'name': 'can_take_damage',
-                'args': []
+                'type': 'setting_value',
+                'setting': 'can_take_damage'
             }
         
         # Recursively process nested rules
