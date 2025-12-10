@@ -16097,8 +16097,13 @@
                         },
                         {
                           "type": "helper",
-                          "name": "has_crystals_for_ganon",
-                          "args": []
+                          "name": "has_crystals",
+                          "args": [
+                            {
+                              "type": "setting_value",
+                              "setting": "crystals_needed_for_ganon"
+                            }
+                          ]
                         }
                       ]
                     },

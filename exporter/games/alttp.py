@@ -27,7 +27,7 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         'can_shoot_arrows',
         # 'can_use_bombs',  # Now works with min/max and setting_value support
         # 'has_crystals',  # Now works with group_count support
-        'has_crystals_for_ganon',
+        # 'has_crystals_for_ganon',  # Removed - has_crystals now handles dynamic arguments
         # 'has_hearts',  # Now works with logical_heart settings
         # 'has_misery_mire_medallion',  # Now works with setting_value index support
         # 'has_turtle_rock_medallion',  # Now works with setting_value index support
@@ -87,7 +87,7 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             'can_use_bombs',
             # 'has_beam_sword',  # Removed - multiple item checks, can be inlined
             'has_crystals',  # Exported with group_count support
-            'has_crystals_for_ganon',
+            # 'has_crystals_for_ganon',  # Removed - has_crystals now handles dynamic arguments
             # 'has_fire_source',  # Removed - simple item checks, can be inlined
             'has_hearts',  # Exported with logical_heart settings
             # 'has_melee_weapon',  # Removed - calls has_sword + item check, can be inlined
@@ -163,35 +163,14 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
     def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
         Post-process rules to fix specific complex patterns that can't be handled by the frontend.
-        
-        Specifically replaces the complex has_crystals call that accesses 
-        state.multiworld.worlds[player].options.crystals_needed_for_ganon
-        with the simpler has_crystals_for_ganon helper.
         """
         if not isinstance(rule, dict):
             return rule
-            
-        # Check if this is a has_crystals helper with complex arguments
-        if (rule.get('type') == 'helper' and
-            rule.get('name') == 'has_crystals' and
-            rule.get('args')):
 
-            # Check if the argument is trying to access crystals_needed_for_ganon
-            if len(rule['args']) == 1:
-                arg = rule['args'][0]
-                # Check for the complex chain: state.multiworld.worlds[player].options.crystals_needed_for_ganon
-                # Also check for setting_value type (from analyzer pattern detection)
-                if (isinstance(arg, dict) and
-                    ((arg.get('type') == 'attribute' and arg.get('attr') == 'crystals_needed_for_ganon') or
-                     (arg.get('type') == 'setting_value' and arg.get('setting') == 'crystals_needed_for_ganon'))):
+        # Note: has_crystals now supports dynamic arguments via setting_value,
+        # so we no longer need to convert has_crystals(crystals_needed_for_ganon)
+        # to has_crystals_for_ganon()
 
-                    # Replace with the simpler helper
-                    return {
-                        'type': 'helper',
-                        'name': 'has_crystals_for_ganon',
-                        'args': []
-                    }
-        
         # Check for state.multiworld.get_region().can_reach() pattern
         if (rule.get('type') == 'function_call' and 
             isinstance(rule.get('function'), dict) and
