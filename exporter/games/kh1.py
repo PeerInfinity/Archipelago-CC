@@ -658,6 +658,31 @@ class KH1GameExportHandler(BaseGameExportHandler):
                     'args': []
                 }
 
+            # Also check for has_defensive_tools with resolved args pattern:
+            # has_all_counts with {"Progressive Cure": 2, "Leaf Bracer": 1, "Dodge Roll": 1}
+            # has_any_count with {"Second Chance": 1, "MP Rage": 1, "Progressive Aero": 2}
+            has_all_counts_defensive = any(
+                isinstance(c, dict) and c.get('type') == 'state_method' and
+                c.get('method') == 'has_all_counts' and
+                self._is_defensive_tools_has_all_counts(c.get('args', []))
+                for c in conditions
+            )
+            has_any_count_defensive = any(
+                isinstance(c, dict) and c.get('type') == 'state_method' and
+                c.get('method') == 'has_any_count' and
+                self._is_defensive_tools_has_any_count(c.get('args', []))
+                for c in conditions
+            )
+
+            if has_all_counts_defensive and has_any_count_defensive:
+                # This is the has_defensive_tools pattern with resolved args
+                logger.info(f"Detected has_defensive_tools pattern (resolved args) in {location_name}, converting to helper call")
+                return {
+                    'type': 'helper',
+                    'name': 'has_defensive_tools',
+                    'args': []
+                }
+
             # Check for has_parasite_cage pattern:
             # AND with:
             #   - constant 0.0 (broken worlds parameter from has_x_worlds)
@@ -824,7 +849,15 @@ class KH1GameExportHandler(BaseGameExportHandler):
                 for c in conditions
             )
 
-            if has_all_magic_lvx_helper and has_constant_zero:
+            # Also check for has_all_counts with resolved magic args (represents has_all_magic_lvx)
+            has_all_counts_magic = any(
+                isinstance(c, dict) and c.get('type') == 'state_method' and
+                c.get('method') == 'has_all_counts' and
+                self._is_magic_level_has_all_counts(c.get('args', []))
+                for c in conditions
+            )
+
+            if (has_all_magic_lvx_helper or has_all_counts_magic) and has_constant_zero:
                 # This is a has_all_magic_lvx + has_x_worlds pattern - fix the constant 0.0
                 # Infer the num_of_worlds from location name
                 num_worlds = self._infer_num_of_worlds_general(location_name)
@@ -1111,3 +1144,60 @@ class KH1GameExportHandler(BaseGameExportHandler):
         ]
 
         return location_name in wonderland_advanced_logic_locations
+
+    def _is_defensive_tools_has_all_counts(self, args: list) -> bool:
+        """
+        Check if the args contain the has_defensive_tools has_all_counts pattern:
+        {"Progressive Cure": 2, "Leaf Bracer": 1, "Dodge Roll": 1}
+        """
+        if not args:
+            return False
+        for arg in args:
+            if isinstance(arg, dict) and arg.get('type') == 'constant':
+                value = arg.get('value', {})
+                if isinstance(value, dict):
+                    # Check for the specific keys
+                    if ('Progressive Cure' in value and
+                        'Leaf Bracer' in value and
+                        'Dodge Roll' in value):
+                        return True
+        return False
+
+    def _is_defensive_tools_has_any_count(self, args: list) -> bool:
+        """
+        Check if the args contain the has_defensive_tools has_any_count pattern:
+        {"Second Chance": 1, "MP Rage": 1, "Progressive Aero": 2}
+        """
+        if not args:
+            return False
+        for arg in args:
+            if isinstance(arg, dict) and arg.get('type') == 'constant':
+                value = arg.get('value', {})
+                if isinstance(value, dict):
+                    # Check for the specific keys
+                    if ('Second Chance' in value and
+                        'MP Rage' in value and
+                        'Progressive Aero' in value):
+                        return True
+        return False
+
+    def _is_magic_level_has_all_counts(self, args: list) -> bool:
+        """
+        Check if the args contain magic level items pattern (has_all_magic_lvx):
+        {"Progressive Fire": N, "Progressive Blizzard": N, "Progressive Thunder": N, etc.}
+        """
+        if not args:
+            return False
+        for arg in args:
+            if isinstance(arg, dict) and arg.get('type') == 'constant':
+                value = arg.get('value', {})
+                if isinstance(value, dict):
+                    # Check for magic level items
+                    magic_items = {'Progressive Fire', 'Progressive Blizzard', 'Progressive Thunder',
+                                   'Progressive Cure', 'Progressive Gravity', 'Progressive Aero',
+                                   'Progressive Stop'}
+                    # Should have at least 4 of these to be considered magic level pattern
+                    matching = sum(1 for item in magic_items if item in value)
+                    if matching >= 4:
+                        return True
+        return False
