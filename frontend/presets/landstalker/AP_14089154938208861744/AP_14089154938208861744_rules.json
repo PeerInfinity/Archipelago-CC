@@ -8587,17 +8587,17 @@
         "dark_region": "Massan Cave",
         "hints": {
           "Foxy (right after making Miro flee with Garlic in Mir Tower)": "I can sense Lantern in the village of Massan.",
-          "Foxy (in room near white golems roundabout in Lake Shrine)": "I can sense Fireproof near a lake.",
-          "Foxy (in sector with red orcs making an elevator appear in Greenmaze)": "I can sense Oracle Stone near a swamp.",
-          "Foxy (in Gumi boulder map)": "I can sense Casino Ticket close to a waterfall.",
-          "Foxy (in room next to spiked floor and keydoor room in King Nole's Labyrinth)": "I can sense Logs in Verla Mines.",
-          "Foxy (in empty isolated room inside King Nole's Cave)": "I can sense Armlet near a swamp.",
-          "Foxy (in Destel)": "I can sense Axe Magic in Destel region.",
-          "Foxy (in room next to green golem roundabout in Lake Shrine)": "I can sense Snow Spikes in King Nole's domain.",
-          "Foxy (on Kazalt bridge)": "I can sense Purple Jewel in Destel region.",
-          "Foxy (inside Mercator Crypt)": "Have you found all of the 283 items in this universe?",
-          "Foxy (at Waterfall Shrine crossroads)": "I can sense Garlic in Verla Mines.",
-          "Foxy (in King Nole's Palace entrance room)": "I can sense Safety Pass in a region inhabited by bears.",
+          "Foxy (in room near white golems roundabout in Lake Shrine)": "I can sense Casino Ticket close to a waterfall.",
+          "Foxy (in sector with red orcs making an elevator appear in Greenmaze)": "I can sense Blue Jewel in Twinkle village.",
+          "Foxy (in Gumi boulder map)": "Did you know that your world contains 100 percent of all progression items?",
+          "Foxy (in room next to spiked floor and keydoor room in King Nole's Labyrinth)": "I can sense Iron Boots in a mountainous area.",
+          "Foxy (in empty isolated room inside King Nole's Cave)": "I can sense Axe Magic in Destel region.",
+          "Foxy (in Destel)": "I can sense Lithograph in the village of Massan.",
+          "Foxy (in room next to green golem roundabout in Lake Shrine)": "I can sense Oracle Stone near a swamp.",
+          "Foxy (on Kazalt bridge)": "I can sense Fireproof near a lake.",
+          "Foxy (inside Mercator Crypt)": "I can sense Gola's Horn in the village of Massan.",
+          "Foxy (at Waterfall Shrine crossroads)": "I can sense Gola's Fang inside a tower.",
+          "Foxy (in King Nole's Palace entrance room)": "I can sense Armlet near a swamp.",
           "Lithograph": "It's barely readable:\nRED MERCATOR ITEM\nPURPLE ITEM DESTEL\nTOWER GREEN CHALLENGE\nFIRST GROUND BLUE\nYELLOW ROOM TOWER",
           "Oracle Stone": "It shows Massan Cave\nenshrouded in darkness."
         },
@@ -8619,8 +8619,8 @@
             "Mountainous area tree"
           ],
           [
-            "Greenmaze end tree",
-            "Greenmaze entrance tree"
+            "Greenmaze entrance tree",
+            "Greenmaze end tree"
           ]
         ],
         "location_prices": {

@@ -1,7 +1,7 @@
 {
   "A Hat in Time": {
     "exporter_path": "exporter/games/ahit.py",
-    "exporter_size": 5839,
+    "exporter_size": 6156,
     "game_logic_path": "frontend/modules/shared/gameLogic/ahit/ahitLogic.js",
     "game_logic_size": 10533,
     "has_custom_exporter": true,
@@ -19,7 +19,7 @@
   },
   "A Link to the Past": {
     "exporter_path": "exporter/games/alttp.py",
-    "exporter_size": 32889,
+    "exporter_size": 33818,
     "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
     "game_logic_size": 61286,
     "has_custom_exporter": true,
@@ -127,7 +127,7 @@
   },
   "Bomb Rush Cyberfunk": {
     "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
-    "exporter_size": 16566,
+    "exporter_size": 1634,
     "game_logic_path": null,
     "game_logic_size": 39146,
     "has_custom_exporter": true,
@@ -595,11 +595,11 @@
   },
   "Landstalker - The Treasures of King Nole": {
     "exporter_path": "exporter/games/landstalker.py",
-    "exporter_size": 16807,
-    "game_logic_path": "frontend/modules/shared/gameLogic/landstalker/landstalkerLogic.js",
-    "game_logic_size": 9354,
+    "exporter_size": 16786,
+    "game_logic_path": null,
+    "game_logic_size": 0,
     "has_custom_exporter": true,
-    "has_custom_game_logic": true,
+    "has_custom_game_logic": false,
     "world_directory": "landstalker"
   },
   "Landstalker - The Treasures of King Nole WorldGen": {
@@ -1279,7 +1279,7 @@
   },
   "The Wind Waker": {
     "exporter_path": "exporter/games/tww.py",
-    "exporter_size": 3557,
+    "exporter_size": 3652,
     "game_logic_path": "frontend/modules/shared/gameLogic/tww/twwLogic.js",
     "game_logic_size": 56586,
     "has_custom_exporter": true,
