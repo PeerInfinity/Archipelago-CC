@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-10T20:15:53.438646",
-    "last_updated": "2025-12-10T20:15:53.438652",
+    "last_updated": "2025-12-10T21:41:06.585677",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1240,14 +1240,14 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.4,
+        "processing_time_seconds": 6.62,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/inscryption/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 85111,
+        "size_bytes": 84999,
         "size_mb": 0.08
       },
       "seed": "1",
@@ -1255,7 +1255,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 10.86,
+        "processing_time_seconds": 14.79,
         "return_code": 0,
         "sphere_reached": 10.2,
         "success": true,
@@ -1263,16 +1263,16 @@
         "warning_count": 0
       },
       "template_filename": "Inscryption.yaml",
-      "timestamp": "2025-12-10T20:02:27.427174",
+      "timestamp": "2025-12-10T21:40:44.760727",
       "world_info": {
         "exporter_path": "exporter/games/inscryption.py",
-        "exporter_size": 11551,
-        "game_logic_path": "frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js",
-        "game_logic_size": 6369,
+        "exporter_size": 8242,
+        "game_logic_path": null,
+        "game_logic_size": 0,
         "game_name_from_filename": "inscryption",
         "game_name_from_yaml": "Inscryption",
         "has_custom_exporter": true,
-        "has_custom_game_logic": true,
+        "has_custom_game_logic": false,
         "world_directory": "inscryption"
       }
     },

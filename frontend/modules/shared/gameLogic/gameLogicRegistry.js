@@ -176,7 +176,6 @@
  * - DLCQuest
  * - Hollow Knight
  * - Hylics 2
- * - Inscryption
  * - Kingdom Hearts
  * - Pokemon Red and Blue
  * - Generic (fallback)
@@ -232,8 +231,6 @@ import * as hkLogic from './hk/hkLogic.js';
 import { hkStateModule } from './hk/hkLogic.js';
 import * as hylics2Logic from './hylics2/hylics2Logic.js';
 import { hylics2StateModule } from './hylics2/hylics2Logic.js';
-import * as inscryptionLogic from './inscryption/inscryptionLogic.js';
-import { inscryptionStateModule } from './inscryption/inscryptionLogic.js';
 import * as jakanddaxterLogic from './jakanddaxter/jakanddaxterLogic.js';
 import { kh1Logic } from './kh1/kh1Logic.js';
 import { helperFunctions as kh2HelperFunctions } from './kh2/kh2Logic.js';
@@ -369,12 +366,6 @@ const GAME_REGISTRY = {
     helperFunctions: hylics2Logic.helperFunctions,
     worldClasses: ['Hylics2World'],
     aliases: ['Hylics 2', 'Hylics2']
-  },
-  'Inscryption': {
-    logicModule: inscryptionLogic.inscryptionStateModule,
-    helperFunctions: inscryptionLogic.helperFunctions,
-    worldClasses: ['InscryptionWorld'],
-    aliases: ['Inscryption']
   },
   'Jak and Daxter: The Precursor Legacy': {
     logicModule: genericLogic.genericStateModule,

@@ -6,60 +6,109 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class InscryptionGameExportHandler(GenericGameExportHandler):
+    """Inscryption game handler.
+
+    Since Inscryption's helper functions are class methods (not module-level functions),
+    they cannot be automatically exported. Instead, we expand the inferred pseudo-items
+    (like Camera_And_Meat, All_Epitaph_Pieces) to their actual item checks.
+    """
     GAME_NAME = 'Inscryption'
-    """Inscryption game handler with special handling for helper functions."""
+
+    # Disable automatic helper export (class methods can't be auto-exported)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
 
     def __init__(self, world=None):
         """Initialize with world object to access game-specific data."""
         super().__init__()
         self.world = world
+        self._required_epitaph_count = 9  # Default value
 
-    def _expand_common_helper(self, helper_name, args):
-        """Override to expand Inscryption helpers to their actual item checks."""
-        # Get the required epitaph pieces count from world if available
-        required_epitaph_count = 9
-        if self.world:
-            required_epitaph_count = getattr(self.world, 'required_epitaph_pieces_count', 9)
+    def preprocess_world_data(self, world, export_data, player):
+        """Store world data needed for rule expansion."""
+        super().preprocess_world_data(world, export_data, player)
+        self.world = world
+        # Get the required epitaph pieces count from world
+        if hasattr(world, 'required_epitaph_pieces_count'):
+            self._required_epitaph_count = world.required_epitaph_pieces_count
+            logger.debug(f"Required epitaph pieces count: {self._required_epitaph_count}")
 
-        # Expand specific Inscryption helpers to their actual item requirements
-        if helper_name == 'has_camera_and_meat':
-            logger.debug("Expanding has_camera_and_meat to actual items")
+    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Expand Inscryption-specific rules.
+
+        Handles:
+        - Inferred pseudo-items like Camera_And_Meat, All_Epitaph_Pieces
+        - Inferred pseudo-items like Act2_Bridge_Requirements, Tower_Requirements
+        """
+        if not rule:
+            return rule
+
+        # First let parent handle standard expansion and recursion
+        rule = super().expand_rule(rule)
+
+        # Handle inferred item_checks with pseudo-items
+        if rule.get('type') == 'item_check' and rule.get('inferred'):
+            item = rule.get('item', '')
+            if isinstance(item, str):
+                expanded = self._expand_pseudo_item(item)
+                if expanded:
+                    return expanded
+
+        # Handle capability rules that should be item checks
+        if rule.get('type') == 'capability' and rule.get('inferred'):
+            capability = rule.get('capability', '')
+            expanded = self._expand_capability(capability)
+            if expanded:
+                return expanded
+
+        return rule
+
+    def _expand_pseudo_item(self, item: str) -> Dict[str, Any] | None:
+        """Expand pseudo-items to their actual item checks."""
+        # Normalize the item name for comparison
+        item_lower = item.lower().replace('_', ' ').replace('-', ' ')
+
+        # Camera_And_Meat -> Camera Replica AND Pile Of Meat
+        if 'camera' in item_lower and 'meat' in item_lower:
+            logger.debug(f"Expanding '{item}' to Camera Replica AND Pile Of Meat")
             return {
-                'type': 'and',
-                'conditions': [
-                    {'type': 'item_check', 'item': 'Camera Replica'},
-                    {'type': 'item_check', 'item': 'Pile Of Meat'}
-                ]
+                'type': 'state_method',
+                'method': 'has_all',
+                'args': [{'type': 'constant', 'value': ['Camera Replica', 'Pile Of Meat']}]
             }
-        elif helper_name == 'has_all_epitaph_pieces':
-            logger.debug("Expanding has_all_epitaph_pieces to actual count check")
+
+        # All_Epitaph_Pieces -> Epitaph Piece (count)
+        if 'epitaph' in item_lower and ('all' in item_lower or 'pieces' in item_lower):
+            logger.debug(f"Expanding '{item}' to Epitaph Piece x{self._required_epitaph_count}")
             return {
                 'type': 'item_check',
                 'item': 'Epitaph Piece',
-                'count': {'type': 'constant', 'value': required_epitaph_count}
+                'count': {'type': 'constant', 'value': self._required_epitaph_count}
             }
-        elif helper_name == 'has_act2_bridge_requirements':
-            logger.debug("Expanding has_act2_bridge_requirements")
+
+        # Act2_Bridge_Requirements -> Camera+Meat OR All Epitaph Pieces
+        if 'bridge' in item_lower and 'requirements' in item_lower:
+            logger.debug(f"Expanding '{item}' to bridge requirements")
             return {
                 'type': 'or',
                 'conditions': [
                     {
-                        'type': 'and',
-                        'conditions': [
-                            {'type': 'item_check', 'item': 'Camera Replica'},
-                            {'type': 'item_check', 'item': 'Pile Of Meat'}
-                        ]
+                        'type': 'state_method',
+                        'method': 'has_all',
+                        'args': [{'type': 'constant', 'value': ['Camera Replica', 'Pile Of Meat']}]
                     },
                     {
                         'type': 'item_check',
                         'item': 'Epitaph Piece',
-                        'count': {'type': 'constant', 'value': required_epitaph_count}
+                        'count': {'type': 'constant', 'value': self._required_epitaph_count}
                     }
                 ]
             }
-        elif helper_name == 'has_tower_requirements':
-            logger.debug("Expanding has_tower_requirements")
+
+        # Tower_Requirements -> Monocle AND Bridge Requirements
+        if 'tower' in item_lower and 'requirements' in item_lower:
+            logger.debug(f"Expanding '{item}' to tower requirements")
             return {
                 'type': 'and',
                 'conditions': [
@@ -68,36 +117,51 @@ class InscryptionGameExportHandler(GenericGameExportHandler):
                         'type': 'or',
                         'conditions': [
                             {
-                                'type': 'and',
-                                'conditions': [
-                                    {'type': 'item_check', 'item': 'Camera Replica'},
-                                    {'type': 'item_check', 'item': 'Pile Of Meat'}
-                                ]
+                                'type': 'state_method',
+                                'method': 'has_all',
+                                'args': [{'type': 'constant', 'value': ['Camera Replica', 'Pile Of Meat']}]
                             },
                             {
                                 'type': 'item_check',
                                 'item': 'Epitaph Piece',
-                                'count': {'type': 'constant', 'value': required_epitaph_count}
+                                'count': {'type': 'constant', 'value': self._required_epitaph_count}
                             }
                         ]
                     }
                 ]
             }
-        elif helper_name == 'has_monocle':
-            return {'type': 'item_check', 'item': 'Monocle'}
-        elif helper_name == 'has_inspectometer_battery':
-            return {'type': 'item_check', 'item': 'Inspectometer Battery'}
-        elif helper_name == 'has_gems_and_battery':
+
+        # Transcendence_Requirements -> Quill AND Gems Module AND Inspectometer Battery
+        if 'transcendence' in item_lower and 'requirements' in item_lower:
+            logger.debug(f"Expanding '{item}' to transcendence requirements")
             return {
-                'type': 'and',
-                'conditions': [
-                    {'type': 'item_check', 'item': 'Gems Module'},
-                    {'type': 'item_check', 'item': 'Inspectometer Battery'}
-                ]
+                'type': 'state_method',
+                'method': 'has_all',
+                'args': [{'type': 'constant', 'value': ['Quill', 'Gems Module', 'Inspectometer Battery']}]
             }
-        elif helper_name == 'has_act2_requirements':
+
+        # Inspectometer_Battery -> Inspectometer Battery
+        if 'inspectometer' in item_lower and 'battery' in item_lower:
+            logger.debug(f"Expanding '{item}' to Inspectometer Battery")
+            return {'type': 'item_check', 'item': 'Inspectometer Battery'}
+
+        # Gems_And_Battery -> Gems Module AND Inspectometer Battery
+        if 'gems' in item_lower and 'battery' in item_lower:
+            logger.debug(f"Expanding '{item}' to Gems Module AND Inspectometer Battery")
+            return {
+                'type': 'state_method',
+                'method': 'has_all',
+                'args': [{'type': 'constant', 'value': ['Gems Module', 'Inspectometer Battery']}]
+            }
+
+        # Act2_Requirements -> Film Roll
+        if 'act2' in item_lower and 'requirements' in item_lower and 'bridge' not in item_lower:
+            logger.debug(f"Expanding '{item}' to Film Roll")
             return {'type': 'item_check', 'item': 'Film Roll'}
-        elif helper_name == 'has_act3_requirements':
+
+        # Act3_Requirements -> Film Roll + All Epitaph Pieces + Camera+Meat + Monocle
+        if 'act3' in item_lower and 'requirements' in item_lower:
+            logger.debug(f"Expanding '{item}' to Act3 requirements")
             return {
                 'type': 'and',
                 'conditions': [
@@ -105,158 +169,24 @@ class InscryptionGameExportHandler(GenericGameExportHandler):
                     {
                         'type': 'item_check',
                         'item': 'Epitaph Piece',
-                        'count': {'type': 'constant', 'value': required_epitaph_count}
+                        'count': {'type': 'constant', 'value': self._required_epitaph_count}
                     },
-                    {'type': 'item_check', 'item': 'Camera Replica'},
-                    {'type': 'item_check', 'item': 'Pile Of Meat'},
+                    {
+                        'type': 'state_method',
+                        'method': 'has_all',
+                        'args': [{'type': 'constant', 'value': ['Camera Replica', 'Pile Of Meat']}]
+                    },
                     {'type': 'item_check', 'item': 'Monocle'}
                 ]
             }
-        elif helper_name == 'has_transcendence_requirements':
-            return {
-                'type': 'and',
-                'conditions': [
-                    {'type': 'item_check', 'item': 'Quill'},
-                    {'type': 'item_check', 'item': 'Gems Module'},
-                    {'type': 'item_check', 'item': 'Inspectometer Battery'}
-                ]
-            }
 
-        # For other helpers, use the default behavior
-        return super()._expand_common_helper(helper_name, args)
+        # Monocle -> Simple item check (not inferred)
+        if item_lower == 'monocle':
+            return {'type': 'item_check', 'item': 'Monocle'}
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Override to handle Inscryption-specific rules."""
-        if not rule:
-            return rule
+        return None
 
-        # List of Inscryption helper functions
-        inscryption_helpers = {
-            'has_act2_requirements',
-            'has_act2_bridge_requirements',
-            'has_act3_requirements',
-            'has_all_epitaph_pieces',
-            'has_camera_and_meat',
-            'has_gems_and_battery',
-            'has_inspectometer_battery',
-            'has_monocle',
-            'has_tower_requirements',
-            'has_transcendence_requirements'
-        }
-
-        # Handle item_check with attribute reference to self.world.required_epitaph_pieces_name
-        if rule.get('type') == 'item_check':
-            item = rule.get('item', {})
-            # Check if item is self.world.required_epitaph_pieces_name
-            if (isinstance(item, dict) and
-                item.get('type') == 'attribute' and
-                item.get('attr') == 'required_epitaph_pieces_name' and
-                item.get('object', {}).get('type') == 'attribute' and
-                item['object'].get('attr') == 'world'):
-
-                # Replace with constant value "Epitaph Piece"
-                logger.debug("Converting self.world.required_epitaph_pieces_name to 'Epitaph Piece'")
-                rule = rule.copy()
-                rule['item'] = {
-                    'type': 'constant',
-                    'value': 'Epitaph Piece'
-                }
-                return rule
-
-            # Handle pseudo-items created by the generic exporter
-            # These should be expanded to their actual implementations
-            if isinstance(item, str):
-                if item == "Camera_And_Meat" or item == "Camera And Meat":
-                    logger.debug("Expanding Camera_And_Meat pseudo-item to actual items")
-                    return {
-                        'type': 'and',
-                        'conditions': [
-                            {'type': 'item_check', 'item': 'Camera Replica'},
-                            {'type': 'item_check', 'item': 'Pile Of Meat'}
-                        ]
-                    }
-                elif item == "All_Epitaph_Pieces" or item == "All Epitaph Pieces":
-                    logger.debug("Expanding All_Epitaph_Pieces pseudo-item to actual count check")
-                    # Get the required count from world if available, otherwise default to 9
-                    required_count = 9
-                    if self.world:
-                        required_count = getattr(self.world, 'required_epitaph_pieces_count', 9)
-                    return {
-                        'type': 'item_check',
-                        'item': 'Epitaph Piece',
-                        'count': {'type': 'constant', 'value': required_count}
-                    }
-                elif item == "Tower_Requirements" or item == "Tower Requirements":
-                    logger.debug("Expanding Tower_Requirements pseudo-item")
-                    return {
-                        'type': 'and',
-                        'conditions': [
-                            {'type': 'item_check', 'item': 'Monocle'},
-                            {
-                                'type': 'or',
-                                'conditions': [
-                                    {
-                                        'type': 'and',
-                                        'conditions': [
-                                            {'type': 'item_check', 'item': 'Camera Replica'},
-                                            {'type': 'item_check', 'item': 'Pile Of Meat'}
-                                        ]
-                                    },
-                                    {
-                                        'type': 'item_check',
-                                        'item': 'Epitaph Piece',
-                                        'count': {'type': 'constant', 'value': 9}
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                elif item == "Act2_Bridge_Requirements" or item == "Act2 Bridge Requirements":
-                    logger.debug("Expanding Act2_Bridge_Requirements pseudo-item")
-                    return {
-                        'type': 'or',
-                        'conditions': [
-                            {
-                                'type': 'and',
-                                'conditions': [
-                                    {'type': 'item_check', 'item': 'Camera Replica'},
-                                    {'type': 'item_check', 'item': 'Pile Of Meat'}
-                                ]
-                            },
-                            {
-                                'type': 'item_check',
-                                'item': 'Epitaph Piece',
-                                'count': {'type': 'constant', 'value': 9}
-                            }
-                        ]
-                    }
-
-        # Handle function_call with self.method pattern
-        if (rule.get('type') == 'function_call' and
-            rule.get('function') and
-            rule['function'].get('type') == 'attribute'):
-
-            func = rule['function']
-            # Check if it's self.method_name
-            if (func.get('object', {}).get('type') == 'name' and
-                func['object'].get('name') == 'self' and
-                func.get('attr') in inscryption_helpers):
-
-                method_name = func['attr']
-                args = rule.get('args', [])
-
-                logger.debug(f"Converting Inscryption self.{method_name} to helper node")
-                return {
-                    'type': 'helper',
-                    'name': method_name,
-                    'args': args
-                }
-
-        # Recursively expand conditions in and/or rules
-        if rule.get('type') in ['and', 'or']:
-            rule = rule.copy()
-            rule['conditions'] = [self.expand_rule(cond) for cond in rule.get('conditions', [])]
-            return rule
-
-        # Otherwise use parent class handling
-        return super().expand_rule(rule)
+    def _expand_capability(self, capability: str) -> Dict[str, Any] | None:
+        """Expand capability rules to item checks."""
+        # No capability expansions needed for Inscryption
+        return None

@@ -22,7 +22,7 @@
       ],
       "last_updated": "2025-12-10T20:00:14.138642"
     },
-    "last_updated": "2025-12-10T20:00:14.138640",
+    "last_updated": "2025-12-10T21:40:16.512796",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1566,31 +1566,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "b94bebd993c756c58bede81aefb406cc12fd1b8386a00af9e1df4ffbe2412453",
-          "new_sphere_log_hash": "444a5b654c947beb45ba27fd6360178c43f22aa264dcca664e59d2f1fb6bd470",
-          "original_rules_hash": "b94bebd993c756c58bede81aefb406cc12fd1b8386a00af9e1df4ffbe2412453",
-          "original_sphere_log_hash": "444a5b654c947beb45ba27fd6360178c43f22aa264dcca664e59d2f1fb6bd470",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-10T19:58:48.845915"
-        }
-      },
       "game_name_from_filename": "inscryption",
       "game_name_from_yaml": "Inscryption",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.44,
+        "processing_time_seconds": 6.7,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/inscryption/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 85111,
+        "size_bytes": 84999,
         "size_mb": 0.08
       },
       "seed": "1",
@@ -1598,7 +1586,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.81,
+        "processing_time_seconds": 9.8,
         "return_code": 0,
         "sphere_reached": 9.2,
         "success": true,
@@ -1606,16 +1594,16 @@
         "warning_count": 0
       },
       "template_filename": "Inscryption.yaml",
-      "timestamp": "2025-12-10T19:54:31.852305",
+      "timestamp": "2025-12-10T21:39:59.578278",
       "world_info": {
         "exporter_path": "exporter/games/inscryption.py",
-        "exporter_size": 11551,
-        "game_logic_path": "frontend/modules/shared/gameLogic/inscryption/inscryptionLogic.js",
-        "game_logic_size": 6369,
+        "exporter_size": 8242,
+        "game_logic_path": null,
+        "game_logic_size": 0,
         "game_name_from_filename": "inscryption",
         "game_name_from_yaml": "Inscryption",
         "has_custom_exporter": true,
-        "has_custom_game_logic": true,
+        "has_custom_game_logic": false,
         "world_directory": "inscryption"
       }
     },

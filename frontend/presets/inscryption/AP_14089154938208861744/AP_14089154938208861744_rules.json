@@ -38,15 +38,15 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Camera Replica"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Pile Of Meat"
+                      "type": "constant",
+                      "value": [
+                        "Camera Replica",
+                        "Pile Of Meat"
+                      ]
                     }
                   ]
                 },
@@ -79,8 +79,17 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "item_check",
-                      "item": "Camera Replica"
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Camera Replica",
+                            "Pile Of Meat"
+                          ]
+                        }
+                      ]
                     },
                     {
                       "type": "item_check",
@@ -97,27 +106,20 @@
                     {
                       "type": "item_check",
                       "item": "Monocle"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Pile Of Meat"
                     }
                   ]
                 },
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Gems Module"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Inspectometer Battery"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Quill"
+                      "type": "constant",
+                      "value": [
+                        "Gems Module",
+                        "Inspectometer Battery",
+                        "Quill"
+                      ]
                     }
                   ]
                 }
@@ -444,15 +446,15 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
                         {
-                          "type": "item_check",
-                          "item": "Camera Replica"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Pile Of Meat"
+                          "type": "constant",
+                          "value": [
+                            "Camera Replica",
+                            "Pile Of Meat"
+                          ]
                         }
                       ]
                     },
@@ -506,15 +508,15 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Camera Replica"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Pile Of Meat"
+                      "type": "constant",
+                      "value": [
+                        "Camera Replica",
+                        "Pile Of Meat"
+                      ]
                     }
                   ]
                 },
@@ -663,15 +665,15 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
                         {
-                          "type": "item_check",
-                          "item": "Camera Replica"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Pile Of Meat"
+                          "type": "constant",
+                          "value": [
+                            "Camera Replica",
+                            "Pile Of Meat"
+                          ]
                         }
                       ]
                     },
@@ -709,15 +711,15 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
                         {
-                          "type": "item_check",
-                          "item": "Camera Replica"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Pile Of Meat"
+                          "type": "constant",
+                          "value": [
+                            "Camera Replica",
+                            "Pile Of Meat"
+                          ]
                         }
                       ]
                     },
@@ -755,15 +757,15 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
                         {
-                          "type": "item_check",
-                          "item": "Camera Replica"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Pile Of Meat"
+                          "type": "constant",
+                          "value": [
+                            "Camera Replica",
+                            "Pile Of Meat"
+                          ]
                         }
                       ]
                     },
@@ -798,15 +800,15 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Camera Replica"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Pile Of Meat"
+                      "type": "constant",
+                      "value": [
+                        "Camera Replica",
+                        "Pile Of Meat"
+                      ]
                     }
                   ]
                 },
@@ -835,15 +837,15 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Camera Replica"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Pile Of Meat"
+                      "type": "constant",
+                      "value": [
+                        "Camera Replica",
+                        "Pile Of Meat"
+                      ]
                     }
                   ]
                 },
@@ -872,15 +874,15 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Camera Replica"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Pile Of Meat"
+                      "type": "constant",
+                      "value": [
+                        "Camera Replica",
+                        "Pile Of Meat"
+                      ]
                     }
                   ]
                 },
@@ -1038,15 +1040,15 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Camera Replica"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Pile Of Meat"
+                      "type": "constant",
+                      "value": [
+                        "Camera Replica",
+                        "Pile Of Meat"
+                      ]
                     }
                   ]
                 },
@@ -1078,15 +1080,15 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
                         {
-                          "type": "item_check",
-                          "item": "Camera Replica"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Pile Of Meat"
+                          "type": "constant",
+                          "value": [
+                            "Camera Replica",
+                            "Pile Of Meat"
+                          ]
                         }
                       ]
                     },
@@ -1124,15 +1126,15 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
                         {
-                          "type": "item_check",
-                          "item": "Camera Replica"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Pile Of Meat"
+                          "type": "constant",
+                          "value": [
+                            "Camera Replica",
+                            "Pile Of Meat"
+                          ]
                         }
                       ]
                     },
@@ -1170,15 +1172,15 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
                         {
-                          "type": "item_check",
-                          "item": "Camera Replica"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Pile Of Meat"
+                          "type": "constant",
+                          "value": [
+                            "Camera Replica",
+                            "Pile Of Meat"
+                          ]
                         }
                       ]
                     },
@@ -1213,15 +1215,15 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Camera Replica"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Pile Of Meat"
+                      "type": "constant",
+                      "value": [
+                        "Camera Replica",
+                        "Pile Of Meat"
+                      ]
                     }
                   ]
                 },
@@ -1250,15 +1252,15 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Camera Replica"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Pile Of Meat"
+                      "type": "constant",
+                      "value": [
+                        "Camera Replica",
+                        "Pile Of Meat"
+                      ]
                     }
                   ]
                 },
@@ -1287,15 +1289,15 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Camera Replica"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Pile Of Meat"
+                      "type": "constant",
+                      "value": [
+                        "Camera Replica",
+                        "Pile Of Meat"
+                      ]
                     }
                   ]
                 },
@@ -1324,15 +1326,15 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Camera Replica"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Pile Of Meat"
+                      "type": "constant",
+                      "value": [
+                        "Camera Replica",
+                        "Pile Of Meat"
+                      ]
                     }
                   ]
                 },
@@ -1361,15 +1363,15 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Camera Replica"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Pile Of Meat"
+                      "type": "constant",
+                      "value": [
+                        "Camera Replica",
+                        "Pile Of Meat"
+                      ]
                     }
                   ]
                 },
@@ -1398,15 +1400,15 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Camera Replica"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Pile Of Meat"
+                      "type": "constant",
+                      "value": [
+                        "Camera Replica",
+                        "Pile Of Meat"
+                      ]
                     }
                   ]
                 },
@@ -1435,15 +1437,15 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Camera Replica"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Pile Of Meat"
+                      "type": "constant",
+                      "value": [
+                        "Camera Replica",
+                        "Pile Of Meat"
+                      ]
                     }
                   ]
                 },
@@ -1475,15 +1477,15 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
                         {
-                          "type": "item_check",
-                          "item": "Camera Replica"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Pile Of Meat"
+                          "type": "constant",
+                          "value": [
+                            "Camera Replica",
+                            "Pile Of Meat"
+                          ]
                         }
                       ]
                     },
@@ -1566,15 +1568,15 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "type": "state_method",
+                      "method": "has_all",
+                      "args": [
                         {
-                          "type": "item_check",
-                          "item": "Camera Replica"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Pile Of Meat"
+                          "type": "constant",
+                          "value": [
+                            "Camera Replica",
+                            "Pile Of Meat"
+                          ]
                         }
                       ]
                     },
@@ -1639,15 +1641,15 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Camera Replica"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Pile Of Meat"
+                      "type": "constant",
+                      "value": [
+                        "Camera Replica",
+                        "Pile Of Meat"
+                      ]
                     }
                   ]
                 },
@@ -1904,19 +1906,16 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Gems Module"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Inspectometer Battery"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Quill"
+                      "type": "constant",
+                      "value": [
+                        "Gems Module",
+                        "Inspectometer Battery",
+                        "Quill"
+                      ]
                     }
                   ]
                 },
@@ -2058,15 +2057,15 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Gems Module"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Inspectometer Battery"
+                      "type": "constant",
+                      "value": [
+                        "Gems Module",
+                        "Inspectometer Battery"
+                      ]
                     }
                   ]
                 },
@@ -2095,15 +2094,15 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Gems Module"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Inspectometer Battery"
+                      "type": "constant",
+                      "value": [
+                        "Gems Module",
+                        "Inspectometer Battery"
+                      ]
                     }
                   ]
                 },
@@ -2132,15 +2131,15 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Gems Module"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Inspectometer Battery"
+                      "type": "constant",
+                      "value": [
+                        "Gems Module",
+                        "Inspectometer Battery"
+                      ]
                     }
                   ]
                 },
@@ -2169,15 +2168,15 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Gems Module"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Inspectometer Battery"
+                      "type": "constant",
+                      "value": [
+                        "Gems Module",
+                        "Inspectometer Battery"
+                      ]
                     }
                   ]
                 },
@@ -2206,15 +2205,15 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Gems Module"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Inspectometer Battery"
+                      "type": "constant",
+                      "value": [
+                        "Gems Module",
+                        "Inspectometer Battery"
+                      ]
                     }
                   ]
                 },
@@ -2447,15 +2446,15 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Gems Module"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Inspectometer Battery"
+                      "type": "constant",
+                      "value": [
+                        "Gems Module",
+                        "Inspectometer Battery"
+                      ]
                     }
                   ]
                 },
@@ -2510,15 +2509,15 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "type": "state_method",
+                  "method": "has_all",
+                  "args": [
                     {
-                      "type": "item_check",
-                      "item": "Gems Module"
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Inspectometer Battery"
+                      "type": "constant",
+                      "value": [
+                        "Gems Module",
+                        "Inspectometer Battery"
+                      ]
                     }
                   ]
                 },
