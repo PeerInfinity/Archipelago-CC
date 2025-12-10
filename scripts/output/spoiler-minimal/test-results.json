@@ -22,7 +22,7 @@
       ],
       "last_updated": "2025-12-10T20:00:14.138642"
     },
-    "last_updated": "2025-12-10T20:00:14.138640",
+    "last_updated": "2025-12-10T22:01:37.948888",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1684,31 +1684,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "1d4233236886a82618e1289894c8ac29d2fc70e0b5c6db0ffbcb18550eaafd5a",
-          "new_sphere_log_hash": "4ba4db21ed61cae7ef82dcb4ed4c1874c0f20c8928d325b73763951a0f70345a",
-          "original_rules_hash": "1d4233236886a82618e1289894c8ac29d2fc70e0b5c6db0ffbcb18550eaafd5a",
-          "original_sphere_log_hash": "4ba4db21ed61cae7ef82dcb4ed4c1874c0f20c8928d325b73763951a0f70345a",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-10T19:56:16.591739"
-        }
-      },
       "game_name_from_filename": "kh2",
       "game_name_from_yaml": "Kingdom Hearts 2",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.46,
+        "processing_time_seconds": 7.86,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/kh2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 459105,
+        "size_bytes": 463251,
         "size_mb": 0.44
       },
       "seed": "1",
@@ -1716,7 +1704,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 33.14,
+        "processing_time_seconds": 38.14,
         "return_code": 0,
         "sphere_reached": 15.1,
         "success": true,
@@ -1724,12 +1712,12 @@
         "warning_count": 0
       },
       "template_filename": "Kingdom Hearts 2.yaml",
-      "timestamp": "2025-12-10T19:54:16.109644",
+      "timestamp": "2025-12-10T22:00:51.528229",
       "world_info": {
         "exporter_path": "exporter/games/kh2.py",
-        "exporter_size": 11474,
+        "exporter_size": 14975,
         "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
-        "game_logic_size": 115323,
+        "game_logic_size": 107789,
         "game_name_from_filename": "kh2",
         "game_name_from_yaml": "Kingdom Hearts 2",
         "has_custom_exporter": true,
