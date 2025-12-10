@@ -541,7 +541,7 @@
   },
   "Kingdom Hearts": {
     "exporter_path": "exporter/games/kh1.py",
-    "exporter_size": 50690,
+    "exporter_size": 52056,
     "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
     "game_logic_size": 19926,
     "has_custom_exporter": true,
@@ -858,7 +858,7 @@
     "exporter_path": "exporter/games/paint.py",
     "exporter_size": 5899,
     "game_logic_path": "frontend/modules/shared/gameLogic/paint/paintLogic.js",
-    "game_logic_size": 4405,
+    "game_logic_size": 4545,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "paint"
@@ -1119,7 +1119,7 @@
     "exporter_path": "exporter/games/marioland2.py",
     "exporter_size": 16096,
     "game_logic_path": "frontend/modules/shared/gameLogic/marioland2/marioland2Logic.js",
-    "game_logic_size": 15655,
+    "game_logic_size": 15682,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "marioland2"
@@ -1281,7 +1281,7 @@
     "exporter_path": "exporter/games/tww.py",
     "exporter_size": 3557,
     "game_logic_path": "frontend/modules/shared/gameLogic/tww/twwLogic.js",
-    "game_logic_size": 41688,
+    "game_logic_size": 56586,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "tww"

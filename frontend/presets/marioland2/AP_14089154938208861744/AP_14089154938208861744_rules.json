@@ -285,18 +285,9 @@
             "name": "Tree Zone 2 - Normal Exit",
             "id": 6,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "has_pipe_right",
-                  "args": []
-                },
-                {
-                  "type": "item_check",
-                  "item": "Tree Zone 2 Midway Bell"
-                }
-              ]
+              "type": "helper",
+              "name": "tree_zone_2_normal_exit",
+              "args": []
             },
             "item": {
               "name": "Tree Zone Progression",
@@ -310,18 +301,9 @@
             "name": "Tree Zone 2 - Secret Exit",
             "id": 7,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "has_pipe_right",
-                  "args": []
-                },
-                {
-                  "type": "item_check",
-                  "item": "Carrot"
-                }
-              ]
+              "type": "helper",
+              "name": "tree_zone_2_secret_exit",
+              "args": []
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -335,18 +317,9 @@
             "name": "Tree Zone 2 - Midway Bell",
             "id": 8,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "has_pipe_right",
-                  "args": []
-                },
-                {
-                  "type": "item_check",
-                  "item": "Tree Zone 2 Midway Bell"
-                }
-              ]
+              "type": "helper",
+              "name": "tree_zone_2_midway_bell",
+              "args": []
             },
             "item": {
               "name": "Space Zone Secret",
@@ -375,17 +348,9 @@
             "name": "Tree Zone 3 - Normal Exit",
             "id": 9,
             "access_rule": {
-              "type": "not",
-              "condition": {
-                "type": "helper",
-                "name": "is_auto_scroll",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Tree Zone 3"
-                  }
-                ]
-              }
+              "type": "helper",
+              "name": "tree_zone_3_normal_exit",
+              "args": []
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -424,19 +389,9 @@
             "name": "Tree Zone 4 - Normal Exit",
             "id": 10,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "has_pipe_down",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "tree_zone_4_midway_bell",
-                  "args": []
-                }
-              ]
+              "type": "helper",
+              "name": "tree_zone_4_normal_exit",
+              "args": []
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -450,28 +405,9 @@
             "name": "Tree Zone 4 - Midway Bell",
             "id": 11,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "has_pipe_right",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "has_pipe_up",
-                      "args": []
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Tree Zone 4 Midway Bell"
-                }
-              ]
+              "type": "helper",
+              "name": "tree_zone_4_midway_bell",
+              "args": []
             },
             "item": {
               "name": "Macro Zone Secret 1",
@@ -491,28 +427,9 @@
             "name": "Tree Zone 5 - Boss",
             "id": 12,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "has_pipe_right",
-                  "args": []
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "has_pipe_up",
-                      "args": []
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Carrot"
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "tree_zone_5_boss",
+              "args": []
             },
             "item": {
               "name": "Tree Coin",
@@ -648,17 +565,9 @@
             "name": "Space Zone 1 - Normal Exit",
             "id": 16,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Carrot",
-                    "Space Physics"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "space_zone_1_normal_exit",
+              "args": []
             },
             "item": {
               "name": "Turtle Zone Progression",
@@ -672,35 +581,9 @@
             "name": "Space Zone 1 - Secret Exit",
             "id": 17,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "not",
-                  "condition": {
-                    "type": "helper",
-                    "name": "is_auto_scroll",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": "Space Zone 1"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Carrot",
-                        "Space Physics"
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "space_zone_1_secret_exit",
+              "args": []
             },
             "item": {
               "name": "Macro Zone Progression",
@@ -773,8 +656,8 @@
                         {
                           "type": "not",
                           "condition": {
-                            "type": "constant",
-                            "value": 0
+                            "type": "setting_value",
+                            "setting": "shuffle_midway_bells"
                           }
                         },
                         {
@@ -859,20 +742,9 @@
             "name": "Space Zone 2 - Midway Bell",
             "id": 21,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Carrot",
-                    "Fire Flower",
-                    "Mushroom",
-                    "Space Physics",
-                    "Space Zone 2 Midway Bell"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "space_zone_2_midway_bell",
+              "args": []
             },
             "item": {
               "name": "Mario Zone Progression",
@@ -915,18 +787,9 @@
             "name": "Macro Zone 1 - Normal Exit",
             "id": 22,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "has_pipe_down",
-                  "args": []
-                },
-                {
-                  "type": "item_check",
-                  "item": "Macro Zone 1 Midway Bell"
-                }
-              ]
+              "type": "helper",
+              "name": "macro_zone_1_normal_exit",
+              "args": []
             },
             "item": {
               "name": "Tree Zone Progression",
@@ -940,23 +803,9 @@
             "name": "Macro Zone 1 - Secret Exit",
             "id": 23,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "has_pipe_up",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "macro_zone_1_midway_bell",
-                  "args": []
-                },
-                {
-                  "type": "item_check",
-                  "item": "Fire Flower"
-                }
-              ]
+              "type": "helper",
+              "name": "macro_zone_1_secret_exit",
+              "args": []
             },
             "item": {
               "name": "Turtle Zone Progression",
@@ -970,18 +819,9 @@
             "name": "Macro Zone 1 - Midway Bell",
             "id": 24,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "has_pipe_down",
-                  "args": []
-                },
-                {
-                  "type": "item_check",
-                  "item": "Macro Zone 1 Midway Bell"
-                }
-              ]
+              "type": "helper",
+              "name": "macro_zone_1_midway_bell",
+              "args": []
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -1020,45 +860,9 @@
             "name": "Macro Zone 2 - Normal Exit",
             "id": 25,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "has_pipe_up",
-                  "args": []
-                },
-                {
-                  "type": "not",
-                  "condition": {
-                    "type": "helper",
-                    "name": "is_auto_scroll",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": "Macro Zone 2"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "has_pipe_down",
-                      "args": []
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Macro Zone 2 Midway Bell"
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Water Physics"
-                }
-              ]
+              "type": "helper",
+              "name": "macro_zone_2_normal_exit",
+              "args": []
             },
             "item": {
               "name": "Pumpkin Zone Progression",
@@ -1072,27 +876,9 @@
             "name": "Macro Zone 2 - Midway Bell",
             "id": 26,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "has_pipe_down",
-                      "args": []
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Water Physics"
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Macro Zone 2 Midway Bell"
-                }
-              ]
+              "type": "helper",
+              "name": "macro_zone_2_midway_bell",
+              "args": []
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -1299,7 +1085,7 @@
             "id": 32,
             "access_rule": {
               "type": "helper",
-              "name": "pumpkin_zone_1_midway_bell",
+              "name": "pumpkin_zone_1_normal_exit",
               "args": []
             },
             "item": {
@@ -1314,36 +1100,9 @@
             "name": "Pumpkin Zone 1 - Midway Bell",
             "id": 33,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "has_pipe_down",
-                      "args": []
-                    },
-                    {
-                      "type": "not",
-                      "condition": {
-                        "type": "helper",
-                        "name": "is_auto_scroll",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Pumpkin Zone 1"
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Pumpkin Zone 1 Midway Bell"
-                }
-              ]
+              "type": "helper",
+              "name": "pumpkin_zone_1_midway_bell",
+              "args": []
             },
             "item": {
               "name": "Pumpkin Zone Secret 1",
@@ -1390,41 +1149,9 @@
             "name": "Pumpkin Zone 2 - Normal Exit",
             "id": 34,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "has_pipe_down",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "has_pipe_right",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "has_pipe_up",
-                  "args": []
-                },
-                {
-                  "type": "not",
-                  "condition": {
-                    "type": "helper",
-                    "name": "is_auto_scroll",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": "Pumpkin Zone 2"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": "Water Physics"
-                }
-              ]
+              "type": "helper",
+              "name": "pumpkin_zone_2_normal_exit",
+              "args": []
             },
             "item": {
               "name": "Space Zone Progression",
@@ -1438,27 +1165,9 @@
             "name": "Pumpkin Zone 2 - Secret Exit",
             "id": 35,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "pumpkin_zone_2_normal_exit",
-                  "args": []
-                },
-                {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Fire Flower",
-                        "Mushroom"
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "pumpkin_zone_2_secret_exit",
+              "args": []
             },
             "item": {
               "name": "Mushroom",
@@ -1535,8 +1244,9 @@
             "name": "Pumpkin Zone 3 - Secret Exit",
             "id": 38,
             "access_rule": {
-              "type": "item_check",
-              "item": "Carrot"
+              "type": "helper",
+              "name": "pumpkin_zone_3_secret_exit",
+              "args": []
             },
             "item": {
               "name": "Macro Zone Secret 2",
@@ -1572,7 +1282,7 @@
             "id": 40,
             "access_rule": {
               "type": "helper",
-              "name": "has_pipe_right",
+              "name": "pumpkin_zone_4_boss",
               "args": []
             },
             "item": {
@@ -1665,47 +1375,9 @@
             "name": "Mario Zone 1 - Normal Exit",
             "id": 44,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "has_pipe_right",
-                  "args": []
-                },
-                {
-                  "type": "or",
-                  "conditions": [
-                    {
-                      "type": "not",
-                      "condition": {
-                        "type": "helper",
-                        "name": "is_auto_scroll",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Mario Zone 1"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Carrot",
-                            "Fire Flower",
-                            "Mario Zone 1 Midway Bell",
-                            "Mushroom"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "mario_zone_1_normal_exit",
+              "args": []
             },
             "item": {
               "name": "Tree Zone Progression",
@@ -1719,37 +1391,9 @@
             "name": "Mario Zone 1 - Midway Bell",
             "id": 45,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "has_pipe_right",
-                      "args": []
-                    },
-                    {
-                      "type": "state_method",
-                      "method": "has_any",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Carrot",
-                            "Fire Flower",
-                            "Mushroom"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Mario Zone 1 Midway Bell"
-                }
-              ]
+              "type": "helper",
+              "name": "mario_zone_1_midway_bell",
+              "args": []
             },
             "item": {
               "name": "Space Physics",
@@ -1880,7 +1524,7 @@
             "id": 50,
             "access_rule": {
               "type": "helper",
-              "name": "has_pipe_right",
+              "name": "mario_zone_4_boss",
               "args": []
             },
             "item": {
@@ -1932,7 +1576,7 @@
             "id": 52,
             "access_rule": {
               "type": "helper",
-              "name": "not_blocked_by_sharks",
+              "name": "turtle_zone_1_normal_exit",
               "args": []
             },
             "item": {
@@ -1995,46 +1639,9 @@
             "name": "Turtle Zone 2 - Normal Exit",
             "id": 54,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "has_pipe_down",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "has_pipe_left",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "has_pipe_right",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "has_pipe_up",
-                  "args": []
-                },
-                {
-                  "type": "not",
-                  "condition": {
-                    "type": "helper",
-                    "name": "is_auto_scroll",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": "Turtle Zone 2"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": "Water Physics"
-                }
-              ]
+              "type": "helper",
+              "name": "turtle_zone_2_normal_exit",
+              "args": []
             },
             "item": {
               "name": "Macro Zone Progression",
@@ -2086,35 +1693,9 @@
             "name": "Turtle Zone 2 - Midway Bell",
             "id": 56,
             "access_rule": {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "not",
-                      "condition": {
-                        "type": "helper",
-                        "name": "is_auto_scroll",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Turtle Zone 2"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Water Physics"
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Turtle Zone 2 Midway Bell"
-                }
-              ]
+              "type": "helper",
+              "name": "turtle_zone_2_midway_bell",
+              "args": []
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -2171,17 +1752,9 @@
             "name": "Turtle Zone Secret Course - Normal Exit",
             "id": 59,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Carrot",
-                    "Fire Flower"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "turtle_zone_secret_course_normal_exit",
+              "args": []
             },
             "item": {
               "name": "Water Physics",
