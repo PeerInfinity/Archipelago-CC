@@ -22,7 +22,7 @@
       ],
       "last_updated": "2025-12-10T20:00:14.138642"
     },
-    "last_updated": "2025-12-10T20:00:14.138640",
+    "last_updated": "2025-12-10T21:33:38.907944",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1507,27 +1507,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "4f5e8d998dac2f80794280ae8bd342d5efa76b89a65a89f1652936edc6cd7725",
-          "new_sphere_log_hash": "530a65f0f1c556705e859ce31ff25fdd90b720676d3df978c7b2d4abeb4bbaf4",
-          "original_rules_hash": "4f5e8d998dac2f80794280ae8bd342d5efa76b89a65a89f1652936edc6cd7725",
-          "original_sphere_log_hash": "530a65f0f1c556705e859ce31ff25fdd90b720676d3df978c7b2d4abeb4bbaf4",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-10T19:57:24.756025"
-        }
-      },
       "game_name_from_filename": "hylics2",
       "game_name_from_yaml": "Hylics 2",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.28,
+        "processing_time_seconds": 7.75,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/hylics2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -1539,7 +1527,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.81,
+        "processing_time_seconds": 9.86,
         "return_code": 0,
         "sphere_reached": 7.2,
         "success": true,
@@ -1547,16 +1535,16 @@
         "warning_count": 0
       },
       "template_filename": "Hylics 2.yaml",
-      "timestamp": "2025-12-10T19:54:19.663104",
+      "timestamp": "2025-12-10T21:33:20.903093",
       "world_info": {
         "exporter_path": "exporter/games/hylics2.py",
-        "exporter_size": 1033,
-        "game_logic_path": "frontend/modules/shared/gameLogic/hylics2/hylics2Logic.js",
-        "game_logic_size": 6716,
+        "exporter_size": 1012,
+        "game_logic_path": null,
+        "game_logic_size": 0,
         "game_name_from_filename": "hylics2",
         "game_name_from_yaml": "Hylics 2",
         "has_custom_exporter": true,
-        "has_custom_game_logic": true,
+        "has_custom_game_logic": false,
         "world_directory": "hylics2"
       }
     },
