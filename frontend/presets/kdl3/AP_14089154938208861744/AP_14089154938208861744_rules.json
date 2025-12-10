@@ -2410,44 +2410,76 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "item_check",
-                  "item": "Heart Star",
-                  "count": {
-                    "type": "constant",
-                    "value": 3
-                  }
+                  "type": "helper",
+                  "name": "can_reach_boss",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 1
+                    },
+                    {
+                      "type": "constant",
+                      "value": 1
+                    },
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": {
+                        "1": [
+                          7798784,
+                          7798785,
+                          7798786,
+                          7798787,
+                          7798788,
+                          7798789,
+                          7799296
+                        ],
+                        "2": [
+                          7798790,
+                          7798791,
+                          7798792,
+                          7798793,
+                          7798794,
+                          7798795,
+                          7799297
+                        ],
+                        "3": [
+                          7798796,
+                          7798797,
+                          7798798,
+                          7798799,
+                          7798800,
+                          7798801,
+                          7799298
+                        ],
+                        "4": [
+                          7798802,
+                          7798803,
+                          7798804,
+                          7798805,
+                          7798806,
+                          7798807,
+                          7799299
+                        ],
+                        "5": [
+                          7798808,
+                          7798809,
+                          7798810,
+                          7798811,
+                          7798812,
+                          7798813,
+                          7799300
+                        ]
+                      }
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
-                  "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "subscript",
-                          "value": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "location_name"
-                            },
-                            "attr": "level_names_inverse"
-                          },
-                          "index": {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " - Stage Completion"
-                      }
-                    ],
-                    "all_simple": true,
-                    "value": "{...} - Stage Completion"
-                  },
+                  "item": "Heart Star",
                   "count": {
                     "type": "constant",
                     "value": 3
@@ -2468,24 +2500,7 @@
             "id": null,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "f_string",
-                "parts": [
-                  {
-                    "type": "formatted_value",
-                    "value": {
-                      "type": "constant",
-                      "value": "Grass Land"
-                    }
-                  },
-                  {
-                    "type": "constant",
-                    "value": " - Stage Completion"
-                  }
-                ],
-                "all_simple": true,
-                "value": "Grass Land - Stage Completion"
-              },
+              "item": "Grass Land - Stage Completion",
               "count": {
                 "type": "constant",
                 "value": 3
@@ -2507,44 +2522,76 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "item_check",
-                  "item": "Heart Star",
-                  "count": {
-                    "type": "constant",
-                    "value": 3
-                  }
+                  "type": "helper",
+                  "name": "can_reach_boss",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 1
+                    },
+                    {
+                      "type": "constant",
+                      "value": 1
+                    },
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": {
+                        "1": [
+                          7798784,
+                          7798785,
+                          7798786,
+                          7798787,
+                          7798788,
+                          7798789,
+                          7799296
+                        ],
+                        "2": [
+                          7798790,
+                          7798791,
+                          7798792,
+                          7798793,
+                          7798794,
+                          7798795,
+                          7799297
+                        ],
+                        "3": [
+                          7798796,
+                          7798797,
+                          7798798,
+                          7798799,
+                          7798800,
+                          7798801,
+                          7799298
+                        ],
+                        "4": [
+                          7798802,
+                          7798803,
+                          7798804,
+                          7798805,
+                          7798806,
+                          7798807,
+                          7799299
+                        ],
+                        "5": [
+                          7798808,
+                          7798809,
+                          7798810,
+                          7798811,
+                          7798812,
+                          7798813,
+                          7799300
+                        ]
+                      }
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
-                  "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "subscript",
-                          "value": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "location_name"
-                            },
-                            "attr": "level_names_inverse"
-                          },
-                          "index": {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " - Stage Completion"
-                      }
-                    ],
-                    "all_simple": true,
-                    "value": "{...} - Stage Completion"
-                  },
+                  "item": "Heart Star",
                   "count": {
                     "type": "constant",
                     "value": 3
@@ -5906,47 +5953,79 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "helper",
+                  "name": "can_reach_boss",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 2
+                    },
+                    {
+                      "type": "constant",
+                      "value": 1
+                    },
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": {
+                        "1": [
+                          7798784,
+                          7798785,
+                          7798786,
+                          7798787,
+                          7798788,
+                          7798789,
+                          7799296
+                        ],
+                        "2": [
+                          7798790,
+                          7798791,
+                          7798792,
+                          7798793,
+                          7798794,
+                          7798795,
+                          7799297
+                        ],
+                        "3": [
+                          7798796,
+                          7798797,
+                          7798798,
+                          7798799,
+                          7798800,
+                          7798801,
+                          7799298
+                        ],
+                        "4": [
+                          7798802,
+                          7798803,
+                          7798804,
+                          7798805,
+                          7798806,
+                          7798807,
+                          7799299
+                        ],
+                        "5": [
+                          7798808,
+                          7798809,
+                          7798810,
+                          7798811,
+                          7798812,
+                          7798813,
+                          7799300
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
                   "type": "item_check",
                   "item": "Heart Star",
                   "count": {
                     "type": "constant",
                     "value": 6
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "subscript",
-                          "value": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "location_name"
-                            },
-                            "attr": "level_names_inverse"
-                          },
-                          "index": {
-                            "type": "constant",
-                            "value": 2
-                          }
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " - Stage Completion"
-                      }
-                    ],
-                    "all_simple": true,
-                    "value": "{...} - Stage Completion"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 3
                   }
                 }
               ]
@@ -5964,24 +6043,7 @@
             "id": null,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "f_string",
-                "parts": [
-                  {
-                    "type": "formatted_value",
-                    "value": {
-                      "type": "constant",
-                      "value": "Ripple Field"
-                    }
-                  },
-                  {
-                    "type": "constant",
-                    "value": " - Stage Completion"
-                  }
-                ],
-                "all_simple": true,
-                "value": "Ripple Field - Stage Completion"
-              },
+              "item": "Ripple Field - Stage Completion",
               "count": {
                 "type": "constant",
                 "value": 3
@@ -6003,47 +6065,79 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "helper",
+                  "name": "can_reach_boss",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 2
+                    },
+                    {
+                      "type": "constant",
+                      "value": 1
+                    },
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": {
+                        "1": [
+                          7798784,
+                          7798785,
+                          7798786,
+                          7798787,
+                          7798788,
+                          7798789,
+                          7799296
+                        ],
+                        "2": [
+                          7798790,
+                          7798791,
+                          7798792,
+                          7798793,
+                          7798794,
+                          7798795,
+                          7799297
+                        ],
+                        "3": [
+                          7798796,
+                          7798797,
+                          7798798,
+                          7798799,
+                          7798800,
+                          7798801,
+                          7799298
+                        ],
+                        "4": [
+                          7798802,
+                          7798803,
+                          7798804,
+                          7798805,
+                          7798806,
+                          7798807,
+                          7799299
+                        ],
+                        "5": [
+                          7798808,
+                          7798809,
+                          7798810,
+                          7798811,
+                          7798812,
+                          7798813,
+                          7799300
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
                   "type": "item_check",
                   "item": "Heart Star",
                   "count": {
                     "type": "constant",
                     "value": 6
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "subscript",
-                          "value": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "location_name"
-                            },
-                            "attr": "level_names_inverse"
-                          },
-                          "index": {
-                            "type": "constant",
-                            "value": 2
-                          }
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " - Stage Completion"
-                      }
-                    ],
-                    "all_simple": true,
-                    "value": "{...} - Stage Completion"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 3
                   }
                 }
               ]
@@ -11191,82 +11285,85 @@
             "name": "Sand Canyon 6 - Professor Hector & R.O.B",
             "id": 7799057,
             "access_rule": {
-              "type": "block",
-              "statements": [
+              "type": "helper",
+              "name": "can_assemble_rob",
+              "args": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "item_check",
-                              "item": "Coo"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Coo Spawn"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "item_check",
-                              "item": "Kine"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Kine Spawn"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": false
-                  },
-                  "if_false": null
-                },
-                {
-                  "type": "return",
+                  "type": "constant",
                   "value": {
-                    "type": "and",
-                    "conditions": [
-                      {
-                        "type": "and",
-                        "conditions": [
-                          {
-                            "type": "item_check",
-                            "item": "Parasol"
-                          },
-                          {
-                            "type": "item_check",
-                            "item": "Parasol Ability"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "and",
-                        "conditions": [
-                          {
-                            "type": "item_check",
-                            "item": "Stone"
-                          },
-                          {
-                            "type": "item_check",
-                            "item": "Stone Ability"
-                          }
-                        ]
-                      }
-                    ]
+                    "Waddle Dee": "No Ability",
+                    "Bronto Burt": "No Ability",
+                    "Rocky": "Stone Ability",
+                    "Bobo": "Burning Ability",
+                    "Chilly": "Ice Ability",
+                    "Poppy Bros Jr.": "No Ability",
+                    "Sparky": "Spark Ability",
+                    "Polof": "No Ability",
+                    "Broom Hatter": "Clean Ability",
+                    "Cappy": "No Ability",
+                    "Bouncy": "No Ability",
+                    "Nruff": "No Ability",
+                    "Glunk": "No Ability",
+                    "Togezo": "Needle Ability",
+                    "Kabu": "No Ability",
+                    "Mony": "No Ability",
+                    "Blipper": "No Ability",
+                    "Squishy": "No Ability",
+                    "Gabon": "No Ability",
+                    "Oro": "No Ability",
+                    "Galbo": "Burning Ability",
+                    "Sir Kibble": "Cutter Ability",
+                    "Nidoo": "No Ability",
+                    "Kany": "No Ability",
+                    "Sasuke": "Parasol Ability",
+                    "Yaban": "No Ability",
+                    "Boten": "Needle Ability",
+                    "Coconut": "No Ability",
+                    "Doka": "No Ability",
+                    "Icicle": "No Ability",
+                    "Pteran": "No Ability",
+                    "Loud": "No Ability",
+                    "Como": "No Ability",
+                    "Klinko": "Parasol Ability",
+                    "Babut": "No Ability",
+                    "Wappa": "Ice Ability",
+                    "Mariel": "No Ability",
+                    "Tick": "Needle Ability",
+                    "Apolo": "No Ability",
+                    "Popon Ball": "No Ability",
+                    "KeKe": "Clean Ability",
+                    "Magoo": "Burning Ability",
+                    "Raft Waddle Dee": "No Ability",
+                    "Madoo": "No Ability",
+                    "Corori": "No Ability",
+                    "Kapar": "Cutter Ability",
+                    "Batamon": "No Ability",
+                    "Peran": "No Ability",
+                    "Bobin": "Spark Ability",
+                    "Mopoo": "No Ability",
+                    "Gansan": "Stone Ability",
+                    "Bukiset (Burning)": "Burning Ability",
+                    "Bukiset (Stone)": "Stone Ability",
+                    "Bukiset (Ice)": "Ice Ability",
+                    "Bukiset (Needle)": "Needle Ability",
+                    "Bukiset (Clean)": "Clean Ability",
+                    "Bukiset (Parasol)": "Parasol Ability",
+                    "Bukiset (Spark)": "Spark Ability",
+                    "Bukiset (Cutter)": "Cutter Ability",
+                    "Waddle Dee Drawing": "No Ability",
+                    "Bronto Burt Drawing": "No Ability",
+                    "Bouncy Drawing": "No Ability",
+                    "Kabu (Dekabu)": "No Ability",
+                    "Wapod": "No Ability",
+                    "Propeller": "No Ability",
+                    "Dogon": "No Ability",
+                    "Joe": "No Ability",
+                    "Captain Stitch": "Needle Ability",
+                    "Yuki": "Ice Ability",
+                    "Blocky": "Stone Ability",
+                    "Jumper Shoot": "Parasol Ability",
+                    "Boboo": "Burning Ability",
+                    "Haboki": "Clean Ability"
                   }
                 }
               ]
@@ -11329,47 +11426,79 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "helper",
+                  "name": "can_reach_boss",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": 1
+                    },
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": {
+                        "1": [
+                          7798784,
+                          7798785,
+                          7798786,
+                          7798787,
+                          7798788,
+                          7798789,
+                          7799296
+                        ],
+                        "2": [
+                          7798790,
+                          7798791,
+                          7798792,
+                          7798793,
+                          7798794,
+                          7798795,
+                          7799297
+                        ],
+                        "3": [
+                          7798796,
+                          7798797,
+                          7798798,
+                          7798799,
+                          7798800,
+                          7798801,
+                          7799298
+                        ],
+                        "4": [
+                          7798802,
+                          7798803,
+                          7798804,
+                          7798805,
+                          7798806,
+                          7798807,
+                          7799299
+                        ],
+                        "5": [
+                          7798808,
+                          7798809,
+                          7798810,
+                          7798811,
+                          7798812,
+                          7798813,
+                          7799300
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
                   "type": "item_check",
                   "item": "Heart Star",
                   "count": {
                     "type": "constant",
                     "value": 9
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "subscript",
-                          "value": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "location_name"
-                            },
-                            "attr": "level_names_inverse"
-                          },
-                          "index": {
-                            "type": "constant",
-                            "value": 3
-                          }
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " - Stage Completion"
-                      }
-                    ],
-                    "all_simple": true,
-                    "value": "{...} - Stage Completion"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 3
                   }
                 }
               ]
@@ -11387,24 +11516,7 @@
             "id": null,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "f_string",
-                "parts": [
-                  {
-                    "type": "formatted_value",
-                    "value": {
-                      "type": "constant",
-                      "value": "Sand Canyon"
-                    }
-                  },
-                  {
-                    "type": "constant",
-                    "value": " - Stage Completion"
-                  }
-                ],
-                "all_simple": true,
-                "value": "Sand Canyon - Stage Completion"
-              },
+              "item": "Sand Canyon - Stage Completion",
               "count": {
                 "type": "constant",
                 "value": 3
@@ -11426,47 +11538,79 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "helper",
+                  "name": "can_reach_boss",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": 1
+                    },
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": {
+                        "1": [
+                          7798784,
+                          7798785,
+                          7798786,
+                          7798787,
+                          7798788,
+                          7798789,
+                          7799296
+                        ],
+                        "2": [
+                          7798790,
+                          7798791,
+                          7798792,
+                          7798793,
+                          7798794,
+                          7798795,
+                          7799297
+                        ],
+                        "3": [
+                          7798796,
+                          7798797,
+                          7798798,
+                          7798799,
+                          7798800,
+                          7798801,
+                          7799298
+                        ],
+                        "4": [
+                          7798802,
+                          7798803,
+                          7798804,
+                          7798805,
+                          7798806,
+                          7798807,
+                          7799299
+                        ],
+                        "5": [
+                          7798808,
+                          7798809,
+                          7798810,
+                          7798811,
+                          7798812,
+                          7798813,
+                          7799300
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
                   "type": "item_check",
                   "item": "Heart Star",
                   "count": {
                     "type": "constant",
                     "value": 9
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "subscript",
-                          "value": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "location_name"
-                            },
-                            "attr": "level_names_inverse"
-                          },
-                          "index": {
-                            "type": "constant",
-                            "value": 3
-                          }
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " - Stage Completion"
-                      }
-                    ],
-                    "all_simple": true,
-                    "value": "{...} - Stage Completion"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 3
                   }
                 }
               ]
@@ -14803,47 +14947,79 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "helper",
+                  "name": "can_reach_boss",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 4
+                    },
+                    {
+                      "type": "constant",
+                      "value": 1
+                    },
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": {
+                        "1": [
+                          7798784,
+                          7798785,
+                          7798786,
+                          7798787,
+                          7798788,
+                          7798789,
+                          7799296
+                        ],
+                        "2": [
+                          7798790,
+                          7798791,
+                          7798792,
+                          7798793,
+                          7798794,
+                          7798795,
+                          7799297
+                        ],
+                        "3": [
+                          7798796,
+                          7798797,
+                          7798798,
+                          7798799,
+                          7798800,
+                          7798801,
+                          7799298
+                        ],
+                        "4": [
+                          7798802,
+                          7798803,
+                          7798804,
+                          7798805,
+                          7798806,
+                          7798807,
+                          7799299
+                        ],
+                        "5": [
+                          7798808,
+                          7798809,
+                          7798810,
+                          7798811,
+                          7798812,
+                          7798813,
+                          7799300
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
                   "type": "item_check",
                   "item": "Heart Star",
                   "count": {
                     "type": "constant",
                     "value": 12
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "subscript",
-                          "value": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "location_name"
-                            },
-                            "attr": "level_names_inverse"
-                          },
-                          "index": {
-                            "type": "constant",
-                            "value": 4
-                          }
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " - Stage Completion"
-                      }
-                    ],
-                    "all_simple": true,
-                    "value": "{...} - Stage Completion"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 3
                   }
                 }
               ]
@@ -14861,24 +15037,7 @@
             "id": null,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "f_string",
-                "parts": [
-                  {
-                    "type": "formatted_value",
-                    "value": {
-                      "type": "constant",
-                      "value": "Cloudy Park"
-                    }
-                  },
-                  {
-                    "type": "constant",
-                    "value": " - Stage Completion"
-                  }
-                ],
-                "all_simple": true,
-                "value": "Cloudy Park - Stage Completion"
-              },
+              "item": "Cloudy Park - Stage Completion",
               "count": {
                 "type": "constant",
                 "value": 3
@@ -14900,47 +15059,79 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "helper",
+                  "name": "can_reach_boss",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 4
+                    },
+                    {
+                      "type": "constant",
+                      "value": 1
+                    },
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": {
+                        "1": [
+                          7798784,
+                          7798785,
+                          7798786,
+                          7798787,
+                          7798788,
+                          7798789,
+                          7799296
+                        ],
+                        "2": [
+                          7798790,
+                          7798791,
+                          7798792,
+                          7798793,
+                          7798794,
+                          7798795,
+                          7799297
+                        ],
+                        "3": [
+                          7798796,
+                          7798797,
+                          7798798,
+                          7798799,
+                          7798800,
+                          7798801,
+                          7799298
+                        ],
+                        "4": [
+                          7798802,
+                          7798803,
+                          7798804,
+                          7798805,
+                          7798806,
+                          7798807,
+                          7799299
+                        ],
+                        "5": [
+                          7798808,
+                          7798809,
+                          7798810,
+                          7798811,
+                          7798812,
+                          7798813,
+                          7799300
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
                   "type": "item_check",
                   "item": "Heart Star",
                   "count": {
                     "type": "constant",
                     "value": 12
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "subscript",
-                          "value": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "location_name"
-                            },
-                            "attr": "level_names_inverse"
-                          },
-                          "index": {
-                            "type": "constant",
-                            "value": 4
-                          }
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " - Stage Completion"
-                      }
-                    ],
-                    "all_simple": true,
-                    "value": "{...} - Stage Completion"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 3
                   }
                 }
               ]
@@ -19693,21 +19884,85 @@
             "name": "Iceberg 6 - Angel",
             "id": 7799069,
             "access_rule": {
-              "type": "block",
-              "statements": [
+              "type": "helper",
+              "name": "can_fix_angel_wings",
+              "args": [
                 {
-                  "type": "assign",
-                  "name": "can_reach",
+                  "type": "constant",
                   "value": {
-                    "type": "constant",
-                    "value": true
-                  }
-                },
-                {
-                  "type": "return",
-                  "value": {
-                    "type": "name",
-                    "name": "can_reach"
+                    "Waddle Dee": "No Ability",
+                    "Bronto Burt": "No Ability",
+                    "Rocky": "Stone Ability",
+                    "Bobo": "Burning Ability",
+                    "Chilly": "Ice Ability",
+                    "Poppy Bros Jr.": "No Ability",
+                    "Sparky": "Spark Ability",
+                    "Polof": "No Ability",
+                    "Broom Hatter": "Clean Ability",
+                    "Cappy": "No Ability",
+                    "Bouncy": "No Ability",
+                    "Nruff": "No Ability",
+                    "Glunk": "No Ability",
+                    "Togezo": "Needle Ability",
+                    "Kabu": "No Ability",
+                    "Mony": "No Ability",
+                    "Blipper": "No Ability",
+                    "Squishy": "No Ability",
+                    "Gabon": "No Ability",
+                    "Oro": "No Ability",
+                    "Galbo": "Burning Ability",
+                    "Sir Kibble": "Cutter Ability",
+                    "Nidoo": "No Ability",
+                    "Kany": "No Ability",
+                    "Sasuke": "Parasol Ability",
+                    "Yaban": "No Ability",
+                    "Boten": "Needle Ability",
+                    "Coconut": "No Ability",
+                    "Doka": "No Ability",
+                    "Icicle": "No Ability",
+                    "Pteran": "No Ability",
+                    "Loud": "No Ability",
+                    "Como": "No Ability",
+                    "Klinko": "Parasol Ability",
+                    "Babut": "No Ability",
+                    "Wappa": "Ice Ability",
+                    "Mariel": "No Ability",
+                    "Tick": "Needle Ability",
+                    "Apolo": "No Ability",
+                    "Popon Ball": "No Ability",
+                    "KeKe": "Clean Ability",
+                    "Magoo": "Burning Ability",
+                    "Raft Waddle Dee": "No Ability",
+                    "Madoo": "No Ability",
+                    "Corori": "No Ability",
+                    "Kapar": "Cutter Ability",
+                    "Batamon": "No Ability",
+                    "Peran": "No Ability",
+                    "Bobin": "Spark Ability",
+                    "Mopoo": "No Ability",
+                    "Gansan": "Stone Ability",
+                    "Bukiset (Burning)": "Burning Ability",
+                    "Bukiset (Stone)": "Stone Ability",
+                    "Bukiset (Ice)": "Ice Ability",
+                    "Bukiset (Needle)": "Needle Ability",
+                    "Bukiset (Clean)": "Clean Ability",
+                    "Bukiset (Parasol)": "Parasol Ability",
+                    "Bukiset (Spark)": "Spark Ability",
+                    "Bukiset (Cutter)": "Cutter Ability",
+                    "Waddle Dee Drawing": "No Ability",
+                    "Bronto Burt Drawing": "No Ability",
+                    "Bouncy Drawing": "No Ability",
+                    "Kabu (Dekabu)": "No Ability",
+                    "Wapod": "No Ability",
+                    "Propeller": "No Ability",
+                    "Dogon": "No Ability",
+                    "Joe": "No Ability",
+                    "Captain Stitch": "Needle Ability",
+                    "Yuki": "Ice Ability",
+                    "Blocky": "Stone Ability",
+                    "Jumper Shoot": "Parasol Ability",
+                    "Boboo": "Burning Ability",
+                    "Haboki": "Clean Ability"
                   }
                 }
               ]
@@ -19770,47 +20025,79 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "helper",
+                  "name": "can_reach_boss",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 1
+                    },
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": {
+                        "1": [
+                          7798784,
+                          7798785,
+                          7798786,
+                          7798787,
+                          7798788,
+                          7798789,
+                          7799296
+                        ],
+                        "2": [
+                          7798790,
+                          7798791,
+                          7798792,
+                          7798793,
+                          7798794,
+                          7798795,
+                          7799297
+                        ],
+                        "3": [
+                          7798796,
+                          7798797,
+                          7798798,
+                          7798799,
+                          7798800,
+                          7798801,
+                          7799298
+                        ],
+                        "4": [
+                          7798802,
+                          7798803,
+                          7798804,
+                          7798805,
+                          7798806,
+                          7798807,
+                          7799299
+                        ],
+                        "5": [
+                          7798808,
+                          7798809,
+                          7798810,
+                          7798811,
+                          7798812,
+                          7798813,
+                          7799300
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
                   "type": "item_check",
                   "item": "Heart Star",
                   "count": {
                     "type": "constant",
                     "value": 15
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "subscript",
-                          "value": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "location_name"
-                            },
-                            "attr": "level_names_inverse"
-                          },
-                          "index": {
-                            "type": "constant",
-                            "value": 5
-                          }
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " - Stage Completion"
-                      }
-                    ],
-                    "all_simple": true,
-                    "value": "{...} - Stage Completion"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 3
                   }
                 }
               ]
@@ -19828,24 +20115,7 @@
             "id": null,
             "access_rule": {
               "type": "item_check",
-              "item": {
-                "type": "f_string",
-                "parts": [
-                  {
-                    "type": "formatted_value",
-                    "value": {
-                      "type": "constant",
-                      "value": "Iceberg"
-                    }
-                  },
-                  {
-                    "type": "constant",
-                    "value": " - Stage Completion"
-                  }
-                ],
-                "all_simple": true,
-                "value": "Iceberg - Stage Completion"
-              },
+              "item": "Iceberg - Stage Completion",
               "count": {
                 "type": "constant",
                 "value": 3
@@ -19867,47 +20137,79 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "helper",
+                  "name": "can_reach_boss",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 5
+                    },
+                    {
+                      "type": "constant",
+                      "value": 1
+                    },
+                    {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    {
+                      "type": "constant",
+                      "value": {
+                        "1": [
+                          7798784,
+                          7798785,
+                          7798786,
+                          7798787,
+                          7798788,
+                          7798789,
+                          7799296
+                        ],
+                        "2": [
+                          7798790,
+                          7798791,
+                          7798792,
+                          7798793,
+                          7798794,
+                          7798795,
+                          7799297
+                        ],
+                        "3": [
+                          7798796,
+                          7798797,
+                          7798798,
+                          7798799,
+                          7798800,
+                          7798801,
+                          7799298
+                        ],
+                        "4": [
+                          7798802,
+                          7798803,
+                          7798804,
+                          7798805,
+                          7798806,
+                          7798807,
+                          7799299
+                        ],
+                        "5": [
+                          7798808,
+                          7798809,
+                          7798810,
+                          7798811,
+                          7798812,
+                          7798813,
+                          7799300
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
                   "type": "item_check",
                   "item": "Heart Star",
                   "count": {
                     "type": "constant",
                     "value": 15
-                  }
-                },
-                {
-                  "type": "item_check",
-                  "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "subscript",
-                          "value": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "location_name"
-                            },
-                            "attr": "level_names_inverse"
-                          },
-                          "index": {
-                            "type": "constant",
-                            "value": 5
-                          }
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " - Stage Completion"
-                      }
-                    ],
-                    "all_simple": true,
-                    "value": "{...} - Stage Completion"
-                  },
-                  "count": {
-                    "type": "constant",
-                    "value": 3
                   }
                 }
               ]
@@ -20037,69 +20339,11 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "constant",
-                        "value": "Level "
-                      },
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "binary_op",
-                          "left": {
-                            "type": "constant",
-                            "value": 2
-                          },
-                          "op": "-",
-                          "right": {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " Boss Defeated"
-                      }
-                    ],
-                    "all_simple": true,
-                    "value": "Level {...} Boss Defeated"
-                  }
+                  "item": "Level 1 Boss Defeated"
                 },
                 {
                   "type": "item_check",
-                  "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "constant",
-                        "value": "Level "
-                      },
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "binary_op",
-                          "left": {
-                            "type": "constant",
-                            "value": 2
-                          },
-                          "op": "-",
-                          "right": {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " Boss Purified"
-                      }
-                    ],
-                    "all_simple": true,
-                    "value": "Level {...} Boss Purified"
-                  }
+                  "item": "Level 1 Boss Purified"
                 }
               ]
             }
@@ -20174,69 +20418,11 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "constant",
-                        "value": "Level "
-                      },
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "binary_op",
-                          "left": {
-                            "type": "constant",
-                            "value": 3
-                          },
-                          "op": "-",
-                          "right": {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " Boss Defeated"
-                      }
-                    ],
-                    "all_simple": true,
-                    "value": "Level {...} Boss Defeated"
-                  }
+                  "item": "Level 2 Boss Defeated"
                 },
                 {
                   "type": "item_check",
-                  "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "constant",
-                        "value": "Level "
-                      },
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "binary_op",
-                          "left": {
-                            "type": "constant",
-                            "value": 3
-                          },
-                          "op": "-",
-                          "right": {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " Boss Purified"
-                      }
-                    ],
-                    "all_simple": true,
-                    "value": "Level {...} Boss Purified"
-                  }
+                  "item": "Level 2 Boss Purified"
                 }
               ]
             }
@@ -20311,69 +20497,11 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "constant",
-                        "value": "Level "
-                      },
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "binary_op",
-                          "left": {
-                            "type": "constant",
-                            "value": 4
-                          },
-                          "op": "-",
-                          "right": {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " Boss Defeated"
-                      }
-                    ],
-                    "all_simple": true,
-                    "value": "Level {...} Boss Defeated"
-                  }
+                  "item": "Level 3 Boss Defeated"
                 },
                 {
                   "type": "item_check",
-                  "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "constant",
-                        "value": "Level "
-                      },
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "binary_op",
-                          "left": {
-                            "type": "constant",
-                            "value": 4
-                          },
-                          "op": "-",
-                          "right": {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " Boss Purified"
-                      }
-                    ],
-                    "all_simple": true,
-                    "value": "Level {...} Boss Purified"
-                  }
+                  "item": "Level 3 Boss Purified"
                 }
               ]
             }
@@ -20448,69 +20576,11 @@
               "conditions": [
                 {
                   "type": "item_check",
-                  "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "constant",
-                        "value": "Level "
-                      },
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "binary_op",
-                          "left": {
-                            "type": "constant",
-                            "value": 5
-                          },
-                          "op": "-",
-                          "right": {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " Boss Defeated"
-                      }
-                    ],
-                    "all_simple": true,
-                    "value": "Level {...} Boss Defeated"
-                  }
+                  "item": "Level 4 Boss Defeated"
                 },
                 {
                   "type": "item_check",
-                  "item": {
-                    "type": "f_string",
-                    "parts": [
-                      {
-                        "type": "constant",
-                        "value": "Level "
-                      },
-                      {
-                        "type": "formatted_value",
-                        "value": {
-                          "type": "binary_op",
-                          "left": {
-                            "type": "constant",
-                            "value": 5
-                          },
-                          "op": "-",
-                          "right": {
-                            "type": "constant",
-                            "value": 1
-                          }
-                        }
-                      },
-                      {
-                        "type": "constant",
-                        "value": " Boss Purified"
-                      }
-                    ],
-                    "all_simple": true,
-                    "value": "Level {...} Boss Purified"
-                  }
+                  "item": "Level 4 Boss Purified"
                 }
               ]
             }
@@ -20621,10 +20691,10 @@
           "Copy Ability",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Stone": {
         "name": "Stone",
@@ -20633,10 +20703,10 @@
           "Copy Ability",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ice": {
         "name": "Ice",
@@ -20645,10 +20715,10 @@
           "Copy Ability",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Needle": {
         "name": "Needle",
@@ -20657,10 +20727,10 @@
           "Copy Ability",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Clean": {
         "name": "Clean",
@@ -20669,10 +20739,10 @@
           "Copy Ability",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Parasol": {
         "name": "Parasol",
@@ -20681,10 +20751,10 @@
           "Copy Ability",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Spark": {
         "name": "Spark",
@@ -20693,10 +20763,10 @@
           "Copy Ability",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Cutter": {
         "name": "Cutter",
@@ -20705,10 +20775,10 @@
           "Copy Ability",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Rick": {
         "name": "Rick",
@@ -20717,10 +20787,10 @@
           "Animal Friend",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Kine": {
         "name": "Kine",
@@ -20729,10 +20799,10 @@
           "Animal Friend",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Coo": {
         "name": "Coo",
@@ -20741,10 +20811,10 @@
           "Animal Friend",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Nago": {
         "name": "Nago",
@@ -20753,10 +20823,10 @@
           "Animal Friend",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "ChuChu": {
         "name": "ChuChu",
@@ -20765,10 +20835,10 @@
           "Animal Friend",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Pitch": {
         "name": "Pitch",
@@ -20777,10 +20847,10 @@
           "Animal Friend",
           "Everything"
         ],
+        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Heart Star": {
         "name": "Heart Star",
@@ -20788,10 +20858,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 23,
-        "classification": "progression_skip_balancing"
+        "max_count": 23
       },
       "1-Up": {
         "name": "1-Up",
@@ -20800,10 +20870,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 10,
-        "classification": "filler"
+        "max_count": 10
       },
       "Maxim Tomato": {
         "name": "Maxim Tomato",
@@ -20811,10 +20881,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Invincible Candy": {
         "name": "Invincible Candy",
@@ -20822,10 +20892,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "filler"
+        "max_count": 3
       },
       "Little Star": {
         "name": "Little Star",
@@ -20833,10 +20903,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Medium Star": {
         "name": "Medium Star",
@@ -20844,10 +20914,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Big Star": {
         "name": "Big Star",
@@ -20855,10 +20925,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "filler"
+        "max_count": 1
       },
       "Gooey Bag": {
         "name": "Gooey Bag",
@@ -20866,10 +20936,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 9,
-        "classification": "trap"
+        "max_count": 9
       },
       "Slowness": {
         "name": "Slowness",
@@ -20877,10 +20947,10 @@
         "groups": [
           "Everything"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "trap"
+        "max_count": 2
       },
       "Eject Ability": {
         "name": "Eject Ability",
@@ -20888,357 +20958,295 @@
         "groups": [
           "Everything"
         ],
+        "classification": "trap",
         "event": false,
         "type": null,
-        "max_count": 3,
-        "classification": "trap"
+        "max_count": 3
       },
       "No Ability": {
         "name": "No Ability",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "filler",
         "event": true,
-        "type": "Event",
-        "max_count": 190,
-        "classification": "filler"
+        "type": null,
+        "max_count": 190
       },
       "Cutter Ability": {
         "name": "Cutter Ability",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 22,
-        "classification": "progression"
+        "type": null,
+        "max_count": 22
       },
       "Spark Ability": {
         "name": "Spark Ability",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 22,
-        "classification": "progression"
+        "type": null,
+        "max_count": 22
       },
       "Parasol Ability": {
         "name": "Parasol Ability",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 21,
-        "classification": "progression"
+        "type": null,
+        "max_count": 21
       },
       "Nago Spawn": {
         "name": "Nago Spawn",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 16,
-        "classification": "progression"
+        "type": null,
+        "max_count": 16
       },
       "Rick Spawn": {
         "name": "Rick Spawn",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 20,
-        "classification": "progression"
+        "type": null,
+        "max_count": 20
       },
       "Stone Ability": {
         "name": "Stone Ability",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 19,
-        "classification": "progression"
+        "type": null,
+        "max_count": 19
       },
       "Clean Ability": {
         "name": "Clean Ability",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 23,
-        "classification": "progression"
+        "type": null,
+        "max_count": 23
       },
       "Burning Ability": {
         "name": "Burning Ability",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 26,
-        "classification": "progression"
+        "type": null,
+        "max_count": 26
       },
       "ChuChu Spawn": {
         "name": "ChuChu Spawn",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 17,
-        "classification": "progression"
+        "type": null,
+        "max_count": 17
       },
       "Pitch Spawn": {
         "name": "Pitch Spawn",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 15,
-        "classification": "progression"
+        "type": null,
+        "max_count": 15
       },
       "Needle Ability": {
         "name": "Needle Ability",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 22,
-        "classification": "progression"
+        "type": null,
+        "max_count": 22
       },
       "Kine Spawn": {
         "name": "Kine Spawn",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 13,
-        "classification": "progression"
+        "type": null,
+        "max_count": 13
       },
       "Coo Spawn": {
         "name": "Coo Spawn",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 17,
-        "classification": "progression"
+        "type": null,
+        "max_count": 17
       },
       "Level 1 Boss Defeated": {
         "name": "Level 1 Boss Defeated",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "type": null,
+        "max_count": 1
       },
       "Level 1 Boss Purified": {
         "name": "Level 1 Boss Purified",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "type": null,
+        "max_count": 1
       },
       "Level 2 Boss Defeated": {
         "name": "Level 2 Boss Defeated",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "type": null,
+        "max_count": 1
       },
       "Level 2 Boss Purified": {
         "name": "Level 2 Boss Purified",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "type": null,
+        "max_count": 1
       },
       "Ice Ability": {
         "name": "Ice Ability",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 18,
-        "classification": "progression"
+        "type": null,
+        "max_count": 18
       },
       "Level 3 Boss Defeated": {
         "name": "Level 3 Boss Defeated",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "type": null,
+        "max_count": 1
       },
       "Level 3 Boss Purified": {
         "name": "Level 3 Boss Purified",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "type": null,
+        "max_count": 1
       },
       "Level 4 Boss Defeated": {
         "name": "Level 4 Boss Defeated",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "type": null,
+        "max_count": 1
       },
       "Level 4 Boss Purified": {
         "name": "Level 4 Boss Purified",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "type": null,
+        "max_count": 1
       },
       "Level 5 Boss Defeated": {
         "name": "Level 5 Boss Defeated",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "type": null,
+        "max_count": 1
       },
       "Level 5 Boss Purified": {
         "name": "Level 5 Boss Purified",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "type": null,
+        "max_count": 1
       },
       "Grass Land - Stage Completion": {
         "name": "Grass Land - Stage Completion",
         "hint_text": "Grass Land   Stage Completion",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 6,
-        "classification": "progression"
+        "type": null,
+        "max_count": 6
       },
       "Ripple Field - Stage Completion": {
         "name": "Ripple Field - Stage Completion",
         "hint_text": "Ripple Field   Stage Completion",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 6,
-        "classification": "progression"
+        "type": null,
+        "max_count": 6
       },
       "Sand Canyon - Stage Completion": {
         "name": "Sand Canyon - Stage Completion",
         "hint_text": "Sand Canyon   Stage Completion",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 6,
-        "classification": "progression"
+        "type": null,
+        "max_count": 6
       },
       "Cloudy Park - Stage Completion": {
         "name": "Cloudy Park - Stage Completion",
         "hint_text": "Cloudy Park   Stage Completion",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 6,
-        "classification": "progression"
+        "type": null,
+        "max_count": 6
       },
       "Iceberg - Stage Completion": {
         "name": "Iceberg - Stage Completion",
         "hint_text": "Iceberg   Stage Completion",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 6,
-        "classification": "progression"
+        "type": null,
+        "max_count": 6
       },
       "Love-Love Rod": {
         "name": "Love-Love Rod",
         "hint_text": "Love Love Rod",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "type": null,
+        "max_count": 1
       }
     }
   },
@@ -21390,6 +21398,81 @@
         "total_heart_stars": -1,
         "trap_percentage": 50,
         "virtual_console": 1
+      },
+      "copy_abilities": {
+        "Waddle Dee": "No Ability",
+        "Bronto Burt": "No Ability",
+        "Rocky": "Stone Ability",
+        "Bobo": "Burning Ability",
+        "Chilly": "Ice Ability",
+        "Poppy Bros Jr.": "No Ability",
+        "Sparky": "Spark Ability",
+        "Polof": "No Ability",
+        "Broom Hatter": "Clean Ability",
+        "Cappy": "No Ability",
+        "Bouncy": "No Ability",
+        "Nruff": "No Ability",
+        "Glunk": "No Ability",
+        "Togezo": "Needle Ability",
+        "Kabu": "No Ability",
+        "Mony": "No Ability",
+        "Blipper": "No Ability",
+        "Squishy": "No Ability",
+        "Gabon": "No Ability",
+        "Oro": "No Ability",
+        "Galbo": "Burning Ability",
+        "Sir Kibble": "Cutter Ability",
+        "Nidoo": "No Ability",
+        "Kany": "No Ability",
+        "Sasuke": "Parasol Ability",
+        "Yaban": "No Ability",
+        "Boten": "Needle Ability",
+        "Coconut": "No Ability",
+        "Doka": "No Ability",
+        "Icicle": "No Ability",
+        "Pteran": "No Ability",
+        "Loud": "No Ability",
+        "Como": "No Ability",
+        "Klinko": "Parasol Ability",
+        "Babut": "No Ability",
+        "Wappa": "Ice Ability",
+        "Mariel": "No Ability",
+        "Tick": "Needle Ability",
+        "Apolo": "No Ability",
+        "Popon Ball": "No Ability",
+        "KeKe": "Clean Ability",
+        "Magoo": "Burning Ability",
+        "Raft Waddle Dee": "No Ability",
+        "Madoo": "No Ability",
+        "Corori": "No Ability",
+        "Kapar": "Cutter Ability",
+        "Batamon": "No Ability",
+        "Peran": "No Ability",
+        "Bobin": "Spark Ability",
+        "Mopoo": "No Ability",
+        "Gansan": "Stone Ability",
+        "Bukiset (Burning)": "Burning Ability",
+        "Bukiset (Stone)": "Stone Ability",
+        "Bukiset (Ice)": "Ice Ability",
+        "Bukiset (Needle)": "Needle Ability",
+        "Bukiset (Clean)": "Clean Ability",
+        "Bukiset (Parasol)": "Parasol Ability",
+        "Bukiset (Spark)": "Spark Ability",
+        "Bukiset (Cutter)": "Cutter Ability",
+        "Waddle Dee Drawing": "No Ability",
+        "Bronto Burt Drawing": "No Ability",
+        "Bouncy Drawing": "No Ability",
+        "Kabu (Dekabu)": "No Ability",
+        "Wapod": "No Ability",
+        "Propeller": "No Ability",
+        "Dogon": "No Ability",
+        "Joe": "No Ability",
+        "Captain Stitch": "Needle Ability",
+        "Yuki": "Ice Ability",
+        "Blocky": "Stone Ability",
+        "Jumper Shoot": "Parasol Ability",
+        "Boboo": "Burning Ability",
+        "Haboki": "Clean Ability"
       }
     }
   },

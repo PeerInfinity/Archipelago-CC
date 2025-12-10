@@ -11,9 +11,23 @@ class KDL3GameExportHandler(BaseGameExportHandler):
     """Handle KDL3-specific rule expansions and f-string conversions."""
 
     GAME_NAME = "Kirby's Dream Land 3"
-    # Disable automatic helper export (use old behavior)
-    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    # Enable automatic helper export
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
+
+    # Blacklist helpers that have loops or complex logic (don't export as definitions)
+    HELPERS_TO_EXPORT_BLACKLIST = {
+        'can_reach_boss',       # Has can_reach location and f-string lookup
+        'can_assemble_rob',     # Has for/while loops
+        'can_fix_angel_wings',  # Has for loop
+    }
+
+    # Preserve these helpers as helper calls (don't inline them - use JavaScript instead)
+    HELPERS_TO_PRESERVE = {
+        'can_reach_boss',       # Has can_reach location and f-string lookup
+        'can_assemble_rob',     # Has for/while loops
+        'can_fix_angel_wings',  # Has for loop
+    }
 
     def __init__(self):
         """Initialize the KDL3 export handler and load location_name module."""
@@ -39,27 +53,6 @@ class KDL3GameExportHandler(BaseGameExportHandler):
             logger.warning("World does not have copy_abilities attribute")
 
         return settings
-
-    def expand_helper(self, helper_name: str):
-        """Return None to preserve helper nodes as-is."""
-        return None
-
-    def should_preserve_as_helper(self, func_name: str) -> bool:
-        """
-        Preserve all KDL3 helper functions as helper calls to avoid inlining issues.
-
-        This prevents the analyzer from trying to inline complex helpers like
-        can_assemble_rob and can_fix_angel_wings which use advanced Python syntax
-        (array slicing, comprehensions) that the analyzer can't handle.
-        """
-        kdl3_helpers = [
-            'can_reach_boss', 'can_reach_rick', 'can_reach_kine', 'can_reach_coo',
-            'can_reach_nago', 'can_reach_chuchu', 'can_reach_pitch',
-            'can_reach_burning', 'can_reach_stone', 'can_reach_ice', 'can_reach_needle',
-            'can_reach_clean', 'can_reach_parasol', 'can_reach_spark', 'can_reach_cutter',
-            'can_assemble_rob', 'can_fix_angel_wings'
-        ]
-        return func_name in kdl3_helpers
 
     def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Recursively expand and convert KDL3 rules, including f-strings."""
