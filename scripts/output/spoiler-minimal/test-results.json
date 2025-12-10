@@ -22,7 +22,7 @@
       ],
       "last_updated": "2025-12-10T20:00:14.138642"
     },
-    "last_updated": "2025-12-10T20:00:14.138640",
+    "last_updated": "2025-12-10T21:27:35.827014",
     "script_version": "1.0.0"
   },
   "results": {
@@ -917,31 +917,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "38baa8151a32dc4a8cbf9f41e72100819fb4265a83ab25851b75d163863fe69e",
-          "new_sphere_log_hash": "ebcafde15f4b92fea83fb33373ce880d2db8294cff3e38d782ea7d244dff5e47",
-          "original_rules_hash": "38baa8151a32dc4a8cbf9f41e72100819fb4265a83ab25851b75d163863fe69e",
-          "original_sphere_log_hash": "ebcafde15f4b92fea83fb33373ce880d2db8294cff3e38d782ea7d244dff5e47",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-10T19:57:20.178575"
-        }
-      },
       "game_name_from_filename": "civ_6",
       "game_name_from_yaml": "Civilization VI",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.43,
+        "processing_time_seconds": 6.5,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/civ_6/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 125186,
+        "size_bytes": 121146,
         "size_mb": 0.12
       },
       "seed": "1",
@@ -949,7 +937,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 8.84,
+        "processing_time_seconds": 11.62,
         "return_code": 0,
         "sphere_reached": 8.2,
         "success": true,
@@ -957,12 +945,12 @@
         "warning_count": 0
       },
       "template_filename": "Civilization VI.yaml",
-      "timestamp": "2025-12-10T19:54:06.439750",
+      "timestamp": "2025-12-10T21:27:17.294733",
       "world_info": {
         "exporter_path": "exporter/games/civ_6.py",
-        "exporter_size": 6440,
+        "exporter_size": 339,
         "game_logic_path": null,
-        "game_logic_size": 5199,
+        "game_logic_size": 0,
         "game_name_from_filename": "civ_6",
         "game_name_from_yaml": "Civilization VI",
         "has_custom_exporter": true,
