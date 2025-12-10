@@ -8,9 +8,12 @@ logger = logging.getLogger(__name__)
 
 class TWWGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'The Wind Waker'
-    # Disable automatic helper export (use old behavior)
-    AUTO_EXPORT_DISCOVERED_HELPERS = False
-    AUTO_PRESERVE_LARGE_HELPERS = False
+    # Enable automatic helper export to export discovered helpers
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    AUTO_PRESERVE_LARGE_HELPERS = True
+
+    # Define where to find helper functions
+    HELPER_MODULES = ['worlds.tww.Macros']
 
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
