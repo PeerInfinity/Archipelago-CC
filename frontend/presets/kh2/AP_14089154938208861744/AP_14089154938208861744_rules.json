@@ -17666,5 +17666,206 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "ag_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Scimitar",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "at_four_unlocked": {
+        "type": "item_check",
+        "item": "Thunder Element",
+        "count": {
+          "type": "constant",
+          "value": 3
+        }
+      },
+      "at_three_unlocked": {
+        "type": "item_check",
+        "item": "Magnet Element",
+        "count": {
+          "type": "constant",
+          "value": 2
+        }
+      },
+      "bc_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Beast's Claw",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "dc_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Disney Castle Key",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "hb_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Membership Card",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "ht_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Bone Fist",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "hundred_acre_unlocked": {
+        "params": [
+          "amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Torn Page",
+          "count": {
+            "type": "name",
+            "name": "amount"
+          }
+        }
+      },
+      "lod_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Sword of the Ancestor",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "oc_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Battlefields of War",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "pl_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Proud Fang",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "pr_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Skill and Crossbones",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "sp_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Identity Disk",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "stt_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Namine Sketches",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "tt_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Ice Cream",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "twtnw_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Way to the Dawn",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      }
+    }
+  }
 }

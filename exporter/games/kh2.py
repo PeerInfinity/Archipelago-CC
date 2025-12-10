@@ -10,7 +10,69 @@ logger = logging.getLogger(__name__)
 class KH2GameExportHandler(BaseGameExportHandler):
     GAME_NAME = 'Kingdom Hearts 2'
     """KH2-specific expander that handles Kingdom Hearts 2 rules."""
-    
+
+    # Enable automatic export of discovered helpers
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+
+    # Module paths containing helper functions
+    HELPER_MODULES = ['worlds.kh2.Rules']
+
+    # Module paths containing item name constants
+    ITEM_NAME_MODULES = ['worlds.kh2.Names']
+
+    # Helpers too complex for automatic export (loops, sums, closures)
+    HELPERS_TO_EXPORT_BLACKLIST = {
+        # Form-related helpers with complex logic
+        'form_list_unlock',           # Has conditional logic based on AutoFormLogic
+        'get_form_level_requirement', # Has loops counting forms
+
+        # Helpers with sum/loop patterns
+        'level_locking_unlock',       # Sum over visit_locking_dict list
+        'summon_levels_unlocked',     # Sum over summons list
+
+        # Utility functions with loops
+        'kh2_list_count_sum',         # List comprehension with sum
+        'kh2_list_any_sum',           # List comprehension with sum and has_any
+        'kh2_dict_count',             # Dict comprehension with all()
+        'kh2_dict_one_count',         # Dict comprehension with sum
+        'kh2_has_all',                # Wraps state.has_all
+        'kh2_has_any',                # Wraps state.has_any
+
+        # Location-based helpers
+        'kh2_can_reach',              # Uses multiworld.get_location
+        'kh2_can_reach_any',          # Loop over locations
+        'kh2_can_reach_all',          # Loop over locations
+
+        # Form region access
+        'final_form_region_access',   # Uses any() over location.can_reach
+
+        # Fight rule helpers - all reference self.fight_logic and local dicts
+        'get_ansem_riku_rules', 'get_armored_xemnas_one_rules', 'get_armored_xemnas_two_rules',
+        'get_barbosa_rules', 'get_blizzard_lord_rules', 'get_cerberus_cup_rules',
+        'get_cerberus_rules', 'get_cor_first_fight_movement_rules', 'get_cor_first_fight_rules',
+        'get_cor_second_fight_movement_rules', 'get_cor_skip_first_rules', 'get_dark_thorn_rules',
+        'get_data_axel_rules', 'get_data_demyx_rules', 'get_data_larxene_rules',
+        'get_data_lexaeus_rules', 'get_data_luxord_rules', 'get_data_marluxia_rules',
+        'get_data_roxas_rules', 'get_data_saix_rules', 'get_data_vexen_rules',
+        'get_data_xaldin_rules', 'get_data_xemnas_rules', 'get_data_xigbar_rules',
+        'get_data_zexion_rules', 'get_demyx_rules', 'get_experiment_rules',
+        'get_final_xemnas_rules', 'get_fire_lord_rules', 'get_future_pete_rules',
+        'get_genie_jafar_rules', 'get_goddess_of_fate_cup_rules', 'get_grim_reaper2_rules',
+        'get_groundshaker_rules', 'get_hades_cup_rules', 'get_hades_rules',
+        'get_hostile_program_rules', 'get_hydra_rules', 'get_luxord_rules',
+        'get_mcp_rules', 'get_olympus_pete_rules', 'get_pain_and_panic_cup_rules',
+        'get_prison_keeper_rules', 'get_roxas_rules', 'get_saix_rules',
+        'get_scar_rules', 'get_sephiroth_rules', 'get_shan_yu_rules',
+        'get_storm_rider_rules', 'get_terra_rules', 'get_thousand_heartless_rules',
+        'get_thresholder_rules', 'get_titan_cup_rules', 'get_transport_fight_rules',
+        'get_transport_movement_rules', 'get_xaldin_rules', 'get_xemnas_rules', 'get_xigbar_rules',
+
+        # Static methods that return True
+        'get_axel_one_rules', 'get_axel_two_rules', 'get_twilight_thorn_rules',
+        'get_beast_rules', 'get_grim_reaper1_rules', 'get_old_pete_rules', 'get_oogie_rules',
+        'limit_form_region_access', 'multi_form_region_access',
+    }
+
     def __init__(self, world=None):
         """Initialize with optional world reference."""
         super().__init__()
