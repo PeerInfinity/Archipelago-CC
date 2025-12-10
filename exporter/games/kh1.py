@@ -191,9 +191,26 @@ class KH1GameExportHandler(BaseGameExportHandler):
         Return KH1-specific item data with classification flags.
         """
         from BaseClasses import ItemClassification
-        
+        import collections
+
         item_data = {}
-        
+
+        # Calculate item counts from the pool to determine max_count
+        # This is important for items like World items that can appear multiple times
+        item_counts = collections.defaultdict(int)
+        if hasattr(world, 'multiworld'):
+            # Count items in the item pool
+            for item in world.multiworld.itempool:
+                if item.player == world.player:
+                    item_counts[item.name] += 1
+            # Also count items placed in locations
+            for location in world.multiworld.get_locations():
+                if location.item and location.item.player == world.player:
+                    item_counts[location.item.name] += 1
+            # Count precollected items
+            for item in world.multiworld.precollected_items.get(world.player, []):
+                item_counts[item.name] += 1
+
         # Get items from world.item_name_to_id if available
         if hasattr(world, 'item_name_to_id'):
             for item_name, item_id in world.item_name_to_id.items():
@@ -232,6 +249,11 @@ class KH1GameExportHandler(BaseGameExportHandler):
                         if item_name in items
                     ]
                 
+                # Use the item count from pool as max_count, defaulting to 1 if not found
+                max_count = item_counts.get(item_name, 1)
+                # Ensure max_count is at least 1
+                max_count = max(max_count, 1)
+
                 item_data[item_name] = {
                     'name': item_name,
                     'id': item_id,
@@ -241,7 +263,7 @@ class KH1GameExportHandler(BaseGameExportHandler):
                     'trap': is_trap,
                     'event': False,  # Regular items are not events
                     'type': None,
-                    'max_count': 1
+                    'max_count': max_count
                 }
         
         # Handle dynamically created event items by scanning locations
@@ -254,6 +276,10 @@ class KH1GameExportHandler(BaseGameExportHandler):
                         item_name not in item_data and
                         hasattr(location.item, 'classification')):
                         
+                        # Event items typically have max_count of 1, but use pool count if available
+                        event_max_count = item_counts.get(item_name, 1)
+                        event_max_count = max(event_max_count, 1)
+
                         item_data[item_name] = {
                             'name': item_name,
                             'id': None,
@@ -263,7 +289,7 @@ class KH1GameExportHandler(BaseGameExportHandler):
                             'trap': location.item.classification == ItemClassification.trap,
                             'event': True,
                             'type': 'Event',
-                            'max_count': 1
+                            'max_count': event_max_count
                         }
 
         return item_data
