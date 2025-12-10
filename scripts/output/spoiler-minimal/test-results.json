@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-10T03:15:40.805921",
-    "last_updated": "2025-12-10T03:15:40.805927",
+    "last_updated": "2025-12-10T03:34:20.343623",
     "script_version": "1.0.0"
   },
   "results": {
@@ -13,27 +13,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "7f61c5734a42912dde14f44f99c5fef25e0a2e2834cd1939c806a05878d1820e",
-          "new_sphere_log_hash": "1b423c75da4cbbd793f1a232a355e630c5d4d8f19afd2cee114b4f75eab6bf3c",
-          "original_rules_hash": "7f61c5734a42912dde14f44f99c5fef25e0a2e2834cd1939c806a05878d1820e",
-          "original_sphere_log_hash": "1b423c75da4cbbd793f1a232a355e630c5d4d8f19afd2cee114b4f75eab6bf3c",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-10T03:12:04.041053"
-        }
-      },
       "game_name_from_filename": "ahit",
       "game_name_from_yaml": "A Hat in Time",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.99,
+        "processing_time_seconds": 7.84,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/ahit/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -45,7 +33,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 15.75,
+        "processing_time_seconds": 16.73,
         "return_code": 0,
         "sphere_reached": 5.11,
         "success": true,
@@ -53,10 +41,10 @@
         "warning_count": 0
       },
       "template_filename": "A Hat in Time.yaml",
-      "timestamp": "2025-12-10T03:09:04.193989",
+      "timestamp": "2025-12-10T03:33:55.378322",
       "world_info": {
         "exporter_path": "exporter/games/ahit.py",
-        "exporter_size": 5839,
+        "exporter_size": 6222,
         "game_logic_path": "frontend/modules/shared/gameLogic/ahit/ahitLogic.js",
         "game_logic_size": 10533,
         "game_name_from_filename": "ahit",
