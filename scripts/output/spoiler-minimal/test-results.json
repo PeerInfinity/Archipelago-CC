@@ -22,7 +22,7 @@
       ],
       "last_updated": "2025-12-10T20:00:14.138642"
     },
-    "last_updated": "2025-12-10T20:00:14.138640",
+    "last_updated": "2025-12-10T20:52:50.210337",
     "script_version": "1.0.0"
   },
   "results": {
@@ -563,31 +563,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "1a21e296c11c80b2f97496a6f54bcb01e0078c6662f3d4f4869c9b0e82eef5a8",
-          "new_sphere_log_hash": "c8858eafb58e4e7527649009af5fe118a5697315dcf5c9690ce2386eb29260ee",
-          "original_rules_hash": "1a21e296c11c80b2f97496a6f54bcb01e0078c6662f3d4f4869c9b0e82eef5a8",
-          "original_sphere_log_hash": "c8858eafb58e4e7527649009af5fe118a5697315dcf5c9690ce2386eb29260ee",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-10T19:59:07.702931"
-        }
-      },
       "game_name_from_filename": "cv64",
       "game_name_from_yaml": "Castlevania 64",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.88,
+        "processing_time_seconds": 6.83,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/cv64/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 136102,
+        "size_bytes": 140098,
         "size_mb": 0.13
       },
       "seed": "1",
@@ -595,7 +583,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 7.85,
+        "processing_time_seconds": 9.82,
         "return_code": 0,
         "sphere_reached": 4.5,
         "success": true,
@@ -603,16 +591,16 @@
         "warning_count": 0
       },
       "template_filename": "Castlevania 64.yaml",
-      "timestamp": "2025-12-10T19:53:44.007265",
+      "timestamp": "2025-12-10T20:52:33.132677",
       "world_info": {
-        "exporter_path": "exporter/games/cv64.py",
-        "exporter_size": 15687,
-        "game_logic_path": "frontend/modules/shared/gameLogic/cv64/cv64Logic.js",
-        "game_logic_size": 2020,
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
         "game_name_from_filename": "cv64",
         "game_name_from_yaml": "Castlevania 64",
-        "has_custom_exporter": true,
-        "has_custom_game_logic": true,
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
         "world_directory": "cv64"
       }
     },
