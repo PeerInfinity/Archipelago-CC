@@ -36,11 +36,11 @@
     "world_directory": "alttp_worldgen"
   },
   "A Short Hike": {
-    "exporter_path": "exporter/games/shorthike.py",
-    "exporter_size": 7172,
+    "exporter_path": null,
+    "exporter_size": 0,
     "game_logic_path": null,
     "game_logic_size": 0,
-    "has_custom_exporter": true,
+    "has_custom_exporter": false,
     "has_custom_game_logic": false,
     "world_directory": "shorthike"
   },
@@ -541,7 +541,7 @@
   },
   "Kingdom Hearts": {
     "exporter_path": "exporter/games/kh1.py",
-    "exporter_size": 50690,
+    "exporter_size": 52056,
     "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
     "game_logic_size": 19926,
     "has_custom_exporter": true,
@@ -858,7 +858,7 @@
     "exporter_path": "exporter/games/paint.py",
     "exporter_size": 5899,
     "game_logic_path": "frontend/modules/shared/gameLogic/paint/paintLogic.js",
-    "game_logic_size": 4405,
+    "game_logic_size": 4545,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "paint"
@@ -1281,7 +1281,7 @@
     "exporter_path": "exporter/games/tww.py",
     "exporter_size": 3557,
     "game_logic_path": "frontend/modules/shared/gameLogic/tww/twwLogic.js",
-    "game_logic_size": 41688,
+    "game_logic_size": 56586,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "tww"

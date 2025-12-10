@@ -2236,315 +2236,426 @@
   },
   "items": {
     "1": {
-      "Golden Feather": {
-        "classification": "progression",
-        "is_event": false,
-        "id": 82003,
-        "groups": [
-          "Everything"
-        ]
-      },
-      "Bucket": {
-        "classification": "progression",
-        "is_event": false,
-        "id": 82005,
-        "groups": [
-          "Everything"
-        ]
-      },
-      "Progressive Fishing Rod": {
-        "classification": "progression",
-        "is_event": false,
-        "id": 82007,
-        "groups": [
-          "Everything"
-        ]
-      },
-      "Shovel": {
-        "classification": "progression",
-        "is_event": false,
-        "id": 82008,
-        "groups": [
-          "Everything"
-        ]
-      },
-      "Shell Necklace": {
-        "classification": "progression",
-        "is_event": false,
-        "id": 82012,
-        "groups": [
-          "Everything"
-        ]
-      },
-      "Wristwatch": {
-        "classification": "progression",
-        "is_event": false,
-        "id": 82013,
-        "groups": [
-          "Everything"
-        ]
-      },
-      "Motorboat Key": {
-        "classification": "progression",
-        "is_event": false,
-        "id": 82014,
-        "groups": [
-          "Everything"
-        ]
-      },
-      "Headband": {
-        "classification": "progression",
-        "is_event": false,
-        "id": 82024,
-        "groups": [
-          "Everything"
-        ]
-      },
-      "Camping Permit": {
-        "classification": "progression",
-        "is_event": false,
-        "id": 82026,
-        "groups": [
-          "Everything"
-        ]
-      },
       "Stick": {
-        "classification": "progression_skip_balancing",
-        "is_event": false,
+        "name": "Stick",
         "id": 82001,
         "groups": [
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 8,
+        "classification": "progression_skip_balancing"
       },
       "Seashell": {
-        "classification": "progression_skip_balancing",
-        "is_event": false,
+        "name": "Seashell",
         "id": 82002,
         "groups": [
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 23,
+        "classification": "progression_skip_balancing"
       },
-      "Toy Shovel": {
-        "classification": "progression_skip_balancing",
-        "is_event": false,
-        "id": 82009,
+      "Golden Feather": {
+        "name": "Golden Feather",
+        "id": 82003,
         "groups": [
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 20,
+        "classification": "progression"
       },
       "Silver Feather": {
-        "classification": "useful",
-        "is_event": false,
+        "name": "Silver Feather",
         "id": 82004,
         "groups": [
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "useful"
       },
-      "Compass": {
-        "classification": "useful",
-        "is_event": false,
-        "id": 82010,
+      "Bucket": {
+        "name": "Bucket",
+        "id": 82005,
         "groups": [
           "Everything"
-        ]
-      },
-      "Pickaxe": {
-        "classification": "useful",
-        "is_event": false,
-        "id": 82015,
-        "groups": [
-          "Everything"
-        ]
-      },
-      "Fishing Journal": {
-        "classification": "useful",
-        "is_event": false,
-        "id": 82016,
-        "groups": [
-          "Everything"
-        ]
-      },
-      "Running Shoes": {
-        "classification": "useful",
-        "is_event": false,
-        "id": 82025,
-        "groups": [
-          "Everything"
-        ]
-      },
-      "Walkie Talkie": {
-        "classification": "useful",
-        "is_event": false,
-        "id": 82027,
-        "groups": [
-          "Everything"
-        ]
-      },
-      "32 Coins": {
-        "classification": "useful",
-        "is_event": false,
-        "id": 82034,
-        "groups": [
-          "Coins",
-          "Everything"
-        ]
-      },
-      "33 Coins": {
-        "classification": "useful",
-        "is_event": false,
-        "id": 82035,
-        "groups": [
-          "Coins",
-          "Everything"
-        ]
-      },
-      "50 Coins": {
-        "classification": "useful",
-        "is_event": false,
-        "id": 82036,
-        "groups": [
-          "Coins",
-          "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "progression"
       },
       "Bait": {
-        "classification": "filler",
-        "is_event": false,
+        "name": "Bait",
         "id": 82006,
         "groups": [
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
+      },
+      "Progressive Fishing Rod": {
+        "name": "Progressive Fishing Rod",
+        "id": 82007,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "progression"
+      },
+      "Shovel": {
+        "name": "Shovel",
+        "id": 82008,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Toy Shovel": {
+        "name": "Toy Shovel",
+        "id": 82009,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 5,
+        "classification": "progression_skip_balancing"
+      },
+      "Compass": {
+        "name": "Compass",
+        "id": 82010,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
       },
       "Medal": {
-        "classification": "filler",
-        "is_event": false,
+        "name": "Medal",
         "id": 82011,
         "groups": [
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "filler"
+      },
+      "Shell Necklace": {
+        "name": "Shell Necklace",
+        "id": 82012,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Wristwatch": {
+        "name": "Wristwatch",
+        "id": 82013,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Motorboat Key": {
+        "name": "Motorboat Key",
+        "id": 82014,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Pickaxe": {
+        "name": "Pickaxe",
+        "id": 82015,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "useful"
+      },
+      "Fishing Journal": {
+        "name": "Fishing Journal",
+        "id": 82016,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
       },
       "A Stormy View Map": {
-        "classification": "filler",
-        "is_event": false,
+        "name": "A Stormy View Map",
         "id": 82017,
         "groups": [
           "Everything",
           "Maps"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "The King Map": {
-        "classification": "filler",
-        "is_event": false,
+        "name": "The King Map",
         "id": 82018,
         "groups": [
           "Everything",
           "Maps"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "The Treasure of Sid Beach Map": {
-        "classification": "filler",
-        "is_event": false,
+        "name": "The Treasure of Sid Beach Map",
         "id": 82019,
         "groups": [
           "Everything",
           "Maps"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "In Her Shadow Map": {
-        "classification": "filler",
-        "is_event": false,
+        "name": "In Her Shadow Map",
         "id": 82020,
         "groups": [
           "Everything",
           "Maps"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "Sunhat": {
-        "classification": "filler",
-        "is_event": false,
+        "name": "Sunhat",
         "id": 82021,
         "groups": [
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "Baseball Cap": {
-        "classification": "filler",
-        "is_event": false,
+        "name": "Baseball Cap",
         "id": 82022,
         "groups": [
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "Provincial Park Hat": {
-        "classification": "filler",
-        "is_event": false,
+        "name": "Provincial Park Hat",
         "id": 82023,
         "groups": [
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "Headband": {
+        "name": "Headband",
+        "id": 82024,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Running Shoes": {
+        "name": "Running Shoes",
+        "id": 82025,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "Camping Permit": {
+        "name": "Camping Permit",
+        "id": 82026,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "progression"
+      },
+      "Walkie Talkie": {
+        "name": "Walkie Talkie",
+        "id": 82027,
+        "groups": [
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
       },
       "7 Coins": {
-        "classification": "filler",
-        "is_event": false,
+        "name": "7 Coins",
         "id": 82028,
         "groups": [
           "Coins",
           "Everything"
-        ]
-      },
-      "13 Coins": {
-        "classification": "filler",
-        "is_event": false,
-        "id": 82037,
-        "groups": [
-          "Coins",
-          "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 3,
+        "classification": "filler"
       },
       "15 Coins": {
-        "classification": "filler",
-        "is_event": false,
+        "name": "15 Coins",
         "id": 82029,
         "groups": [
           "Coins",
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "18 Coins": {
-        "classification": "filler",
-        "is_event": false,
+        "name": "18 Coins",
         "id": 82030,
         "groups": [
           "Coins",
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
       },
       "21 Coins": {
-        "classification": "filler",
-        "is_event": false,
+        "name": "21 Coins",
         "id": 82031,
         "groups": [
           "Coins",
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 2,
+        "classification": "filler"
       },
       "25 Coins": {
-        "classification": "filler",
-        "is_event": false,
+        "name": "25 Coins",
         "id": 82032,
         "groups": [
           "Coins",
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 7,
+        "classification": "filler"
       },
       "27 Coins": {
-        "classification": "filler",
-        "is_event": false,
+        "name": "27 Coins",
         "id": 82033,
         "groups": [
           "Coins",
           "Everything"
-        ]
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "filler"
+      },
+      "32 Coins": {
+        "name": "32 Coins",
+        "id": 82034,
+        "groups": [
+          "Coins",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "33 Coins": {
+        "name": "33 Coins",
+        "id": 82035,
+        "groups": [
+          "Coins",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 6,
+        "classification": "useful"
+      },
+      "50 Coins": {
+        "name": "50 Coins",
+        "id": 82036,
+        "groups": [
+          "Coins",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 1,
+        "classification": "useful"
+      },
+      "13 Coins": {
+        "name": "13 Coins",
+        "id": 82037,
+        "groups": [
+          "Coins",
+          "Everything"
+        ],
+        "event": false,
+        "type": null,
+        "max_count": 21,
+        "classification": "filler"
       }
     }
   },
