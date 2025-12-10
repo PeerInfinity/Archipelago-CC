@@ -87,8 +87,8 @@ def generate_locations_py(data: ExtractedData) -> str:
     game_name = data.metadata.game_name
     class_name = sanitize_class_name(game_name)
 
-    # Check if we need LocationProgressType import
-    has_progress_type = any(loc.progress_type for loc in data.locations.values())
+    # Always import LocationProgressType since it's used in LocationData type annotation
+    has_progress_type = True  # Always True - LocationData.__init__ references it
 
     # Build location table entries (preserve original order from JSON)
     location_entries = []
