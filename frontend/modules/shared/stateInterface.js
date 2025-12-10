@@ -344,9 +344,13 @@ export function createStateSnapshotInterface(
         case 'world':
           // Return an object with player and options properties
           const playerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
+          // The settings structure may have game options nested under settings[playerId].options
+          // (for games like Shivers with options like early_beth) or directly on settings[playerId]
+          const playerSettings = staticData?.settings?.[playerId];
+          const gameOptions = playerSettings?.options || playerSettings || staticData?.settings || {};
           return {
             player: playerId,
-            options: staticData?.settings?.[playerId] || staticData?.settings || {}
+            options: gameOptions
           };
         case 'logic':
         case 'StateLogic':
