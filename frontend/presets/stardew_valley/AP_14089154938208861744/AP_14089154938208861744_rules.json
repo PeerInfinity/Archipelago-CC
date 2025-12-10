@@ -205352,8 +205352,8 @@
         "elevator_progression": 2,
         "enabled_filler_buffs": [
           "Bite Rate",
-          "Luck",
-          "Defense"
+          "Defense",
+          "Luck"
         ],
         "entrance_randomization": 0,
         "exclude_ginger_island": 0,
@@ -205437,10 +205437,10 @@
           "file_name": "setup_en.md",
           "link": "setup/en",
           "authors": [
-            "KaitoKid",
+            "Exempt-Medic (Proofreading)",
             "Jouramie",
-            "Witchybun (Mod Support)",
-            "Exempt-Medic (Proofreading)"
+            "KaitoKid",
+            "Witchybun (Mod Support)"
           ]
         },
         {

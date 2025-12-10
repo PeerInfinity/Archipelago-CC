@@ -455,7 +455,7 @@ class BaseGameExportHandler:
                         if isinstance(value, (int, bool, str, list, dict)):
                             options_dict[option_name] = value
                         elif isinstance(value, set):
-                            options_dict[option_name] = list(value)
+                            options_dict[option_name] = sorted(value)
                 except Exception:
                     pass
             if options_dict:

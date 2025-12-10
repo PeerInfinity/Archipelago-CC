@@ -3686,15 +3686,15 @@
         "mips2_cost": 42,
         "move_rando_actions": [
           "Backflip",
-          "Triple Jump",
-          "Ground Pound",
-          "Ledge Grab",
-          "Side Flip",
-          "Wall Kick",
-          "Kick",
-          "Long Jump",
+          "Climb",
           "Dive",
-          "Climb"
+          "Ground Pound",
+          "Kick",
+          "Ledge Grab",
+          "Long Jump",
+          "Side Flip",
+          "Triple Jump",
+          "Wall Kick"
         ],
         "non_local_items": [],
         "plando_items": [],

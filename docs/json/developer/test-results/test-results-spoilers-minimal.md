@@ -6,30 +6,30 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-10 04:46:59
+**Generated:** 2025-12-10 04:21:04
 
-**Source Data Created:** 2025-12-10T04:44:04.295267
+**Source Data Created:** 2025-12-10T03:30:03.907731
 
-**Source Data Last Updated:** 2025-12-10T04:44:04.295273
+**Source Data Last Updated:** 2025-12-10T03:30:03.907738
 
 ## Summary
 
 - **Total Games:** 79
-- **Passed:** 79 (100.0%)
-- **Failed:** 0 (0.0%)
-- **Games with Intermittent Failures:** 1
-- **Total Intermittent Failures:** 1
+- **Passed:** 77 (97.5%)
+- **Failed:** 2 (2.5%)
+- **Games with Intermittent Failures:** 0
+- **Total Intermittent Failures:** 0
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
-| A Hat in Time | ✅ Passed | 0 | 5.11 | 5.11 | 🟢 Complete | 6.1KB | 10.3KB |
-| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 32.8KB | 59.8KB |
-| A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
+| A Hat in Time | ✅ Passed | 0 | 5.11 | 5.11 | 🟢 Complete | 5.7KB | 10.3KB |
+| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 32.1KB | 59.8KB |
+| A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | 7.0KB | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
-| Aquaria | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 4.8KB | ✅ |
+| Aquaria | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 10.8KB | 8.3KB |
 | Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.9 | 10.9 | 🟢 Complete | 16.2KB | 38.2KB |
 | Bumper Stickers | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | 0 | 4.4 | 4.4 | 🟢 Complete | 10.2KB | 5.7KB |
@@ -77,13 +77,13 @@
 | SMZ3 | ✅ Passed | 0 | 16.2 | 16.2 | 🟢 Complete | 59.5KB | 51.2KB |
 | Saving Princess | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 3.1KB | ✅ |
 | Secret of Evermore | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 13.7KB | 6.9KB |
-| Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
+| Shivers | ❌ Failed | 0 | 5.2 | 17.1 | 🟡 30.4% | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 19.3KB | 86.3KB |
 | Stardew Valley | ✅ Passed | 0 | 44.1 | 44.1 | 🟢 Complete | 15.9KB | 10.7KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 5.2KB | 14.7KB |
 | Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 14.6KB | 3.3KB |
-| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 15.7KB | 15.3KB |
+| Super Mario Land 2 | ❌ Failed | 0 | 0 | 10.1 | 🔴 0.0% | 15.7KB | 15.3KB |
 | Super Mario World | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
 | Super Metroid | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | 71.5KB | 114.6KB |
 | TOEM original | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
@@ -103,15 +103,6 @@
 | Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 8.1KB | 33.2KB |
 | Yu-Gi-Oh! 2006 | ✅ Passed | 0 | 21.23 | 21.23 | 🟢 Complete | 1.6KB | 21.4KB |
 | shapez | ✅ Passed | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
-
-## Intermittent Failures
-
-These seeds were previously failing but passed during a retest run:
-
-| Template | Seed | Timestamp | Notes |
-|----------|------|-----------|-------|
-| MathProof2p2e4 | 1 | 2025-12-10 04:42 | Previously failed, now passing |
-
 
 ## Notes
 
