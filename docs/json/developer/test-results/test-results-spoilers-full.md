@@ -6,30 +6,30 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2025-12-10 04:21:04
+**Generated:** 2025-12-10 06:37:24
 
-**Source Data Created:** 2025-12-10T03:40:51.568117
+**Source Data Created:** 2025-12-10T05:33:42.229635
 
-**Source Data Last Updated:** 2025-12-10T03:40:51.568123
+**Source Data Last Updated:** 2025-12-10T05:33:42.229640
 
 ## Summary
 
 - **Total Games:** 79
 - **Passed:** 77 (97.5%)
 - **Failed:** 2 (2.5%)
-- **Games with Intermittent Failures:** 1
-- **Total Intermittent Failures:** 1
+- **Games with Intermittent Failures:** 0
+- **Total Intermittent Failures:** 0
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
-| A Hat in Time | ✅ Passed | 0 | 5.21 | 5.21 | 🟢 Complete | 5.7KB | 10.3KB |
-| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 32.1KB | 59.8KB |
-| A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | 7.0KB | ✅ |
+| A Hat in Time | ❌ Failed | 0 | 0.46 | 5.21 | 🟠 8.8% | 6.1KB | 10.3KB |
+| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 32.8KB | 59.8KB |
+| A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
-| Aquaria | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 10.8KB | 8.3KB |
+| Aquaria | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 4.8KB | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.18 | 10.18 | 🟢 Complete | 16.2KB | 38.2KB |
 | Bumper Stickers | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | 0 | 4.41 | 4.41 | 🟢 Complete | 10.2KB | 5.7KB |
@@ -68,7 +68,7 @@
 | Muse Dash | ✅ Passed | 0 | 8.6 | 8.6 | 🟢 Complete | ✅ | ✅ |
 | Noita | ✅ Passed | 0 | 0.117 | 0.117 | 🟢 Complete | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | 0 | 7.6 | 7.6 | 🟢 Complete | 3.0KB | 1.2KB |
-| Overcooked! 2 | ✅ Passed | 0 | 18.3 | 18.3 | 🟢 Complete | 26.5KB | 7.2KB |
+| Overcooked! 2 | ❌ Failed | 0 | 5.2 | 18.3 | 🟡 28.4% | 26.5KB | 7.2KB |
 | Paint | ✅ Passed | 0 | 13.2 | 13.2 | 🟢 Complete | 5.8KB | 4.4KB |
 | Pokemon Emerald | ✅ Passed | 0 | 19.4 | 19.4 | 🟢 Complete | 6.2KB | 8.7KB |
 | Pokemon Red and Blue | ✅ Passed | 0 | 10.9 | 10.9 | 🟢 Complete | 12.2KB | 13.0KB |
@@ -77,13 +77,13 @@
 | SMZ3 | ✅ Passed | 0 | 16.1 | 16.1 | 🟢 Complete | 59.5KB | 51.2KB |
 | Saving Princess | ✅ Passed | 0 | 5.3 | 5.3 | 🟢 Complete | 3.1KB | ✅ |
 | Secret of Evermore | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 13.7KB | 6.9KB |
-| Shivers | ❌ Failed | 0 | 5.3 | 17.1 | 🟡 31.0% | ✅ | ✅ |
+| Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.18 | 7.18 | 🟢 Complete | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | 0 | 15.14 | 15.14 | 🟢 Complete | 19.3KB | 86.3KB |
 | Stardew Valley | ✅ Passed | 0 | 44.2 | 44.2 | 🟢 Complete | 15.9KB | 10.7KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 5.2KB | 14.7KB |
 | Super Mario 64 | ✅ Passed | 0 | 5.5 | 5.5 | 🟢 Complete | 14.6KB | 3.3KB |
-| Super Mario Land 2 | ❌ Failed | 0 | 0 | 10.1 | 🔴 0.0% | 15.7KB | 15.3KB |
+| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 15.7KB | 15.3KB |
 | Super Mario World | ✅ Passed | 0 | 8.12 | 8.12 | 🟢 Complete | ✅ | ✅ |
 | Super Metroid | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 71.5KB | 114.6KB |
 | TOEM original | ✅ Passed | 0 | 3.66 | 3.66 | 🟢 Complete | ✅ | ✅ |
@@ -103,15 +103,6 @@
 | Yoshi's Island | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | 8.1KB | 33.2KB |
 | Yu-Gi-Oh! 2006 | ✅ Passed | 0 | 21.23 | 21.23 | 🟢 Complete | 1.6KB | 21.4KB |
 | shapez | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ✅ |
-
-## Intermittent Failures
-
-These seeds were previously failing but passed during a retest run:
-
-| Template | Seed | Timestamp | Notes |
-|----------|------|-----------|-------|
-| Metamath | 1 | 2025-12-10 03:35 | Previously failed, now passing |
-
 
 ## Notes
 
