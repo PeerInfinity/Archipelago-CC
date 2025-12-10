@@ -9,13 +9,25 @@ logger = logging.getLogger(__name__)
 
 
 class LingoGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'Lingo'
-    # Disable automatic helper export (use old behavior)
-    AUTO_EXPORT_DISCOVERED_HELPERS = False
-    AUTO_PRESERVE_LARGE_HELPERS = False
-
     """Export handler for Lingo that handles AccessRequirements string sorting, door variable resolution,
     and exporting door-related data structures for rule evaluation."""
+
+    GAME_NAME = 'Lingo'
+    # Enable automatic helper export
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
+    # Blacklist helpers with loops or complex logic that cannot be auto-exported
+    # These helpers iterate over collections (rooms, doors, colors, items, etc.)
+    # and require JavaScript implementations for runtime evaluation
+    HELPERS_TO_EXPORT_BLACKLIST = {
+        'lingo_can_use_entrance',         # accesses NamedTuple attributes (door.room, door.door)
+        'lingo_can_do_pilgrimage',        # uses all() with generator (loop)
+        'lingo_can_use_mastery_location', # has for loop counting satisfied requirements
+        'lingo_can_use_level_2_location', # has nested for loops over regions and panels
+        '_lingo_can_satisfy_requirements', # has multiple for loops over access collections
+        '_lingo_can_open_door',           # has complex conditionals with dictionary lookups
+    }
 
     def should_preserve_as_helper(self, func_name: str) -> bool:
         """
