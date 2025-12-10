@@ -239,8 +239,6 @@ import { kh1Logic } from './kh1/kh1Logic.js';
 import { helperFunctions as kh2HelperFunctions } from './kh2/kh2Logic.js';
 import * as kdl3Logic from './kdl3/kdl3Logic.js';
 import * as ladxLogic from './ladx/ladxLogic.js';
-import * as landstalkerLogic from './landstalker/landstalkerLogic.js';
-import { landstalkerStateModule } from './landstalker/landstalkerLogic.js';
 import { helperFunctions as lingoHelperFunctions } from './lingo/lingoLogic.js';
 import * as mlssLogic from './mlss/mlssLogic.js';
 import { mlssStateModule } from './mlss/mlssLogic.js';
@@ -429,12 +427,6 @@ const GAME_REGISTRY = {
     helperFunctions: pokemon_emeraldLogic.helperFunctions,
     worldClasses: ['PokemonEmeraldWorld'],
     aliases: ['Pokemon Emerald', 'pokemon_emerald']
-  },
-  'Landstalker - The Treasures of King Nole': {
-    logicModule: landstalkerLogic.landstalkerStateModule,
-    helperFunctions: landstalkerLogic.helperFunctions,
-    worldClasses: ['LandstalkerWorld'],
-    aliases: ['Landstalker - The Treasures of King Nole', 'Landstalker']
   },
   'Lingo': {
     logicModule: genericLogic.genericStateModule,
