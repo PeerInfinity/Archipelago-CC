@@ -21,10 +21,10 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
     # These have loops, complex counting, settings lookups, or dynamic conditions
     HELPERS_TO_EXPORT_BLACKLIST = {
         'GanonDefeatRule',
-        'can_extend_magic',  # Needs more debugging - block mode with parameters
+        'can_extend_magic',  # Complex - needs debugging of shop region reachability
         'can_get_good_bee',
         'can_kill_most_things',
-        'can_shoot_arrows',  # Needs more debugging - depends on can_extend_magic pattern
+        # 'can_shoot_arrows',  # Now works with can_buy and can_hold_arrows
         # 'can_use_bombs',  # Now works with min/max and setting_value support
         # 'has_crystals',  # Now works with group_count support
         # 'has_crystals_for_ganon',  # Removed - has_crystals now handles dynamic arguments

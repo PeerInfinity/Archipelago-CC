@@ -19834,6 +19834,116 @@
           }
         ]
       },
+      "can_buy": {
+        "params": [
+          "item"
+        ],
+        "body": {
+          "type": "any_of",
+          "element_rule": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "shop"
+                  },
+                  "attr": "has"
+                },
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "item"
+                  }
+                ]
+              },
+              {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "shop"
+                    },
+                    "attr": "region"
+                  },
+                  "attr": "can_reach"
+                },
+                "args": []
+              }
+            ]
+          },
+          "iterator_info": {
+            "type": "comprehension_details",
+            "target": {
+              "type": "name",
+              "name": "shop"
+            },
+            "iterator": {
+              "type": "setting_value",
+              "setting": "shops"
+            }
+          }
+        }
+      },
+      "can_hold_arrows": {
+        "params": [
+          "quantity"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "setting_value",
+            "setting": "shuffle_capacity_upgrades"
+          },
+          "if_true": {
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "name",
+                "name": "quantity"
+              },
+              "op": "==",
+              "right": {
+                "type": "constant",
+                "value": 0
+              }
+            },
+            "if_true": {
+              "type": "constant",
+              "value": true
+            },
+            "if_false": null
+          },
+          "if_false": {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "quantity"
+                },
+                "op": "<=",
+                "right": {
+                  "type": "constant",
+                  "value": 30
+                }
+              },
+              {
+                "type": "item_check",
+                "item": "Capacity Upgrade Shop"
+              }
+            ]
+          }
+        }
+      },
       "can_lift_heavy_rocks": {
         "type": "item_check",
         "item": "Titans Mitts"
@@ -19914,6 +20024,77 @@
             ]
           }
         ]
+      },
+      "can_shoot_arrows": {
+        "params": [
+          "count"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "setting_value",
+            "setting": "retro_bow"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Bow"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Silver Bow"
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "can_buy",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Single Arrow"
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Bow"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Silver Bow"
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "can_hold_arrows",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "defaults": {
+          "count": 0
+        }
       },
       "can_use_bombs": {
         "params": [
@@ -20102,6 +20283,9 @@
               }
             }
           ]
+        },
+        "defaults": {
+          "quantity": 1
         }
       },
       "cross_peg_bridge": {

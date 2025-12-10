@@ -384,16 +384,27 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             // Found a helper definition in rules.json - evaluate it recursively
             // Helper definitions may have params and body, or just be a rule directly
             const params = helperDefinition.params || [];
+            const defaults = helperDefinition.defaults || {};
             const body = helperDefinition.body || helperDefinition;
             const args = rule.args || [];
 
             // Create localScope mapping parameter names to evaluated argument values
             let helperLocalScope = localScope ? { ...localScope } : {};
+
+            // First, apply default values for all parameters that have defaults
+            for (const paramName of params) {
+              if (paramName in defaults) {
+                helperLocalScope[paramName] = defaults[paramName];
+              }
+            }
+
+            // Then, override with actual argument values
             for (let i = 0; i < params.length && i < args.length; i++) {
               helperLocalScope[params[i]] = evaluateRule(args[i], context, depth + 1, localScope);
             }
 
             result = evaluateRule(body, context, depth + 1, helperLocalScope);
+
             // Unwrap return marker if present (from block with return statement)
             if (result && typeof result === 'object' && result.__isReturn) {
               result = result.value;
