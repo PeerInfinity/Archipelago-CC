@@ -26,11 +26,11 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         'can_kill_most_things',
         'can_shoot_arrows',
         # 'can_use_bombs',  # Now works with min/max and setting_value support
-        'has_crystals',
+        # 'has_crystals',  # Now works with group_count support
         'has_crystals_for_ganon',
         'has_hearts',
-        'has_misery_mire_medallion',
-        'has_turtle_rock_medallion',
+        # 'has_misery_mire_medallion',  # Testing dynamic item check
+        # 'has_turtle_rock_medallion',  # Testing dynamic item check
         'item_name_in_location_names',
         'tr_big_key_chest_keys_needed',
         'location_item_name',
@@ -86,14 +86,14 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             'can_shoot_arrows',
             'can_use_bombs',
             # 'has_beam_sword',  # Removed - multiple item checks, can be inlined
-            'has_crystals',  # Preserved as helper call, definition exported to helpers section
+            'has_crystals',  # Exported with group_count support
             'has_crystals_for_ganon',
             # 'has_fire_source',  # Removed - simple item checks, can be inlined
             'has_hearts',
             # 'has_melee_weapon',  # Removed - calls has_sword + item check, can be inlined
-            'has_misery_mire_medallion',  # Keep - dynamic medallion lookup needs JS
+            'has_misery_mire_medallion',  # Exported with setting_value index support
             # 'has_sword',  # Removed - multiple item checks, can be inlined
-            'has_turtle_rock_medallion',
+            'has_turtle_rock_medallion',  # Exported with setting_value index support
             'item_name_in_location_names',
             'tr_big_key_chest_keys_needed',
             'location_item_name',

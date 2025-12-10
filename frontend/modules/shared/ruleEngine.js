@@ -1680,10 +1680,23 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         let settingName = rule.setting;
         if (typeof settingName === 'string') {
           const rawValue = context.getSetting(settingName);
-          // Normalize certain string values to be falsy
-          // This handles Choice options where 0='off'/'none' etc.
-          // The normalization of 'off'/'none' strings is now handled in stateInterface.getSetting
-          result = rawValue;
+          // If an index is provided, subscript the array value
+          if (rule.index !== undefined && rawValue !== undefined) {
+            if (Array.isArray(rawValue)) {
+              result = rawValue[rule.index];
+            } else {
+              log('warn', '[evaluateRule] setting_value has index but value is not an array', {
+                rule,
+                rawValue,
+              });
+              result = undefined;
+            }
+          } else {
+            // Normalize certain string values to be falsy
+            // This handles Choice options where 0='off'/'none' etc.
+            // The normalization of 'off'/'none' strings is now handled in stateInterface.getSetting
+            result = rawValue;
+          }
         } else {
           log('warn', '[evaluateRule] Invalid setting name for setting_value', {
             rule,

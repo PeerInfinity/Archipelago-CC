@@ -20005,6 +20005,39 @@
           }
         ]
       },
+      "has_crystals": {
+        "params": [
+          "count"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "found",
+              "value": {
+                "type": "group_count",
+                "group": "Crystals"
+              }
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "found"
+                },
+                "op": ">=",
+                "right": {
+                  "type": "name",
+                  "name": "count"
+                }
+              }
+            }
+          ]
+        }
+      },
       "has_fire_source": {
         "type": "or",
         "conditions": [
@@ -20032,6 +20065,14 @@
           }
         ]
       },
+      "has_misery_mire_medallion": {
+        "type": "item_check",
+        "item": {
+          "type": "setting_value",
+          "setting": "required_medallions",
+          "index": 0
+        }
+      },
       "has_sword": {
         "type": "or",
         "conditions": [
@@ -20052,6 +20093,14 @@
             "item": "Golden Sword"
           }
         ]
+      },
+      "has_turtle_rock_medallion": {
+        "type": "item_check",
+        "item": {
+          "type": "setting_value",
+          "setting": "required_medallions",
+          "index": 1
+        }
       }
     }
   }

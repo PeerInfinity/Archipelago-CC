@@ -163,10 +163,10 @@ class ASTVisitorMixin:
         has_return = any(isinstance(n, ast.Return) for n in body_nodes)
 
         # Use block mode if we have for loops, augmented assignments,
-        # or multiple assignments before a return
+        # or any assignments before a return (need to capture variable bindings)
         if has_for or has_augassign:
             return True
-        if assign_count > 0 and has_return and len(body_nodes) > 2:
+        if assign_count > 0 and has_return:
             return True
         return False
 
@@ -1339,6 +1339,66 @@ class ASTVisitorMixin:
 
         return setting_name
 
+    def _is_world_attribute_subscript_pattern(self, node):
+        """
+        Detect the pattern: state.multiworld.worlds[player].<attr>[index]
+        Returns (attr_name, index) tuple if matched, (None, None) otherwise.
+
+        This handles patterns like:
+        - state.multiworld.worlds[player].required_medallions[0]
+        - state.multiworld.worlds[player].some_array[1]
+
+        AST structure:
+        Subscript(slice=Constant(N))
+          value=Attribute(attr='<attr_name>')
+            value=Subscript
+              value=Attribute(attr='worlds')
+                value=Attribute(attr='multiworld')
+                  value=Name(id='state')
+              slice=Name(id='player')
+        """
+        if not isinstance(node, ast.Subscript):
+            return None, None
+
+        # Get the index
+        index_val = None
+        if isinstance(node.slice, ast.Constant):
+            index_val = node.slice.value
+        elif isinstance(node.slice, ast.Num):  # Python 3.7 compatibility
+            index_val = node.slice.n
+        else:
+            return None, None
+
+        # Check that the value being subscripted is an attribute
+        if not isinstance(node.value, ast.Attribute):
+            return None, None
+
+        attr_name = node.value.attr
+
+        # Check [player] subscript on worlds
+        subscript = node.value.value
+        if not isinstance(subscript, ast.Subscript):
+            return None, None
+        if not isinstance(subscript.slice, ast.Name) or subscript.slice.id != 'player':
+            return None, None
+
+        # Check .worlds
+        worlds_attr = subscript.value
+        if not isinstance(worlds_attr, ast.Attribute) or worlds_attr.attr != 'worlds':
+            return None, None
+
+        # Check .multiworld
+        multiworld_attr = worlds_attr.value
+        if not isinstance(multiworld_attr, ast.Attribute) or multiworld_attr.attr != 'multiworld':
+            return None, None
+
+        # Check state (or world)
+        state_name = multiworld_attr.value
+        if not isinstance(state_name, ast.Name) or state_name.id not in ('state', 'world'):
+            return None, None
+
+        return attr_name, index_val
+
     def visit_Attribute(self, node):
         try:
             attr_name = node.attr
@@ -1598,6 +1658,13 @@ class ASTVisitorMixin:
         logging.debug(f"\nvisit_Subscript called:")
         logging.debug(f"Value: {ast.dump(node.value)}")
         logging.debug(f"Slice: {ast.dump(node.slice)}")
+
+        # Check for state.multiworld.worlds[player].<attr>[index] pattern
+        # Convert to setting_value rule type for frontend evaluation
+        attr_name, index_val = self._is_world_attribute_subscript_pattern(node)
+        if attr_name is not None and index_val is not None:
+            logging.debug(f"visit_Subscript: Detected world attribute subscript pattern: {attr_name}[{index_val}]")
+            return {'type': 'setting_value', 'setting': attr_name, 'index': index_val}
 
         # First visit the value (the object being subscripted)
         value_info = self.visit(node.value) # Get returned result
