@@ -217,7 +217,6 @@ import * as alttpLogic from './alttp/alttpLogic.js';
 import { alttpStateModule } from './alttp/alttpLogic.js';
 import * as genericLogic from './generic/genericLogic.js';
 import * as ahitLogic from './ahit/ahitLogic.js';
-import { ahitStateModule } from './ahit/ahitLogic.js';
 import * as aquariaLogic from './aquaria/aquariaLogic.js';
 import * as blasphemousLogic from './blasphemous/blasphemousLogic.js';
 import { blasphemousStateModule } from './blasphemous/blasphemousLogic.js';
@@ -301,7 +300,7 @@ const GAME_REGISTRY = {
     aliases: ['A Link to the Past', 'ALTTP']
   },
   'A Hat in Time': {
-    logicModule: ahitLogic.ahitStateModule,
+    logicModule: genericLogic.genericStateModule,
     helperFunctions: ahitLogic.helperFunctions,
     worldClasses: ['HatInTimeWorld'],
     aliases: ['A Hat in Time', 'AHIT']

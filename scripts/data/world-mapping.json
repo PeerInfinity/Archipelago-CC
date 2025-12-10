@@ -1,9 +1,9 @@
 {
   "A Hat in Time": {
     "exporter_path": "exporter/games/ahit.py",
-    "exporter_size": 23761,
+    "exporter_size": 5839,
     "game_logic_path": "frontend/modules/shared/gameLogic/ahit/ahitLogic.js",
-    "game_logic_size": 23739,
+    "game_logic_size": 10533,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "ahit"
@@ -181,7 +181,7 @@
   },
   "Castlevania 64": {
     "exporter_path": "exporter/games/cv64.py",
-    "exporter_size": 13366,
+    "exporter_size": 15687,
     "game_logic_path": "frontend/modules/shared/gameLogic/cv64/cv64Logic.js",
     "game_logic_size": 2020,
     "has_custom_exporter": true,
