@@ -168,7 +168,6 @@
  * **SUPPORTED GAMES**:
  * - A Link to the Past (ALTTP)
  * - A Hat in Time (AHIT)
- * - Aquaria
  * - Blasphemous
  * - Bomb Rush Cyberfunk
  * - Celeste 64
@@ -217,7 +216,6 @@ import * as alttpLogic from './alttp/alttpLogic.js';
 import { alttpStateModule } from './alttp/alttpLogic.js';
 import * as genericLogic from './generic/genericLogic.js';
 import * as ahitLogic from './ahit/ahitLogic.js';
-import * as aquariaLogic from './aquaria/aquariaLogic.js';
 import * as blasphemousLogic from './blasphemous/blasphemousLogic.js';
 import { blasphemousStateModule } from './blasphemous/blasphemousLogic.js';
 import { helperFunctions as bombRushCyberfunkHelperFunctions } from './bomb_rush_cyberfunk/bombRushCyberfunkLogic.js';
@@ -304,12 +302,6 @@ const GAME_REGISTRY = {
     helperFunctions: ahitLogic.helperFunctions,
     worldClasses: ['HatInTimeWorld'],
     aliases: ['A Hat in Time', 'AHIT']
-  },
-  'Aquaria': {
-    logicModule: genericLogic.genericStateModule,
-    helperFunctions: aquariaLogic.helperFunctions,
-    worldClasses: ['AquariaWorld'],
-    aliases: ['Aquaria']
   },
   'Blasphemous': {
     logicModule: blasphemousLogic.blasphemousStateModule,
