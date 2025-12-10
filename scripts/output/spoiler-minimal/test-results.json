@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-10T03:15:40.805921",
-    "last_updated": "2025-12-10T03:15:40.805927",
+    "last_updated": "2025-12-10T03:35:50.450780",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3140,27 +3140,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "0e9e2617b4b81b3702f4283b96b65879dc3f2abefa349dc412033a8a0e09c1d9",
-          "new_sphere_log_hash": "cdd9c240bf25c9a64418a7c5d758b3da7a0be98beac7ce68f87c972a2285ae89",
-          "original_rules_hash": "097e26f78af7691da6b56d28b6c6041824fed0e462079be68f10b5ba2abfd3ab",
-          "original_sphere_log_hash": "cdd9c240bf25c9a64418a7c5d758b3da7a0be98beac7ce68f87c972a2285ae89",
-          "rules_identical": false,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-10T03:12:34.966556"
-        }
-      },
       "game_name_from_filename": "shivers",
       "game_name_from_yaml": "Shivers",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.32,
+        "processing_time_seconds": 6.67,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/shivers/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -3170,17 +3158,17 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
-        "error_count": 8,
-        "pass_fail": "failed",
-        "processing_time_seconds": 23.48,
-        "return_code": 1,
-        "sphere_reached": 5.2,
-        "success": false,
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 12.84,
+        "return_code": 0,
+        "sphere_reached": 17.1,
+        "success": true,
         "total_spheres": 17.1,
         "warning_count": 0
       },
       "template_filename": "Shivers.yaml",
-      "timestamp": "2025-12-10T03:11:43.437509",
+      "timestamp": "2025-12-10T03:35:30.551300",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,

@@ -376,7 +376,9 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         if (typeof context?.getStaticData === 'function') {
           const staticData = context.getStaticData();
           const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
-          const helperDefinition = staticData?.helpers?.[playerId]?.[rule.name];
+          // Convert playerId to string for JSON key lookup (JSON keys are always strings)
+          const playerIdKey = String(playerId);
+          const helperDefinition = staticData?.helpers?.[playerIdKey]?.[rule.name];
 
           if (helperDefinition) {
             // Found a helper definition in rules.json - evaluate it recursively
