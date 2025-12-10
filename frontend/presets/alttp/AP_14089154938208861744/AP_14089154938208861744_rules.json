@@ -19580,6 +19580,7 @@
       "mode": "open",
       "crystals_needed_for_gt": 7,
       "crystals_needed_for_ganon": 7,
+      "item_functionality": "hard",
       "shuffle_capacity_upgrades": "off",
       "treasure_hunt_required": 0,
       "can_take_damage": true,
@@ -19782,6 +19783,19 @@
           }
         }
       },
+      "bottle_count": {
+        "type": "min",
+        "args": [
+          {
+            "type": "setting_value",
+            "setting": "difficulty_requirements.progressive_bottle_limit"
+          },
+          {
+            "type": "group_count",
+            "group": "Bottles"
+          }
+        ]
+      },
       "can_activate_crystal_switch": {
         "type": "or",
         "conditions": [
@@ -19834,61 +19848,253 @@
           }
         ]
       },
-      "can_buy": {
+      "can_extend_magic": {
         "params": [
-          "item"
+          "smallmagic",
+          "fullrefill"
         ],
         "body": {
-          "type": "any_of",
-          "element_rule": {
-            "type": "and",
-            "conditions": [
-              {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "name",
-                    "name": "shop"
-                  },
-                  "attr": "has"
-                },
-                "args": [
-                  {
-                    "type": "name",
-                    "name": "item"
-                  }
-                ]
-              },
-              {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "shop"
-                    },
-                    "attr": "region"
-                  },
-                  "attr": "can_reach"
-                },
-                "args": []
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "basemagic",
+              "value": {
+                "type": "constant",
+                "value": 8
               }
-            ]
-          },
-          "iterator_info": {
-            "type": "comprehension_details",
-            "target": {
-              "type": "name",
-              "name": "shop"
             },
-            "iterator": {
-              "type": "setting_value",
-              "setting": "shops"
+            {
+              "type": "assign",
+              "name": "basemagic",
+              "value": {
+                "type": "conditional",
+                "test": {
+                  "type": "item_check",
+                  "item": "Magic Upgrade (1/4)"
+                },
+                "if_true": {
+                  "type": "constant",
+                  "value": 32
+                },
+                "if_false": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "item_check",
+                    "item": "Magic Upgrade (1/2)"
+                  },
+                  "if_true": {
+                    "type": "constant",
+                    "value": 16
+                  },
+                  "if_false": {
+                    "type": "name",
+                    "name": "basemagic"
+                  }
+                }
+              }
+            },
+            {
+              "type": "assign",
+              "name": "basemagic",
+              "value": {
+                "type": "conditional",
+                "test": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "can_buy_unlimited",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Green Potion"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "helper",
+                      "name": "can_buy_unlimited",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Blue Potion"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "if_true": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "compare",
+                        "left": {
+                          "type": "setting_value",
+                          "setting": "item_functionality"
+                        },
+                        "op": "==",
+                        "right": {
+                          "type": "constant",
+                          "value": "hard"
+                        }
+                      },
+                      {
+                        "type": "not",
+                        "condition": {
+                          "type": "name",
+                          "name": "fullrefill"
+                        }
+                      }
+                    ]
+                  },
+                  "if_true": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "name",
+                      "name": "basemagic"
+                    },
+                    "op": "+",
+                    "right": {
+                      "type": "helper",
+                      "name": "int",
+                      "args": [
+                        {
+                          "type": "binary_op",
+                          "left": {
+                            "type": "binary_op",
+                            "left": {
+                              "type": "name",
+                              "name": "basemagic"
+                            },
+                            "op": "*",
+                            "right": {
+                              "type": "constant",
+                              "value": 0.5
+                            }
+                          },
+                          "op": "*",
+                          "right": {
+                            "type": "helper",
+                            "name": "bottle_count",
+                            "args": []
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "if_false": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "compare",
+                          "left": {
+                            "type": "setting_value",
+                            "setting": "item_functionality"
+                          },
+                          "op": "==",
+                          "right": {
+                            "type": "constant",
+                            "value": "expert"
+                          }
+                        },
+                        {
+                          "type": "not",
+                          "condition": {
+                            "type": "name",
+                            "name": "fullrefill"
+                          }
+                        }
+                      ]
+                    },
+                    "if_true": {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "name",
+                        "name": "basemagic"
+                      },
+                      "op": "+",
+                      "right": {
+                        "type": "helper",
+                        "name": "int",
+                        "args": [
+                          {
+                            "type": "binary_op",
+                            "left": {
+                              "type": "binary_op",
+                              "left": {
+                                "type": "name",
+                                "name": "basemagic"
+                              },
+                              "op": "*",
+                              "right": {
+                                "type": "constant",
+                                "value": 0.25
+                              }
+                            },
+                            "op": "*",
+                            "right": {
+                              "type": "helper",
+                              "name": "bottle_count",
+                              "args": []
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "if_false": {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "name",
+                        "name": "basemagic"
+                      },
+                      "op": "+",
+                      "right": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "name",
+                          "name": "basemagic"
+                        },
+                        "op": "*",
+                        "right": {
+                          "type": "helper",
+                          "name": "bottle_count",
+                          "args": []
+                        }
+                      }
+                    }
+                  }
+                },
+                "if_false": {
+                  "type": "name",
+                  "name": "basemagic"
+                }
+              }
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "basemagic"
+                },
+                "op": ">=",
+                "right": {
+                  "type": "name",
+                  "name": "smallmagic"
+                }
+              }
             }
-          }
+          ]
+        },
+        "defaults": {
+          "smallmagic": 16,
+          "fullrefill": false
         }
       },
       "can_hold_arrows": {

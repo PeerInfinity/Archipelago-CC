@@ -21,7 +21,9 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
     # These have loops, complex counting, settings lookups, or dynamic conditions
     HELPERS_TO_EXPORT_BLACKLIST = {
         'GanonDefeatRule',
-        'can_extend_magic',  # Complex - needs debugging of shop region reachability
+        # 'can_extend_magic',  # Debugging - shop region reachability
+        'can_buy',  # Uses frontend shop_items implementation
+        'can_buy_unlimited',  # Uses frontend shop_items implementation
         'can_get_good_bee',
         'can_kill_most_things',
         # 'can_shoot_arrows',  # Now works with can_buy and can_hold_arrows
@@ -466,6 +468,7 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             'pot_shuffle', 'dungeon_counters', 'glitch_boots', 'accessibility',
             'mode', # Mode is crucial
             'crystals_needed_for_gt', 'crystals_needed_for_ganon', # Crystal requirements
+            'item_functionality',  # Used by can_extend_magic
         ]
         for setting in alttp_settings_mw:
              settings_dict[setting] = extract_option(setting)

@@ -1894,8 +1894,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'binary_op': {
-        const left = evaluateRule(rule.left, context, depth + 1);
-        const right = evaluateRule(rule.right, context, depth + 1);
+        const left = evaluateRule(rule.left, context, depth + 1, localScope);
+        const right = evaluateRule(rule.right, context, depth + 1, localScope);
         const op = rule.op;
 
         if (left === undefined || right === undefined) {
