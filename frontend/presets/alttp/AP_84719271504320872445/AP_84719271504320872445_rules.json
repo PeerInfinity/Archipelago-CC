@@ -3680,50 +3680,9 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "helper",
-                      "name": "location_item_name",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Sewers - Key Rat Key Drop"
-                        }
-                      ]
-                    },
-                    "op": "==",
-                    "right": {
-                      "type": "list",
-                      "value": [
-                        {
-                          "type": "constant",
-                          "value": "Small Key (Hyrule Castle)"
-                        },
-                        {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      ]
-                    }
-                  },
-                  "if_true": {
-                    "type": "count_check",
-                    "item": "Small Key (Hyrule Castle)",
-                    "count": {
-                      "type": "constant",
-                      "value": 2
-                    }
-                  },
-                  "if_false": {
-                    "type": "count_check",
-                    "item": "Small Key (Hyrule Castle)",
-                    "count": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  }
+                  "type": "helper",
+                  "name": "basement_key_rule",
+                  "args": []
                 },
                 {
                   "type": "helper",
@@ -3875,50 +3834,9 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "helper",
-                      "name": "location_item_name",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Sewers - Key Rat Key Drop"
-                        }
-                      ]
-                    },
-                    "op": "==",
-                    "right": {
-                      "type": "list",
-                      "value": [
-                        {
-                          "type": "constant",
-                          "value": "Small Key (Hyrule Castle)"
-                        },
-                        {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      ]
-                    }
-                  },
-                  "if_true": {
-                    "type": "count_check",
-                    "item": "Small Key (Hyrule Castle)",
-                    "count": {
-                      "type": "constant",
-                      "value": 2
-                    }
-                  },
-                  "if_false": {
-                    "type": "count_check",
-                    "item": "Small Key (Hyrule Castle)",
-                    "count": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  }
+                  "type": "helper",
+                  "name": "basement_key_rule",
+                  "args": []
                 },
                 {
                   "type": "helper",
@@ -5992,17 +5910,9 @@
                       ]
                     },
                     {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Hammer"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Moon Pearl"
-                        }
-                      ]
+                      "type": "helper",
+                      "name": "cross_peg_bridge",
+                      "args": []
                     }
                   ]
                 }
@@ -8056,31 +7966,8 @@
               "name": "has_crystals",
               "args": [
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "subscript",
-                      "value": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "state"
-                          },
-                          "attr": "multiworld"
-                        },
-                        "attr": "worlds"
-                      },
-                      "index": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    },
-                    "attr": "options"
-                  },
-                  "attr": "crystals_needed_for_gt"
+                  "type": "setting_value",
+                  "setting": "crystals_needed_for_gt"
                 }
               ]
             }
@@ -8807,31 +8694,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "subscript",
-                                "value": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "state"
-                                    },
-                                    "attr": "multiworld"
-                                  },
-                                  "attr": "worlds"
-                                },
-                                "index": {
-                                  "type": "constant",
-                                  "value": 1
-                                }
-                              },
-                              "attr": "options"
-                            },
-                            "attr": "enemy_health"
+                            "type": "setting_value",
+                            "setting": "enemy_health"
                           },
                           "op": "in",
                           "right": {
@@ -16797,33 +16661,6 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "subscript",
-                              "value": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "name",
-                                    "name": "state"
-                                  },
-                                  "attr": "multiworld"
-                                },
-                                "attr": "worlds"
-                              },
-                              "index": {
-                                "type": "name",
-                                "name": "player"
-                              }
-                            },
-                            "attr": "options"
-                          },
-                          "attr": "swordless"
-                        },
-                        {
                           "type": "helper",
                           "name": "can_extend_magic",
                           "args": [
@@ -16832,6 +16669,10 @@
                               "value": 16
                             }
                           ]
+                        },
+                        {
+                          "type": "setting_value",
+                          "setting": "swordless"
                         },
                         {
                           "type": "item_check",
@@ -16879,36 +16720,13 @@
                           "type": "or",
                           "conditions": [
                             {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "subscript",
-                                  "value": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "state"
-                                      },
-                                      "attr": "multiworld"
-                                    },
-                                    "attr": "worlds"
-                                  },
-                                  "index": {
-                                    "type": "name",
-                                    "name": "player"
-                                  }
-                                },
-                                "attr": "options"
-                              },
-                              "attr": "swordless"
-                            },
-                            {
                               "type": "helper",
                               "name": "has_sword",
                               "args": []
+                            },
+                            {
+                              "type": "setting_value",
+                              "setting": "swordless"
                             }
                           ]
                         },
@@ -17420,7 +17238,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Hammer": {
@@ -17433,7 +17251,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Hookshot": {
@@ -17446,7 +17264,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Magic Mirror": {
@@ -17459,7 +17277,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Flute": {
@@ -17472,7 +17290,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Pegasus Boots": {
@@ -17485,7 +17303,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Power Glove": {
@@ -17511,7 +17329,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Mushroom": {
@@ -17524,7 +17342,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Shovel": {
@@ -17537,7 +17355,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Lamp": {
@@ -17550,7 +17368,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Magic Powder": {
@@ -17563,7 +17381,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Moon Pearl": {
@@ -17576,7 +17394,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Cane of Somaria": {
@@ -17590,7 +17408,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Fire Rod": {
@@ -17604,7 +17422,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Flippers": {
@@ -17617,7 +17435,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Ice Rod": {
@@ -17631,7 +17449,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Titans Mitts": {
@@ -17657,7 +17475,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Ether": {
@@ -17670,7 +17488,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Quake": {
@@ -17683,7 +17501,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Bottle": {
@@ -18042,7 +17860,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "filler"
       },
       "Arrows (10)": {
@@ -18055,7 +17873,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 24,
+        "max_count": 12,
         "classification": "filler"
       },
       "Arrow Upgrade (+10)": {
@@ -18119,7 +17937,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 32,
+        "max_count": 16,
         "classification": "filler"
       },
       "Bombs (10)": {
@@ -18132,7 +17950,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "filler"
       },
       "Bomb Upgrade (+10)": {
@@ -18225,7 +18043,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Red Boomerang": {
@@ -18239,7 +18057,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Blue Shield": {
@@ -18305,7 +18123,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Cane of Byrna": {
@@ -18319,7 +18137,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Boss Heart Container": {
@@ -18345,7 +18163,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "useful"
       },
       "Piece of Heart": {
@@ -18372,7 +18190,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 4,
+        "max_count": 2,
         "classification": "filler"
       },
       "Rupees (5)": {
@@ -18386,7 +18204,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 8,
+        "max_count": 4,
         "classification": "filler"
       },
       "Rupees (20)": {
@@ -18400,7 +18218,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 56,
+        "max_count": 28,
         "classification": "filler"
       },
       "Rupees (50)": {
@@ -18414,7 +18232,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 14,
+        "max_count": 7,
         "classification": "filler"
       },
       "Rupees (100)": {
@@ -18428,7 +18246,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "filler"
       },
       "Rupees (300)": {
@@ -18442,7 +18260,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 10,
+        "max_count": 5,
         "classification": "filler"
       },
       "Rupoor": {
@@ -18531,7 +18349,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Magic Upgrade (1/4)": {
@@ -19659,6 +19477,9 @@
       "__max_progressive_bottle": 4
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {
       "Progressive Sword": {
@@ -19786,5 +19607,265 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "basement_key_rule": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "helper",
+            "name": "location_item_name",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Sewers - Key Rat Key Drop"
+              }
+            ]
+          },
+          "op": "==",
+          "right": {
+            "type": "list",
+            "value": [
+              {
+                "type": "constant",
+                "value": "Small Key (Hyrule Castle)"
+              },
+              {
+                "type": "constant",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "if_true": {
+          "type": "count_check",
+          "item": "Small Key (Hyrule Castle)",
+          "count": {
+            "type": "constant",
+            "value": 2
+          }
+        },
+        "if_false": {
+          "type": "count_check",
+          "item": "Small Key (Hyrule Castle)",
+          "count": {
+            "type": "constant",
+            "value": 3
+          }
+        }
+      },
+      "can_activate_crystal_switch": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "has_melee_weapon",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "can_use_bombs",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "can_shoot_arrows",
+            "args": []
+          },
+          {
+            "type": "state_method",
+            "method": "has_any",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Blue Boomerang",
+                  "Cane of Byrna",
+                  "Cane of Somaria",
+                  "Fire Rod",
+                  "Hookshot",
+                  "Ice Rod",
+                  "Red Boomerang"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "can_bomb_or_bonk": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Pegasus Boots"
+          },
+          {
+            "type": "helper",
+            "name": "can_use_bombs",
+            "args": []
+          }
+        ]
+      },
+      "can_lift_heavy_rocks": {
+        "type": "item_check",
+        "item": "Titans Mitts"
+      },
+      "can_lift_rocks": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Power Glove"
+          },
+          {
+            "type": "item_check",
+            "item": "Titans Mitts"
+          }
+        ]
+      },
+      "can_melt_things": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Fire Rod"
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Bombos"
+              },
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "setting_value",
+                    "setting": "swordless"
+                  },
+                  {
+                    "type": "helper",
+                    "name": "has_sword",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "can_retrieve_tablet": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Book of Mudora"
+          },
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "has_beam_sword",
+                "args": []
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "setting_value",
+                    "setting": "swordless"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Hammer"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "cross_peg_bridge": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Hammer"
+          },
+          {
+            "type": "item_check",
+            "item": "Moon Pearl"
+          }
+        ]
+      },
+      "has_beam_sword": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Master Sword"
+          },
+          {
+            "type": "item_check",
+            "item": "Tempered Sword"
+          },
+          {
+            "type": "item_check",
+            "item": "Golden Sword"
+          }
+        ]
+      },
+      "has_fire_source": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Fire Rod"
+          },
+          {
+            "type": "item_check",
+            "item": "Lamp"
+          }
+        ]
+      },
+      "has_melee_weapon": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "has_sword",
+            "args": []
+          },
+          {
+            "type": "item_check",
+            "item": "Hammer"
+          }
+        ]
+      },
+      "has_sword": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Fighter Sword"
+          },
+          {
+            "type": "item_check",
+            "item": "Master Sword"
+          },
+          {
+            "type": "item_check",
+            "item": "Tempered Sword"
+          },
+          {
+            "type": "item_check",
+            "item": "Golden Sword"
+          }
+        ]
+      }
+    }
+  }
 }
