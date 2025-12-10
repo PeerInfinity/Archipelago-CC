@@ -22,7 +22,7 @@
       ],
       "last_updated": "2025-12-10T20:00:14.138642"
     },
-    "last_updated": "2025-12-10T20:00:14.138640",
+    "last_updated": "2025-12-10T21:35:39.749309",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1625,27 +1625,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "f86be95fc1b591433bff3e57883b2dd4a32359ff5dd21ab7a71bfbbb64ceba94",
-          "new_sphere_log_hash": "dc2f69a2748180544aa3500cc166fa5ef7612923af779d3726d564dbfc2f32f7",
-          "original_rules_hash": "f86be95fc1b591433bff3e57883b2dd4a32359ff5dd21ab7a71bfbbb64ceba94",
-          "original_sphere_log_hash": "dc2f69a2748180544aa3500cc166fa5ef7612923af779d3726d564dbfc2f32f7",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-10T19:59:14.157935"
-        }
-      },
       "game_name_from_filename": "jak_and_daxter_the_precursor_legacy",
       "game_name_from_yaml": "Jak and Daxter: The Precursor Legacy",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.9,
+        "processing_time_seconds": 6.61,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/jakanddaxter/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -1657,7 +1645,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 18.99,
+        "processing_time_seconds": 22.83,
         "return_code": 0,
         "sphere_reached": 13.1,
         "success": true,
@@ -1665,12 +1653,12 @@
         "warning_count": 0
       },
       "template_filename": "Jak and Daxter The Precursor Legacy.yaml",
-      "timestamp": "2025-12-10T19:54:14.250411",
+      "timestamp": "2025-12-10T21:35:09.901866",
       "world_info": {
         "exporter_path": "exporter/games/jakanddaxter.py",
-        "exporter_size": 13467,
+        "exporter_size": 13446,
         "game_logic_path": "frontend/modules/shared/gameLogic/jakanddaxter/jakanddaxterLogic.js",
-        "game_logic_size": 4318,
+        "game_logic_size": 2555,
         "game_name_from_filename": "jak_and_daxter_the_precursor_legacy",
         "game_name_from_yaml": "Jak and Daxter: The Precursor Legacy",
         "has_custom_exporter": true,

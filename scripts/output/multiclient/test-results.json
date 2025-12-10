@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-10T20:24:35.278146",
-    "last_updated": "2025-12-10T20:24:35.278151",
+    "last_updated": "2025-12-10T21:39:07.676586",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1417,10 +1417,10 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.97,
+        "processing_time_seconds": 7.1,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "multiclient_test": {
         "client1_event_locations": 0,
@@ -1433,14 +1433,14 @@
         "client2_locations_received": 239,
         "client2_passed": true,
         "client2_total_locations": 239,
-        "error_count": 45,
+        "error_count": 1,
         "locations_checked": 239,
-        "processing_time_seconds": 16.71,
+        "processing_time_seconds": 25.06,
         "return_code": 0,
         "single_client_mode": false,
         "success": true,
         "total_locations": 239,
-        "warning_count": 1036
+        "warning_count": 642
       },
       "rules_file": {
         "path": "frontend/presets/jakanddaxter/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -1450,12 +1450,12 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Jak and Daxter The Precursor Legacy.yaml",
-      "timestamp": "2025-12-10T20:17:51.579039",
+      "timestamp": "2025-12-10T21:38:35.499445",
       "world_info": {
         "exporter_path": "exporter/games/jakanddaxter.py",
-        "exporter_size": 13467,
+        "exporter_size": 13446,
         "game_logic_path": "frontend/modules/shared/gameLogic/jakanddaxter/jakanddaxterLogic.js",
-        "game_logic_size": 4318,
+        "game_logic_size": 2555,
         "game_name_from_filename": "jak_and_daxter_the_precursor_legacy",
         "game_name_from_yaml": "Jak and Daxter: The Precursor Legacy",
         "has_custom_exporter": true,
