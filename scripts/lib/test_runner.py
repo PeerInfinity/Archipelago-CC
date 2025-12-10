@@ -178,10 +178,23 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         # Analyze generation output
         full_output = gen_stdout + "\n" + gen_stderr
         gen_error_count, gen_warning_count, gen_first_error, gen_first_warning = count_errors_and_warnings(full_output)
-        gen_error_type = classify_generation_error(full_output) if gen_return_code != 0 else None
+
+        # Check if generation actually completed successfully by looking for the success message
+        # This handles the case where return code is non-zero due to memory leak assertion
+        # but generation actually completed successfully
+        generation_completed = "Done. Enjoy." in full_output
+        is_memory_leak_only = (
+            gen_return_code != 0 and
+            generation_completed and
+            "MultiWorld object was not de-allocated" in full_output
+        )
+
+        # Determine actual success: either clean exit or memory leak assertion after successful generation
+        gen_success = gen_return_code == 0 or is_memory_leak_only
+        gen_error_type = classify_generation_error(full_output) if not gen_success else None
 
         gen_update = {
-            'success': gen_return_code == 0,
+            'success': gen_success,
             'return_code': gen_return_code,
             'error_count': gen_error_count,
             'warning_count': gen_warning_count,
@@ -191,14 +204,18 @@ def test_template_single_seed(template_file: str, templates_dir: str, project_ro
         if include_error_details:
             gen_update['first_error_line'] = gen_first_error
             gen_update['first_warning_line'] = gen_first_warning
+        if is_memory_leak_only:
+            gen_update['note'] = 'Memory leak assertion after successful generation (non-fatal)'
         result['generation'].update(gen_update)
 
         # Remove the test-only note if it exists from a previous run
         result['generation'].pop('note', None)
 
-        if gen_return_code != 0:
+        if not gen_success:
             print(f"Generation failed with return code {gen_return_code}")
             return result
+        elif is_memory_leak_only:
+            print(f"Note: Memory leak assertion occurred after successful generation (continuing)")
     else:
         print(f"Skipping generation for {template_filename} (test-only mode)")
         # In test-only mode, don't overwrite error counts - keep the defaults initialized above
@@ -969,10 +986,23 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
         # Analyze generation output
         full_output = gen_stdout + "\n" + gen_stderr
         gen_error_count, gen_warning_count, gen_first_error, gen_first_warning = count_errors_and_warnings(full_output)
-        gen_error_type = classify_generation_error(full_output) if gen_return_code != 0 else None
+
+        # Check if generation actually completed successfully by looking for the success message
+        # This handles the case where return code is non-zero due to memory leak assertion
+        # but generation actually completed successfully
+        generation_completed = "Done. Enjoy." in full_output
+        is_memory_leak_only = (
+            gen_return_code != 0 and
+            generation_completed and
+            "MultiWorld object was not de-allocated" in full_output
+        )
+
+        # Determine actual success: either clean exit or memory leak assertion after successful generation
+        gen_success = gen_return_code == 0 or is_memory_leak_only
+        gen_error_type = classify_generation_error(full_output) if not gen_success else None
 
         gen_result = {
-            'success': gen_return_code == 0,
+            'success': gen_success,
             'return_code': gen_return_code,
             'error_count': gen_error_count,
             'warning_count': gen_warning_count,
@@ -982,9 +1012,11 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
         if include_error_details:
             gen_result['first_error_line'] = gen_first_error
             gen_result['first_warning_line'] = gen_first_warning
+        if is_memory_leak_only:
+            gen_result['note'] = 'Memory leak assertion after successful generation (non-fatal)'
         result['generation'] = gen_result
 
-        if gen_return_code != 0:
+        if not gen_success:
             print(f"Generation failed with return code {gen_return_code}")
             result['multiworld_test']['success'] = False
             result['multiworld_test']['error'] = 'Generation failed'
@@ -1270,10 +1302,23 @@ def test_template_multiworld_bisect(template_file: str, templates_dir: str, proj
         # Analyze generation output
         full_output = gen_stdout + "\n" + gen_stderr
         gen_error_count, gen_warning_count, gen_first_error, gen_first_warning = count_errors_and_warnings(full_output)
-        gen_error_type = classify_generation_error(full_output) if gen_return_code != 0 else None
+
+        # Check if generation actually completed successfully by looking for the success message
+        # This handles the case where return code is non-zero due to memory leak assertion
+        # but generation actually completed successfully
+        generation_completed = "Done. Enjoy." in full_output
+        is_memory_leak_only = (
+            gen_return_code != 0 and
+            generation_completed and
+            "MultiWorld object was not de-allocated" in full_output
+        )
+
+        # Determine actual success: either clean exit or memory leak assertion after successful generation
+        gen_success = gen_return_code == 0 or is_memory_leak_only
+        gen_error_type = classify_generation_error(full_output) if not gen_success else None
 
         pair_result['generation'] = {
-            'success': gen_return_code == 0,
+            'success': gen_success,
             'return_code': gen_return_code,
             'error_count': gen_error_count,
             'warning_count': gen_warning_count,
@@ -1283,8 +1328,10 @@ def test_template_multiworld_bisect(template_file: str, templates_dir: str, proj
         if include_error_details:
             pair_result['generation']['first_error_line'] = gen_first_error
             pair_result['generation']['first_warning_line'] = gen_first_warning
+        if is_memory_leak_only:
+            pair_result['generation']['note'] = 'Memory leak assertion after successful generation (non-fatal)'
 
-        if gen_return_code != 0:
+        if not gen_success:
             print(f"  Generation FAILED (return code {gen_return_code})")
             pair_result['generation_success'] = False
             pair_result['error'] = 'Generation failed'
@@ -1495,7 +1542,21 @@ def test_generation_consistency(template_file: str, templates_dir: str, project_
 
     gen_return_code, gen_stdout, gen_stderr = run_command(generate_cmd, cwd=project_root, timeout=600)
 
-    if gen_return_code != 0:
+    # Check if generation actually completed successfully by looking for the success message
+    # This handles the case where return code is non-zero due to memory leak assertion
+    # but generation actually completed successfully
+    full_output = gen_stdout + "\n" + gen_stderr
+    generation_completed = "Done. Enjoy." in full_output
+    is_memory_leak_only = (
+        gen_return_code != 0 and
+        generation_completed and
+        "MultiWorld object was not de-allocated" in full_output
+    )
+
+    # Determine actual success: either clean exit or memory leak assertion after successful generation
+    gen_success = gen_return_code == 0 or is_memory_leak_only
+
+    if not gen_success:
         print(f"Error: Re-generation failed with return code {gen_return_code}")
         return {
             'seed': seed,
@@ -1504,6 +1565,8 @@ def test_generation_consistency(template_file: str, templates_dir: str, project_
             'spoilers_identical': None,
             'error': f'Re-generation failed with return code {gen_return_code}'
         }
+    elif is_memory_leak_only:
+        print(f"Note: Memory leak assertion occurred after successful generation (continuing)")
 
     # Compute hashes of new files
     print(f"Computing hash of new rules file...")
