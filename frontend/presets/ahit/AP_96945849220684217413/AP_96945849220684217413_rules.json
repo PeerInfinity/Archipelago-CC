@@ -3,7 +3,7 @@
   "game_name": "A Hat in Time",
   "game_directory": "ahit",
   "archipelago_version": "0.6.5",
-  "generation_seed": 2,
+  "generation_seed": 5,
   "player_names": {
     "1": "Player1"
   },
@@ -49,7 +49,7 @@
               "item": "Time Piece",
               "count": {
                 "type": "constant",
-                "value": 5
+                "value": 9
               }
             }
           },
@@ -108,7 +108,34 @@
                   "item": "Time Piece",
                   "count": {
                     "type": "constant",
-                    "value": 35
+                    "value": 31
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Time Rift - Gallery Portal - Entrance 1",
+            "connected_region": "Time Rift - The Moon",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "can_use_hat",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Time Piece",
+                  "count": {
+                    "type": "constant",
+                    "value": 9
                   }
                 }
               ]
@@ -116,7 +143,7 @@
           },
           {
             "name": "Time Rift - The Lab Portal - Entrance 1",
-            "connected_region": "Time Rift - Village",
+            "connected_region": "Time Rift - Curly Tail Trail",
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -140,33 +167,6 @@
                 }
               ]
             }
-          },
-          {
-            "name": "Time Rift - Gallery Portal - Entrance 1",
-            "connected_region": "Time Rift - The Lab",
-            "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "can_use_hat",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 1
-                    }
-                  ]
-                },
-                {
-                  "type": "item_check",
-                  "item": "Time Piece",
-                  "count": {
-                    "type": "constant",
-                    "value": 5
-                  }
-                }
-              ]
-            }
           }
         ],
         "locations": [
@@ -178,9 +178,9 @@
               "value": true
             },
             "item": {
-              "name": "Relic (Cool Cow)",
+              "name": "Scooter Badge",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -204,15 +204,15 @@
                   "item": "Time Piece",
                   "count": {
                     "type": "constant",
-                    "value": 5
+                    "value": 9
                   }
                 }
               ]
             },
             "item": {
-              "name": "Fast Hatter Badge",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -237,9 +237,9 @@
               ]
             },
             "item": {
-              "name": "Yarn",
+              "name": "Random Cosmetic",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -258,9 +258,9 @@
               "value": true
             },
             "item": {
-              "name": "No Bonk Badge",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -271,32 +271,24 @@
         "name": "Mafia Town",
         "exits": [
           {
+            "name": "Mafia Town - Act 3",
+            "connected_region": "She Came from Outer Space",
+            "access_rule": {
+              "type": "constant",
+              "value": false
+            }
+          },
+          {
             "name": "Mafia Town - Act 1",
-            "connected_region": "Welcome to Mafia Town",
+            "connected_region": "Queen Vanessa's Manor",
             "access_rule": {
               "type": "constant",
               "value": true
             }
           },
           {
-            "name": "Mafia Town - Act 7",
-            "connected_region": "Queen Vanessa's Manor",
-            "access_rule": {
-              "type": "constant",
-              "value": false
-            }
-          },
-          {
-            "name": "Mafia Town - Act 3",
-            "connected_region": "Contractual Obligations",
-            "access_rule": {
-              "type": "constant",
-              "value": false
-            }
-          },
-          {
-            "name": "Mafia Town - Act 5",
-            "connected_region": "The Golden Vault",
+            "name": "Mafia Town - Act 2",
+            "connected_region": "Cheating the Race",
             "access_rule": {
               "type": "constant",
               "value": false
@@ -304,7 +296,23 @@
           },
           {
             "name": "Mafia Town - Act 4",
-            "connected_region": "The Big Parade",
+            "connected_region": "Barrel Battle",
+            "access_rule": {
+              "type": "constant",
+              "value": false
+            }
+          },
+          {
+            "name": "Mafia Town - Act 5",
+            "connected_region": "Picture Perfect",
+            "access_rule": {
+              "type": "constant",
+              "value": false
+            }
+          },
+          {
+            "name": "Mafia Town - Act 7",
+            "connected_region": "Alpine Free Roam",
             "access_rule": {
               "type": "constant",
               "value": false
@@ -312,15 +320,7 @@
           },
           {
             "name": "Mafia Town - Act 6",
-            "connected_region": "The Subcon Well",
-            "access_rule": {
-              "type": "constant",
-              "value": false
-            }
-          },
-          {
-            "name": "Mafia Town - Act 2",
-            "connected_region": "Dead Bird Studio Basement",
+            "connected_region": "Train Rush",
             "access_rule": {
               "type": "constant",
               "value": false
@@ -342,7 +342,7 @@
           },
           {
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 1",
-            "connected_region": "Time Rift - Mafia of Cooks",
+            "connected_region": "Time Rift - Sleepy Subcon",
             "access_rule": {
               "type": "helper",
               "name": "has_relic_combo",
@@ -356,7 +356,7 @@
           },
           {
             "name": "Time Rift - Bazaar Portal - Entrance 1",
-            "connected_region": "Time Rift - The Twilight Bell",
+            "connected_region": "Time Rift - Gallery",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -370,7 +370,7 @@
           },
           {
             "name": "Time Rift - Sewers Portal - Entrance 1",
-            "connected_region": "Time Rift - Gallery",
+            "connected_region": "Time Rift - Bazaar",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -383,16 +383,16 @@
             }
           },
           {
-            "name": "Mafia Town - Act 2: Connection 1",
-            "connected_region": "Dead Bird Studio Basement",
+            "name": "Battle of the Birds - Act 2: Connection 1",
+            "connected_region": "Dead Bird Studio",
             "access_rule": {
               "type": "constant",
               "value": true
             }
           },
           {
-            "name": "Mafia Town - Act 3: Connection 1",
-            "connected_region": "Contractual Obligations",
+            "name": "Battle of the Birds - Act 3: Connection 1",
+            "connected_region": "The Big Parade",
             "access_rule": {
               "type": "constant",
               "value": true
@@ -408,9 +408,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -423,7 +423,7 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Yarn",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -445,7 +445,7 @@
           },
           {
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 2",
-            "connected_region": "Time Rift - Mafia of Cooks",
+            "connected_region": "Time Rift - Sleepy Subcon",
             "access_rule": {
               "type": "helper",
               "name": "has_relic_combo",
@@ -459,7 +459,7 @@
           },
           {
             "name": "Time Rift - Bazaar Portal - Entrance 2",
-            "connected_region": "Time Rift - The Twilight Bell",
+            "connected_region": "Time Rift - Gallery",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -473,7 +473,7 @@
           },
           {
             "name": "Time Rift - Sewers Portal - Entrance 2",
-            "connected_region": "Time Rift - Gallery",
+            "connected_region": "Time Rift - Bazaar",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -486,16 +486,16 @@
             }
           },
           {
-            "name": "Battle of the Birds - Act 4: Connection 2",
-            "connected_region": "Dead Bird Studio",
+            "name": "Mafia Town - Act 6: Connection 1",
+            "connected_region": "Train Rush",
             "access_rule": {
               "type": "constant",
               "value": true
             }
           },
           {
-            "name": "Battle of the Birds - Act 5: Connection 2",
-            "connected_region": "Train Rush",
+            "name": "Mafia Town - Act 7: Connection 1",
+            "connected_region": "Alpine Free Roam",
             "access_rule": {
               "type": "constant",
               "value": true
@@ -511,9 +511,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "100 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -533,7 +533,7 @@
           },
           {
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 3",
-            "connected_region": "Time Rift - Mafia of Cooks",
+            "connected_region": "Time Rift - Sleepy Subcon",
             "access_rule": {
               "type": "helper",
               "name": "has_relic_combo",
@@ -547,7 +547,7 @@
           },
           {
             "name": "Time Rift - Bazaar Portal - Entrance 3",
-            "connected_region": "Time Rift - The Twilight Bell",
+            "connected_region": "Time Rift - Gallery",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -561,7 +561,7 @@
           },
           {
             "name": "Time Rift - Sewers Portal - Entrance 3",
-            "connected_region": "Time Rift - Gallery",
+            "connected_region": "Time Rift - Bazaar",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -574,19 +574,35 @@
             }
           },
           {
-            "name": "Battle of the Birds - Act 2: Connection 1",
-            "connected_region": "Down with the Mafia!",
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "Battle of the Birds - Act 3: Connection 1",
+            "name": "Mafia Town - Act 4: Connection 2",
             "connected_region": "Barrel Battle",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "constant",
+                      "value": true
+                    },
+                    {
+                      "type": "helper",
+                      "name": "can_use_hat",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 4
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "constant",
+                  "value": true
+                }
+              ]
             }
           }
         ],
@@ -599,7 +615,7 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Relic (Cool Cow)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -621,7 +637,7 @@
           },
           {
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 4",
-            "connected_region": "Time Rift - Mafia of Cooks",
+            "connected_region": "Time Rift - Sleepy Subcon",
             "access_rule": {
               "type": "helper",
               "name": "has_relic_combo",
@@ -635,7 +651,7 @@
           },
           {
             "name": "Time Rift - Bazaar Portal - Entrance 4",
-            "connected_region": "Time Rift - The Twilight Bell",
+            "connected_region": "Time Rift - Gallery",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -649,7 +665,7 @@
           },
           {
             "name": "Time Rift - Sewers Portal - Entrance 4",
-            "connected_region": "Time Rift - Gallery",
+            "connected_region": "Time Rift - Bazaar",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -662,19 +678,89 @@
             }
           },
           {
-            "name": "Battle of the Birds - Act 4: Connection 1",
-            "connected_region": "Dead Bird Studio",
+            "name": "Subcon Forest - Finale: Connection 3",
+            "connected_region": "Murder on the Owl Express",
             "access_rule": {
-              "type": "constant",
-              "value": true
-            }
-          },
-          {
-            "name": "Battle of the Birds - Act 5: Connection 1",
-            "connected_region": "Train Rush",
-            "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "and",
+                              "conditions": [
+                                {
+                                  "type": "and",
+                                  "conditions": [
+                                    {
+                                      "type": "and",
+                                      "conditions": [
+                                        {
+                                          "type": "and",
+                                          "conditions": [
+                                            {
+                                              "type": "item_check",
+                                              "item": "Hookshot Badge"
+                                            },
+                                            {
+                                              "type": "item_check",
+                                              "item": "Snatcher's Contract - The Subcon Well"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "constant",
+                                          "value": true
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "item_check",
+                                      "item": "Snatcher's Contract - Toilet of Doom"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "constant",
+                                  "value": true
+                                }
+                              ]
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Snatcher's Contract - Queen Vanessa's Manor"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Hookshot Badge"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Snatcher's Contract - Mail Delivery Service"
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "can_use_hat",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -693,9 +779,9 @@
               ]
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -708,7 +794,7 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Time Piece",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -729,7 +815,7 @@
               ]
             },
             "item": {
-              "name": "50 Pons",
+              "name": "100 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -744,7 +830,7 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Badge Pin",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -759,9 +845,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -781,7 +867,7 @@
           },
           {
             "name": "Time Rift - Bazaar Portal - Entrance 6",
-            "connected_region": "Time Rift - The Twilight Bell",
+            "connected_region": "Time Rift - Gallery",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -795,7 +881,7 @@
           },
           {
             "name": "Time Rift - Sewers Portal - Entrance 6",
-            "connected_region": "Time Rift - Gallery",
+            "connected_region": "Time Rift - Bazaar",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -808,69 +894,119 @@
             }
           },
           {
-            "name": "Subcon Forest - Finale: Connection 5",
-            "connected_region": "The Illness has Spread",
+            "name": "Battle of the Birds - Finale A: Connection 1",
+            "connected_region": "Award Ceremony",
             "access_rule": {
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
+                  "type": "conditional",
+                  "test": {
+                    "type": "not",
+                    "condition": {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  },
+                  "if_true": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "if_false": {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "helper",
+                            "name": "can_use_hat",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": 1
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Umbrella"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "test": {
+                    "type": "not",
+                    "condition": {
+                      "type": "helper",
+                      "name": "painting_logic",
+                      "args": []
+                    }
+                  },
+                  "if_true": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "if_false": {
+                    "type": "conditional",
+                    "test": {
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "and",
-                              "conditions": [
-                                {
-                                  "type": "and",
-                                  "conditions": [
-                                    {
-                                      "type": "constant",
-                                      "value": true
-                                    },
-                                    {
-                                      "type": "item_check",
-                                      "item": "Snatcher's Contract - The Subcon Well"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Snatcher's Contract - Toilet of Doom"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Snatcher's Contract - Queen Vanessa's Manor"
-                            }
-                          ]
+                          "type": "constant",
+                          "value": false
                         },
                         {
-                          "type": "helper",
-                          "name": "can_use_hat",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": 4
-                            }
-                          ]
+                          "type": "not",
+                          "condition": {
+                            "type": "constant",
+                            "value": 0
+                          }
                         }
                       ]
                     },
-                    {
+                    "if_true": {
+                      "type": "conditional",
+                      "test": {
+                        "type": "compare",
+                        "left": {
+                          "type": "helper",
+                          "name": "get_difficulty",
+                          "args": []
+                        },
+                        "op": ">=",
+                        "right": {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      },
+                      "if_true": {
+                        "type": "constant",
+                        "value": true
+                      },
+                      "if_false": null
+                    },
+                    "if_false": {
                       "type": "item_check",
-                      "item": "Snatcher's Contract - Mail Delivery Service"
+                      "item": "Progressive Painting Unlock",
+                      "count": {
+                        "type": "constant",
+                        "value": 1
+                      }
                     }
-                  ]
+                  }
                 },
                 {
-                  "type": "constant",
-                  "value": true
+                  "type": "item_check",
+                  "item": "Hookshot Badge"
                 }
               ]
             }
@@ -923,7 +1059,7 @@
           },
           {
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 5",
-            "connected_region": "Time Rift - Mafia of Cooks",
+            "connected_region": "Time Rift - Sleepy Subcon",
             "access_rule": {
               "type": "helper",
               "name": "has_relic_combo",
@@ -937,7 +1073,7 @@
           },
           {
             "name": "Time Rift - Bazaar Portal - Entrance 5",
-            "connected_region": "Time Rift - The Twilight Bell",
+            "connected_region": "Time Rift - Gallery",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -951,7 +1087,7 @@
           },
           {
             "name": "Time Rift - Sewers Portal - Entrance 5",
-            "connected_region": "Time Rift - Gallery",
+            "connected_region": "Time Rift - Bazaar",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -964,8 +1100,8 @@
             }
           },
           {
-            "name": "Subcon Forest - Finale: Connection 4",
-            "connected_region": "The Illness has Spread",
+            "name": "Mafia Town - Act 4: Connection 1",
+            "connected_region": "Barrel Battle",
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -973,54 +1109,18 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "and",
-                              "conditions": [
-                                {
-                                  "type": "and",
-                                  "conditions": [
-                                    {
-                                      "type": "constant",
-                                      "value": true
-                                    },
-                                    {
-                                      "type": "item_check",
-                                      "item": "Snatcher's Contract - The Subcon Well"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Snatcher's Contract - Toilet of Doom"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Snatcher's Contract - Queen Vanessa's Manor"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "helper",
-                          "name": "can_use_hat",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": 4
-                            }
-                          ]
-                        }
-                      ]
+                      "type": "constant",
+                      "value": true
                     },
                     {
-                      "type": "item_check",
-                      "item": "Snatcher's Contract - Mail Delivery Service"
+                      "type": "helper",
+                      "name": "can_use_hat",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 4
+                        }
+                      ]
                     }
                   ]
                 },
@@ -1069,7 +1169,7 @@
           },
           {
             "name": "Time Rift - Mafia of Cooks Portal - Entrance 6",
-            "connected_region": "Time Rift - Mafia of Cooks",
+            "connected_region": "Time Rift - Sleepy Subcon",
             "access_rule": {
               "type": "helper",
               "name": "has_relic_combo",
@@ -1083,7 +1183,7 @@
           },
           {
             "name": "Time Rift - Bazaar Portal - Entrance 7",
-            "connected_region": "Time Rift - The Twilight Bell",
+            "connected_region": "Time Rift - Gallery",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -1097,7 +1197,7 @@
           },
           {
             "name": "Time Rift - Sewers Portal - Entrance 7",
-            "connected_region": "Time Rift - Gallery",
+            "connected_region": "Time Rift - Bazaar",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -1119,9 +1219,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1141,7 +1241,23 @@
           },
           {
             "name": "Battle of the Birds - Finale B",
-            "connected_region": "Mail Delivery Service",
+            "connected_region": "Contractual Obligations",
+            "access_rule": {
+              "type": "constant",
+              "value": false
+            }
+          },
+          {
+            "name": "Battle of the Birds - Act 3",
+            "connected_region": "The Big Parade",
+            "access_rule": {
+              "type": "constant",
+              "value": false
+            }
+          },
+          {
+            "name": "Battle of the Birds - Act 5",
+            "connected_region": "Toilet of Doom",
             "access_rule": {
               "type": "constant",
               "value": false
@@ -1149,14 +1265,6 @@
           },
           {
             "name": "Battle of the Birds - Act 2",
-            "connected_region": "Down with the Mafia!",
-            "access_rule": {
-              "type": "constant",
-              "value": false
-            }
-          },
-          {
-            "name": "Battle of the Birds - Act 4",
             "connected_region": "Dead Bird Studio",
             "access_rule": {
               "type": "constant",
@@ -1165,23 +1273,15 @@
           },
           {
             "name": "Battle of the Birds - Act 1",
-            "connected_region": "She Came from Outer Space",
+            "connected_region": "Welcome to Mafia Town",
             "access_rule": {
               "type": "constant",
               "value": true
             }
           },
           {
-            "name": "Battle of the Birds - Act 3",
-            "connected_region": "Barrel Battle",
-            "access_rule": {
-              "type": "constant",
-              "value": false
-            }
-          },
-          {
-            "name": "Battle of the Birds - Act 5",
-            "connected_region": "Train Rush",
+            "name": "Battle of the Birds - Act 4",
+            "connected_region": "Heating Up Mafia Town",
             "access_rule": {
               "type": "constant",
               "value": false
@@ -1219,7 +1319,7 @@
           },
           {
             "name": "Time Rift - Dead Bird Studio Portal - Entrance 1",
-            "connected_region": "Time Rift - Alpine Skyline",
+            "connected_region": "Time Rift - Mafia of Cooks",
             "access_rule": {
               "type": "helper",
               "name": "has_relic_combo",
@@ -1232,8 +1332,8 @@
             }
           },
           {
-            "name": "Battle of the Birds - Finale A: Connection 1",
-            "connected_region": "Award Ceremony",
+            "name": "Battle of the Birds - Act 4: Connection 1",
+            "connected_region": "Heating Up Mafia Town",
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -1266,8 +1366,49 @@
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Hookshot Badge"
+                  "type": "constant",
+                  "value": true
+                }
+              ]
+            }
+          },
+          {
+            "name": "Battle of the Birds - Act 5: Connection 1",
+            "connected_region": "Toilet of Doom",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "constant",
+                      "value": true
+                    },
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "can_use_hat",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Umbrella"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "constant",
+                  "value": true
                 }
               ]
             }
@@ -1297,9 +1438,9 @@
               ]
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Health Pon",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1311,7 +1452,7 @@
         "exits": [
           {
             "name": "Time Rift - The Owl Express Portal - Entrance 1",
-            "connected_region": "Time Rift - Curly Tail Trail",
+            "connected_region": "Time Rift - Village",
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -1337,74 +1478,6 @@
                 }
               ]
             }
-          },
-          {
-            "name": "Subcon Forest - Finale: Connection 2",
-            "connected_region": "The Illness has Spread",
-            "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "and",
-                              "conditions": [
-                                {
-                                  "type": "and",
-                                  "conditions": [
-                                    {
-                                      "type": "constant",
-                                      "value": true
-                                    },
-                                    {
-                                      "type": "item_check",
-                                      "item": "Snatcher's Contract - The Subcon Well"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Snatcher's Contract - Toilet of Doom"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Snatcher's Contract - Queen Vanessa's Manor"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "helper",
-                          "name": "can_use_hat",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": 4
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Snatcher's Contract - Mail Delivery Service"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
-            }
           }
         ],
         "locations": [
@@ -1416,9 +1489,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1446,9 +1519,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "50 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1467,9 +1540,9 @@
               ]
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1497,9 +1570,9 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1512,9 +1585,9 @@
               "value": true
             },
             "item": {
-              "name": "50 Pons",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1571,9 +1644,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "50 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1586,9 +1659,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Fast Hatter Badge",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1622,38 +1695,14 @@
             }
           },
           {
-            "name": "Battle of the Birds - Finale A: Connection 2",
-            "connected_region": "Award Ceremony",
+            "name": "Mafia Town - Act 5: Connection 1",
+            "connected_region": "Picture Perfect",
             "access_rule": {
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    },
-                    {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "helper",
-                          "name": "can_use_hat",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": 1
-                            }
-                          ]
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Umbrella"
-                        }
-                      ]
-                    }
-                  ]
+                  "type": "constant",
+                  "value": true
                 },
                 {
                   "type": "item_check",
@@ -1672,9 +1721,9 @@
               "item": "Hookshot Badge"
             },
             "item": {
-              "name": "Relic (Burger Cushion)",
+              "name": "Random Cosmetic",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1714,19 +1763,85 @@
             }
           },
           {
-            "name": "Mafia Town - Act 6: Connection 1",
-            "connected_region": "The Subcon Well",
+            "name": "Battle of the Birds - Act 4: Connection 2",
+            "connected_region": "Heating Up Mafia Town",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "constant",
+                      "value": true
+                    },
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "can_use_hat",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Umbrella"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "constant",
+                  "value": true
+                }
+              ]
             }
           },
           {
-            "name": "Mafia Town - Act 7: Connection 1",
-            "connected_region": "Queen Vanessa's Manor",
+            "name": "Battle of the Birds - Act 5: Connection 2",
+            "connected_region": "Toilet of Doom",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "constant",
+                      "value": true
+                    },
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "can_use_hat",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": 1
+                            }
+                          ]
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Umbrella"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "constant",
+                  "value": true
+                }
+              ]
             }
           }
         ],
@@ -1739,7 +1854,7 @@
               "value": true
             },
             "item": {
-              "name": "50 Pons",
+              "name": "25 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1753,7 +1868,7 @@
         "exits": [
           {
             "name": "Battle of the Birds - Finale B: Connection 1",
-            "connected_region": "Mail Delivery Service",
+            "connected_region": "Contractual Obligations",
             "access_rule": {
               "type": "constant",
               "value": true
@@ -1769,9 +1884,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1791,7 +1906,7 @@
           },
           {
             "name": "Time Rift - Dead Bird Studio Portal - Entrance 2",
-            "connected_region": "Time Rift - Alpine Skyline",
+            "connected_region": "Time Rift - Mafia of Cooks",
             "access_rule": {
               "type": "helper",
               "name": "has_relic_combo",
@@ -1799,32 +1914,6 @@
                 {
                   "type": "constant",
                   "value": "Train"
-                }
-              ]
-            }
-          },
-          {
-            "name": "Mafia Town - Act 4: Connection 1",
-            "connected_region": "The Big Parade",
-            "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Hookshot Badge"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
                 }
               ]
             }
@@ -1839,9 +1928,9 @@
               "item": "Hookshot Badge"
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1869,9 +1958,9 @@
               "item": "Hookshot Badge"
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Health Pon",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1884,7 +1973,7 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "25 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1899,7 +1988,7 @@
               "item": "Hookshot Badge"
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "Health Pon",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1914,9 +2003,9 @@
               "value": true
             },
             "item": {
-              "name": "Scooter Badge",
+              "name": "Relic (Red Crayon)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1929,9 +2018,9 @@
               "value": true
             },
             "item": {
-              "name": "Relic (Green Crayon)",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1959,9 +2048,9 @@
               "item": "Hookshot Badge"
             },
             "item": {
-              "name": "100 Pons",
+              "name": "Relic (Blue Crayon)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1974,9 +2063,9 @@
               "item": "Hookshot Badge"
             },
             "item": {
-              "name": "Time Piece",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1989,9 +2078,9 @@
               "item": "Hookshot Badge"
             },
             "item": {
-              "name": "Time Piece",
+              "name": "50 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2025,7 +2114,7 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Snatcher's Contract - Queen Vanessa's Manor",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2040,9 +2129,9 @@
               "value": true
             },
             "item": {
-              "name": "50 Pons",
+              "name": "Snatcher's Contract - The Subcon Well",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2055,7 +2144,7 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "Health Pon",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2070,9 +2159,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2085,9 +2174,9 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2100,9 +2189,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Health Pon",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2115,9 +2204,9 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2130,9 +2219,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2151,9 +2240,9 @@
               "value": true
             },
             "item": {
-              "name": "Relic (Mountain Set)",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2172,9 +2261,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Random Cosmetic",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2193,9 +2282,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Health Pon",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2208,7 +2297,7 @@
               "value": true
             },
             "item": {
-              "name": "Snatcher's Contract - Queen Vanessa's Manor",
+              "name": "Relic (Train)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2223,9 +2312,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2238,7 +2327,7 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "50 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2274,7 +2363,7 @@
               ]
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "50 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2289,7 +2378,7 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "50 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2319,7 +2408,7 @@
               ]
             },
             "item": {
-              "name": "Projectile Badge",
+              "name": "50 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2349,7 +2438,7 @@
               ]
             },
             "item": {
-              "name": "100 Pons",
+              "name": "50 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2362,51 +2451,51 @@
         "name": "Subcon Forest",
         "exits": [
           {
+            "name": "Subcon Forest - Act 5",
+            "connected_region": "Mail Delivery Service",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Snatcher's Contract - Mail Delivery Service"
+            }
+          },
+          {
             "name": "Subcon Forest - Finale",
-            "connected_region": "The Illness has Spread",
+            "connected_region": "Murder on the Owl Express",
             "access_rule": {
               "type": "constant",
               "value": false
             }
           },
           {
-            "name": "Subcon Forest - Act 2",
-            "connected_region": "Murder on the Owl Express",
-            "access_rule": {
-              "type": "item_check",
-              "item": "Snatcher's Contract - The Subcon Well"
-            }
-          },
-          {
             "name": "Subcon Forest - Act 1",
-            "connected_region": "Your Contract has Expired",
+            "connected_region": "The Subcon Well",
             "access_rule": {
               "type": "constant",
               "value": true
             }
           },
           {
-            "name": "Subcon Forest - Act 3",
-            "connected_region": "Alpine Free Roam",
+            "name": "Subcon Forest - Act 2",
+            "connected_region": "Your Contract has Expired",
             "access_rule": {
               "type": "item_check",
-              "item": "Snatcher's Contract - Toilet of Doom"
+              "item": "Snatcher's Contract - The Subcon Well"
             }
           },
           {
             "name": "Subcon Forest - Act 4",
-            "connected_region": "Cheating the Race",
+            "connected_region": "The Illness has Spread",
             "access_rule": {
               "type": "item_check",
               "item": "Snatcher's Contract - Queen Vanessa's Manor"
             }
           },
           {
-            "name": "Subcon Forest - Act 5",
-            "connected_region": "Heating Up Mafia Town",
+            "name": "Subcon Forest - Act 3",
+            "connected_region": "Down with the Mafia!",
             "access_rule": {
               "type": "item_check",
-              "item": "Snatcher's Contract - Mail Delivery Service"
+              "item": "Snatcher's Contract - Toilet of Doom"
             }
           }
         ],
@@ -2425,7 +2514,7 @@
           },
           {
             "name": "Time Rift - Pipe Portal - Entrance 1",
-            "connected_region": "Time Rift - The Moon",
+            "connected_region": "Time Rift - The Owl Express",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -2439,7 +2528,7 @@
           },
           {
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 1",
-            "connected_region": "Time Rift - Dead Bird Studio",
+            "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
               "type": "helper",
               "name": "has_relic_combo",
@@ -2453,7 +2542,7 @@
           },
           {
             "name": "Time Rift - Village Portal - Entrance 1",
-            "connected_region": "Time Rift - The Owl Express",
+            "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -2461,32 +2550,6 @@
                 {
                   "type": "constant",
                   "value": "Subcon Forest - Act 4"
-                }
-              ]
-            }
-          },
-          {
-            "name": "Mafia Town - Act 4: Connection 2",
-            "connected_region": "The Big Parade",
-            "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Hookshot Badge"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
                 }
               ]
             }
@@ -2501,7 +2564,7 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Yarn",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2516,9 +2579,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Health Pon",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2531,9 +2594,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Random Cosmetic",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2553,7 +2616,7 @@
           },
           {
             "name": "Time Rift - Pipe Portal - Entrance 2",
-            "connected_region": "Time Rift - The Moon",
+            "connected_region": "Time Rift - The Owl Express",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -2567,7 +2630,7 @@
           },
           {
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 2",
-            "connected_region": "Time Rift - Dead Bird Studio",
+            "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
               "type": "helper",
               "name": "has_relic_combo",
@@ -2581,7 +2644,7 @@
           },
           {
             "name": "Time Rift - Village Portal - Entrance 2",
-            "connected_region": "Time Rift - The Owl Express",
+            "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -2594,8 +2657,8 @@
             }
           },
           {
-            "name": "Mafia Town - Act 5: Connection 1",
-            "connected_region": "The Golden Vault",
+            "name": "Subcon Forest - Finale: Connection 1",
+            "connected_region": "Murder on the Owl Express",
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -2603,18 +2666,78 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "constant",
-                      "value": true
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "and",
+                              "conditions": [
+                                {
+                                  "type": "and",
+                                  "conditions": [
+                                    {
+                                      "type": "and",
+                                      "conditions": [
+                                        {
+                                          "type": "and",
+                                          "conditions": [
+                                            {
+                                              "type": "item_check",
+                                              "item": "Hookshot Badge"
+                                            },
+                                            {
+                                              "type": "item_check",
+                                              "item": "Snatcher's Contract - The Subcon Well"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "constant",
+                                          "value": true
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "item_check",
+                                      "item": "Snatcher's Contract - Toilet of Doom"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "constant",
+                                  "value": true
+                                }
+                              ]
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Snatcher's Contract - Queen Vanessa's Manor"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Hookshot Badge"
+                        }
+                      ]
                     },
                     {
                       "type": "item_check",
-                      "item": "Hookshot Badge"
+                      "item": "Snatcher's Contract - Mail Delivery Service"
                     }
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": true
+                  "type": "helper",
+                  "name": "can_use_hat",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             }
@@ -2629,7 +2752,7 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Random Cosmetic",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2674,9 +2797,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Health Pon",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2689,9 +2812,9 @@
               "item": "Hookshot Badge"
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2711,7 +2834,7 @@
           },
           {
             "name": "Time Rift - Pipe Portal - Entrance 3",
-            "connected_region": "Time Rift - The Moon",
+            "connected_region": "Time Rift - The Owl Express",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -2725,7 +2848,7 @@
           },
           {
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 3",
-            "connected_region": "Time Rift - Dead Bird Studio",
+            "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
               "type": "helper",
               "name": "has_relic_combo",
@@ -2739,7 +2862,7 @@
           },
           {
             "name": "Time Rift - Village Portal - Entrance 3",
-            "connected_region": "Time Rift - The Owl Express",
+            "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -2747,6 +2870,124 @@
                 {
                   "type": "constant",
                   "value": "Subcon Forest - Act 4"
+                }
+              ]
+            }
+          },
+          {
+            "name": "Battle of the Birds - Finale A: Connection 2",
+            "connected_region": "Award Ceremony",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "conditional",
+                  "test": {
+                    "type": "not",
+                    "condition": {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  },
+                  "if_true": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "if_false": {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "helper",
+                            "name": "can_use_hat",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": 1
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Umbrella"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "test": {
+                    "type": "not",
+                    "condition": {
+                      "type": "helper",
+                      "name": "painting_logic",
+                      "args": []
+                    }
+                  },
+                  "if_true": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "if_false": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": false
+                        },
+                        {
+                          "type": "not",
+                          "condition": {
+                            "type": "constant",
+                            "value": 0
+                          }
+                        }
+                      ]
+                    },
+                    "if_true": {
+                      "type": "conditional",
+                      "test": {
+                        "type": "compare",
+                        "left": {
+                          "type": "helper",
+                          "name": "get_difficulty",
+                          "args": []
+                        },
+                        "op": ">=",
+                        "right": {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      },
+                      "if_true": {
+                        "type": "constant",
+                        "value": true
+                      },
+                      "if_false": null
+                    },
+                    "if_false": {
+                      "type": "item_check",
+                      "item": "Progressive Painting Unlock",
+                      "count": {
+                        "type": "constant",
+                        "value": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Hookshot Badge"
                 }
               ]
             }
@@ -2909,7 +3150,7 @@
           },
           {
             "name": "Time Rift - Pipe Portal - Entrance 4",
-            "connected_region": "Time Rift - The Moon",
+            "connected_region": "Time Rift - The Owl Express",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -2923,7 +3164,7 @@
           },
           {
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 4",
-            "connected_region": "Time Rift - Dead Bird Studio",
+            "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
               "type": "helper",
               "name": "has_relic_combo",
@@ -2937,7 +3178,7 @@
           },
           {
             "name": "Time Rift - Village Portal - Entrance 4",
-            "connected_region": "Time Rift - The Owl Express",
+            "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -2950,29 +3191,19 @@
             }
           },
           {
-            "name": "Mafia Town - Act 5: Connection 2",
-            "connected_region": "The Golden Vault",
+            "name": "Mafia Town - Act 2: Connection 1",
+            "connected_region": "Cheating the Race",
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "constant",
-                      "value": true
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Hookshot Badge"
-                    }
-                  ]
-                },
-                {
-                  "type": "constant",
-                  "value": true
-                }
-              ]
+              "type": "constant",
+              "value": true
+            }
+          },
+          {
+            "name": "Mafia Town - Act 3: Connection 1",
+            "connected_region": "She Came from Outer Space",
+            "access_rule": {
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -2985,9 +3216,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3000,9 +3231,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Random Cosmetic",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3015,7 +3246,7 @@
               "value": true
             },
             "item": {
-              "name": "50 Pons",
+              "name": "25 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3030,7 +3261,7 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Time Piece",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3045,9 +3276,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3067,7 +3298,7 @@
           },
           {
             "name": "Time Rift - Pipe Portal - Entrance 5",
-            "connected_region": "Time Rift - The Moon",
+            "connected_region": "Time Rift - The Owl Express",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -3081,7 +3312,7 @@
           },
           {
             "name": "Time Rift - Sleepy Subcon Portal - Entrance 5",
-            "connected_region": "Time Rift - Dead Bird Studio",
+            "connected_region": "Time Rift - Alpine Skyline",
             "access_rule": {
               "type": "helper",
               "name": "has_relic_combo",
@@ -3095,7 +3326,7 @@
           },
           {
             "name": "Time Rift - Village Portal - Entrance 5",
-            "connected_region": "Time Rift - The Owl Express",
+            "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
               "type": "helper",
               "name": "can_clear_required_act",
@@ -3103,6 +3334,92 @@
                 {
                   "type": "constant",
                   "value": "Subcon Forest - Act 4"
+                }
+              ]
+            }
+          },
+          {
+            "name": "Subcon Forest - Finale: Connection 5",
+            "connected_region": "Murder on the Owl Express",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "and",
+                              "conditions": [
+                                {
+                                  "type": "and",
+                                  "conditions": [
+                                    {
+                                      "type": "and",
+                                      "conditions": [
+                                        {
+                                          "type": "and",
+                                          "conditions": [
+                                            {
+                                              "type": "item_check",
+                                              "item": "Hookshot Badge"
+                                            },
+                                            {
+                                              "type": "item_check",
+                                              "item": "Snatcher's Contract - The Subcon Well"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "constant",
+                                          "value": true
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "item_check",
+                                      "item": "Snatcher's Contract - Toilet of Doom"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "constant",
+                                  "value": true
+                                }
+                              ]
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Snatcher's Contract - Queen Vanessa's Manor"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Hookshot Badge"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Snatcher's Contract - Mail Delivery Service"
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "can_use_hat",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             }
@@ -3123,7 +3440,7 @@
               ]
             },
             "item": {
-              "name": "Yarn",
+              "name": "Time Piece",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3152,8 +3469,8 @@
             }
           },
           {
-            "name": "Subcon Forest - Finale: Connection 1",
-            "connected_region": "The Illness has Spread",
+            "name": "Subcon Forest - Finale: Connection 2",
+            "connected_region": "Murder on the Owl Express",
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -3173,18 +3490,36 @@
                                   "type": "and",
                                   "conditions": [
                                     {
-                                      "type": "constant",
-                                      "value": true
+                                      "type": "and",
+                                      "conditions": [
+                                        {
+                                          "type": "and",
+                                          "conditions": [
+                                            {
+                                              "type": "item_check",
+                                              "item": "Hookshot Badge"
+                                            },
+                                            {
+                                              "type": "item_check",
+                                              "item": "Snatcher's Contract - The Subcon Well"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "constant",
+                                          "value": true
+                                        }
+                                      ]
                                     },
                                     {
                                       "type": "item_check",
-                                      "item": "Snatcher's Contract - The Subcon Well"
+                                      "item": "Snatcher's Contract - Toilet of Doom"
                                     }
                                   ]
                                 },
                                 {
-                                  "type": "item_check",
-                                  "item": "Snatcher's Contract - Toilet of Doom"
+                                  "type": "constant",
+                                  "value": true
                                 }
                               ]
                             },
@@ -3195,14 +3530,8 @@
                           ]
                         },
                         {
-                          "type": "helper",
-                          "name": "can_use_hat",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": 4
-                            }
-                          ]
+                          "type": "item_check",
+                          "item": "Hookshot Badge"
                         }
                       ]
                     },
@@ -3213,8 +3542,14 @@
                   ]
                 },
                 {
-                  "type": "constant",
-                  "value": true
+                  "type": "helper",
+                  "name": "can_use_hat",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             }
@@ -3227,7 +3562,7 @@
         "exits": [
           {
             "name": "Alpine Skyline - Finale",
-            "connected_region": "Toilet of Doom",
+            "connected_region": "Dead Bird Studio Basement",
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -3252,7 +3587,7 @@
           },
           {
             "name": "Alpine Skyline - Free Roam",
-            "connected_region": "Picture Perfect",
+            "connected_region": "The Golden Vault",
             "access_rule": {
               "type": "constant",
               "value": true
@@ -3273,16 +3608,8 @@
             }
           },
           {
-            "name": "Time Rift - Curly Tail Trail Portal - Entrance 1",
-            "connected_region": "Time Rift - Pipe",
-            "access_rule": {
-              "type": "item_check",
-              "item": "Windmill Cleared"
-            }
-          },
-          {
             "name": "Time Rift - Alpine Skyline Portal - Entrance 1",
-            "connected_region": "Time Rift - Sleepy Subcon",
+            "connected_region": "Time Rift - Dead Bird Studio",
             "access_rule": {
               "type": "and",
               "conditions": [
@@ -3352,76 +3679,33 @@
           },
           {
             "name": "Time Rift - The Twilight Bell Portal - Entrance 1",
-            "connected_region": "Time Rift - Bazaar",
+            "connected_region": "Time Rift - The Lab",
             "access_rule": {
               "type": "item_check",
               "item": "Twilight Bell Cleared"
             }
           },
           {
-            "name": "Subcon Forest - Finale: Connection 3",
-            "connected_region": "The Illness has Spread",
+            "name": "Time Rift - Curly Tail Trail Portal - Entrance 1",
+            "connected_region": "Time Rift - Pipe",
+            "access_rule": {
+              "type": "item_check",
+              "item": "Windmill Cleared"
+            }
+          },
+          {
+            "name": "Mafia Town - Act 5: Connection 2",
+            "connected_region": "Picture Perfect",
             "access_rule": {
               "type": "and",
               "conditions": [
                 {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
-                              "type": "and",
-                              "conditions": [
-                                {
-                                  "type": "and",
-                                  "conditions": [
-                                    {
-                                      "type": "constant",
-                                      "value": true
-                                    },
-                                    {
-                                      "type": "item_check",
-                                      "item": "Snatcher's Contract - The Subcon Well"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Snatcher's Contract - Toilet of Doom"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Snatcher's Contract - Queen Vanessa's Manor"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "helper",
-                          "name": "can_use_hat",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": 4
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Snatcher's Contract - Mail Delivery Service"
-                    }
-                  ]
-                },
-                {
                   "type": "constant",
                   "value": true
+                },
+                {
+                  "type": "item_check",
+                  "item": "Hookshot Badge"
                 }
               ]
             }
@@ -3529,9 +3813,9 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3580,9 +3864,9 @@
               ]
             },
             "item": {
-              "name": "Yarn",
+              "name": "50 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3595,7 +3879,7 @@
               "value": true
             },
             "item": {
-              "name": "Relic (Tin-foil Hat Cow)",
+              "name": "Yarn",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3616,9 +3900,9 @@
               ]
             },
             "item": {
-              "name": "Snatcher's Contract - The Subcon Well",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3661,9 +3945,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Random Cosmetic",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3736,9 +4020,9 @@
               ]
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3751,7 +4035,7 @@
               "item": "Hookshot Badge"
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "25 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3781,9 +4065,9 @@
               ]
             },
             "item": {
-              "name": "50 Pons",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3811,9 +4095,9 @@
               "item": "Hookshot Badge"
             },
             "item": {
-              "name": "Yarn",
+              "name": "50 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3826,7 +4110,7 @@
               "item": "Hookshot Badge"
             },
             "item": {
-              "name": "Yarn",
+              "name": "Relic (Tin-foil Hat Cow)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3847,7 +4131,7 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Yarn",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3868,9 +4152,9 @@
               ]
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Random Cosmetic",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3883,9 +4167,9 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "Relic (Mountain Set)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3898,9 +4182,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3913,7 +4197,7 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "Health Pon",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3928,7 +4212,7 @@
               "value": true
             },
             "item": {
-              "name": "Relic (Cow)",
+              "name": "Yarn",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3943,7 +4227,7 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "50 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3980,7 +4264,7 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Random Cosmetic",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4010,9 +4294,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4025,9 +4309,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "50 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -4040,9 +4324,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Health Pon",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -4107,9 +4391,9 @@
               "value": true
             },
             "item": {
-              "name": "50 Pons",
+              "name": "Relic (UFO)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4122,7 +4406,7 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Yarn",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4137,9 +4421,9 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "Relic (Green Crayon)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4174,9 +4458,9 @@
               "value": true
             },
             "item": {
-              "name": "Badge Pin",
+              "name": "Snatcher's Contract - Mail Delivery Service",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4189,9 +4473,9 @@
               "value": true
             },
             "item": {
-              "name": "Relic (Red Crayon)",
+              "name": "Health Pon",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -4242,7 +4526,7 @@
           },
           {
             "name": "Time Rift - Alpine Skyline Portal - Entrance 2",
-            "connected_region": "Time Rift - Sleepy Subcon",
+            "connected_region": "Time Rift - Dead Bird Studio",
             "access_rule": {
               "type": "helper",
               "name": "has_relic_combo",
@@ -4250,6 +4534,92 @@
                 {
                   "type": "constant",
                   "value": "Crayon"
+                }
+              ]
+            }
+          },
+          {
+            "name": "Subcon Forest - Finale: Connection 4",
+            "connected_region": "Murder on the Owl Express",
+            "access_rule": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "and",
+                              "conditions": [
+                                {
+                                  "type": "and",
+                                  "conditions": [
+                                    {
+                                      "type": "and",
+                                      "conditions": [
+                                        {
+                                          "type": "and",
+                                          "conditions": [
+                                            {
+                                              "type": "item_check",
+                                              "item": "Hookshot Badge"
+                                            },
+                                            {
+                                              "type": "item_check",
+                                              "item": "Snatcher's Contract - The Subcon Well"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "constant",
+                                          "value": true
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "item_check",
+                                      "item": "Snatcher's Contract - Toilet of Doom"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "constant",
+                                  "value": true
+                                }
+                              ]
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Snatcher's Contract - Queen Vanessa's Manor"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Hookshot Badge"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Snatcher's Contract - Mail Delivery Service"
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "can_use_hat",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  ]
                 }
               ]
             }
@@ -4264,9 +4634,9 @@
               "item": "Hookshot Badge"
             },
             "item": {
-              "name": "Item Magnet Badge",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4301,7 +4671,7 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Time Piece",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4316,9 +4686,9 @@
               "value": true
             },
             "item": {
-              "name": "50 Pons",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4331,9 +4701,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4346,7 +4716,7 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Projectile Badge",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4361,7 +4731,7 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "100 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4376,7 +4746,7 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Health Pon",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4403,9 +4773,9 @@
               ]
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4430,7 +4800,7 @@
               ]
             },
             "item": {
-              "name": "Yarn",
+              "name": "Time Piece",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4625,9 +4995,9 @@
               ]
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4640,7 +5010,7 @@
               "value": true
             },
             "item": {
-              "name": "Badge Pin",
+              "name": "25 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4655,9 +5025,9 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4670,9 +5040,9 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4691,7 +5061,7 @@
               ]
             },
             "item": {
-              "name": "Relic (Blue Crayon)",
+              "name": "Relic (Crayon Box)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -4706,9 +5076,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Hover Badge",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -4721,9 +5091,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Umbrella",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4736,9 +5106,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -4766,9 +5136,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Snatcher's Contract - Toilet of Doom",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4781,9 +5151,9 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4802,9 +5172,9 @@
               ]
             },
             "item": {
-              "name": "Hover Badge",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4817,9 +5187,9 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4847,9 +5217,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4862,7 +5232,7 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Badge Pin",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4877,7 +5247,7 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "25 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4892,7 +5262,7 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Random Cosmetic",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -4992,9 +5362,9 @@
               ]
             },
             "item": {
-              "name": "Yarn",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -5007,9 +5377,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5022,9 +5392,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "50 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -5037,7 +5407,7 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Random Cosmetic",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5052,9 +5422,9 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "Relic (Burger Patty)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5067,7 +5437,7 @@
               "value": true
             },
             "item": {
-              "name": "Snatcher's Contract - Toilet of Doom",
+              "name": "Yarn",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5088,9 +5458,9 @@
               ]
             },
             "item": {
-              "name": "Yarn",
+              "name": "Random Cosmetic",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -5109,9 +5479,9 @@
               ]
             },
             "item": {
-              "name": "100 Pons",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5119,21 +5489,6 @@
           {
             "name": "Mafia Town - Camera Badge 1",
             "id": 2000302003,
-            "access_rule": {
-              "type": "constant",
-              "value": true
-            },
-            "item": {
-              "name": "Health Pon",
-              "player": 1,
-              "advancement": false,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Mafia Town - Camera Badge 2",
-            "id": 2000302004,
             "access_rule": {
               "type": "constant",
               "value": true
@@ -5147,6 +5502,21 @@
             "locked": false
           },
           {
+            "name": "Mafia Town - Camera Badge 2",
+            "id": 2000302004,
+            "access_rule": {
+              "type": "constant",
+              "value": true
+            },
+            "item": {
+              "name": "100 Pons",
+              "player": 1,
+              "advancement": false,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
             "name": "Mafia Town - Chest Beneath Aqueduct",
             "id": 2000303489,
             "access_rule": {
@@ -5154,9 +5524,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5184,9 +5554,9 @@
               ]
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Relic (Burger Cushion)",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5199,9 +5569,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5223,7 +5593,7 @@
               ]
             },
             "item": {
-              "name": "25 Pons",
+              "name": "50 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5238,9 +5608,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Item Magnet Badge",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -5253,7 +5623,7 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Time Piece",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5268,7 +5638,7 @@
               "item": "Hookshot Badge"
             },
             "item": {
-              "name": "Yarn",
+              "name": "Relic (Cow)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5455,7 +5825,7 @@
               ]
             },
             "item": {
-              "name": "50 Pons",
+              "name": "Random Cosmetic",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5476,7 +5846,7 @@
               "value": true
             },
             "item": {
-              "name": "Snatcher's Contract - Mail Delivery Service",
+              "name": "Yarn",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5491,9 +5861,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5506,7 +5876,7 @@
               "value": true
             },
             "item": {
-              "name": "Umbrella",
+              "name": "Time Piece",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5521,9 +5891,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Health Pon",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -5536,9 +5906,9 @@
               "value": true
             },
             "item": {
-              "name": "Relic (UFO)",
+              "name": "Health Pon",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -5551,7 +5921,7 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Time Piece",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5566,7 +5936,7 @@
               "value": true
             },
             "item": {
-              "name": "100 Pons",
+              "name": "Health Pon",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5587,9 +5957,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5608,9 +5978,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5705,9 +6075,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -5720,9 +6090,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Random Cosmetic",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -5735,7 +6105,7 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Time Piece",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5750,9 +6120,9 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5765,9 +6135,9 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5780,7 +6150,7 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Random Cosmetic",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5795,7 +6165,7 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "25 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5816,7 +6186,7 @@
               ]
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Yarn",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -5831,9 +6201,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Random Cosmetic",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -5846,9 +6216,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Health Pon",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -5876,7 +6246,7 @@
               "value": true
             },
             "item": {
-              "name": "100 Pons",
+              "name": "25 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5921,9 +6291,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -5936,7 +6306,7 @@
               "value": true
             },
             "item": {
-              "name": "50 Pons",
+              "name": "25 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5951,7 +6321,7 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "50 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -5966,9 +6336,9 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5981,9 +6351,9 @@
               "value": true
             },
             "item": {
-              "name": "Relic (Crayon Box)",
+              "name": "No Bonk Badge",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -5996,7 +6366,7 @@
               "value": true
             },
             "item": {
-              "name": "Relic (Burger Patty)",
+              "name": "Time Piece",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6047,7 +6417,7 @@
               ]
             },
             "item": {
-              "name": "Hookshot Badge",
+              "name": "Yarn",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6062,9 +6432,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6083,7 +6453,7 @@
               ]
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "25 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6104,9 +6474,9 @@
               ]
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6161,9 +6531,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6182,9 +6552,9 @@
               ]
             },
             "item": {
-              "name": "Yarn",
+              "name": "100 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -6263,9 +6633,9 @@
               "item": "Hookshot Badge"
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6278,7 +6648,7 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "50 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6293,9 +6663,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6347,7 +6717,7 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Yarn",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6368,9 +6738,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6389,7 +6759,7 @@
               "value": true
             },
             "item": {
-              "name": "Relic (Train)",
+              "name": "Time Piece",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6410,9 +6780,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Random Cosmetic",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -6425,9 +6795,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Health Pon",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -6440,9 +6810,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6470,9 +6840,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Random Cosmetic",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -6500,7 +6870,7 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Random Cosmetic",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6515,9 +6885,9 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6530,9 +6900,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Yarn",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6545,9 +6915,9 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Hookshot Badge",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6566,9 +6936,9 @@
               "item": "Hookshot Badge"
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Health Pon",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -6612,9 +6982,9 @@
               ]
             },
             "item": {
-              "name": "Yarn",
+              "name": "100 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -6633,9 +7003,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -6648,7 +7018,7 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Random Cosmetic",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6663,9 +7033,9 @@
               "value": true
             },
             "item": {
-              "name": "Yarn",
+              "name": "Random Cosmetic",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -6678,7 +7048,7 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "50 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6693,7 +7063,7 @@
               "value": true
             },
             "item": {
-              "name": "Health Pon",
+              "name": "Random Cosmetic",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6708,7 +7078,7 @@
               "value": true
             },
             "item": {
-              "name": "Random Cosmetic",
+              "name": "25 Pons",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6723,9 +7093,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -6738,9 +7108,9 @@
               "value": true
             },
             "item": {
-              "name": "25 Pons",
+              "name": "Time Piece",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -6773,9 +7143,9 @@
               "value": true
             },
             "item": {
-              "name": "Time Piece",
+              "name": "25 Pons",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -6803,7 +7173,7 @@
               ]
             },
             "item": {
-              "name": "Time Piece",
+              "name": "Yarn",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -6872,7 +7242,7 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
+        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
         "max_count": 40
@@ -7268,7 +7638,7 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 39
+        "max_count": 34
       },
       "50 Pons": {
         "name": "50 Pons",
@@ -7279,7 +7649,7 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 12
+        "max_count": 19
       },
       "100 Pons": {
         "name": "100 Pons",
@@ -7290,7 +7660,7 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 5
+        "max_count": 6
       },
       "Health Pon": {
         "name": "Health Pon",
@@ -7301,7 +7671,7 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 31
+        "max_count": 27
       },
       "Random Cosmetic": {
         "name": "Random Cosmetic",
@@ -7312,7 +7682,7 @@
         "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 24
+        "max_count": 25
       },
       "Baby Trap": {
         "name": "Baby Trap",
@@ -7612,23 +7982,23 @@
   },
   "itempool_counts": {
     "1": {
-      "100 Pons": 5,
-      "25 Pons": 39,
-      "50 Pons": 12,
+      "100 Pons": 6,
+      "25 Pons": 34,
+      "50 Pons": 19,
       "AFR Access": 1,
       "Badge Pin": 2,
       "Birdhouse Cleared": 1,
       "Compass Badge": 1,
       "Fast Hatter Badge": 1,
       "HUMT Access": 1,
-      "Health Pon": 31,
+      "Health Pon": 27,
       "Hookshot Badge": 1,
       "Hover Badge": 1,
       "Item Magnet Badge": 1,
       "Lava Cake Cleared": 1,
       "No Bonk Badge": 1,
       "Projectile Badge": 1,
-      "Random Cosmetic": 24,
+      "Random Cosmetic": 25,
       "Relic (Blue Crayon)": 1,
       "Relic (Burger Cushion)": 1,
       "Relic (Burger Patty)": 1,
@@ -7768,26 +8138,26 @@
       },
       "chapter_costs": {
         "Mafia Town": 0,
-        "Battle of the Birds": 5,
+        "Battle of the Birds": 9,
         "Subcon Forest": 17,
         "Alpine Skyline": 13,
-        "Time's End": 35,
+        "Time's End": 31,
         "Arctic Cruise": -1,
         "Nyakuza Metro": -1
       },
       "hat_info": {
         "hat_yarn_costs": {
-          "0": 6,
-          "1": 4,
+          "0": 4,
+          "1": 8,
           "2": 8,
-          "3": 6,
-          "4": 6
+          "3": 5,
+          "4": 8
         },
         "hat_craft_order": [
-          3,
           2,
-          4,
+          3,
           1,
+          4,
           0
         ]
       },

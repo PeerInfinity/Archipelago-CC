@@ -1,0 +1,1284 @@
+﻿Archipelago Version 0.6.5  -  Seed: 4
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            A Hat in Time
+Location Count:                  227
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Start Inventory from Pool:       
+End Goal:                        Finale
+Shuffle Acts:                    Light
+Act Plando:                      
+Act Blacklist:                   
+Shuffle Alpine Ziplines:         No
+Finale Shuffle:                  No
+Logic Difficulty:                Normal
+Yarn Balance Percentage:         20
+Time Piece Balance Percentage:   35
+Randomize Hat Order:             True
+Umbrella Logic:                  No
+Start with Compass Badge:        Yes
+Compass Badge Mode:              Closest
+Shuffle Storybook Pages:         Yes
+Shuffle Contracts:               Yes
+Shuffle Subcon Paintings:        No
+No Subcon Fire Wall Skips:       No
+Starting Chapter:                1
+Cheating the Race Logic:         Time Stop Only
+Shuffle Chapter 6:               No
+Tasksanity:                      No
+Tasksanity Task Step:            1
+Tasksanity Check Count:          18
+Exclude Tour Time Rift:          No
+Ship Shape Custom Task Goal:     0
+Enable Death Wish:               No
+Death Wish Shuffle:              No
+Death Wish Shuffle Minimum Count:18
+Death Wish Shuffle Maximum Count:25
+Death Wish Only:                 No
+Shuffle Death Wish Full Completions:No
+Auto Complete Bonus Stamps:      Yes
+Exclude Annoying Death Wish Contracts:Yes
+Exclude Annoying Death Wish Full Completions:Yes
+Exclude Candle Death Wishes:     Yes
+Death Wish Time Piece Requirement:15
+Shuffle Chapter 7:               No
+Baseball Bat:                    No
+Metro Shops Minimum Pon Cost:    50
+Metro Shops Maximum Pon Cost:    200
+Nyakuza Thug Minimum Shop Items: 2
+Nyakuza Thug Maximum Shop Items: 4
+No Ticket Skips:                 False
+Lowest Possible Chapter Cost:    5
+Highest Possible Chapter Cost:   25
+Chapter Cost Increment:          4
+Minimum Chapter Cost Difference: 4
+Max Extra Time Pieces:           16
+Final Chapter Minimum Time Piece Cost:30
+Final Chapter Maximum Time Piece Cost:35
+Minimum Yarn Cost:               4
+Maximum Yarn Cost:               8
+Yarn Available:                  50
+Min Extra Yarn:                  10
+Hat Items:                       No
+Minimum Shop Pon Cost:           75
+Maximum Shop Pon Cost:           300
+Badge Seller Minimum Items:      4
+Badge Seller Maximum Items:      8
+Trap Chance:                     0
+Baby Trap Weight:                40
+Laser Trap Weight:               40
+Parade Trap Weight:              20
+Death Link:                      No
+Death Link Amnesty:              0
+Death Wish Amnesty:              5
+Chapter 1 Cost: 0
+Chapter 2 Cost: 7
+Chapter 3 Cost: 14
+Chapter 4 Cost: 18
+Chapter 5 Cost: 31
+Chapter 6 Cost: -1
+Chapter 7 Cost: -1
+Hat Cost: 0: 8
+Hat Cost: 3: 7
+Hat Cost: 1: 5
+Hat Cost: 2: 8
+Hat Cost: 4: 6
+
+
+Starting Items:
+
+Compass Badge
+
+Locations:
+
+Spaceship - Rumbi Abuse: Yarn
+Mafia Boss Shop Item: Time Piece
+Act Completion (Time Rift - Gallery): 50 Pons
+Act Completion (Time Rift - The Lab): 25 Pons
+Welcome to Mafia Town - Umbrella: Yarn
+Act Completion (Welcome to Mafia Town): Relic (Green Crayon)
+Act Completion (Barrel Battle): Health Pon
+Act Completion (She Came from Outer Space): Time Piece
+Mafia HQ - Hallway Brewing Crate: 50 Pons
+Mafia HQ - Freezer Chest: 25 Pons
+Mafia HQ - Secret Room: Yarn
+Mafia HQ - Bathroom Stall Chest: Random Cosmetic
+Act Completion (Down with the Mafia!): Random Cosmetic
+Act Completion (Heating Up Mafia Town): Time Piece
+Act Completion (Cheating the Race): Random Cosmetic
+Act Completion (The Golden Vault): Yarn
+Act Completion (Dead Bird Studio): 25 Pons
+Murder on the Owl Express - Cafeteria: Random Cosmetic
+Murder on the Owl Express - Luggage Room Top: 25 Pons
+Murder on the Owl Express - Luggage Room Bottom: 25 Pons
+Murder on the Owl Express - Raven Suite Room: Snatcher's Contract - Queen Vanessa's Manor
+Murder on the Owl Express - Raven Suite Top: Relic (Train)
+Murder on the Owl Express - Lounge Chest: Yarn
+Act Completion (Murder on the Owl Express): Snatcher's Contract - Mail Delivery Service
+Picture Perfect - Behind Badge Seller: 50 Pons
+Picture Perfect - Hats Buy Building: 50 Pons
+Act Completion (Picture Perfect): 25 Pons
+Act Completion (Train Rush): Random Cosmetic
+Act Completion (The Big Parade): Yarn
+Act Completion (Award Ceremony): Time Piece
+Dead Bird Studio Basement - Window Platform: Random Cosmetic
+Dead Bird Studio Basement - Cardboard Conductor: 50 Pons
+Dead Bird Studio Basement - Above Conductor Sign: 25 Pons
+Dead Bird Studio Basement - Logo Wall: Time Piece
+Dead Bird Studio Basement - Disco Room: 100 Pons
+Dead Bird Studio Basement - Small Room: 25 Pons
+Dead Bird Studio Basement - Vent Pipe: Yarn
+Dead Bird Studio Basement - Tightrope: Time Piece
+Dead Bird Studio Basement - Cameras: Yarn
+Dead Bird Studio Basement - Locked Room: Snatcher's Contract - The Subcon Well
+Act Completion (Dead Bird Studio Basement): Time Piece
+Act Completion (Time Rift - Dead Bird Studio): Random Cosmetic
+Dead Bird Studio (Rift) - Page: Behind Cardboard Planet: Yarn
+Dead Bird Studio (Rift) - Page: Near Time Rift Gate: Random Cosmetic
+Dead Bird Studio (Rift) - Page: Top of Metal Bar: Time Piece
+Dead Bird Studio (Rift) - Page: Lava Lamp: Yarn
+Dead Bird Studio (Rift) - Page: Above Horse Picture: Projectile Badge
+Dead Bird Studio (Rift) - Page: Green Screen: 25 Pons
+Dead Bird Studio (Rift) - Page: In The Corner: Random Cosmetic
+Dead Bird Studio (Rift) - Page: Above TV Room: 100 Pons
+Act Completion (Time Rift - The Owl Express): Time Piece
+Act Completion (Time Rift - The Moon): Yarn
+Dead Bird Studio - Up the Ladder: Time Piece
+Dead Bird Studio - Red Building Top: 50 Pons
+Dead Bird Studio - Behind Water Tower: Random Cosmetic
+Dead Bird Studio - Side of House: 25 Pons
+Dead Bird Studio - DJ Grooves Sign Chest: Time Piece
+Dead Bird Studio - Tightrope Chest: Relic (Mountain Set)
+Dead Bird Studio - Tepee Chest: Time Piece
+Dead Bird Studio - Conductor Chest: 25 Pons
+Contractual Obligations - Cherry Bomb Bone Cage: 25 Pons
+Act Completion (Contractual Obligations): Time Piece
+Snatcher's Contract - The Subcon Well: Random Cosmetic
+Subcon Well - Hookshot Badge Chest: Time Piece
+Subcon Well - Above Chest: Yarn
+Subcon Well - On Pipe: Yarn
+Subcon Well - Mushroom: 100 Pons
+Act Completion (The Subcon Well): Badge Pin
+Act Completion (Toilet of Doom): 25 Pons
+Queen Vanessa's Manor - Cellar: Yarn
+Queen Vanessa's Manor - Bedroom Chest: Time Piece
+Queen Vanessa's Manor - Hall Chest: Scooter Badge
+Queen Vanessa's Manor - Chandelier: Yarn
+Act Completion (Queen Vanessa's Manor): 25 Pons
+Act Completion (Mail Delivery Service): Yarn
+Alpine Skyline - The Purrloined Village: Horned Stone: Yarn
+Alpine Skyline - The Purrloined Village: Chest Reward: 25 Pons
+Alpine Skyline - Mystifying Time Mesa: Zipline: Badge Pin
+Alpine Skyline - Mystifying Time Mesa: Gate Puzzle: Random Cosmetic
+Alpine Skyline - The Twilight Path: 25 Pons
+Alpine Skyline - Goat Village: Below Hookpoint: Health Pon
+Alpine Skyline - Goat Village: Hidden Branch: Random Cosmetic
+Alpine Skyline - Goat Refinery: Yarn
+Alpine Skyline - Bird Pass Fork: 25 Pons
+Alpine Skyline - Yellow Band Hills: Health Pon
+Alpine Skyline - Ember Summit: Yarn
+Alpine Skyline - Goat Outpost Horn: 50 Pons
+Alpine Skyline - Windy Passage: Yarn
+Alpine Skyline - The Birdhouse: Triple Crow Chest: 25 Pons
+Alpine Skyline - The Birdhouse: Dweller Platforms Relic: Time Piece
+Alpine Skyline - The Birdhouse: Brewing Crate House: Health Pon
+Alpine Skyline - The Birdhouse: Hay Bale: Random Cosmetic
+Alpine Skyline - The Birdhouse: Alpine Crow Mini-Gauntlet: Yarn
+Alpine Skyline - The Birdhouse: Outer Edge: Yarn
+Act Completion (The Birdhouse): Yarn
+Alpine Skyline - The Lava Cake: Center Fence Cage: 100 Pons
+Alpine Skyline - The Lava Cake: Outer Island Chest: Yarn
+Alpine Skyline - The Lava Cake: Dweller Pillars: 25 Pons
+Alpine Skyline - The Lava Cake: Top Cake: Time Piece
+Act Completion (The Lava Cake): Yarn
+Alpine Skyline - The Windmill: Inside Pon Cluster: 25 Pons
+Alpine Skyline - The Windmill: Entrance: Random Cosmetic
+Alpine Skyline - The Windmill: Dropdown: Time Piece
+Alpine Skyline - The Windmill: House Window: Health Pon
+Act Completion (The Windmill): Yarn
+Alpine Skyline - The Twilight Bell: Wide Purple Platform: Random Cosmetic
+Alpine Skyline - The Twilight Bell: Ice Platform: Umbrella
+Act Completion (The Twilight Bell): Random Cosmetic
+Act Completion (The Illness has Spread): Random Cosmetic
+Act Completion (Time Rift - Alpine Skyline): 25 Pons
+Alpine Skyline (Rift) - Page: Entrance Area Hidden Ledge: 25 Pons
+Alpine Skyline (Rift) - Page: Windmill Island Ledge: Random Cosmetic
+Alpine Skyline (Rift) - Page: Waterfall Wooden Pillar: Relic (Cool Cow)
+Alpine Skyline (Rift) - Page: Lonely Birdhouse Top: 25 Pons
+Alpine Skyline (Rift) - Page: Below Aqueduct: Yarn
+Act Completion (Time Rift - The Twilight Bell): Yarn
+Act Completion (Time Rift - Curly Tail Trail): Relic (Blue Crayon)
+Mafia Town - Old Man (Seaside Spaghetti): 50 Pons
+Mafia Town - Old Man (Steel Beams): 25 Pons
+Mafia Town - Blue Vault: 25 Pons
+Mafia Town - Green Vault: Health Pon
+Mafia Town - Red Vault: 100 Pons
+Mafia Town - Blue Vault Brewing Crate: 25 Pons
+Mafia Town - Plaza Under Boxes: Random Cosmetic
+Mafia Town - Small Boat: Time Piece
+Mafia Town - Staircase Pon Cluster: Health Pon
+Mafia Town - Palm Tree: Time Piece
+Mafia Town - Port: Time Piece
+Mafia Town - Docks Chest: Random Cosmetic
+Mafia Town - Ice Hat Cage: 50 Pons
+Mafia Town - Hidden Buttons Chest: Yarn
+Mafia Town - Dweller Boxes: 50 Pons
+Mafia Town - Ledge Chest: Yarn
+Mafia Town - Yellow Sphere Building Chest: Health Pon
+Mafia Town - Beneath Scaffolding: Time Piece
+Mafia Town - On Scaffolding: Time Piece
+Mafia Town - Cargo Ship: Yarn
+Mafia Town - Beach Alcove: 50 Pons
+Mafia Town - Wood Cage: Time Piece
+Mafia Town - Beach Patio: Time Piece
+Mafia Town - Steel Beam Nest: Yarn
+Mafia Town - Top of Ruined Tower: Yarn
+Mafia Town - Hot Air Balloon: Health Pon
+Mafia Town - Camera Badge 1: 50 Pons
+Mafia Town - Camera Badge 2: 50 Pons
+Mafia Town - Chest Beneath Aqueduct: Time Piece
+Mafia Town - Secret Cave: Relic (Cow)
+Mafia Town - Crow Chest: Yarn
+Mafia Town - Above Boats: 25 Pons
+Mafia Town - Slip Slide Chest: 50 Pons
+Mafia Town - Behind Faucet: 25 Pons
+Mafia Town - Clock Tower Chest: Snatcher's Contract - Toilet of Doom
+Mafia Town - Top of Lighthouse: Yarn
+Mafia Town - Mafia Geek Platform: Yarn
+Mafia Town - Behind HQ Chest: 25 Pons
+Act Completion (Time Rift - Mafia of Cooks): 25 Pons
+Mafia of Cooks - Page: Fish Pile: Random Cosmetic
+Mafia of Cooks - Page: Trash Mound: 25 Pons
+Mafia of Cooks - Page: Beside Red Building: Time Piece
+Mafia of Cooks - Page: Behind Shipping Containers: No Bonk Badge
+Mafia of Cooks - Page: Top of Boat: Time Piece
+Mafia of Cooks - Page: Below Dock: Random Cosmetic
+Act Completion (Time Rift - Sewers): Time Piece
+Act Completion (Time Rift - Bazaar): 25 Pons
+Subcon Village - Tree Top Ice Cube: Random Cosmetic
+Subcon Village - Graveyard Ice Cube: Time Piece
+Subcon Village - House Top: 50 Pons
+Subcon Village - Ice Cube House: 50 Pons
+Subcon Village - Stump Platform Chest: Yarn
+Subcon Forest - Giant Tree Climb: Health Pon
+Subcon Forest - Ice Cube Shack: Random Cosmetic
+Subcon Forest - Swamp Gravestone: Yarn
+Subcon Forest - Swamp Near Well: Health Pon
+Subcon Forest - Swamp Tree A: Time Piece
+Subcon Forest - Swamp Tree B: Yarn
+Subcon Forest - Swamp Ice Wall: Hookshot Badge
+Subcon Forest - Swamp Treehouse: Yarn
+Subcon Forest - Swamp Tree Chest: Yarn
+Subcon Forest - Burning House: Relic (Crayon Box)
+Subcon Forest - Burning Tree Climb: 25 Pons
+Subcon Forest - Burning Stump Chest: Health Pon
+Subcon Forest - Burning Forest Treehouse: 50 Pons
+Subcon Forest - Spider Bone Cage A: Random Cosmetic
+Subcon Forest - Spider Bone Cage B: Time Piece
+Subcon Forest - Triple Spider Bounce: Random Cosmetic
+Subcon Forest - Noose Treehouse: Time Piece
+Subcon Forest - Long Tree Climb Chest: 25 Pons
+Subcon Forest - Manor Rooftop: 50 Pons
+Subcon Forest - Infinite Yarn Bush: 50 Pons
+Subcon Forest - Magnet Badge Bush: Yarn
+Subcon Forest - Dweller Stump: Item Magnet Badge
+Subcon Forest - Dweller Floating Rocks: 100 Pons
+Subcon Forest - Dweller Platforming Tree A: Time Piece
+Subcon Forest - Dweller Platforming Tree B: Random Cosmetic
+Subcon Forest - Giant Time Piece: 100 Pons
+Subcon Forest - Gallows: Time Piece
+Subcon Forest - Green and Purple Dweller Rocks: Relic (Tin-foil Hat Cow)
+Subcon Forest - Dweller Shack: Yarn
+Subcon Forest - Tall Tree Hookshot Swing: 25 Pons
+Snatcher's Contract - Toilet of Doom: Fast Hatter Badge
+Snatcher's Contract - Queen Vanessa's Manor: Relic (Burger Cushion)
+Snatcher's Contract - Mail Delivery Service: Time Piece
+Subcon Village - Snatcher Statue Chest: Relic (Red Crayon)
+Subcon Forest - Boss Arena Chest: 25 Pons
+Act Completion (Your Contract has Expired): 25 Pons
+Act Completion (Time Rift - Sleepy Subcon): Yarn
+Sleepy Subcon - Page: Behind Entrance Area: Yarn
+Sleepy Subcon - Page: Near Wrecking Ball: Yarn
+Sleepy Subcon - Page: Behind Crane: Yarn
+Sleepy Subcon - Page: Wrecked Treehouse: Relic (UFO)
+Sleepy Subcon - Page: Behind 2nd Rift Gate: Time Piece
+Sleepy Subcon - Page: Rotating Platform: Health Pon
+Sleepy Subcon - Page: Behind 3rd Rift Gate: Health Pon
+Sleepy Subcon - Page: Frozen Tree: Hover Badge
+Sleepy Subcon - Page: Secret Library: Relic (Burger Patty)
+Act Completion (Time Rift - Pipe): Yarn
+Act Completion (Time Rift - Village): Time Piece
+Badge Seller - Item 1: 50 Pons
+Badge Seller - Item 2: Yarn
+Badge Seller - Item 3: 25 Pons
+Badge Seller - Item 4: Time Piece
+Badge Seller - Item 5: Health Pon
+Badge Seller - Item 6: Health Pon
+Badge Seller - Item 7: Yarn
+Badge Seller - Item 8: Time Piece
+The Finale - Frozen Item: Random Cosmetic
+Act Completion (The Finale): 25 Pons
+
+Playthrough:
+
+0: {
+
+}
+1: {
+  Act Completion (Murder on the Owl Express): Snatcher's Contract - Mail Delivery Service
+  Act Completion (She Came from Outer Space): Time Piece
+  Badge Seller - Item 2: Yarn
+  Badge Seller - Item 4: Time Piece
+  Badge Seller - Item 7: Yarn
+  Badge Seller - Item 8: Time Piece
+  Mafia Town - Beach Patio: Time Piece
+  Mafia Town - Beneath Scaffolding: Time Piece
+  Mafia Town - Cargo Ship: Yarn
+  Mafia Town - Chest Beneath Aqueduct: Time Piece
+  Mafia Town - Crow Chest: Yarn
+  Mafia Town - Hidden Buttons Chest: Yarn
+  Mafia Town - Ledge Chest: Yarn
+  Mafia Town - On Scaffolding: Time Piece
+  Mafia Town - Palm Tree: Time Piece
+  Mafia Town - Port: Time Piece
+  Mafia Town - Small Boat: Time Piece
+  Mafia Town - Steel Beam Nest: Yarn
+  Mafia Town - Wood Cage: Time Piece
+  Murder on the Owl Express - Lounge Chest: Yarn
+  Murder on the Owl Express - Raven Suite Top: Relic (Train)
+  Spaceship - Rumbi Abuse: Yarn
+}
+2: {
+  Dead Bird Studio - Up the Ladder: Time Piece
+  Dead Bird Studio Basement - Logo Wall: Time Piece
+  Dead Bird Studio Basement - Vent Pipe: Yarn
+}
+3: {
+  Mafia Boss Shop Item: Time Piece
+}
+4: {
+  Mafia Town - Mafia Geek Platform: Yarn
+  Snatcher's Contract - Mail Delivery Service: Time Piece
+  Snatcher's Contract - Queen Vanessa's Manor: Relic (Burger Cushion)
+  Subcon Forest - Burning House: Relic (Crayon Box)
+  Subcon Forest - Dweller Platforming Tree A: Time Piece
+  Subcon Forest - Gallows: Time Piece
+  Subcon Forest - Green and Purple Dweller Rocks: Relic (Tin-foil Hat Cow)
+  Subcon Forest - Spider Bone Cage B: Time Piece
+  Subcon Forest - Swamp Ice Wall: Hookshot Badge
+  Subcon Forest - Swamp Tree A: Time Piece
+  Subcon Forest - Swamp Tree B: Yarn
+  Subcon Forest - Swamp Tree Chest: Yarn
+  Subcon Forest - Swamp Treehouse: Yarn
+  Subcon Village - Graveyard Ice Cube: Time Piece
+  Subcon Village - Snatcher Statue Chest: Relic (Red Crayon)
+  Subcon Village - Stump Platform Chest: Yarn
+  TOD Access: TOD Access
+}
+5: {
+  AFR Access: AFR Access
+  Act Completion (Award Ceremony): Time Piece
+  Act Completion (Contractual Obligations): Time Piece
+  Act Completion (Dead Bird Studio Basement): Time Piece
+  Act Completion (Heating Up Mafia Town): Time Piece
+  Act Completion (The Golden Vault): Yarn
+  Act Completion (The Lava Cake): Yarn
+  Act Completion (The Windmill): Yarn
+  Act Completion (Time Rift - Pipe): Yarn
+  Act Completion (Time Rift - The Moon): Yarn
+  Alpine Skyline - Ember Summit: Yarn
+  Alpine Skyline - The Lava Cake: Outer Island Chest: Yarn
+  Alpine Skyline - The Lava Cake: Top Cake: Time Piece
+  Alpine Skyline - The Purrloined Village: Horned Stone: Yarn
+  Alpine Skyline - The Twilight Bell: Ice Platform: Umbrella
+  Alpine Skyline - The Windmill: Dropdown: Time Piece
+  Alpine Skyline - Windy Passage: Yarn
+  Dead Bird Studio Basement - Cameras: Yarn
+  Dead Bird Studio Basement - Locked Room: Snatcher's Contract - The Subcon Well
+  Dead Bird Studio Basement - Tightrope: Time Piece
+  HUMT Access: HUMT Access
+  Lava Cake Cleared: Lava Cake Cleared
+  Mafia Town - Clock Tower Chest: Snatcher's Contract - Toilet of Doom
+  Mafia Town - Top of Lighthouse: Yarn
+  Subcon Forest - Dweller Shack: Yarn
+  Subcon Forest - Noose Treehouse: Time Piece
+  Subcon Well - Above Chest: Yarn
+  Subcon Well - Hookshot Badge Chest: Time Piece
+  Subcon Well - On Pipe: Yarn
+  TIHS Access: TIHS Access
+  Twilight Bell Cleared: Twilight Bell Cleared
+  Windmill Cleared: Windmill Cleared
+}
+6: {
+  Act Completion (Mail Delivery Service): Yarn
+  Act Completion (The Birdhouse): Yarn
+  Act Completion (Time Rift - Sewers): Time Piece
+  Act Completion (Time Rift - The Owl Express): Time Piece
+  Act Completion (Time Rift - The Twilight Bell): Yarn
+  Act Completion (Time Rift - Village): Time Piece
+  Alpine Skyline - Goat Refinery: Yarn
+  Alpine Skyline - The Birdhouse: Alpine Crow Mini-Gauntlet: Yarn
+  Alpine Skyline - The Birdhouse: Dweller Platforms Relic: Time Piece
+  Alpine Skyline - The Birdhouse: Outer Edge: Yarn
+  Birdhouse Cleared: Birdhouse Cleared
+  Mafia HQ - Secret Room: Yarn
+  Mafia Town - Secret Cave: Relic (Cow)
+  Mafia Town - Top of Ruined Tower: Yarn
+  Murder on the Owl Express - Raven Suite Room: Snatcher's Contract - Queen Vanessa's Manor
+  Subcon Forest - Magnet Badge Bush: Yarn
+  Subcon Forest - Swamp Gravestone: Yarn
+}
+7: {
+  Act Completion (The Big Parade): Yarn
+  Act Completion (Time Rift - Curly Tail Trail): Relic (Blue Crayon)
+  Act Completion (Welcome to Mafia Town): Relic (Green Crayon)
+  Dead Bird Studio - DJ Grooves Sign Chest: Time Piece
+  Dead Bird Studio - Tepee Chest: Time Piece
+  Dead Bird Studio - Tightrope Chest: Relic (Mountain Set)
+  Queen Vanessa's Manor - Bedroom Chest: Time Piece
+  Queen Vanessa's Manor - Cellar: Yarn
+  Queen Vanessa's Manor - Chandelier: Yarn
+  Time Piece Cluster: Time Piece Cluster
+  Welcome to Mafia Town - Umbrella: Yarn
+}
+8: {
+  Act Completion (Time Rift - Sleepy Subcon): Yarn
+  Dead Bird Studio (Rift) - Page: Behind Cardboard Planet: Yarn
+  Dead Bird Studio (Rift) - Page: Lava Lamp: Yarn
+  Dead Bird Studio (Rift) - Page: Top of Metal Bar: Time Piece
+  Sleepy Subcon - Page: Behind 2nd Rift Gate: Time Piece
+  Sleepy Subcon - Page: Behind Crane: Yarn
+  Sleepy Subcon - Page: Behind Entrance Area: Yarn
+  Sleepy Subcon - Page: Near Wrecking Ball: Yarn
+  Sleepy Subcon - Page: Secret Library: Relic (Burger Patty)
+  Sleepy Subcon - Page: Wrecked Treehouse: Relic (UFO)
+}
+9: {
+  Alpine Skyline (Rift) - Page: Below Aqueduct: Yarn
+  Alpine Skyline (Rift) - Page: Waterfall Wooden Pillar: Relic (Cool Cow)
+}
+10: {
+  Mafia of Cooks - Page: Beside Red Building: Time Piece
+  Mafia of Cooks - Page: Top of Boat: Time Piece
+}
+
+Paths:
+
+AFR Access
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam
+Act Completion (Award Ceremony)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> Battle of the Birds - Finale A: Connection 1
+   =>   Award Ceremony
+Act Completion (Contractual Obligations)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 5: Connection 1
+   =>   Contractual Obligations
+Act Completion (Dead Bird Studio Basement)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement
+Act Completion (Heating Up Mafia Town)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> Battle of the Birds - Finale A: Connection 1
+   =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
+   =>   Heating Up Mafia Town
+Act Completion (Mail Delivery Service)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 3
+   =>   Mail Delivery Service
+Act Completion (Murder on the Owl Express)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express
+Act Completion (She Came from Outer Space)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space
+Act Completion (The Big Parade)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
+   =>   The Subcon Well -> Mafia Town - Act 7: Connection 1
+   =>   The Illness has Spread -> Mafia Town - Act 5: Connection 2
+   =>   The Big Parade
+Act Completion (The Birdhouse)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
+   =>   Alpine Skyline Area -> -> The Birdhouse
+   =>   The Birdhouse
+Act Completion (The Golden Vault)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Alpine Skyline
+   =>   Alpine Skyline -> Alpine Skyline - Free Roam
+   =>   The Golden Vault
+Act Completion (The Lava Cake)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
+   =>   Alpine Skyline Area -> -> The Lava Cake
+   =>   The Lava Cake
+Act Completion (The Windmill)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
+   =>   Alpine Skyline Area -> -> The Windmill
+   =>   The Windmill
+Act Completion (Time Rift - Curly Tail Trail)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Time Rift - Bazaar Portal - Entrance 2
+   =>   Time Rift - Curly Tail Trail
+Act Completion (Time Rift - Pipe)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Time Rift - The Owl Express Portal - Entrance 1
+   =>   Time Rift - Pipe
+Act Completion (Time Rift - Sewers)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Time Rift - Gallery Portal - Entrance 1
+   =>   Time Rift - Sewers
+Act Completion (Time Rift - Sleepy Subcon)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> Time Rift - Alpine Skyline Portal - Entrance 1
+   =>   Time Rift - Sleepy Subcon
+Act Completion (Time Rift - The Moon)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Time Rift - The Lab Portal - Entrance 1
+   =>   Time Rift - The Moon
+Act Completion (Time Rift - The Owl Express)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 5: Connection 1
+   =>   Contractual Obligations -> Time Rift - Pipe Portal - Entrance 1
+   =>   Time Rift - The Owl Express
+Act Completion (Time Rift - The Twilight Bell)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> Time Rift - Curly Tail Trail Portal - Entrance 1
+   =>   Time Rift - The Twilight Bell
+Act Completion (Time Rift - Village)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 2
+   =>   Picture Perfect -> Time Rift - The Moon Portal - Entrance 1
+   =>   Time Rift - Village
+Act Completion (Welcome to Mafia Town)
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 4
+   =>   Welcome to Mafia Town
+Alpine Skyline (Rift) - Page: Below Aqueduct
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 4
+   =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
+   =>   Time Rift - Alpine Skyline
+Alpine Skyline (Rift) - Page: Waterfall Wooden Pillar
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 4
+   =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
+   =>   Time Rift - Alpine Skyline
+Alpine Skyline - Ember Summit
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
+   =>   The Subcon Well -> Mafia Town - Act 7: Connection 1
+   =>   The Illness has Spread -> TIHS -> Alpine Skyline Area (TIHS)
+   =>   Alpine Skyline Area (TIHS)
+Alpine Skyline - Goat Refinery
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
+   =>   The Subcon Well -> Mafia Town - Act 7: Connection 1
+   =>   The Illness has Spread -> TIHS -> Alpine Skyline Area (TIHS)
+   =>   Alpine Skyline Area (TIHS)
+Alpine Skyline - The Birdhouse: Alpine Crow Mini-Gauntlet
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
+   =>   Alpine Skyline Area -> -> The Birdhouse
+   =>   The Birdhouse
+Alpine Skyline - The Birdhouse: Dweller Platforms Relic
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
+   =>   Alpine Skyline Area -> -> The Birdhouse
+   =>   The Birdhouse
+Alpine Skyline - The Birdhouse: Outer Edge
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
+   =>   Alpine Skyline Area -> -> The Birdhouse
+   =>   The Birdhouse
+Alpine Skyline - The Lava Cake: Outer Island Chest
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
+   =>   Alpine Skyline Area -> -> The Lava Cake
+   =>   The Lava Cake
+Alpine Skyline - The Lava Cake: Top Cake
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
+   =>   Alpine Skyline Area -> -> The Lava Cake
+   =>   The Lava Cake
+Alpine Skyline - The Purrloined Village: Horned Stone
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
+   =>   Alpine Skyline Area
+Alpine Skyline - The Twilight Bell: Ice Platform
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
+   =>   Alpine Skyline Area -> -> The Twilight Bell
+   =>   The Twilight Bell
+Alpine Skyline - The Windmill: Dropdown
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
+   =>   Alpine Skyline Area -> -> The Windmill
+   =>   The Windmill
+Alpine Skyline - Windy Passage
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
+   =>   The Subcon Well -> Mafia Town - Act 7: Connection 1
+   =>   The Illness has Spread -> TIHS -> Alpine Skyline Area (TIHS)
+   =>   Alpine Skyline Area (TIHS)
+Badge Seller - Item 2
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 3: Connection 1
+   =>   Train Rush -> TR -> Badge Seller
+   =>   Badge Seller
+Badge Seller - Item 4
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 3: Connection 1
+   =>   Train Rush -> TR -> Badge Seller
+   =>   Badge Seller
+Badge Seller - Item 7
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 3: Connection 1
+   =>   Train Rush -> TR -> Badge Seller
+   =>   Badge Seller
+Badge Seller - Item 8
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 3: Connection 1
+   =>   Train Rush -> TR -> Badge Seller
+   =>   Badge Seller
+Birdhouse Cleared
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
+   =>   Alpine Skyline Area -> -> The Birdhouse
+   =>   The Birdhouse
+Dead Bird Studio (Rift) - Page: Behind Cardboard Planet
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Alpine Skyline
+   =>   Alpine Skyline -> Alpine Skyline - Finale
+   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
+   =>   Time Rift - Dead Bird Studio
+Dead Bird Studio (Rift) - Page: Lava Lamp
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Alpine Skyline
+   =>   Alpine Skyline -> Alpine Skyline - Finale
+   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
+   =>   Time Rift - Dead Bird Studio
+Dead Bird Studio (Rift) - Page: Top of Metal Bar
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Alpine Skyline
+   =>   Alpine Skyline -> Alpine Skyline - Finale
+   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
+   =>   Time Rift - Dead Bird Studio
+Dead Bird Studio - DJ Grooves Sign Chest
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Alpine Skyline
+   =>   Alpine Skyline -> Alpine Skyline - Finale
+   =>   Dead Bird Studio -> DBS -> Post Elevator Area
+   =>   Dead Bird Studio - Post Elevator Area
+Dead Bird Studio - Tepee Chest
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Alpine Skyline
+   =>   Alpine Skyline -> Alpine Skyline - Finale
+   =>   Dead Bird Studio -> DBS -> Post Elevator Area
+   =>   Dead Bird Studio - Post Elevator Area
+Dead Bird Studio - Tightrope Chest
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Alpine Skyline
+   =>   Alpine Skyline -> Alpine Skyline - Finale
+   =>   Dead Bird Studio -> DBS -> Post Elevator Area
+   =>   Dead Bird Studio - Post Elevator Area
+Dead Bird Studio - Up the Ladder
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> DBS Basement -> Elevator Area
+   =>   Dead Bird Studio - Elevator Area
+Dead Bird Studio Basement - Cameras
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement
+Dead Bird Studio Basement - Locked Room
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement
+Dead Bird Studio Basement - Logo Wall
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement
+Dead Bird Studio Basement - Tightrope
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement
+Dead Bird Studio Basement - Vent Pipe
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement
+HUMT Access
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> Battle of the Birds - Finale A: Connection 1
+   =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
+   =>   Heating Up Mafia Town
+Lava Cake Cleared
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
+   =>   Alpine Skyline Area -> -> The Lava Cake
+   =>   The Lava Cake
+Mafia Boss Shop Item
+        Menu -> Save File -> Spaceship
+   =>   Spaceship
+Mafia HQ - Secret Room
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 1
+   =>   Down with the Mafia!
+Mafia Town - Beach Patio
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town Entrance SCFOS
+   =>   Mafia Town Area -> MT Area -> MT Area (HUMT)
+   =>   Mafia Town Area (HUMT)
+Mafia Town - Beneath Scaffolding
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town Entrance SCFOS
+   =>   Mafia Town Area -> MT Area -> MT Area (HUMT)
+   =>   Mafia Town Area (HUMT)
+Mafia Town - Cargo Ship
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town Entrance SCFOS
+   =>   Mafia Town Area -> MT Area -> MT Area (HUMT)
+   =>   Mafia Town Area (HUMT)
+Mafia Town - Chest Beneath Aqueduct
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town Entrance SCFOS
+   =>   Mafia Town Area -> MT Area -> MT Area (HUMT)
+   =>   Mafia Town Area (HUMT)
+Mafia Town - Clock Tower Chest
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town Entrance SCFOS
+   =>   Mafia Town Area -> MT Area -> MT Area (HUMT)
+   =>   Mafia Town Area (HUMT)
+Mafia Town - Crow Chest
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town Entrance SCFOS
+   =>   Mafia Town Area -> MT Area -> MT Area (HUMT)
+   =>   Mafia Town Area (HUMT)
+Mafia Town - Hidden Buttons Chest
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town Entrance SCFOS
+   =>   Mafia Town Area
+Mafia Town - Ledge Chest
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town Entrance SCFOS
+   =>   Mafia Town Area -> MT Area -> MT Area (HUMT)
+   =>   Mafia Town Area (HUMT)
+Mafia Town - Mafia Geek Platform
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town Entrance SCFOS
+   =>   Mafia Town Area -> MT Area -> MT Area (HUMT)
+   =>   Mafia Town Area (HUMT)
+Mafia Town - On Scaffolding
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town Entrance SCFOS
+   =>   Mafia Town Area -> MT Area -> MT Area (HUMT)
+   =>   Mafia Town Area (HUMT)
+Mafia Town - Palm Tree
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town Entrance SCFOS
+   =>   Mafia Town Area
+Mafia Town - Port
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town Entrance SCFOS
+   =>   Mafia Town Area
+Mafia Town - Secret Cave
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town Entrance SCFOS
+   =>   Mafia Town Area -> MT Area -> MT Area (HUMT)
+   =>   Mafia Town Area (HUMT)
+Mafia Town - Small Boat
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town Entrance SCFOS
+   =>   Mafia Town Area
+Mafia Town - Steel Beam Nest
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town Entrance SCFOS
+   =>   Mafia Town Area -> MT Area -> MT Area (HUMT)
+   =>   Mafia Town Area (HUMT)
+Mafia Town - Top of Lighthouse
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town Entrance SCFOS
+   =>   Mafia Town Area -> MT Area -> MT Area (HUMT)
+   =>   Mafia Town Area (HUMT)
+Mafia Town - Top of Ruined Tower
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town Entrance SCFOS
+   =>   Mafia Town Area -> MT Area -> MT Area (HUMT)
+   =>   Mafia Town Area (HUMT)
+Mafia Town - Wood Cage
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town Entrance SCFOS
+   =>   Mafia Town Area -> MT Area -> MT Area (HUMT)
+   =>   Mafia Town Area (HUMT)
+Mafia of Cooks - Page: Beside Red Building
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 5: Connection 1
+   =>   Contractual Obligations -> Time Rift - Sleepy Subcon Portal - Entrance 1
+   =>   Time Rift - Mafia of Cooks
+Mafia of Cooks - Page: Top of Boat
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 5: Connection 1
+   =>   Contractual Obligations -> Time Rift - Sleepy Subcon Portal - Entrance 1
+   =>   Time Rift - Mafia of Cooks
+Murder on the Owl Express - Lounge Chest
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express
+Murder on the Owl Express - Raven Suite Room
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express
+Murder on the Owl Express - Raven Suite Top
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express
+Queen Vanessa's Manor - Bedroom Chest
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 1
+   =>   Down with the Mafia! -> Subcon Forest - Finale: Connection 1
+   =>   Queen Vanessa's Manor
+Queen Vanessa's Manor - Cellar
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 1
+   =>   Down with the Mafia! -> Subcon Forest - Finale: Connection 1
+   =>   Queen Vanessa's Manor
+Queen Vanessa's Manor - Chandelier
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 1
+   =>   Down with the Mafia! -> Subcon Forest - Finale: Connection 1
+   =>   Queen Vanessa's Manor
+Sleepy Subcon - Page: Behind 2nd Rift Gate
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> Time Rift - Alpine Skyline Portal - Entrance 1
+   =>   Time Rift - Sleepy Subcon
+Sleepy Subcon - Page: Behind Crane
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> Time Rift - Alpine Skyline Portal - Entrance 1
+   =>   Time Rift - Sleepy Subcon
+Sleepy Subcon - Page: Behind Entrance Area
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> Time Rift - Alpine Skyline Portal - Entrance 1
+   =>   Time Rift - Sleepy Subcon
+Sleepy Subcon - Page: Near Wrecking Ball
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> Time Rift - Alpine Skyline Portal - Entrance 1
+   =>   Time Rift - Sleepy Subcon
+Sleepy Subcon - Page: Secret Library
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> Time Rift - Alpine Skyline Portal - Entrance 1
+   =>   Time Rift - Sleepy Subcon
+Sleepy Subcon - Page: Wrecked Treehouse
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> Time Rift - Alpine Skyline Portal - Entrance 1
+   =>   Time Rift - Sleepy Subcon
+Snatcher's Contract - Mail Delivery Service
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom -> Subcon Forest Entrance TOD
+   =>   Subcon Forest Area
+Snatcher's Contract - Queen Vanessa's Manor
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom -> Subcon Forest Entrance TOD
+   =>   Subcon Forest Area
+Spaceship - Rumbi Abuse
+        Menu -> Save File -> Spaceship
+   =>   Spaceship
+Subcon Forest - Burning House
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom -> Subcon Forest Entrance TOD
+   =>   Subcon Forest Area
+Subcon Forest - Dweller Platforming Tree A
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom -> Subcon Forest Entrance TOD
+   =>   Subcon Forest Area
+Subcon Forest - Dweller Shack
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom -> Subcon Forest Entrance TOD
+   =>   Subcon Forest Area
+Subcon Forest - Gallows
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom -> Subcon Forest Entrance TOD
+   =>   Subcon Forest Area
+Subcon Forest - Green and Purple Dweller Rocks
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom -> Subcon Forest Entrance TOD
+   =>   Subcon Forest Area
+Subcon Forest - Magnet Badge Bush
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom -> Subcon Forest Entrance TOD
+   =>   Subcon Forest Area
+Subcon Forest - Noose Treehouse
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom -> Subcon Forest Entrance TOD
+   =>   Subcon Forest Area
+Subcon Forest - Spider Bone Cage B
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom -> Subcon Forest Entrance TOD
+   =>   Subcon Forest Area
+Subcon Forest - Swamp Gravestone
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom -> Subcon Forest Entrance TOD
+   =>   Subcon Forest Area
+Subcon Forest - Swamp Ice Wall
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom -> Subcon Forest Entrance TOD
+   =>   Subcon Forest Area
+Subcon Forest - Swamp Tree A
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom -> Subcon Forest Entrance TOD
+   =>   Subcon Forest Area
+Subcon Forest - Swamp Tree B
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom -> Subcon Forest Entrance TOD
+   =>   Subcon Forest Area
+Subcon Forest - Swamp Tree Chest
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom -> Subcon Forest Entrance TOD
+   =>   Subcon Forest Area
+Subcon Forest - Swamp Treehouse
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom -> Subcon Forest Entrance TOD
+   =>   Subcon Forest Area
+Subcon Village - Graveyard Ice Cube
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom -> Subcon Forest Entrance TOD
+   =>   Subcon Forest Area
+Subcon Village - Snatcher Statue Chest
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom -> Subcon Forest Entrance TOD
+   =>   Subcon Forest Area -> SF Area -> SF Behind Boss Firewall
+   =>   Subcon Forest Behind Boss Firewall
+Subcon Village - Stump Platform Chest
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom -> Subcon Forest Entrance TOD
+   =>   Subcon Forest Area
+Subcon Well - Above Chest
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
+   =>   The Subcon Well
+Subcon Well - Hookshot Badge Chest
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
+   =>   The Subcon Well
+Subcon Well - On Pipe
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
+   =>   The Subcon Well
+TIHS Access
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Murder on the Owl Express -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
+   =>   The Subcon Well -> Mafia Town - Act 7: Connection 1
+   =>   The Illness has Spread
+TOD Access
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 5
+   =>   Toilet of Doom
+Time Piece Cluster
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Time's End
+   =>   Time's End -> Time's End - Act 1
+   =>   The Finale
+Twilight Bell Cleared
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
+   =>   Alpine Skyline Area -> -> The Twilight Bell
+   =>   The Twilight Bell
+Welcome to Mafia Town - Umbrella
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Subcon Forest
+   =>   Subcon Forest -> Subcon Forest - Act 4
+   =>   Welcome to Mafia Town
+Windmill Cleared
+        Menu -> Save File -> Spaceship
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Dead Bird Studio Basement -> Battle of the Birds - Act 2: Connection 1
+   =>   Barrel Battle -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> AFR -> Alpine Skyline Area
+   =>   Alpine Skyline Area -> -> The Windmill
+   =>   The Windmill

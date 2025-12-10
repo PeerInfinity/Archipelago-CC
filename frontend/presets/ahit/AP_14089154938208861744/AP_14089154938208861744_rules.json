@@ -8048,5 +8048,180 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "can_use_hat": {
+        "params": [
+          "hat"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "attribute",
+            "object": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
+              },
+              "attr": "options"
+            },
+            "attr": "HatItems"
+          },
+          "if_true": {
+            "type": "item_check",
+            "item": {
+              "type": "subscript",
+              "value": {
+                "type": "name",
+                "name": "hat_type_to_item"
+              },
+              "index": {
+                "type": "name",
+                "name": "hat"
+              }
+            }
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "subscript",
+                "value": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "world"
+                  },
+                  "attr": "hat_yarn_costs"
+                },
+                "index": {
+                  "type": "name",
+                  "name": "hat"
+                }
+              },
+              "op": "<=",
+              "right": {
+                "type": "constant",
+                "value": 0
+              }
+            },
+            "if_true": {
+              "type": "constant",
+              "value": true
+            },
+            "if_false": {
+              "type": "item_check",
+              "item": "Yarn",
+              "count": {
+                "type": "helper",
+                "name": "get_hat_cost",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "hat"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "get_difficulty": {
+        "type": "helper",
+        "name": "Difficulty",
+        "args": [
+          {
+            "type": "attribute",
+            "object": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
+              },
+              "attr": "options"
+            },
+            "attr": "LogicDifficulty"
+          }
+        ]
+      },
+      "get_hat_cost": {
+        "params": [
+          "hat"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "cost",
+              "value": {
+                "type": "constant",
+                "value": 0
+              }
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "name",
+                "name": "cost"
+              }
+            }
+          ]
+        }
+      },
+      "has_relic_combo": {
+        "params": [
+          "relic"
+        ],
+        "body": {
+          "type": "group_check",
+          "group": {
+            "type": "name",
+            "name": "relic"
+          },
+          "count": {
+            "type": "helper",
+            "name": "len",
+            "args": [
+              {
+                "type": "subscript",
+                "value": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "world"
+                  },
+                  "attr": "item_name_groups"
+                },
+                "index": {
+                  "type": "name",
+                  "name": "relic"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "painting_logic": {
+        "type": "helper",
+        "name": "bool",
+        "args": [
+          {
+            "type": "attribute",
+            "object": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
+              },
+              "attr": "options"
+            },
+            "attr": "ShuffleSubconPaintings"
+          }
+        ]
+      }
+    }
+  }
 }

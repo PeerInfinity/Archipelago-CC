@@ -399,6 +399,38 @@
           "AP_84719271504320872445_rules.json",
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
+      },
+      "AP_05594871498841892311": {
+        "seed": 4,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Hat in Time"
+          }
+        ],
+        "files": [
+          "AP_05594871498841892311.archipelago",
+          "AP_05594871498841892311_Spoiler.txt",
+          "AP_05594871498841892311_rules.json",
+          "AP_05594871498841892311_sphere_log.jsonl"
+        ]
+      },
+      "AP_96945849220684217413": {
+        "seed": 5,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Hat in Time"
+          }
+        ],
+        "files": [
+          "AP_96945849220684217413.archipelago",
+          "AP_96945849220684217413_Spoiler.txt",
+          "AP_96945849220684217413_rules.json",
+          "AP_96945849220684217413_sphere_log.jsonl"
+        ]
       }
     },
     "test_result": {

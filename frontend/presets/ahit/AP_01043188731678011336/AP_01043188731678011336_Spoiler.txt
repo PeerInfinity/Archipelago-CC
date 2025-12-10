@@ -476,8 +476,8 @@ Act Completion (Award Ceremony)
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
    =>   She Came from Outer Space -> Battle of the Birds - Act 2: Connection 1
-   =>   Down with the Mafia! -> Battle of the Birds - Act 5: Connection 1
-   =>   Train Rush -> Battle of the Birds - Finale A: Connection 2
+   =>   Down with the Mafia! -> Battle of the Birds - Act 4: Connection 1
+   =>   Dead Bird Studio -> Battle of the Birds - Finale A: Connection 1
    =>   Award Ceremony
 Act Completion (Barrel Battle)
         Menu -> Save File -> Spaceship
@@ -509,8 +509,8 @@ Act Completion (Mail Delivery Service)
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
    =>   She Came from Outer Space -> Battle of the Birds - Act 2: Connection 1
-   =>   Down with the Mafia! -> Battle of the Birds - Act 5: Connection 1
-   =>   Train Rush -> Battle of the Birds - Finale A: Connection 2
+   =>   Down with the Mafia! -> Battle of the Birds - Act 4: Connection 1
+   =>   Dead Bird Studio -> Battle of the Birds - Finale A: Connection 1
    =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
    =>   Mail Delivery Service
 Act Completion (Picture Perfect)
