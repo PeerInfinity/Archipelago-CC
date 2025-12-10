@@ -175,7 +175,6 @@
  * - Castlevania - Circle of the Moon
  * - DLCQuest
  * - Hollow Knight
- * - Hylics 2
  * - Inscryption
  * - Kingdom Hearts
  * - Pokemon Red and Blue
@@ -230,8 +229,6 @@ import * as factorioLogic from './factorio/factorioLogic.js';
 import { factorioStateModule } from './factorio/factorioLogic.js';
 import * as hkLogic from './hk/hkLogic.js';
 import { hkStateModule } from './hk/hkLogic.js';
-import * as hylics2Logic from './hylics2/hylics2Logic.js';
-import { hylics2StateModule } from './hylics2/hylics2Logic.js';
 import * as inscryptionLogic from './inscryption/inscryptionLogic.js';
 import { inscryptionStateModule } from './inscryption/inscryptionLogic.js';
 import * as jakanddaxterLogic from './jakanddaxter/jakanddaxterLogic.js';
@@ -363,12 +360,6 @@ const GAME_REGISTRY = {
     helperFunctions: hkLogic.helperFunctions,
     worldClasses: ['HKWorld'],
     aliases: ['Hollow Knight', 'HK']
-  },
-  'Hylics 2': {
-    logicModule: hylics2Logic.hylics2StateModule,
-    helperFunctions: hylics2Logic.helperFunctions,
-    worldClasses: ['Hylics2World'],
-    aliases: ['Hylics 2', 'Hylics2']
   },
   'Inscryption': {
     logicModule: inscryptionLogic.inscryptionStateModule,
