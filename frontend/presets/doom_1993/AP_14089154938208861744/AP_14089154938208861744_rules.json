@@ -11215,15 +11215,15 @@
         "episode3": 1,
         "episode4": 0,
         "exclude_locations": [
-          "Command Control (E1M4) - Supercharge",
-          "Containment Area (E2M2) - Supercharge",
-          "Pandemonium (E3M3) - Mega Armor",
-          "Mt. Erebus (E3M6) - Chainsaw",
-          "Unholy Cathedral (E3M5) - BFG9000",
           "Command Control (E1M4) - Mega Armor",
+          "Command Control (E1M4) - Supercharge",
+          "Containment Area (E2M2) - Plasma gun",
+          "Containment Area (E2M2) - Supercharge",
           "House of Pain (E3M4) - Chaingun",
           "House of Pain (E3M4) - Invulnerability",
-          "Containment Area (E2M2) - Plasma gun"
+          "Mt. Erebus (E3M6) - Chainsaw",
+          "Pandemonium (E3M3) - Mega Armor",
+          "Unholy Cathedral (E3M5) - BFG9000"
         ],
         "flip_levels": 0,
         "goal": 0,

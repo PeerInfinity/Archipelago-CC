@@ -1736,6 +1736,45 @@ def process_progression_mapping(multiworld, player: int) -> Dict[str, Any]:
         logger.exception("Traceback:")
         return {} # Return empty on error
 
+
+def sort_lists_for_consistency(data):
+    """
+    Recursively sort lists of simple types (strings, numbers) for consistent JSON output.
+
+    This handles cases like slot_data containing lists that may be in arbitrary order
+    (e.g., Terraria's goal list). It only sorts lists where all elements are of
+    comparable simple types to avoid breaking structured data.
+
+    Args:
+        data: The data structure to process
+
+    Returns:
+        The data structure with sortable lists sorted
+    """
+    if data is None or isinstance(data, (bool, int, float, str)):
+        return data
+
+    if isinstance(data, list):
+        # First, recursively process all items
+        processed = [sort_lists_for_consistency(item) for item in data]
+
+        # Only sort if all items are simple comparable types (str, int, float)
+        # and the list is non-empty
+        if processed and all(isinstance(item, (str, int, float)) for item in processed):
+            # Sort strings and numbers (convert to string for consistent sorting of mixed types)
+            try:
+                return sorted(processed, key=lambda x: (type(x).__name__, x))
+            except TypeError:
+                # If comparison fails, return unsorted
+                return processed
+        return processed
+
+    if isinstance(data, dict):
+        return {k: sort_lists_for_consistency(v) for k, v in data.items()}
+
+    return data
+
+
 def cleanup_export_data(data):
     """
     Clean up specific fields in the export data that need special handling.
@@ -1801,7 +1840,13 @@ def cleanup_export_data(data):
                         if 'progress_type' in location and isinstance(location['progress_type'], str):
                             if location['progress_type'].isdigit():
                                 location['progress_type'] = int(location['progress_type'])
-    
+
+    # Sort lists in game_info (including slot_data) for consistent output
+    # This handles cases like Terraria's goal list and Witness's disabled_entities
+    if 'game_info' in data:
+        for player_id, game_info in data['game_info'].items():
+            data['game_info'][player_id] = sort_lists_for_consistency(game_info)
+
     return data
 
 # --- Helper for Field Exclusion ---

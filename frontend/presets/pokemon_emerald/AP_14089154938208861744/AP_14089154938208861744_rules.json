@@ -47933,18 +47933,18 @@
         "ability_blacklist": [],
         "accessibility": 0,
         "allowed_legendary_hunt_encounters": [
-          "Lugia",
-          "Regirock",
-          "Kyogre",
-          "Latios",
-          "Groudon",
-          "Latias",
-          "Mew",
-          "Regice",
           "Deoxys",
-          "Registeel",
+          "Groudon",
           "Ho-Oh",
-          "Rayquaza"
+          "Kyogre",
+          "Latias",
+          "Latios",
+          "Lugia",
+          "Mew",
+          "Rayquaza",
+          "Regice",
+          "Regirock",
+          "Registeel"
         ],
         "badges": 2,
         "berry_trees": 0,
@@ -47966,11 +47966,11 @@
         "fanfares": 0,
         "force_fully_evolved": 100,
         "free_fly_blacklist": [
-          "Oldale Town",
+          "Dewford Town",
           "Littleroot Town",
-          "Rustboro City",
+          "Oldale Town",
           "Petalburg City",
-          "Dewford Town"
+          "Rustboro City"
         ],
         "free_fly_location": 0,
         "goal": 0,
