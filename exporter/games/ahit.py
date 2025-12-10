@@ -1,4 +1,17 @@
-"""A Hat in Time game-specific exporter handler."""
+"""A Hat in Time game-specific exporter handler.
+
+Helper Export Status:
+- can_use_hat: Exported to rules.json, JS fallback still needed
+- get_hat_cost: Exported to rules.json, JS fallback still needed
+- has_relic_combo: Exported to rules.json, JS fallback still needed
+- painting_logic: Exported to rules.json, JS fallback still needed
+- get_difficulty: Exported to rules.json, JS fallback still needed
+- can_clear_required_act: NOT exported (uses region reachability), requires JS
+
+Note: JavaScript helpers in ahitLogic.js are still required as fallback
+because some rule engine code paths use executeHelper() instead of
+evaluating the exported helper definitions directly.
+"""
 
 from typing import Dict, Any, Set
 from .base import BaseGameExportHandler
@@ -21,20 +34,8 @@ class AHitGameExportHandler(BaseGameExportHandler):
 
     # Blacklist helpers that are too complex to analyze automatically:
     # - can_clear_required_act: Uses multiworld.get_entrance and region reachability
-    # - can_use_hat: Uses loop in get_hat_cost to calculate cumulative yarn costs
-    # - get_hat_cost: Has loop through hat_craft_order
-    # - has_relic_combo: Uses state.has_group which needs special handling
-    # - get_relic_count: Uses state.count_group which needs special handling
-    # - painting_logic: Settings lookup (analyzer exports as world.options reference)
-    # - get_difficulty: Settings lookup (analyzer exports as world.options reference)
     HELPERS_TO_EXPORT_BLACKLIST: Set[str] = {
         'can_clear_required_act',
-        'can_use_hat',
-        'get_hat_cost',
-        'has_relic_combo',
-        'get_relic_count',
-        'painting_logic',
-        'get_difficulty',
     }
 
     # Preserve these helpers as helper calls (don't inline their bodies)
@@ -44,9 +45,6 @@ class AHitGameExportHandler(BaseGameExportHandler):
         'can_use_hat',
         'get_hat_cost',
         'has_relic_combo',
-        'get_relic_count',
-        'painting_logic',
-        'get_difficulty',
     }
 
     def get_settings_data(self, world, multiworld, player):
