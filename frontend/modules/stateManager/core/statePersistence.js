@@ -344,8 +344,28 @@ export function _createSelfSnapshotInterface(sm) {
         : (sm.state &&
           typeof sm.state.hasFlag === 'function' &&
           sm.state.hasFlag(flagName))),
-    getSetting: (settingName) =>
-      sm.settings ? sm.settings[settingName] : undefined,
+    getSetting: (settingName) => {
+      if (!sm.settings) {
+        return undefined;
+      }
+      // Check if settings is keyed by player ID (multiworld case)
+      // JSON keys are always strings, so convert playerId to string for lookup
+      let settingsToUse = sm.settings;
+      const playerIdKey = String(sm.playerId);
+      if (sm.settings[playerIdKey] && typeof sm.settings[playerIdKey] === 'object') {
+        settingsToUse = sm.settings[playerIdKey];
+      }
+      const rawValue = settingsToUse[settingName];
+      // Normalize "off"/"none" type strings to falsy values
+      // Choice options in Python use 0 for "off"/"none" which get exported as strings
+      if (typeof rawValue === 'string') {
+        const lowerValue = rawValue.toLowerCase();
+        if (lowerValue === 'off' || lowerValue === 'none' || lowerValue === 'false' || lowerValue === '') {
+          return 0;
+        }
+      }
+      return rawValue;
+    },
     getAllSettings: () => sm.settings,
     isRegionReachable: (regionName) => sm.isRegionReachable(regionName),
     isRegionAccessible: (regionName) => sm.isRegionReachable(regionName), // Alias for isRegionReachable

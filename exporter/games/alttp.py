@@ -25,7 +25,7 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         'can_get_good_bee',
         'can_kill_most_things',
         'can_shoot_arrows',
-        'can_use_bombs',
+        # 'can_use_bombs',  # Now works with min/max and setting_value support
         'has_crystals',
         'has_crystals_for_ganon',
         'has_hearts',

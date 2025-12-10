@@ -19786,6 +19786,195 @@
           }
         ]
       },
+      "can_use_bombs": {
+        "params": [
+          "quantity"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "bombs",
+              "value": {
+                "type": "conditional",
+                "test": {
+                  "type": "setting_value",
+                  "setting": "bombless_start"
+                },
+                "if_true": {
+                  "type": "constant",
+                  "value": 0
+                },
+                "if_false": {
+                  "type": "constant",
+                  "value": 10
+                }
+              }
+            },
+            {
+              "type": "assign",
+              "name": "bombs",
+              "op": "+=",
+              "value": {
+                "type": "binary_op",
+                "left": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Bomb Upgrade (+5)"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 5
+                    }
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Bomb Upgrade (+10)"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 10
+                    }
+                  }
+                },
+                "op": "+",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Bomb Upgrade (50)"
+                      }
+                    ]
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "constant",
+                    "value": 50
+                  }
+                }
+              }
+            },
+            {
+              "type": "assign",
+              "name": "bombs",
+              "op": "+=",
+              "value": {
+                "type": "max",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 0
+                  },
+                  {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "state_method",
+                        "method": "count",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Bomb Upgrade (+5)"
+                          }
+                        ]
+                      },
+                      "op": "-",
+                      "right": {
+                        "type": "constant",
+                        "value": 6
+                      }
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 10
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "conditional",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "setting_value",
+                      "setting": "shuffle_capacity_upgrades"
+                    }
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Capacity Upgrade Shop"
+                  }
+                ]
+              },
+              "if_true": {
+                "type": "assign",
+                "name": "bombs",
+                "op": "+=",
+                "value": {
+                  "type": "constant",
+                  "value": 40
+                }
+              },
+              "if_false": null
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "bombs"
+                },
+                "op": ">=",
+                "right": {
+                  "type": "min",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 1
+                    },
+                    {
+                      "type": "constant",
+                      "value": 50
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
       "cross_peg_bridge": {
         "type": "and",
         "conditions": [

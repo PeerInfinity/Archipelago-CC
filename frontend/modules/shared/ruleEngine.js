@@ -1675,9 +1675,15 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
       case 'setting_value': {
         // Retrieve a setting value (e.g. for self.world.options.difficulty)
+        // Note: Choice options in Python use 0 for "off"/"none" states, which are exported
+        // as strings like 'off', 'none', 'false'. These should be treated as falsy in JS.
         let settingName = rule.setting;
         if (typeof settingName === 'string') {
-          result = context.getSetting(settingName);
+          const rawValue = context.getSetting(settingName);
+          // Normalize certain string values to be falsy
+          // This handles Choice options where 0='off'/'none' etc.
+          // The normalization of 'off'/'none' strings is now handled in stateInterface.getSetting
+          result = rawValue;
         } else {
           log('warn', '[evaluateRule] Invalid setting name for setting_value', {
             rule,
@@ -2280,9 +2286,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         // Create a new scope for this block (inheriting from parent scope)
-        const blockScope = localScope !== null ? { ...localScope } : {};
+        // Track if this is a top-level block (localScope was null)
+        const isTopLevelBlock = localScope === null;
+        const blockScope = isTopLevelBlock ? {} : { ...localScope };
 
-        for (const stmt of rule.statements) {
+        for (let i = 0; i < rule.statements.length; i++) {
+          const stmt = rule.statements[i];
           const stmtResult = evaluateRule(stmt, context, depth + 1, blockScope);
 
           // Check for early return (marked with __isReturn)
@@ -2291,6 +2300,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             break;
           }
           result = stmtResult;
+        }
+
+        // If this is a top-level block, unwrap the return value
+        // Nested blocks keep the marker so outer blocks can propagate
+        if (isTopLevelBlock && result && typeof result === 'object' && result.__isReturn) {
+          result = result.value;
         }
         break;
       }
