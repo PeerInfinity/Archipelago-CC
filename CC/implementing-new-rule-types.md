@@ -277,6 +277,81 @@ case 'max': {
 }
 ```
 
+### Example 5: `setting_value` Pattern Detection (commit 52fe9b0a)
+
+**Problem:** Helpers accessing world options like `state.multiworld.worlds[player].options.bombless_start` produced verbose, deeply nested attribute chains in the exported rules that the frontend couldn't evaluate.
+
+**Python pattern:**
+```python
+# Common pattern in helpers that check game settings
+if state.multiworld.worlds[player].options.bombless_start:
+    bombs = 0
+else:
+    bombs = 10
+```
+
+**Solution:** Add pattern detection to recognize this specific attribute chain and convert it to a simple `setting_value` rule type.
+
+**Analyzer change** (add helper method to `ASTVisitorMixin` class):
+```python
+def _is_world_options_pattern(self, node):
+    """
+    Detect the pattern: state.multiworld.worlds[player].options.<setting>
+    Returns the setting name if matched, None otherwise.
+    """
+    if not isinstance(node, ast.Attribute):
+        return None
+
+    setting_name = node.attr
+
+    # Check .options
+    if not isinstance(node.value, ast.Attribute) or node.value.attr != 'options':
+        return None
+
+    # Check [player] subscript
+    subscript = node.value.value
+    if not isinstance(subscript, ast.Subscript):
+        return None
+    if not isinstance(subscript.slice, ast.Name) or subscript.slice.id != 'player':
+        return None
+
+    # Check .worlds
+    worlds_attr = subscript.value
+    if not isinstance(worlds_attr, ast.Attribute) or worlds_attr.attr != 'worlds':
+        return None
+
+    # Check .multiworld
+    multiworld_attr = worlds_attr.value
+    if not isinstance(multiworld_attr, ast.Attribute) or multiworld_attr.attr != 'multiworld':
+        return None
+
+    # Check state (or world)
+    state_name = multiworld_attr.value
+    if not isinstance(state_name, ast.Name) or state_name.id not in ('state', 'world'):
+        return None
+
+    return setting_name
+```
+
+**Usage in `visit_Attribute()`:**
+```python
+def visit_Attribute(self, node):
+    # Check for state.multiworld.worlds[player].options.<setting> pattern
+    setting_name = self._is_world_options_pattern(node)
+    if setting_name:
+        logging.debug(f"Detected world options pattern, setting: {setting_name}")
+        return {'type': 'setting_value', 'setting': setting_name}
+
+    # ... rest of visit_Attribute
+```
+
+**Result:** Instead of a deeply nested attribute structure, the exported rule is simply:
+```json
+{"type": "setting_value", "setting": "bombless_start"}
+```
+
+**Key insight:** Pattern detection is useful when Python code uses a common idiom that produces verbose output. By detecting the pattern early in the analyzer, you can emit a simpler, more semantic rule type that the frontend can easily evaluate.
+
 ## Debugging Tips
 
 ### Print Analyzer Output
