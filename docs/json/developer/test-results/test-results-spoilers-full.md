@@ -6,11 +6,11 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2025-12-10 06:37:24
+**Generated:** 2025-12-10 20:15:54
 
-**Source Data Created:** 2025-12-10T05:33:42.229635
+**Source Data Created:** 2025-12-10T20:15:53.438646
 
-**Source Data Last Updated:** 2025-12-10T05:33:42.229640
+**Source Data Last Updated:** 2025-12-10T20:15:53.438652
 
 ## Summary
 
@@ -24,13 +24,13 @@
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
-| A Hat in Time | ❌ Failed | 0 | 0.46 | 5.21 | 🟠 8.8% | 6.1KB | 10.3KB |
-| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 32.8KB | 59.8KB |
+| A Hat in Time | ❌ Failed | 1 | 5.21 | 5.21 | 🟡 100.0% | 6.0KB | 10.3KB |
+| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 33.0KB | 59.8KB |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Aquaria | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 4.8KB | ✅ |
-| Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.18 | 10.18 | 🟢 Complete | 16.2KB | 38.2KB |
+| Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.18 | 10.18 | 🟢 Complete | 1.6KB | 38.2KB |
 | Bumper Stickers | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | 0 | 4.41 | 4.41 | 🟢 Complete | 10.2KB | 5.7KB |
 | Castlevania 64 | ✅ Passed | 0 | 5.6 | 5.6 | 🟢 Complete | 15.3KB | 2.0KB |
@@ -52,7 +52,7 @@
 | Hylics 2 | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 1.0KB | 6.6KB |
 | Inscryption | ✅ Passed | 0 | 10.2 | 10.2 | 🟢 Complete | 11.3KB | 6.2KB |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | 14.1 | 14.1 | 🟢 Complete | 13.2KB | 4.2KB |
-| Kingdom Hearts | ✅ Passed | 0 | 10.8 | 10.8 | 🟢 Complete | 50.8KB | 19.5KB |
+| Kingdom Hearts | ❌ Failed | 0 | 9.39 | 10.8 | 🟡 86.9% | 50.8KB | 19.5KB |
 | Kingdom Hearts 2 | ✅ Passed | 0 | 15.2 | 15.2 | 🟢 Complete | 11.2KB | 112.6KB |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | 11.3 | 11.3 | 🟢 Complete | 10.1KB | 14.9KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 16.4KB | 9.1KB |
@@ -68,7 +68,7 @@
 | Muse Dash | ✅ Passed | 0 | 8.6 | 8.6 | 🟢 Complete | ✅ | ✅ |
 | Noita | ✅ Passed | 0 | 0.117 | 0.117 | 🟢 Complete | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | 0 | 7.6 | 7.6 | 🟢 Complete | 3.0KB | 1.2KB |
-| Overcooked! 2 | ❌ Failed | 0 | 5.2 | 18.3 | 🟡 28.4% | 26.5KB | 7.2KB |
+| Overcooked! 2 | ✅ Passed | 0 | 18.3 | 18.3 | 🟢 Complete | 26.5KB | 7.2KB |
 | Paint | ✅ Passed | 0 | 13.2 | 13.2 | 🟢 Complete | 5.8KB | 4.4KB |
 | Pokemon Emerald | ✅ Passed | 0 | 19.4 | 19.4 | 🟢 Complete | 6.2KB | 8.7KB |
 | Pokemon Red and Blue | ✅ Passed | 0 | 10.9 | 10.9 | 🟢 Complete | 12.2KB | 13.0KB |
@@ -92,7 +92,7 @@
 | Terraria | ✅ Passed | 0 | 9.6 | 9.6 | 🟢 Complete | 11.8KB | 4.6KB |
 | The Legend of Zelda | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 6.9KB | 1.7KB |
 | The Messenger | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 13.3KB | 3.3KB |
-| The Wind Waker | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 3.5KB | 55.3KB |
+| The Wind Waker | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 3.6KB | 55.3KB |
 | The Witness | ✅ Passed | 0 | 9.15 | 9.15 | 🟢 Complete | 23.7KB | 0.9KB |
 | Timespinner | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 5.4KB | 10.5KB |
 | Undertale | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
