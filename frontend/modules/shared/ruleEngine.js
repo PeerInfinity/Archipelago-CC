@@ -478,6 +478,49 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
 
+        // Handle can_buy and can_buy_unlimited using shop_items data
+        if (rule.name === 'can_buy' || rule.name === 'can_buy_unlimited') {
+          const itemName = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (itemName === undefined) {
+            result = undefined;
+            break;
+          }
+          // Get shop_items from settings
+          const shopItems = context.getSetting?.('shop_items');
+          if (!shopItems || !shopItems[itemName]) {
+            log('debug', `[evaluateRule] ${rule.name}: item '${itemName}' not found in shop_items`);
+            result = false;
+            break;
+          }
+          // Get the regions where this item can be bought
+          const regionsKey = rule.name === 'can_buy_unlimited' ? 'unlimited' : 'limited';
+          const regions = shopItems[itemName][regionsKey] || [];
+          if (regions.length === 0) {
+            result = false;
+            break;
+          }
+          // Check if ANY of the regions are reachable
+          if (typeof context.isRegionReachable !== 'function') {
+            log('warn', `[evaluateRule] ${rule.name}: context.isRegionReachable not available`);
+            result = undefined;
+            break;
+          }
+          result = regions.some(regionName => context.isRegionReachable(regionName));
+          break;
+        }
+
+        // Handle built-in Python functions
+        if (rule.name === 'int') {
+          // Python's int() function - truncate a float to an integer
+          const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (typeof value === 'number') {
+            result = Math.trunc(value);
+          } else {
+            result = undefined;
+          }
+          break;
+        }
+
         // Regular helper function handling
         const args = rule.args
           ? rule.args.map((arg) => evaluateRule(arg, context, depth + 1))

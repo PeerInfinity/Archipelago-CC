@@ -19595,7 +19595,135 @@
         "Ether"
       ],
       "misery_mire_medallion": "Quake",
-      "turtle_rock_medallion": "Ether"
+      "turtle_rock_medallion": "Ether",
+      "shop_items": {
+        "Red Potion": {
+          "unlimited": [
+            "Cave Shop (Dark Death Mountain)",
+            "Dark Lake Hylia Shop",
+            "Dark World Lumberjack Shop",
+            "Village of Outcasts Shop",
+            "Dark World Potion Shop",
+            "Light World Death Mountain Shop",
+            "Kakariko Shop",
+            "Cave Shop (Lake Hylia)",
+            "Potion Shop"
+          ],
+          "limited": [
+            "Cave Shop (Dark Death Mountain)",
+            "Dark Lake Hylia Shop",
+            "Dark World Lumberjack Shop",
+            "Village of Outcasts Shop",
+            "Dark World Potion Shop",
+            "Light World Death Mountain Shop",
+            "Kakariko Shop",
+            "Cave Shop (Lake Hylia)",
+            "Potion Shop"
+          ]
+        },
+        "Small Heart": {
+          "unlimited": [
+            "Cave Shop (Dark Death Mountain)",
+            "Light World Death Mountain Shop",
+            "Kakariko Shop",
+            "Cave Shop (Lake Hylia)"
+          ],
+          "limited": [
+            "Cave Shop (Dark Death Mountain)",
+            "Light World Death Mountain Shop",
+            "Kakariko Shop",
+            "Cave Shop (Lake Hylia)"
+          ]
+        },
+        "Bombs (10)": {
+          "unlimited": [
+            "Cave Shop (Dark Death Mountain)",
+            "Dark Lake Hylia Shop",
+            "Dark World Lumberjack Shop",
+            "Village of Outcasts Shop",
+            "Dark World Potion Shop",
+            "Light World Death Mountain Shop",
+            "Kakariko Shop",
+            "Cave Shop (Lake Hylia)"
+          ],
+          "limited": [
+            "Cave Shop (Dark Death Mountain)",
+            "Dark Lake Hylia Shop",
+            "Dark World Lumberjack Shop",
+            "Village of Outcasts Shop",
+            "Dark World Potion Shop",
+            "Light World Death Mountain Shop",
+            "Kakariko Shop",
+            "Cave Shop (Lake Hylia)"
+          ]
+        },
+        "Red Shield": {
+          "unlimited": [
+            "Red Shield Shop"
+          ],
+          "limited": [
+            "Red Shield Shop"
+          ]
+        },
+        "Bee": {
+          "unlimited": [
+            "Red Shield Shop"
+          ],
+          "limited": [
+            "Red Shield Shop"
+          ]
+        },
+        "Arrows (10)": {
+          "unlimited": [
+            "Red Shield Shop"
+          ],
+          "limited": [
+            "Red Shield Shop"
+          ]
+        },
+        "Blue Shield": {
+          "unlimited": [
+            "Dark Lake Hylia Shop",
+            "Dark World Lumberjack Shop",
+            "Village of Outcasts Shop",
+            "Dark World Potion Shop"
+          ],
+          "limited": [
+            "Dark Lake Hylia Shop",
+            "Dark World Lumberjack Shop",
+            "Village of Outcasts Shop",
+            "Dark World Potion Shop"
+          ]
+        },
+        "Green Potion": {
+          "unlimited": [
+            "Potion Shop"
+          ],
+          "limited": [
+            "Potion Shop"
+          ]
+        },
+        "Blue Potion": {
+          "unlimited": [
+            "Potion Shop"
+          ],
+          "limited": [
+            "Potion Shop"
+          ]
+        },
+        "Bomb Upgrade (+5)": {
+          "unlimited": [],
+          "limited": [
+            "Capacity Upgrade"
+          ]
+        },
+        "Arrow Upgrade (+5)": {
+          "unlimited": [],
+          "limited": [
+            "Capacity Upgrade"
+          ]
+        }
+      }
     }
   },
   "game_info": {

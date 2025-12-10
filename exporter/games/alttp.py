@@ -21,10 +21,10 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
     # These have loops, complex counting, settings lookups, or dynamic conditions
     HELPERS_TO_EXPORT_BLACKLIST = {
         'GanonDefeatRule',
-        'can_extend_magic',
+        'can_extend_magic',  # Needs more debugging - block mode with parameters
         'can_get_good_bee',
         'can_kill_most_things',
-        'can_shoot_arrows',
+        'can_shoot_arrows',  # Needs more debugging - depends on can_extend_magic pattern
         # 'can_use_bombs',  # Now works with min/max and setting_value support
         # 'has_crystals',  # Now works with group_count support
         # 'has_crystals_for_ganon',  # Removed - has_crystals now handles dynamic arguments
@@ -76,6 +76,8 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             # 'basement_key_rule',  # Removed - can be inlined, JS impl is incorrect
             # 'can_activate_crystal_switch',  # Removed - item checks + helper calls
             # 'can_bomb_or_bonk',  # Removed - item check + can_use_bombs, may need to preserve can_use_bombs
+            'can_buy',  # Implemented in frontend using shop_items data
+            'can_buy_unlimited',  # Implemented in frontend using shop_items data
             'can_extend_magic',
             'can_get_good_bee',
             'can_kill_most_things',
@@ -520,6 +522,46 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
              settings_dict['misery_mire_medallion'] = None
              settings_dict['turtle_rock_medallion'] = None
 
+        # Shop item data - maps items to regions where shops sell them
+        # This enables can_buy and can_buy_unlimited helper implementation
+        # Based on Shop.has() and Shop.has_unlimited() logic in worlds/alttp/Shops.py
+        shop_items = {}
+        if hasattr(world, 'shops'):
+            for shop in world.shops:
+                region_name = shop.region.name if hasattr(shop, 'region') and shop.region else None
+                if not region_name:
+                    continue
+                for inv in getattr(shop, 'inventory', []):
+                    if inv is None:
+                        continue
+                    item_name = inv.get('item')
+                    if not item_name:
+                        continue
+                    if item_name not in shop_items:
+                        shop_items[item_name] = {'unlimited': [], 'limited': []}
+
+                    # has_unlimited logic: if max is set, check replacement; else item is unlimited
+                    # has logic: just check if item exists in inventory
+                    if inv.get('max'):
+                        # Limited purchase with replacement when exhausted
+                        replacement = inv.get('replacement')
+                        if replacement:
+                            # Replacement item is unlimited
+                            if replacement not in shop_items:
+                                shop_items[replacement] = {'unlimited': [], 'limited': []}
+                            if region_name not in shop_items[replacement]['unlimited']:
+                                shop_items[replacement]['unlimited'].append(region_name)
+                        # Original item is limited (can only buy 'max' times)
+                        if region_name not in shop_items[item_name]['limited']:
+                            shop_items[item_name]['limited'].append(region_name)
+                    else:
+                        # No max = unlimited purchase
+                        if region_name not in shop_items[item_name]['unlimited']:
+                            shop_items[item_name]['unlimited'].append(region_name)
+                        # Also available as limited (can_buy returns true for unlimited items too)
+                        if region_name not in shop_items[item_name]['limited']:
+                            shop_items[item_name]['limited'].append(region_name)
+        settings_dict['shop_items'] = shop_items
 
         return settings_dict
 

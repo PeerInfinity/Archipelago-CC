@@ -818,11 +818,14 @@ class BaseGameExportHandler:
 
                 # Analyze the function to get its rule structure
                 # This may discover new helpers via register_helper_usage
+                # Use preserve_parameter_names=True so that default parameter values
+                # are kept as name references (not inlined) for runtime resolution
                 try:
                     rule = analyze_rule(
                         rule_func=helper_func,
                         game_handler=self,
-                        player_context=world.player if hasattr(world, 'player') else None
+                        player_context=world.player if hasattr(world, 'player') else None,
+                        preserve_parameter_names=True
                     )
 
                     # Clean up the rule - resolve item names, convert state methods to rule types
