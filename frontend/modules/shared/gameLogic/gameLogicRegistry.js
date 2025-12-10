@@ -221,8 +221,6 @@ import { blasphemousStateModule } from './blasphemous/blasphemousLogic.js';
 import { helperFunctions as bombRushCyberfunkHelperFunctions } from './bomb_rush_cyberfunk/bombRushCyberfunkLogic.js';
 import * as celeste64Logic from './celeste64/celeste64Logic.js';
 import { celeste64StateModule } from './celeste64/celeste64Logic.js';
-import * as civ6Logic from './civ_6/civ6Logic.js';
-import { civ6StateModule } from './civ_6/civ6Logic.js';
 import { helperFunctions as cvcotmHelperFunctions } from './cvcotm/cvcotmLogic.js';
 import * as dlcquestLogic from './dlcquest/dlcquestLogic.js';
 import { dlcquestStateModule, wrapState as dlcquestWrapState } from './dlcquest/dlcquestLogic.js';
@@ -320,12 +318,6 @@ const GAME_REGISTRY = {
     helperFunctions: celeste64Logic.helperFunctions,
     worldClasses: ['Celeste64World'],
     aliases: ['Celeste 64', 'Celeste64']
-  },
-  'Civilization VI': {
-    logicModule: civ6Logic.civ6StateModule,
-    helperFunctions: civ6Logic.helperFunctions,
-    worldClasses: ['CivVIWorld'],
-    aliases: ['Civilization VI', 'Civ VI', 'Civ6']
   },
   'Castlevania - Circle of the Moon': {
     logicModule: genericLogic.genericStateModule,
