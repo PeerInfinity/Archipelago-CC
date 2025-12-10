@@ -28,9 +28,9 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         # 'can_use_bombs',  # Now works with min/max and setting_value support
         # 'has_crystals',  # Now works with group_count support
         'has_crystals_for_ganon',
-        'has_hearts',
-        # 'has_misery_mire_medallion',  # Testing dynamic item check
-        # 'has_turtle_rock_medallion',  # Testing dynamic item check
+        # 'has_hearts',  # Now works with logical_heart settings
+        # 'has_misery_mire_medallion',  # Now works with setting_value index support
+        # 'has_turtle_rock_medallion',  # Now works with setting_value index support
         'item_name_in_location_names',
         'tr_big_key_chest_keys_needed',
         'location_item_name',
@@ -89,7 +89,7 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             'has_crystals',  # Exported with group_count support
             'has_crystals_for_ganon',
             # 'has_fire_source',  # Removed - simple item checks, can be inlined
-            'has_hearts',
+            'has_hearts',  # Exported with logical_heart settings
             # 'has_melee_weapon',  # Removed - calls has_sword + item check, can be inlined
             'has_misery_mire_medallion',  # Exported with setting_value index support
             # 'has_sword',  # Removed - multiple item checks, can be inlined
@@ -512,6 +512,11 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
              }
         else:
              settings_dict['difficulty_requirements'] = {}
+
+        # Logical heart limits (used by heart_count and has_hearts helpers)
+        # These can be modified during item pool generation from difficulty_requirements defaults
+        settings_dict['logical_heart_pieces'] = getattr(world, 'logical_heart_pieces', 24)
+        settings_dict['logical_heart_containers'] = getattr(world, 'logical_heart_containers', 10)
 
         # Medallions
         if hasattr(world, 'required_medallions'):

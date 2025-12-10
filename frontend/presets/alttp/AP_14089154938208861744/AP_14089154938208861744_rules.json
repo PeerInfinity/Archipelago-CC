@@ -19589,6 +19589,8 @@
         "boss_heart_container_limit": 10,
         "heart_piece_limit": 24
       },
+      "logical_heart_pieces": 24,
+      "logical_heart_containers": 10,
       "required_medallions": [
         "Quake",
         "Ether"
@@ -20051,6 +20053,24 @@
           }
         ]
       },
+      "has_hearts": {
+        "params": [
+          "count"
+        ],
+        "body": {
+          "type": "compare",
+          "left": {
+            "type": "helper",
+            "name": "heart_count",
+            "args": []
+          },
+          "op": ">=",
+          "right": {
+            "type": "name",
+            "name": "count"
+          }
+        }
+      },
       "has_melee_weapon": {
         "type": "or",
         "conditions": [
@@ -20101,6 +20121,102 @@
           "setting": "required_medallions",
           "index": 1
         }
+      },
+      "heart_count": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "max_heart_pieces",
+            "value": {
+              "type": "setting_value",
+              "setting": "logical_heart_pieces"
+            }
+          },
+          {
+            "type": "assign",
+            "name": "max_heart_containers",
+            "value": {
+              "type": "setting_value",
+              "setting": "logical_heart_containers"
+            }
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "binary_op",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "min",
+                    "args": [
+                      {
+                        "type": "state_method",
+                        "method": "count",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Boss Heart Container"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "name",
+                        "name": "max_heart_containers"
+                      }
+                    ]
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Sanctuary Heart Container"
+                      }
+                    ]
+                  }
+                },
+                "op": "+",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "min",
+                    "args": [
+                      {
+                        "type": "state_method",
+                        "method": "count",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Piece of Heart"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "name",
+                        "name": "max_heart_pieces"
+                      }
+                    ]
+                  },
+                  "op": "//",
+                  "right": {
+                    "type": "constant",
+                    "value": 4
+                  }
+                }
+              },
+              "op": "+",
+              "right": {
+                "type": "constant",
+                "value": 3
+              }
+            }
+          }
+        ]
       }
     }
   }
