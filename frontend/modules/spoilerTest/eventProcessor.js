@@ -100,8 +100,33 @@ export class EventProcessor {
     this.playerId = Number(playerId); // Ensure numeric type for consistency
     this.playerIdKey = String(this.playerId); // String version for accessing JSON objects with string keys
 
+    // Calculate the sphere-only index (excludes non-state_update events like metadata)
+    // This is needed because sphereState.sphereData only contains state_update events,
+    // but currentLogIndex counts ALL events in the log file.
+    this.currentSphereIndex = this._calculateSphereIndex(currentLogIndex);
+
     // Check if we're in focused mode (from sphereState)
     this._updateFocusedMode();
+  }
+
+  /**
+   * Calculate the sphere index by counting only state_update events up to and including the current log index.
+   * This handles the case where metadata or other non-sphere events are present in the log.
+   * @param {number} logIndex - The current position in the full log
+   * @returns {number} The index into sphereState.sphereData
+   * @private
+   */
+  _calculateSphereIndex(logIndex) {
+    if (!this.spoilerLogData) return 0;
+
+    let sphereIndex = 0;
+    for (let i = 0; i < logIndex; i++) {
+      const event = this.spoilerLogData[i];
+      if (event && event.type === 'state_update') {
+        sphereIndex++;
+      }
+    }
+    return sphereIndex;
   }
 
   /**
@@ -193,7 +218,7 @@ export class EventProcessor {
     switch (eventType) {
       case 'state_update': {
         // Get sphere data from sphereState (which handles both verbose and incremental formats)
-        const sphereData = this._getSphereDataFromSphereState(this.currentLogIndex);
+        const sphereData = this._getSphereDataFromSphereState(this.currentSphereIndex);
 
         if (!sphereData) {
           this.logCallback(
@@ -792,7 +817,7 @@ export class EventProcessor {
 
     // Update previous inventory for next comparison
     if (eventType === 'state_update') {
-      const sphereData = this._getSphereDataFromSphereState(this.currentLogIndex);
+      const sphereData = this._getSphereDataFromSphereState(this.currentSphereIndex);
       if (sphereData) {
         const staticData = stateManager.getStaticData();
         const useResolvedItems = staticData?.settings?.[this.playerIdKey]?.use_resolved_items || false;

@@ -27,7 +27,9 @@ import { DEFAULT_PLAYER_ID } from '../../playerIdUtils.js';
  */
 export function paint_percent_available(snapshot, staticData) {
     // Get world options from settings (settings are per-player, so we access player slot)
-    const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
+    // IMPORTANT: Normalize playerSlot to string since JSON object keys are always strings
+    const rawPlayerSlot = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID;
+    const playerSlot = String(rawPlayerSlot);
     const settings = staticData?.settings?.[playerSlot] || {};
     const canvasSizeIncrement = settings.canvas_size_increment || 50; // Default from Paint.yaml
     const logicPercent = settings.logic_percent || 60; // Default from Paint.yaml
