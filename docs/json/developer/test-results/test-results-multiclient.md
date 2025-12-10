@@ -6,20 +6,20 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-09 08:10:56
+**Generated:** 2025-12-10 03:49:34
 
 ## Summary
 
 - **Total Games:** 79
-- **Passed:** 71 (89.9%)
-- **Failed:** 8 (10.1%)
+- **Passed:** 76 (96.2%)
+- **Failed:** 3 (3.8%)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Exporter | GameLogic |
 |-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|----------|----------|
-| A Hat in Time | ✅ Passed | 0 | ✅ | 232/232 | 223/223 | 9/9 | ✅ | 232/232 | 23.2KB | 23.2KB |
-| A Link to the Past | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 19/19 | ✅ | 268/268 | 31.2KB | 59.8KB |
+| A Hat in Time | ✅ Passed | 0 | ✅ | 232/232 | 223/223 | 9/9 | ✅ | 232/232 | 5.7KB | 10.3KB |
+| A Link to the Past | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 19/19 | ✅ | 268/268 | 32.1KB | 59.8KB |
 | A Short Hike | ✅ Passed | 0 | ✅ | 131/131 | 131/131 | 0/0 | ✅ | 131/131 | 7.0KB | ✅ |
 | APQuest | ✅ Passed | 0 | ✅ | 8/8 | 6/6 | 2/2 | ✅ | 8/8 | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | ✅ | 25/25 | 24/24 | 1/1 | ✅ | 25/25 | ✅ | ✅ |
@@ -27,7 +27,7 @@
 | Bomb Rush Cyberfunk | ✅ Passed | 0 | ✅ | 252/252 | 247/247 | 5/5 | ✅ | 252/252 | 16.2KB | 38.2KB |
 | Bumper Stickers | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | 0 | ✅ | 125/125 | 124/124 | 1/1 | ✅ | 125/125 | 10.2KB | 5.7KB |
-| Castlevania 64 | ✅ Passed | 0 | ✅ | 215/215 | 213/213 | 2/2 | ✅ | 215/215 | 13.1KB | 2.0KB |
+| Castlevania 64 | ✅ Passed | 0 | ✅ | 215/215 | 213/213 | 2/2 | ✅ | 215/215 | 15.3KB | 2.0KB |
 | Celeste (Open World) | ✅ Passed | 0 | ✅ | 237/237 | 233/233 | 4/4 | ✅ | 237/237 | 7.1KB | ✅ |
 | Celeste 64 | ✅ Passed | 0 | ✅ | 40/40 | 40/40 | 0/0 | ✅ | 40/40 | 4.2KB | 5.9KB |
 | ChecksFinder | ✅ Passed | 0 | ✅ | 25/25 | 25/25 | 0/0 | ✅ | 25/25 | ✅ | ✅ |
@@ -46,10 +46,10 @@
 | Hylics 2 | ✅ Passed | 0 | ✅ | 134/134 | 133/133 | 1/1 | ✅ | 134/134 | 1.0KB | 6.6KB |
 | Inscryption | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | 11.3KB | 6.2KB |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | ✅ | 239/239 | 239/239 | 0/0 | ✅ | 239/239 | 13.2KB | 4.2KB |
-| Kingdom Hearts | ❌ Failed | 0 | ❌ | 496/512 | 495/511 | 1/1 | ❌ | 495/512 | 49.5KB | 19.5KB |
+| Kingdom Hearts | ✅ Passed | 0 | ✅ | 512/512 | 511/511 | 1/1 | ✅ | 512/512 | 50.8KB | 19.5KB |
 | Kingdom Hearts 2 | ✅ Passed | 0 | ✅ | 705/705 | 643/643 | 62/62 | ✅ | 705/705 | 11.2KB | 112.6KB |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | ✅ | 567/567 | 65/65 | 502/502 | ✅ | 567/567 | 10.1KB | 14.9KB |
-| Landstalker - The Treasures of King Nole | ❌ Failed | 2 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/0 | 16.4KB | 9.1KB |
+| Landstalker - The Treasures of King Nole | ✅ Passed | 0 | ✅ | 298/298 | 291/291 | 7/7 | ✅ | 298/298 | 16.4KB | 9.1KB |
 | Lingo | ✅ Passed | 0 | ✅ | 156/156 | 155/155 | 1/1 | ✅ | 156/156 | 32.2KB | 11.3KB |
 | Links Awakening DX | ✅ Passed | 0 | ✅ | 226/226 | 220/220 | 6/6 | ✅ | 226/226 | 15.8KB | 5.3KB |
 | Lufia II Ancient Cave | ✅ Passed | 0 | ✅ | 40/40 | 35/35 | 5/5 | ✅ | 40/40 | ✅ | ✅ |
@@ -63,7 +63,7 @@
 | Noita | ✅ Passed | 0 | ✅ | 117/117 | 109/109 | 8/8 | ✅ | 117/117 | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | 0 | ✅ | 76/76 | 76/76 | 22/22 | ✅ | 76/76 | 3.0KB | 1.2KB |
 | Overcooked! 2 | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | 26.5KB | 7.2KB |
-| Paint | ❌ Failed | 0 | ❌ | 127/130 | 127/130 | 0/0 | ❌ | 125/130 | 5.8KB | 4.3KB |
+| Paint | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | 5.8KB | 4.4KB |
 | Pokemon Emerald | ✅ Passed | 0 | ✅ | 1061/1061 | 203/203 | 867/867 | ✅ | 1061/1061 | 6.2KB | 8.7KB |
 | Pokemon Red and Blue | ✅ Passed | 0 | ✅ | 1010/1010 | 161/161 | 845/845 | ✅ | 1010/1010 | 12.2KB | 13.0KB |
 | Raft | ✅ Passed | 0 | ✅ | 155/155 | 154/154 | 1/1 | ✅ | 155/155 | 6.8KB | 16.4KB |
@@ -71,7 +71,7 @@
 | SMZ3 | ❌ Failed | 0 | ❌ | 70/316 | 70/316 | 0/0 | ❌ | 70/316 | 59.5KB | 51.2KB |
 | Saving Princess | ✅ Passed | 0 | ✅ | 37/37 | 36/36 | 1/1 | ✅ | 37/37 | 3.1KB | ✅ |
 | Secret of Evermore | ✅ Passed | 0 | ✅ | 340/340 | 339/339 | 1/1 | ✅ | 340/340 | 13.7KB | 6.9KB |
-| Shivers | ✅ Passed | 0 | ✅ | 114/114 | 76/76 | 38/38 | ✅ | 114/114 | ✅ | ✅ |
+| Shivers | ❌ Failed | 0 | ❌ | 88/114 | 60/76 | 28/38 | ❌ | 85/114 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | ✅ | 207/207 | 206/206 | 1/1 | ✅ | 207/207 | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | 0 | ✅ | 257/257 | 232/232 | 25/25 | ✅ | 257/257 | 19.3KB | 86.3KB |
 | Stardew Valley | ✅ Passed | 0 | ✅ | 500/500 | 491/491 | 9/9 | ✅ | 500/500 | 15.9KB | 10.7KB |
@@ -86,14 +86,14 @@
 | Terraria | ✅ Passed | 0 | ✅ | 244/244 | 63/63 | 181/181 | ✅ | 244/244 | 11.8KB | 4.6KB |
 | The Legend of Zelda | ✅ Passed | 0 | ✅ | 165/165 | 155/155 | 10/10 | ✅ | 165/165 | 6.9KB | 1.7KB |
 | The Messenger | ✅ Passed | 0 | ✅ | 113/113 | 106/106 | 7/7 | ✅ | 113/113 | 13.3KB | 3.3KB |
-| The Wind Waker | ❌ Failed | 0 | ❌ | 80/109 | 80/108 | 0/1 | ❌ | 80/109 | 3.5KB | 40.7KB |
+| The Wind Waker | ✅ Passed | 0 | ✅ | 109/109 | 108/108 | 1/1 | ✅ | 109/109 | 3.5KB | 55.3KB |
 | The Witness | ❌ Failed | 0 | ❌ | 138/147 | 125/132 | 13/15 | ❌ | 135/147 | 23.7KB | 0.9KB |
 | Timespinner | ✅ Passed | 0 | ✅ | 185/185 | 180/180 | 5/5 | ✅ | 185/185 | 5.4KB | 10.5KB |
-| Undertale | ❌ Failed | 0 | ❌ | 49/51 | 46/48 | 3/3 | ❌ | 45/51 | ✅ | ✅ |
+| Undertale | ✅ Passed | 0 | ✅ | 51/51 | 48/48 | 3/3 | ✅ | 51/51 | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | ✅ | 20/20 | 20/20 | 0/0 | ✅ | 20/20 | 5.2KB | 2.1KB |
 | Wargroove | ✅ Passed | 0 | ✅ | 39/39 | 38/38 | 1/1 | ✅ | 39/39 | 5.7KB | 2.6KB |
 | WebDevJourney | ✅ Passed | 0 | ✅ | 62/62 | 61/61 | 1/1 | ✅ | 62/62 | ✅ | ✅ |
-| Yacht Dice | ❌ Failed | 0 | ❌ | 5/90 | 5/90 | 0/1 | ❌ | 5/90 | 2.3KB | 285.0KB |
+| Yacht Dice | ✅ Passed | 0 | ✅ | 90/90 | 90/90 | 1/1 | ✅ | 90/90 | 2.3KB | 285.0KB |
 | Yoshi's Island | ✅ Passed | 0 | ✅ | 207/207 | 191/191 | 16/16 | ✅ | 207/207 | 8.1KB | 33.2KB |
 | Yu-Gi-Oh! 2006 | ✅ Passed | 0 | ✅ | 981/981 | 84/84 | 897/897 | ✅ | 981/981 | 1.6KB | 21.4KB |
 | shapez | ✅ Passed | 0 | ✅ | 140/140 | 139/139 | 1/1 | ✅ | 140/140 | ✅ | ✅ |
