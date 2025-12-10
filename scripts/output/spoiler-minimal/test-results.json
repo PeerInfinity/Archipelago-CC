@@ -22,7 +22,7 @@
       ],
       "last_updated": "2025-12-10T20:00:14.138642"
     },
-    "last_updated": "2025-12-10T20:00:14.138640",
+    "last_updated": "2025-12-10T23:09:18.967094",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1743,27 +1743,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "271323016dd66fc5f979031d599ea90df146788457f8d1ad68cf2a90fd354c23",
-          "new_sphere_log_hash": "de7899804e4c52b1f868b59e2a028e25cad006a7a8bc4e11f4d833dd194f87ae",
-          "original_rules_hash": "271323016dd66fc5f979031d599ea90df146788457f8d1ad68cf2a90fd354c23",
-          "original_sphere_log_hash": "de7899804e4c52b1f868b59e2a028e25cad006a7a8bc4e11f4d833dd194f87ae",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-10T19:59:22.749649"
-        }
-      },
       "game_name_from_filename": "kh1",
       "game_name_from_yaml": "Kingdom Hearts",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 9.55,
+        "processing_time_seconds": 12.15,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/kh1/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -1775,7 +1763,7 @@
       "spoiler_test": {
         "error_count": 8,
         "pass_fail": "failed",
-        "processing_time_seconds": 67.94,
+        "processing_time_seconds": 26.35,
         "return_code": 1,
         "sphere_reached": 9.11,
         "success": false,
@@ -1783,7 +1771,7 @@
         "warning_count": 0
       },
       "template_filename": "Kingdom Hearts.yaml",
-      "timestamp": "2025-12-10T19:57:44.766374",
+      "timestamp": "2025-12-10T23:08:40.041472",
       "world_info": {
         "exporter_path": "exporter/games/kh1.py",
         "exporter_size": 52056,
