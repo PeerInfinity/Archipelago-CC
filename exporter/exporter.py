@@ -1758,15 +1758,20 @@ def sort_lists_for_consistency(data):
         # First, recursively process all items
         processed = [sort_lists_for_consistency(item) for item in data]
 
-        # Only sort if all items are simple comparable types (str, int, float)
-        # and the list is non-empty
+        # Only sort if all items are simple comparable types (str, int, float),
+        # AND all items are the SAME type. This prevents sorting of lists that
+        # represent tuples with mixed types (e.g., ['item_name', 0.5] from a Python
+        # tuple ('item_name', 0.5) that should preserve its original order).
         if processed and all(isinstance(item, (str, int, float)) for item in processed):
-            # Sort strings and numbers (convert to string for consistent sorting of mixed types)
-            try:
-                return sorted(processed, key=lambda x: (type(x).__name__, x))
-            except TypeError:
-                # If comparison fails, return unsorted
-                return processed
+            # Check if all items are the same type
+            first_type = type(processed[0])
+            if all(type(item) is first_type for item in processed):
+                # Sort strings and numbers of the same type
+                try:
+                    return sorted(processed)
+                except TypeError:
+                    # If comparison fails, return unsorted
+                    return processed
         return processed
 
     if isinstance(data, dict):
