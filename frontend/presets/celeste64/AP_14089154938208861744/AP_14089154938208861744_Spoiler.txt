@@ -108,6 +108,7 @@ Playthrough:
   Badeline Tower Bottom Strawberry: Strawberry
   Breakable Blocks Strawberry: Strawberry
   Double Dash House Checkpoint: Double Dash House Checkpoint
+  Double Dash Spike Climb Strawberry: Raspberry
   Falling Blocks Strawberry: Strawberry
   Feather Maze Checkpoint: Feather Maze Checkpoint
   Freeway Checkpoint: Freeway Checkpoint
@@ -123,14 +124,19 @@ Playthrough:
 }
 4: {
   Badeline Island Checkpoint: Badeline Island Checkpoint
+  Badeline Tower Breakable Bottom Strawberry: Strawberry
   Badeline Tower Checkpoint: Badeline Tower Checkpoint
   Double Dash Puzzle Strawberry: Strawberry
   Feather Chain Strawberry: Strawberry
   Feather Hidden Strawberry: Coins
   Feather Maze Strawberry: Strawberry
+  Theo Strawberry: Raspberry
+  Theo Tower Lower Cassette Strawberry: Strawberry
+  Traffic Block Strawberry: Strawberry
   You Are Ready Cassette Strawberry: Strawberry
 }
 5: {
+  Badeline Tower Cassette Strawberry: Strawberry
   Distant Feather Cassette Strawberry: Strawberry
   Feather Arches Cassette Strawberry: Strawberry
   South End of Bridge Cassette Strawberry: Springs

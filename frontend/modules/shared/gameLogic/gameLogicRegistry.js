@@ -219,8 +219,6 @@ import * as ahitLogic from './ahit/ahitLogic.js';
 import * as blasphemousLogic from './blasphemous/blasphemousLogic.js';
 import { blasphemousStateModule } from './blasphemous/blasphemousLogic.js';
 import { helperFunctions as bombRushCyberfunkHelperFunctions } from './bomb_rush_cyberfunk/bombRushCyberfunkLogic.js';
-import * as celeste64Logic from './celeste64/celeste64Logic.js';
-import { celeste64StateModule } from './celeste64/celeste64Logic.js';
 import * as civ6Logic from './civ_6/civ6Logic.js';
 import { civ6StateModule } from './civ_6/civ6Logic.js';
 import { helperFunctions as cvcotmHelperFunctions } from './cvcotm/cvcotmLogic.js';
@@ -314,12 +312,6 @@ const GAME_REGISTRY = {
     helperFunctions: bombRushCyberfunkHelperFunctions,
     worldClasses: ['BombRushCyberfunkWorld'],
     aliases: ['Bomb Rush Cyberfunk', 'BRC']
-  },
-  'Celeste 64': {
-    logicModule: celeste64Logic.celeste64StateModule,
-    helperFunctions: celeste64Logic.helperFunctions,
-    worldClasses: ['Celeste64World'],
-    aliases: ['Celeste 64', 'Celeste64']
   },
   'Civilization VI': {
     logicModule: civ6Logic.civ6StateModule,

@@ -22,7 +22,7 @@
       ],
       "last_updated": "2025-12-10T20:00:14.138642"
     },
-    "last_updated": "2025-12-10T20:00:14.138640",
+    "last_updated": "2025-12-10T20:50:53.745904",
     "script_version": "1.0.0"
   },
   "results": {
@@ -681,39 +681,27 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "5463a4abf4b8f5a190de298a8152d695f8add529be9bb8fe482cfc0c053b0521",
-          "new_sphere_log_hash": "d4839752701855082f15103b57ccf0fefd4075694e879b84d22674191ab28640",
-          "original_rules_hash": "5463a4abf4b8f5a190de298a8152d695f8add529be9bb8fe482cfc0c053b0521",
-          "original_sphere_log_hash": "d4839752701855082f15103b57ccf0fefd4075694e879b84d22674191ab28640",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-10T19:56:02.070771"
-        }
-      },
       "game_name_from_filename": "celeste64",
       "game_name_from_yaml": "Celeste 64",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.28,
+        "processing_time_seconds": 6.53,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/celeste64/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 71626,
-        "size_mb": 0.07
+        "size_bytes": 52589,
+        "size_mb": 0.05
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.82,
+        "processing_time_seconds": 9.83,
         "return_code": 0,
         "sphere_reached": 5.2,
         "success": true,
@@ -721,16 +709,16 @@
         "warning_count": 0
       },
       "template_filename": "Celeste 64.yaml",
-      "timestamp": "2025-12-10T19:54:12.730006",
+      "timestamp": "2025-12-10T20:50:36.988503",
       "world_info": {
         "exporter_path": "exporter/games/celeste64.py",
-        "exporter_size": 4308,
-        "game_logic_path": "frontend/modules/shared/gameLogic/celeste64/celeste64Logic.js",
-        "game_logic_size": 6008,
+        "exporter_size": 9645,
+        "game_logic_path": null,
+        "game_logic_size": 0,
         "game_name_from_filename": "celeste64",
         "game_name_from_yaml": "Celeste 64",
         "has_custom_exporter": true,
-        "has_custom_game_logic": true,
+        "has_custom_game_logic": false,
         "world_directory": "celeste64"
       }
     },
