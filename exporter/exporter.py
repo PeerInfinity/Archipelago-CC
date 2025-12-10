@@ -1737,7 +1737,7 @@ def process_progression_mapping(multiworld, player: int) -> Dict[str, Any]:
         return {} # Return empty on error
 
 
-def sort_lists_for_consistency(data):
+def sort_lists_for_consistency(data, key_name=None):
     """
     Recursively sort lists of simple types (strings, numbers) for consistent JSON output.
 
@@ -1747,16 +1747,27 @@ def sort_lists_for_consistency(data):
 
     Args:
         data: The data structure to process
+        key_name: The key name from the parent dict (used to preserve order for specific keys)
 
     Returns:
         The data structure with sortable lists sorted
     """
+    # Keys that should preserve their order (order is semantically meaningful)
+    ORDER_SENSITIVE_KEYS = {
+        'hat_craft_order',  # A Hat in Time: order determines craft sequence
+        # Add other order-sensitive keys here as needed
+    }
+
     if data is None or isinstance(data, (bool, int, float, str)):
         return data
 
     if isinstance(data, list):
         # First, recursively process all items
         processed = [sort_lists_for_consistency(item) for item in data]
+
+        # Skip sorting for order-sensitive keys
+        if key_name in ORDER_SENSITIVE_KEYS:
+            return processed
 
         # Only sort if all items are simple comparable types (str, int, float)
         # and the list is non-empty
@@ -1770,7 +1781,7 @@ def sort_lists_for_consistency(data):
         return processed
 
     if isinstance(data, dict):
-        return {k: sort_lists_for_consistency(v) for k, v in data.items()}
+        return {k: sort_lists_for_consistency(v, key_name=k) for k, v in data.items()}
 
     return data
 
