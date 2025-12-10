@@ -551,7 +551,30 @@ export function createStateSnapshotInterface(
     },
     hasFlag: (flagName) =>
       !!(snapshot?.flags && snapshot.flags.includes(flagName)),
-    getSetting: (settingName) => snapshot?.settings?.[settingName],
+    getSetting: (settingName) => {
+      // Settings may be in snapshot OR staticData, keyed by player ID (multiworld) or directly
+      // Try snapshot first, then staticData
+      let settingsToUse = snapshot?.settings || staticData?.settings;
+      if (settingsToUse) {
+        const rawPlayerId = snapshot?.player?.id || snapshot?.player?.slot ||
+                         staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
+        const playerIdKey = String(rawPlayerId);
+        // Check if settings is keyed by player ID
+        if (settingsToUse[playerIdKey] && typeof settingsToUse[playerIdKey] === 'object') {
+          settingsToUse = settingsToUse[playerIdKey];
+        }
+      }
+      const rawValue = settingsToUse?.[settingName];
+      // Normalize "off"/"none" type strings to falsy values
+      // Choice options in Python use 0 for "off"/"none" which get exported as strings
+      if (typeof rawValue === 'string') {
+        const lowerValue = rawValue.toLowerCase();
+        if (lowerValue === 'off' || lowerValue === 'none' || lowerValue === 'false' || lowerValue === '') {
+          return 0;
+        }
+      }
+      return rawValue;
+    },
     isRegionReachable: (regionName) => {
       // During BFS (when stateManager is provided and _computing is true),
       // check the LIVE knownReachableRegions being built, not the frozen snapshot.
@@ -942,14 +965,22 @@ export function createStateSnapshotInterface(
       const selectedStateMethods = getStateMethods(gameName);
 
       if (selectedStateMethods && selectedStateMethods[methodName]) {
-        return selectedStateMethods[methodName](snapshot, staticData, ...args);
+        // For state methods with no args, pass the player ID so they can look up
+        // player-specific settings (important for multiworld)
+        const playerId = snapshot?.player?.id || snapshot?.player?.slot || DEFAULT_PLAYER_ID;
+        const argsWithPlayer = args.length === 0 ? [playerId] : args;
+        return selectedStateMethods[methodName](snapshot, staticData, ...argsWithPlayer);
       }
 
       // Use game-specific agnostic helpers for all helper methods
       const selectedHelpers = getHelperFunctions(gameName);
 
       if (selectedHelpers[methodName]) {
-        return selectedHelpers[methodName](snapshot, staticData, ...args);
+        // For helper methods with no args, pass the player ID so they can look up
+        // player-specific data (important for multiworld)
+        const playerId = snapshot?.player?.id || snapshot?.player?.slot || DEFAULT_PLAYER_ID;
+        const argsWithPlayer = args.length === 0 ? [playerId] : args;
+        return selectedHelpers[methodName](snapshot, staticData, ...argsWithPlayer);
       }
 
       // Legacy helper system removed - all games should use agnostic helpers

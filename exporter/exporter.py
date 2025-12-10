@@ -13,7 +13,8 @@ from collections import defaultdict
 
 import Utils
 from .analyzer import analyze_rule
-from .games import get_game_export_handler
+from .analyzer.cache import clear_caches as clear_analyzer_caches
+from .games import get_game_export_handler, clear_handler_cache
 from BaseClasses import ItemClassification
 
 logger = logging.getLogger(__name__)
@@ -1737,20 +1738,31 @@ def process_progression_mapping(multiworld, player: int) -> Dict[str, Any]:
         return {} # Return empty on error
 
 
-def sort_lists_for_consistency(data):
+def sort_lists_for_consistency(data, key_name=None):
     """
     Recursively sort lists of simple types (strings, numbers) for consistent JSON output.
 
-    This handles cases like slot_data containing lists that may be in arbitrary order
-    (e.g., Terraria's goal list). It only sorts lists where all elements are of
-    comparable simple types to avoid breaking structured data.
+    Uses a whitelist approach: only sorts lists under specific keys known to be safe.
+    This prevents accidentally breaking game logic where list order is semantically
+    meaningful (e.g., hat_craft_order in A Hat in Time, level_logic tuples in Overcooked).
 
     Args:
         data: The data structure to process
+        key_name: The key name from the parent dict (used to determine if sorting is safe)
 
     Returns:
-        The data structure with sortable lists sorted
+        The data structure with whitelisted lists sorted
     """
+    # Keys where sorting is safe (order is not semantically meaningful)
+    SAFE_TO_SORT_KEYS = {
+        'exclude_locations',
+        'allowed_legendary_hunt_encounters',
+        'move_rando_actions',
+        'enabled_filler_buffs',
+        'goal',
+        'disabled_entities',
+    }
+
     if data is None or isinstance(data, (bool, int, float, str)):
         return data
 
@@ -1758,19 +1770,19 @@ def sort_lists_for_consistency(data):
         # First, recursively process all items
         processed = [sort_lists_for_consistency(item) for item in data]
 
-        # Only sort if all items are simple comparable types (str, int, float)
-        # and the list is non-empty
-        if processed and all(isinstance(item, (str, int, float)) for item in processed):
-            # Sort strings and numbers (convert to string for consistent sorting of mixed types)
-            try:
-                return sorted(processed, key=lambda x: (type(x).__name__, x))
-            except TypeError:
-                # If comparison fails, return unsorted
-                return processed
+        # Only sort if this key is in the whitelist
+        if key_name in SAFE_TO_SORT_KEYS:
+            # Only sort if all items are simple comparable types (str, int, float)
+            if processed and all(isinstance(item, (str, int, float)) for item in processed):
+                try:
+                    return sorted(processed)
+                except TypeError:
+                    # If comparison fails, return unsorted
+                    return processed
         return processed
 
     if isinstance(data, dict):
-        return {k: sort_lists_for_consistency(v) for k, v in data.items()}
+        return {k: sort_lists_for_consistency(v, key_name=k) for k, v in data.items()}
 
     return data
 
@@ -2284,9 +2296,20 @@ def _clear_multiworld_references(multiworld) -> None:
     - Spoiler (spoiler.multiworld points to multiworld)
     - CollectionState (state.multiworld points to multiworld)
 
-    This function breaks these cycles so the garbage collector can free the memory.
+    Additionally, the exporter has module-level caches that hold references:
+    - _handler_cache: Game export handlers that store world references
+    - _rule_analysis_cache: Cached rule analysis results
+    - Analyzer caches: File content and AST caches
+
+    This function breaks these cycles and clears caches so the garbage collector
+    can free the memory.
     """
     try:
+        # Clear exporter caches first (they hold references to world objects)
+        clear_handler_cache()
+        clear_rule_cache()
+        clear_analyzer_caches()
+
         # Clear region references
         if hasattr(multiworld, 'regions') and hasattr(multiworld.regions, 'region_cache'):
             for player_regions in multiworld.regions.region_cache.values():
@@ -2295,13 +2318,46 @@ def _clear_multiworld_references(multiworld) -> None:
                     for exit in region.exits:
                         exit.parent_region = None
                         exit.connected_region = None
+                        # Clear access rules which may have closures capturing multiworld
+                        if hasattr(exit, 'access_rule'):
+                            exit.access_rule = None
+                        if hasattr(exit, 'access_rules'):
+                            exit.access_rules = []
                     for loc in region.locations:
                         loc.parent_region = None
+                        # Clear location access rules as well
+                        if hasattr(loc, 'access_rule'):
+                            loc.access_rule = None
+                        if hasattr(loc, 'item_rule'):
+                            loc.item_rule = None
+                    region.exits = []
+                    region.locations = []
                 player_regions.clear()
 
-        # Clear world references
+        # Clear world references and world-specific objects (like dungeons)
         if hasattr(multiworld, 'worlds'):
             for player, world in list(multiworld.worlds.items()):
+                # Clear dungeon references (ALttP has dungeons dict that hold multiworld refs)
+                if hasattr(world, 'dungeons') and isinstance(world.dungeons, dict):
+                    dungeon_count = 0
+                    for dungeon in list(world.dungeons.values()):
+                        if hasattr(dungeon, 'multiworld'):
+                            dungeon.multiworld = None
+                            dungeon_count += 1
+                        if hasattr(dungeon, 'regions'):
+                            dungeon.regions = []
+                        # Clear other dungeon attributes that might hold references
+                        if hasattr(dungeon, 'bosses'):
+                            dungeon.bosses.clear()
+                        if hasattr(dungeon, 'big_key'):
+                            dungeon.big_key = None
+                        if hasattr(dungeon, 'small_keys'):
+                            dungeon.small_keys = []
+                        if hasattr(dungeon, 'dungeon_items'):
+                            dungeon.dungeon_items = []
+                    # Clear the dungeons dict
+                    world.dungeons.clear()
+                    logger.debug(f"Cleared {dungeon_count} dungeon multiworld refs for player {player}")
                 if hasattr(world, 'multiworld'):
                     world.multiworld = None
             multiworld.worlds.clear()

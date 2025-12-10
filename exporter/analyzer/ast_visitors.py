@@ -766,6 +766,26 @@ class ASTVisitorMixin:
                     return processed_result
                 # If can't pre-process, fall through to regular helper handling
 
+            # *** Special handling for min() function ***
+            if func_name == 'min' and len(filtered_args) >= 2:
+                logging.debug(f"Detected min() function call with {len(filtered_args)} args")
+                result = {
+                    'type': 'min',
+                    'args': filtered_args
+                }
+                logging.debug(f"Created min result: {result}")
+                return result
+
+            # *** Special handling for max() function ***
+            if func_name == 'max' and len(filtered_args) >= 2:
+                logging.debug(f"Detected max() function call with {len(filtered_args)} args")
+                result = {
+                    'type': 'max',
+                    'args': filtered_args
+                }
+                logging.debug(f"Created max result: {result}")
+                return result
+
             # Create helper result with filtered args (no state/player in JSON)
             result = {
                 'type': 'helper',
@@ -1944,6 +1964,46 @@ class ASTVisitorMixin:
             return {'type': 'list', 'value': elements}
         except Exception as e:
             logging.error("Error in visit_Set", e)
+            return None
+
+    def visit_Dict(self, node: ast.Dict):
+        """ Handle dictionary literals. """
+        try:
+            logging.debug(f"\n--- visit_Dict ---")
+            dict_data = {}
+            for key_node, value_node in zip(node.keys, node.values):
+                # Handle None key (dict unpacking like **kwargs) - skip for now
+                if key_node is None:
+                    logging.warning("Skipping dict unpacking in visit_Dict")
+                    continue
+
+                key_result = self.visit(key_node)
+                if key_result is None:
+                    logging.error(f"Failed to analyze key in Dict: {ast.dump(key_node)}")
+                    return None
+
+                value_result = self.visit(value_node)
+                if value_result is None:
+                    logging.error(f"Failed to analyze value in Dict: {ast.dump(value_node)}")
+                    return None
+
+                # Extract the key value if it's a constant
+                if key_result.get('type') == 'constant':
+                    key = key_result['value']
+                else:
+                    # For non-constant keys, use the string representation
+                    key = str(key_result)
+
+                # For constant values, extract the value; otherwise keep the structure
+                if value_result.get('type') == 'constant':
+                    dict_data[key] = value_result['value']
+                else:
+                    dict_data[key] = value_result
+
+            # Return dict as a constant with dict value for JSON serialization
+            return {'type': 'constant', 'value': dict_data}
+        except Exception as e:
+            logging.error(f"Error in visit_Dict: {e}")
             return None
 
     def visit_GeneratorExp(self, node: ast.GeneratorExp):

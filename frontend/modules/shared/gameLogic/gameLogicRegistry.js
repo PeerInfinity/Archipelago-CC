@@ -310,7 +310,7 @@ const GAME_REGISTRY = {
     aliases: ['Blasphemous']
   },
   'Bomb Rush Cyberfunk': {
-    logicModule: genericLogic.genericStateModule, // Using generic for now
+    logicModule: genericLogic.genericStateModule,
     helperFunctions: bombRushCyberfunkHelperFunctions,
     worldClasses: ['BombRushCyberfunkWorld'],
     aliases: ['Bomb Rush Cyberfunk', 'BRC']
