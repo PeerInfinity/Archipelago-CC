@@ -30,6 +30,10 @@
       "reason": "Not a game"
     },
     {
+      "name": "Yu-Gi-Oh! 2006.yaml",
+      "reason": "Takes too long to process"
+    },
+    {
       "name": "Zillion.yaml",
       "reason": "Uses the external zilliandomizer tool for its logic, which is not compatible with this system"
     }
