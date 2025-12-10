@@ -13,9 +13,31 @@ logger = logging.getLogger(__name__) # Add logger if needed later
 class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritance
     GAME_NAME = 'A Link to the Past'
     # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = True  # Closure functions are cached during analysis and exported
     # HELPER_MODULES = ['worlds.alttp.StateHelpers']  # Disabled - helper defs need more work
+
+    # Complex helpers that can't be exported (need JavaScript implementations)
+    # These have loops, complex counting, settings lookups, or dynamic conditions
+    HELPERS_TO_EXPORT_BLACKLIST = {
+        'GanonDefeatRule',
+        'can_extend_magic',
+        'can_get_good_bee',
+        'can_kill_most_things',
+        'can_shoot_arrows',
+        'can_use_bombs',
+        'has_crystals',
+        'has_crystals_for_ganon',
+        'has_hearts',
+        'has_misery_mire_medallion',
+        'has_turtle_rock_medallion',
+        'item_name_in_location_names',
+        'tr_big_key_chest_keys_needed',
+        'location_item_name',
+        'can_defeat_boss',
+        'can_reach_region',
+        'can_take_damage',
+    }
 
     """No longer expands helpers - just validates they're known ALTTP helpers"""
     
