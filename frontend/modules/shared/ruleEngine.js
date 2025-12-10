@@ -1675,11 +1675,23 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
       case 'setting_value': {
         // Retrieve a setting value (e.g. for self.world.options.difficulty)
+        // Supports dot notation for nested access (e.g. "difficulty_requirements.progressive_bottle_limit")
         // Note: Choice options in Python use 0 for "off"/"none" states, which are exported
         // as strings like 'off', 'none', 'false'. These should be treated as falsy in JS.
         let settingName = rule.setting;
         if (typeof settingName === 'string') {
-          const rawValue = context.getSetting(settingName);
+          let rawValue;
+          // Handle dot notation for nested property access
+          if (settingName.includes('.')) {
+            const parts = settingName.split('.');
+            rawValue = context.getSetting(parts[0]);
+            // Traverse the path for nested properties
+            for (let i = 1; i < parts.length && rawValue !== undefined; i++) {
+              rawValue = rawValue?.[parts[i]];
+            }
+          } else {
+            rawValue = context.getSetting(settingName);
+          }
           // If an index is provided, subscript the array value
           if (rule.index !== undefined && rawValue !== undefined) {
             if (Array.isArray(rawValue)) {

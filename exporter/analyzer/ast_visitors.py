@@ -1292,52 +1292,78 @@ class ASTVisitorMixin:
         logging.debug(f"Fallback call result: {result}")
         return result # Return generic function call result
 
-    def _is_world_options_pattern(self, node):
+    def _is_world_player_subscript(self, node):
         """
-        Detect the pattern: state.multiworld.worlds[player].options.<setting>
-        Returns the setting name if matched, None otherwise.
+        Check if node is the pattern: state.multiworld.worlds[player]
+        Returns True if matched, False otherwise.
 
         AST structure:
-        Attribute(attr='<setting>')
-          value=Attribute(attr='options')
-            value=Subscript
-              value=Attribute(attr='worlds')
-                value=Attribute(attr='multiworld')
-                  value=Name(id='state')
-              slice=Name(id='player')
+        Subscript
+          value=Attribute(attr='worlds')
+            value=Attribute(attr='multiworld')
+              value=Name(id='state' or 'world')
+          slice=Name(id='player')
         """
-        if not isinstance(node, ast.Attribute):
-            return None
-
-        setting_name = node.attr
-
-        # Check .options
-        if not isinstance(node.value, ast.Attribute) or node.value.attr != 'options':
-            return None
-
-        # Check [player] subscript
-        subscript = node.value.value
-        if not isinstance(subscript, ast.Subscript):
-            return None
-        if not isinstance(subscript.slice, ast.Name) or subscript.slice.id != 'player':
-            return None
+        if not isinstance(node, ast.Subscript):
+            return False
+        if not isinstance(node.slice, ast.Name) or node.slice.id != 'player':
+            return False
 
         # Check .worlds
-        worlds_attr = subscript.value
+        worlds_attr = node.value
         if not isinstance(worlds_attr, ast.Attribute) or worlds_attr.attr != 'worlds':
-            return None
+            return False
 
         # Check .multiworld
         multiworld_attr = worlds_attr.value
         if not isinstance(multiworld_attr, ast.Attribute) or multiworld_attr.attr != 'multiworld':
-            return None
+            return False
 
         # Check state (or world)
         state_name = multiworld_attr.value
         if not isinstance(state_name, ast.Name) or state_name.id not in ('state', 'world'):
+            return False
+
+        return True
+
+    def _is_world_options_pattern(self, node):
+        """
+        Detect patterns accessing world settings/attributes:
+        - state.multiworld.worlds[player].options.<setting>
+        - state.multiworld.worlds[player].<attr>
+        - state.multiworld.worlds[player].<attr1>.<attr2> (nested like difficulty_requirements.progressive_bottle_limit)
+
+        Returns the setting path as a dot-separated string if matched, None otherwise.
+        """
+        if not isinstance(node, ast.Attribute):
             return None
 
-        return setting_name
+        # Collect attribute chain from bottom up
+        attrs = [node.attr]
+        current = node.value
+
+        # Walk up the attribute chain until we hit the worlds[player] subscript
+        while isinstance(current, ast.Attribute):
+            attrs.append(current.attr)
+            current = current.value
+
+        # Check if we've reached the world player subscript
+        if not self._is_world_player_subscript(current):
+            return None
+
+        # Reverse to get top-down order
+        attrs.reverse()
+
+        # Handle different patterns:
+        # - ['options', 'setting_name'] -> 'setting_name'
+        # - ['attr_name'] -> 'attr_name'
+        # - ['difficulty_requirements', 'progressive_bottle_limit'] -> 'difficulty_requirements.progressive_bottle_limit'
+        if attrs[0] == 'options' and len(attrs) >= 2:
+            # Remove 'options' prefix for .options.<setting> pattern
+            return '.'.join(attrs[1:])
+        else:
+            # Direct attribute or nested attribute
+            return '.'.join(attrs)
 
     def _is_world_attribute_subscript_pattern(self, node):
         """
