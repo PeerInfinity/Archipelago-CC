@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-10 06:37:24
+**Generated:** 2025-12-10 20:24:36
 
 ## Summary
 
 - **Total Games:** 79
-- **Passed:** 76 (96.2%)
-- **Failed:** 3 (3.8%)
+- **Passed:** 75 (94.9%)
+- **Failed:** 4 (5.1%)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Exporter | GameLogic |
 |-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|----------|----------|
-| A Hat in Time | ✅ Passed | 0 | ✅ | 232/232 | 223/223 | 9/9 | ✅ | 232/232 | 6.1KB | 10.3KB |
-| A Link to the Past | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 19/19 | ✅ | 268/268 | 32.8KB | 59.8KB |
+| A Hat in Time | ❌ Failed | 1 | ✅ | 232/232 | 223/223 | 9/9 | ✅ | 232/232 | 6.0KB | 10.3KB |
+| A Link to the Past | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 19/19 | ✅ | 268/268 | 33.0KB | 59.8KB |
 | A Short Hike | ✅ Passed | 0 | ✅ | 131/131 | 131/131 | 0/0 | ✅ | 131/131 | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | ✅ | 8/8 | 6/6 | 2/2 | ✅ | 8/8 | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | ✅ | 25/25 | 24/24 | 1/1 | ✅ | 25/25 | ✅ | ✅ |
 | Aquaria | ✅ Passed | 0 | ✅ | 237/237 | 218/218 | 19/19 | ✅ | 237/237 | 4.8KB | ✅ |
-| Bomb Rush Cyberfunk | ✅ Passed | 0 | ✅ | 252/252 | 247/247 | 5/5 | ✅ | 252/252 | 16.2KB | 38.2KB |
+| Bomb Rush Cyberfunk | ✅ Passed | 0 | ✅ | 252/252 | 247/247 | 5/5 | ✅ | 252/252 | 1.6KB | 38.2KB |
 | Bumper Stickers | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | 0 | ✅ | 125/125 | 124/124 | 1/1 | ✅ | 125/125 | 10.2KB | 5.7KB |
 | Castlevania 64 | ✅ Passed | 0 | ✅ | 215/215 | 213/213 | 2/2 | ✅ | 215/215 | 15.3KB | 2.0KB |
@@ -46,7 +46,7 @@
 | Hylics 2 | ✅ Passed | 0 | ✅ | 134/134 | 133/133 | 1/1 | ✅ | 134/134 | 1.0KB | 6.6KB |
 | Inscryption | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | 11.3KB | 6.2KB |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | ✅ | 239/239 | 239/239 | 0/0 | ✅ | 239/239 | 13.2KB | 4.2KB |
-| Kingdom Hearts | ✅ Passed | 0 | ✅ | 512/512 | 511/511 | 1/1 | ✅ | 512/512 | 50.8KB | 19.5KB |
+| Kingdom Hearts | ❌ Failed | 0 | ❌ | 510/512 | 510/511 | 0/1 | ❌ | 510/512 | 50.8KB | 19.5KB |
 | Kingdom Hearts 2 | ✅ Passed | 0 | ✅ | 705/705 | 643/643 | 62/62 | ✅ | 705/705 | 11.2KB | 112.6KB |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | ✅ | 567/567 | 65/65 | 502/502 | ✅ | 567/567 | 10.1KB | 14.9KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | ✅ | 298/298 | 291/291 | 7/7 | ✅ | 298/298 | 16.4KB | 9.1KB |
@@ -62,7 +62,7 @@
 | Muse Dash | ✅ Passed | 0 | ✅ | 90/90 | 90/90 | 0/0 | ✅ | 90/90 | ✅ | ✅ |
 | Noita | ✅ Passed | 0 | ✅ | 117/117 | 109/109 | 8/8 | ✅ | 117/117 | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | 0 | ✅ | 76/76 | 76/76 | 22/22 | ✅ | 76/76 | 3.0KB | 1.2KB |
-| Overcooked! 2 | ❌ Failed | 0 | ❌ | 57/215 | 19/43 | 38/172 | ❌ | 55/215 | 26.5KB | 7.2KB |
+| Overcooked! 2 | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | 26.5KB | 7.2KB |
 | Paint | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | 5.8KB | 4.4KB |
 | Pokemon Emerald | ✅ Passed | 0 | ✅ | 1061/1061 | 203/203 | 867/867 | ✅ | 1061/1061 | 6.2KB | 8.7KB |
 | Pokemon Red and Blue | ✅ Passed | 0 | ✅ | 1010/1010 | 161/161 | 845/845 | ✅ | 1010/1010 | 12.2KB | 13.0KB |
@@ -86,7 +86,7 @@
 | Terraria | ✅ Passed | 0 | ✅ | 244/244 | 63/63 | 181/181 | ✅ | 244/244 | 11.8KB | 4.6KB |
 | The Legend of Zelda | ✅ Passed | 0 | ✅ | 165/165 | 155/155 | 10/10 | ✅ | 165/165 | 6.9KB | 1.7KB |
 | The Messenger | ✅ Passed | 0 | ✅ | 113/113 | 106/106 | 7/7 | ✅ | 113/113 | 13.3KB | 3.3KB |
-| The Wind Waker | ✅ Passed | 0 | ✅ | 109/109 | 108/108 | 1/1 | ✅ | 109/109 | 3.5KB | 55.3KB |
+| The Wind Waker | ✅ Passed | 0 | ✅ | 109/109 | 108/108 | 1/1 | ✅ | 109/109 | 3.6KB | 55.3KB |
 | The Witness | ❌ Failed | 0 | ❌ | 138/147 | 125/132 | 13/15 | ❌ | 135/147 | 23.7KB | 0.9KB |
 | Timespinner | ✅ Passed | 0 | ✅ | 185/185 | 180/180 | 5/5 | ✅ | 185/185 | 5.4KB | 10.5KB |
 | Undertale | ✅ Passed | 0 | ✅ | 51/51 | 48/48 | 3/3 | ✅ | 51/51 | ✅ | ✅ |
