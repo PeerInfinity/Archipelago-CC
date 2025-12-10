@@ -848,7 +848,8 @@ class BaseGameExportHandler:
         else:
             logger.warning(f"Helper discovery reached max iterations ({max_iterations}), may have circular dependencies")
 
-        return helper_definitions
+        # Sort alphabetically for consistent output
+        return dict(sorted(helper_definitions.items()))
 
     def _clean_helper_rule(self, rule: Dict[str, Any], world) -> Dict[str, Any]:
         """

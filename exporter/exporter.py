@@ -2210,7 +2210,59 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     from .analyzer import clear_caches as clear_analyzer_caches
     clear_analyzer_caches()
 
+    # Clear circular references in multiworld to allow garbage collection
+    # This is necessary because Region, World, Spoiler, and CollectionState
+    # all hold references to multiworld, creating reference cycles
+    _clear_multiworld_references(multiworld)
+
     return results
+
+
+def _clear_multiworld_references(multiworld) -> None:
+    """Clear circular references in multiworld to allow proper garbage collection.
+
+    The MultiWorld object has circular references with:
+    - Regions (each region.multiworld points to multiworld)
+    - Entrances (connected to regions)
+    - Locations (parent_region points to regions)
+    - Worlds (world.multiworld points to multiworld)
+    - Spoiler (spoiler.multiworld points to multiworld)
+    - CollectionState (state.multiworld points to multiworld)
+
+    This function breaks these cycles so the garbage collector can free the memory.
+    """
+    try:
+        # Clear region references
+        if hasattr(multiworld, 'regions') and hasattr(multiworld.regions, 'region_cache'):
+            for player_regions in multiworld.regions.region_cache.values():
+                for region in list(player_regions.values()):
+                    region.multiworld = None
+                    for exit in region.exits:
+                        exit.parent_region = None
+                        exit.connected_region = None
+                    for loc in region.locations:
+                        loc.parent_region = None
+                player_regions.clear()
+
+        # Clear world references
+        if hasattr(multiworld, 'worlds'):
+            for player, world in list(multiworld.worlds.items()):
+                if hasattr(world, 'multiworld'):
+                    world.multiworld = None
+            multiworld.worlds.clear()
+
+        # Clear spoiler reference
+        if hasattr(multiworld, 'spoiler') and multiworld.spoiler:
+            if hasattr(multiworld.spoiler, 'multiworld'):
+                multiworld.spoiler.multiworld = None
+
+        # Clear collection state reference
+        if hasattr(multiworld, 'state') and multiworld.state:
+            if hasattr(multiworld.state, 'multiworld'):
+                multiworld.state.multiworld = None
+
+    except Exception as e:
+        logger.warning(f"Error clearing multiworld references: {e}")
 
 # --- Field Exclusion Processing ---
 def process_field_exclusions(data, context_excluded_fields=None, global_excluded_fields=None, context_path=None):
