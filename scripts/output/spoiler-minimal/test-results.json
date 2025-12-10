@@ -22,7 +22,7 @@
       ],
       "last_updated": "2025-12-10T20:00:14.138642"
     },
-    "last_updated": "2025-12-10T20:00:14.138640",
+    "last_updated": "2025-12-10T21:10:27.246661",
     "script_version": "1.0.0"
   },
   "results": {
@@ -504,31 +504,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "a2d8db4b2c491adc05bc97ae5db9db9ea351dbfb5e2cb94f09837b6b472bcf0b",
-          "new_sphere_log_hash": "b936877f390ee7e88ee8061112d9d2f884115f01590f7c33da925199c862a766",
-          "original_rules_hash": "a2d8db4b2c491adc05bc97ae5db9db9ea351dbfb5e2cb94f09837b6b472bcf0b",
-          "original_sphere_log_hash": "b936877f390ee7e88ee8061112d9d2f884115f01590f7c33da925199c862a766",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-10T19:56:08.334799"
-        }
-      },
       "game_name_from_filename": "cvcotm",
       "game_name_from_yaml": "Castlevania - Circle of the Moon",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.45,
+        "processing_time_seconds": 7.04,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/cvcotm/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 89392,
+        "size_bytes": 92051,
         "size_mb": 0.09
       },
       "seed": "1",
@@ -536,7 +524,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 9.19,
+        "processing_time_seconds": 8.94,
         "return_code": 0,
         "sphere_reached": 4.4,
         "success": true,
@@ -544,16 +532,16 @@
         "warning_count": 0
       },
       "template_filename": "Castlevania - Circle of the Moon.yaml",
-      "timestamp": "2025-12-10T19:53:45.135390",
+      "timestamp": "2025-12-10T21:10:10.851854",
       "world_info": {
         "exporter_path": "exporter/games/cvcotm.py",
-        "exporter_size": 10449,
-        "game_logic_path": "frontend/modules/shared/gameLogic/cvcotm/cvcotmLogic.js",
-        "game_logic_size": 5832,
+        "exporter_size": 15496,
+        "game_logic_path": null,
+        "game_logic_size": 0,
         "game_name_from_filename": "cvcotm",
         "game_name_from_yaml": "Castlevania - Circle of the Moon",
         "has_custom_exporter": true,
-        "has_custom_game_logic": true,
+        "has_custom_game_logic": false,
         "world_directory": "cvcotm"
       }
     },
