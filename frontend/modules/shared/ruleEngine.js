@@ -1878,6 +1878,42 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'min': {
+        // Return the minimum of evaluated arguments
+        if (!rule.args || rule.args.length === 0) {
+          log('warn', '[evaluateRule] min rule has no arguments', { rule });
+          result = undefined;
+          break;
+        }
+        const minArgs = rule.args.map((arg) =>
+          evaluateRule(arg, context, depth + 1)
+        );
+        if (minArgs.some((arg) => arg === undefined)) {
+          result = undefined;
+          break;
+        }
+        result = Math.min(...minArgs);
+        break;
+      }
+
+      case 'max': {
+        // Return the maximum of evaluated arguments
+        if (!rule.args || rule.args.length === 0) {
+          log('warn', '[evaluateRule] max rule has no arguments', { rule });
+          result = undefined;
+          break;
+        }
+        const maxArgs = rule.args.map((arg) =>
+          evaluateRule(arg, context, depth + 1)
+        );
+        if (maxArgs.some((arg) => arg === undefined)) {
+          result = undefined;
+          break;
+        }
+        result = Math.max(...maxArgs);
+        break;
+      }
+
       case 'list': {
         if (!Array.isArray(rule.value)) {
           log(
@@ -2176,6 +2212,40 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             log('warn', `[evaluateRule] Unknown binary operator: ${rule.op}`);
             result = undefined;
         }
+        break;
+      }
+
+      case 'min': {
+        // Return the minimum of evaluated arguments (block scope version)
+        if (!rule.args || rule.args.length === 0) {
+          result = undefined;
+          break;
+        }
+        const minArgsBlock = rule.args.map((arg) =>
+          evaluateRule(arg, context, depth + 1, localScope)
+        );
+        if (minArgsBlock.some((arg) => arg === undefined)) {
+          result = undefined;
+          break;
+        }
+        result = Math.min(...minArgsBlock);
+        break;
+      }
+
+      case 'max': {
+        // Return the maximum of evaluated arguments (block scope version)
+        if (!rule.args || rule.args.length === 0) {
+          result = undefined;
+          break;
+        }
+        const maxArgsBlock = rule.args.map((arg) =>
+          evaluateRule(arg, context, depth + 1, localScope)
+        );
+        if (maxArgsBlock.some((arg) => arg === undefined)) {
+          result = undefined;
+          break;
+        }
+        result = Math.max(...maxArgsBlock);
         break;
       }
 

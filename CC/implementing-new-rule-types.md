@@ -207,6 +207,76 @@ state.can_reach(entrance_obj, "Entrance", player)
 
 **Change:** Updated `can_reach` handling to detect Entrance type and produce `can_reach_entrance` rule type.
 
+### Example 4: `min` and `max` Built-in Functions
+
+**Problem:** Helpers using Python's `min()` and `max()` functions couldn't be exported. This affected helpers like:
+- `heart_count` in ALTTP
+- `can_use_bombs` in ALTTP
+- `bottle_count` in ALTTP
+- `can_hold_arrows` in ALTTP
+
+**Python patterns:**
+```python
+min(state.count('Piece of Heart', player), max_heart_pieces) // 4
+max(0, (state.count("Bomb Upgrade (+5)", player) - 6) * 10)
+```
+
+**Analyzer change** (in `visit_Call()` after len handling):
+```python
+# *** Special handling for min() function ***
+if func_name == 'min' and len(filtered_args) >= 2:
+    logging.debug(f"Detected min() function call with {len(filtered_args)} args")
+    result = {
+        'type': 'min',
+        'args': filtered_args
+    }
+    return result
+
+# *** Special handling for max() function ***
+if func_name == 'max' and len(filtered_args) >= 2:
+    logging.debug(f"Detected max() function call with {len(filtered_args)} args")
+    result = {
+        'type': 'max',
+        'args': filtered_args
+    }
+    return result
+```
+
+**Frontend change:**
+```javascript
+case 'min': {
+  if (!rule.args || rule.args.length === 0) {
+    result = undefined;
+    break;
+  }
+  const minArgs = rule.args.map((arg) =>
+    evaluateRule(arg, context, depth + 1)
+  );
+  if (minArgs.some((arg) => arg === undefined)) {
+    result = undefined;
+    break;
+  }
+  result = Math.min(...minArgs);
+  break;
+}
+
+case 'max': {
+  if (!rule.args || rule.args.length === 0) {
+    result = undefined;
+    break;
+  }
+  const maxArgs = rule.args.map((arg) =>
+    evaluateRule(arg, context, depth + 1)
+  );
+  if (maxArgs.some((arg) => arg === undefined)) {
+    result = undefined;
+    break;
+  }
+  result = Math.max(...maxArgs);
+  break;
+}
+```
+
 ## Debugging Tips
 
 ### Print Analyzer Output

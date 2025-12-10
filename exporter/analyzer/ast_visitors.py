@@ -766,6 +766,26 @@ class ASTVisitorMixin:
                     return processed_result
                 # If can't pre-process, fall through to regular helper handling
 
+            # *** Special handling for min() function ***
+            if func_name == 'min' and len(filtered_args) >= 2:
+                logging.debug(f"Detected min() function call with {len(filtered_args)} args")
+                result = {
+                    'type': 'min',
+                    'args': filtered_args
+                }
+                logging.debug(f"Created min result: {result}")
+                return result
+
+            # *** Special handling for max() function ***
+            if func_name == 'max' and len(filtered_args) >= 2:
+                logging.debug(f"Detected max() function call with {len(filtered_args)} args")
+                result = {
+                    'type': 'max',
+                    'args': filtered_args
+                }
+                logging.debug(f"Created max result: {result}")
+                return result
+
             # Create helper result with filtered args (no state/player in JSON)
             result = {
                 'type': 'helper',

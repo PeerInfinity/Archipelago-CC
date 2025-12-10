@@ -76,6 +76,8 @@ Both layers must support a rule type for it to work end-to-end.
 |------|-------------|--------|-----------|
 | `binary_op` / `binop` | Arithmetic operations | `left`, `right`, `op` | `+`, `-`, `*`, `/`, `//`, `%` |
 | `compare` / `comparison` | Comparison operations | `left`, `right`, `op` | `==`, `!=`, `<`, `>`, `<=`, `>=`, `in` |
+| `min` | Return minimum of values | `args: []` | N/A |
+| `max` | Return maximum of values | `args: []` | N/A |
 
 ### Generators & Iteration
 
