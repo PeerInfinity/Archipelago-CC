@@ -1,14 +1,17 @@
 /**
  * Jak and Daxter: The Precursor Legacy Helper Functions
  *
- * These helpers implement game-specific logic that can't be expressed
- * purely through the rule system.
+ * Only contains helpers that cannot be expressed through the rule system.
+ * Most helpers are now inlined by the Python exporter.
  */
 
 /**
  * Check if player can reach enough orbs for trading.
  * This is used when orbsanity is off (default). "Reachable Orbs" is a virtual
  * progressive item that gets calculated based on accessible orb regions.
+ *
+ * This helper cannot be exported because it iterates through regions
+ * and sums orb counts based on reachability - complex runtime logic.
  *
  * @param {Object} snapshot - Canonical state snapshot
  * @param {Object} staticData - Static game data (regions is a Map)
@@ -48,72 +51,7 @@ export function can_reach_orbs(snapshot, staticData, requiredOrbs) {
   }
 }
 
-/**
- * Check if player has an item, handling progressive items.
- *
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data including progressionMapping
- * @param {string} itemName - Name of the item to check
- * @returns {boolean} True if player has the item
- */
-export function has(snapshot, staticData, itemName) {
-  // First check if it's in flags (events, checked locations, etc.)
-  if (snapshot.flags && snapshot.flags.includes(itemName)) {
-    return true;
-  }
-
-  // Also check state.events (promoted from state.state.events)
-  if (snapshot.events && snapshot.events.includes(itemName)) {
-    return true;
-  }
-
-  // Check inventory
-  if (!snapshot.inventory) return false;
-
-  // Direct item check
-  if ((snapshot.inventory[itemName] || 0) > 0) {
-    return true;
-  }
-
-  // Check progressive items
-  if (staticData && staticData.progressionMapping) {
-    // Check if this item is provided by any progressive item
-    for (const [progressiveBase, progression] of Object.entries(staticData.progressionMapping)) {
-      const baseCount = snapshot.inventory[progressiveBase] || 0;
-      if (baseCount > 0 && progression && progression.items) {
-        // Check each upgrade in the progression
-        for (const upgrade of progression.items) {
-          if (baseCount >= upgrade.level) {
-            // Check if this upgrade provides the item we're looking for
-            if (upgrade.name === itemName ||
-                (upgrade.provides && upgrade.provides.includes(itemName))) {
-              return true;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return false;
-}
-
-/**
- * Count how many of an item the player has.
- *
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data
- * @param {string} itemName - Name of the item to count
- * @returns {number} Number of items
- */
-export function count(snapshot, staticData, itemName) {
-  if (!snapshot.inventory) return 0;
-  return snapshot.inventory[itemName] || 0;
-}
-
 // Export all helpers as default for game logic registry
 export default {
-  can_reach_orbs,
-  has,
-  count
+  can_reach_orbs
 };
