@@ -22,7 +22,7 @@
       ],
       "last_updated": "2025-12-10T20:00:14.138642"
     },
-    "last_updated": "2025-12-10T20:00:14.138640",
+    "last_updated": "2025-12-10T21:27:32.707327",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1389,31 +1389,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "906bebdb4807204abee280f6919f4033bbcf4c2a138b8f673e3440d051d6701d",
-          "new_sphere_log_hash": "d8a256813915f623031bc028c84d8aae8f14eb24645bc4997d98037c6d34c962",
-          "original_rules_hash": "906bebdb4807204abee280f6919f4033bbcf4c2a138b8f673e3440d051d6701d",
-          "original_sphere_log_hash": "d8a256813915f623031bc028c84d8aae8f14eb24645bc4997d98037c6d34c962",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-10T19:55:48.343625"
-        }
-      },
       "game_name_from_filename": "ffmq",
       "game_name_from_yaml": "Final Fantasy Mystic Quest",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.86,
+        "processing_time_seconds": 7.75,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/ffmq/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 442126,
+        "size_bytes": 435736,
         "size_mb": 0.42
       },
       "seed": "1",
@@ -1421,7 +1409,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 9.91,
+        "processing_time_seconds": 12.92,
         "return_code": 0,
         "sphere_reached": 18.2,
         "success": true,
@@ -1429,10 +1417,10 @@
         "warning_count": 0
       },
       "template_filename": "Final Fantasy Mystic Quest.yaml",
-      "timestamp": "2025-12-10T19:54:05.727131",
+      "timestamp": "2025-12-10T21:27:11.626398",
       "world_info": {
         "exporter_path": "exporter/games/ffmq.py",
-        "exporter_size": 11492,
+        "exporter_size": 7672,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "ffmq",

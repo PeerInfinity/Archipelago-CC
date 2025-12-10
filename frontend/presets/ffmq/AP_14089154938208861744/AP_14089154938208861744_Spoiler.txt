@@ -362,6 +362,19 @@ Playthrough:
   Bomb
 }
 1: {
+  Bone Dungeon 1F - Entrance Room East Box: Cure Potion
+  Bone Dungeon 1F - Entrance Room Middle Box: Heal Potion
+  Bone Dungeon 1F - Entrance Room West Box: Heal Potion
+  Bone Dungeon B1 - Checker Room Box: Projectile Refill
+  Bone Dungeon B1 - Skull Chest: Projectile Refill
+  Bone Dungeon B2 - Spines Room Alcove Box: Projectile Refill
+  Focus Tower 1F - Main Lobby Box: Magic Mirror
+  Foresta - Kaeli's House Box: Charm
+  Foresta - Old Man House Chest: Projectile Refill
+  Foresta - Rest House Box: Cure Potion
+  Foresta West Battlefield: Cure Potion
+  Level Forest - Middle Box: Projectile Refill
+  Level Forest - Old Man: Moon Helm
   Long Spine: Long Spine Bombed
   Old Man Barrel: Barrel Pushed
   Tristam Companion: Tristam
@@ -369,10 +382,12 @@ Playthrough:
 2: {
   Bone Dungeon B1 - Ribcage Waterway Box: Libra Crest
   Bone Dungeon B1 - Tristam: Dragon Claw
+  Bone Dungeon B2 - Spines Room Looped Hallway Box: Projectile Refill
   Short Spine: Short Spine Bombed
   Tristam Bone Dungeon Item Given: Tristam Bone Item Given
 }
 3: {
+  Bone Dungeon B2 - Two Skulls Room Box: Cure Potion
   Skull 1: Skull 1 Bombed
 }
 4: {
@@ -381,12 +396,35 @@ Playthrough:
 }
 5: {
   Bone Dungeon B2 - Flamerus Rex Chest: Sun Coin
+  Bone Dungeon B2 - North Box: Cure Potion
+  Bone Dungeon B2 - Penultimate Room Chest: Cure Potion
+  Bone Dungeon B2 - South Box: Heal Potion
+  Bone Dungeon B2 - Tristam's Treasure Chest: Heal Potion
   Flamerus Rex: Flamerus Rex
+  Foresta - Outside Box: Cure Potion
+  Level Forest - Northeast Box: Cure Potion
+  Level Forest - Northwest Box: Cure Potion
   Level Forest - Southeast Box: Mega Grenade
+  Level Forest - Southwest Box: Heal Potion
 }
 6: {
+  Alive Forest - After Bridge Box: Cure Potion
+  Alive Forest - Gemini Stump Box: Projectile Refill
+  Alive Forest - Libra Treehouse Box: Heal Potion
+  Alive Forest - Near Entrance Box: Heal Potion
+  Alive Forest - Tree Stump Chest: Cure Potion
   Doom Castle B2 - Sun Door Chest: Multi Key
+  Giant Tree 1F - Center Box: Heal Potion
+  Giant Tree 1F - East Box: Cure Potion
+  Giant Tree 1F - Northwest Box: Projectile Refill
+  Giant Tree 1F - Southwest Box: Projectile Refill
+  Giant Tree 2F - Mushroom Tunnel East Box: Heal Potion
   Giant Tree 2F - Mushroom Tunnel West Box: Gemini Crest
+  Giant Tree 2F - North Box: Heal Potion
+  Giant Tree 2F - South Box: Heal Potion
+  Kaidge Temple - Box: Cure Potion
+  Mount Gale - East Box: Cure Potion
+  Mount Gale - West Box: Projectile Refill
   Pazuzu 2F: Pazuzu 2F
   Pazuzu 2F Lock: Pazuzu 2F Lock
   Pazuzu 3F: Pazuzu 3F
@@ -396,75 +434,257 @@ Playthrough:
   Pazuzu 6F: Pazuzu 6F
   Pazuzu 6F Lock: Pazuzu 6F Lock
   Pazuzu's Tower 1F - Descent Bomb Wall Center Box: Steel Sword
+  Pazuzu's Tower 1F - Descent Bomb Wall East Box: Projectile Refill
+  Pazuzu's Tower 1F - Descent Bomb Wall West Box: Heal Potion
+  Pazuzu's Tower 1F - Descent Box: Bomb Refill
+  Pazuzu's Tower 2F - East Room East Box: Bomb Refill
+  Pazuzu's Tower 2F - East Room West Box: Heal Potion
+  Pazuzu's Tower 3F - Guest Room East Box: Projectile Refill
+  Pazuzu's Tower 3F - Guest Room West Box: Cure Potion
+  Pazuzu's Tower 3F - South Ledge Box: Aero Book
+  Pazuzu's Tower 4F - East Storage Room Chest: Life Book
+  Pazuzu's Tower 4F - Elevator East Box: Heal Potion
+  Pazuzu's Tower 4F - Elevator West Box: Projectile Refill
+  Pazuzu's Tower 5F - North Box: Heal Potion
+  Pazuzu's Tower 5F - South Box: Mask
+  Pazuzu's Tower 6F - Box: Cure Potion
   Pazuzu's Tower 6F - Chest: Venus Key
   Rope Bridge - East Box: Tree Wither
+  Rope Bridge - West Box: Bomb Refill
+  Windhole Temple - Box: Refresher
+  Windia - Inn Bedroom North Box: Heal Potion
   Windia - Inn Bedroom South Box: Captain's Cap
+  Windia - Mobius Basement East Box: Cure Potion
+  Windia - Mobius Basement West Box: Bomb Refill
+  Windia - Otto's Attic Box: Cure Potion
+  Windia - Vendor: Refresher
 }
 7: {
+  Alive Forest - Gemini Treehouse Box: Cure Potion
+  Giant Tree 2F - Dropdown Ledge Box: Refresher
+  Giant Tree 3F - Center North Box: Projectile Refill
+  Giant Tree 3F - Center West Box: Refresher
+  Giant Tree 3F - Central Island Box: Steel Shield
+  Giant Tree 3F - West Side Box: Projectile Refill
+  Giant Tree 3F - Worm Room North Box: Quake Book
+  Giant Tree 3F - Worm Room South Box: Cure Potion
+  Giant Tree 4F - East Slime Room Box: Heal Potion
+  Giant Tree 4F - Highest Platform North Box: Projectile Refill
+  Giant Tree 4F - Highest Platform South Box: Projectile Refill
+  Giant Tree 4F - Hook Ledge Northeast Box: Heal Potion
+  Giant Tree 4F - Hook Ledge Southwest Box: Cure Potion
   Giant Tree 4F - West Slime Room Box: River Coin
+  Giant Tree 5F - Northwest Left Box: Cure Potion
+  Giant Tree 5F - Northwest Right Box: Heal Potion
+  Giant Tree 5F - South Left Box: Refresher
+  Giant Tree 5F - South Right Box: Steel Helm
   Kaeli Companion: Kaeli 1
 }
 8: {
+  Fireburg - Hidden Tunnel Box: Projectile Refill
+  Fireburg - Locked House Man: Bomb Refill
+  Fireburg - Reuben's House Box: Projectile Refill
+  Fireburg - Tristam: Projectile Refill
+  Fireburg - Vendor: Cure Potion
+  Focus Tower 3F - River Door Box: Bomb Refill
   Jinn: Jinn
+  Lava Dome - Bare Maze Center Box: Heal Book
+  Lava Dome - Bare Maze Leapfrog Alcove North Box: Cure Potion
+  Lava Dome - Bare Maze Leapfrog Alcove South Box: Heal Potion
+  Lava Dome - Bare Maze Southwest Box: Heal Potion
+  Lava Dome - Beyond River Room Box: Bomb Refill
+  Lava Dome - Beyond River Room Chest: Cure Potion
+  Lava Dome - Caldera Stairway East Left Box: Seed
+  Lava Dome - Caldera Stairway East Right Box: Cure Potion
+  Lava Dome - Caldera Stairway West Left Box: Cure Potion
+  Lava Dome - Caldera Stairway West Right Box: Projectile Refill
+  Lava Dome - Exterior Caldera Near Switch Cliff Box: Projectile Refill
+  Lava Dome - Exterior Center Dropoff Ledge Box: Heal Potion
   Lava Dome - Exterior Dead End Caldera Box: Giant's Axe
+  Lava Dome - Exterior South Cliff Box: Heal Potion
+  Lava Dome - Gold Bar Room Boulder Chest: Cure Book
+  Lava Dome - Gold Bar Room Leapfrog Alcove Box East: Cure Potion
+  Lava Dome - Gold Bar Room Leapfrog Alcove Box West: Bomb Refill
+  Lava Dome - Gold Maze Center Box: Apollo Helm
+  Lava Dome - Gold Maze North Box: Heal Potion
+  Lava Dome - Gold Maze Northeast Box: Cure Potion
+  Lava Dome - Gold Maze Northwest Box: Cure Potion
+  Lava Dome - Gold Maze Southeast Box: Heal Potion
+  Lava Dome - Gold Maze Southwest Box: Heal Potion
+  Lava Dome - Lava River Room East Box: Heal Potion
+  Lava Dome - Lava River Room North Box: Heal Potion
+  Lava Dome - Lava River Room South Box: Heal Potion
+  Lava Dome - Split Corridor Box: Cure Potion
+  Lava Dome - Three Jumps Room Box: Cure Potion
   Lava Dome - U-Bend Room North Box: Charm Claw
+  Lava Dome - U-Bend Room South Box: Blizzard Book
   Lava Dome Plate: Lava Dome Plate
   Medusa: Medusa
   Mine - Crescent Room Chest: Knight Sword
+  Mine - Glitchy Collision Cave Box: Projectile Refill
   Mine - Parallel Room East Box: Battle Axe
   Mine - Parallel Room West Box: Mobius Crest
+  Mine Battlefield: Projectile Refill
   Minotaur: Minotaur
+  Path to Fireburg Central Battlefield: Refresher
   Reuben Companion: Reuben 1
+  Sealed Temple - East Box: Projectile Refill
+  Sealed Temple - West Box: Bomb Refill
+  Volcano - Base Chest: Cure Potion
+  Volcano - Base East Left Box: Cure Potion
   Volcano - Base East Right Box: Excalibur
+  Volcano - Base West Box: Projectile Refill
+  Volcano - Behind Medusa Box: Cure Potion
+  Volcano - Crossover Section Box: Fire Book
+  Volcano - Left Path Box: Bomb Refill
+  Volcano - Right Path Box: Refresher
+  Volcano - Top of the Volcano Left Box: Bomb Refill
+  Volcano - Top of the Volcano Right Box: Heal Potion
+  Wintry Temple - North Box: Projectile Refill
+  Wintry Temple - West Box: Projectile Refill
 }
 9: {
+  Alive Forest - Mobius Treehouse East Box: Refresher
+  Alive Forest - Mobius Treehouse West Box: Heal Potion
   Dualhead Hydra: Dualhead Hydra
   Lava Dome - Hydra Room Northwest Box: Cat Claw
+  Lava Dome - Hydra Room Southweast Box: Refresher
+  Level Forest - Kaeli: Heal Potion
+  Light Temple - Box: Projectile Refill
   Mine - Cliff Northeast Box: Elixir
+  Mine - Cliff Northwest Box: Gaia's Armor
+  Mine - Cliff Southeast Box: Projectile Refill
+  Mine - Cliff Southwest Box: Cure Potion
+  Mine - Reuben: Projectile Refill
   Reuben's dad Saved: Reuben Dad Saved
   Ship Dock Access: Ship Dock Access
+  Volcano - Medusa Chest: Exit Book
 }
 10: {
+  Fireburg - Reuben's House Arion: Cure Potion
   Kaeli 2: Kaeli 2
+  Lava Dome - Dualhead Hydra Chest: Cure Potion
 }
 11: {
   Windia - Kaeli: Sand Coin
 }
 12: {
+  Aquaria - Phoebe's House Chest: Bomb Refill
+  Aquaria - Vendor: Bomb Refill
+  Aquaria - Vendor House Box: Projectile Refill
   Dullahan: Dullahan
+  Falls Basin - Box: Heal Potion
+  Focus Tower 2F - Sand Door Chest: Refresher
   Freezer Crab: Freezer Crab
   Gidrah: Gidrah
   Ice Pyramid 1F Statue: Ice Pyramid 1F Statue
+  Libra Temple - Box: Cure Potion
+  Life Temple - Box: Refresher
+  Life Temple - Mysterious Man: Projectile Refill
   Pazuzu 1F: Pazuzu 1F
   Phanquid: Phanquid
   Phoebe Companion: Phoebe 1
+  South of Aquaria Battlefield: Cure Potion
+  Wintry Cave 1F - Entrance Box: Heal Potion
+  Wintry Cave 1F - North Box: Cure Potion
+  Wintry Cave 1F - Scenic Overlook Box: Bomb Refill
+  Wintry Cave 1F - Slippery Cliff Box: Bomb Refill
+  Wintry Cave 2F - East Left Box: Heal Potion
+  Wintry Cave 2F - East Right Box: White Seal
   Wintry Cave 2F - West Left Box: Thunder Rock
+  Wintry Cave 2F - West Right Box: Projectile Refill
+  Wintry Cave 3F - Before Boss Box: Cure Potion
+  Wintry Cave 3F - East Box: Venus Shield
+  Wintry Cave 3F - West Box: Refresher
 }
 13: {
+  Falls Basin - Snow Crab Chest: Refresher
+  Giant Tree 2F - Gidrah Chest: Bomb Refill
+  Ice Pyramid 1F - East Alcove Chest: Cure Potion
+  Ice Pyramid 1F - Sandwiched Alcove Box: Bomb Refill
+  Ice Pyramid 1F - Southwest Left Box: Heal Potion
+  Ice Pyramid 1F - Southwest Right Box: Cure Potion
+  Ice Pyramid 2F - Center Room Box: Aegis Shield
+  Ice Pyramid 2F - North Corridor Glass Door Box: Projectile Refill
+  Ice Pyramid 2F - North Room Glass Door Box: Magic Ring
+  Ice Pyramid 2F - Northwest Room Box: Flare Seal
+  Ice Pyramid 2F - South Side East Box: Refresher
+  Ice Pyramid 2F - South Side Glass Door Box: Heal Potion
+  Ice Pyramid 3F - East Alcove Box: Cure Potion
+  Ice Pyramid 3F - Inner Room North Box: Bomb Refill
+  Ice Pyramid 3F - Inner Room South Box: Cure Potion
+  Ice Pyramid 3F - Leapfrog Box: Projectile Refill
+  Ice Pyramid 3F - Staircase Dead End Left Box: Cure Potion
+  Ice Pyramid 3F - Staircase Dead End Right Box: Heal Potion
   Ice Pyramid 3F Statue: Ice Pyramid 3F Statue
+  Mount Gale - Dullahan Chest: Noble Armor
   Otto: Rainbow Bridge
   Pazuzu: Pazuzu
+  Pazuzu's Tower 7F - Pazuzu Chest: Projectile Refill
+  Wintry Cave 1F - Phoebe: Cure Potion
+  Wintry Cave 3F - Squidite Chest: Cure Potion
 }
 14: {
   Bomb Libra Block: Spencer Cave Libra Block Bombed
   Collapse Spencer's Cave: Ship Liberated
   Ice Golem: Ice Golem
   Ice Pyramid 4F - Chest: Sky Coin
+  Ice Pyramid 4F - East Left Box: Cure Potion
+  Ice Pyramid 4F - East Right Box: Heal Potion
+  Ice Pyramid 4F - Northwest Box: Projectile Refill
+  Ice Pyramid 4F - South Left Box: Cure Potion
+  Ice Pyramid 4F - South Right Box: Projectile Refill
+  Ice Pyramid 4F - West Left Box: Refresher
+  Ice Pyramid 4F - West Right Box: Heal Potion
   Ice Pyramid 4F Statue: Ice Pyramid 4F Statue
+  Ice Pyramid 5F - North Box: Seed
+  Ice Pyramid 5F - South Leapfrog Box: Refresher
+  Ice Pyramid 5F - South Shelf Box: Cure Potion
+  Ice Pyramid 5F - West Ledge Box: Projectile Refill
   Ice Pyramid 5F Statue: Ice Pyramid 5F Statue
+  Ice Pyramid B1 - Chest: Projectile Refill
+  Ice Pyramid B1 - East Box: Heal Potion
+  Ice Pyramid B1 - North Box: Cupid Locket
   Ice Pyramid B1 - West Box: Jumbo Bomb
+  Spencer's Cave - Mobius Chest: Heal Potion
 }
 15: {
   Captain Mac: Ship Loaned
+  Ice Pyramid 5F - Glass Door Left Box: Heal Potion
+  Ice Pyramid 5F - Glass Door Right Box: Projectile Refill
+  Ice Pyramid 6F - Ice Golem Chest: Cure Potion
   Mac Ship Steering Wheel: Ship Steering Wheel
+  Mac's Ship B1 - Center Hook Platform Box: Meteor Seal
+  Mac's Ship B1 - Central Corridor Box: Heal Potion
+  Mac's Ship B1 - Mac Room Chest: Projectile Refill
+  Mac's Ship B1 - Northwest Hook Platform Box: Cure Potion
+  Mac's Ship B2 - Barrel Room North Box: Heal Potion
+  Mac's Ship B2 - Barrel Room South Box: Projectile Refill
+  Mac's Ship B2 - Southeast Room Box: Cure Potion
+  Mac's Ship B2 - Southwest Room Box: Heal Potion
+  Mac's Ship Deck - Center Box: Heal Potion
+  Mac's Ship Deck - North Box: Projectile Refill
+  Mac's Ship Deck - South Box: Heal Potion
 }
 16: {
+  Doom Castle 4F - Northeast Room Box: Heal Potion
+  Doom Castle 4F - Northwest Room Box: Thunder Seal
+  Doom Castle 4F - Southeast Room Box: Refresher
+  Doom Castle 4F - Southwest Room Box: Projectile Refill
+  Doom Castle B2 - Bone Ledge Box: Cure Potion
+  Doom Castle B2 - Hook Platform Box: Cure Potion
+  Doom Castle B2 - Southeast Chest: Cure Potion
   Stone Golem: Stone Golem
 }
 17: {
+  Doom Castle 5F - North Left Box: Heal Potion
+  Doom Castle 5F - North Right Box: Cure Potion
+  Doom Castle 5F - South Left Box: Bomb Refill
+  Doom Castle 5F - South Right Box: Heal Potion
   Twinhead Wyvern: Twinhead Wyvern
 }
 18: {
+  Doom Castle 6F - East Box: Projectile Refill
   Doom Castle 6F - West Box: Wakewater
   Zuh: Zuh
 }
@@ -472,9 +692,90 @@ Playthrough:
   Dark King: Dark King
   Summer Aquaria: Summer Aquaria
 }
+20: {
+  Focus Tower 2F - Back Door Chest: Projectile Refill
+  Focus Tower 2F - Venus Chest: Cure Potion
+  North of Libra Temple Battlefield: Cure Potion
+  Spencer's Cave - Box: Projectile Refill
+  Spencer's Cave - Locked Chest: Heal Potion
+  Spencer's Cave - Spencer: Projectile Refill
+}
 
 Paths:
 
+Alive Forest - After Bridge Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest
+Alive Forest - Gemini Stump Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest
+Alive Forest - Gemini Treehouse Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Gemini Teleporter Script
+   =>   Gemini Treehouse
+Alive Forest - Libra Treehouse Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Libra Teleporter Script
+   =>   Libra Treehouse
+Alive Forest - Mobius Treehouse East Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Mobius Teleporter Script
+   =>   Mobius Treehouse
+Alive Forest - Mobius Treehouse West Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Mobius Teleporter Script
+   =>   Mobius Treehouse
+Alive Forest - Near Entrance Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest
+Alive Forest - Tree Stump Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest
+Aquaria - Phoebe's House Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Phoebe's House Entrance Script
+   =>   Phoebe's House
+Aquaria - Vendor
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House
+Aquaria - Vendor House Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Winter - Winter Vendor House Entrance
+   =>   Aquaria Vendor House
 Bomb Libra Block
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -484,6 +785,28 @@ Bomb Libra Block
    =>   Spencer Cave Normal South Ledge -> Spencer Cave Normal South Ledge to Spencer Cave Caved In Main Loop
    =>   Spencer Cave Caved In Main Loop -> Spencer Cave Caved In Main Loop to Spencer Cave Caved In Waters
    =>   Spencer Cave Caved In Waters
+Bone Dungeon 1F - Entrance Room East Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F
+Bone Dungeon 1F - Entrance Room Middle Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F
+Bone Dungeon 1F - Entrance Room West Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F
+Bone Dungeon B1 - Checker Room Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
+   =>   Bone Dungeon B1 - Waterway -> Bone Dungeon B1 - Waterway - Exit Waterway
+   =>   Bone Dungeon B1 - Checker Room
 Bone Dungeon B1 - Ribcage Waterway Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -494,6 +817,12 @@ Bone Dungeon B1 - Ribcage Waterway Box
    =>   Bone Dungeon B2 - Exploding Skull Room - First Room -> Bone Dungeon B2 - Exploding Skull Room - First Room to Bone Dungeon B2 - Exploding Skull Room - Second Room
    =>   Bone Dungeon B2 - Exploding Skull Room - Second Room -> Bonne Dungeon B2 - Exploding Skull Room - To Hidden Passage
    =>   Bone Dungeon B1 - Hidden Room
+Bone Dungeon B1 - Skull Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
+   =>   Bone Dungeon B1 - Waterway
 Bone Dungeon B1 - Tristam
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -527,6 +856,90 @@ Bone Dungeon B2 - Lone Room Box
    =>   Bone Dungeon B2 - Two Skulls Room - First Room -> Bone Dungeon B2 - Two Skulls Room - First Room to Bone Dungeon B2 - Two Skulls Room - Second Room
    =>   Bone Dungeon B2 - Two Skulls Room - Second Room -> Bonne Dungeon B2 - Two Skulls Room - To Box Room
    =>   Bone Dungeon B2 - Box Room
+Bone Dungeon B2 - North Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
+   =>   Bone Dungeon B1 - Waterway -> Bone Dungeon B1 - Waterway - Exit Waterway
+   =>   Bone Dungeon B1 - Checker Room -> Bone Dungeon B1 - Checker Room - Exit Checker Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - First Room -> Bone Dungeon B2 - Exploding Skull Room - First Room to Bone Dungeon B2 - Exploding Skull Room - Second Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Second Room -> Bone Dungeon B2 - Exploding Skull Room - Second Room to Bone Dungeon B2 - Exploding Skull Room - Third Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Third Room -> Bonne Dungeon B2 - Exploding Skull Room - To Two Skulls Room
+   =>   Bone Dungeon B2 - Two Skulls Room - First Room -> Bone Dungeon B2 - Two Skulls Room - First Room to Bone Dungeon B2 - Two Skulls Room - Second Room
+   =>   Bone Dungeon B2 - Two Skulls Room - Second Room -> Bone Dungeon B2 - Two Skulls Room - Second Room to Bone Dungeon B2 - Two Skulls Room - Third Room
+   =>   Bone Dungeon B2 - Two Skulls Room - Third Room -> Bonne Dungeon B2 - Two Skulls Room - To Boss Room
+   =>   Bone Dungeon B2 - Boss Room
+Bone Dungeon B2 - Penultimate Room Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
+   =>   Bone Dungeon B1 - Waterway -> Bone Dungeon B1 - Waterway - Exit Waterway
+   =>   Bone Dungeon B1 - Checker Room -> Bone Dungeon B1 - Checker Room - Exit Checker Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - First Room -> Bone Dungeon B2 - Exploding Skull Room - First Room to Bone Dungeon B2 - Exploding Skull Room - Second Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Second Room -> Bone Dungeon B2 - Exploding Skull Room - Second Room to Bone Dungeon B2 - Exploding Skull Room - Third Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Third Room -> Bonne Dungeon B2 - Exploding Skull Room - To Two Skulls Room
+   =>   Bone Dungeon B2 - Two Skulls Room - First Room -> Bone Dungeon B2 - Two Skulls Room - First Room to Bone Dungeon B2 - Two Skulls Room - Second Room
+   =>   Bone Dungeon B2 - Two Skulls Room - Second Room -> Bone Dungeon B2 - Two Skulls Room - Second Room to Bone Dungeon B2 - Two Skulls Room - Third Room
+   =>   Bone Dungeon B2 - Two Skulls Room - Third Room -> Bonne Dungeon B2 - Two Skulls Room - To Quake Room
+   =>   Bone Dungeon B2 - Quake Room
+Bone Dungeon B2 - South Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
+   =>   Bone Dungeon B1 - Waterway -> Bone Dungeon B1 - Waterway - Exit Waterway
+   =>   Bone Dungeon B1 - Checker Room -> Bone Dungeon B1 - Checker Room - Exit Checker Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - First Room -> Bone Dungeon B2 - Exploding Skull Room - First Room to Bone Dungeon B2 - Exploding Skull Room - Second Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Second Room -> Bone Dungeon B2 - Exploding Skull Room - Second Room to Bone Dungeon B2 - Exploding Skull Room - Third Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Third Room -> Bonne Dungeon B2 - Exploding Skull Room - To Two Skulls Room
+   =>   Bone Dungeon B2 - Two Skulls Room - First Room -> Bone Dungeon B2 - Two Skulls Room - First Room to Bone Dungeon B2 - Two Skulls Room - Second Room
+   =>   Bone Dungeon B2 - Two Skulls Room - Second Room -> Bone Dungeon B2 - Two Skulls Room - Second Room to Bone Dungeon B2 - Two Skulls Room - Third Room
+   =>   Bone Dungeon B2 - Two Skulls Room - Third Room -> Bonne Dungeon B2 - Two Skulls Room - To Boss Room
+   =>   Bone Dungeon B2 - Boss Room
+Bone Dungeon B2 - Spines Room Alcove Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
+   =>   Bone Dungeon B1 - Waterway -> Bone Dungeon B1 - Waterway - Exit Waterway
+   =>   Bone Dungeon B1 - Checker Room -> Bone Dungeon B1 - Checker Room - Exit Checker Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - First Room
+Bone Dungeon B2 - Spines Room Looped Hallway Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
+   =>   Bone Dungeon B1 - Waterway -> Bone Dungeon B1 - Waterway - Exit Waterway
+   =>   Bone Dungeon B1 - Checker Room -> Bone Dungeon B1 - Checker Room - Exit Checker Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - First Room -> Bone Dungeon B2 - Exploding Skull Room - First Room to Bone Dungeon B2 - Exploding Skull Room - Second Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Second Room
+Bone Dungeon B2 - Tristam's Treasure Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
+   =>   Bone Dungeon B1 - Waterway -> Bone Dungeon B1 - Waterway - Exit Waterway
+   =>   Bone Dungeon B1 - Checker Room -> Bone Dungeon B1 - Checker Room - Exit Checker Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - First Room -> Bone Dungeon B2 - Exploding Skull Room - First Room to Bone Dungeon B2 - Exploding Skull Room - Second Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Second Room -> Bone Dungeon B2 - Exploding Skull Room - Second Room to Bone Dungeon B2 - Exploding Skull Room - Third Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Third Room -> Bonne Dungeon B2 - Exploding Skull Room - To Two Skulls Room
+   =>   Bone Dungeon B2 - Two Skulls Room - First Room -> Bone Dungeon B2 - Two Skulls Room - First Room to Bone Dungeon B2 - Two Skulls Room - Second Room
+   =>   Bone Dungeon B2 - Two Skulls Room - Second Room -> Bone Dungeon B2 - Two Skulls Room - Second Room to Bone Dungeon B2 - Two Skulls Room - Third Room
+   =>   Bone Dungeon B2 - Two Skulls Room - Third Room -> Bonne Dungeon B2 - Two Skulls Room - To Boss Room
+   =>   Bone Dungeon B2 - Boss Room
+Bone Dungeon B2 - Two Skulls Room Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Bone Dungeon
+   =>   Bone Dungeon 1F -> Bone Dungeon 1F - To Bone Dungeon B1
+   =>   Bone Dungeon B1 - Waterway -> Bone Dungeon B1 - Waterway - Exit Waterway
+   =>   Bone Dungeon B1 - Checker Room -> Bone Dungeon B1 - Checker Room - Exit Checker Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - First Room -> Bone Dungeon B2 - Exploding Skull Room - First Room to Bone Dungeon B2 - Exploding Skull Room - Second Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Second Room -> Bone Dungeon B2 - Exploding Skull Room - Second Room to Bone Dungeon B2 - Exploding Skull Room - Third Room
+   =>   Bone Dungeon B2 - Exploding Skull Room - Third Room -> Bonne Dungeon B2 - Exploding Skull Room - To Two Skulls Room
+   =>   Bone Dungeon B2 - Two Skulls Room - First Room
 Captain Mac
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -569,6 +982,159 @@ Dark King
    =>   Doom Castle Corridor of Destiny -> Doom Castle Corridor of Destiny - Hero Room Entrance
    =>   Doom Castle Hero Room -> Doom Castle Hero Room - Dark King Entrance 1
    =>   Doom Castle Dark King Room
+Doom Castle 4F - Northeast Room Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Subregion Mac's Ship to Subregion Doom Castle
+   =>   Subregion Doom Castle -> Overworld - Doom Castle
+   =>   Doom Castle - Sand Floor -> Doom Castle - Sand Floor - To Sky Door - Sand Floor
+   =>   Focus Tower B1 - Inner Loop -> Focus Tower B1 - Inner Loop - To Focus Tower 1F - Sky Door
+   =>   Focus Tower 1F SkyCoin Room -> Focus Tower 1F - Sky Door
+   =>   Doom Castle Corridor of Destiny -> Doom Castle Corridor of Destiny - Ice Floor Entrance
+   =>   Doom Castle Ice Floor
+Doom Castle 4F - Northwest Room Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Subregion Mac's Ship to Subregion Doom Castle
+   =>   Subregion Doom Castle -> Overworld - Doom Castle
+   =>   Doom Castle - Sand Floor -> Doom Castle - Sand Floor - To Sky Door - Sand Floor
+   =>   Focus Tower B1 - Inner Loop -> Focus Tower B1 - Inner Loop - To Focus Tower 1F - Sky Door
+   =>   Focus Tower 1F SkyCoin Room -> Focus Tower 1F - Sky Door
+   =>   Doom Castle Corridor of Destiny -> Doom Castle Corridor of Destiny - Ice Floor Entrance
+   =>   Doom Castle Ice Floor
+Doom Castle 4F - Southeast Room Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Subregion Mac's Ship to Subregion Doom Castle
+   =>   Subregion Doom Castle -> Overworld - Doom Castle
+   =>   Doom Castle - Sand Floor -> Doom Castle - Sand Floor - To Sky Door - Sand Floor
+   =>   Focus Tower B1 - Inner Loop -> Focus Tower B1 - Inner Loop - To Focus Tower 1F - Sky Door
+   =>   Focus Tower 1F SkyCoin Room -> Focus Tower 1F - Sky Door
+   =>   Doom Castle Corridor of Destiny -> Doom Castle Corridor of Destiny - Ice Floor Entrance
+   =>   Doom Castle Ice Floor
+Doom Castle 4F - Southwest Room Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Subregion Mac's Ship to Subregion Doom Castle
+   =>   Subregion Doom Castle -> Overworld - Doom Castle
+   =>   Doom Castle - Sand Floor -> Doom Castle - Sand Floor - To Sky Door - Sand Floor
+   =>   Focus Tower B1 - Inner Loop -> Focus Tower B1 - Inner Loop - To Focus Tower 1F - Sky Door
+   =>   Focus Tower 1F SkyCoin Room -> Focus Tower 1F - Sky Door
+   =>   Doom Castle Corridor of Destiny -> Doom Castle Corridor of Destiny - Ice Floor Entrance
+   =>   Doom Castle Ice Floor
+Doom Castle 5F - North Left Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Subregion Mac's Ship to Subregion Doom Castle
+   =>   Subregion Doom Castle -> Overworld - Doom Castle
+   =>   Doom Castle - Sand Floor -> Doom Castle - Sand Floor - To Sky Door - Sand Floor
+   =>   Focus Tower B1 - Inner Loop -> Focus Tower B1 - Inner Loop - To Focus Tower 1F - Sky Door
+   =>   Focus Tower 1F SkyCoin Room -> Focus Tower 1F - Sky Door
+   =>   Doom Castle Corridor of Destiny -> Doom Castle Corridor of Destiny - Lava Floor Entrance
+   =>   Doom Castle Lava Floor
+Doom Castle 5F - North Right Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Subregion Mac's Ship to Subregion Doom Castle
+   =>   Subregion Doom Castle -> Overworld - Doom Castle
+   =>   Doom Castle - Sand Floor -> Doom Castle - Sand Floor - To Sky Door - Sand Floor
+   =>   Focus Tower B1 - Inner Loop -> Focus Tower B1 - Inner Loop - To Focus Tower 1F - Sky Door
+   =>   Focus Tower 1F SkyCoin Room -> Focus Tower 1F - Sky Door
+   =>   Doom Castle Corridor of Destiny -> Doom Castle Corridor of Destiny - Lava Floor Entrance
+   =>   Doom Castle Lava Floor
+Doom Castle 5F - South Left Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Subregion Mac's Ship to Subregion Doom Castle
+   =>   Subregion Doom Castle -> Overworld - Doom Castle
+   =>   Doom Castle - Sand Floor -> Doom Castle - Sand Floor - To Sky Door - Sand Floor
+   =>   Focus Tower B1 - Inner Loop -> Focus Tower B1 - Inner Loop - To Focus Tower 1F - Sky Door
+   =>   Focus Tower 1F SkyCoin Room -> Focus Tower 1F - Sky Door
+   =>   Doom Castle Corridor of Destiny -> Doom Castle Corridor of Destiny - Lava Floor Entrance
+   =>   Doom Castle Lava Floor
+Doom Castle 5F - South Right Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Subregion Mac's Ship to Subregion Doom Castle
+   =>   Subregion Doom Castle -> Overworld - Doom Castle
+   =>   Doom Castle - Sand Floor -> Doom Castle - Sand Floor - To Sky Door - Sand Floor
+   =>   Focus Tower B1 - Inner Loop -> Focus Tower B1 - Inner Loop - To Focus Tower 1F - Sky Door
+   =>   Focus Tower 1F SkyCoin Room -> Focus Tower 1F - Sky Door
+   =>   Doom Castle Corridor of Destiny -> Doom Castle Corridor of Destiny - Lava Floor Entrance
+   =>   Doom Castle Lava Floor
+Doom Castle 6F - East Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Subregion Mac's Ship to Subregion Doom Castle
+   =>   Subregion Doom Castle -> Overworld - Doom Castle
+   =>   Doom Castle - Sand Floor -> Doom Castle - Sand Floor - To Sky Door - Sand Floor
+   =>   Focus Tower B1 - Inner Loop -> Focus Tower B1 - Inner Loop - To Focus Tower 1F - Sky Door
+   =>   Focus Tower 1F SkyCoin Room -> Focus Tower 1F - Sky Door
+   =>   Doom Castle Corridor of Destiny -> Doom Castle Corridor of Destiny - Sky Floor Entrance
+   =>   Doom Castle Sky Floor
 Doom Castle 6F - West Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -586,6 +1152,45 @@ Doom Castle 6F - West Box
    =>   Focus Tower 1F SkyCoin Room -> Focus Tower 1F - Sky Door
    =>   Doom Castle Corridor of Destiny -> Doom Castle Corridor of Destiny - Sky Floor Entrance
    =>   Doom Castle Sky Floor
+Doom Castle B2 - Bone Ledge Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Subregion Mac's Ship to Subregion Doom Castle
+   =>   Subregion Doom Castle -> Overworld - Doom Castle
+   =>   Doom Castle - Sand Floor
+Doom Castle B2 - Hook Platform Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Subregion Mac's Ship to Subregion Doom Castle
+   =>   Subregion Doom Castle -> Overworld - Doom Castle
+   =>   Doom Castle - Sand Floor
+Doom Castle B2 - Southeast Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Subregion Mac's Ship to Subregion Doom Castle
+   =>   Subregion Doom Castle -> Overworld - Doom Castle
+   =>   Doom Castle - Sand Floor
 Doom Castle B2 - Sun Door Chest
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -615,6 +1220,61 @@ Dullahan
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
    =>   Subregion Windia -> Overworld - Mount Gale
    =>   Mount Gale
+Falls Basin - Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Falls Basin
+   =>   Fall Basin
+Falls Basin - Snow Crab Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Falls Basin
+   =>   Fall Basin
+Fireburg - Hidden Tunnel Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Fireburg
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza
+Fireburg - Locked House Man
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Fireburg
+   =>   Fireburg Upper Plaza -> Fireburg Upper Plaza to Fireburg Lower Plaza
+   =>   Fireburg Lower Plaza -> Fireburg - GrenadeMan House Script
+   =>   GrenadeMan's House
+Fireburg - Reuben's House Arion
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Fireburg
+   =>   Fireburg Upper Plaza -> Fireburg - Reuben House
+   =>   Reuben's House
+Fireburg - Reuben's House Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Fireburg
+   =>   Fireburg Upper Plaza -> Fireburg - Reuben House
+   =>   Reuben's House
+Fireburg - Tristam
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Fireburg
+   =>   Fireburg Upper Plaza -> Fireburg - Hotel
+   =>   Fireburg Hotel Lobby
+Fireburg - Vendor
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Fireburg
+   =>   Fireburg Upper Plaza -> Fireburg - Vendor House
+   =>   Fireburg Vendor House
 Flamerus Rex
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -629,13 +1289,143 @@ Flamerus Rex
    =>   Bone Dungeon B2 - Two Skulls Room - Second Room -> Bone Dungeon B2 - Two Skulls Room - Second Room to Bone Dungeon B2 - Two Skulls Room - Third Room
    =>   Bone Dungeon B2 - Two Skulls Room - Third Room -> Bonne Dungeon B2 - Two Skulls Room - To Boss Room
    =>   Bone Dungeon B2 - Boss Room
+Focus Tower 1F - Main Lobby Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Focus Tower Foresta
+   =>   Focus Tower B1 - Main Loop -> Focus Tower B1 - Main Loop - To Focus Tower 1F - Main Hall
+   =>   Focus Tower 1F Main Lobby
+Focus Tower 2F - Back Door Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Subregion Fireburg to Subregion Volcano Battlefield
+   =>   Subregion Volcano Battlefield -> Subregion Volcano Battlefield to Subregion Frozen Fields
+   =>   Subregion Frozen Fields -> Overworld - Focus Tower Frozen Strip
+   =>   Focus Tower 3F - Upper Floor -> Focus Tower 3F - Upper Floor - To Focus Tower 2F - Venus Chest Room
+   =>   Focus Tower 2F - Venus Chest Room
+Focus Tower 2F - Sand Door Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Focus Tower Foresta
+   =>   Focus Tower B1 - Main Loop -> Focus Tower B1 - Main Loop - To Focus Tower 1F - Main Hall
+   =>   Focus Tower 1F Main Lobby -> Focus Tower 1F Main Lobby to Focus Tower 1F SandCoin Room
+   =>   Focus Tower 1F SandCoin Room -> Focus Tower 1F - To Focus Tower 2F - From SandCoin
+   =>   Focus Tower 2F - Sand Coin Passage
+Focus Tower 2F - Venus Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Subregion Fireburg to Subregion Volcano Battlefield
+   =>   Subregion Volcano Battlefield -> Subregion Volcano Battlefield to Subregion Frozen Fields
+   =>   Subregion Frozen Fields -> Overworld - Focus Tower Frozen Strip
+   =>   Focus Tower 3F - Upper Floor -> Focus Tower 3F - Upper Floor - To Focus Tower 2F - Venus Chest Room
+   =>   Focus Tower 2F - Venus Chest Room
+Focus Tower 3F - River Door Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Focus Tower Fireburg
+   =>   Focus Tower 3F - Lower Floor
+Foresta - Kaeli's House Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Foresta
+   =>   Foresta -> Foresta - Kaeli's House
+   =>   Kaeli's House
+Foresta - Old Man House Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Foresta
+   =>   Foresta -> Foresta - Old Man House - Back Door
+   =>   Foresta Houses - Old Man's House Back
+Foresta - Outside Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Foresta
+   =>   Foresta
+Foresta - Rest House Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Foresta
+   =>   Foresta -> Foresta - Rest House
+   =>   Foresta Houses - Rest House
+Foresta West Battlefield
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta
 Freezer Crab
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Falls Basin
    =>   Fall Basin
+Giant Tree 1F - Center Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area
+Giant Tree 1F - East Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area
+Giant Tree 1F - Northwest Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area
+Giant Tree 1F - Southwest Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area
+Giant Tree 2F - Dropdown Ledge Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby to Giant Tree 2F Lower Area
+   =>   Giant Tree 2F Lower Area -> Giant Tree 2F Lower Area to Giant Tree 2F Central Island
+   =>   Giant Tree 2F Central Island -> Giant Tree 2F Main Lobby - Central Entrance to 3F
+   =>   Giant Tree 3F Central Island -> Giant Tree 3F Central Island to Giant Tree 3F Lower Ledge
+   =>   Giant Tree 3F Lower Ledge -> Giant Tree 3F Central Room - East Entrance to Worm Room
+   =>   Giant Tree Worm Room Upper Ledge -> Giant Tree Worm Room Upper Ledge to Giant Tree Worm Room Lower Ledge
+   =>   Giant Tree Worm Room Lower Ledge -> Giant Tree Worm Room - West Entrance
+   =>   Giant Tree 3F West Area -> Giant Tree 3F West Area to Giant Tree 2F West Ledge
+   =>   Giant Tree 2F West Ledge
+Giant Tree 2F - Gidrah Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby - West Entrance to Mushroom Room
+   =>   Giant Tree 2F Mushroom Room -> Giant Tree 2F Mushroom Room - North Face to Meteor
+   =>   Giant Tree 2F Meteor Chest Room
+Giant Tree 2F - Mushroom Tunnel East Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby - West Entrance to Mushroom Room
+   =>   Giant Tree 2F Mushroom Room
 Giant Tree 2F - Mushroom Tunnel West Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -646,6 +1436,222 @@ Giant Tree 2F - Mushroom Tunnel West Box
    =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
    =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby - West Entrance to Mushroom Room
    =>   Giant Tree 2F Mushroom Room
+Giant Tree 2F - North Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby
+Giant Tree 2F - South Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby to Giant Tree 2F Lower Area
+   =>   Giant Tree 2F Lower Area
+Giant Tree 3F - Center North Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby to Giant Tree 2F Lower Area
+   =>   Giant Tree 2F Lower Area -> Giant Tree 2F Lower Area to Giant Tree 2F Central Island
+   =>   Giant Tree 2F Central Island -> Giant Tree 2F Main Lobby - Central Entrance to 3F
+   =>   Giant Tree 3F Central Island -> Giant Tree 3F Central Island to Giant Tree 3F Central Area
+   =>   Giant Tree 3F Central Area
+Giant Tree 3F - Center West Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby to Giant Tree 2F Lower Area
+   =>   Giant Tree 2F Lower Area -> Giant Tree 2F Lower Area to Giant Tree 2F Central Island
+   =>   Giant Tree 2F Central Island -> Giant Tree 2F Main Lobby - Central Entrance to 3F
+   =>   Giant Tree 3F Central Island -> Giant Tree 3F Central Island to Giant Tree 3F Central Area
+   =>   Giant Tree 3F Central Area
+Giant Tree 3F - Central Island Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby to Giant Tree 2F Lower Area
+   =>   Giant Tree 2F Lower Area -> Giant Tree 2F Lower Area to Giant Tree 2F Central Island
+   =>   Giant Tree 2F Central Island -> Giant Tree 2F Main Lobby - Central Entrance to 3F
+   =>   Giant Tree 3F Central Island
+Giant Tree 3F - West Side Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby to Giant Tree 2F Lower Area
+   =>   Giant Tree 2F Lower Area -> Giant Tree 2F Lower Area to Giant Tree 2F Central Island
+   =>   Giant Tree 2F Central Island -> Giant Tree 2F Main Lobby - Central Entrance to 3F
+   =>   Giant Tree 3F Central Island -> Giant Tree 3F Central Island to Giant Tree 3F Lower Ledge
+   =>   Giant Tree 3F Lower Ledge -> Giant Tree 3F Central Room - East Entrance to Worm Room
+   =>   Giant Tree Worm Room Upper Ledge -> Giant Tree Worm Room Upper Ledge to Giant Tree Worm Room Lower Ledge
+   =>   Giant Tree Worm Room Lower Ledge -> Giant Tree Worm Room - West Entrance
+   =>   Giant Tree 3F West Area
+Giant Tree 3F - Worm Room North Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby to Giant Tree 2F Lower Area
+   =>   Giant Tree 2F Lower Area -> Giant Tree 2F Lower Area to Giant Tree 2F Central Island
+   =>   Giant Tree 2F Central Island -> Giant Tree 2F Main Lobby - Central Entrance to 3F
+   =>   Giant Tree 3F Central Island -> Giant Tree 3F Central Island to Giant Tree 3F Lower Ledge
+   =>   Giant Tree 3F Lower Ledge -> Giant Tree 3F Central Room - East Entrance to Worm Room
+   =>   Giant Tree Worm Room Upper Ledge
+Giant Tree 3F - Worm Room South Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby to Giant Tree 2F Lower Area
+   =>   Giant Tree 2F Lower Area -> Giant Tree 2F Lower Area to Giant Tree 2F Central Island
+   =>   Giant Tree 2F Central Island -> Giant Tree 2F Main Lobby - Central Entrance to 3F
+   =>   Giant Tree 3F Central Island -> Giant Tree 3F Central Island to Giant Tree 3F Lower Ledge
+   =>   Giant Tree 3F Lower Ledge -> Giant Tree 3F Central Room - East Entrance to Worm Room
+   =>   Giant Tree Worm Room Upper Ledge
+Giant Tree 4F - East Slime Room Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby to Giant Tree 2F Lower Area
+   =>   Giant Tree 2F Lower Area -> Giant Tree 2F Lower Area to Giant Tree 2F Central Island
+   =>   Giant Tree 2F Central Island -> Giant Tree 2F Main Lobby - Central Entrance to 3F
+   =>   Giant Tree 3F Central Island -> Giant Tree 3F Central Island to Giant Tree 3F Lower Ledge
+   =>   Giant Tree 3F Lower Ledge -> Giant Tree 3F Central Room - East Entrance to Worm Room
+   =>   Giant Tree Worm Room Upper Ledge -> Giant Tree Worm Room Upper Ledge to Giant Tree Worm Room Lower Ledge
+   =>   Giant Tree Worm Room Lower Ledge -> Giant Tree Worm Room - West Entrance
+   =>   Giant Tree 3F West Area -> Giant Tree 3F West Area to Giant Tree 2F West Ledge
+   =>   Giant Tree 2F West Ledge -> Giant Tree 2F West Ledge - To 3F Northwest Ledge
+   =>   Giant Tree 3F West Platform -> Giant Tree 3F West Platform to Giant Tree 3F North Ledge
+   =>   Giant Tree 3F North Ledge -> Giant Tree 3F West Platform - Top Entrance
+   =>   Giant Tree 4F Lower Floor -> Giant Tree 4F Lower Floor - Lower East Mouth
+   =>   Giant Tree 4F Slime Room East Area
+Giant Tree 4F - Highest Platform North Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby to Giant Tree 2F Lower Area
+   =>   Giant Tree 2F Lower Area -> Giant Tree 2F Lower Area to Giant Tree 2F Central Island
+   =>   Giant Tree 2F Central Island -> Giant Tree 2F Main Lobby - Central Entrance to 3F
+   =>   Giant Tree 3F Central Island -> Giant Tree 3F Central Island to Giant Tree 3F Lower Ledge
+   =>   Giant Tree 3F Lower Ledge -> Giant Tree 3F Central Room - East Entrance to Worm Room
+   =>   Giant Tree Worm Room Upper Ledge -> Giant Tree Worm Room Upper Ledge to Giant Tree Worm Room Lower Ledge
+   =>   Giant Tree Worm Room Lower Ledge -> Giant Tree Worm Room - West Entrance
+   =>   Giant Tree 3F West Area -> Giant Tree 3F West Area to Giant Tree 2F West Ledge
+   =>   Giant Tree 2F West Ledge -> Giant Tree 2F West Ledge - To 3F Northwest Ledge
+   =>   Giant Tree 3F West Platform -> Giant Tree 3F West Platform to Giant Tree 3F North Ledge
+   =>   Giant Tree 3F North Ledge -> Giant Tree 3F West Platform - Top Entrance
+   =>   Giant Tree 4F Lower Floor -> Giant Tree 4F Lower Floor - Lower West Mouth
+   =>   Giant Tree 4F Slime Room West Area -> Giant Tree 4F Slime Room West Area to Giant Tree 4F Slime Room Platform
+   =>   Giant Tree 4F Slime Room Platform -> Giant Tree 4F Slime Room - Exit
+   =>   Giant Tree 4F Middle Floor
+Giant Tree 4F - Highest Platform South Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby to Giant Tree 2F Lower Area
+   =>   Giant Tree 2F Lower Area -> Giant Tree 2F Lower Area to Giant Tree 2F Central Island
+   =>   Giant Tree 2F Central Island -> Giant Tree 2F Main Lobby - Central Entrance to 3F
+   =>   Giant Tree 3F Central Island -> Giant Tree 3F Central Island to Giant Tree 3F Lower Ledge
+   =>   Giant Tree 3F Lower Ledge -> Giant Tree 3F Central Room - East Entrance to Worm Room
+   =>   Giant Tree Worm Room Upper Ledge -> Giant Tree Worm Room Upper Ledge to Giant Tree Worm Room Lower Ledge
+   =>   Giant Tree Worm Room Lower Ledge -> Giant Tree Worm Room - West Entrance
+   =>   Giant Tree 3F West Area -> Giant Tree 3F West Area to Giant Tree 2F West Ledge
+   =>   Giant Tree 2F West Ledge -> Giant Tree 2F West Ledge - To 3F Northwest Ledge
+   =>   Giant Tree 3F West Platform -> Giant Tree 3F West Platform to Giant Tree 3F North Ledge
+   =>   Giant Tree 3F North Ledge -> Giant Tree 3F West Platform - Top Entrance
+   =>   Giant Tree 4F Lower Floor -> Giant Tree 4F Lower Floor - Lower West Mouth
+   =>   Giant Tree 4F Slime Room West Area -> Giant Tree 4F Slime Room West Area to Giant Tree 4F Slime Room Platform
+   =>   Giant Tree 4F Slime Room Platform -> Giant Tree 4F Slime Room - Exit
+   =>   Giant Tree 4F Middle Floor
+Giant Tree 4F - Hook Ledge Northeast Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby to Giant Tree 2F Lower Area
+   =>   Giant Tree 2F Lower Area -> Giant Tree 2F Lower Area to Giant Tree 2F Central Island
+   =>   Giant Tree 2F Central Island -> Giant Tree 2F Main Lobby - Central Entrance to 3F
+   =>   Giant Tree 3F Central Island -> Giant Tree 3F Central Island to Giant Tree 3F Lower Ledge
+   =>   Giant Tree 3F Lower Ledge -> Giant Tree 3F Central Room - East Entrance to Worm Room
+   =>   Giant Tree Worm Room Upper Ledge -> Giant Tree Worm Room Upper Ledge to Giant Tree Worm Room Lower Ledge
+   =>   Giant Tree Worm Room Lower Ledge -> Giant Tree Worm Room - West Entrance
+   =>   Giant Tree 3F West Area -> Giant Tree 3F West Area to Giant Tree 2F West Ledge
+   =>   Giant Tree 2F West Ledge -> Giant Tree 2F West Ledge - To 3F Northwest Ledge
+   =>   Giant Tree 3F West Platform -> Giant Tree 3F West Platform to Giant Tree 3F North Ledge
+   =>   Giant Tree 3F North Ledge -> Giant Tree 3F West Platform - Top Entrance
+   =>   Giant Tree 4F Lower Floor -> Giant Tree 4F Lower Floor - Lower West Mouth
+   =>   Giant Tree 4F Slime Room West Area -> Giant Tree 4F Slime Room West Area to Giant Tree 4F Slime Room Platform
+   =>   Giant Tree 4F Slime Room Platform -> Giant Tree 4F Slime Room - Exit
+   =>   Giant Tree 4F Middle Floor -> Giant Tree 4F Middle Floor to Giant Tree 4F South Ledge
+   =>   Giant Tree 4F South Ledge
+Giant Tree 4F - Hook Ledge Southwest Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby to Giant Tree 2F Lower Area
+   =>   Giant Tree 2F Lower Area -> Giant Tree 2F Lower Area to Giant Tree 2F Central Island
+   =>   Giant Tree 2F Central Island -> Giant Tree 2F Main Lobby - Central Entrance to 3F
+   =>   Giant Tree 3F Central Island -> Giant Tree 3F Central Island to Giant Tree 3F Lower Ledge
+   =>   Giant Tree 3F Lower Ledge -> Giant Tree 3F Central Room - East Entrance to Worm Room
+   =>   Giant Tree Worm Room Upper Ledge -> Giant Tree Worm Room Upper Ledge to Giant Tree Worm Room Lower Ledge
+   =>   Giant Tree Worm Room Lower Ledge -> Giant Tree Worm Room - West Entrance
+   =>   Giant Tree 3F West Area -> Giant Tree 3F West Area to Giant Tree 2F West Ledge
+   =>   Giant Tree 2F West Ledge -> Giant Tree 2F West Ledge - To 3F Northwest Ledge
+   =>   Giant Tree 3F West Platform -> Giant Tree 3F West Platform to Giant Tree 3F North Ledge
+   =>   Giant Tree 3F North Ledge -> Giant Tree 3F West Platform - Top Entrance
+   =>   Giant Tree 4F Lower Floor -> Giant Tree 4F Lower Floor - Lower West Mouth
+   =>   Giant Tree 4F Slime Room West Area -> Giant Tree 4F Slime Room West Area to Giant Tree 4F Slime Room Platform
+   =>   Giant Tree 4F Slime Room Platform -> Giant Tree 4F Slime Room - Exit
+   =>   Giant Tree 4F Middle Floor -> Giant Tree 4F Middle Floor to Giant Tree 4F South Ledge
+   =>   Giant Tree 4F South Ledge
 Giant Tree 4F - West Slime Room Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -668,6 +1674,106 @@ Giant Tree 4F - West Slime Room Box
    =>   Giant Tree 4F Lower Floor -> Giant Tree 4F Lower Floor - Lower West Mouth
    =>   Giant Tree 4F Slime Room West Area -> Giant Tree 4F Slime Room West Area to Giant Tree 4F Slime Room Platform
    =>   Giant Tree 4F Slime Room Platform
+Giant Tree 5F - Northwest Left Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby to Giant Tree 2F Lower Area
+   =>   Giant Tree 2F Lower Area -> Giant Tree 2F Lower Area to Giant Tree 2F Central Island
+   =>   Giant Tree 2F Central Island -> Giant Tree 2F Main Lobby - Central Entrance to 3F
+   =>   Giant Tree 3F Central Island -> Giant Tree 3F Central Island to Giant Tree 3F Lower Ledge
+   =>   Giant Tree 3F Lower Ledge -> Giant Tree 3F Central Room - East Entrance to Worm Room
+   =>   Giant Tree Worm Room Upper Ledge -> Giant Tree Worm Room Upper Ledge to Giant Tree Worm Room Lower Ledge
+   =>   Giant Tree Worm Room Lower Ledge -> Giant Tree Worm Room - West Entrance
+   =>   Giant Tree 3F West Area -> Giant Tree 3F West Area to Giant Tree 2F West Ledge
+   =>   Giant Tree 2F West Ledge -> Giant Tree 2F West Ledge - To 3F Northwest Ledge
+   =>   Giant Tree 3F West Platform -> Giant Tree 3F West Platform to Giant Tree 3F North Ledge
+   =>   Giant Tree 3F North Ledge -> Giant Tree 3F West Platform - Top Entrance
+   =>   Giant Tree 4F Lower Floor -> Giant Tree 4F Lower Floor - Lower West Mouth
+   =>   Giant Tree 4F Slime Room West Area -> Giant Tree 4F Slime Room West Area to Giant Tree 4F Slime Room Platform
+   =>   Giant Tree 4F Slime Room Platform -> Giant Tree 4F Slime Room - Exit
+   =>   Giant Tree 4F Middle Floor -> Giant Tree 4F Middle Floor to Giant Tree 4F Upper Floor
+   =>   Giant Tree 4F Upper Floor -> Giant Tree 4F Upper Floor - Upper Central Mouth
+   =>   Giant Tree 5F Lower Area
+Giant Tree 5F - Northwest Right Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby to Giant Tree 2F Lower Area
+   =>   Giant Tree 2F Lower Area -> Giant Tree 2F Lower Area to Giant Tree 2F Central Island
+   =>   Giant Tree 2F Central Island -> Giant Tree 2F Main Lobby - Central Entrance to 3F
+   =>   Giant Tree 3F Central Island -> Giant Tree 3F Central Island to Giant Tree 3F Lower Ledge
+   =>   Giant Tree 3F Lower Ledge -> Giant Tree 3F Central Room - East Entrance to Worm Room
+   =>   Giant Tree Worm Room Upper Ledge -> Giant Tree Worm Room Upper Ledge to Giant Tree Worm Room Lower Ledge
+   =>   Giant Tree Worm Room Lower Ledge -> Giant Tree Worm Room - West Entrance
+   =>   Giant Tree 3F West Area -> Giant Tree 3F West Area to Giant Tree 2F West Ledge
+   =>   Giant Tree 2F West Ledge -> Giant Tree 2F West Ledge - To 3F Northwest Ledge
+   =>   Giant Tree 3F West Platform -> Giant Tree 3F West Platform to Giant Tree 3F North Ledge
+   =>   Giant Tree 3F North Ledge -> Giant Tree 3F West Platform - Top Entrance
+   =>   Giant Tree 4F Lower Floor -> Giant Tree 4F Lower Floor - Lower West Mouth
+   =>   Giant Tree 4F Slime Room West Area -> Giant Tree 4F Slime Room West Area to Giant Tree 4F Slime Room Platform
+   =>   Giant Tree 4F Slime Room Platform -> Giant Tree 4F Slime Room - Exit
+   =>   Giant Tree 4F Middle Floor -> Giant Tree 4F Middle Floor to Giant Tree 4F Upper Floor
+   =>   Giant Tree 4F Upper Floor -> Giant Tree 4F Upper Floor - Upper Central Mouth
+   =>   Giant Tree 5F Lower Area
+Giant Tree 5F - South Left Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby to Giant Tree 2F Lower Area
+   =>   Giant Tree 2F Lower Area -> Giant Tree 2F Lower Area to Giant Tree 2F Central Island
+   =>   Giant Tree 2F Central Island -> Giant Tree 2F Main Lobby - Central Entrance to 3F
+   =>   Giant Tree 3F Central Island -> Giant Tree 3F Central Island to Giant Tree 3F Lower Ledge
+   =>   Giant Tree 3F Lower Ledge -> Giant Tree 3F Central Room - East Entrance to Worm Room
+   =>   Giant Tree Worm Room Upper Ledge -> Giant Tree Worm Room Upper Ledge to Giant Tree Worm Room Lower Ledge
+   =>   Giant Tree Worm Room Lower Ledge -> Giant Tree Worm Room - West Entrance
+   =>   Giant Tree 3F West Area -> Giant Tree 3F West Area to Giant Tree 2F West Ledge
+   =>   Giant Tree 2F West Ledge -> Giant Tree 2F West Ledge - To 3F Northwest Ledge
+   =>   Giant Tree 3F West Platform -> Giant Tree 3F West Platform to Giant Tree 3F North Ledge
+   =>   Giant Tree 3F North Ledge -> Giant Tree 3F West Platform - Top Entrance
+   =>   Giant Tree 4F Lower Floor -> Giant Tree 4F Lower Floor - Lower West Mouth
+   =>   Giant Tree 4F Slime Room West Area -> Giant Tree 4F Slime Room West Area to Giant Tree 4F Slime Room Platform
+   =>   Giant Tree 4F Slime Room Platform -> Giant Tree 4F Slime Room - Exit
+   =>   Giant Tree 4F Middle Floor -> Giant Tree 4F Middle Floor to Giant Tree 4F Upper Floor
+   =>   Giant Tree 4F Upper Floor -> Giant Tree 4F Upper Floor - Upper Central Mouth
+   =>   Giant Tree 5F Lower Area
+Giant Tree 5F - South Right Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Alive Forest
+   =>   Alive Forest -> Alive Forest - Giant Tree Entrance
+   =>   Giant Tree 1F Main Area -> Giant Tree 1F Main Area to Giant Tree 1F North Island
+   =>   Giant Tree 1F North Island -> Giant Tree 1F - North Entrance To 2F
+   =>   Giant Tree 2F Main Lobby -> Giant Tree 2F Main Lobby to Giant Tree 2F Lower Area
+   =>   Giant Tree 2F Lower Area -> Giant Tree 2F Lower Area to Giant Tree 2F Central Island
+   =>   Giant Tree 2F Central Island -> Giant Tree 2F Main Lobby - Central Entrance to 3F
+   =>   Giant Tree 3F Central Island -> Giant Tree 3F Central Island to Giant Tree 3F Lower Ledge
+   =>   Giant Tree 3F Lower Ledge -> Giant Tree 3F Central Room - East Entrance to Worm Room
+   =>   Giant Tree Worm Room Upper Ledge -> Giant Tree Worm Room Upper Ledge to Giant Tree Worm Room Lower Ledge
+   =>   Giant Tree Worm Room Lower Ledge -> Giant Tree Worm Room - West Entrance
+   =>   Giant Tree 3F West Area -> Giant Tree 3F West Area to Giant Tree 2F West Ledge
+   =>   Giant Tree 2F West Ledge -> Giant Tree 2F West Ledge - To 3F Northwest Ledge
+   =>   Giant Tree 3F West Platform -> Giant Tree 3F West Platform to Giant Tree 3F North Ledge
+   =>   Giant Tree 3F North Ledge -> Giant Tree 3F West Platform - Top Entrance
+   =>   Giant Tree 4F Lower Floor -> Giant Tree 4F Lower Floor - Lower West Mouth
+   =>   Giant Tree 4F Slime Room West Area -> Giant Tree 4F Slime Room West Area to Giant Tree 4F Slime Room Platform
+   =>   Giant Tree 4F Slime Room Platform -> Giant Tree 4F Slime Room - Exit
+   =>   Giant Tree 4F Middle Floor -> Giant Tree 4F Middle Floor to Giant Tree 4F Upper Floor
+   =>   Giant Tree 4F Upper Floor -> Giant Tree 4F Upper Floor - Upper Central Mouth
+   =>   Giant Tree 5F Lower Area
 Gidrah
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -697,8 +1803,7 @@ Gidrah
 Ice Golem
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Ice Pyramid
    =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
    =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
@@ -712,18 +1817,146 @@ Ice Golem
    =>   Ice Pyramid Climbing Wall Room Upper Space -> Ice Pyramid Climbing Wall Room - To 5F Stairs
    =>   Ice Pyramid 5F Stairs to Ice Golem -> Ice Pyramid 5F Stairs to Ice Golem - To Ice Golem Room
    =>   Ice Pyramid Ice Golem Room
+Ice Pyramid 1F - East Alcove Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze
+Ice Pyramid 1F - Sandwiched Alcove Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze
+Ice Pyramid 1F - Southwest Left Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze
+Ice Pyramid 1F - Southwest Right Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze
 Ice Pyramid 1F Statue
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Ice Pyramid
    =>   Ice Pyramid 1F Maze Lobby
+Ice Pyramid 2F - Center Room Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Center Stairs to 2F Center Room
+   =>   Ice Pyramid 2F Center Room
+Ice Pyramid 2F - North Corridor Glass Door Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor
+Ice Pyramid 2F - North Room Glass Door Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - Upper Stairs to 2F Small North Room
+   =>   Ice Pyramid 2F Small North Room
+Ice Pyramid 2F - Northwest Room Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - West Center Stairs to 2F West Room
+   =>   Ice Pyramid 2F West Room
+Ice Pyramid 2F - South Side East Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - West Stairs To 2F South Tiled Room
+   =>   Ice Pyramid 2F South Tiled Room
+Ice Pyramid 2F - South Side Glass Door Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - West Stairs To 2F South Tiled Room
+   =>   Ice Pyramid 2F South Tiled Room
+Ice Pyramid 3F - East Alcove Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop
+Ice Pyramid 3F - Inner Room North Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop
+Ice Pyramid 3F - Inner Room South Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop
+Ice Pyramid 3F - Leapfrog Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop
+Ice Pyramid 3F - Staircase Dead End Left Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - West Stairs To 2F South Tiled Room
+   =>   Ice Pyramid 2F South Tiled Room -> Ice Pyramid 2F South Tiled Room - To 3F Two Boxes Room
+   =>   Ice Pyramid 3F Two Boxes Room
+Ice Pyramid 3F - Staircase Dead End Right Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - West Stairs To 2F South Tiled Room
+   =>   Ice Pyramid 2F South Tiled Room -> Ice Pyramid 2F South Tiled Room - To 3F Two Boxes Room
+   =>   Ice Pyramid 3F Two Boxes Room
 Ice Pyramid 3F Statue
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Ice Pyramid
    =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
    =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
@@ -732,8 +1965,98 @@ Ice Pyramid 3F Statue
 Ice Pyramid 4F - Chest
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room -> Ice Pyramid 5F Leap of Faith Room to Ice Pyramid 4F Treasure Room
+   =>   Ice Pyramid 4F Treasure Room
+Ice Pyramid 4F - East Left Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room -> Ice Pyramid 5F Leap of Faith Room to Ice Pyramid 4F Treasure Room
+   =>   Ice Pyramid 4F Treasure Room
+Ice Pyramid 4F - East Right Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room -> Ice Pyramid 5F Leap of Faith Room to Ice Pyramid 4F Treasure Room
+   =>   Ice Pyramid 4F Treasure Room
+Ice Pyramid 4F - Northwest Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room -> Ice Pyramid 5F Leap of Faith Room to Ice Pyramid 4F Treasure Room
+   =>   Ice Pyramid 4F Treasure Room
+Ice Pyramid 4F - South Left Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room -> Ice Pyramid 5F Leap of Faith Room to Ice Pyramid 4F Treasure Room
+   =>   Ice Pyramid 4F Treasure Room
+Ice Pyramid 4F - South Right Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room -> Ice Pyramid 5F Leap of Faith Room to Ice Pyramid 4F Treasure Room
+   =>   Ice Pyramid 4F Treasure Room
+Ice Pyramid 4F - West Left Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room -> Ice Pyramid 5F Leap of Faith Room to Ice Pyramid 4F Treasure Room
+   =>   Ice Pyramid 4F Treasure Room
+Ice Pyramid 4F - West Right Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Ice Pyramid
    =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
    =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
@@ -746,8 +2069,7 @@ Ice Pyramid 4F - Chest
 Ice Pyramid 4F Statue
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Ice Pyramid
    =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
    =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
@@ -757,11 +2079,82 @@ Ice Pyramid 4F Statue
    =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
    =>   Ice Pyramid 5F Leap of Faith Room -> Ice Pyramid 5F Leap of Faith Room to Ice Pyramid 4F Treasure Room
    =>   Ice Pyramid 4F Treasure Room
+Ice Pyramid 5F - Glass Door Left Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room
+Ice Pyramid 5F - Glass Door Right Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room
+Ice Pyramid 5F - North Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room
+Ice Pyramid 5F - South Leapfrog Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room
+Ice Pyramid 5F - South Shelf Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room
+Ice Pyramid 5F - West Ledge Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room
 Ice Pyramid 5F Statue
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Ice Pyramid
    =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
    =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
@@ -774,11 +2167,66 @@ Ice Pyramid 5F Statue
    =>   Ice Pyramid Climbing Wall Room Lower Space -> Ice Pyramid Climbing Wall Room Lower Space to Ice Pyramid Climbing Wall Room Upper Space
    =>   Ice Pyramid Climbing Wall Room Upper Space -> Ice Pyramid Climbing Wall Room - To 5F Stairs
    =>   Ice Pyramid 5F Stairs to Ice Golem
+Ice Pyramid 6F - Ice Golem Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room -> Ice Pyramid 5F Leap of Faith Room to Ice Pyramid B1 Taunt Room
+   =>   Ice Pyramid B1 Taunt Room -> Ice Pyramid B1 Taunt Room - To Climbing Wall Room
+   =>   Ice Pyramid Climbing Wall Room Lower Space -> Ice Pyramid Climbing Wall Room Lower Space to Ice Pyramid Climbing Wall Room Upper Space
+   =>   Ice Pyramid Climbing Wall Room Upper Space -> Ice Pyramid Climbing Wall Room - To 5F Stairs
+   =>   Ice Pyramid 5F Stairs to Ice Golem -> Ice Pyramid 5F Stairs to Ice Golem - To Ice Golem Room
+   =>   Ice Pyramid Ice Golem Room
+Ice Pyramid B1 - Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room -> Ice Pyramid 5F Leap of Faith Room to Ice Pyramid B1 Taunt Room
+   =>   Ice Pyramid B1 Taunt Room
+Ice Pyramid B1 - East Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room -> Ice Pyramid 5F Leap of Faith Room to Ice Pyramid B1 Taunt Room
+   =>   Ice Pyramid B1 Taunt Room
+Ice Pyramid B1 - North Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Ice Pyramid
+   =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
+   =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
+   =>   Ice Pyramid 2F North Corridor -> Ice Pyramid 2F North Corridor - To 3F Main Loop
+   =>   Ice Pyramid 3F Main Loop -> Ice Pyramid 3F Main Loop to Ice Pyramid 3F Blocked Room
+   =>   Ice Pyramid 3F Blocked Room -> Ice Pyramid 3F Main Loop - To 4F
+   =>   Ice Pyramid 4F Main Loop -> Ice Pyramid 4F Treasure Room - To 5F Leap of Faith Room
+   =>   Ice Pyramid 5F Leap of Faith Room -> Ice Pyramid 5F Leap of Faith Room to Ice Pyramid B1 Taunt Room
+   =>   Ice Pyramid B1 Taunt Room
 Ice Pyramid B1 - West Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Ice Pyramid
    =>   Ice Pyramid 1F Maze Lobby -> Ice Pyramid 1F Maze Lobby to Ice Pyramid 1F Maze
    =>   Ice Pyramid 1F Maze -> Ice Pyramid 1F Maze - East Stairs to 2F North Corridor
@@ -807,6 +2255,144 @@ Kaeli Companion
    =>   Subregion Foresta -> Overworld - Foresta
    =>   Foresta -> Foresta - Kaeli's House
    =>   Kaeli's House
+Kaidge Temple - Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Kaidge Temple
+   =>   Kaidge Temple Lower Ledge -> Kaidge Temple Lower Ledge to Kaidge Temple Upper Ledge
+   =>   Kaidge Temple Upper Ledge
+Lava Dome - Bare Maze Center Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
+   =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
+   =>   Lava Dome Jump Maze I
+Lava Dome - Bare Maze Leapfrog Alcove North Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
+   =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
+   =>   Lava Dome Jump Maze I
+Lava Dome - Bare Maze Leapfrog Alcove South Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
+   =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
+   =>   Lava Dome Jump Maze I
+Lava Dome - Bare Maze Southwest Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
+   =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
+   =>   Lava Dome Jump Maze I
+Lava Dome - Beyond River Room Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Big Jump Room Left
+   =>   Lava Dome Big Jump Room Main Area -> Lava Dome Big Jump Room Main Area to Lava Dome Big Jump Room MegaGrenade Area
+   =>   Lava Dome Big Jump Room MegaGrenade Area -> Lava Dome Big Jump Room - North Entrance
+   =>   Lava Dome Moon Helm Room
+Lava Dome - Beyond River Room Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Big Jump Room Left
+   =>   Lava Dome Big Jump Room Main Area -> Lava Dome Big Jump Room Main Area to Lava Dome Big Jump Room MegaGrenade Area
+   =>   Lava Dome Big Jump Room MegaGrenade Area -> Lava Dome Big Jump Room - North Entrance
+   =>   Lava Dome Moon Helm Room
+Lava Dome - Caldera Stairway East Left Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
+   =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
+   =>   Lava Dome Jump Maze I -> Lava Dome Jump Maze I - North Entrance
+   =>   Lava Dome Lower Moon Helm Room -> Lava Dome Lower Moon Helm Room - Left Entrance
+   =>   Lava Dome Inner Ring Upper Ledge West -> Lava Dome Inner Ring Upper Ledges - To Up-Down Corridor
+   =>   Lava Dome Up-Down Corridor -> Lava Dome Up-Down Corridor - Lower Entrance
+   =>   Lava Dome Jump Maze II -> Lava Dome Jump Maze II - Lower Left Entrance
+   =>   Lava Dome Four Boxes Stairs
+Lava Dome - Caldera Stairway East Right Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
+   =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
+   =>   Lava Dome Jump Maze I -> Lava Dome Jump Maze I - North Entrance
+   =>   Lava Dome Lower Moon Helm Room -> Lava Dome Lower Moon Helm Room - Left Entrance
+   =>   Lava Dome Inner Ring Upper Ledge West -> Lava Dome Inner Ring Upper Ledges - To Up-Down Corridor
+   =>   Lava Dome Up-Down Corridor -> Lava Dome Up-Down Corridor - Lower Entrance
+   =>   Lava Dome Jump Maze II -> Lava Dome Jump Maze II - Lower Left Entrance
+   =>   Lava Dome Four Boxes Stairs
+Lava Dome - Caldera Stairway West Left Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
+   =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
+   =>   Lava Dome Jump Maze I -> Lava Dome Jump Maze I - North Entrance
+   =>   Lava Dome Lower Moon Helm Room -> Lava Dome Lower Moon Helm Room - Left Entrance
+   =>   Lava Dome Inner Ring Upper Ledge West -> Lava Dome Inner Ring Upper Ledges - To Up-Down Corridor
+   =>   Lava Dome Up-Down Corridor -> Lava Dome Up-Down Corridor - Lower Entrance
+   =>   Lava Dome Jump Maze II -> Lava Dome Jump Maze II - Lower Left Entrance
+   =>   Lava Dome Four Boxes Stairs
+Lava Dome - Caldera Stairway West Right Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
+   =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
+   =>   Lava Dome Jump Maze I -> Lava Dome Jump Maze I - North Entrance
+   =>   Lava Dome Lower Moon Helm Room -> Lava Dome Lower Moon Helm Room - Left Entrance
+   =>   Lava Dome Inner Ring Upper Ledge West -> Lava Dome Inner Ring Upper Ledges - To Up-Down Corridor
+   =>   Lava Dome Up-Down Corridor -> Lava Dome Up-Down Corridor - Lower Entrance
+   =>   Lava Dome Jump Maze II -> Lava Dome Jump Maze II - Lower Left Entrance
+   =>   Lava Dome Four Boxes Stairs
+Lava Dome - Dualhead Hydra Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
+   =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
+   =>   Lava Dome Jump Maze I -> Lava Dome Jump Maze I - North Entrance
+   =>   Lava Dome Lower Moon Helm Room -> Lava Dome Lower Moon Helm Room - Left Entrance
+   =>   Lava Dome Inner Ring Upper Ledge West -> Lava Dome Inner Ring Upper Ledges - To Up-Down Corridor
+   =>   Lava Dome Up-Down Corridor -> Lava Dome Up-Down Corridor - Lower Entrance
+   =>   Lava Dome Jump Maze II -> Lava Dome Jump Maze II - Lower Right Entrance
+   =>   Lava Dome Inner Ring Big Door Ledge -> Lava Dome Inner Ring Big Door Ledge - Hydra Gate 1
+   =>   Lava Dome Hydra Room
+Lava Dome - Exterior Caldera Near Switch Cliff Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop
+Lava Dome - Exterior Center Dropoff Ledge Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Life Chest Room Lower
+   =>   Lava Dome Life Chest Room Lower Ledge -> Lava Dome Life Chest Room Lower Ledge to Lava Dome Life Chest Room Upper Ledge
+   =>   Lava Dome Life Chest Room Upper Ledge -> Lava Dome Life Chest Room - Upper South Entrance
+   =>   Lava Dome Inner Ring Center Ledge
 Lava Dome - Exterior Dead End Caldera Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -821,6 +2407,107 @@ Lava Dome - Exterior Dead End Caldera Box
    =>   Lava Dome Jump Maze II -> Lava Dome Jump Maze II - Lower Left Entrance
    =>   Lava Dome Four Boxes Stairs -> Lava Dome Four Boxes Stairs - Lower Entrance
    =>   Lava Dome Inner Ring Tiny Bottom Ledge
+Lava Dome - Exterior South Cliff Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop
+Lava Dome - Gold Bar Room Boulder Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Life Chest Room Lower
+   =>   Lava Dome Life Chest Room Lower Ledge
+Lava Dome - Gold Bar Room Leapfrog Alcove Box East
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Life Chest Room Lower
+   =>   Lava Dome Life Chest Room Lower Ledge -> Lava Dome Life Chest Room Lower Ledge to Lava Dome Life Chest Room Upper Ledge
+   =>   Lava Dome Life Chest Room Upper Ledge
+Lava Dome - Gold Bar Room Leapfrog Alcove Box West
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Life Chest Room Lower
+   =>   Lava Dome Life Chest Room Lower Ledge -> Lava Dome Life Chest Room Lower Ledge to Lava Dome Life Chest Room Upper Ledge
+   =>   Lava Dome Life Chest Room Upper Ledge
+Lava Dome - Gold Maze Center Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
+   =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
+   =>   Lava Dome Jump Maze I -> Lava Dome Jump Maze I - North Entrance
+   =>   Lava Dome Lower Moon Helm Room -> Lava Dome Lower Moon Helm Room - Left Entrance
+   =>   Lava Dome Inner Ring Upper Ledge West -> Lava Dome Inner Ring Upper Ledges - To Up-Down Corridor
+   =>   Lava Dome Up-Down Corridor -> Lava Dome Up-Down Corridor - Lower Entrance
+   =>   Lava Dome Jump Maze II
+Lava Dome - Gold Maze North Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
+   =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
+   =>   Lava Dome Jump Maze I -> Lava Dome Jump Maze I - North Entrance
+   =>   Lava Dome Lower Moon Helm Room -> Lava Dome Lower Moon Helm Room - Left Entrance
+   =>   Lava Dome Inner Ring Upper Ledge West -> Lava Dome Inner Ring Upper Ledges - To Up-Down Corridor
+   =>   Lava Dome Up-Down Corridor -> Lava Dome Up-Down Corridor - Lower Entrance
+   =>   Lava Dome Jump Maze II
+Lava Dome - Gold Maze Northeast Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
+   =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
+   =>   Lava Dome Jump Maze I -> Lava Dome Jump Maze I - North Entrance
+   =>   Lava Dome Lower Moon Helm Room -> Lava Dome Lower Moon Helm Room - Left Entrance
+   =>   Lava Dome Inner Ring Upper Ledge West -> Lava Dome Inner Ring Upper Ledges - To Up-Down Corridor
+   =>   Lava Dome Up-Down Corridor -> Lava Dome Up-Down Corridor - Lower Entrance
+   =>   Lava Dome Jump Maze II
+Lava Dome - Gold Maze Northwest Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
+   =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
+   =>   Lava Dome Jump Maze I -> Lava Dome Jump Maze I - North Entrance
+   =>   Lava Dome Lower Moon Helm Room -> Lava Dome Lower Moon Helm Room - Left Entrance
+   =>   Lava Dome Inner Ring Upper Ledge West -> Lava Dome Inner Ring Upper Ledges - To Up-Down Corridor
+   =>   Lava Dome Up-Down Corridor -> Lava Dome Up-Down Corridor - Lower Entrance
+   =>   Lava Dome Jump Maze II
+Lava Dome - Gold Maze Southeast Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
+   =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
+   =>   Lava Dome Jump Maze I -> Lava Dome Jump Maze I - North Entrance
+   =>   Lava Dome Lower Moon Helm Room -> Lava Dome Lower Moon Helm Room - Left Entrance
+   =>   Lava Dome Inner Ring Upper Ledge West -> Lava Dome Inner Ring Upper Ledges - To Up-Down Corridor
+   =>   Lava Dome Up-Down Corridor -> Lava Dome Up-Down Corridor - Lower Entrance
+   =>   Lava Dome Jump Maze II
+Lava Dome - Gold Maze Southwest Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
+   =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
+   =>   Lava Dome Jump Maze I -> Lava Dome Jump Maze I - North Entrance
+   =>   Lava Dome Lower Moon Helm Room -> Lava Dome Lower Moon Helm Room - Left Entrance
+   =>   Lava Dome Inner Ring Upper Ledge West -> Lava Dome Inner Ring Upper Ledges - To Up-Down Corridor
+   =>   Lava Dome Up-Down Corridor -> Lava Dome Up-Down Corridor - Lower Entrance
+   =>   Lava Dome Jump Maze II
 Lava Dome - Hydra Room Northwest Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -835,7 +2522,65 @@ Lava Dome - Hydra Room Northwest Box
    =>   Lava Dome Jump Maze II -> Lava Dome Jump Maze II - Lower Right Entrance
    =>   Lava Dome Inner Ring Big Door Ledge -> Lava Dome Inner Ring Big Door Ledge - Hydra Gate 1
    =>   Lava Dome Hydra Room
+Lava Dome - Hydra Room Southweast Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
+   =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
+   =>   Lava Dome Jump Maze I -> Lava Dome Jump Maze I - North Entrance
+   =>   Lava Dome Lower Moon Helm Room -> Lava Dome Lower Moon Helm Room - Left Entrance
+   =>   Lava Dome Inner Ring Upper Ledge West -> Lava Dome Inner Ring Upper Ledges - To Up-Down Corridor
+   =>   Lava Dome Up-Down Corridor -> Lava Dome Up-Down Corridor - Lower Entrance
+   =>   Lava Dome Jump Maze II -> Lava Dome Jump Maze II - Lower Right Entrance
+   =>   Lava Dome Inner Ring Big Door Ledge -> Lava Dome Inner Ring Big Door Ledge - Hydra Gate 1
+   =>   Lava Dome Hydra Room
+Lava Dome - Lava River Room East Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Big Jump Room Left
+   =>   Lava Dome Big Jump Room Main Area
+Lava Dome - Lava River Room North Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Big Jump Room Left
+   =>   Lava Dome Big Jump Room Main Area
+Lava Dome - Lava River Room South Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Big Jump Room Left
+   =>   Lava Dome Big Jump Room Main Area
+Lava Dome - Split Corridor Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
+   =>   Lava Dome Split Corridor
+Lava Dome - Three Jumps Room Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Three Steps Room
+   =>   Lava Dome Three Jumps Room
 Lava Dome - U-Bend Room North Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Lava Dome
+   =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
+   =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
+   =>   Lava Dome Jump Maze I -> Lava Dome Jump Maze I - North Entrance
+   =>   Lava Dome Lower Moon Helm Room
+Lava Dome - U-Bend Room South Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
@@ -853,11 +2598,69 @@ Lava Dome Plate
    =>   Lava Dome Big Jump Room Main Area -> Lava Dome Big Jump Room - Lower Right Stairs
    =>   Lava Dome Plate Corridor -> Lava Dome Plate Corridor - Right Entrance
    =>   Lava Dome Inner Ring Plate Ledge
+Level Forest - Kaeli
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Level Forest
+   =>   Level Forest
+Level Forest - Middle Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Level Forest
+   =>   Level Forest
+Level Forest - Northeast Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Level Forest
+   =>   Level Forest
+Level Forest - Northwest Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Level Forest
+   =>   Level Forest
+Level Forest - Old Man
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Level Forest
+   =>   Level Forest
 Level Forest - Southeast Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Overworld - Level Forest
    =>   Level Forest
+Level Forest - Southwest Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Overworld - Level Forest
+   =>   Level Forest
+Libra Temple - Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Libra Temple
+   =>   Libra Temple
+Life Temple - Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Libra Temple
+   =>   Libra Temple -> Libra Temple - Libra Tile Script
+   =>   Life Temple
+Life Temple - Mysterious Man
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Libra Temple
+   =>   Libra Temple -> Libra Temple - Libra Tile Script
+   =>   Life Temple
+Light Temple - Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Kaidge Temple
+   =>   Kaidge Temple Lower Ledge -> Kaidge Temple Lower Ledge to Kaidge Temple Upper Ledge
+   =>   Kaidge Temple Upper Ledge -> Kaidge Temple - Mobius Teleporter Script
+   =>   Light Temple
 Long Spine
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -867,6 +2670,156 @@ Long Spine
    =>   Bone Dungeon B1 - Checker Room -> Bone Dungeon B1 - Checker Room - Exit Checker Room
    =>   Bone Dungeon B2 - Exploding Skull Room - First Room
 Mac Ship Steering Wheel
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Overworld - Mac Ship
+   =>   Mac Ship Deck
+Mac's Ship B1 - Center Hook Platform Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Overworld - Mac Ship
+   =>   Mac Ship Deck -> Mac Ship Deck - Central Stairs Script
+   =>   Mac Ship B1 Outer Ring
+Mac's Ship B1 - Central Corridor Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Overworld - Mac Ship
+   =>   Mac Ship Deck -> Mac Ship Deck - North Stairs Script
+   =>   Mac Ship B1 Square Room -> Mac Ship B1 Square Room - South Stairs
+   =>   Mac Ship B2 North Corridor -> Mac Ship B2 North Corridor - South Stairs Script
+   =>   Mac Ship B1 Central Corridor
+Mac's Ship B1 - Mac Room Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Overworld - Mac Ship
+   =>   Mac Ship Deck -> Mac Ship Deck - North Stairs Script
+   =>   Mac Ship B1 Square Room -> Mac Ship B1 Square Room - South Stairs
+   =>   Mac Ship B2 North Corridor -> Mac Ship B2 North Corridor - South Stairs Script
+   =>   Mac Ship B1 Central Corridor -> Mac Ship B1 Central Corridor - South Stairs
+   =>   Mac Ship B2 South Corridor -> Mac Ship B2 South Corridor - South Stairs
+   =>   Mac Ship B1 Mac Room
+Mac's Ship B1 - Northwest Hook Platform Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Overworld - Mac Ship
+   =>   Mac Ship Deck -> Mac Ship Deck - Central Stairs Script
+   =>   Mac Ship B1 Outer Ring
+Mac's Ship B2 - Barrel Room North Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Overworld - Mac Ship
+   =>   Mac Ship Deck -> Mac Ship Deck - Central Stairs Script
+   =>   Mac Ship B1 Outer Ring -> Mac Ship B1 Outer Ring - Northwest Stairs
+   =>   Mac Ship B2 Outer Ring
+Mac's Ship B2 - Barrel Room South Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Overworld - Mac Ship
+   =>   Mac Ship Deck -> Mac Ship Deck - Central Stairs Script
+   =>   Mac Ship B1 Outer Ring -> Mac Ship B1 Outer Ring - Northwest Stairs
+   =>   Mac Ship B2 Outer Ring
+Mac's Ship B2 - Southeast Room Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Overworld - Mac Ship
+   =>   Mac Ship Deck -> Mac Ship Deck - Central Stairs Script
+   =>   Mac Ship B1 Outer Ring -> Mac Ship B1 Outer Ring - Northwest Stairs
+   =>   Mac Ship B2 Outer Ring
+Mac's Ship B2 - Southwest Room Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Overworld - Mac Ship
+   =>   Mac Ship Deck -> Mac Ship Deck - Central Stairs Script
+   =>   Mac Ship B1 Outer Ring -> Mac Ship B1 Outer Ring - Northwest Stairs
+   =>   Mac Ship B2 Outer Ring
+Mac's Ship Deck - Center Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Overworld - Mac Ship
+   =>   Mac Ship Deck
+Mac's Ship Deck - North Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement -> Windia Old People House Basement - Mobius Teleporter Script
+   =>   Ship Dock -> Ship Dock - Entrance
+   =>   Subregion Ship Dock -> Subregion Ship Dock to Subregion Mac's Ship
+   =>   Subregion Mac's Ship -> Overworld - Mac Ship
+   =>   Mac Ship Deck
+Mac's Ship Deck - South Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
@@ -895,6 +2848,30 @@ Mine - Cliff Northeast Box
    =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior South East Platforms
    =>   Mine Exterior South East Platforms -> Mine Exterior - To Cliff
    =>   Mine Cliff
+Mine - Cliff Northwest Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Mine
+   =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior South East Platforms
+   =>   Mine Exterior South East Platforms -> Mine Exterior - To Cliff
+   =>   Mine Cliff
+Mine - Cliff Southeast Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Mine
+   =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior South East Platforms
+   =>   Mine Exterior South East Platforms -> Mine Exterior - To Cliff
+   =>   Mine Cliff
+Mine - Cliff Southwest Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Mine
+   =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior South East Platforms
+   =>   Mine Exterior South East Platforms -> Mine Exterior - To Cliff
+   =>   Mine Cliff
 Mine - Crescent Room Chest
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -903,6 +2880,14 @@ Mine - Crescent Room Chest
    =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior North Ledge
    =>   Mine Exterior North Ledge -> Mine Exterior - To Crescent Room
    =>   Mine Crescent Room
+Mine - Glitchy Collision Cave Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Mine
+   =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior Central Ledge
+   =>   Mine Exterior Central Ledge -> Mine Exterior - To Climbing Room
+   =>   Mine Climbing Room
 Mine - Parallel Room East Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -917,11 +2902,49 @@ Mine - Parallel Room West Box
    =>   Subregion Fireburg -> Overworld - Mine
    =>   Mine Exterior North West Platforms -> Mine Exterior - To Parallel Room
    =>   Mine Parallel Room
+Mine - Reuben
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Mine
+   =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior South East Platforms
+   =>   Mine Exterior South East Platforms -> Mine Exterior - To Cliff
+   =>   Mine Cliff
+Mine Battlefield
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg
 Minotaur
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Overworld - Level Forest
    =>   Level Forest
+Mount Gale - Dullahan Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Mount Gale
+   =>   Mount Gale
+Mount Gale - East Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Mount Gale
+   =>   Mount Gale
+Mount Gale - West Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Mount Gale
+   =>   Mount Gale
+North of Libra Temple Battlefield
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Subregion Fireburg to Subregion Volcano Battlefield
+   =>   Subregion Volcano Battlefield -> Subregion Volcano Battlefield to Subregion Frozen Fields
+   =>   Subregion Frozen Fields
 Old Man Barrel
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -935,6 +2958,11 @@ Otto
    =>   Subregion Windia -> Overworld - Windia
    =>   Windia -> Windia - Otto's House
    =>   Otto's House
+Path to Fireburg Central Battlefield
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg
 Pazuzu
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -1088,6 +3116,224 @@ Pazuzu's Tower 1F - Descent Bomb Wall Center Box
    =>   Pazuzu 2F to 4F -> Pazuzu 2F to 4F - South Stairs
    =>   Pazuzu 2F -> Pazuzu 2F - West Lower Stairs
    =>   Pazuzu Tower 1F Boxes Room
+Pazuzu's Tower 1F - Descent Bomb Wall East Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
+   =>   Pazuzu 6F -> Pazuzu 6F - West Stairs
+   =>   Pazuzu 4F to 6F -> Pazuzu 4F to 6F - South Stairs
+   =>   Pazuzu 4F -> Pazuzu 4F - Northwest Stairs
+   =>   Pazuzu 2F to 4F -> Pazuzu 2F to 4F - South Stairs
+   =>   Pazuzu 2F -> Pazuzu 2F - West Lower Stairs
+   =>   Pazuzu Tower 1F Boxes Room
+Pazuzu's Tower 1F - Descent Bomb Wall West Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
+   =>   Pazuzu 6F -> Pazuzu 6F - West Stairs
+   =>   Pazuzu 4F to 6F -> Pazuzu 4F to 6F - South Stairs
+   =>   Pazuzu 4F -> Pazuzu 4F - Northwest Stairs
+   =>   Pazuzu 2F to 4F -> Pazuzu 2F to 4F - South Stairs
+   =>   Pazuzu 2F -> Pazuzu 2F - West Lower Stairs
+   =>   Pazuzu Tower 1F Boxes Room
+Pazuzu's Tower 1F - Descent Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
+   =>   Pazuzu 6F -> Pazuzu 6F - West Stairs
+   =>   Pazuzu 4F to 6F -> Pazuzu 4F to 6F - South Stairs
+   =>   Pazuzu 4F -> Pazuzu 4F - Northwest Stairs
+   =>   Pazuzu 2F to 4F -> Pazuzu 2F to 4F - South Stairs
+   =>   Pazuzu 2F -> Pazuzu 2F - West Lower Stairs
+   =>   Pazuzu Tower 1F Boxes Room
+Pazuzu's Tower 2F - East Room East Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
+   =>   Pazuzu 6F -> Pazuzu 6F - West Stairs
+   =>   Pazuzu 4F to 6F -> Pazuzu 4F to 6F - South Stairs
+   =>   Pazuzu 4F -> Pazuzu 4F - Northwest Stairs
+   =>   Pazuzu 2F to 4F -> Pazuzu 2F to 4F - South Stairs
+   =>   Pazuzu 2F
+Pazuzu's Tower 2F - East Room West Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
+   =>   Pazuzu 6F -> Pazuzu 6F - West Stairs
+   =>   Pazuzu 4F to 6F -> Pazuzu 4F to 6F - South Stairs
+   =>   Pazuzu 4F -> Pazuzu 4F - Northwest Stairs
+   =>   Pazuzu 2F to 4F -> Pazuzu 2F to 4F - South Stairs
+   =>   Pazuzu 2F
+Pazuzu's Tower 3F - Guest Room East Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room
+Pazuzu's Tower 3F - Guest Room West Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room
+Pazuzu's Tower 3F - South Ledge Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
+   =>   Pazuzu 6F -> Pazuzu 6F - West Stairs
+   =>   Pazuzu 4F to 6F -> Pazuzu 4F to 6F - South Stairs
+   =>   Pazuzu 4F -> Pazuzu 4F - South Stairs
+   =>   Pazuzu 3F Southern Island
+Pazuzu's Tower 4F - East Storage Room Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
+   =>   Pazuzu 6F -> Pazuzu 6F - West Stairs
+   =>   Pazuzu 4F to 6F -> Pazuzu 4F to 6F - South Stairs
+   =>   Pazuzu 4F
+Pazuzu's Tower 4F - Elevator East Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
+   =>   Pazuzu 6F -> Pazuzu 6F - West Stairs
+   =>   Pazuzu 4F to 6F -> Pazuzu 4F to 6F - South Stairs
+   =>   Pazuzu 4F
+Pazuzu's Tower 4F - Elevator West Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
+   =>   Pazuzu 6F -> Pazuzu 6F - West Stairs
+   =>   Pazuzu 4F to 6F -> Pazuzu 4F to 6F - South Stairs
+   =>   Pazuzu 4F
+Pazuzu's Tower 5F - North Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
+   =>   Pazuzu 6F -> Pazuzu 6F - Northwest Stairs
+   =>   Pazuzu 5F Upper Loop
+Pazuzu's Tower 5F - South Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
+   =>   Pazuzu 6F -> Pazuzu 6F - Northwest Stairs
+   =>   Pazuzu 5F Upper Loop
+Pazuzu's Tower 6F - Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
+   =>   Pazuzu 6F
 Pazuzu's Tower 6F - Chest
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -1102,11 +3348,24 @@ Pazuzu's Tower 6F - Chest
    =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
    =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Main Room - Northeast Stairs
    =>   Pazuzu 6F
-Phanquid
+Pazuzu's Tower 7F - Pazuzu Chest
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Windia -> Overworld - Pazuzu Tower
+   =>   Pazuzu Tower 1F Main Lobby -> Pazuzu Tower 1F Main Lobby - East Entrance
+   =>   Pazuzu 1F to 3F -> Pazuzu 1F to 3F - North Stairs
+   =>   Pazuzu 3F Main Room -> Pazuzu 3F Main Room - West Stairs
+   =>   Pazuzu 3F to 5F -> Pazuzu 3F to 5F - North Stairs
+   =>   Pazuzu 5F Pazuzu Loop -> Pazuzu 5F Pazuzu Loop - South Stairs
+   =>   Pazuzu 5F to 7F -> Pazuzu 5F to 7F - North Stairs
+   =>   Pazuzu 7F Southwest Area -> Pazuzu 7F Southwest Area to Pazuzu 7F Rest of the Area
+   =>   Pazuzu 7F Rest of the Area -> Pazuzu 7F Rest of the Area to Pazuzu 7F Sky Room
+   =>   Pazuzu 7F Sky Room
+Phanquid
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Wintry Cave
    =>   Wintry Cave 1F - East Ledge -> Wintry Cave 1F - East Ledge to Wintry Cave 1F - Central Space
    =>   Wintry Cave 1F - Central Space -> Wintry Cave 1F - Central Space to Wintry Cave 1F - West Ledge
@@ -1116,8 +3375,7 @@ Phanquid
 Phoebe Companion
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Libra Temple
    =>   Libra Temple
 Reuben Companion
@@ -1141,6 +3399,24 @@ Rope Bridge - East Box
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
    =>   Subregion Windia -> Overworld - Rope Bridge
    =>   Rope Bridge
+Rope Bridge - West Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Rope Bridge
+   =>   Rope Bridge
+Sealed Temple - East Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Sealed Temple
+   =>   Sealed Temple
+Sealed Temple - West Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Sealed Temple
+   =>   Sealed Temple
 Ship Dock Access
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -1182,6 +3458,44 @@ Skull 2
    =>   Bone Dungeon B2 - Exploding Skull Room - Third Room -> Bonne Dungeon B2 - Exploding Skull Room - To Two Skulls Room
    =>   Bone Dungeon B2 - Two Skulls Room - First Room -> Bone Dungeon B2 - Two Skulls Room - First Room to Bone Dungeon B2 - Two Skulls Room - Second Room
    =>   Bone Dungeon B2 - Two Skulls Room - Second Room
+South of Aquaria Battlefield
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria
+Spencer's Cave - Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Summer - Spencer's Place Entrance Top
+   =>   Spencer Waterfall -> Spencer Waterfall - To Spencer Cave
+   =>   Spencer Cave Normal Main
+Spencer's Cave - Locked Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Summer - Spencer's Place Entrance Top
+   =>   Spencer Waterfall -> Spencer Waterfall - To Spencer Cave
+   =>   Spencer Cave Normal Main
+Spencer's Cave - Mobius Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Subregion Windia to Subregion Spencer's Cave
+   =>   Subregion Spencer's Cave -> Overworld - Spencer's Place
+   =>   Spencer Cave Normal South Ledge -> Spencer Cave Normal South Ledge to Spencer Cave Caved In Main Loop
+   =>   Spencer Cave Caved In Main Loop -> Spencer Cave Unplug - Mobius Teleporter Start Script
+   =>   Spencer Cave Caved In Mobius Chest
+Spencer's Cave - Spencer
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Aquaria
+   =>   Aquaria -> Aquaria Summer - Spencer's Place Entrance Top
+   =>   Spencer Waterfall -> Spencer Waterfall - To Spencer Cave
+   =>   Spencer Cave Normal Main
 Stone Golem
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -1202,8 +3516,7 @@ Stone Golem
 Summer Aquaria
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Aquaria
    =>   Aquaria
 Tristam Bone Dungeon Item Given
@@ -1234,12 +3547,102 @@ Twinhead Wyvern
    =>   Focus Tower 1F SkyCoin Room -> Focus Tower 1F - Sky Door
    =>   Doom Castle Corridor of Destiny -> Doom Castle Corridor of Destiny - Lava Floor Entrance
    =>   Doom Castle Lava Floor
+Volcano - Base Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Volcano
+   =>   Volcano Base
+Volcano - Base East Left Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Volcano
+   =>   Volcano Base
 Volcano - Base East Right Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Volcano
    =>   Volcano Base
+Volcano - Base West Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Volcano
+   =>   Volcano Base
+Volcano - Behind Medusa Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Volcano
+   =>   Volcano Base -> Volcano Base - Left Stairs Script
+   =>   Volcano Left Path -> Volcano Left Path - To Volcano Cross Right-Left
+   =>   Volcano Cross Right-Left -> Volcano Cross Right-Left - To Volcano Top Left Script
+   =>   Volcano Top Left
+Volcano - Crossover Section Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Volcano
+   =>   Volcano Base -> Volcano Base - Left Stairs Script
+   =>   Volcano Left Path -> Volcano Left Path - To Volcano Cross Right-Left
+   =>   Volcano Cross Right-Left
+Volcano - Left Path Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Volcano
+   =>   Volcano Base -> Volcano Base - Left Stairs Script
+   =>   Volcano Left Path
+Volcano - Medusa Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Volcano
+   =>   Volcano Base -> Volcano Base - Left Stairs Script
+   =>   Volcano Left Path -> Volcano Left Path - To Volcano Cross Right-Left
+   =>   Volcano Cross Right-Left -> Volcano Cross Right-Left - To Volcano Top Left Script
+   =>   Volcano Top Left
+Volcano - Right Path Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Volcano
+   =>   Volcano Base -> Volcano Base - Right Stairs Script
+   =>   Volcano Right Path
+Volcano - Top of the Volcano Left Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Volcano
+   =>   Volcano Base -> Volcano Base - Left Stairs Script
+   =>   Volcano Left Path -> Volcano Left Path - To Volcano Cross Left-Right
+   =>   Volcano Cross Left-Right -> Volcano Cross Left-Right - To Volcano Top Right Script
+   =>   Volcano Top Right
+Volcano - Top of the Volcano Right Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Volcano
+   =>   Volcano Base -> Volcano Base - Left Stairs Script
+   =>   Volcano Left Path -> Volcano Left Path - To Volcano Cross Left-Right
+   =>   Volcano Cross Left-Right -> Volcano Cross Left-Right - To Volcano Top Right Script
+   =>   Volcano Top Right
+Windhole Temple - Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windhole Temple
+   =>   Windhole Temple
+Windia - Inn Bedroom North Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - INN's Script
+   =>   Windia Inn Lobby -> Windia Inn Lobby - Stairs to Beds
+   =>   Windia Inn Beds
 Windia - Inn Bedroom South Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
@@ -1256,16 +3659,152 @@ Windia - Kaeli
    =>   Windia -> Windia - INN's Script
    =>   Windia Inn Lobby -> Windia Inn Lobby - Stairs to Beds
    =>   Windia Inn Beds
-Wintry Cave 2F - West Left Box
+Windia - Mobius Basement East Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
    =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
-   =>   Subregion Windia -> Subregion Windia to Subregion Aquaria
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement
+Windia - Mobius Basement West Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Old People House
+   =>   Windia Old People House -> Windia Old People House - Basement Stairs
+   =>   Windia Old People House Basement
+Windia - Otto's Attic Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Otto's House
+   =>   Otto's House -> Otto's House - Attic Stairs
+   =>   Otto's Attic
+Windia - Vendor
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Overworld - Windia
+   =>   Windia -> Windia - Vendor House
+   =>   Windia Vendor House
+Wintry Cave 1F - Entrance Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Wintry Cave
+   =>   Wintry Cave 1F - East Ledge
+Wintry Cave 1F - North Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Wintry Cave
+   =>   Wintry Cave 1F - East Ledge
+Wintry Cave 1F - Phoebe
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Wintry Cave
+   =>   Wintry Cave 1F - East Ledge
+Wintry Cave 1F - Scenic Overlook Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Wintry Cave
+   =>   Wintry Cave 1F - East Ledge -> Wintry Cave 1F - East Ledge to Wintry Cave 1F - Central Space
+   =>   Wintry Cave 1F - Central Space
+Wintry Cave 1F - Slippery Cliff Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Wintry Cave
+   =>   Wintry Cave 1F - East Ledge
+Wintry Cave 2F - East Left Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
    =>   Subregion Aquaria -> Overworld - Wintry Cave
    =>   Wintry Cave 1F - East Ledge -> Wintry Cave 1F - East Ledge to Wintry Cave 1F - Central Space
    =>   Wintry Cave 1F - Central Space -> Wintry Cave 1F - Central Space to Wintry Cave 1F - West Ledge
    =>   Wintry Cave 1F - West Ledge -> Wintry Cave 1F - To 2F
    =>   Wintry Cave 2F
+Wintry Cave 2F - East Right Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Wintry Cave
+   =>   Wintry Cave 1F - East Ledge -> Wintry Cave 1F - East Ledge to Wintry Cave 1F - Central Space
+   =>   Wintry Cave 1F - Central Space -> Wintry Cave 1F - Central Space to Wintry Cave 1F - West Ledge
+   =>   Wintry Cave 1F - West Ledge -> Wintry Cave 1F - To 2F
+   =>   Wintry Cave 2F
+Wintry Cave 2F - West Left Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Wintry Cave
+   =>   Wintry Cave 1F - East Ledge -> Wintry Cave 1F - East Ledge to Wintry Cave 1F - Central Space
+   =>   Wintry Cave 1F - Central Space -> Wintry Cave 1F - Central Space to Wintry Cave 1F - West Ledge
+   =>   Wintry Cave 1F - West Ledge -> Wintry Cave 1F - To 2F
+   =>   Wintry Cave 2F
+Wintry Cave 2F - West Right Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Wintry Cave
+   =>   Wintry Cave 1F - East Ledge -> Wintry Cave 1F - East Ledge to Wintry Cave 1F - Central Space
+   =>   Wintry Cave 1F - Central Space -> Wintry Cave 1F - Central Space to Wintry Cave 1F - West Ledge
+   =>   Wintry Cave 1F - West Ledge -> Wintry Cave 1F - To 2F
+   =>   Wintry Cave 2F
+Wintry Cave 3F - Before Boss Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Wintry Cave
+   =>   Wintry Cave 1F - East Ledge -> Wintry Cave 1F - East Ledge to Wintry Cave 1F - Central Space
+   =>   Wintry Cave 1F - Central Space -> Wintry Cave 1F - Central Space to Wintry Cave 1F - West Ledge
+   =>   Wintry Cave 1F - West Ledge -> Wintry Cave 1F - To 2F
+   =>   Wintry Cave 2F -> Wintry Cave 2F - To 3F Bottom
+   =>   Wintry Cave 3F Bottom
+Wintry Cave 3F - East Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Wintry Cave
+   =>   Wintry Cave 1F - East Ledge -> Wintry Cave 1F - To 3F Top
+   =>   Wintry Cave 3F Top
+Wintry Cave 3F - Squidite Chest
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Wintry Cave
+   =>   Wintry Cave 1F - East Ledge -> Wintry Cave 1F - East Ledge to Wintry Cave 1F - Central Space
+   =>   Wintry Cave 1F - Central Space -> Wintry Cave 1F - Central Space to Wintry Cave 1F - West Ledge
+   =>   Wintry Cave 1F - West Ledge -> Wintry Cave 1F - To 2F
+   =>   Wintry Cave 2F -> Wintry Cave 2F - To 3F Bottom
+   =>   Wintry Cave 3F Bottom
+Wintry Cave 3F - West Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Aquaria
+   =>   Subregion Aquaria -> Overworld - Wintry Cave
+   =>   Wintry Cave 1F - East Ledge -> Wintry Cave 1F - To 3F Top
+   =>   Wintry Cave 3F Top
+Wintry Temple - North Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Sealed Temple
+   =>   Sealed Temple -> Sealed Temple - Gemini Tile Script
+   =>   Wintry Temple Inner Room
+Wintry Temple - West Box
+        Menu -> Enter Overworld
+   =>   Overworld -> Overworld to Subregion Foresta
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Fireburg -> Overworld - Sealed Temple
+   =>   Sealed Temple -> Sealed Temple - Gemini Tile Script
+   =>   Wintry Temple Inner Room
 Zuh
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
