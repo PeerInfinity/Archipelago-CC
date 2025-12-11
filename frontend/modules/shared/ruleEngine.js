@@ -1741,6 +1741,39 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'total_received': {
+        // Check if the total count of multiple items meets a required threshold
+        // Used by Stardew Valley's TotalReceived rule
+        const requiredCount = typeof rule.count === 'number'
+          ? rule.count
+          : evaluateRule(rule.count, context, depth + 1, localScope);
+
+        // Items can be a plain array of strings or a rule that evaluates to an array
+        const items = Array.isArray(rule.items)
+          ? rule.items
+          : evaluateRule(rule.items, context, depth + 1, localScope);
+
+        if (requiredCount === undefined || items === undefined) {
+          result = undefined;
+        } else if (!Array.isArray(items)) {
+          log('warn', '[evaluateRule] total_received: items is not an array');
+          result = undefined;
+        } else if (typeof context.countItem === 'function') {
+          let totalCount = 0;
+          for (const itemName of items) {
+            const itemCount = context.countItem(itemName);
+            if (itemCount !== undefined) {
+              totalCount += itemCount;
+            }
+          }
+          result = totalCount >= requiredCount;
+        } else {
+          log('warn', '[evaluateRule] context.countItem is not a function for total_received.');
+          result = undefined;
+        }
+        break;
+      }
+
       case 'group_check': {
         const groupName = evaluateRule(rule.group, context, depth + 1);
         // Default count to 1 if not specified
@@ -2853,6 +2886,16 @@ export function debugRule(rule, indent = 0) {
       } else if (rule.count) {
         log('info', `${prefix}Count (complex):`);
         debugRule(rule.count, indent + 2);
+      }
+      break;
+
+    case 'total_received':
+      log('info', `${prefix}TOTAL_RECEIVED (require ${rule.count} total):`);
+      if (Array.isArray(rule.items)) {
+        log('info', `${prefix}  Items: ${rule.items.join(', ')}`);
+      } else if (rule.items) {
+        log('info', `${prefix}  Items (complex):`);
+        debugRule(rule.items, indent + 2);
       }
       break;
 

@@ -11,9 +11,13 @@
  * (received_progression_item) counts all received items.
  *
  * These items are tracked by the Python CollectionState and need to be mirrored in JavaScript.
+ *
+ * NOTE: This module no longer exports custom helper functions. All Stardew Valley rules are
+ * now fully exported to rules.json and evaluated by the generic rule engine.
+ * The only custom logic remaining is virtual progression item tracking.
  */
 
-import * as helpers from './helpers.js';
+import { helperFunctions } from '../generic/genericLogic.js';
 
 /**
  * State module for Stardew Valley
@@ -175,5 +179,6 @@ export const stardewValleyStateModule = {
 
 /**
  * Export helper functions for use by rule engine
+ * Uses generic helpers since all Stardew Valley rules are now natively supported
  */
-export const helperFunctions = helpers;
+export { helperFunctions };

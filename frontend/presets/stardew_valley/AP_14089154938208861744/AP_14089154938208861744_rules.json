@@ -1646,88 +1646,6 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "helper",
-                          "name": "total_received",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": 3
-                            },
-                            {
-                              "type": "constant",
-                              "value": [
-                                "Traveling Merchant: Sunday",
-                                "Traveling Merchant: Monday",
-                                "Traveling Merchant: Tuesday",
-                                "Traveling Merchant: Wednesday",
-                                "Traveling Merchant: Thursday",
-                                "Traveling Merchant: Friday",
-                                "Traveling Merchant: Saturday"
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "item_check",
-                              "item": "Progressive Club"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Progressive Dagger"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Progressive Sword"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Progressive Weapon"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "region_check",
-                          "region": "The Mines - Floor 60"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Coffee Bean"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Received Progression Percent",
-                          "count": {
-                            "type": "constant",
-                            "value": 16
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "type": "or",
-                      "conditions": [
-                        {
-                          "type": "region_check",
-                          "region": "Spring Farming"
-                        },
-                        {
-                          "type": "region_check",
-                          "region": "Summer Farming"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
                           "type": "item_check",
                           "item": "Ancient Seeds Recipe"
                         },
@@ -1925,6 +1843,79 @@
                     {
                       "type": "region_check",
                       "region": "Summer Farming"
+                    }
+                  ]
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": "Progressive Club"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Progressive Dagger"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Progressive Sword"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Progressive Weapon"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "region_check",
+                          "region": "The Mines - Floor 60"
+                        },
+                        {
+                          "type": "total_received",
+                          "count": 3,
+                          "items": [
+                            "Traveling Merchant: Sunday",
+                            "Traveling Merchant: Monday",
+                            "Traveling Merchant: Tuesday",
+                            "Traveling Merchant: Wednesday",
+                            "Traveling Merchant: Thursday",
+                            "Traveling Merchant: Friday",
+                            "Traveling Merchant: Saturday"
+                          ]
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Coffee Bean"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Received Progression Percent",
+                          "count": {
+                            "type": "constant",
+                            "value": 16
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "region_check",
+                          "region": "Spring Farming"
+                        },
+                        {
+                          "type": "region_check",
+                          "region": "Summer Farming"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -3362,88 +3353,6 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "helper",
-                              "name": "total_received",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": 3
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Traveling Merchant: Sunday",
-                                    "Traveling Merchant: Monday",
-                                    "Traveling Merchant: Tuesday",
-                                    "Traveling Merchant: Wednesday",
-                                    "Traveling Merchant: Thursday",
-                                    "Traveling Merchant: Friday",
-                                    "Traveling Merchant: Saturday"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "or",
-                              "conditions": [
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Club"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Dagger"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Sword"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Weapon"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "region_check",
-                              "region": "The Mines - Floor 60"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Coffee Bean"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Received Progression Percent",
-                              "count": {
-                                "type": "constant",
-                                "value": 16
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "region_check",
-                              "region": "Spring Farming"
-                            },
-                            {
-                              "type": "region_check",
-                              "region": "Summer Farming"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
                               "type": "item_check",
                               "item": "Ancient Seeds Recipe"
                             },
@@ -3641,6 +3550,79 @@
                         {
                           "type": "region_check",
                           "region": "Summer Farming"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "or",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Club"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Dagger"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Weapon"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "region_check",
+                              "region": "The Mines - Floor 60"
+                            },
+                            {
+                              "type": "total_received",
+                              "count": 3,
+                              "items": [
+                                "Traveling Merchant: Sunday",
+                                "Traveling Merchant: Monday",
+                                "Traveling Merchant: Tuesday",
+                                "Traveling Merchant: Wednesday",
+                                "Traveling Merchant: Thursday",
+                                "Traveling Merchant: Friday",
+                                "Traveling Merchant: Saturday"
+                              ]
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Coffee Bean"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Received Progression Percent",
+                              "count": {
+                                "type": "constant",
+                                "value": 16
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "region_check",
+                              "region": "Spring Farming"
+                            },
+                            {
+                              "type": "region_check",
+                              "region": "Summer Farming"
+                            }
+                          ]
                         }
                       ]
                     }
@@ -5084,88 +5066,6 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "helper",
-                              "name": "total_received",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": 3
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Traveling Merchant: Sunday",
-                                    "Traveling Merchant: Monday",
-                                    "Traveling Merchant: Tuesday",
-                                    "Traveling Merchant: Wednesday",
-                                    "Traveling Merchant: Thursday",
-                                    "Traveling Merchant: Friday",
-                                    "Traveling Merchant: Saturday"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "or",
-                              "conditions": [
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Club"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Dagger"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Sword"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Weapon"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "region_check",
-                              "region": "The Mines - Floor 60"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Coffee Bean"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Received Progression Percent",
-                              "count": {
-                                "type": "constant",
-                                "value": 16
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "region_check",
-                              "region": "Spring Farming"
-                            },
-                            {
-                              "type": "region_check",
-                              "region": "Summer Farming"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
                               "type": "item_check",
                               "item": "Ancient Seeds Recipe"
                             },
@@ -5363,6 +5263,79 @@
                         {
                           "type": "region_check",
                           "region": "Summer Farming"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "or",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Club"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Dagger"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Weapon"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "region_check",
+                              "region": "The Mines - Floor 60"
+                            },
+                            {
+                              "type": "total_received",
+                              "count": 3,
+                              "items": [
+                                "Traveling Merchant: Sunday",
+                                "Traveling Merchant: Monday",
+                                "Traveling Merchant: Tuesday",
+                                "Traveling Merchant: Wednesday",
+                                "Traveling Merchant: Thursday",
+                                "Traveling Merchant: Friday",
+                                "Traveling Merchant: Saturday"
+                              ]
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Coffee Bean"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Received Progression Percent",
+                              "count": {
+                                "type": "constant",
+                                "value": 16
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "region_check",
+                              "region": "Spring Farming"
+                            },
+                            {
+                              "type": "region_check",
+                              "region": "Summer Farming"
+                            }
+                          ]
                         }
                       ]
                     }
@@ -6818,88 +6791,6 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "helper",
-                              "name": "total_received",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": 3
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Traveling Merchant: Sunday",
-                                    "Traveling Merchant: Monday",
-                                    "Traveling Merchant: Tuesday",
-                                    "Traveling Merchant: Wednesday",
-                                    "Traveling Merchant: Thursday",
-                                    "Traveling Merchant: Friday",
-                                    "Traveling Merchant: Saturday"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "or",
-                              "conditions": [
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Club"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Dagger"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Sword"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Weapon"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "region_check",
-                              "region": "The Mines - Floor 60"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Coffee Bean"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Received Progression Percent",
-                              "count": {
-                                "type": "constant",
-                                "value": 16
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "region_check",
-                              "region": "Spring Farming"
-                            },
-                            {
-                              "type": "region_check",
-                              "region": "Summer Farming"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
                               "type": "item_check",
                               "item": "Ancient Seeds Recipe"
                             },
@@ -7097,6 +6988,79 @@
                         {
                           "type": "region_check",
                           "region": "Summer Farming"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "or",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Club"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Dagger"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Weapon"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "region_check",
+                              "region": "The Mines - Floor 60"
+                            },
+                            {
+                              "type": "total_received",
+                              "count": 3,
+                              "items": [
+                                "Traveling Merchant: Sunday",
+                                "Traveling Merchant: Monday",
+                                "Traveling Merchant: Tuesday",
+                                "Traveling Merchant: Wednesday",
+                                "Traveling Merchant: Thursday",
+                                "Traveling Merchant: Friday",
+                                "Traveling Merchant: Saturday"
+                              ]
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Coffee Bean"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Received Progression Percent",
+                              "count": {
+                                "type": "constant",
+                                "value": 16
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "region_check",
+                              "region": "Spring Farming"
+                            },
+                            {
+                              "type": "region_check",
+                              "region": "Summer Farming"
+                            }
+                          ]
                         }
                       ]
                     }
@@ -8552,88 +8516,6 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "helper",
-                              "name": "total_received",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": 3
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Traveling Merchant: Sunday",
-                                    "Traveling Merchant: Monday",
-                                    "Traveling Merchant: Tuesday",
-                                    "Traveling Merchant: Wednesday",
-                                    "Traveling Merchant: Thursday",
-                                    "Traveling Merchant: Friday",
-                                    "Traveling Merchant: Saturday"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "or",
-                              "conditions": [
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Club"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Dagger"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Sword"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Weapon"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "region_check",
-                              "region": "The Mines - Floor 60"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Coffee Bean"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Received Progression Percent",
-                              "count": {
-                                "type": "constant",
-                                "value": 16
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "region_check",
-                              "region": "Spring Farming"
-                            },
-                            {
-                              "type": "region_check",
-                              "region": "Summer Farming"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
                               "type": "item_check",
                               "item": "Ancient Seeds Recipe"
                             },
@@ -8831,6 +8713,79 @@
                         {
                           "type": "region_check",
                           "region": "Summer Farming"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "or",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Club"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Dagger"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Weapon"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "region_check",
+                              "region": "The Mines - Floor 60"
+                            },
+                            {
+                              "type": "total_received",
+                              "count": 3,
+                              "items": [
+                                "Traveling Merchant: Sunday",
+                                "Traveling Merchant: Monday",
+                                "Traveling Merchant: Tuesday",
+                                "Traveling Merchant: Wednesday",
+                                "Traveling Merchant: Thursday",
+                                "Traveling Merchant: Friday",
+                                "Traveling Merchant: Saturday"
+                              ]
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Coffee Bean"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Received Progression Percent",
+                              "count": {
+                                "type": "constant",
+                                "value": 16
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "region_check",
+                              "region": "Spring Farming"
+                            },
+                            {
+                              "type": "region_check",
+                              "region": "Summer Farming"
+                            }
+                          ]
                         }
                       ]
                     }
@@ -10294,88 +10249,6 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "helper",
-                              "name": "total_received",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": 3
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Traveling Merchant: Sunday",
-                                    "Traveling Merchant: Monday",
-                                    "Traveling Merchant: Tuesday",
-                                    "Traveling Merchant: Wednesday",
-                                    "Traveling Merchant: Thursday",
-                                    "Traveling Merchant: Friday",
-                                    "Traveling Merchant: Saturday"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "or",
-                              "conditions": [
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Club"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Dagger"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Sword"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Weapon"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "region_check",
-                              "region": "The Mines - Floor 60"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Coffee Bean"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Received Progression Percent",
-                              "count": {
-                                "type": "constant",
-                                "value": 16
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "region_check",
-                              "region": "Spring Farming"
-                            },
-                            {
-                              "type": "region_check",
-                              "region": "Summer Farming"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
                               "type": "item_check",
                               "item": "Ancient Seeds Recipe"
                             },
@@ -10573,6 +10446,79 @@
                         {
                           "type": "region_check",
                           "region": "Summer Farming"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "or",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Club"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Dagger"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Weapon"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "region_check",
+                              "region": "The Mines - Floor 60"
+                            },
+                            {
+                              "type": "total_received",
+                              "count": 3,
+                              "items": [
+                                "Traveling Merchant: Sunday",
+                                "Traveling Merchant: Monday",
+                                "Traveling Merchant: Tuesday",
+                                "Traveling Merchant: Wednesday",
+                                "Traveling Merchant: Thursday",
+                                "Traveling Merchant: Friday",
+                                "Traveling Merchant: Saturday"
+                              ]
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Coffee Bean"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Received Progression Percent",
+                              "count": {
+                                "type": "constant",
+                                "value": 16
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "region_check",
+                              "region": "Spring Farming"
+                            },
+                            {
+                              "type": "region_check",
+                              "region": "Summer Farming"
+                            }
+                          ]
                         }
                       ]
                     }
@@ -12036,88 +11982,6 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "helper",
-                              "name": "total_received",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": 3
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Traveling Merchant: Sunday",
-                                    "Traveling Merchant: Monday",
-                                    "Traveling Merchant: Tuesday",
-                                    "Traveling Merchant: Wednesday",
-                                    "Traveling Merchant: Thursday",
-                                    "Traveling Merchant: Friday",
-                                    "Traveling Merchant: Saturday"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "or",
-                              "conditions": [
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Club"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Dagger"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Sword"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Weapon"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "region_check",
-                              "region": "The Mines - Floor 60"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Coffee Bean"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Received Progression Percent",
-                              "count": {
-                                "type": "constant",
-                                "value": 16
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "region_check",
-                              "region": "Spring Farming"
-                            },
-                            {
-                              "type": "region_check",
-                              "region": "Summer Farming"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
                               "type": "item_check",
                               "item": "Ancient Seeds Recipe"
                             },
@@ -12315,6 +12179,79 @@
                         {
                           "type": "region_check",
                           "region": "Summer Farming"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "or",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Club"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Dagger"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Weapon"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "region_check",
+                              "region": "The Mines - Floor 60"
+                            },
+                            {
+                              "type": "total_received",
+                              "count": 3,
+                              "items": [
+                                "Traveling Merchant: Sunday",
+                                "Traveling Merchant: Monday",
+                                "Traveling Merchant: Tuesday",
+                                "Traveling Merchant: Wednesday",
+                                "Traveling Merchant: Thursday",
+                                "Traveling Merchant: Friday",
+                                "Traveling Merchant: Saturday"
+                              ]
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Coffee Bean"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Received Progression Percent",
+                              "count": {
+                                "type": "constant",
+                                "value": 16
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "region_check",
+                              "region": "Spring Farming"
+                            },
+                            {
+                              "type": "region_check",
+                              "region": "Summer Farming"
+                            }
+                          ]
                         }
                       ]
                     }
@@ -13778,88 +13715,6 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "helper",
-                              "name": "total_received",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": 3
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Traveling Merchant: Sunday",
-                                    "Traveling Merchant: Monday",
-                                    "Traveling Merchant: Tuesday",
-                                    "Traveling Merchant: Wednesday",
-                                    "Traveling Merchant: Thursday",
-                                    "Traveling Merchant: Friday",
-                                    "Traveling Merchant: Saturday"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "or",
-                              "conditions": [
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Club"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Dagger"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Sword"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Weapon"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "region_check",
-                              "region": "The Mines - Floor 60"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Coffee Bean"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Received Progression Percent",
-                              "count": {
-                                "type": "constant",
-                                "value": 16
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "region_check",
-                              "region": "Spring Farming"
-                            },
-                            {
-                              "type": "region_check",
-                              "region": "Summer Farming"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
                               "type": "item_check",
                               "item": "Ancient Seeds Recipe"
                             },
@@ -14057,6 +13912,79 @@
                         {
                           "type": "region_check",
                           "region": "Summer Farming"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "or",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Club"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Dagger"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Weapon"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "region_check",
+                              "region": "The Mines - Floor 60"
+                            },
+                            {
+                              "type": "total_received",
+                              "count": 3,
+                              "items": [
+                                "Traveling Merchant: Sunday",
+                                "Traveling Merchant: Monday",
+                                "Traveling Merchant: Tuesday",
+                                "Traveling Merchant: Wednesday",
+                                "Traveling Merchant: Thursday",
+                                "Traveling Merchant: Friday",
+                                "Traveling Merchant: Saturday"
+                              ]
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Coffee Bean"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Received Progression Percent",
+                              "count": {
+                                "type": "constant",
+                                "value": 16
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "region_check",
+                              "region": "Spring Farming"
+                            },
+                            {
+                              "type": "region_check",
+                              "region": "Summer Farming"
+                            }
+                          ]
                         }
                       ]
                     }
@@ -15520,88 +15448,6 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "helper",
-                              "name": "total_received",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": 3
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Traveling Merchant: Sunday",
-                                    "Traveling Merchant: Monday",
-                                    "Traveling Merchant: Tuesday",
-                                    "Traveling Merchant: Wednesday",
-                                    "Traveling Merchant: Thursday",
-                                    "Traveling Merchant: Friday",
-                                    "Traveling Merchant: Saturday"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "or",
-                              "conditions": [
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Club"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Dagger"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Sword"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Weapon"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "region_check",
-                              "region": "The Mines - Floor 60"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Coffee Bean"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Received Progression Percent",
-                              "count": {
-                                "type": "constant",
-                                "value": 16
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "region_check",
-                              "region": "Spring Farming"
-                            },
-                            {
-                              "type": "region_check",
-                              "region": "Summer Farming"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
                               "type": "item_check",
                               "item": "Ancient Seeds Recipe"
                             },
@@ -15799,6 +15645,79 @@
                         {
                           "type": "region_check",
                           "region": "Summer Farming"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "or",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Club"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Dagger"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Weapon"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "region_check",
+                              "region": "The Mines - Floor 60"
+                            },
+                            {
+                              "type": "total_received",
+                              "count": 3,
+                              "items": [
+                                "Traveling Merchant: Sunday",
+                                "Traveling Merchant: Monday",
+                                "Traveling Merchant: Tuesday",
+                                "Traveling Merchant: Wednesday",
+                                "Traveling Merchant: Thursday",
+                                "Traveling Merchant: Friday",
+                                "Traveling Merchant: Saturday"
+                              ]
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Coffee Bean"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Received Progression Percent",
+                              "count": {
+                                "type": "constant",
+                                "value": 16
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "region_check",
+                              "region": "Spring Farming"
+                            },
+                            {
+                              "type": "region_check",
+                              "region": "Summer Farming"
+                            }
+                          ]
                         }
                       ]
                     }
@@ -17262,88 +17181,6 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "helper",
-                              "name": "total_received",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": 3
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Traveling Merchant: Sunday",
-                                    "Traveling Merchant: Monday",
-                                    "Traveling Merchant: Tuesday",
-                                    "Traveling Merchant: Wednesday",
-                                    "Traveling Merchant: Thursday",
-                                    "Traveling Merchant: Friday",
-                                    "Traveling Merchant: Saturday"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "or",
-                              "conditions": [
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Club"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Dagger"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Sword"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Weapon"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "region_check",
-                              "region": "The Mines - Floor 60"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Coffee Bean"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Received Progression Percent",
-                              "count": {
-                                "type": "constant",
-                                "value": 16
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "region_check",
-                              "region": "Spring Farming"
-                            },
-                            {
-                              "type": "region_check",
-                              "region": "Summer Farming"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
                               "type": "item_check",
                               "item": "Ancient Seeds Recipe"
                             },
@@ -17541,6 +17378,79 @@
                         {
                           "type": "region_check",
                           "region": "Summer Farming"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "or",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Club"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Dagger"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Weapon"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "region_check",
+                              "region": "The Mines - Floor 60"
+                            },
+                            {
+                              "type": "total_received",
+                              "count": 3,
+                              "items": [
+                                "Traveling Merchant: Sunday",
+                                "Traveling Merchant: Monday",
+                                "Traveling Merchant: Tuesday",
+                                "Traveling Merchant: Wednesday",
+                                "Traveling Merchant: Thursday",
+                                "Traveling Merchant: Friday",
+                                "Traveling Merchant: Saturday"
+                              ]
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Coffee Bean"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Received Progression Percent",
+                              "count": {
+                                "type": "constant",
+                                "value": 16
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "region_check",
+                              "region": "Spring Farming"
+                            },
+                            {
+                              "type": "region_check",
+                              "region": "Summer Farming"
+                            }
+                          ]
                         }
                       ]
                     }
@@ -27225,88 +27135,6 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "helper",
-                              "name": "total_received",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": 3
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    "Traveling Merchant: Sunday",
-                                    "Traveling Merchant: Monday",
-                                    "Traveling Merchant: Tuesday",
-                                    "Traveling Merchant: Wednesday",
-                                    "Traveling Merchant: Thursday",
-                                    "Traveling Merchant: Friday",
-                                    "Traveling Merchant: Saturday"
-                                  ]
-                                }
-                              ]
-                            },
-                            {
-                              "type": "or",
-                              "conditions": [
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Club"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Dagger"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Sword"
-                                },
-                                {
-                                  "type": "item_check",
-                                  "item": "Progressive Weapon"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "region_check",
-                              "region": "The Mines - Floor 60"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Coffee Bean"
-                            },
-                            {
-                              "type": "item_check",
-                              "item": "Received Progression Percent",
-                              "count": {
-                                "type": "constant",
-                                "value": 16
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "type": "or",
-                          "conditions": [
-                            {
-                              "type": "region_check",
-                              "region": "Spring Farming"
-                            },
-                            {
-                              "type": "region_check",
-                              "region": "Summer Farming"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "and",
-                          "conditions": [
-                            {
                               "type": "item_check",
                               "item": "Ancient Seeds Recipe"
                             },
@@ -27504,6 +27332,79 @@
                         {
                           "type": "region_check",
                           "region": "Summer Farming"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "or",
+                              "conditions": [
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Club"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Dagger"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Sword"
+                                },
+                                {
+                                  "type": "item_check",
+                                  "item": "Progressive Weapon"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "region_check",
+                              "region": "The Mines - Floor 60"
+                            },
+                            {
+                              "type": "total_received",
+                              "count": 3,
+                              "items": [
+                                "Traveling Merchant: Sunday",
+                                "Traveling Merchant: Monday",
+                                "Traveling Merchant: Tuesday",
+                                "Traveling Merchant: Wednesday",
+                                "Traveling Merchant: Thursday",
+                                "Traveling Merchant: Friday",
+                                "Traveling Merchant: Saturday"
+                              ]
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Coffee Bean"
+                            },
+                            {
+                              "type": "item_check",
+                              "item": "Received Progression Percent",
+                              "count": {
+                                "type": "constant",
+                                "value": 16
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "region_check",
+                              "region": "Spring Farming"
+                            },
+                            {
+                              "type": "region_check",
+                              "region": "Summer Farming"
+                            }
+                          ]
                         }
                       ]
                     }
@@ -57853,29 +57754,6 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "total_received",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 2
-                    },
-                    {
-                      "type": "constant",
-                      "value": [
-                        "100 Qi Gems",
-                        "50 Qi Gems",
-                        "40 Qi Gems",
-                        "35 Qi Gems",
-                        "25 Qi Gems",
-                        "20 Qi Gems",
-                        "15 Qi Gems",
-                        "10 Qi Gems"
-                      ]
-                    }
-                  ]
-                },
-                {
                   "type": "or",
                   "conditions": [
                     {
@@ -57932,6 +57810,20 @@
                 {
                   "type": "region_check",
                   "region": "Stardew Valley Fair"
+                },
+                {
+                  "type": "total_received",
+                  "count": 2,
+                  "items": [
+                    "100 Qi Gems",
+                    "50 Qi Gems",
+                    "40 Qi Gems",
+                    "35 Qi Gems",
+                    "25 Qi Gems",
+                    "20 Qi Gems",
+                    "15 Qi Gems",
+                    "10 Qi Gems"
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -58005,29 +57897,6 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "total_received",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 2
-                    },
-                    {
-                      "type": "constant",
-                      "value": [
-                        "100 Qi Gems",
-                        "50 Qi Gems",
-                        "40 Qi Gems",
-                        "35 Qi Gems",
-                        "25 Qi Gems",
-                        "20 Qi Gems",
-                        "15 Qi Gems",
-                        "10 Qi Gems"
-                      ]
-                    }
-                  ]
-                },
-                {
                   "type": "or",
                   "conditions": [
                     {
@@ -58076,6 +57945,20 @@
                 {
                   "type": "region_check",
                   "region": "Qi's Walnut Room"
+                },
+                {
+                  "type": "total_received",
+                  "count": 2,
+                  "items": [
+                    "100 Qi Gems",
+                    "50 Qi Gems",
+                    "40 Qi Gems",
+                    "35 Qi Gems",
+                    "25 Qi Gems",
+                    "20 Qi Gems",
+                    "15 Qi Gems",
+                    "10 Qi Gems"
+                  ]
                 }
               ]
             },
@@ -60430,23 +60313,14 @@
             "name": "Play Journey of the Prairie King",
             "connected_region": "JotPK World 1",
             "access_rule": {
-              "type": "helper",
-              "name": "total_received",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 2
-                },
-                {
-                  "type": "constant",
-                  "value": [
-                    "JotPK: Progressive Boots",
-                    "JotPK: Progressive Gun",
-                    "JotPK: Progressive Ammo",
-                    "JotPK: Extra Life",
-                    "JotPK: Increased Drop Rate"
-                  ]
-                }
+              "type": "total_received",
+              "count": 2,
+              "items": [
+                "JotPK: Progressive Boots",
+                "JotPK: Progressive Gun",
+                "JotPK: Progressive Ammo",
+                "JotPK: Extra Life",
+                "JotPK: Increased Drop Rate"
               ]
             }
           },
@@ -60944,23 +60818,14 @@
             "name": "Reach JotPK World 2",
             "connected_region": "JotPK World 2",
             "access_rule": {
-              "type": "helper",
-              "name": "total_received",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 4
-                },
-                {
-                  "type": "constant",
-                  "value": [
-                    "JotPK: Progressive Boots",
-                    "JotPK: Progressive Gun",
-                    "JotPK: Progressive Ammo",
-                    "JotPK: Extra Life",
-                    "JotPK: Increased Drop Rate"
-                  ]
-                }
+              "type": "total_received",
+              "count": 4,
+              "items": [
+                "JotPK: Progressive Boots",
+                "JotPK: Progressive Gun",
+                "JotPK: Progressive Ammo",
+                "JotPK: Extra Life",
+                "JotPK: Increased Drop Rate"
               ]
             }
           }
@@ -61050,23 +60915,14 @@
             "name": "Reach JotPK World 3",
             "connected_region": "JotPK World 3",
             "access_rule": {
-              "type": "helper",
-              "name": "total_received",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 7
-                },
-                {
-                  "type": "constant",
-                  "value": [
-                    "JotPK: Progressive Boots",
-                    "JotPK: Progressive Gun",
-                    "JotPK: Progressive Ammo",
-                    "JotPK: Extra Life",
-                    "JotPK: Increased Drop Rate"
-                  ]
-                }
+              "type": "total_received",
+              "count": 7,
+              "items": [
+                "JotPK: Progressive Boots",
+                "JotPK: Progressive Gun",
+                "JotPK: Progressive Ammo",
+                "JotPK: Extra Life",
+                "JotPK: Increased Drop Rate"
               ]
             }
           }
@@ -61142,23 +60998,14 @@
             "name": "Journey of the Prairie King Victory",
             "id": 717620,
             "access_rule": {
-              "type": "helper",
-              "name": "total_received",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 9
-                },
-                {
-                  "type": "constant",
-                  "value": [
-                    "JotPK: Progressive Boots",
-                    "JotPK: Progressive Gun",
-                    "JotPK: Progressive Ammo",
-                    "JotPK: Extra Life",
-                    "JotPK: Increased Drop Rate"
-                  ]
-                }
+              "type": "total_received",
+              "count": 9,
+              "items": [
+                "JotPK: Progressive Boots",
+                "JotPK: Progressive Gun",
+                "JotPK: Progressive Ammo",
+                "JotPK: Extra Life",
+                "JotPK: Increased Drop Rate"
               ]
             },
             "item": {
@@ -177139,28 +176986,6 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "total_received",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": 3
-                        },
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Traveling Merchant: Sunday",
-                            "Traveling Merchant: Monday",
-                            "Traveling Merchant: Tuesday",
-                            "Traveling Merchant: Wednesday",
-                            "Traveling Merchant: Thursday",
-                            "Traveling Merchant: Friday",
-                            "Traveling Merchant: Saturday"
-                          ]
-                        }
-                      ]
-                    },
-                    {
                       "type": "or",
                       "conditions": [
                         {
@@ -177184,6 +177009,19 @@
                     {
                       "type": "region_check",
                       "region": "The Mines - Floor 60"
+                    },
+                    {
+                      "type": "total_received",
+                      "count": 3,
+                      "items": [
+                        "Traveling Merchant: Sunday",
+                        "Traveling Merchant: Monday",
+                        "Traveling Merchant: Tuesday",
+                        "Traveling Merchant: Wednesday",
+                        "Traveling Merchant: Thursday",
+                        "Traveling Merchant: Friday",
+                        "Traveling Merchant: Saturday"
+                      ]
                     },
                     {
                       "type": "item_check",
@@ -205437,10 +205275,10 @@
           "file_name": "setup_en.md",
           "link": "setup/en",
           "authors": [
-            "Exempt-Medic (Proofreading)",
-            "Jouramie",
             "KaitoKid",
-            "Witchybun (Mod Support)"
+            "Jouramie",
+            "Witchybun (Mod Support)",
+            "Exempt-Medic (Proofreading)"
           ]
         },
         {

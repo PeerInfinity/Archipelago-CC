@@ -223,15 +223,11 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
                         'count': {'type': 'constant', 'value': rule_obj.count}
                     }
                 else:
-                    # Multiple items - need to check total count
-                    # This is more complex and might need a helper
+                    # Multiple items - use native total_received rule type
                     return {
-                        'type': 'helper',
-                        'name': 'total_received',
-                        'args': [
-                            {'type': 'constant', 'value': rule_obj.count},
-                            {'type': 'constant', 'value': list(rule_obj.items)}
-                        ]
+                        'type': 'total_received',
+                        'count': rule_obj.count,
+                        'items': list(rule_obj.items)
                     }
 
             # Handle And rule (logical AND)
