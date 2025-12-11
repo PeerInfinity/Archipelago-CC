@@ -1,97 +1,245 @@
-"""Celeste 64 helper expander."""
+"""Celeste 64 helper expander.
 
-from typing import Dict, Any, List
+Inlines location and region rules from the logic mappings, eliminating
+the need for JavaScript helper implementations.
+"""
+
+from typing import Dict, Any, List, Optional
 from .base import BaseGameExportHandler
 import logging
 
 logger = logging.getLogger(__name__)
 
+
 class Celeste64GameExportHandler(BaseGameExportHandler):
+    """Celeste 64 expander that inlines rules from logic mappings."""
     GAME_NAME = 'Celeste 64'
-    """Celeste 64 expander that handles game-specific rules."""
+
+    # Enable automatic export of discovered helpers
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
 
     def __init__(self, world=None):
         """Initialize with world instance to access options."""
         super().__init__()
         self.world = world
+        self._logic_difficulty = None
+        self._location_logic = {}
+        self._region_logic = {}
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """
-        Get Celeste 64 settings including the logic mappings.
-
-        This overrides the base get_settings_data to include the location
-        and region logic mappings that are needed for rule evaluation.
-        """
-        # Get base settings from parent class
-        settings_dict = super().get_settings_data(world, multiworld, player)
+    def _load_logic_mappings(self, world) -> None:
+        """Load and cache the logic mappings based on difficulty setting."""
+        if self._location_logic:
+            return  # Already loaded
 
         try:
-            # Import the Rules module to get the logic mappings
             from worlds.celeste64 import Rules
 
-            # Export the location logic mappings
-            settings_dict['location_standard_moves_logic'] = self._convert_logic_mapping(
-                Rules.location_standard_moves_logic
-            )
-            settings_dict['location_hard_moves_logic'] = self._convert_logic_mapping(
-                Rules.location_hard_moves_logic
-            )
+            # Get logic difficulty from world options
+            logic_difficulty = 'standard'
+            if hasattr(world, 'options') and hasattr(world.options, 'logic_difficulty'):
+                logic_difficulty = str(world.options.logic_difficulty.current_key)
 
-            # Export the region connection logic mappings
-            settings_dict['region_standard_moves_logic'] = self._convert_region_logic_mapping(
-                Rules.region_standard_moves_logic
-            )
-            settings_dict['region_hard_moves_logic'] = self._convert_region_logic_mapping(
-                Rules.region_hard_moves_logic
-            )
+            self._logic_difficulty = logic_difficulty
 
-            logger.info(f"Successfully exported Celeste 64 logic mappings for player {player}")
+            if logic_difficulty == 'standard':
+                self._location_logic = dict(Rules.location_standard_moves_logic)
+                self._region_logic = {
+                    f"{k[0]},{k[1]}": v for k, v in Rules.region_standard_moves_logic.items()
+                }
+            else:
+                self._location_logic = dict(Rules.location_hard_moves_logic)
+                self._region_logic = {
+                    f"{k[0]},{k[1]}": v for k, v in Rules.region_hard_moves_logic.items()
+                }
+
+            logger.debug(f"Loaded Celeste 64 logic mappings for difficulty: {logic_difficulty}")
 
         except Exception as e:
-            logger.warning(f"Could not export Celeste 64 logic mappings: {e}")
+            logger.warning(f"Could not load Celeste 64 logic mappings: {e}")
 
-        return settings_dict
-
-    def _convert_logic_mapping(self, logic_dict: Dict[str, List[List[str]]]) -> Dict[str, List[List[str]]]:
+    def _expand_location_rule(self, location_name: str) -> Dict[str, Any]:
         """
-        Convert the Python logic mapping to JSON-serializable format.
+        Expand a location rule to its actual rule structure.
+
+        Converts the logic mapping for a location to an OR of ANDs of item_checks.
+        If the location has no requirements, returns a constant true.
         """
-        # The logic mapping should already be in the right format (strings and lists)
-        # Just return it as-is
-        return dict(logic_dict)
+        if location_name not in self._location_logic:
+            return {'type': 'constant', 'value': True}
 
-    def _convert_region_logic_mapping(self, logic_dict: Dict[tuple, List[List[str]]]) -> Dict[str, List[List[str]]]:
+        possible_access_methods = self._location_logic[location_name]
+        if not possible_access_methods:
+            return {'type': 'constant', 'value': True}
+
+        # Build OR of ANDs
+        conditions = []
+        for required_items in possible_access_methods:
+            if len(required_items) == 1:
+                # Single item - just item_check
+                conditions.append({
+                    'type': 'item_check',
+                    'item': required_items[0]
+                })
+            else:
+                # Multiple items - AND of item_checks
+                conditions.append({
+                    'type': 'and',
+                    'conditions': [
+                        {'type': 'item_check', 'item': item}
+                        for item in required_items
+                    ]
+                })
+
+        if len(conditions) == 1:
+            return conditions[0]
+        else:
+            return {
+                'type': 'or',
+                'conditions': conditions
+            }
+
+    def _expand_region_rule(self, region_tuple: List[str]) -> Dict[str, Any]:
         """
-        Convert the region logic mapping from tuple keys to string keys for JSON.
+        Expand a region connection rule to its actual rule structure.
+
+        Converts the logic mapping for a region connection to an OR of ANDs of item_checks.
+        Handles special "CANNOT ACCESS" case.
         """
-        result = {}
-        for region_tuple, requirements in sorted(logic_dict.items()):
-            # Convert tuple (from_region, to_region) to string key "from_region,to_region"
-            key = f"{region_tuple[0]},{region_tuple[1]}"
-            result[key] = requirements
-        return result
+        if not region_tuple or len(region_tuple) < 2:
+            return {'type': 'constant', 'value': True}
 
-    def expand_helper(self, helper_name: str, args: List[Any] = None):
-        """Expand Celeste 64 specific helper functions."""
-        if args is None:
-            args = []
+        connection_key = f"{region_tuple[0]},{region_tuple[1]}"
 
-        # Celeste 64 uses location_rule and region_connection_rule as helpers
-        # These are handled in the JavaScript frontend, so we don't expand them here
-        if helper_name in ['location_rule', 'region_connection_rule', 'goal_rule']:
-            return None  # Keep as helper nodes
+        if connection_key not in self._region_logic:
+            return {'type': 'constant', 'value': True}
 
-        return None  # Preserve other helper nodes as-is
+        possible_access_methods = self._region_logic[connection_key]
+        if not possible_access_methods:
+            return {'type': 'constant', 'value': True}
+
+        # Build OR of ANDs
+        conditions = []
+        for required_items in possible_access_methods:
+            # Check for "CANNOT ACCESS" special case
+            if len(required_items) == 1 and required_items[0] == 'CANNOT ACCESS':
+                return {'type': 'constant', 'value': False}
+
+            if len(required_items) == 1:
+                # Single item - just item_check
+                conditions.append({
+                    'type': 'item_check',
+                    'item': required_items[0]
+                })
+            else:
+                # Multiple items - AND of item_checks
+                conditions.append({
+                    'type': 'and',
+                    'conditions': [
+                        {'type': 'item_check', 'item': item}
+                        for item in required_items
+                    ]
+                })
+
+        if len(conditions) == 1:
+            return conditions[0]
+        else:
+            return {
+                'type': 'or',
+                'conditions': conditions
+            }
+
+    def _expand_goal_rule(self, world) -> Dict[str, Any]:
+        """
+        Expand the goal rule.
+
+        The goal requires:
+        1. Having enough strawberries
+        2. Being able to reach Badeline Island
+        """
+        strawberries_required = 0
+        if hasattr(world, 'strawberries_required'):
+            strawberries_required = world.strawberries_required
+
+        conditions = []
+
+        # Strawberry requirement
+        if strawberries_required > 0:
+            conditions.append({
+                'type': 'count_check',
+                'item': 'Strawberry',
+                'count': strawberries_required
+            })
+
+        # Region reachability - reaching Badeline Island
+        conditions.append({
+            'type': 'can_reach',
+            'region': 'Badeline Island',
+            'resolution': 'Region'
+        })
+
+        if len(conditions) == 1:
+            return conditions[0]
+        else:
+            return {
+                'type': 'and',
+                'conditions': conditions
+            }
+
+    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """Recursively expand rule functions, inlining Celeste 64 logic mappings."""
+        if not rule:
+            return rule
+
+        if not isinstance(rule, dict):
+            return rule
+
+        rule_type = rule.get('type')
+
+        # Expand helper calls to location_rule and region_connection_rule
+        if rule_type == 'helper':
+            helper_name = rule.get('name', '')
+            args = rule.get('args', [])
+
+            if helper_name == 'location_rule':
+                # Get location name from args
+                if args and isinstance(args[0], dict) and args[0].get('type') == 'constant':
+                    location_name = args[0].get('value')
+                    if location_name:
+                        return self._expand_location_rule(location_name)
+
+            elif helper_name == 'region_connection_rule':
+                # Get region tuple from args
+                if args and isinstance(args[0], dict) and args[0].get('type') == 'constant':
+                    region_tuple = args[0].get('value')
+                    if region_tuple:
+                        return self._expand_region_rule(region_tuple)
+
+            elif helper_name == 'goal_rule':
+                if self.world:
+                    return self._expand_goal_rule(self.world)
+
+        # Recursively process conditions
+        if rule_type in ['and', 'or']:
+            rule['conditions'] = [self.expand_rule(cond) for cond in rule.get('conditions', [])]
+
+        if rule_type == 'not':
+            rule['condition'] = self.expand_rule(rule.get('condition'))
+
+        if rule_type == 'conditional':
+            rule['test'] = self.expand_rule(rule.get('test'))
+            rule['if_true'] = self.expand_rule(rule.get('if_true'))
+            rule['if_false'] = self.expand_rule(rule.get('if_false'))
+
+        return rule
 
     def handle_special_function_call(self, func_name: str, processed_args: list) -> dict:
         """
-        Handle Celeste 64 specific function calls that should be converted to helpers.
+        Handle Celeste 64 specific function calls.
 
         Convert calls to location_rule, region_connection_rule, and goal_rule into
-        helper nodes instead of inlining them.
+        helper nodes. These will be expanded later by expand_rule using the logic mappings.
         """
         if func_name in ['location_rule', 'region_connection_rule', 'goal_rule']:
-            # Convert to helper node
             return {
                 'type': 'helper',
                 'name': func_name,
@@ -100,10 +248,18 @@ class Celeste64GameExportHandler(BaseGameExportHandler):
 
         return None
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Recursively expand rule functions with Celeste 64-specific analysis."""
-        if not rule:
-            return rule
+    def preprocess_world_data(self, world, export_data: Dict[str, Any], player: int) -> None:
+        """Load logic mappings before rule processing."""
+        self._load_logic_mappings(world)
+        # Store world reference for goal_rule expansion
+        self.world = world
 
-        # Let the base class handle most of the expansion
-        return super().expand_rule(rule)
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Get Celeste 64 settings (no longer need logic mappings since rules are inlined)."""
+        settings_dict = super().get_settings_data(world, multiworld, player)
+
+        # Export strawberries_required for reference
+        if hasattr(world, 'strawberries_required'):
+            settings_dict['strawberries_required'] = world.strawberries_required
+
+        return settings_dict
