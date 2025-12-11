@@ -3118,8 +3118,16 @@
                   ]
                 },
                 {
-                  "type": "can_reach",
-                  "region": "Desert Palace Main (Outer)"
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "region_reference",
+                      "region": "Desert Palace Main (Outer)"
+                    },
+                    "attr": "can_reach"
+                  },
+                  "args": []
                 }
               ]
             },
@@ -20097,6 +20105,80 @@
           "fullrefill": false
         }
       },
+      "can_get_good_bee": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "cave",
+            "value": {
+              "type": "region_reference",
+              "region": "Good Bee Cave"
+            }
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "group_check",
+                  "group": "Bottles"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Bug Catching Net"
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Pegasus Boots"
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "has_sword",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Quake"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "cave"
+                    },
+                    "attr": "can_reach"
+                  },
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "is_not_bunny",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "cave"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
       "can_hold_arrows": {
         "params": [
           "quantity"
@@ -20148,6 +20230,169 @@
               }
             ]
           }
+        }
+      },
+      "can_kill_most_things": {
+        "params": [
+          "enemies"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "setting_value",
+            "setting": "enemy_shuffle"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "has_melee_weapon",
+                "args": []
+              },
+              {
+                "type": "item_check",
+                "item": "Cane of Somaria"
+              },
+              {
+                "type": "item_check",
+                "item": "Cane of Byrna"
+              },
+              {
+                "type": "helper",
+                "name": "can_extend_magic",
+                "args": []
+              },
+              {
+                "type": "helper",
+                "name": "can_shoot_arrows",
+                "args": []
+              },
+              {
+                "type": "item_check",
+                "item": "Fire Rod"
+              },
+              {
+                "type": "helper",
+                "name": "can_use_bombs",
+                "args": [
+                  {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "name",
+                      "name": "enemies"
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 4
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "has_melee_weapon",
+                "args": []
+              },
+              {
+                "type": "item_check",
+                "item": "Cane of Somaria"
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Cane of Byrna"
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "compare",
+                        "left": {
+                          "type": "name",
+                          "name": "enemies"
+                        },
+                        "op": "<",
+                        "right": {
+                          "type": "constant",
+                          "value": 6
+                        }
+                      },
+                      {
+                        "type": "helper",
+                        "name": "can_extend_magic",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "can_shoot_arrows",
+                "args": []
+              },
+              {
+                "type": "item_check",
+                "item": "Fire Rod"
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "compare",
+                    "left": {
+                      "type": "setting_value",
+                      "setting": "enemy_health"
+                    },
+                    "op": "in",
+                    "right": {
+                      "type": "list",
+                      "value": [
+                        {
+                          "type": "constant",
+                          "value": "easy"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "default"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "type": "helper",
+                    "name": "can_use_bombs",
+                    "args": [
+                      {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "name",
+                          "name": "enemies"
+                        },
+                        "op": "*",
+                        "right": {
+                          "type": "constant",
+                          "value": 4
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "defaults": {
+          "enemies": 5
         }
       },
       "can_lift_heavy_rocks": {
@@ -20290,8 +20535,8 @@
                 "name": "can_hold_arrows",
                 "args": [
                   {
-                    "type": "constant",
-                    "value": 0
+                    "type": "name",
+                    "name": "count"
                   }
                 ]
               }
@@ -20477,8 +20722,8 @@
                   "type": "min",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 1
+                      "type": "name",
+                      "name": "quantity"
                     },
                     {
                       "type": "constant",
@@ -20734,6 +20979,53 @@
             }
           }
         ]
+      },
+      "is_not_bunny": {
+        "params": [
+          "region"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "item_check",
+            "item": "Moon Pearl"
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "setting_value",
+                "setting": "mode"
+              },
+              "op": "!=",
+              "right": {
+                "type": "constant",
+                "value": "inverted"
+              }
+            },
+            "if_true": {
+              "type": "region_attribute",
+              "region": {
+                "type": "name",
+                "name": "region"
+              },
+              "attr": "is_light_world"
+            },
+            "if_false": {
+              "type": "region_attribute",
+              "region": {
+                "type": "name",
+                "name": "region"
+              },
+              "attr": "is_dark_world"
+            }
+          }
+        }
       }
     }
   }

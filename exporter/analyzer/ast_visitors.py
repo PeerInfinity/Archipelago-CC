@@ -208,6 +208,13 @@ class ASTVisitorMixin:
         logging.debug(f"Function: {ast.dump(node.func)}")
         logging.debug(f"Args: {[ast.dump(arg) for arg in node.args]}")
 
+        # *** Special handling for state.multiworld.get_region() pattern ***
+        # Check this early before visiting function node to avoid unnecessary processing
+        region_name = self._is_multiworld_get_region_call(node)
+        if region_name:
+            logging.debug(f"Detected state.multiworld.get_region pattern, region: {region_name}")
+            return {'type': 'region_reference', 'region': region_name}
+
         # Visit the function node to obtain its details.
         func_info = self.visit(node.func) # Get returned result
         logging.debug(f"Function info after visit: {func_info}")
@@ -235,58 +242,60 @@ class ASTVisitorMixin:
 
             # Filter arguments for game handler and result creation
             filtered_args = self._filter_special_args(args_with_nodes)
-            
-            # Resolve variable references in arguments (e.g., lambda defaults)
-            resolved_args = []
-            for arg in filtered_args:
-                if arg and arg.get('type') == 'name':
-                    # Skip 'world' - it should have been filtered already but double-check
-                    if arg['name'] == 'world':
-                        logging.debug(f"Skipping resolution of 'world' argument")
-                        continue
 
-                    # Try to resolve the variable
-                    resolved_value = self.expression_resolver.resolve_variable(arg['name'])
-                    if resolved_value is not None and is_simple_value(resolved_value):
-                        # Only create constant for simple values
-                        # Handle enum values - extract the numeric value
-                        if hasattr(resolved_value, 'value'):
-                            final_value = resolved_value.value
+            # Resolve variable references in arguments (e.g., lambda defaults)
+            # Skip this when preserve_parameter_names is True - we want to keep params as name references
+            if not getattr(self, 'preserve_parameter_names', False):
+                resolved_args = []
+                for arg in filtered_args:
+                    if arg and arg.get('type') == 'name':
+                        # Skip 'world' - it should have been filtered already but double-check
+                        if arg['name'] == 'world':
+                            logging.debug(f"Skipping resolution of 'world' argument")
+                            continue
+
+                        # Try to resolve the variable
+                        resolved_value = self.expression_resolver.resolve_variable(arg['name'])
+                        if resolved_value is not None and is_simple_value(resolved_value):
+                            # Only create constant for simple values
+                            # Handle enum values - extract the numeric value
+                            if hasattr(resolved_value, 'value'):
+                                final_value = resolved_value.value
+                            else:
+                                final_value = resolved_value
+                            # Ensure the final value is JSON-serializable
+                            final_value = make_json_serializable(final_value)
+                            logging.debug(f"Resolved argument variable '{arg['name']}' to {final_value}")
+                            resolved_args.append({'type': 'constant', 'value': final_value})
+                        # Handle Region objects - extract the .name attribute
+                        elif resolved_value is not None and hasattr(resolved_value, 'name') and hasattr(resolved_value, 'entrances'):
+                            region_name = resolved_value.name
+                            logging.debug(f"Resolved argument variable '{arg['name']}' (Region object) to region name: {region_name}")
+                            resolved_args.append({'type': 'constant', 'value': region_name})
                         else:
-                            final_value = resolved_value
-                        # Ensure the final value is JSON-serializable
-                        final_value = make_json_serializable(final_value)
-                        logging.debug(f"Resolved argument variable '{arg['name']}' to {final_value}")
-                        resolved_args.append({'type': 'constant', 'value': final_value})
-                    # Handle Region objects - extract the .name attribute
-                    elif resolved_value is not None and hasattr(resolved_value, 'name') and hasattr(resolved_value, 'entrances'):
-                        region_name = resolved_value.name
-                        logging.debug(f"Resolved argument variable '{arg['name']}' (Region object) to region name: {region_name}")
-                        resolved_args.append({'type': 'constant', 'value': region_name})
-                    else:
-                        # Keep unresolved or complex objects as name references
-                        resolved_args.append(arg)
-                elif arg and arg.get('type') == 'attribute':
-                    # Try to resolve attribute expressions like HatType.BREWING
-                    resolved_value = self.expression_resolver.resolve_expression(arg)
-                    if resolved_value is not None and is_simple_value(resolved_value):
-                        # Only create constant for simple values
-                        # Handle enum values - extract the numeric value
-                        if hasattr(resolved_value, 'value'):
-                            final_value = resolved_value.value
+                            # Keep unresolved or complex objects as name references
+                            resolved_args.append(arg)
+                    elif arg and arg.get('type') == 'attribute':
+                        # Try to resolve attribute expressions like HatType.BREWING
+                        resolved_value = self.expression_resolver.resolve_expression(arg)
+                        if resolved_value is not None and is_simple_value(resolved_value):
+                            # Only create constant for simple values
+                            # Handle enum values - extract the numeric value
+                            if hasattr(resolved_value, 'value'):
+                                final_value = resolved_value.value
+                            else:
+                                final_value = resolved_value
+                            # Ensure the final value is JSON-serializable
+                            final_value = make_json_serializable(final_value)
+                            logging.debug(f"Resolved argument attribute to {final_value}")
+                            resolved_args.append({'type': 'constant', 'value': final_value})
                         else:
-                            final_value = resolved_value
-                        # Ensure the final value is JSON-serializable
-                        final_value = make_json_serializable(final_value)
-                        logging.debug(f"Resolved argument attribute to {final_value}")
-                        resolved_args.append({'type': 'constant', 'value': final_value})
+                            # Keep unresolved or complex objects as attribute references
+                            resolved_args.append(arg)
                     else:
-                        # Keep unresolved or complex objects as attribute references
                         resolved_args.append(arg)
-                else:
-                    resolved_args.append(arg)
-            
-            filtered_args = resolved_args
+
+                filtered_args = resolved_args
 
             # Check for game-specific special function calls
             if self.game_handler and hasattr(self.game_handler, 'handle_special_function_call'):
@@ -1425,6 +1434,89 @@ class ASTVisitorMixin:
 
         return attr_name, index_val
 
+    def _is_multiworld_get_region_call(self, node):
+        """
+        Detect the pattern: state.multiworld.get_region('Region Name', player)
+        Returns the region name if matched, None otherwise.
+
+        AST structure:
+        Call
+          func=Attribute(attr='get_region')
+            value=Attribute(attr='multiworld')
+              value=Name(id='state')
+          args=[Constant('Region Name'), Name(id='player')]
+        """
+        if not isinstance(node, ast.Call):
+            return None
+
+        # Check func is an attribute access
+        func = node.func
+        if not isinstance(func, ast.Attribute) or func.attr != 'get_region':
+            return None
+
+        # Check the object is state.multiworld
+        multiworld_attr = func.value
+        if not isinstance(multiworld_attr, ast.Attribute) or multiworld_attr.attr != 'multiworld':
+            return None
+
+        # Check it's accessing 'state' or 'world'
+        state_name = multiworld_attr.value
+        if not isinstance(state_name, ast.Name) or state_name.id not in ('state', 'world'):
+            return None
+
+        # Get the region name from the first argument
+        if len(node.args) < 1:
+            return None
+
+        first_arg = node.args[0]
+        if isinstance(first_arg, ast.Constant):
+            return first_arg.value
+        elif isinstance(first_arg, ast.Str):  # Python 3.7 compatibility
+            return first_arg.s
+
+        return None
+
+    def _is_region_parameter_attribute(self, node, region_param_names=None):
+        """
+        Detect access to region parameter attributes like region.is_light_world.
+
+        This is used when a helper function takes a region as a parameter
+        and accesses its attributes within the function body.
+
+        Args:
+            node: The AST Attribute node
+            region_param_names: Set of parameter names that are known to be regions
+                              (e.g., {'region', 'cave'})
+
+        Returns:
+            Tuple of (param_name, attr_name) if matched, (None, None) otherwise.
+        """
+        if not isinstance(node, ast.Attribute):
+            return None, None
+
+        attr_name = node.attr
+
+        # Only handle known region attributes
+        if attr_name not in ('is_light_world', 'is_dark_world', 'name'):
+            return None, None
+
+        # Check if the object is a Name node (variable reference)
+        if not isinstance(node.value, ast.Name):
+            return None, None
+
+        param_name = node.value.id
+
+        # If we have a list of known region parameters, check against it
+        if region_param_names is not None:
+            if param_name not in region_param_names:
+                return None, None
+        else:
+            # Default known region parameter names
+            if param_name not in ('region', 'cave', 'r', 'reg'):
+                return None, None
+
+        return param_name, attr_name
+
     def visit_Attribute(self, node):
         try:
             attr_name = node.attr
@@ -1436,6 +1528,17 @@ class ASTVisitorMixin:
             if setting_name:
                 logging.debug(f"visit_Attribute: Detected world options pattern, setting: {setting_name}")
                 return {'type': 'setting_value', 'setting': setting_name}
+
+            # Check for region parameter attribute access (e.g., region.is_light_world)
+            # This handles helpers like is_not_bunny that take a region parameter
+            param_name, region_attr = self._is_region_parameter_attribute(node)
+            if param_name and region_attr:
+                logging.debug(f"visit_Attribute: Detected region parameter attribute: {param_name}.{region_attr}")
+                return {
+                    'type': 'region_attribute',
+                    'region': {'type': 'name', 'name': param_name},
+                    'attr': region_attr
+                }
 
             # Specifically log if we are processing self.player
             if isinstance(node.value, ast.Name) and node.value.id == 'self' and attr_name == 'player':

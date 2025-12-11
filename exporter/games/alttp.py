@@ -24,8 +24,8 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         # 'can_extend_magic',  # Debugging - shop region reachability
         'can_buy',  # Uses frontend shop_items implementation
         'can_buy_unlimited',  # Uses frontend shop_items implementation
-        'can_get_good_bee',
-        'can_kill_most_things',
+        # 'can_get_good_bee',  # Now works with region_reference and region_attribute support
+        # 'can_kill_most_things',  # Now works with default parameter values support
         # 'can_shoot_arrows',  # Now works with can_buy and can_hold_arrows
         # 'can_use_bombs',  # Now works with min/max and setting_value support
         # 'has_crystals',  # Now works with group_count support
@@ -81,7 +81,8 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             'can_buy',  # Implemented in frontend using shop_items data
             'can_buy_unlimited',  # Implemented in frontend using shop_items data
             'can_extend_magic',
-            'can_get_good_bee',
+            'can_get_good_bee',  # Uses region_reference and is_not_bunny
+            'is_not_bunny',  # Takes region parameter, uses region_attribute
             'can_kill_most_things',
             # 'can_lift_heavy_rocks',  # Removed - simple item check, can be inlined
             # 'can_lift_rocks',  # Removed - simple item checks, can be inlined
