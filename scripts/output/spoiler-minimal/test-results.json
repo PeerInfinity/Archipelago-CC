@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-11T01:26:53.632096",
-    "last_updated": "2025-12-11T01:26:53.632103",
+    "last_updated": "2025-12-11T03:23:10.323254",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3258,39 +3258,27 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "c0b55a9c47565f4de14cb9b2a3af0b3350cad36331357f71a3b061f6ad1f78f7",
-          "new_sphere_log_hash": "4e273924d459441ba2255c7f74510033a3c4a92b2efb3b1e4014c3d3fba738bb",
-          "original_rules_hash": "c0b55a9c47565f4de14cb9b2a3af0b3350cad36331357f71a3b061f6ad1f78f7",
-          "original_sphere_log_hash": "4e273924d459441ba2255c7f74510033a3c4a92b2efb3b1e4014c3d3fba738bb",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-11T01:19:27.250898"
-        }
-      },
       "game_name_from_filename": "stardew_valley",
       "game_name_from_yaml": "Stardew Valley",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 6.49,
+        "processing_time_seconds": 10.09,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/stardew_valley/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 8231294,
-        "size_mb": 7.85
+        "size_bytes": 8224946,
+        "size_mb": 7.84
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 34.9,
+        "processing_time_seconds": 40.19,
         "return_code": 0,
         "sphere_reached": 44.1,
         "success": true,
@@ -3298,12 +3286,12 @@
         "warning_count": 0
       },
       "template_filename": "Stardew Valley.yaml",
-      "timestamp": "2025-12-11T01:17:47.845686",
+      "timestamp": "2025-12-11T03:22:19.605467",
       "world_info": {
         "exporter_path": "exporter/games/stardew_valley.py",
-        "exporter_size": 16332,
+        "exporter_size": 16121,
         "game_logic_path": null,
-        "game_logic_size": 10915,
+        "game_logic_size": 7256,
         "game_name_from_filename": "stardew_valley",
         "game_name_from_yaml": "Stardew Valley",
         "has_custom_exporter": true,
