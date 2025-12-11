@@ -6,29 +6,29 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-11 19:43:46
+**Generated:** 2025-12-11 21:38:57
 
 ## Summary
 
 - **Total Games:** 76
-- **Passed:** 68 (89.5%)
-- **Failed:** 0 (0.0%)
-- **Skipped (Prerequisites):** 8 (10.5%)
-- **Second Pass Tested:** 68
-- **Second Pass Passed:** 68
+- **Passed:** 71 (93.4%)
+- **Failed:** 1 (1.3%)
+- **Skipped (Prerequisites):** 4 (5.3%)
+- **Second Pass Tested:** 71
+- **Second Pass Passed:** 71
 - **Second Pass Failed:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 29/68 (42.6% of passed)
-- **Passing with Generic Logic:** 48/68 (70.6% of passed)
-- **Passing with Both Generic:** 29/68 (42.6% of passed)
+- **Passing with Generic Exporter:** 29/71 (40.8% of passed)
+- **Passing with Generic Logic:** 50/71 (70.4% of passed)
+- **Passing with Both Generic:** 29/71 (40.8% of passed)
 
 ## Test Results
 
 | Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |
 |-----------|------------|-------------|----------|---------|----------|----------|
-| A Hat in Time | ⚫ Skipped | — | 1 | N/A | 7.5KB | 10.3KB |
+| A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 7.5KB | 10.3KB |
 | A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 43.0KB | ✅ |
 | A Short Hike | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
@@ -38,76 +38,82 @@
 | Bumper Stickers | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | 1 | 1 | 15.1KB | ✅ |
 | Castlevania 64 | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
-| Celeste (Open World) | ✅ Passed | ✅ Passed | 1 | 1 | 7.1KB | ✅ |
+| Celeste (Open World) | ✅ Passed | ✅ Passed | 2 | 2 | 7.1KB | ✅ |
 | Celeste 64 | ✅ Passed | ✅ Passed | 2 | 2 | 9.4KB | ✅ |
 | ChecksFinder | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | ChocolateChipCookies | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Choo-Choo Charles | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
-| Civilization VI | ⚫ Skipped | — | 2 | N/A | 0.3KB | ✅ |
+| Civilization VI | ✅ Passed | ✅ Passed | 2 | 2 | 10.2KB | ✅ |
 | DLCQuest | ✅ Passed | ✅ Passed | 2 | 2 | 10.3KB | 9.6KB |
 | DOOM 1993 | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | DOOM II | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | ✅ Passed | 2 | 2 | 4.7KB | ✅ |
-| Donkey Kong Country 3 | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
+| Donkey Kong Country 3 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 11.4KB | 4.2KB |
 | Faxanadu | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | 3 | 3 | 7.5KB | ✅ |
 | Heretic | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Hylics 2 | ✅ Passed | ✅ Passed | 2 | 2 | 1.0KB | ✅ |
+| Hylics 2 | ✅ Passed | ✅ Passed | 3 | 3 | 1.0KB | ✅ |
 | Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 8.0KB | ✅ |
-| Jak and Daxter: The Precursor Legacy | ✅ Passed | ✅ Passed | 3 | 3 | 13.1KB | 2.5KB |
-| Kingdom Hearts | ✅ Passed | ✅ Passed | 3 | 3 | 58.1KB | 5.4KB |
-| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 3 | 3 | 14.6KB | 105.3KB |
-| Kirby's Dream Land 3 | ⚫ Skipped | — | 3 | N/A | 9.7KB | 14.9KB |
+| Jak and Daxter: The Precursor Legacy | ✅ Passed | ✅ Passed | 3 | 3 | 15.5KB | 4.6KB |
+| Kingdom Hearts | ✅ Passed | ✅ Passed | 3 | 3 | 58.4KB | 5.4KB |
+| Kingdom Hearts 2 | ⚫ Skipped | — | 3 | N/A | 15.5KB | 105.3KB |
+| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 4 | 4 | 9.7KB | 15.7KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | 4 | 4 | 16.4KB | ✅ |
 | Lingo | ✅ Passed | ✅ Passed | 4 | 4 | 32.9KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | ✅ Passed | 4 | 4 | 16.9KB | 5.3KB |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
-| Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | 3 | 3 | 0.6KB | ✅ |
+| Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | 4 | 4 | 0.6KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
-| Mega Man 2 | ⚫ Skipped | — | 4 | N/A | 0.6KB | 3.2KB |
-| MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | 4 | 4 | 3.5KB | ✅ |
+| Mega Man 2 | ❌ Failed | — | 4 | 4 | 0.6KB | 3.9KB |
+| MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | 3 | 3 | 3.5KB | ✅ |
 | Meritous | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
-| Metamath | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
+| Metamath | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Muse Dash | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Noita | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Old School Runescape | ✅ Passed | ✅ Passed | 5 | 5 | 3.1KB | 1.2KB |
 | Overcooked! 2 | ✅ Passed | ✅ Passed | 5 | 5 | 26.1KB | 5.1KB |
-| Paint | ✅ Passed | ✅ Passed | 4 | 4 | 6.4KB | 4.4KB |
+| Paint | ✅ Passed | ✅ Passed | 5 | 5 | 6.4KB | 4.4KB |
 | Raft | ✅ Passed | ✅ Passed | 5 | 5 | 11.8KB | 5.5KB |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
-| SMZ3 | ⚫ Skipped | — | 5 | N/A | 59.6KB | 51.3KB |
+| SMZ3 | ⚫ Skipped | — | 4 | N/A | 61.4KB | 51.3KB |
 | Saving Princess | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Secret of Evermore | ✅ Passed | ✅ Passed | 4 | 4 | 13.7KB | 6.9KB |
+| Secret of Evermore | ✅ Passed | ✅ Passed | 6 | 6 | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 19.7KB | 86.3KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 15.9KB | 10.7KB |
-| Subnautica | ✅ Passed | ✅ Passed | 5 | 5 | 2.3KB | 14.7KB |
+| Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 2.3KB | 14.7KB |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | 5 | 5 | 13.8KB | 4.9KB |
-| Super Mario World | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
+| Super Mario World | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Super Metroid | ✅ Passed | ✅ Passed | 6 | 6 | 71.8KB | 114.6KB |
-| TOEM original | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
+| TOEM original | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | TUNIC | ⚫ Skipped | — | 7 | N/A | 2.4KB | ✅ |
 | Terraria | ✅ Passed | ✅ Passed | 7 | 7 | 12.3KB | 4.3KB |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | 6.9KB | ✅ |
-| The Messenger | ⚫ Skipped | — | 6 | N/A | 10.0KB | ✅ |
+| The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 11.7KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 4.8KB | 4.6KB |
 | The Witness | ⚫ Skipped | — | 6 | N/A | 23.7KB | ✅ |
-| Timespinner | ✅ Passed | ✅ Passed | 6 | 6 | 4.0KB | ✅ |
+| Timespinner | ✅ Passed | ✅ Passed | 5 | 5 | 4.0KB | ✅ |
 | Undertale | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
-| VVVVVV | ✅ Passed | ✅ Passed | 6 | 6 | 5.4KB | ✅ |
+| VVVVVV | ✅ Passed | ✅ Passed | 8 | 8 | 5.4KB | ✅ |
 | Wargroove | ✅ Passed | ✅ Passed | 8 | 8 | 5.7KB | 2.6KB |
 | WebDevJourney | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | Yacht Dice | ✅ Passed | ✅ Passed | 8 | 8 | 1.6KB | 285.0KB |
 | Yoshi's Island | ✅ Passed | ✅ Passed | 8 | 8 | 10.8KB | ✅ |
-| shapez | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
+| shapez | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
 
 ## Templates in Multiworld
 
 Shows which templates were in the multiworld when each game was tested:
+
+### A Hat in Time ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Hat in Time.yaml |
 
 ### A Link to the Past ✅
 
@@ -167,7 +173,8 @@ Shows which templates were in the multiworld when each game was tested:
 
 | Player # | Template |
 |----------|----------|
-| 1 | Celeste (Open World).yaml |
+| 1 | A Hat in Time.yaml |
+| 2 | Celeste (Open World).yaml |
 
 ### Celeste 64 ✅
 
@@ -196,6 +203,13 @@ Shows which templates were in the multiworld when each game was tested:
 |----------|----------|
 | 1 | Adventure.yaml |
 | 2 | Choo-Choo Charles.yaml |
+
+### Civilization VI ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | Aquaria.yaml |
+| 2 | Civilization VI.yaml |
 
 ### DLCQuest ✅
 
@@ -229,8 +243,9 @@ Shows which templates were in the multiworld when each game was tested:
 
 | Player # | Template |
 |----------|----------|
-| 1 | Celeste (Open World).yaml |
-| 2 | Donkey Kong Country 3.yaml |
+| 1 | A Hat in Time.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
 
 ### Factorio ✅
 
@@ -269,7 +284,8 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
-| 2 | Hylics 2.yaml |
+| 2 | Civilization VI.yaml |
+| 3 | Hylics 2.yaml |
 
 ### Inscryption ✅
 
@@ -295,13 +311,14 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Dark Souls III.yaml |
 | 3 | Kingdom Hearts.yaml |
 
-### Kingdom Hearts 2 ✅
+### Kirby's Dream Land 3 ✅
 
 | Player # | Template |
 |----------|----------|
-| 1 | Castlevania - Circle of the Moon.yaml |
-| 2 | DOOM II.yaml |
-| 3 | Kingdom Hearts 2.yaml |
+| 1 | A Hat in Time.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
 
 ### Landstalker - The Treasures of King Nole ✅
 
@@ -344,8 +361,9 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
-| 2 | Hylics 2.yaml |
-| 3 | Mario & Luigi Superstar Saga.yaml |
+| 2 | Civilization VI.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Mario & Luigi Superstar Saga.yaml |
 
 ### MathProof2p2e4 ✅
 
@@ -356,14 +374,22 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Inscryption.yaml |
 | 4 | MathProof2p2e4.yaml |
 
+### Mega Man 2 ❌
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bumper Stickers.yaml |
+| 2 | DOOM 1993.yaml |
+| 3 | Jak and Daxter The Precursor Legacy.yaml |
+| 4 | Mega Man 2.yaml |
+
 ### MegaMan Battle Network 3 ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | Castlevania - Circle of the Moon.yaml |
 | 2 | DOOM II.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
+| 3 | MegaMan Battle Network 3.yaml |
 
 ### Meritous ✅
 
@@ -378,9 +404,11 @@ Shows which templates were in the multiworld when each game was tested:
 
 | Player # | Template |
 |----------|----------|
-| 1 | Celeste (Open World).yaml |
-| 2 | Donkey Kong Country 3.yaml |
-| 3 | Metamath.yaml |
+| 1 | A Hat in Time.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
+| 5 | Metamath.yaml |
 
 ### Muse Dash ✅
 
@@ -427,9 +455,10 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
-| 2 | Hylics 2.yaml |
-| 3 | Mario & Luigi Superstar Saga.yaml |
-| 4 | Paint.yaml |
+| 2 | Civilization VI.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Mario & Luigi Superstar Saga.yaml |
+| 5 | Paint.yaml |
 
 ### Raft ✅
 
@@ -464,10 +493,12 @@ Shows which templates were in the multiworld when each game was tested:
 
 | Player # | Template |
 |----------|----------|
-| 1 | Celeste (Open World).yaml |
-| 2 | Donkey Kong Country 3.yaml |
-| 3 | Metamath.yaml |
-| 4 | Secret of Evermore.yaml |
+| 1 | A Hat in Time.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
+| 5 | Metamath.yaml |
+| 6 | Secret of Evermore.yaml |
 
 ### Shivers ✅
 
@@ -518,10 +549,11 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
-| 2 | Hylics 2.yaml |
-| 3 | Mario & Luigi Superstar Saga.yaml |
-| 4 | Paint.yaml |
-| 5 | Subnautica.yaml |
+| 2 | Civilization VI.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Mario & Luigi Superstar Saga.yaml |
+| 5 | Paint.yaml |
+| 6 | Subnautica.yaml |
 
 ### Super Mario 64 ✅
 
@@ -550,9 +582,8 @@ Shows which templates were in the multiworld when each game was tested:
 |----------|----------|
 | 1 | Castlevania - Circle of the Moon.yaml |
 | 2 | DOOM II.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
-| 5 | Super Mario World.yaml |
+| 3 | MegaMan Battle Network 3.yaml |
+| 4 | Super Mario World.yaml |
 
 ### Super Metroid ✅
 
@@ -569,11 +600,13 @@ Shows which templates were in the multiworld when each game was tested:
 
 | Player # | Template |
 |----------|----------|
-| 1 | Celeste (Open World).yaml |
-| 2 | Donkey Kong Country 3.yaml |
-| 3 | Metamath.yaml |
-| 4 | Secret of Evermore.yaml |
-| 5 | TOEM original.yaml |
+| 1 | A Hat in Time.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
+| 5 | Metamath.yaml |
+| 6 | Secret of Evermore.yaml |
+| 7 | TOEM original.yaml |
 
 ### TOEM rule builder ✅
 
@@ -611,6 +644,18 @@ Shows which templates were in the multiworld when each game was tested:
 | 6 | Stardew Valley.yaml |
 | 7 | The Legend of Zelda.yaml |
 
+### The Messenger ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | Aquaria.yaml |
+| 2 | Civilization VI.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Mario & Luigi Superstar Saga.yaml |
+| 5 | Paint.yaml |
+| 6 | Subnautica.yaml |
+| 7 | The Messenger.yaml |
+
 ### The Wind Waker ✅
 
 | Player # | Template |
@@ -629,10 +674,9 @@ Shows which templates were in the multiworld when each game was tested:
 |----------|----------|
 | 1 | Castlevania - Circle of the Moon.yaml |
 | 2 | DOOM II.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
-| 5 | Super Mario World.yaml |
-| 6 | Timespinner.yaml |
+| 3 | MegaMan Battle Network 3.yaml |
+| 4 | Super Mario World.yaml |
+| 5 | Timespinner.yaml |
 
 ### Undertale ✅
 
@@ -650,12 +694,14 @@ Shows which templates were in the multiworld when each game was tested:
 
 | Player # | Template |
 |----------|----------|
-| 1 | Celeste (Open World).yaml |
-| 2 | Donkey Kong Country 3.yaml |
-| 3 | Metamath.yaml |
-| 4 | Secret of Evermore.yaml |
-| 5 | TOEM original.yaml |
-| 6 | VVVVVV.yaml |
+| 1 | A Hat in Time.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
+| 5 | Metamath.yaml |
+| 6 | Secret of Evermore.yaml |
+| 7 | TOEM original.yaml |
+| 8 | VVVVVV.yaml |
 
 ### Wargroove ✅
 
@@ -713,11 +759,28 @@ Shows which templates were in the multiworld when each game was tested:
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
-| 2 | Hylics 2.yaml |
-| 3 | Mario & Luigi Superstar Saga.yaml |
-| 4 | Paint.yaml |
-| 5 | Subnautica.yaml |
-| 6 | shapez.yaml |
+| 2 | Civilization VI.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Mario & Luigi Superstar Saga.yaml |
+| 5 | Paint.yaml |
+| 6 | Subnautica.yaml |
+| 7 | The Messenger.yaml |
+| 8 | shapez.yaml |
+
+
+## Bisection Results
+
+When a multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
+
+### Mega Man 2 (Mega Man 2.yaml)
+
+**Failing pairs found:** 3
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| Bumper Stickers.yaml | ❌ | ✅ | ✅ | ❌ |
+| DOOM 1993.yaml | ❌ | ✅ | ✅ | ❌ |
+| Jak and Daxter The Precursor Legacy.yaml | ❌ | ✅ | ✅ | ❌ |
 
 
 ## Second Pass Results
@@ -726,78 +789,94 @@ Templates tested in the first pass with fewer than the maximum number of players
 
 | Game Name | First Pass MW Size | Second Pass MW Size | Second Pass Player # | Second Pass Result |
 |-----------|-------------------|---------------------|---------------------|--------------------|
+| A Hat in Time | 1 | 8 | 1 | ✅ Passed |
 | A Link to the Past | 1 | 8 | 1 | ✅ Passed |
 | A Short Hike | 1 | 7 | 1 | ✅ Passed |
 | APQuest | 1 | 8 | 1 | ✅ Passed |
 | Adventure | 1 | 8 | 1 | ✅ Passed |
-| Aquaria | 1 | 6 | 1 | ✅ Passed |
+| Aquaria | 1 | 8 | 1 | ✅ Passed |
 | Bomb Rush Cyberfunk | 1 | 7 | 1 | ✅ Passed |
 | Bumper Stickers | 1 | 5 | 1 | ✅ Passed |
-| Castlevania - Circle of the Moon | 1 | 6 | 1 | ✅ Passed |
+| Castlevania - Circle of the Moon | 1 | 5 | 1 | ✅ Passed |
 | Castlevania 64 | 1 | 7 | 1 | ✅ Passed |
-| Celeste (Open World) | 1 | 6 | 1 | ✅ Passed |
+| Celeste (Open World) | 2 | 8 | 2 | ✅ Passed |
 | Celeste 64 | 2 | 8 | 2 | ✅ Passed |
 | ChecksFinder | 2 | 7 | 2 | ✅ Passed |
 | ChocolateChipCookies | 2 | 8 | 2 | ✅ Passed |
 | Choo-Choo Charles | 2 | 8 | 2 | ✅ Passed |
+| Civilization VI | 2 | 8 | 2 | ✅ Passed |
 | DLCQuest | 2 | 7 | 2 | ✅ Passed |
 | DOOM 1993 | 2 | 5 | 2 | ✅ Passed |
-| DOOM II | 2 | 6 | 2 | ✅ Passed |
+| DOOM II | 2 | 5 | 2 | ✅ Passed |
 | Dark Souls III | 2 | 7 | 2 | ✅ Passed |
-| Donkey Kong Country 3 | 2 | 6 | 2 | ✅ Passed |
+| Donkey Kong Country 3 | 3 | 8 | 3 | ✅ Passed |
 | Factorio | 3 | 8 | 3 | ✅ Passed |
 | Faxanadu | 3 | 7 | 3 | ✅ Passed |
 | Final Fantasy Mystic Quest | 3 | 8 | 3 | ✅ Passed |
 | Heretic | 3 | 8 | 3 | ✅ Passed |
-| Hylics 2 | 2 | 6 | 2 | ✅ Passed |
+| Hylics 2 | 3 | 8 | 3 | ✅ Passed |
 | Inscryption | 3 | 7 | 3 | ✅ Passed |
 | Jak and Daxter: The Precursor Legacy | 3 | 5 | 3 | ✅ Passed |
 | Kingdom Hearts | 3 | 7 | 3 | ✅ Passed |
-| Kingdom Hearts 2 | 3 | 6 | 3 | ✅ Passed |
+| Kirby's Dream Land 3 | 4 | 8 | 4 | ✅ Passed |
 | Landstalker - The Treasures of King Nole | 4 | 8 | 4 | ✅ Passed |
 | Lingo | 4 | 7 | 4 | ✅ Passed |
 | Links Awakening DX | 4 | 8 | 4 | ✅ Passed |
 | Lufia II Ancient Cave | 4 | 8 | 4 | ✅ Passed |
-| Mario & Luigi Superstar Saga | 3 | 6 | 3 | ✅ Passed |
+| Mario & Luigi Superstar Saga | 4 | 8 | 4 | ✅ Passed |
 | MathProof2p2e4 | 4 | 7 | 4 | ✅ Passed |
-| MegaMan Battle Network 3 | 4 | 6 | 4 | ✅ Passed |
+| MegaMan Battle Network 3 | 3 | 5 | 3 | ✅ Passed |
 | Meritous | 4 | 7 | 4 | ✅ Passed |
-| Metamath | 3 | 6 | 3 | ✅ Passed |
+| Metamath | 5 | 8 | 5 | ✅ Passed |
 | Muse Dash | 5 | 8 | 5 | ✅ Passed |
 | Noita | 5 | 7 | 5 | ✅ Passed |
 | Old School Runescape | 5 | 8 | 5 | ✅ Passed |
 | Overcooked! 2 | 5 | 8 | 5 | ✅ Passed |
-| Paint | 4 | 6 | 4 | ✅ Passed |
+| Paint | 5 | 8 | 5 | ✅ Passed |
 | Raft | 5 | 7 | 5 | ✅ Passed |
 | Risk of Rain 2 | 4 | 5 | 4 | ✅ Passed |
 | Saving Princess | 5 | 7 | 5 | ✅ Passed |
-| Secret of Evermore | 4 | 6 | 4 | ✅ Passed |
+| Secret of Evermore | 6 | 8 | 6 | ✅ Passed |
 | Shivers | 6 | 8 | 6 | ✅ Passed |
 | Sonic Adventure 2 Battle | 6 | 7 | 6 | ✅ Passed |
 | Starcraft 2 | 6 | 8 | 6 | ✅ Passed |
 | Stardew Valley | 6 | 8 | 6 | ✅ Passed |
-| Subnautica | 5 | 6 | 5 | ✅ Passed |
+| Subnautica | 6 | 8 | 6 | ✅ Passed |
 | Super Mario 64 | 6 | 7 | 6 | ✅ Passed |
 | Super Mario Land 2 | 5 | 5 | 5 | ✅ Passed |
-| Super Mario World | 5 | 6 | 5 | ✅ Passed |
+| Super Mario World | 4 | 5 | 4 | ✅ Passed |
 | Super Metroid | 6 | 7 | 6 | ✅ Passed |
-| TOEM original | 5 | 6 | 5 | ✅ Passed |
+| TOEM original | 7 | 8 | 7 | ✅ Passed |
 | TOEM rule builder | 7 | 8 | 7 | ✅ Passed |
 | Terraria | 7 | 8 | 7 | ✅ Passed |
 | The Legend of Zelda | 7 | 8 | 7 | ✅ Passed |
+| The Messenger | 7 | 8 | 7 | ✅ Passed |
 | The Wind Waker | 7 | 7 | 7 | ✅ Passed |
-| Timespinner | 6 | 6 | 6 | ✅ Passed |
+| Timespinner | 5 | 5 | 5 | ✅ Passed |
 | Undertale | 7 | 7 | 7 | ✅ Passed |
-| VVVVVV | 6 | 6 | 6 | ✅ Passed |
+| VVVVVV | 8 | 8 | 8 | ✅ Passed |
 | Wargroove | 8 | 8 | 8 | ✅ Passed |
 | WebDevJourney | 7 | 7 | 7 | ✅ Passed |
 | Yacht Dice | 8 | 8 | 8 | ✅ Passed |
 | Yoshi's Island | 8 | 8 | 8 | ✅ Passed |
-| shapez | 6 | 6 | 6 | ✅ Passed |
+| shapez | 8 | 8 | 8 | ✅ Passed |
 
 ### Second Pass Templates in Multiworld
 
 Shows which templates were in the multiworld when each game was tested in the second pass:
+
+#### A Hat in Time ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Hat in Time.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
+| 5 | Metamath.yaml |
+| 6 | Secret of Evermore.yaml |
+| 7 | TOEM original.yaml |
+| 8 | VVVVVV.yaml |
 
 #### A Link to the Past ✅
 
@@ -855,11 +934,13 @@ Shows which templates were in the multiworld when each game was tested in the se
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
-| 2 | Hylics 2.yaml |
-| 3 | Mario & Luigi Superstar Saga.yaml |
-| 4 | Paint.yaml |
-| 5 | Subnautica.yaml |
-| 6 | shapez.yaml |
+| 2 | Civilization VI.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Mario & Luigi Superstar Saga.yaml |
+| 5 | Paint.yaml |
+| 6 | Subnautica.yaml |
+| 7 | The Messenger.yaml |
+| 8 | shapez.yaml |
 
 #### Bomb Rush Cyberfunk ✅
 
@@ -889,10 +970,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 |----------|----------|
 | 1 | Castlevania - Circle of the Moon.yaml |
 | 2 | DOOM II.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
-| 5 | Super Mario World.yaml |
-| 6 | Timespinner.yaml |
+| 3 | MegaMan Battle Network 3.yaml |
+| 4 | Super Mario World.yaml |
+| 5 | Timespinner.yaml |
 
 #### Castlevania 64 ✅
 
@@ -910,12 +990,14 @@ Shows which templates were in the multiworld when each game was tested in the se
 
 | Player # | Template |
 |----------|----------|
-| 1 | Celeste (Open World).yaml |
-| 2 | Donkey Kong Country 3.yaml |
-| 3 | Metamath.yaml |
-| 4 | Secret of Evermore.yaml |
-| 5 | TOEM original.yaml |
-| 6 | VVVVVV.yaml |
+| 1 | A Hat in Time.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
+| 5 | Metamath.yaml |
+| 6 | Secret of Evermore.yaml |
+| 7 | TOEM original.yaml |
+| 8 | VVVVVV.yaml |
 
 #### Celeste 64 ✅
 
@@ -968,6 +1050,19 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | The Legend of Zelda.yaml |
 | 8 | Yoshi's Island.yaml |
 
+#### Civilization VI ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | Aquaria.yaml |
+| 2 | Civilization VI.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Mario & Luigi Superstar Saga.yaml |
+| 5 | Paint.yaml |
+| 6 | Subnautica.yaml |
+| 7 | The Messenger.yaml |
+| 8 | shapez.yaml |
+
 #### DLCQuest ✅
 
 | Player # | Template |
@@ -996,10 +1091,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 |----------|----------|
 | 1 | Castlevania - Circle of the Moon.yaml |
 | 2 | DOOM II.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
-| 5 | Super Mario World.yaml |
-| 6 | Timespinner.yaml |
+| 3 | MegaMan Battle Network 3.yaml |
+| 4 | Super Mario World.yaml |
+| 5 | Timespinner.yaml |
 
 #### Dark Souls III ✅
 
@@ -1017,12 +1111,14 @@ Shows which templates were in the multiworld when each game was tested in the se
 
 | Player # | Template |
 |----------|----------|
-| 1 | Celeste (Open World).yaml |
-| 2 | Donkey Kong Country 3.yaml |
-| 3 | Metamath.yaml |
-| 4 | Secret of Evermore.yaml |
-| 5 | TOEM original.yaml |
-| 6 | VVVVVV.yaml |
+| 1 | A Hat in Time.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
+| 5 | Metamath.yaml |
+| 6 | Secret of Evermore.yaml |
+| 7 | TOEM original.yaml |
+| 8 | VVVVVV.yaml |
 
 #### Factorio ✅
 
@@ -1080,11 +1176,13 @@ Shows which templates were in the multiworld when each game was tested in the se
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
-| 2 | Hylics 2.yaml |
-| 3 | Mario & Luigi Superstar Saga.yaml |
-| 4 | Paint.yaml |
-| 5 | Subnautica.yaml |
-| 6 | shapez.yaml |
+| 2 | Civilization VI.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Mario & Luigi Superstar Saga.yaml |
+| 5 | Paint.yaml |
+| 6 | Subnautica.yaml |
+| 7 | The Messenger.yaml |
+| 8 | shapez.yaml |
 
 #### Inscryption ✅
 
@@ -1120,16 +1218,18 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Metroid.yaml |
 | 7 | Undertale.yaml |
 
-#### Kingdom Hearts 2 ✅
+#### Kirby's Dream Land 3 ✅
 
 | Player # | Template |
 |----------|----------|
-| 1 | Castlevania - Circle of the Moon.yaml |
-| 2 | DOOM II.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
-| 5 | Super Mario World.yaml |
-| 6 | Timespinner.yaml |
+| 1 | A Hat in Time.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
+| 5 | Metamath.yaml |
+| 6 | Secret of Evermore.yaml |
+| 7 | TOEM original.yaml |
+| 8 | VVVVVV.yaml |
 
 #### Landstalker - The Treasures of King Nole ✅
 
@@ -1187,11 +1287,13 @@ Shows which templates were in the multiworld when each game was tested in the se
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
-| 2 | Hylics 2.yaml |
-| 3 | Mario & Luigi Superstar Saga.yaml |
-| 4 | Paint.yaml |
-| 5 | Subnautica.yaml |
-| 6 | shapez.yaml |
+| 2 | Civilization VI.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Mario & Luigi Superstar Saga.yaml |
+| 5 | Paint.yaml |
+| 6 | Subnautica.yaml |
+| 7 | The Messenger.yaml |
+| 8 | shapez.yaml |
 
 #### MathProof2p2e4 ✅
 
@@ -1211,10 +1313,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 |----------|----------|
 | 1 | Castlevania - Circle of the Moon.yaml |
 | 2 | DOOM II.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
-| 5 | Super Mario World.yaml |
-| 6 | Timespinner.yaml |
+| 3 | MegaMan Battle Network 3.yaml |
+| 4 | Super Mario World.yaml |
+| 5 | Timespinner.yaml |
 
 #### Meritous ✅
 
@@ -1232,12 +1333,14 @@ Shows which templates were in the multiworld when each game was tested in the se
 
 | Player # | Template |
 |----------|----------|
-| 1 | Celeste (Open World).yaml |
-| 2 | Donkey Kong Country 3.yaml |
-| 3 | Metamath.yaml |
-| 4 | Secret of Evermore.yaml |
-| 5 | TOEM original.yaml |
-| 6 | VVVVVV.yaml |
+| 1 | A Hat in Time.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
+| 5 | Metamath.yaml |
+| 6 | Secret of Evermore.yaml |
+| 7 | TOEM original.yaml |
+| 8 | VVVVVV.yaml |
 
 #### Muse Dash ✅
 
@@ -1295,11 +1398,13 @@ Shows which templates were in the multiworld when each game was tested in the se
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
-| 2 | Hylics 2.yaml |
-| 3 | Mario & Luigi Superstar Saga.yaml |
-| 4 | Paint.yaml |
-| 5 | Subnautica.yaml |
-| 6 | shapez.yaml |
+| 2 | Civilization VI.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Mario & Luigi Superstar Saga.yaml |
+| 5 | Paint.yaml |
+| 6 | Subnautica.yaml |
+| 7 | The Messenger.yaml |
+| 8 | shapez.yaml |
 
 #### Raft ✅
 
@@ -1339,12 +1444,14 @@ Shows which templates were in the multiworld when each game was tested in the se
 
 | Player # | Template |
 |----------|----------|
-| 1 | Celeste (Open World).yaml |
-| 2 | Donkey Kong Country 3.yaml |
-| 3 | Metamath.yaml |
-| 4 | Secret of Evermore.yaml |
-| 5 | TOEM original.yaml |
-| 6 | VVVVVV.yaml |
+| 1 | A Hat in Time.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
+| 5 | Metamath.yaml |
+| 6 | Secret of Evermore.yaml |
+| 7 | TOEM original.yaml |
+| 8 | VVVVVV.yaml |
 
 #### Shivers ✅
 
@@ -1402,11 +1509,13 @@ Shows which templates were in the multiworld when each game was tested in the se
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
-| 2 | Hylics 2.yaml |
-| 3 | Mario & Luigi Superstar Saga.yaml |
-| 4 | Paint.yaml |
-| 5 | Subnautica.yaml |
-| 6 | shapez.yaml |
+| 2 | Civilization VI.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Mario & Luigi Superstar Saga.yaml |
+| 5 | Paint.yaml |
+| 6 | Subnautica.yaml |
+| 7 | The Messenger.yaml |
+| 8 | shapez.yaml |
 
 #### Super Mario 64 ✅
 
@@ -1436,10 +1545,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 |----------|----------|
 | 1 | Castlevania - Circle of the Moon.yaml |
 | 2 | DOOM II.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
-| 5 | Super Mario World.yaml |
-| 6 | Timespinner.yaml |
+| 3 | MegaMan Battle Network 3.yaml |
+| 4 | Super Mario World.yaml |
+| 5 | Timespinner.yaml |
 
 #### Super Metroid ✅
 
@@ -1457,12 +1565,14 @@ Shows which templates were in the multiworld when each game was tested in the se
 
 | Player # | Template |
 |----------|----------|
-| 1 | Celeste (Open World).yaml |
-| 2 | Donkey Kong Country 3.yaml |
-| 3 | Metamath.yaml |
-| 4 | Secret of Evermore.yaml |
-| 5 | TOEM original.yaml |
-| 6 | VVVVVV.yaml |
+| 1 | A Hat in Time.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
+| 5 | Metamath.yaml |
+| 6 | Secret of Evermore.yaml |
+| 7 | TOEM original.yaml |
+| 8 | VVVVVV.yaml |
 
 #### TOEM rule builder ✅
 
@@ -1503,6 +1613,19 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | The Legend of Zelda.yaml |
 | 8 | Yoshi's Island.yaml |
 
+#### The Messenger ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | Aquaria.yaml |
+| 2 | Civilization VI.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Mario & Luigi Superstar Saga.yaml |
+| 5 | Paint.yaml |
+| 6 | Subnautica.yaml |
+| 7 | The Messenger.yaml |
+| 8 | shapez.yaml |
+
 #### The Wind Waker ✅
 
 | Player # | Template |
@@ -1521,10 +1644,9 @@ Shows which templates were in the multiworld when each game was tested in the se
 |----------|----------|
 | 1 | Castlevania - Circle of the Moon.yaml |
 | 2 | DOOM II.yaml |
-| 3 | Kingdom Hearts 2.yaml |
-| 4 | MegaMan Battle Network 3.yaml |
-| 5 | Super Mario World.yaml |
-| 6 | Timespinner.yaml |
+| 3 | MegaMan Battle Network 3.yaml |
+| 4 | Super Mario World.yaml |
+| 5 | Timespinner.yaml |
 
 #### Undertale ✅
 
@@ -1542,12 +1664,14 @@ Shows which templates were in the multiworld when each game was tested in the se
 
 | Player # | Template |
 |----------|----------|
-| 1 | Celeste (Open World).yaml |
-| 2 | Donkey Kong Country 3.yaml |
-| 3 | Metamath.yaml |
-| 4 | Secret of Evermore.yaml |
-| 5 | TOEM original.yaml |
-| 6 | VVVVVV.yaml |
+| 1 | A Hat in Time.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
+| 5 | Metamath.yaml |
+| 6 | Secret of Evermore.yaml |
+| 7 | TOEM original.yaml |
+| 8 | VVVVVV.yaml |
 
 #### Wargroove ✅
 
@@ -1605,11 +1729,13 @@ Shows which templates were in the multiworld when each game was tested in the se
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
-| 2 | Hylics 2.yaml |
-| 3 | Mario & Luigi Superstar Saga.yaml |
-| 4 | Paint.yaml |
-| 5 | Subnautica.yaml |
-| 6 | shapez.yaml |
+| 2 | Civilization VI.yaml |
+| 3 | Hylics 2.yaml |
+| 4 | Mario & Luigi Superstar Saga.yaml |
+| 5 | Paint.yaml |
+| 6 | Subnautica.yaml |
+| 7 | The Messenger.yaml |
+| 8 | shapez.yaml |
 
 
 ## Notes
