@@ -199,16 +199,26 @@ class ASTVisitorMixin:
         try:
             logging.debug("\n--- Analyzing Return ---")
             logging.debug(f"Return value type: {type(node.value).__name__}")
-            
+
             if isinstance(node.value, ast.BoolOp):
                 logging.debug(f"BoolOp type: {type(node.value.op).__name__}")
                 logging.debug(f"BoolOp values count: {len(node.value.values)}")
-            
+
             # Visit the return value and return its result
             return self.visit(node.value)
         except Exception as e:
             logging.error("Error in visit_Return", e)
             return None
+
+    def visit_Break(self, node):
+        """Handle break statements - used to exit loops early."""
+        logging.debug("\n--- Analyzing Break ---")
+        return {'type': 'break'}
+
+    def visit_Continue(self, node):
+        """Handle continue statements - skip to next iteration."""
+        logging.debug("\n--- Analyzing Continue ---")
+        return {'type': 'continue'}
 
     def visit_Call(self, node):
         """
@@ -598,9 +608,16 @@ class ASTVisitorMixin:
                                         return {'type': 'and', 'conditions': expanded_conditions}
 
                 # Represent this as a specific 'all_of' rule type
+                # For nested generator expressions, recursively convert inner generators to all_of
+                element_rule = gen_exp['element']
+                if element_rule.get('type') == 'generator_expression':
+                    # Recursively convert nested generator_expression to all_of
+                    element_rule = self._convert_generator_exp_to_all_of(element_rule)
+                    logging.debug(f"all(GeneratorExp): Converted nested generator_expression to all_of")
+
                 result = {
                     'type': 'all_of',
-                    'element_rule': gen_exp['element'],
+                    'element_rule': element_rule,
                     'iterator_info': iterator_info
                 }
                 logging.debug(f"Created 'all_of' result: {result}")
@@ -761,9 +778,16 @@ class ASTVisitorMixin:
                                         return {'type': 'or', 'conditions': expanded_conditions}
 
                 # If we couldn't resolve, represent this as a specific 'any_of' rule type
+                # For nested generator expressions, recursively convert inner generators to any_of
+                element_rule = gen_exp['element']
+                if element_rule.get('type') == 'generator_expression':
+                    # Recursively convert nested generator_expression to any_of
+                    element_rule = self._convert_generator_exp_to_any_of(element_rule)
+                    logging.debug(f"any(GeneratorExp): Converted nested generator_expression to any_of")
+
                 result = {
                     'type': 'any_of',
-                    'element_rule': gen_exp['element'],
+                    'element_rule': element_rule,
                     'iterator_info': iterator_info
                 }
                 logging.debug(f"Created 'any_of' result: {result}")
@@ -1578,6 +1602,19 @@ class ASTVisitorMixin:
                             list_value = list(resolved_attr) if isinstance(resolved_attr, tuple) else resolved_attr
                             logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} to list: {list_value}")
                             return {'type': 'constant', 'value': list_value}
+                        elif isinstance(resolved_attr, dict):
+                            # Handle dict values - convert keys to list for iteration purposes
+                            # When iterating over a dict in Python, we iterate over its keys
+                            # For nested comprehensions like "for sub_ingredient in custom_recipe.ingredients"
+                            # we need to return the keys as a list for the frontend to iterate
+                            keys_list = list(resolved_attr.keys())
+                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} (dict) to keys list: {keys_list}")
+                            return {'type': 'constant', 'value': keys_list}
+                        elif isinstance(resolved_attr, (set, frozenset)):
+                            # Handle set/frozenset values - convert to list for JSON serialization
+                            list_value = list(resolved_attr)
+                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} (set) to list: {list_value}")
+                            return {'type': 'constant', 'value': list_value}
                     except AttributeError:
                         # If attribute doesn't exist, fall through to normal processing
                         logging.debug(f"visit_Attribute: Could not directly resolve {var_name}.{attr_name}")
@@ -2235,34 +2272,80 @@ class ASTVisitorMixin:
             return None
 
     def visit_GeneratorExp(self, node: ast.GeneratorExp):
-        """ Handle generator expressions. """
+        """ Handle generator expressions, including nested comprehensions.
+
+        For nested comprehensions like:
+            f(x, y) for x in A for y in B[x]
+
+        This is semantically equivalent to:
+            (f(x, y) for y in B[x]) for x in A
+
+        We transform this into nested generator_expression structures where
+        the inner generators become the element of outer generators.
+        """
         try:
-            logging.debug(f"\n--- visit_GeneratorExp ---")
+            logging.debug(f"\n--- visit_GeneratorExp --- (generators: {len(node.generators)})")
+
             # Analyze the element expression
             elt_result = self.visit(node.elt)
             if elt_result is None:
                 logging.error(f"Failed to analyze element expression in GeneratorExp: {ast.dump(node.elt)}")
                 return None
 
-            # Analyze the comprehension generators
-            # NOTE: Currently only supports one comprehension generator like `for target in iter`
-            if len(node.generators) != 1:
-                logging.error(f"Unsupported number of generators in GeneratorExp: {len(node.generators)}")
-                return None
+            # Handle single generator (simple case)
+            if len(node.generators) == 1:
+                comprehension_result = self.visit(node.generators[0])
+                if comprehension_result is None:
+                    logging.error(f"Failed to analyze comprehension in GeneratorExp")
+                    return None
 
-            comprehension_result = self.visit(node.generators[0])
-            if comprehension_result is None:
-                 logging.error(f"Failed to analyze comprehension in GeneratorExp")
-                 return None
+                return {
+                    'type': 'generator_expression',
+                    'element': elt_result,
+                    'comprehension': comprehension_result
+                }
 
-            # Combine results into a dedicated type
-            return {
-                'type': 'generator_expression',
-                'element': elt_result,
-                'comprehension': comprehension_result
-            }
+            # Handle multiple generators (nested comprehensions)
+            # Process from innermost (last) to outermost (first)
+            # e.g., for "f(x,y) for x in A for y in B[x]":
+            #   - Start with innermost: element=f(x,y), comprehension=for y in B[x]
+            #   - Wrap with outer: element=inner_gen_exp, comprehension=for x in A
+            logging.debug(f"Processing nested comprehension with {len(node.generators)} generators")
+
+            # Analyze all comprehension generators first
+            comprehension_results = []
+            for i, gen in enumerate(node.generators):
+                comp_result = self.visit(gen)
+                if comp_result is None:
+                    logging.error(f"Failed to analyze comprehension {i} in nested GeneratorExp")
+                    return None
+                comprehension_results.append(comp_result)
+                logging.debug(f"  Generator {i}: target={comp_result.get('target')}, iterator type={comp_result.get('iterator', {}).get('type')}")
+
+            # Build nested structure from inside out
+            # Start with the innermost generator and the original element
+            current_element = elt_result
+
+            # Process generators in reverse order (innermost first)
+            for i in range(len(comprehension_results) - 1, -1, -1):
+                current_element = {
+                    'type': 'generator_expression',
+                    'element': current_element,
+                    'comprehension': comprehension_results[i]
+                }
+                logging.debug(f"  Built nested level {len(comprehension_results) - i}: comprehension target={comprehension_results[i].get('target')}")
+
+            # The outermost wrapper is our final result
+            # But we need to unwrap one level since the loop creates one extra wrapper
+            # Actually, let me reconsider - we want the structure to be:
+            # gen_exp(element=gen_exp(element=f(x,y), comp=for y in B[x]), comp=for x in A)
+
+            # The current_element after the loop IS the correctly nested structure
+            logging.debug(f"Nested GeneratorExp complete: {len(node.generators)} levels")
+            return current_element
+
         except Exception as e:
-            logging.error("Error in visit_GeneratorExp", e)
+            logging.error(f"Error in visit_GeneratorExp: {e}")
             return None
 
     def visit_comprehension(self, node: ast.comprehension):
@@ -2519,8 +2602,9 @@ class ASTVisitorMixin:
 
     def visit_For(self, node: ast.For):
         """
-        Handle for loops, specifically for range() iterations.
-        Produces a for_range rule type for use in imperative helper evaluation.
+        Handle for loops.
+        Produces a for_range rule type for range() iterations,
+        or a for_iter rule type for iterating over arbitrary iterables.
         """
         try:
             logging.debug(f"\n--- visit_For ---")
@@ -2532,24 +2616,6 @@ class ASTVisitorMixin:
             if isinstance(node.target, ast.Name):
                 var_name = node.target.id
 
-            # Check if this is a range() call
-            if not (isinstance(node.iter, ast.Call) and
-                    isinstance(node.iter.func, ast.Name) and
-                    node.iter.func.id == 'range'):
-                logging.warning(f"visit_For: Only range() loops are supported, got: {ast.dump(node.iter)}")
-                return None
-
-            # Get the count argument for range()
-            if not node.iter.args:
-                logging.error("visit_For: range() called without arguments")
-                return None
-
-            count_arg = node.iter.args[0]
-            count_result = self.visit(count_arg)
-            if count_result is None:
-                logging.error(f"visit_For: Failed to analyze range count: {ast.dump(count_arg)}")
-                return None
-
             # Analyze the loop body
             body_results = []
             for stmt in node.body:
@@ -2557,12 +2623,41 @@ class ASTVisitorMixin:
                 if stmt_result is not None:
                     body_results.append(stmt_result)
 
-            return {
-                'type': 'for_range',
-                'var': var_name,
-                'count': count_result,
-                'body': body_results
-            }
+            # Check if this is a range() call
+            if (isinstance(node.iter, ast.Call) and
+                    isinstance(node.iter.func, ast.Name) and
+                    node.iter.func.id == 'range'):
+                # Get the count argument for range()
+                if not node.iter.args:
+                    logging.error("visit_For: range() called without arguments")
+                    return None
+
+                count_arg = node.iter.args[0]
+                count_result = self.visit(count_arg)
+                if count_result is None:
+                    logging.error(f"visit_For: Failed to analyze range count: {ast.dump(count_arg)}")
+                    return None
+
+                return {
+                    'type': 'for_range',
+                    'var': var_name,
+                    'count': count_result,
+                    'body': body_results
+                }
+            else:
+                # Handle iteration over arbitrary iterables (for_iter)
+                iterable_result = self.visit(node.iter)
+                if iterable_result is None:
+                    logging.error(f"visit_For: Failed to analyze iterable: {ast.dump(node.iter)}")
+                    return None
+
+                logging.debug(f"visit_For: Creating for_iter with iterable: {iterable_result}")
+                return {
+                    'type': 'for_iter',
+                    'var': var_name,
+                    'iterable': iterable_result,
+                    'body': body_results
+                }
         except Exception as e:
             logging.error(f"Error in visit_For: {e}")
             return None
@@ -2644,16 +2739,63 @@ class ASTVisitorMixin:
                 assign_result = self._try_convert_if_to_assign(node)
                 if assign_result is not None:
                     return assign_result
-                # Otherwise, fall back to regular conditional handling
-                return self.visit_If(node)
+                # Use statement-based if handling for imperative contexts
+                return self._visit_If_statement(node)
             elif isinstance(node, ast.Expr):
                 # Expression statement - just evaluate it
                 return self.visit(node.value)
+            elif isinstance(node, ast.Break):
+                # Break statement - used to exit loops early
+                return {'type': 'break'}
+            elif isinstance(node, ast.Continue):
+                # Continue statement - skip to next iteration
+                return {'type': 'continue'}
             else:
                 logging.warning(f"visit_statement: Unsupported statement type: {type(node).__name__}")
                 return None
         except Exception as e:
             logging.error(f"Error in visit_statement: {e}")
+            return None
+
+    def _visit_If_statement(self, node: ast.If) -> Optional[Dict[str, Any]]:
+        """
+        Handle If statements in imperative/statement context.
+        Produces an if_statement rule type that can contain break/continue/return.
+        """
+        try:
+            logging.debug(f"\n--- _visit_If_statement ---")
+            test_result = self.visit(node.test)
+            if test_result is None:
+                logging.error(f"_visit_If_statement: Failed to analyze test: {ast.dump(node.test)}")
+                return None
+
+            # Analyze the if-body as statements
+            body_results = []
+            for stmt in node.body:
+                stmt_result = self.visit_statement(stmt)
+                if stmt_result is not None:
+                    body_results.append(stmt_result)
+
+            # Analyze the else-body as statements (if present)
+            orelse_results = []
+            if node.orelse:
+                for stmt in node.orelse:
+                    stmt_result = self.visit_statement(stmt)
+                    if stmt_result is not None:
+                        orelse_results.append(stmt_result)
+
+            result = {
+                'type': 'if_statement',
+                'test': test_result,
+                'body': body_results
+            }
+
+            if orelse_results:
+                result['orelse'] = orelse_results
+
+            return result
+        except Exception as e:
+            logging.error(f"Error in _visit_If_statement: {e}")
             return None
 
     def _try_convert_if_to_assign(self, node: ast.If) -> Optional[Dict[str, Any]]:
@@ -2770,6 +2912,78 @@ class ASTVisitorMixin:
             'name': target_var,
             'value': conditional_value
         }
+
+    def _convert_generator_exp_to_all_of(self, gen_exp: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert a generator_expression to an all_of rule structure.
+
+        This is used to handle nested comprehensions like:
+            all(f(x, y) for x in A for y in B[x])
+
+        Which becomes nested all_of structures:
+            all_of(element=all_of(element=f(x,y), iterator=B[x]), iterator=A)
+
+        Args:
+            gen_exp: A generator_expression rule structure
+
+        Returns:
+            An all_of rule structure
+        """
+        if gen_exp.get('type') != 'generator_expression':
+            logging.warning(f"_convert_generator_exp_to_all_of: Expected generator_expression, got {gen_exp.get('type')}")
+            return gen_exp
+
+        element_rule = gen_exp.get('element')
+        comprehension = gen_exp.get('comprehension')
+
+        # Recursively convert nested generator_expressions
+        if element_rule and element_rule.get('type') == 'generator_expression':
+            element_rule = self._convert_generator_exp_to_all_of(element_rule)
+            logging.debug(f"_convert_generator_exp_to_all_of: Recursively converted nested generator_expression")
+
+        result = {
+            'type': 'all_of',
+            'element_rule': element_rule,
+            'iterator_info': comprehension
+        }
+        logging.debug(f"_convert_generator_exp_to_all_of: Created all_of with iterator target={comprehension.get('target')}")
+        return result
+
+    def _convert_generator_exp_to_any_of(self, gen_exp: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert a generator_expression to an any_of rule structure.
+
+        This is used to handle nested comprehensions like:
+            any(f(x, y) for x in A for y in B[x])
+
+        Which becomes nested any_of structures:
+            any_of(element=any_of(element=f(x,y), iterator=B[x]), iterator=A)
+
+        Args:
+            gen_exp: A generator_expression rule structure
+
+        Returns:
+            An any_of rule structure
+        """
+        if gen_exp.get('type') != 'generator_expression':
+            logging.warning(f"_convert_generator_exp_to_any_of: Expected generator_expression, got {gen_exp.get('type')}")
+            return gen_exp
+
+        element_rule = gen_exp.get('element')
+        comprehension = gen_exp.get('comprehension')
+
+        # Recursively convert nested generator_expressions
+        if element_rule and element_rule.get('type') == 'generator_expression':
+            element_rule = self._convert_generator_exp_to_any_of(element_rule)
+            logging.debug(f"_convert_generator_exp_to_any_of: Recursively converted nested generator_expression")
+
+        result = {
+            'type': 'any_of',
+            'element_rule': element_rule,
+            'iterator_info': comprehension
+        }
+        logging.debug(f"_convert_generator_exp_to_any_of: Created any_of with iterator target={comprehension.get('target')}")
+        return result
 
     def _substitute_variable_in_rule(self, rule: Dict[str, Any], var_name: str, value: Any) -> Optional[Dict[str, Any]]:
         """

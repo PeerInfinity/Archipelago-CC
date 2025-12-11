@@ -2,7 +2,7 @@
 
 Helper Export Status:
 - can_use_hat: Exported to rules.json, JS fallback still needed
-- get_hat_cost: Exported to rules.json, JS fallback still needed
+- get_hat_cost: Exported to rules.json (uses for_iter rule type)
 - has_relic_combo: Exported to rules.json, JS fallback still needed
 - painting_logic: Exported to rules.json, JS fallback still needed
 - get_difficulty: Exported to rules.json, JS fallback still needed
@@ -34,10 +34,8 @@ class AHitGameExportHandler(BaseGameExportHandler):
 
     # Blacklist helpers that are too complex to analyze automatically:
     # - can_clear_required_act: Uses multiworld.get_entrance and region reachability
-    # - get_hat_cost: Uses for loop over world.hat_craft_order (not range())
     HELPERS_TO_EXPORT_BLACKLIST: Set[str] = {
         'can_clear_required_act',
-        'get_hat_cost',
     }
 
     # Preserve these helpers as helper calls (don't inline their bodies)

@@ -7021,10 +7021,10 @@
       "Yarn": {
         "name": "Yarn",
         "id": 2000300001,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
         "max_count": 50
@@ -7032,10 +7032,10 @@
       "Time Piece": {
         "name": "Time Piece",
         "id": 2000300002,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
         "max_count": 40
@@ -7043,10 +7043,10 @@
       "Sprint Hat": {
         "name": "Sprint Hat",
         "id": 2000300049,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7054,10 +7054,10 @@
       "Brewing Hat": {
         "name": "Brewing Hat",
         "id": 2000300050,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7065,10 +7065,10 @@
       "Ice Hat": {
         "name": "Ice Hat",
         "id": 2000300051,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7076,10 +7076,10 @@
       "Dweller Mask": {
         "name": "Dweller Mask",
         "id": 2000300052,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7087,10 +7087,10 @@
       "Time Stop Hat": {
         "name": "Time Stop Hat",
         "id": 2000300053,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7098,10 +7098,10 @@
       "Projectile Badge": {
         "name": "Projectile Badge",
         "id": 2000300024,
+        "classification": "useful",
         "groups": [
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7109,10 +7109,10 @@
       "Fast Hatter Badge": {
         "name": "Fast Hatter Badge",
         "id": 2000300025,
+        "classification": "useful",
         "groups": [
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7120,10 +7120,10 @@
       "Hover Badge": {
         "name": "Hover Badge",
         "id": 2000300026,
+        "classification": "useful",
         "groups": [
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7131,10 +7131,10 @@
       "Hookshot Badge": {
         "name": "Hookshot Badge",
         "id": 2000300027,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7142,10 +7142,10 @@
       "Item Magnet Badge": {
         "name": "Item Magnet Badge",
         "id": 2000300028,
+        "classification": "useful",
         "groups": [
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7153,10 +7153,10 @@
       "No Bonk Badge": {
         "name": "No Bonk Badge",
         "id": 2000300029,
+        "classification": "useful",
         "groups": [
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7164,10 +7164,10 @@
       "Compass Badge": {
         "name": "Compass Badge",
         "id": 2000300030,
+        "classification": "useful",
         "groups": [
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7175,10 +7175,10 @@
       "Scooter Badge": {
         "name": "Scooter Badge",
         "id": 2000300031,
+        "classification": "useful",
         "groups": [
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7186,10 +7186,10 @@
       "One-Hit Hero Badge": {
         "name": "One-Hit Hero Badge",
         "id": 2000300038,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7197,10 +7197,10 @@
       "Camera Badge": {
         "name": "Camera Badge",
         "id": 2000300042,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7208,11 +7208,11 @@
       "Relic (Burger Patty)": {
         "name": "Relic (Burger Patty)",
         "id": 2000300006,
+        "classification": "progression",
         "groups": [
           "Burger",
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7220,11 +7220,11 @@
       "Relic (Burger Cushion)": {
         "name": "Relic (Burger Cushion)",
         "id": 2000300007,
+        "classification": "progression",
         "groups": [
           "Burger",
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7232,11 +7232,11 @@
       "Relic (Mountain Set)": {
         "name": "Relic (Mountain Set)",
         "id": 2000300008,
+        "classification": "progression",
         "groups": [
           "Everything",
           "Train"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7244,11 +7244,11 @@
       "Relic (Train)": {
         "name": "Relic (Train)",
         "id": 2000300009,
+        "classification": "progression",
         "groups": [
           "Everything",
           "Train"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7256,11 +7256,11 @@
       "Relic (UFO)": {
         "name": "Relic (UFO)",
         "id": 2000300010,
+        "classification": "progression",
         "groups": [
           "Everything",
           "UFO"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7268,11 +7268,11 @@
       "Relic (Cow)": {
         "name": "Relic (Cow)",
         "id": 2000300011,
+        "classification": "progression",
         "groups": [
           "Everything",
           "UFO"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7280,11 +7280,11 @@
       "Relic (Cool Cow)": {
         "name": "Relic (Cool Cow)",
         "id": 2000300012,
+        "classification": "progression",
         "groups": [
           "Everything",
           "UFO"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7293,11 +7293,11 @@
         "name": "Relic (Tin-foil Hat Cow)",
         "hint_text": "Relic (Tin foil Hat Cow)",
         "id": 2000300013,
+        "classification": "progression",
         "groups": [
           "Everything",
           "UFO"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7305,11 +7305,11 @@
       "Relic (Crayon Box)": {
         "name": "Relic (Crayon Box)",
         "id": 2000300014,
+        "classification": "progression",
         "groups": [
           "Crayon",
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7317,11 +7317,11 @@
       "Relic (Red Crayon)": {
         "name": "Relic (Red Crayon)",
         "id": 2000300015,
+        "classification": "progression",
         "groups": [
           "Crayon",
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7329,11 +7329,11 @@
       "Relic (Blue Crayon)": {
         "name": "Relic (Blue Crayon)",
         "id": 2000300016,
+        "classification": "progression",
         "groups": [
           "Crayon",
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7341,11 +7341,11 @@
       "Relic (Green Crayon)": {
         "name": "Relic (Green Crayon)",
         "id": 2000300017,
+        "classification": "progression",
         "groups": [
           "Crayon",
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7353,11 +7353,11 @@
       "Relic (Cake Stand)": {
         "name": "Relic (Cake Stand)",
         "id": 2000300018,
+        "classification": "progression",
         "groups": [
           "Cake",
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7365,11 +7365,11 @@
       "Relic (Shortcake)": {
         "name": "Relic (Shortcake)",
         "id": 2000300019,
+        "classification": "progression",
         "groups": [
           "Cake",
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7377,11 +7377,11 @@
       "Relic (Chocolate Cake Slice)": {
         "name": "Relic (Chocolate Cake Slice)",
         "id": 2000300020,
+        "classification": "progression",
         "groups": [
           "Cake",
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7389,11 +7389,11 @@
       "Relic (Chocolate Cake)": {
         "name": "Relic (Chocolate Cake)",
         "id": 2000300021,
+        "classification": "progression",
         "groups": [
           "Cake",
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7401,11 +7401,11 @@
       "Relic (Necklace Bust)": {
         "name": "Relic (Necklace Bust)",
         "id": 2000300022,
+        "classification": "progression",
         "groups": [
           "Everything",
           "Necklace"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7413,11 +7413,11 @@
       "Relic (Necklace)": {
         "name": "Relic (Necklace)",
         "id": 2000300023,
+        "classification": "progression",
         "groups": [
           "Everything",
           "Necklace"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7425,10 +7425,10 @@
       "25 Pons": {
         "name": "25 Pons",
         "id": 2000300034,
+        "classification": "filler",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 39
@@ -7436,10 +7436,10 @@
       "50 Pons": {
         "name": "50 Pons",
         "id": 2000300035,
+        "classification": "filler",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 17
@@ -7447,10 +7447,10 @@
       "100 Pons": {
         "name": "100 Pons",
         "id": 2000300036,
+        "classification": "filler",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 6
@@ -7458,10 +7458,10 @@
       "Health Pon": {
         "name": "Health Pon",
         "id": 2000300037,
+        "classification": "filler",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 15
@@ -7469,10 +7469,10 @@
       "Random Cosmetic": {
         "name": "Random Cosmetic",
         "id": 2000300044,
+        "classification": "filler",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 30
@@ -7480,10 +7480,10 @@
       "Baby Trap": {
         "name": "Baby Trap",
         "id": 2000300039,
+        "classification": "trap",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7491,10 +7491,10 @@
       "Laser Trap": {
         "name": "Laser Trap",
         "id": 2000300040,
+        "classification": "trap",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7502,10 +7502,10 @@
       "Parade Trap": {
         "name": "Parade Trap",
         "id": 2000300041,
+        "classification": "trap",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7513,10 +7513,10 @@
       "Badge Pin": {
         "name": "Badge Pin",
         "id": 2000300043,
+        "classification": "useful",
         "groups": [
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
         "max_count": 2
@@ -7524,10 +7524,10 @@
       "Umbrella": {
         "name": "Umbrella",
         "id": 2000300033,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7535,10 +7535,10 @@
       "Progressive Painting Unlock": {
         "name": "Progressive Painting Unlock",
         "id": 2000300003,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7546,10 +7546,10 @@
       "Metro Ticket - Yellow": {
         "name": "Metro Ticket - Yellow",
         "id": 2000300045,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7557,10 +7557,10 @@
       "Metro Ticket - Green": {
         "name": "Metro Ticket - Green",
         "id": 2000300046,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7568,10 +7568,10 @@
       "Metro Ticket - Blue": {
         "name": "Metro Ticket - Blue",
         "id": 2000300047,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7579,10 +7579,10 @@
       "Metro Ticket - Pink": {
         "name": "Metro Ticket - Pink",
         "id": 2000300048,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7591,10 +7591,10 @@
         "name": "Snatcher's Contract - The Subcon Well",
         "hint_text": "Snatcher's Contract   The Subcon Well",
         "id": 2000300200,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7603,10 +7603,10 @@
         "name": "Snatcher's Contract - Toilet of Doom",
         "hint_text": "Snatcher's Contract   Toilet of Doom",
         "id": 2000300201,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7615,10 +7615,10 @@
         "name": "Snatcher's Contract - Queen Vanessa's Manor",
         "hint_text": "Snatcher's Contract   Queen Vanessa's Manor",
         "id": 2000300202,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7627,10 +7627,10 @@
         "name": "Snatcher's Contract - Mail Delivery Service",
         "hint_text": "Snatcher's Contract   Mail Delivery Service",
         "id": 2000300203,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7638,10 +7638,10 @@
       "Zipline Unlock - The Birdhouse Path": {
         "name": "Zipline Unlock - The Birdhouse Path",
         "id": 2000300204,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7649,10 +7649,10 @@
       "Zipline Unlock - The Lava Cake Path": {
         "name": "Zipline Unlock - The Lava Cake Path",
         "id": 2000300205,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7660,10 +7660,10 @@
       "Zipline Unlock - The Windmill Path": {
         "name": "Zipline Unlock - The Windmill Path",
         "id": 2000300206,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -7671,10 +7671,10 @@
       "Zipline Unlock - The Twilight Bell Path": {
         "name": "Zipline Unlock - The Twilight Bell Path",
         "id": 2000300207,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
         "max_count": 1
@@ -8048,5 +8048,243 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "Difficulty": {
+        "params": [
+          "value"
+        ],
+        "body": {
+          "type": "name",
+          "name": "value"
+        }
+      },
+      "can_use_hat": {
+        "params": [
+          "hat"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "attribute",
+            "object": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
+              },
+              "attr": "options"
+            },
+            "attr": "HatItems"
+          },
+          "if_true": {
+            "type": "item_check",
+            "item": {
+              "type": "subscript",
+              "value": {
+                "type": "name",
+                "name": "hat_type_to_item"
+              },
+              "index": {
+                "type": "name",
+                "name": "hat"
+              }
+            }
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "subscript",
+                "value": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "world"
+                  },
+                  "attr": "hat_yarn_costs"
+                },
+                "index": {
+                  "type": "name",
+                  "name": "hat"
+                }
+              },
+              "op": "<=",
+              "right": {
+                "type": "constant",
+                "value": 0
+              }
+            },
+            "if_true": {
+              "type": "constant",
+              "value": true
+            },
+            "if_false": {
+              "type": "item_check",
+              "item": "Yarn",
+              "count": {
+                "type": "helper",
+                "name": "get_hat_cost",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "hat"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "get_difficulty": {
+        "type": "helper",
+        "name": "Difficulty",
+        "args": [
+          {
+            "type": "attribute",
+            "object": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
+              },
+              "attr": "options"
+            },
+            "attr": "LogicDifficulty"
+          }
+        ]
+      },
+      "get_hat_cost": {
+        "params": [
+          "hat"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "cost",
+              "value": {
+                "type": "constant",
+                "value": 0
+              }
+            },
+            {
+              "type": "for_iter",
+              "var": "h",
+              "iterable": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "world"
+                },
+                "attr": "hat_craft_order"
+              },
+              "body": [
+                {
+                  "type": "assign",
+                  "name": "cost",
+                  "op": "+=",
+                  "value": {
+                    "type": "subscript",
+                    "value": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "world"
+                      },
+                      "attr": "hat_yarn_costs"
+                    },
+                    "index": {
+                      "type": "name",
+                      "name": "h"
+                    }
+                  }
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "name",
+                      "name": "h"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "name",
+                      "name": "hat"
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "break"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "name",
+                "name": "cost"
+              }
+            }
+          ]
+        }
+      },
+      "has_relic_combo": {
+        "params": [
+          "relic"
+        ],
+        "body": {
+          "type": "group_check",
+          "group": {
+            "type": "name",
+            "name": "relic"
+          },
+          "count": {
+            "type": "helper",
+            "name": "len",
+            "args": [
+              {
+                "type": "subscript",
+                "value": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "world"
+                  },
+                  "attr": "item_name_groups"
+                },
+                "index": {
+                  "type": "name",
+                  "name": "relic"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "painting_logic": {
+        "type": "helper",
+        "name": "bool",
+        "args": [
+          {
+            "type": "attribute",
+            "object": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "world"
+              },
+              "attr": "options"
+            },
+            "attr": "ShuffleSubconPaintings"
+          }
+        ]
+      }
+    }
+  }
 }

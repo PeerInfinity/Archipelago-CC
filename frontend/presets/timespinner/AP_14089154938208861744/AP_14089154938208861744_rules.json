@@ -2844,11 +2844,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "not",
-                  "condition": {
-                    "type": "constant",
-                    "value": false
-                  }
+                  "type": "constant",
+                  "value": true
                 },
                 {
                   "type": "item_check",
@@ -3193,11 +3190,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "not",
-                  "condition": {
-                    "type": "constant",
-                    "value": false
-                  }
+                  "type": "constant",
+                  "value": true
                 },
                 {
                   "type": "item_check",
@@ -3252,11 +3246,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "not",
-                  "condition": {
-                    "type": "constant",
-                    "value": true
-                  }
+                  "type": "constant",
+                  "value": false
                 },
                 {
                   "type": "item_check",
@@ -3349,11 +3340,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "not",
-                  "condition": {
-                    "type": "constant",
-                    "value": true
-                  }
+                  "type": "constant",
+                  "value": false
                 },
                 {
                   "type": "item_check",
@@ -3642,11 +3630,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "not",
-                  "condition": {
-                    "type": "constant",
-                    "value": true
-                  }
+                  "type": "constant",
+                  "value": false
                 },
                 {
                   "type": "item_check",
@@ -3662,11 +3647,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "not",
-                  "condition": {
-                    "type": "constant",
-                    "value": false
-                  }
+                  "type": "constant",
+                  "value": true
                 },
                 {
                   "type": "item_check",
@@ -3734,11 +3716,8 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "not",
-                      "condition": {
-                        "type": "constant",
-                        "value": false
-                      }
+                      "type": "constant",
+                      "value": true
                     },
                     {
                       "type": "item_check",
@@ -3763,11 +3742,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "not",
-                  "condition": {
-                    "type": "constant",
-                    "value": false
-                  }
+                  "type": "constant",
+                  "value": true
                 },
                 {
                   "type": "item_check",
@@ -3905,11 +3881,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "not",
-                  "condition": {
-                    "type": "constant",
-                    "value": false
-                  }
+                  "type": "constant",
+                  "value": true
                 },
                 {
                   "type": "item_check",
@@ -3934,23 +3907,9 @@
             "name": "Caves of Banishment (Maw) -> Caves of Banishment (upper)",
             "connected_region": "Caves of Banishment (upper)",
             "access_rule": {
-              "type": "conditional",
-              "test": {
-                "type": "not",
-                "condition": {
-                  "type": "constant",
-                  "value": false
-                }
-              },
-              "if_true": {
-                "type": "helper",
-                "name": "has_doublejump",
-                "args": []
-              },
-              "if_false": {
-                "type": "item_check",
-                "item": "Water Mask"
-              }
+              "type": "helper",
+              "name": "has_doublejump",
+              "args": []
             }
           },
           {
@@ -4359,11 +4318,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "not",
-                  "condition": {
-                    "type": "constant",
-                    "value": false
-                  }
+                  "type": "constant",
+                  "value": true
                 },
                 {
                   "type": "item_check",
@@ -4778,11 +4734,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "not",
-                  "condition": {
-                    "type": "constant",
-                    "value": false
-                  }
+                  "type": "constant",
+                  "value": true
                 },
                 {
                   "type": "item_check",
@@ -5203,11 +5156,8 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "not",
-                      "condition": {
-                        "type": "constant",
-                        "value": false
-                      }
+                      "type": "constant",
+                      "value": true
                     },
                     {
                       "type": "item_check",
@@ -5300,11 +5250,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "not",
-                  "condition": {
-                    "type": "constant",
-                    "value": false
-                  }
+                  "type": "constant",
+                  "value": true
                 },
                 {
                   "type": "item_check",
@@ -5330,11 +5277,8 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "not",
-                      "condition": {
-                        "type": "constant",
-                        "value": false
-                      }
+                      "type": "constant",
+                      "value": true
                     },
                     {
                       "type": "item_check",
@@ -8818,10 +8762,10 @@
         ],
         "unchained_keys": 0
       },
-      "specific_keycards": 0,
-      "eye_spy": 0,
-      "unchained_keys": 0,
-      "prism_break": 0,
+      "flag_specific_keycards": false,
+      "flag_eye_spy": false,
+      "flag_unchained_keys": false,
+      "flag_prism_break": false,
       "pyramid_keys_unlock": "GateLakeSereneRight",
       "present_keys_unlock": "GateSealedSirensCave",
       "past_keys_unlock": "GateLakeSereneRight",
@@ -9215,5 +9159,405 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "can_break_walls": {
+        "type": "conditional",
+        "test": {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "self"
+          },
+          "attr": "flag_eye_spy"
+        },
+        "if_true": {
+          "type": "item_check",
+          "item": "Oculus Ring"
+        },
+        "if_false": {
+          "type": "constant",
+          "value": true
+        }
+      },
+      "can_kill_all_3_bosses": {
+        "type": "conditional",
+        "test": {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "self"
+          },
+          "attr": "flag_prism_break"
+        },
+        "if_true": {
+          "type": "state_method",
+          "method": "has_all",
+          "args": [
+            {
+              "type": "constant",
+              "value": [
+                "Laser Access A",
+                "Laser Access I",
+                "Laser Access M"
+              ]
+            }
+          ]
+        },
+        "if_false": {
+          "type": "state_method",
+          "method": "has_all",
+          "args": [
+            {
+              "type": "constant",
+              "value": [
+                "Killed Aelana",
+                "Killed Maw",
+                "Killed Twins"
+              ]
+            }
+          ]
+        }
+      },
+      "can_teleport_to": {
+        "params": [
+          "era",
+          "gate"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "not",
+            "condition": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "flag_unchained_keys"
+            }
+          },
+          "if_true": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "pyramid_keys_unlock"
+            },
+            "op": "==",
+            "right": {
+              "type": "name",
+              "name": "gate"
+            }
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "name",
+                "name": "era"
+              },
+              "op": "==",
+              "right": {
+                "type": "constant",
+                "value": "Present"
+              }
+            },
+            "if_true": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "compare",
+                  "left": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "present_keys_unlock"
+                  },
+                  "op": "==",
+                  "right": {
+                    "type": "name",
+                    "name": "gate"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Modern Warp Beacon"
+                }
+              ]
+            },
+            "if_false": {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "era"
+                },
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": "Past"
+                }
+              },
+              "if_true": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "compare",
+                    "left": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "self"
+                      },
+                      "attr": "past_keys_unlock"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "name",
+                      "name": "gate"
+                    }
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Timeworn Warp Beacon"
+                  }
+                ]
+              },
+              "if_false": {
+                "type": "conditional",
+                "test": {
+                  "type": "compare",
+                  "left": {
+                    "type": "name",
+                    "name": "era"
+                  },
+                  "op": "==",
+                  "right": {
+                    "type": "constant",
+                    "value": "Time"
+                  }
+                },
+                "if_true": {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "compare",
+                      "left": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "self"
+                        },
+                        "attr": "time_keys_unlock"
+                      },
+                      "op": "==",
+                      "right": {
+                        "type": "name",
+                        "name": "gate"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Mysterious Warp Beacon"
+                    }
+                  ]
+                },
+                "if_false": null
+              }
+            }
+          }
+        }
+      },
+      "has_doublejump": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Celestial Sash"
+          },
+          {
+            "type": "item_check",
+            "item": "Lightwall"
+          },
+          {
+            "type": "item_check",
+            "item": "Succubus Hairpin"
+          }
+        ]
+      },
+      "has_doublejump_of_npc": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "has_upwarddash",
+            "args": []
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Timespinner Wheel"
+              },
+              {
+                "type": "helper",
+                "name": "has_doublejump",
+                "args": []
+              }
+            ]
+          }
+        ]
+      },
+      "has_fastjump_on_npc": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Talaria Attachment"
+          },
+          {
+            "type": "item_check",
+            "item": "Timespinner Wheel"
+          }
+        ]
+      },
+      "has_fire": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Djinn Inferno"
+          },
+          {
+            "type": "item_check",
+            "item": "Fire Orb"
+          },
+          {
+            "type": "item_check",
+            "item": "Infernal Flames"
+          },
+          {
+            "type": "item_check",
+            "item": "Pyro Ring"
+          }
+        ]
+      },
+      "has_forwarddash_doublejump": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "has_upwarddash",
+            "args": []
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Talaria Attachment"
+              },
+              {
+                "type": "helper",
+                "name": "has_doublejump",
+                "args": []
+              }
+            ]
+          }
+        ]
+      },
+      "has_keycard_A": {
+        "type": "item_check",
+        "item": "Security Keycard A"
+      },
+      "has_keycard_B": {
+        "type": "conditional",
+        "test": {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "self"
+          },
+          "attr": "flag_specific_keycards"
+        },
+        "if_true": {
+          "type": "item_check",
+          "item": "Security Keycard B"
+        },
+        "if_false": {
+          "type": "state_method",
+          "method": "has_any",
+          "args": [
+            {
+              "type": "constant",
+              "value": [
+                "Security Keycard A",
+                "Security Keycard B"
+              ]
+            }
+          ]
+        }
+      },
+      "has_pink": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Plasma Geyser"
+          },
+          {
+            "type": "item_check",
+            "item": "Plasma Orb"
+          },
+          {
+            "type": "item_check",
+            "item": "Royal Ring"
+          }
+        ]
+      },
+      "has_timestop": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Celestial Sash"
+          },
+          {
+            "type": "item_check",
+            "item": "Lightwall"
+          },
+          {
+            "type": "item_check",
+            "item": "Succubus Hairpin"
+          },
+          {
+            "type": "item_check",
+            "item": "Timespinner Wheel"
+          }
+        ]
+      },
+      "has_upwarddash": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Celestial Sash"
+          },
+          {
+            "type": "item_check",
+            "item": "Lightwall"
+          }
+        ]
+      }
+    }
+  }
 }

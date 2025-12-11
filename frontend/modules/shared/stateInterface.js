@@ -963,6 +963,61 @@ export function createStateSnapshotInterface(
         return uniqueItemsFound >= requiredCount;
       }
 
+      // Handle count_group_unique - returns count of unique items from a group (ignores duplicates)
+      if (methodName === 'count_group_unique' && args.length >= 1) {
+        const groupName = args[0];
+        if (typeof groupName !== 'string') return 0;
+
+        const playerId = snapshot?.player?.id || snapshot?.player?.slot || DEFAULT_PLAYER_ID;
+        const playerItemGroups = staticData?.item_groups?.[playerId] || staticData?.item_groups;
+
+        let uniqueItemsFound = 0;
+
+        if (Array.isArray(playerItemGroups)) {
+          // ALTTP-style with group names as array
+          const playerItemsData = staticData.itemsByPlayer && staticData.itemsByPlayer[playerId];
+          if (playerItemsData) {
+            for (const itemName in playerItemsData) {
+              if (playerItemsData[itemName]?.groups?.includes(groupName)) {
+                const itemCount = snapshot.inventory[itemName] || 0;
+                if (itemCount > 0) {
+                  uniqueItemsFound++;
+                }
+              }
+            }
+          }
+        } else if (
+          typeof playerItemGroups === 'object' &&
+          playerItemGroups[groupName] &&
+          Array.isArray(playerItemGroups[groupName])
+        ) {
+          // Item_groups is an object { groupName: [itemNames...] }
+          for (const itemInGroup of playerItemGroups[groupName]) {
+            const itemCount = snapshot.inventory[itemInGroup] || 0;
+            if (itemCount > 0) {
+              uniqueItemsFound++;
+            }
+          }
+        } else if (staticData?.groups) {
+          // Fallback to old groups structure if available
+          const playerGroups = staticData.groups[playerId] || staticData.groups;
+          if (
+            typeof playerGroups === 'object' &&
+            playerGroups[groupName] &&
+            Array.isArray(playerGroups[groupName])
+          ) {
+            for (const itemInGroup of playerGroups[groupName]) {
+              const itemCount = snapshot.inventory[itemInGroup] || 0;
+              if (itemCount > 0) {
+                uniqueItemsFound++;
+              }
+            }
+          }
+        }
+
+        return uniqueItemsFound;
+      }
+
       // Check for game-specific state methods first
       const selectedStateMethods = getStateMethods(gameName);
 

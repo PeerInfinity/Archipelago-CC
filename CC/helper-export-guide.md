@@ -111,6 +111,38 @@ The frontend infrastructure is already set up. When you enable helper export:
 2. The rule engine checks for definitions before calling JavaScript
 3. Settings are available for resolving `name` nodes in helper definitions
 
+### Generic `has` and `count` Functions
+
+The generic `has` and `count` functions in `frontend/modules/shared/gameLogic/generic/genericLogic.js` combine patterns from multiple game implementations to work universally:
+
+```javascript
+has(snapshot, staticData, itemName) {
+  // 1. Check flags (events, checked locations, etc.)
+  if (snapshot?.flags?.includes(itemName)) return true;
+
+  // 2. Check events
+  if (snapshot?.events?.includes(itemName)) return true;
+
+  // 3. Check inventory
+  if (snapshot?.inventory?.[itemName] > 0) return true;
+
+  // 4. Check progression_mapping for progressive items
+  // (e.g., "Fighter Sword" resolves from "Progressive Sword" at level 1)
+  // ...
+}
+```
+
+**Patterns combined from different games:**
+
+| Pattern | Source Games | Purpose |
+|---------|--------------|---------|
+| Check `flags` array | AHIT, KDL3, Pokemon Emerald, SM, Yugioh06 | Event items stored as flags |
+| Check `events` array | AHIT, KDL3, Pokemon Emerald, SM, Yugioh06 | Game events/triggers |
+| Check `inventory` | All games | Standard item counts |
+| Check `progression_mapping` | ALTTP | Progressive items (e.g., Progressive Sword → Fighter Sword) |
+
+This unified implementation means most games can use `genericLogic.helperFunctions` without needing custom `has`/`count` implementations. Games with truly unique requirements can still provide custom implementations in their game logic module.
+
 ### Removing JavaScript Helpers
 
 After enabling export, you can remove JavaScript helper implementations that are now exported. Keep only:
@@ -304,8 +336,7 @@ COMPUTED_SETTINGS: Dict[str, Callable] = {}
 
 The following games have achieved **complete removal** of all game-specific files (custom exporter, JavaScript helpers, game logic directory, and registry entry):
 
-- **shapez** - Complex shape-building logic now fully exported
-- **Shivers** - Ixupi capture helpers inlined as has_all patterns
+- **A Link to the Past** - Complex helper functions (can_buy, can_defeat_boss, etc.) exported with imperative block support
 - **Adventure** - Classic Atari game rules exported
 - **Bumper Stickers** - Puzzle game logic exported
 - **ChecksFinder** - All rules exported
@@ -314,8 +345,11 @@ The following games have achieved **complete removal** of all game-specific file
 - **Donkey Kong Country 3** - Platformer rules exported
 - **Faxanadu** - Action RPG rules exported
 - **Metamath** - Mathematical puzzle logic exported
+- **shapez** - Complex shape-building logic now fully exported
+- **Shivers** - Ixupi capture helpers inlined as has_all patterns
 - **Sonic Adventure 2 Battle** - Platform game rules exported
 - **Super Mario World** - Platformer rules exported
+- **Timespinner** - Time-manipulation game rules exported
 - **Undertale** - RPG game rules exported
 
 These games use only the generic infrastructure. No custom Python exporter, no JavaScript helper files, no game logic directory, and no entry in the game logic registry.
