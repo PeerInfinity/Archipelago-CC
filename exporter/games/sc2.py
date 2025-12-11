@@ -7,26 +7,17 @@ import logging
 logger = logging.getLogger(__name__)
 
 class SC2GameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'Starcraft 2'
     """Export handler for Starcraft 2 game-specific rules and items."""
+    GAME_NAME = 'Starcraft 2'
 
-    def _extract_closure_vars(self, rule_func: Callable) -> Dict[str, Any]:
-        """Extract closure variables from a function."""
-        closure_vars = {}
-        if hasattr(rule_func, '__closure__') and rule_func.__closure__:
-            if hasattr(rule_func, '__code__'):
-                freevars = rule_func.__code__.co_freevars
-                for i, var_name in enumerate(freevars):
-                    if i < len(rule_func.__closure__):
-                        cell = rule_func.__closure__[i]
-                        try:
-                            closure_vars[var_name] = cell.cell_contents
-                        except ValueError:
-                            pass
-        return closure_vars
+    # Enable automatic helper export
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
 
-    # Complex helper methods that should be kept as helper calls rather than expanded
-    COMPLEX_HELPERS = {
+    # Module containing helper functions
+    HELPER_MODULES = ['worlds.sc2.rules']
+
+    # Helpers too complex for automatic export (loops, closures, complex calculations)
+    HELPERS_TO_EXPORT_BLACKLIST = {
         'terran_competent_comp', 'protoss_competent_comp', 'zerg_competent_comp',
         'terran_defense_rating', 'protoss_defense_rating', 'zerg_defense_rating',
         'terran_power_rating', 'protoss_power_rating', 'zerg_power_rating',
@@ -44,6 +35,22 @@ class SC2GameExportHandler(GenericGameExportHandler):
         'terran_survives_rip_field', 'terran_sustainable_mech_heal',
     }
 
+    def _extract_closure_vars(self, rule_func: Callable) -> Dict[str, Any]:
+        """Extract closure variables from a function."""
+        closure_vars = {}
+        if hasattr(rule_func, '__closure__') and rule_func.__closure__:
+            if hasattr(rule_func, '__code__'):
+                freevars = rule_func.__code__.co_freevars
+                for i, var_name in enumerate(freevars):
+                    if i < len(rule_func.__closure__):
+                        cell = rule_func.__closure__[i]
+                        try:
+                            closure_vars[var_name] = cell.cell_contents
+                        except ValueError:
+                            pass
+        return closure_vars
+
+
     def override_rule_analysis(self, rule_func: Callable, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """
         Override rule analysis for SC2 mission entry rules.
@@ -58,7 +65,7 @@ class SC2GameExportHandler(GenericGameExportHandler):
         logger.debug(f"[SC2] override_rule_analysis called for '{rule_target_name}' with func_name='{func_name}'")
 
         # Check if this is a complex helper method that should not be expanded
-        if func_name in self.COMPLEX_HELPERS:
+        if func_name in self.HELPERS_TO_EXPORT_BLACKLIST:
             logger.debug(f"[SC2] Converting complex helper method '{func_name}' to helper call")
             return {'type': 'helper', 'name': func_name, 'args': []}
 
@@ -283,6 +290,9 @@ class SC2GameExportHandler(GenericGameExportHandler):
 
                     logger.debug(f"[SC2] Converting logic.{method_name}() to helper call")
 
+                    # Register the helper usage for automatic discovery
+                    self.register_helper_usage(method_name)
+
                     # Convert to helper format
                     converted_rule = {
                         'type': 'helper',
@@ -338,6 +348,9 @@ class SC2GameExportHandler(GenericGameExportHandler):
                     # This is a helper method accessed without parentheses
                     # Convert to a helper call
                     logger.debug(f"[SC2] Converting logic.{attr_name} to helper call (method accessed as attribute)")
+
+                    # Register the helper usage for automatic discovery
+                    self.register_helper_usage(attr_name)
 
                     converted_rule = {
                         'type': 'helper',
