@@ -13869,5 +13869,726 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "beanFruit": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Bean Fruit 1"
+          },
+          {
+            "type": "item_check",
+            "item": "Bean Fruit 2"
+          },
+          {
+            "type": "item_check",
+            "item": "Bean Fruit 3"
+          },
+          {
+            "type": "item_check",
+            "item": "Bean Fruit 4"
+          },
+          {
+            "type": "item_check",
+            "item": "Bean Fruit 5"
+          },
+          {
+            "type": "item_check",
+            "item": "Bean Fruit 6"
+          },
+          {
+            "type": "item_check",
+            "item": "Bean Fruit 7"
+          }
+        ]
+      },
+      "birdo_shop": {
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Shop Birdo Flag"
+          },
+          {
+            "type": "constant",
+            "value": "Region"
+          }
+        ]
+      },
+      "brooch": {
+        "type": "item_check",
+        "item": "Beanbean Brooch"
+      },
+      "canCrash": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Green Pearl Bean"
+          },
+          {
+            "type": "item_check",
+            "item": "Thunderhand"
+          }
+        ]
+      },
+      "canDash": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Red Pearl Bean"
+          },
+          {
+            "type": "item_check",
+            "item": "Firebrand"
+          }
+        ]
+      },
+      "canDig": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Green Goblet"
+          },
+          {
+            "type": "item_check",
+            "item": "Hammers"
+          }
+        ]
+      },
+      "canMini": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Red Goblet"
+          },
+          {
+            "type": "item_check",
+            "item": "Hammers"
+          }
+        ]
+      },
+      "castleTown": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Red Chuckola Fruit"
+              },
+              {
+                "type": "item_check",
+                "item": "Purple Chuckola Fruit"
+              },
+              {
+                "type": "item_check",
+                "item": "White Chuckola Fruit"
+              }
+            ]
+          },
+          {
+            "type": "item_check",
+            "item": "Beanbean Brooch"
+          }
+        ]
+      },
+      "fire": {
+        "type": "item_check",
+        "item": "Firebrand"
+      },
+      "fruits": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Red Chuckola Fruit"
+          },
+          {
+            "type": "item_check",
+            "item": "Purple Chuckola Fruit"
+          },
+          {
+            "type": "item_check",
+            "item": "White Chuckola Fruit"
+          }
+        ]
+      },
+      "fungitown": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Red Chuckola Fruit"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Purple Chuckola Fruit"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "White Chuckola Fruit"
+                  }
+                ]
+              },
+              {
+                "type": "item_check",
+                "item": "Beanbean Brooch"
+              }
+            ]
+          },
+          {
+            "type": "item_check",
+            "item": "Thunderhand"
+          },
+          {
+            "type": "item_check",
+            "item": "Peasley's Rose"
+          },
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Hammers",
+                "count": {
+                  "type": "constant",
+                  "value": 2
+                }
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Red Pearl Bean"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Firebrand"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "fungitown_birdo_shop": {
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Fungitown Shop Birdo Flag"
+          },
+          {
+            "type": "constant",
+            "value": "Region"
+          }
+        ]
+      },
+      "fungitown_shop": {
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Shop Enter Fungitown Flag"
+          },
+          {
+            "type": "constant",
+            "value": "Region"
+          }
+        ]
+      },
+      "hammers": {
+        "type": "item_check",
+        "item": "Hammers"
+      },
+      "membership": {
+        "type": "item_check",
+        "item": "Membership Card"
+      },
+      "neon": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Blue Neon Egg"
+          },
+          {
+            "type": "item_check",
+            "item": "Red Neon Egg"
+          },
+          {
+            "type": "item_check",
+            "item": "Green Neon Egg"
+          },
+          {
+            "type": "item_check",
+            "item": "Yellow Neon Egg"
+          },
+          {
+            "type": "item_check",
+            "item": "Purple Neon Egg"
+          },
+          {
+            "type": "item_check",
+            "item": "Orange Neon Egg"
+          },
+          {
+            "type": "item_check",
+            "item": "Azure Neon Egg"
+          }
+        ]
+      },
+      "pieces": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Beanstar Piece 1"
+          },
+          {
+            "type": "item_check",
+            "item": "Beanstar Piece 2"
+          },
+          {
+            "type": "item_check",
+            "item": "Beanstar Piece 3"
+          },
+          {
+            "type": "item_check",
+            "item": "Beanstar Piece 4"
+          }
+        ]
+      },
+      "piranha_shop": {
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Shop Mom Piranha Flag"
+          },
+          {
+            "type": "constant",
+            "value": "Region"
+          }
+        ]
+      },
+      "postJokes": {
+        "params": [
+          "goal"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "name",
+              "name": "goal"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": 0
+            }
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Hammers",
+                    "count": {
+                      "type": "constant",
+                      "value": 3
+                    }
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "Green Goblet"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Hammers"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "Red Goblet"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Hammers"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "Membership Card"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Firebrand"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Green Goblet"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Hammers"
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Peach's Extra Dress"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Fake Beanstar"
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Beanstar Piece 1"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Beanstar Piece 2"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Beanstar Piece 3"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Beanstar Piece 4"
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Red Chuckola Fruit"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Purple Chuckola Fruit"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "White Chuckola Fruit"
+                  }
+                ]
+              },
+              {
+                "type": "item_check",
+                "item": "Beanbean Brooch"
+              },
+              {
+                "type": "item_check",
+                "item": "Peasley's Rose"
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Red Pearl Bean"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Firebrand"
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Hammers",
+                    "count": {
+                      "type": "constant",
+                      "value": 3
+                    }
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "Green Goblet"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Hammers"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "Red Goblet"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Hammers"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "Membership Card"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Firebrand"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Green Goblet"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Hammers"
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Red Pearl Bean"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Firebrand"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "rose": {
+        "type": "item_check",
+        "item": "Peasley's Rose"
+      },
+      "spangle": {
+        "type": "item_check",
+        "item": "Spangle"
+      },
+      "star_shop": {
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Shop Beanstar Complete Flag"
+          },
+          {
+            "type": "constant",
+            "value": "Region"
+          }
+        ]
+      },
+      "super": {
+        "type": "item_check",
+        "item": "Hammers",
+        "count": {
+          "type": "constant",
+          "value": 2
+        }
+      },
+      "surfable": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Hammers",
+            "count": {
+              "type": "constant",
+              "value": 3
+            }
+          },
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Green Goblet"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Hammers"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Red Goblet"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Hammers"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Membership Card"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Firebrand"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "teehee": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Hammers",
+            "count": {
+              "type": "constant",
+              "value": 2
+            }
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Red Pearl Bean"
+              },
+              {
+                "type": "item_check",
+                "item": "Firebrand"
+              }
+            ]
+          }
+        ]
+      },
+      "thunder": {
+        "type": "item_check",
+        "item": "Thunderhand"
+      },
+      "ultra": {
+        "type": "item_check",
+        "item": "Hammers",
+        "count": {
+          "type": "constant",
+          "value": 3
+        }
+      },
+      "winkle": {
+        "type": "item_check",
+        "item": "Winkle Card"
+      }
+    }
+  }
 }
