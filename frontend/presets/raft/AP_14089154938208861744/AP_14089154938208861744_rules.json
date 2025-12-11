@@ -102,15 +102,13 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Glass",
-                  "args": [],
-                  "description": "Can access Glass"
+                  "name": "raft_can_access_balboa_island",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_HoneyComb",
-                  "args": [],
-                  "description": "Can access HoneyComb"
+                  "name": "raft_can_smelt_items",
+                  "args": []
                 }
               ]
             },
@@ -126,33 +124,9 @@
             "name": "Flippers",
             "id": 48002,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plastic",
-                  "args": [],
-                  "description": "Can access Plastic"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Rope",
-                  "args": [],
-                  "description": "Can access Rope"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_SeaVine",
-                  "args": [],
-                  "description": "Can access SeaVine"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_VineGoo",
-                  "args": [],
-                  "description": "Can access VineGoo"
-                }
-              ]
+              "type": "helper",
+              "name": "raft_can_smelt_items",
+              "args": []
             },
             "item": {
               "name": "Fuel tank",
@@ -166,27 +140,8 @@
             "name": "Birds nest",
             "id": 48003,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Placeable_GiantClam",
-                  "args": [],
-                  "description": "Can access Placeable_GiantClam"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Thatch",
-                  "args": [],
-                  "description": "Can access Thatch"
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "progressive-grill",
@@ -200,27 +155,9 @@
             "name": "Battery",
             "id": 48004,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_CopperIngot",
-                  "args": [],
-                  "description": "Can access CopperIngot"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plastic",
-                  "args": [],
-                  "description": "Can access Plastic"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Scrap",
-                  "args": [],
-                  "description": "Can access Scrap"
-                }
-              ]
+              "type": "helper",
+              "name": "raft_can_smelt_items",
+              "args": []
             },
             "item": {
               "name": "progressive-anchor",
@@ -238,21 +175,13 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_CopperIngot",
-                  "args": [],
-                  "description": "Can access CopperIngot"
+                  "name": "raft_can_smelt_items",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Plastic",
-                  "args": [],
-                  "description": "Can access Plastic"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_VineGoo",
-                  "args": [],
-                  "description": "Can access VineGoo"
+                  "name": "raft_can_smelt_items",
+                  "args": []
                 }
               ]
             },
@@ -269,9 +198,8 @@
             "id": 48006,
             "access_rule": {
               "type": "helper",
-              "name": "raft_itemcheck_MetalIngot",
-              "args": [],
-              "description": "Can access MetalIngot"
+              "name": "raft_can_smelt_items",
+              "args": []
             },
             "item": {
               "name": "progressive-biofuel",
@@ -286,9 +214,8 @@
             "id": 48007,
             "access_rule": {
               "type": "helper",
-              "name": "raft_itemcheck_MetalIngot",
-              "args": [],
-              "description": "Can access MetalIngot"
+              "name": "raft_can_smelt_items",
+              "args": []
             },
             "item": {
               "name": "progressive-crop-plot",
@@ -306,21 +233,13 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Hinge",
-                  "args": [],
-                  "description": "Can access Hinge"
+                  "name": "raft_can_craft_hinge",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_MetalIngot",
-                  "args": [],
-                  "description": "Can access MetalIngot"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Scrap",
-                  "args": [],
-                  "description": "Can access Scrap"
+                  "name": "raft_can_smelt_items",
+                  "args": []
                 }
               ]
             },
@@ -340,27 +259,13 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Bolt",
-                  "args": [],
-                  "description": "Can access Bolt"
+                  "name": "raft_can_craft_bolt",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_MetalIngot",
-                  "args": [],
-                  "description": "Can access MetalIngot"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plastic",
-                  "args": [],
-                  "description": "Can access Plastic"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Scrap",
-                  "args": [],
-                  "description": "Can access Scrap"
+                  "name": "raft_can_smelt_items",
+                  "args": []
                 }
               ]
             },
@@ -377,9 +282,8 @@
             "id": 48010,
             "access_rule": {
               "type": "helper",
-              "name": "raft_itemcheck_Glass",
-              "args": [],
-              "description": "Can access Glass"
+              "name": "raft_can_smelt_items",
+              "args": []
             },
             "item": {
               "name": "Hinge",
@@ -393,10 +297,8 @@
             "name": "Clay bowl",
             "id": 48011,
             "access_rule": {
-              "type": "helper",
-              "name": "raft_itemcheck_Clay",
-              "args": [],
-              "description": "Can access Clay"
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "progressive-spear",
@@ -414,21 +316,13 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_ExplosivePowder",
-                  "args": [],
-                  "description": "Can access ExplosivePowder"
+                  "name": "raft_big_islands_available",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Rope",
-                  "args": [],
-                  "description": "Can access Rope"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Stone",
-                  "args": [],
-                  "description": "Can access Stone"
+                  "name": "raft_can_smelt_items",
+                  "args": []
                 }
               ]
             },
@@ -448,27 +342,18 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Bolt",
-                  "args": [],
-                  "description": "Can access Bolt"
+                  "name": "raft_can_craft_bolt",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Glass",
-                  "args": [],
-                  "description": "Can access Glass"
+                  "name": "raft_can_craft_plasticBottle",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_PlasticBottle_Empty",
-                  "args": [],
-                  "description": "Can access PlasticBottle_Empty"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Rope",
-                  "args": [],
-                  "description": "Can access Rope"
+                  "name": "raft_can_smelt_items",
+                  "args": []
                 }
               ]
             },
@@ -484,27 +369,9 @@
             "name": "Metal fishing rod",
             "id": 48014,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Bolt",
-                  "args": [],
-                  "description": "Can access Bolt"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Rope",
-                  "args": [],
-                  "description": "Can access Rope"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Scrap",
-                  "args": [],
-                  "description": "Can access Scrap"
-                }
-              ]
+              "type": "helper",
+              "name": "raft_can_craft_bolt",
+              "args": []
             },
             "item": {
               "name": "Resource Pack: 5 Sand",
@@ -522,27 +389,13 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Plastic",
-                  "args": [],
-                  "description": "Can access Plastic"
+                  "name": "raft_can_craft_plasticBottle",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_PlasticBottle_Empty",
-                  "args": [],
-                  "description": "Can access PlasticBottle_Empty"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Rope",
-                  "args": [],
-                  "description": "Can access Rope"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_VineGoo",
-                  "args": [],
-                  "description": "Can access VineGoo"
+                  "name": "raft_can_smelt_items",
+                  "args": []
                 }
               ]
             },
@@ -562,27 +415,13 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Bolt",
-                  "args": [],
-                  "description": "Can access Bolt"
+                  "name": "raft_can_craft_bolt",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_CircuitBoard",
-                  "args": [],
-                  "description": "Can access CircuitBoard"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plastic",
-                  "args": [],
-                  "description": "Can access Plastic"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Scrap",
-                  "args": [],
-                  "description": "Can access Scrap"
+                  "name": "raft_can_craft_circuitBoard",
+                  "args": []
                 }
               ]
             },
@@ -598,21 +437,9 @@
             "name": "Empty bottle",
             "id": 48017,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plastic",
-                  "args": [],
-                  "description": "Can access Plastic"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_VineGoo",
-                  "args": [],
-                  "description": "Can access VineGoo"
-                }
-              ]
+              "type": "helper",
+              "name": "raft_can_smelt_items",
+              "args": []
             },
             "item": {
               "name": "progressive-spear",
@@ -630,33 +457,18 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Bolt",
-                  "args": [],
-                  "description": "Can access Bolt"
+                  "name": "raft_can_craft_bolt",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_MetalIngot",
-                  "args": [],
-                  "description": "Can access MetalIngot"
+                  "name": "raft_can_smelt_items",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plastic",
-                  "args": [],
-                  "description": "Can access Plastic"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_VineGoo",
-                  "args": [],
-                  "description": "Can access VineGoo"
+                  "name": "raft_can_smelt_items",
+                  "args": []
                 }
               ]
             },
@@ -676,33 +488,18 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Bolt",
-                  "args": [],
-                  "description": "Can access Bolt"
+                  "name": "raft_can_craft_bolt",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_CircuitBoard",
-                  "args": [],
-                  "description": "Can access CircuitBoard"
+                  "name": "raft_can_craft_circuitBoard",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plastic",
-                  "args": [],
-                  "description": "Can access Plastic"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_VineGoo",
-                  "args": [],
-                  "description": "Can access VineGoo"
+                  "name": "raft_can_smelt_items",
+                  "args": []
                 }
               ]
             },
@@ -722,27 +519,13 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Hinge",
-                  "args": [],
-                  "description": "Can access Hinge"
+                  "name": "raft_can_craft_hinge",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_MetalIngot",
-                  "args": [],
-                  "description": "Can access MetalIngot"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Rope",
-                  "args": [],
-                  "description": "Can access Rope"
+                  "name": "raft_can_smelt_items",
+                  "args": []
                 }
               ]
             },
@@ -758,33 +541,9 @@
             "name": "Advanced grill",
             "id": 48021,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_MetalIngot",
-                  "args": [],
-                  "description": "Can access MetalIngot"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Nail",
-                  "args": [],
-                  "description": "Can access Nail"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Rope",
-                  "args": [],
-                  "description": "Can access Rope"
-                }
-              ]
+              "type": "helper",
+              "name": "raft_can_smelt_items",
+              "args": []
             },
             "item": {
               "name": "Antenna",
@@ -802,27 +561,13 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Bolt",
-                  "args": [],
-                  "description": "Can access Bolt"
+                  "name": "raft_can_craft_bolt",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_MetalIngot",
-                  "args": [],
-                  "description": "Can access MetalIngot"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Rope",
-                  "args": [],
-                  "description": "Can access Rope"
+                  "name": "raft_can_smelt_items",
+                  "args": []
                 }
               ]
             },
@@ -838,33 +583,9 @@
             "name": "Storage",
             "id": 48023,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Hinge",
-                  "args": [],
-                  "description": "Can access Hinge"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Rope",
-                  "args": [],
-                  "description": "Can access Rope"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Scrap",
-                  "args": [],
-                  "description": "Can access Scrap"
-                }
-              ]
+              "type": "helper",
+              "name": "raft_can_craft_hinge",
+              "args": []
             },
             "item": {
               "name": "Resource Pack: 1 SeaVine",
@@ -878,33 +599,8 @@
             "name": "Smelter",
             "id": 48024,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Brick_Dry",
-                  "args": [],
-                  "description": "Can access Brick_Dry"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Nail",
-                  "args": [],
-                  "description": "Can access Nail"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Scrap",
-                  "args": [],
-                  "description": "Can access Scrap"
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Resource Pack: 3 Scrap",
@@ -918,33 +614,8 @@
             "name": "Paint mill",
             "id": 48025,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Rope",
-                  "args": [],
-                  "description": "Can access Rope"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Scrap",
-                  "args": [],
-                  "description": "Can access Scrap"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Stone",
-                  "args": [],
-                  "description": "Can access Stone"
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Circuit board",
@@ -958,31 +629,17 @@
             "name": "Hammock",
             "id": 48026,
             "access_rule": {
-              "type": "and",
+              "type": "or",
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Feather",
-                  "args": [],
-                  "description": "Can access Feather"
+                  "name": "raft_big_islands_available",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Nail",
-                  "args": [],
-                  "description": "Can access Nail"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Thatch",
-                  "args": [],
-                  "description": "Can access Thatch"
+                  "name": "raft_can_craft_birdNest",
+                  "args": []
                 }
               ]
             },
@@ -998,33 +655,9 @@
             "name": "Metal axe",
             "id": 48027,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Bolt",
-                  "args": [],
-                  "description": "Can access Bolt"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Rope",
-                  "args": [],
-                  "description": "Can access Rope"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Scrap",
-                  "args": [],
-                  "description": "Can access Scrap"
-                }
-              ]
+              "type": "helper",
+              "name": "raft_can_craft_bolt",
+              "args": []
             },
             "item": {
               "name": "Resource Pack: 1 CopperOre",
@@ -1038,33 +671,9 @@
             "name": "Scrap hook",
             "id": 48028,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Bolt",
-                  "args": [],
-                  "description": "Can access Bolt"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Rope",
-                  "args": [],
-                  "description": "Can access Rope"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Scrap",
-                  "args": [],
-                  "description": "Can access Scrap"
-                }
-              ]
+              "type": "helper",
+              "name": "raft_can_craft_bolt",
+              "args": []
             },
             "item": {
               "name": "Resource Pack: 4 CopperOre",
@@ -1078,33 +687,9 @@
             "name": "Large crop plot",
             "id": 48029,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Bolt",
-                  "args": [],
-                  "description": "Can access Bolt"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Nail",
-                  "args": [],
-                  "description": "Can access Nail"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Rope",
-                  "args": [],
-                  "description": "Can access Rope"
-                }
-              ]
+              "type": "helper",
+              "name": "raft_can_craft_bolt",
+              "args": []
             },
             "item": {
               "name": "Resource Pack: 2 TitaniumOre",
@@ -1122,27 +707,13 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Bolt",
-                  "args": [],
-                  "description": "Can access Bolt"
+                  "name": "raft_can_craft_bolt",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Rope",
-                  "args": [],
-                  "description": "Can access Rope"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_VineGoo",
-                  "args": [],
-                  "description": "Can access VineGoo"
+                  "name": "raft_can_smelt_items",
+                  "args": []
                 }
               ]
             },
@@ -1162,27 +733,13 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Bolt",
-                  "args": [],
-                  "description": "Can access Bolt"
+                  "name": "raft_can_craft_bolt",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Rope",
-                  "args": [],
-                  "description": "Can access Rope"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_VineGoo",
-                  "args": [],
-                  "description": "Can access VineGoo"
+                  "name": "raft_can_smelt_items",
+                  "args": []
                 }
               ]
             },
@@ -1198,33 +755,8 @@
             "name": "Scarecrow",
             "id": 48032,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Nail",
-                  "args": [],
-                  "description": "Can access Nail"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plastic",
-                  "args": [],
-                  "description": "Can access Plastic"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Thatch",
-                  "args": [],
-                  "description": "Can access Thatch"
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Resource Pack: 3 Plank",
@@ -1242,21 +774,23 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Feather",
-                  "args": [],
-                  "description": "Can access Feather"
+                  "name": "raft_can_smelt_items",
+                  "args": []
                 },
                 {
-                  "type": "helper",
-                  "name": "raft_itemcheck_MetalIngot",
-                  "args": [],
-                  "description": "Can access MetalIngot"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "raft_big_islands_available",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "raft_can_craft_birdNest",
+                      "args": []
+                    }
+                  ]
                 }
               ]
             },
@@ -1276,21 +810,13 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Bolt",
-                  "args": [],
-                  "description": "Can access Bolt"
+                  "name": "raft_can_craft_bolt",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_MetalIngot",
-                  "args": [],
-                  "description": "Can access MetalIngot"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
+                  "name": "raft_can_smelt_items",
+                  "args": []
                 }
               ]
             },
@@ -1310,21 +836,13 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
+                  "name": "raft_can_find_titanium",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Rope",
-                  "args": [],
-                  "description": "Can access Rope"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_TitaniumIngot",
-                  "args": [],
-                  "description": "Can access TitaniumIngot"
+                  "name": "raft_can_smelt_items",
+                  "args": []
                 }
               ]
             },
@@ -1340,27 +858,8 @@
             "name": "Bucket",
             "id": 48036,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Rope",
-                  "args": [],
-                  "description": "Can access Rope"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Scrap",
-                  "args": [],
-                  "description": "Can access Scrap"
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "progressive-crop-plot",
@@ -1374,27 +873,8 @@
             "name": "Collection net",
             "id": 48037,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Nail",
-                  "args": [],
-                  "description": "Can access Nail"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Rope",
-                  "args": [],
-                  "description": "Can access Rope"
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Trashcan",
@@ -1408,25 +888,17 @@
             "name": "Paint brush",
             "id": 48038,
             "access_rule": {
-              "type": "and",
+              "type": "or",
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Feather",
-                  "args": [],
-                  "description": "Can access Feather"
+                  "name": "raft_big_islands_available",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Rope",
-                  "args": [],
-                  "description": "Can access Rope"
+                  "name": "raft_can_craft_birdNest",
+                  "args": []
                 }
               ]
             },
@@ -1442,27 +914,9 @@
             "name": "Advanced purifier",
             "id": 48039,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Glass",
-                  "args": [],
-                  "description": "Can access Glass"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plastic",
-                  "args": [],
-                  "description": "Can access Plastic"
-                }
-              ]
+              "type": "helper",
+              "name": "raft_can_smelt_items",
+              "args": []
             },
             "item": {
               "name": "Beehive",
@@ -1476,27 +930,9 @@
             "name": "Grass plot",
             "id": 48040,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Dirt",
-                  "args": [],
-                  "description": "Can access Dirt"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plastic",
-                  "args": [],
-                  "description": "Can access Plastic"
-                }
-              ]
+              "type": "helper",
+              "name": "raft_can_get_dirt",
+              "args": []
             },
             "item": {
               "name": "Net canister",
@@ -1510,27 +946,8 @@
             "name": "Stone arrow",
             "id": 48041,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plastic",
-                  "args": [],
-                  "description": "Can access Plastic"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Stone",
-                  "args": [],
-                  "description": "Can access Stone"
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Firework",
@@ -1544,21 +961,8 @@
             "name": "Medium crop plot",
             "id": 48042,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Scrap",
-                  "args": [],
-                  "description": "Can access Scrap"
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "progressive-metals",
@@ -1572,21 +976,8 @@
             "name": "Lantern",
             "id": 48043,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Scrap",
-                  "args": [],
-                  "description": "Can access Scrap"
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "progressive-bow",
@@ -1600,21 +991,8 @@
             "name": "Small trophy board",
             "id": 48044,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Nail",
-                  "args": [],
-                  "description": "Can access Nail"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "progressive-engine",
@@ -1628,21 +1006,8 @@
             "name": "Medium trophy board",
             "id": 48045,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Nail",
-                  "args": [],
-                  "description": "Can access Nail"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Bolt",
@@ -1656,21 +1021,8 @@
             "name": "Large trophy board",
             "id": 48046,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Nail",
-                  "args": [],
-                  "description": "Can access Nail"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                }
-              ]
+              "type": "constant",
+              "value": true
             },
             "item": {
               "name": "Resource Pack: 5 CopperOre",
@@ -1687,22 +1039,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Leather",
-                  "args": [],
-                  "description": "Can access Leather"
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "raft_can_capture_animals",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "raft_can_craft_shears",
+                      "args": []
+                    }
+                  ]
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Rope",
-                  "args": [],
-                  "description": "Can access Rope"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Wool",
-                  "args": [],
-                  "description": "Can access Wool"
+                  "name": "raft_big_islands_available",
+                  "args": []
                 }
               ]
             },
@@ -1721,16 +1075,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Leather",
-                  "args": [],
-                  "description": "Can access Leather"
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "raft_can_capture_animals",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "raft_can_craft_shears",
+                      "args": []
+                    }
+                  ]
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Wool",
-                  "args": [],
-                  "description": "Can access Wool"
+                  "name": "raft_big_islands_available",
+                  "args": []
                 }
               ]
             },
@@ -1749,16 +1111,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Leather",
-                  "args": [],
-                  "description": "Can access Leather"
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "raft_can_capture_animals",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "raft_can_craft_shears",
+                      "args": []
+                    }
+                  ]
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Wool",
-                  "args": [],
-                  "description": "Can access Wool"
+                  "name": "raft_big_islands_available",
+                  "args": []
                 }
               ]
             },
@@ -1777,16 +1147,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Leather",
-                  "args": [],
-                  "description": "Can access Leather"
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "raft_can_capture_animals",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "raft_can_craft_shears",
+                      "args": []
+                    }
+                  ]
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Wool",
-                  "args": [],
-                  "description": "Can access Wool"
+                  "name": "raft_big_islands_available",
+                  "args": []
                 }
               ]
             },
@@ -1805,34 +1183,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Clay",
-                  "args": [],
-                  "description": "Can access Clay"
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "raft_can_access_balboa_island",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "raft_can_smelt_items",
+                      "args": []
+                    }
+                  ]
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Hinge",
-                  "args": [],
-                  "description": "Can access Hinge"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Jar_Bee",
-                  "args": [],
-                  "description": "Can access Jar_Bee"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plank",
-                  "args": [],
-                  "description": "Can access Plank"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Plastic",
-                  "args": [],
-                  "description": "Can access Plastic"
+                  "name": "raft_can_craft_hinge",
+                  "args": []
                 }
               ]
             },
@@ -1852,21 +1220,13 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Clay",
-                  "args": [],
-                  "description": "Can access Clay"
+                  "name": "raft_can_access_balboa_island",
+                  "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Egg",
-                  "args": [],
-                  "description": "Can access Egg"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_HoneyComb",
-                  "args": [],
-                  "description": "Can access HoneyComb"
+                  "name": "raft_can_capture_animals",
+                  "args": []
                 }
               ]
             },
@@ -1882,21 +1242,9 @@
             "name": "Healing salve",
             "id": 48053,
             "access_rule": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Clay",
-                  "args": [],
-                  "description": "Can access Clay"
-                },
-                {
-                  "type": "helper",
-                  "name": "raft_itemcheck_Egg",
-                  "args": [],
-                  "description": "Can access Egg"
-                }
-              ]
+              "type": "helper",
+              "name": "raft_can_capture_animals",
+              "args": []
             },
             "item": {
               "name": "Resource Pack: 1 Plank",
@@ -2337,9 +1685,8 @@
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Machete",
-                  "args": [],
-                  "description": "Can access Machete"
+                  "name": "raft_can_craft_machete",
+                  "args": []
                 }
               ]
             },
@@ -2364,9 +1711,8 @@
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Machete",
-                  "args": [],
-                  "description": "Can access Machete"
+                  "name": "raft_can_craft_machete",
+                  "args": []
                 }
               ]
             },
@@ -2391,9 +1737,8 @@
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Machete",
-                  "args": [],
-                  "description": "Can access Machete"
+                  "name": "raft_can_craft_machete",
+                  "args": []
                 }
               ]
             },
@@ -2482,9 +1827,8 @@
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Machete",
-                  "args": [],
-                  "description": "Can access Machete"
+                  "name": "raft_can_craft_machete",
+                  "args": []
                 }
               ]
             },
@@ -2781,15 +2125,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "raft_can_access_caravan_island",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "raft_big_islands_available",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "raft_can_smelt_items",
+                      "args": []
+                    }
+                  ]
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_ExplosivePowder",
-                  "args": [],
-                  "description": "Can access ExplosivePowder"
+                  "name": "raft_can_access_caravan_island",
+                  "args": []
                 }
               ]
             },
@@ -2814,9 +2167,8 @@
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Zipline_tool",
-                  "args": [],
-                  "description": "Can access Zipline tool"
+                  "name": "raft_can_craft_ziplineTool",
+                  "args": []
                 }
               ]
             },
@@ -2841,9 +2193,8 @@
                 },
                 {
                   "type": "helper",
-                  "name": "raft_itemcheck_Zipline_tool",
-                  "args": [],
-                  "description": "Can access Zipline tool"
+                  "name": "raft_can_craft_ziplineTool",
+                  "args": []
                 }
               ]
             },
@@ -7897,5 +7248,723 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "raft_can_access_balboa_island": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_navigate",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_drive",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Balboa Island Frequency"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_access_caravan_island": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_navigate",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_drive",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Caravan Island Frequency"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_access_radio_tower": {
+        "type": "helper",
+        "name": "raft_can_navigate",
+        "args": []
+      },
+      "raft_can_access_tangaroa": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_navigate",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_drive",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Tangaroa Frequency"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_access_temperance": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_navigate",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_drive",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Temperance Frequency"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_access_utopia": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_navigate",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_drive",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_access_radio_tower",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_access_vasagatan",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_access_balboa_island",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_access_caravan_island",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_access_tangaroa",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_access_varuna_point",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_access_temperance",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Utopia Frequency"
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_shovel",
+            "args": []
+          }
+        ]
+      },
+      "raft_can_access_varuna_point": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_navigate",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_drive",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Varuna Point Frequency"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_access_vasagatan": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_navigate",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Vasagatan Frequency"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_capture_animals": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_craft_netLauncher",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_netCanister",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_grassPlot",
+            "args": []
+          }
+        ]
+      },
+      "raft_can_complete_temperance": {
+        "type": "helper",
+        "name": "raft_can_access_temperance",
+        "args": []
+      },
+      "raft_can_craft_antenna": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_craft_circuitBoard",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_bolt",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Antenna"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_craft_battery": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Battery"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_craft_birdNest": {
+        "type": "helper",
+        "name": "has",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Birds nest"
+          }
+        ]
+      },
+      "raft_can_craft_bolt": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Bolt"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_craft_circuitBoard": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Circuit board"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_craft_engine": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_circuitBoard",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Engine"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_craft_grassPlot": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_get_dirt",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Grass plot"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_craft_hinge": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Hinge"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_craft_machete": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_bolt",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Machete"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_craft_netCanister": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Net canister"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_craft_netLauncher": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_bolt",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Net launcher"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_craft_plasticBottle": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Empty bottle"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_craft_reciever": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_craft_circuitBoard",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_hinge",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Receiver"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_craft_shears": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_hinge",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Shear"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_craft_shovel": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Shovel"
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_bolt",
+            "args": []
+          }
+        ]
+      },
+      "raft_can_craft_steeringWheel": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_smelt_items",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_bolt",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_hinge",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Steering Wheel"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_craft_ziplineTool": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_craft_hinge",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_bolt",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Zipline tool"
+              }
+            ]
+          }
+        ]
+      },
+      "raft_can_drive": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "raft_can_craft_engine",
+                "args": []
+              },
+              {
+                "type": "helper",
+                "name": "raft_can_craft_steeringWheel",
+                "args": []
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "raft_paddleboard_mode_enabled",
+            "args": []
+          }
+        ]
+      },
+      "raft_can_find_titanium": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "has",
+            "args": [
+              {
+                "type": "constant",
+                "value": "Metal detector"
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_battery",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_shovel",
+            "args": []
+          }
+        ]
+      },
+      "raft_can_get_dirt": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_craft_shovel",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_big_islands_available",
+            "args": []
+          }
+        ]
+      },
+      "raft_can_navigate": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "raft_can_craft_battery",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_reciever",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "raft_can_craft_antenna",
+            "args": []
+          }
+        ]
+      },
+      "raft_can_smelt_items": {
+        "type": "helper",
+        "name": "has",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Smelter"
+          }
+        ]
+      }
+    }
+  }
 }
