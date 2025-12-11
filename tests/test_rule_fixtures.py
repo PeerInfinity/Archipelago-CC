@@ -47,12 +47,13 @@ class MockContext:
     """
 
     def __init__(self, inventory=None, groups=None, settings=None,
-                 regions=None, player_id=1):
+                 regions=None, player_id=1, helpers=None):
         self.inventory = inventory or {}
         self.groups = groups or {}
         self.settings = settings or {}
         self.regions = regions or set()
         self.player_id = player_id
+        self.helpers = helpers or {}  # Pre-configured helper results
 
     def hasItem(self, item_name):
         """Check if player has at least one of the item."""
@@ -82,6 +83,36 @@ class MockContext:
         """Get a setting value."""
         return self.settings.get(setting_name)
 
+    def executeHelper(self, helper_name, *args):
+        """Execute a helper function."""
+        # Check for pre-configured result
+        if helper_name in self.helpers:
+            result = self.helpers[helper_name]
+            return result(args) if callable(result) else result
+
+        # Implement common helpers
+        if helper_name == 'has':
+            return self.hasItem(args[0]) if args else False
+        elif helper_name == 'count':
+            return self.countItem(args[0]) if args else 0
+        elif helper_name == 'has_group':
+            return self.hasGroup(args[0], args[1] if len(args) > 1 else 1)
+        elif helper_name == 'count_group':
+            return self.countGroup(args[0]) if args else 0
+        return None
+
+    def hasAny(self, items):
+        """Check if player has any of the items."""
+        if isinstance(items, list):
+            return any(self.hasItem(item) for item in items)
+        return False
+
+    def hasAll(self, items):
+        """Check if player has all items."""
+        if isinstance(items, list):
+            return all(self.hasItem(item) for item in items)
+        return False
+
     @classmethod
     def from_test_context(cls, context_dict):
         """Create a MockContext from a test case context dictionary."""
@@ -93,7 +124,8 @@ class MockContext:
             groups=context_dict.get('groups', {}),
             settings=context_dict.get('settings', {}),
             regions=set(context_dict.get('regions', [])),
-            player_id=context_dict.get('playerId', 1)
+            player_id=context_dict.get('playerId', 1),
+            helpers=context_dict.get('helpers', {})
         )
 
 
@@ -279,6 +311,40 @@ def evaluate_rule_python(rule, context):
     elif rule_type == 'setting_value':
         setting = rule.get('setting')
         return context.getSetting(setting)
+
+    elif rule_type == 'helper':
+        helper_name = rule.get('name')
+        args = rule.get('args', [])
+        evaluated_args = [evaluate_rule_python(arg, context) for arg in args]
+        return context.executeHelper(helper_name, *evaluated_args)
+
+    elif rule_type == 'state_method':
+        method = rule.get('method')
+        args = rule.get('args', [])
+        evaluated_args = [evaluate_rule_python(arg, context) for arg in args]
+
+        if method == 'can_reach':
+            return context.canReach(evaluated_args[0]) if evaluated_args else False
+        elif method == 'has':
+            return context.hasItem(evaluated_args[0]) if evaluated_args else False
+        elif method == 'count':
+            return context.countItem(evaluated_args[0]) if evaluated_args else 0
+        elif method == 'has_group':
+            count = evaluated_args[1] if len(evaluated_args) > 1 else 1
+            return context.hasGroup(evaluated_args[0], count) if evaluated_args else False
+        elif method == 'count_group':
+            return context.countGroup(evaluated_args[0]) if evaluated_args else 0
+        elif method == 'has_any':
+            return context.hasAny(evaluated_args[0]) if evaluated_args else False
+        elif method == 'has_all':
+            return context.hasAll(evaluated_args[0]) if evaluated_args else False
+        return None
+
+    elif rule_type == 'can_reach':
+        region = rule.get('region')
+        if isinstance(region, dict):
+            region = evaluate_rule_python(region, context)
+        return context.canReach(region)
 
     # Unknown rule type
     return None

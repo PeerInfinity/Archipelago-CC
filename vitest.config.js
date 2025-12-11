@@ -11,11 +11,20 @@ export default defineConfig({
     // Reporter configuration
     reporters: ['default'],
 
-    // Coverage configuration (optional, can be enabled with --coverage)
+    // Coverage configuration (run with: npm run test:unit:coverage)
     coverage: {
       provider: 'v8',
-      include: ['frontend/modules/**/*.js'],
+      include: ['frontend/modules/shared/ruleEngine.js'],
       exclude: ['**/*.test.js', '**/test-*.js'],
+      reporter: ['text', 'text-summary', 'html'],
+      reportsDirectory: './coverage',
+      // Thresholds can be enabled once baseline is established
+      // thresholds: {
+      //   lines: 80,
+      //   functions: 80,
+      //   branches: 80,
+      //   statements: 80,
+      // },
     },
 
     // Global test settings

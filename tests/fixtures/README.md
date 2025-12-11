@@ -88,11 +88,6 @@ npm run test:unit -- -t "constant"
 npm run test:unit -- --reporter=verbose
 ```
 
-**Note**: Some fixture tests are skipped in JavaScript due to features not yet implemented in `ruleEngine.js`:
-- `block:assign_and_return` - Variable assignment with `name` resolution
-- `block:multiple_assigns` - Multiple variable assignments
-- `for_range:sum_range_5` - For loop with accumulator
-
 ## Adding New Test Cases
 
 ### 1. Simple Addition
@@ -170,8 +165,11 @@ python -m pytest tests/test_rule_fixtures.py -v --tb=short
 | `block` | 3 | Block execution |
 | `for_range` | 1 | For loops |
 | `setting_value` | 3 | Setting lookups |
+| `helper` | 4 | Helper function calls |
+| `state_method` | 6 | State manager methods |
+| `can_reach` | 3 | Region reachability |
 
-**Total: 74 test cases**
+**Total: 87 test cases**
 
 ## Best Practices
 

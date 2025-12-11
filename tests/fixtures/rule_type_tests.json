@@ -526,6 +526,100 @@
           "expected": 3
         }
       ]
+    },
+    "helper": {
+      "description": "Helper function call tests",
+      "tests": [
+        {
+          "name": "has_helper_true",
+          "rule": {"type": "helper", "name": "has", "args": [{"type": "constant", "value": "Sword"}]},
+          "context": {"inventory": {"Sword": 1}},
+          "expected": true
+        },
+        {
+          "name": "has_helper_false",
+          "rule": {"type": "helper", "name": "has", "args": [{"type": "constant", "value": "Sword"}]},
+          "context": {"inventory": {}},
+          "expected": false
+        },
+        {
+          "name": "count_helper",
+          "rule": {"type": "helper", "name": "count", "args": [{"type": "constant", "value": "Arrow"}]},
+          "context": {"inventory": {"Arrow": 30}},
+          "expected": 30
+        },
+        {
+          "name": "custom_helper_result",
+          "rule": {"type": "helper", "name": "can_lift_rocks", "args": []},
+          "context": {"helpers": {"can_lift_rocks": true}},
+          "expected": true,
+          "note": "Tests pre-configured helper result"
+        }
+      ]
+    },
+    "state_method": {
+      "description": "State method call tests",
+      "tests": [
+        {
+          "name": "can_reach_true",
+          "rule": {"type": "state_method", "method": "can_reach", "args": [{"type": "constant", "value": "Castle"}]},
+          "context": {"regions": ["Castle", "Town"]},
+          "expected": true
+        },
+        {
+          "name": "can_reach_false",
+          "rule": {"type": "state_method", "method": "can_reach", "args": [{"type": "constant", "value": "Dungeon"}]},
+          "context": {"regions": ["Castle", "Town"]},
+          "expected": false
+        },
+        {
+          "name": "has_any_true",
+          "rule": {"type": "state_method", "method": "has_any", "args": [{"type": "list", "value": [{"type": "constant", "value": "Sword"}, {"type": "constant", "value": "Axe"}]}]},
+          "context": {"inventory": {"Axe": 1}},
+          "expected": true
+        },
+        {
+          "name": "has_any_false",
+          "rule": {"type": "state_method", "method": "has_any", "args": [{"type": "list", "value": [{"type": "constant", "value": "Sword"}, {"type": "constant", "value": "Axe"}]}]},
+          "context": {"inventory": {}},
+          "expected": false
+        },
+        {
+          "name": "has_all_true",
+          "rule": {"type": "state_method", "method": "has_all", "args": [{"type": "list", "value": [{"type": "constant", "value": "Key"}, {"type": "constant", "value": "Compass"}]}]},
+          "context": {"inventory": {"Key": 1, "Compass": 1, "Map": 1}},
+          "expected": true
+        },
+        {
+          "name": "has_all_false",
+          "rule": {"type": "state_method", "method": "has_all", "args": [{"type": "list", "value": [{"type": "constant", "value": "Key"}, {"type": "constant", "value": "Compass"}]}]},
+          "context": {"inventory": {"Key": 1}},
+          "expected": false
+        }
+      ]
+    },
+    "can_reach": {
+      "description": "Region reachability tests",
+      "tests": [
+        {
+          "name": "can_reach_region_true",
+          "rule": {"type": "can_reach", "region": "Forest"},
+          "context": {"regions": ["Forest", "Village"]},
+          "expected": true
+        },
+        {
+          "name": "can_reach_region_false",
+          "rule": {"type": "can_reach", "region": "Mountain"},
+          "context": {"regions": ["Forest", "Village"]},
+          "expected": false
+        },
+        {
+          "name": "can_reach_empty_regions",
+          "rule": {"type": "can_reach", "region": "Anywhere"},
+          "context": {"regions": []},
+          "expected": false
+        }
+      ]
     }
   }
 }

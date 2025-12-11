@@ -33,7 +33,15 @@ const fixtures = JSON.parse(fixtureContent);
  * the context object (SnapshotInterface), allowing isolated unit tests.
  */
 class MockContext {
-  constructor({ inventory = {}, groups = {}, settings = {}, regions = [], playerId = 1 } = {}) {
+  constructor({
+    inventory = {},
+    groups = {},
+    settings = {},
+    regions = [],
+    playerId = 1,
+    helpers = {},
+    capabilities = {},
+  } = {}) {
     // Mark as a valid snapshot interface for ruleEngine validation
     this._isSnapshotInterface = true;
 
@@ -42,6 +50,8 @@ class MockContext {
     this.settings = settings;
     this.regions = new Set(regions);
     this.playerId = playerId;
+    this.helpers = helpers; // Pre-configured helper results: { helperName: result }
+    this.capabilities = capabilities; // Pre-configured capability results: { capName: result }
   }
 
   /**
@@ -91,6 +101,15 @@ class MockContext {
   }
 
   /**
+   * Alias for canReach - used by ruleEngine for can_reach rule type.
+   * @param {string} regionName - Name of the region
+   * @returns {boolean}
+   */
+  isRegionReachable(regionName) {
+    return this.regions.has(regionName);
+  }
+
+  /**
    * Get the current player ID.
    * @returns {number}
    */
@@ -108,6 +127,73 @@ class MockContext {
   }
 
   /**
+   * Execute a helper function.
+   * Returns pre-configured result from helpers map, or implements common helpers.
+   * @param {string} helperName - Name of the helper
+   * @param {...*} args - Arguments to the helper
+   * @returns {*}
+   */
+  executeHelper(helperName, ...args) {
+    // Check for pre-configured result
+    if (helperName in this.helpers) {
+      const result = this.helpers[helperName];
+      // If result is a function, call it with args
+      return typeof result === 'function' ? result(...args) : result;
+    }
+
+    // Implement common helpers
+    switch (helperName) {
+      case 'has':
+        return this.hasItem(args[0]);
+      case 'count':
+        return this.countItem(args[0]);
+      case 'has_group':
+        return this.hasGroup(args[0], args[1] || 1);
+      case 'count_group':
+        return this.countGroup(args[0]);
+      default:
+        // Unknown helper - return undefined
+        return undefined;
+    }
+  }
+
+  /**
+   * Execute a StateManager method.
+   * Returns pre-configured result or implements common methods.
+   * @param {string} methodName - Name of the method
+   * @param {...*} args - Arguments to the method
+   * @returns {*}
+   */
+  executeStateManagerMethod(methodName, ...args) {
+    switch (methodName) {
+      case 'can_reach':
+        return this.canReach(args[0]);
+      case 'has':
+        return this.hasItem(args[0]);
+      case 'count':
+        return this.countItem(args[0]);
+      case 'has_group':
+        return this.hasGroup(args[0], args[1] || 1);
+      case 'count_group':
+        return this.countGroup(args[0]);
+      case 'has_any':
+        // Check if player has any of the items in the list
+        if (Array.isArray(args[0])) {
+          return args[0].some((item) => this.hasItem(item));
+        }
+        return false;
+      case 'has_all':
+        // Check if player has all items in the list
+        if (Array.isArray(args[0])) {
+          return args[0].every((item) => this.hasItem(item));
+        }
+        return false;
+      default:
+        return undefined;
+    }
+  }
+
+  /**
    * Create a MockContext from a test case context dictionary.
    * @param {Object} contextDict - Test case context
    * @returns {MockContext}
@@ -119,6 +205,8 @@ class MockContext {
       settings: contextDict.settings || {},
       regions: contextDict.regions || [],
       playerId: contextDict.playerId || 1,
+      helpers: contextDict.helpers || {},
+      capabilities: contextDict.capabilities || {},
     });
   }
 }
@@ -128,10 +216,7 @@ class MockContext {
  * These will be skipped until the features are added to ruleEngine.js.
  */
 const SKIP_TESTS = new Set([
-  // Block variable assignment with `name` resolution isn't fully implemented
-  'block:assign_and_return',
-  'block:multiple_assigns',
-  'for_range:sum_range_5',
+  // All block/for_range tests now pass after implementing var support
 ]);
 
 /**

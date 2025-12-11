@@ -2821,7 +2821,9 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       case 'assign': {
         // Assign a value to a local variable
         // Supports simple assignment and compound operators (+=, -=, *=, /=)
-        if (!rule.name) {
+        // Accepts both 'var' (from analyzer) and 'name' (legacy) for variable name
+        const varName = rule.var || rule.name;
+        if (!varName) {
           result = undefined;
           break;
         }
@@ -2837,21 +2839,21 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
         if (rule.op && rule.op !== '=') {
           // Compound assignment
-          const currentVal = localScope[rule.name] || 0;
+          const currentVal = localScope[varName] || 0;
           switch (rule.op) {
-            case '+=': localScope[rule.name] = currentVal + value; break;
-            case '-=': localScope[rule.name] = currentVal - value; break;
-            case '*=': localScope[rule.name] = currentVal * value; break;
-            case '/=': localScope[rule.name] = currentVal / value; break;
+            case '+=': localScope[varName] = currentVal + value; break;
+            case '-=': localScope[varName] = currentVal - value; break;
+            case '*=': localScope[varName] = currentVal * value; break;
+            case '/=': localScope[varName] = currentVal / value; break;
             default:
               log('warn', `[evaluateRule] Unknown assignment operator: ${rule.op}`);
-              localScope[rule.name] = value;
+              localScope[varName] = value;
           }
         } else {
           // Simple assignment
-          localScope[rule.name] = value;
+          localScope[varName] = value;
         }
-        result = localScope[rule.name];
+        result = localScope[varName];
         break;
       }
 
@@ -2865,12 +2867,30 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
       case 'for_range': {
         // Execute a loop body a specified number of times
-        // count can be a number or a rule that evaluates to a number
-        const count = typeof rule.count === 'number'
-          ? rule.count
-          : evaluateRule(rule.count, context, depth + 1, localScope);
+        // Supports two formats:
+        // 1. count-based: { count: N } - iterates 0 to N-1
+        // 2. range-based: { start: S, end: E } - iterates S to E-1 (Python range style)
+        let startVal = 0;
+        let endVal;
 
-        if (typeof count !== 'number' || count < 0 || !Number.isFinite(count)) {
+        if (rule.start !== undefined && rule.end !== undefined) {
+          // Range-based format (from Python analyzer)
+          startVal = typeof rule.start === 'number'
+            ? rule.start
+            : evaluateRule(rule.start, context, depth + 1, localScope);
+          endVal = typeof rule.end === 'number'
+            ? rule.end
+            : evaluateRule(rule.end, context, depth + 1, localScope);
+        } else {
+          // Count-based format (legacy)
+          const count = typeof rule.count === 'number'
+            ? rule.count
+            : evaluateRule(rule.count, context, depth + 1, localScope);
+          endVal = count;
+        }
+
+        if (typeof startVal !== 'number' || typeof endVal !== 'number' ||
+            !Number.isFinite(startVal) || !Number.isFinite(endVal)) {
           result = undefined;
           break;
         }
@@ -2883,13 +2903,14 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         // Limit iterations to prevent infinite loops
-        const maxIterations = Math.min(count, 1000);
-        if (count > 1000) {
-          log('warn', `[evaluateRule] for_range count ${count} limited to 1000`);
+        const iterations = endVal - startVal;
+        const maxIterations = Math.min(iterations, 1000);
+        if (iterations > 1000) {
+          log('warn', `[evaluateRule] for_range iterations ${iterations} limited to 1000`);
         }
 
         let breakLoop = false;
-        for (let i = 0; i < maxIterations && !breakLoop; i++) {
+        for (let i = startVal; i < startVal + maxIterations && !breakLoop; i++) {
           // Set loop variable if specified (and not '_')
           if (rule.var && rule.var !== '_') {
             localScope[rule.var] = i;
