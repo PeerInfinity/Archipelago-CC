@@ -261,7 +261,6 @@ import * as v6Logic from './v6/v6Logic.js';
 import { v6StateModule } from './v6/v6Logic.js';
 import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
 import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
-import * as cv64Logic from './cv64/cv64Logic.js';
 import * as darkSouls3Logic from './dark_souls_3/darkSouls3Logic.js';
 import { darkSouls3StateModule } from './dark_souls_3/darkSouls3Logic.js';
 import * as overcooked2Logic from './overcooked2/overcooked2Logic.js';
@@ -329,12 +328,6 @@ const GAME_REGISTRY = {
     helperFunctions: cvcotmHelperFunctions,
     worldClasses: ['CVCotMWorld'],
     aliases: ['Castlevania - Circle of the Moon', 'CvCotM', 'cvcotm']
-  },
-  'Castlevania 64': {
-    logicModule: genericLogic.genericStateModule,
-    helperFunctions: cv64Logic.helperFunctions,
-    worldClasses: ['CV64World'],
-    aliases: ['Castlevania 64', 'CV64', 'cv64']
   },
   'Dark Souls III': {
     logicModule: darkSouls3Logic.darkSouls3StateModule,
