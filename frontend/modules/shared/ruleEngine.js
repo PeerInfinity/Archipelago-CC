@@ -1590,12 +1590,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'item_check': {
-        const itemName = evaluateRule(rule.item, context, depth + 1);
+        const itemName = evaluateRule(rule.item, context, depth + 1, localScope);
         if (itemName === undefined) {
           result = undefined;
         } else if (rule.count !== undefined) {
           // If there's a count field, use count-based checking
-          const requiredCount = evaluateRule(rule.count, context, depth + 1);
+          const requiredCount = evaluateRule(rule.count, context, depth + 1, localScope);
           if (requiredCount === undefined) {
             result = undefined;
           } else if (typeof context.countItem === 'function') {

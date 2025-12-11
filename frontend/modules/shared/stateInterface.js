@@ -662,6 +662,8 @@ export function createStateSnapshotInterface(
       return true;
     },
     getPlayerSlot: () => snapshot?.player?.slot,
+    getPlayerId: () => contextVariables?.playerId || snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID,
+    playerId: contextVariables?.playerId || snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || DEFAULT_PLAYER_ID,
     getGameMode: () => snapshot?.gameMode,
     getDifficultyRequirements: () => snapshot?.difficultyRequirements,
     getShops: () => snapshot?.shops,

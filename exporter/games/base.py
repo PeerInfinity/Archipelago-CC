@@ -783,21 +783,34 @@ class BaseGameExportHandler:
                 processed_helpers.add(helper_name)
 
                 # Find the helper function in one of the loaded modules
+                # First check module-level functions, then class methods
                 helper_func = None
                 for module in loaded_modules:
+                    # Check module-level function
                     if hasattr(module, helper_name):
                         helper_func = getattr(module, helper_name)
+                        break
+                    # Check methods in classes defined in the module
+                    for name, obj in vars(module).items():
+                        if isinstance(obj, type):  # It's a class
+                            if hasattr(obj, helper_name):
+                                method = getattr(obj, helper_name)
+                                # Get the underlying function from the method
+                                if callable(method):
+                                    helper_func = method
+                                    break
+                    if helper_func is not None:
                         break
 
                 # Check if we have a cached definition (from auto-preservation due to size)
                 cached_def = self.get_cached_helper(helper_name)
                 if cached_def is not None:
-                    # Extract parameter names and defaults from the function (excluding state, player, world)
+                    # Extract parameter names and defaults from the function (excluding state, player, world, self)
                     params = []
                     defaults = {}
                     if helper_func and hasattr(helper_func, '__code__'):
                         all_params = helper_func.__code__.co_varnames[:helper_func.__code__.co_argcount]
-                        params = [p for p in all_params if p not in ('state', 'player', 'world')]
+                        params = [p for p in all_params if p not in ('state', 'player', 'world', 'self')]
 
                         # Extract default values for parameters
                         if hasattr(helper_func, '__defaults__') and helper_func.__defaults__:
@@ -846,12 +859,12 @@ class BaseGameExportHandler:
                     rule = self._clean_helper_rule(rule, world)
 
                     if rule and rule.get('type') != 'error':
-                        # Extract parameter names and defaults from the function (excluding state, player, world)
+                        # Extract parameter names and defaults from the function (excluding state, player, world, self)
                         params = []
                         defaults = {}
                         if hasattr(helper_func, '__code__'):
                             all_params = helper_func.__code__.co_varnames[:helper_func.__code__.co_argcount]
-                            params = [p for p in all_params if p not in ('state', 'player', 'world')]
+                            params = [p for p in all_params if p not in ('state', 'player', 'world', 'self')]
 
                             # Extract default values for parameters
                             if hasattr(helper_func, '__defaults__') and helper_func.__defaults__:
