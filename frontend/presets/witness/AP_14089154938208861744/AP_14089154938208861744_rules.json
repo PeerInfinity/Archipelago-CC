@@ -88,14 +88,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_region",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Symmetry Island Upper"
-                    }
-                  ]
+                  "type": "can_reach",
+                  "region": "Symmetry Island Upper"
                 },
                 {
                   "type": "item_check",
@@ -119,14 +113,8 @@
             "name": "Desert Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_region",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Desert Outside"
-                }
-              ]
+              "type": "can_reach",
+              "region": "Desert Outside"
             },
             "item": {
               "name": "+1 Laser (Unredirected)",
@@ -143,14 +131,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_region",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Outside Quarry"
-                    }
-                  ]
+                  "type": "can_reach",
+                  "region": "Outside Quarry"
                 },
                 {
                   "type": "state_method",
@@ -182,14 +164,8 @@
             "name": "Shadows Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_region",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Shadows Laser Room"
-                }
-              ]
+              "type": "can_reach",
+              "region": "Shadows Laser Room"
             },
             "item": {
               "name": "+1 Laser",
@@ -237,32 +213,26 @@
                       "value": [
                         [
                           "<bound method Region.can_reach of Keep Tower>",
-                          "<bound method Region.can_reach of Keep 3rd Pressure Plate>",
-                          "<bound method Region.can_reach of Keep 4th Pressure Plate>",
-                          "<bound method Region.can_reach of Keep>",
-                          "<bound method Region.can_reach of Keep 2nd Pressure Plate>",
-                          "<function convert_requirement_option.<locals>.<lambda>>"
-                        ],
-                        [
-                          "<bound method Region.can_reach of Keep Tower>",
-                          "<bound method Region.can_reach of Keep 3rd Maze>",
                           "<bound method Region.can_reach of Keep 2nd Maze>",
                           "<bound method Region.can_reach of Keep 4th Maze>",
+                          "<bound method Region.can_reach of Keep 3rd Maze>",
                           "<bound method Region.can_reach of Keep>"
+                        ],
+                        [
+                          "<bound method Region.can_reach of Keep 2nd Pressure Plate>",
+                          "<bound method Region.can_reach of Keep>",
+                          "<bound method Region.can_reach of Keep Tower>",
+                          "<bound method Region.can_reach of Keep 3rd Pressure Plate>",
+                          "<bound method Region.can_reach of Keep 4th Pressure Plate>",
+                          "<function convert_requirement_option.<locals>.<lambda>>"
                         ]
                       ]
                     }
                   }
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_region",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Keep Tower"
-                    }
-                  ]
+                  "type": "can_reach",
+                  "region": "Keep Tower"
                 }
               ]
             },
@@ -281,14 +251,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_region",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Outside Monastery"
-                    }
-                  ]
+                  "type": "can_reach",
+                  "region": "Outside Monastery"
                 },
                 {
                   "type": "item_check",
@@ -312,14 +276,8 @@
             "name": "Town Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_region",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Town Tower Top"
-                }
-              ]
+              "type": "can_reach",
+              "region": "Town Tower Top"
             },
             "item": {
               "name": "+1 Laser",
@@ -336,14 +294,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_region",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Jungle"
-                    }
-                  ]
+                  "type": "can_reach",
+                  "region": "Jungle"
                 },
                 {
                   "type": "item_check",
@@ -367,14 +319,8 @@
             "name": "Bunker Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_region",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Bunker Laser Platform"
-                }
-              ]
+              "type": "can_reach",
+              "region": "Bunker Laser Platform"
             },
             "item": {
               "name": "+1 Laser",
@@ -388,14 +334,8 @@
             "name": "Swamp Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_region",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Swamp Laser Area"
-                }
-              ]
+              "type": "can_reach",
+              "region": "Swamp Laser Area"
             },
             "item": {
               "name": "+1 Laser",
@@ -409,14 +349,8 @@
             "name": "Treehouse Laser Activated",
             "id": null,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_region",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Treehouse Laser Room"
-                }
-              ]
+              "type": "can_reach",
+              "region": "Treehouse Laser Room"
             },
             "item": {
               "name": "+1 Laser",
@@ -10779,8 +10713,8 @@
           "file_name": "setup_en.md",
           "link": "setup/en",
           "authors": [
-            "Jarno",
-            "NewSoupVi"
+            "NewSoupVi",
+            "Jarno"
           ]
         },
         {
@@ -10968,14 +10902,14 @@
             49977
           ],
           "159111": [
-            99099,
-            99100,
-            99101,
+            115423,
             99102,
             115296,
+            99100,
+            115443,
+            99101,
             115377,
-            115423,
-            115443
+            99099
           ],
           "159112": [
             40874
@@ -10996,16 +10930,16 @@
             97289
           ],
           "159119": [
-            7769,
-            7770
+            7770,
+            7769
           ],
           "159120": [
-            13942,
-            13944
+            13944,
+            13942
           ],
           "159122": [
-            13941,
-            13945
+            13945,
+            13941
           ],
           "159123": [
             13943
@@ -11082,15 +11016,15 @@
             211634
           ],
           "159200": [
-            10374,
-            10380
+            10380,
+            10374
           ],
           "159202": [
             41346
           ],
           "159205": [
-            97468,
-            159755
+            159755,
+            97468
           ],
           "159208": [
             14335
@@ -11173,12 +11107,12 @@
             40581
           ],
           "159310": [
-            40376,
-            41044,
-            97429,
-            97446,
+            97503,
             97480,
-            97503
+            97446,
+            40376,
+            97429,
+            41044
           ],
           "159400": [
             186175
@@ -11244,8 +11178,8 @@
             13962
           ],
           "159651": [
-            160099,
-            161435
+            161435,
+            160099
           ],
           "159653": [
             97360
@@ -11263,8 +11197,8 @@
             104037
           ],
           "159663": [
-            41695,
-            104549
+            104549,
+            41695
           ],
           "159666": [
             99675,
@@ -11476,27 +11410,27 @@
           ],
           "159903": [
             15266,
-            19619,
-            41328
+            41328,
+            19619
           ],
           "159904": [
-            6697,
-            55277
+            55277,
+            6697
           ],
           "159906": [
             98110,
             98921
           ],
           "159909": [
-            13063,
-            13075
+            13075,
+            13063
           ],
           "159912": [
-            4887,
             40942,
-            41547,
             49859,
-            49942
+            41547,
+            49942,
+            4887
           ],
           "159915": [
             40303,
@@ -11504,45 +11438,45 @@
           ],
           "159918": [
             8208,
-            13962,
+            161279,
             97512,
-            161279
+            13962
           ],
           "159921": [
             97360,
-            160099,
+            231007,
             161435,
-            231007
+            160099
           ],
           "159924": [
             103602,
             104037
           ],
           "159927": [
+            104549,
             41695,
             99675,
-            104549,
             105182,
             105252
           ],
           "159930": [
-            6350,
             6484,
-            6554,
-            6581,
+            6350,
             6616,
+            6581,
             6630,
+            6554,
             6670
           ],
           "159933": [
-            7146,
             7148,
+            7146,
             7381,
             7488
           ],
           "159936": [
-            20367,
-            40509
+            40509,
+            20367
           ],
           "159939": [
             49448,
@@ -11554,12 +11488,12 @@
             53034
           ],
           "159945": [
-            13557,
-            15280,
             41161,
-            166267,
+            13557,
             166497,
-            166562
+            15280,
+            166562,
+            166267
           ],
           "159948": [
             161688,
@@ -11569,19 +11503,19 @@
           ],
           "159951": [
             41325,
-            98184,
+            249055,
             99419,
-            249055
+            98184
           ],
           "159954": [
-            83803,
-            231227
+            231227,
+            83803
           ],
           "159957": [
-            41101,
-            49827,
             49828,
-            97401
+            97401,
+            49827,
+            41101
           ],
           "159960": [
             3100,
@@ -11589,35 +11523,35 @@
             99591
           ],
           "159961": [
-            186496,
-            232166
+            232166,
+            186496
           ],
           "159963": [
             19327,
-            41430,
             99314,
+            198101,
             99458,
-            198101
+            41430
           ],
           "159966": [
-            41345,
             49929,
-            49936
+            49936,
+            41345
           ],
           "159969": [
             49955,
             49965
           ],
           "159975": [
-            40455,
             40532,
+            40955,
             40669,
-            40955
+            40455
           ],
           "159978": [
-            40841,
             49473,
-            98099
+            98099,
+            40841
           ],
           "159981": [
             6565,
@@ -11625,34 +11559,34 @@
             186237
           ],
           "159984": [
-            186175,
-            186457
+            186457,
+            186175
           ],
           "159987": [
-            13450,
-            40583,
+            161593,
             160355,
-            161593
+            40583,
+            13450
           ],
           "160000": [
-            40838,
-            40864,
             40874,
-            40981,
-            99099,
-            99100,
-            99101,
+            115423,
             99102,
             115296,
+            99100,
+            115443,
+            99101,
             115377,
-            115423,
-            115443
+            99099,
+            40981,
+            40864,
+            40838
           ],
           "160005": [
-            13941,
-            13942,
             13944,
-            13945
+            13942,
+            13945,
+            13941
           ],
           "160010": [
             14418,
@@ -11660,73 +11594,73 @@
             161274
           ],
           "160015": [
-            40856,
             166250,
-            210136
+            210136,
+            40856
           ],
           "160020": [
-            2069,
-            97538
+            97538,
+            2069
           ],
           "160025": [
-            41081,
             216005,
-            216006
+            216006,
+            41081
           ],
           "160030": [
             1545,
-            97290,
-            97799,
-            97835,
+            99464,
             98805,
-            99464
+            97835,
+            97290,
+            97799
           ],
           "160035": [
-            40505,
-            40582,
             40664,
+            40582,
+            40505,
             40683,
             210347,
             210348,
             210589
           ],
           "160100": [
-            176,
-            115529
+            115529,
+            176
           ],
           "160101": [
-            19620,
-            41329
+            41329,
+            19620
           ],
           "160105": [
-            40838,
-            40864,
             40874,
-            40981,
-            41545,
-            49977,
-            99099,
-            99100,
-            99101,
+            115423,
             99102,
             115296,
+            99100,
+            115443,
+            99101,
             115377,
-            115423,
-            115443
+            99099,
+            49977,
+            41545,
+            40981,
+            40864,
+            40838
           ],
           "160110": [
-            40535,
             97289,
+            40535,
             97476
           ],
           "160115": [
-            7769,
             7770,
-            13941,
-            13942,
-            13943,
+            7769,
             13944,
-            13945
+            13942,
+            13945,
+            13941,
+            13943
           ],
           "160120": [
             14418,
@@ -11740,13 +11674,13 @@
             6671
           ],
           "160125": [
-            2832,
+            40347,
             3218,
-            40347
+            2832
           ],
           "160127": [
-            97450,
-            97451
+            97451,
+            97450
           ],
           "160130": [
             166296,
@@ -11758,93 +11692,86 @@
             166521
           ],
           "160137": [
-            40856,
-            41160
+            41160,
+            40856
           ],
           "160140": [
-            2069,
-            41320,
             97538,
+            2069,
             98143,
             98185,
+            41320,
             211634
           ],
           "160145": [
-            10374,
-            10380,
-            14335,
             41346,
+            10380,
+            10374,
+            159755,
             97468,
-            159755
+            14335
           ],
           "160150": [
+            216005,
+            216006,
             41081,
             41113,
-            97326,
-            216005,
-            216006
+            97326
           ],
           "160155": [
-            1390,
             1545,
-            97285,
-            97290,
-            97293,
-            97799,
-            97835,
+            99464,
             98805,
-            99464
+            97835,
+            97290,
+            97799,
+            97293,
+            1390,
+            97285
           ],
           "160160": [
-            40505,
-            40582,
             40664,
+            40582,
+            40505,
             40683
           ],
           "160165": [
+            210589,
             4088,
-            8663,
             41326,
-            97522,
             210347,
             210348,
-            210589
+            8663,
+            97522
           ],
           "160170": [
-            14772,
-            40581
+            40581,
+            14772
           ],
           "160200": [
-            247,
-            857,
-            1340,
-            1905,
             13099,
             13159,
-            14258,
-            14262,
-            14267,
-            41292,
-            41293,
-            139492,
-            139493,
-            139526,
             166794,
-            210105,
-            210108,
+            14262,
+            14258,
+            247,
             210205,
+            1340,
+            1905,
             210376,
             210377,
-            210936
+            210936,
+            14267,
+            139492,
+            139493,
+            210105,
+            210108,
+            139526,
+            41292,
+            41293,
+            857
           ],
           "160201": [
-            611,
-            1765,
-            1766,
-            1767,
-            13479,
-            13485,
-            13487,
             15036,
             15038,
             15040,
@@ -11852,120 +11779,127 @@
             15045,
             15330,
             15331,
+            41993,
+            1765,
+            1766,
+            1767,
+            13479,
+            13485,
+            13487,
             15787,
             15788,
             15789,
             15873,
-            41993,
             166388,
-            166389
+            166389,
+            611
           ],
           "160202": [
-            151,
             1341,
             1342,
             1897,
+            210721,
+            139431,
+            139453,
+            15138,
+            15139,
+            15140,
+            15141,
+            14969,
+            166589,
+            166590,
+            211087,
+            166697,
+            166698,
             6326,
             13246,
             13247,
             13277,
             13285,
-            14969,
-            15138,
-            15139,
-            15140,
-            15141,
-            139431,
-            139453,
-            166589,
-            166590,
             166633,
-            166697,
-            166698,
             210063,
-            210721,
-            211087
+            151
           ],
           "160203": [
-            211,
             419,
-            871,
-            4189,
-            5810,
-            13771,
-            13775,
-            13790,
+            210350,
+            211,
             13813,
-            13825,
-            13827,
-            14030,
-            14129,
-            14995,
-            15006,
-            15014,
-            15367,
-            15629,
             40285,
             40286,
             40291,
-            41732,
-            210181,
-            210350,
-            210527,
+            210702,
+            13790,
+            13825,
+            13827,
+            15629,
             210586,
             210632,
-            210702,
-            211324
+            210181,
+            15006,
+            5810,
+            210527,
+            14129,
+            14030,
+            15367,
+            14995,
+            15014,
+            211324,
+            4189,
+            41732,
+            13771,
+            13775,
+            871
           ],
           "160204": [
+            166523,
             1526,
+            2137,
+            97465,
+            166474,
+            210102,
             1556,
             1693,
-            2137,
-            15991,
-            15996,
-            97465,
-            139379,
+            166476,
             166351,
             166353,
-            166474,
-            166476,
-            166523,
-            210102,
-            210578
+            210578,
+            15991,
+            15996,
+            139379
           ],
           "160205": [
+            13767,
             6216,
+            15622,
+            210224,
+            210432,
+            166447,
+            166455,
+            210083,
+            210223,
+            211031,
+            211065,
+            15385,
+            166704,
+            13769,
             13109,
             13330,
-            13767,
-            13769,
             14502,
             14506,
+            15935,
+            15936,
+            166798,
+            166801,
             15310,
             15311,
             15313,
-            15385,
-            15622,
-            15935,
-            15936,
-            41324,
-            166447,
-            166455,
-            166704,
-            166798,
-            166801,
-            210083,
-            210223,
-            210224,
-            210432,
-            211031,
-            211065,
             211382,
             211488,
             211497,
             211498,
-            211718
+            211718,
+            41324
           ],
           "159500": [
             1289
@@ -12545,249 +12479,249 @@
         "hunt_entities": [],
         "log_ids_to_hints": {
           "4807": [
+            "",
             -1,
-            -1,
-            ""
+            -1
           ],
           "207358": [
-            1,
+            "Mountain Floor 1 Back Row 3 contains Speed Boost.",
             158423,
-            "Mountain Floor 1 Back Row 3 contains Speed Boost."
+            1
           ],
           "211767": [
-            1,
             "In the Bunker area, you will find 1 progression item.",
-            "hinted_area:Bunker"
+            "hinted_area:Bunker",
+            1
           ],
           "1889": [
-            1,
+            "Progressive Dots can be found at Town RGB House Entry Panel.",
             158225,
-            "Progressive Dots can be found at Town RGB House Entry Panel."
+            1
           ],
           "246028": [
+            "",
             -1,
-            -1,
-            ""
+            -1
           ],
           "246018": [
-            0,
             "In the Mountain (Outside) area, you will find no progression items.",
-            "hinted_area:Mountain (Outside)"
+            "hinted_area:Mountain (Outside)",
+            0
           ],
           "211711": [
+            "",
             -1,
-            -1,
-            ""
+            -1
           ],
           "246013": [
+            "",
             -1,
-            -1,
-            ""
+            -1
           ],
           "207368": [
-            1,
+            "Town Cargo Box Entry Panel contains Speed Boost.",
             158219,
-            "Town Cargo Box Entry Panel contains Speed Boost."
+            1
           ],
           "211159": [
-            1,
+            "Negative Shapers can be found at Outside Tutorial Outpost Entry Panel.",
             158011,
-            "Negative Shapers can be found at Outside Tutorial Outpost Entry Panel."
+            1
           ],
           "211146": [
-            1,
+            "Mountain Floor 1 Back Row 3 contains Speed Boost.",
             158423,
-            "Mountain Floor 1 Back Row 3 contains Speed Boost."
+            1
           ],
           "246003": [
-            0,
             "In the Symmetry Island area, you will find no progression items.",
-            "hinted_area:Symmetry Island"
+            "hinted_area:Symmetry Island",
+            0
           ],
           "207370": [
-            1,
+            "Triangles can be found at Desert Flood Room 6.",
             158110,
-            "Triangles can be found at Desert Flood Room 6."
+            1
           ],
           "246022": [
-            1,
+            "Boat can be found at Town Wooden Rooftop.",
             158240,
-            "Boat can be found at Town Wooden Rooftop."
+            1
           ],
           "246027": [
-            1,
+            "Town RGB House Upstairs Right contains Puzzle Skip.",
             158246,
-            "Town RGB House Upstairs Right contains Puzzle Skip."
+            1
           ],
           "246007": [
-            1,
+            "Negative Shapers can be found at Outside Tutorial Outpost Entry Panel.",
             158011,
-            "Negative Shapers can be found at Outside Tutorial Outpost Entry Panel."
+            1
           ],
           "246019": [
-            0,
             "In the Mountain (Outside) area, you will find no progression items.",
-            "hinted_area:Mountain (Outside)"
+            "hinted_area:Mountain (Outside)",
+            0
           ],
           "246004": [
-            0,
             "In the Monastery area, you will find no progression items.",
-            "hinted_area:Monastery"
+            "hinted_area:Monastery",
+            0
           ],
           "246015": [
-            1,
+            "Progressive Dots can be found at Town RGB House Entry Panel.",
             158225,
-            "Progressive Dots can be found at Town RGB House Entry Panel."
+            1
           ],
           "211133": [
+            "",
             -1,
-            -1,
-            ""
+            -1
           ],
           "246030": [
-            0,
             "In the Monastery area, you will find no progression items.",
-            "hinted_area:Monastery"
+            "hinted_area:Monastery",
+            0
           ],
           "246026": [
-            1,
             "In the Bunker area, you will find 1 progression item.",
-            "hinted_area:Bunker"
+            "hinted_area:Bunker",
+            1
           ],
           "4601": [
+            "",
             -1,
-            -1,
-            ""
+            -1
           ],
           "1871": [
+            "",
             -1,
-            -1,
-            ""
+            -1
           ],
           "5559": [
-            1,
+            "Progressive Dots can be found at Town RGB House Entry Panel.",
             158225,
-            "Progressive Dots can be found at Town RGB House Entry Panel."
+            1
           ],
           "211137": [
+            "",
             -1,
-            -1,
-            ""
+            -1
           ],
           "5568": [
+            "",
             -1,
-            -1,
-            ""
+            -1
           ],
           "246021": [
-            0,
             "In the Symmetry Island area, you will find no progression items.",
-            "hinted_area:Symmetry Island"
+            "hinted_area:Symmetry Island",
+            0
           ],
           "1891": [
-            1,
+            "Mountain Floor 1 Back Row 3 contains Speed Boost.",
             158423,
-            "Mountain Floor 1 Back Row 3 contains Speed Boost."
+            1
           ],
           "207360": [
+            "",
             -1,
-            -1,
-            ""
+            -1
           ],
           "5569": [
-            1,
+            "Negative Shapers can be found at Outside Tutorial Outpost Entry Panel.",
             158011,
-            "Negative Shapers can be found at Outside Tutorial Outpost Entry Panel."
+            1
           ],
           "246029": [
-            1,
+            "Town Cargo Box Entry Panel contains Speed Boost.",
             158219,
-            "Town Cargo Box Entry Panel contains Speed Boost."
+            1
           ],
           "211766": [
-            1,
+            "Triangles can be found at Desert Flood Room 6.",
             158110,
-            "Triangles can be found at Desert Flood Room 6."
+            1
           ],
           "246025": [
+            "",
             -1,
-            -1,
-            ""
+            -1
           ],
           "207367": [
-            1,
+            "Quarry Stoneworks Control Room Left contains Speed Boost.",
             158143,
-            "Quarry Stoneworks Control Room Left contains Speed Boost."
+            1
           ],
           "246023": [
-            0,
             "In the Mountain (Outside) area, you will find no progression items.",
-            "hinted_area:Mountain (Outside)"
+            "hinted_area:Mountain (Outside)",
+            0
           ],
           "211145": [
-            1,
+            "Quarry Stoneworks Control Room Left contains Speed Boost.",
             158143,
-            "Quarry Stoneworks Control Room Left contains Speed Boost."
+            1
           ],
           "211368": [
-            1,
+            "Town RGB House Upstairs Right contains Puzzle Skip.",
             158246,
-            "Town RGB House Upstairs Right contains Puzzle Skip."
+            1
           ],
           "246017": [
-            1,
+            "Triangles can be found at Desert Flood Room 6.",
             158110,
-            "Triangles can be found at Desert Flood Room 6."
+            1
           ],
           "246069": [
-            1,
+            "Quarry Stoneworks Control Room Left contains Speed Boost.",
             158143,
-            "Quarry Stoneworks Control Room Left contains Speed Boost."
+            1
           ],
           "246020": [
-            1,
+            "Boat can be found at Town Wooden Rooftop.",
             158240,
-            "Boat can be found at Town Wooden Rooftop."
+            1
           ],
           "1290": [
-            1,
+            "Town RGB House Upstairs Right contains Puzzle Skip.",
             158246,
-            "Town RGB House Upstairs Right contains Puzzle Skip."
+            1
           ],
           "246016": [
+            "",
             -1,
-            -1,
-            ""
+            -1
           ],
           "246058": [
+            "",
             -1,
-            -1,
-            ""
+            -1
           ],
           "207359": [
-            0,
             "In the Symmetry Island area, you will find no progression items.",
-            "hinted_area:Symmetry Island"
+            "hinted_area:Symmetry Island",
+            0
           ],
           "211369": [
-            0,
             "In the Monastery area, you will find no progression items.",
-            "hinted_area:Monastery"
+            "hinted_area:Monastery",
+            0
           ],
           "246014": [
-            1,
+            "Boat can be found at Town Wooden Rooftop.",
             158240,
-            "Boat can be found at Town Wooden Rooftop."
+            1
           ],
           "2575": [
-            1,
+            "Town Cargo Box Entry Panel contains Speed Boost.",
             158219,
-            "Town Cargo Box Entry Panel contains Speed Boost."
+            1
           ],
           "207374": [
-            1,
             "In the Bunker area, you will find 1 progression item.",
-            "hinted_area:Bunker"
+            "hinted_area:Bunker",
+            1
           ]
         },
         "laser_ids_to_hints": {},
@@ -12797,8 +12731,8 @@
             158002
           ],
           "158210": [
-            158001,
-            158010
+            158010,
+            158001
           ],
           "158260": [
             158060,
