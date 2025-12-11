@@ -2819,7 +2819,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           log('warn', `[evaluateRule] for_range count ${count} limited to 1000`);
         }
 
-        for (let i = 0; i < maxIterations; i++) {
+        let breakLoop = false;
+        for (let i = 0; i < maxIterations && !breakLoop; i++) {
           // Set loop variable if specified (and not '_')
           if (rule.var && rule.var !== '_') {
             localScope[rule.var] = i;
@@ -2833,19 +2834,132 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
               // Check for early return
               if (stmtResult && typeof stmtResult === 'object' && stmtResult.__isReturn) {
                 result = stmtResult;
+                breakLoop = true;
                 break;
               }
+              // Check for break
+              if (stmtResult && typeof stmtResult === 'object' && stmtResult.__isBreak) {
+                breakLoop = true;
+                break;
+              }
+              // Check for continue
+              if (stmtResult && typeof stmtResult === 'object' && stmtResult.__isContinue) {
+                break; // break inner loop, continue outer loop
+              }
             }
-          }
-
-          // If we got an early return, exit the loop
-          if (result && typeof result === 'object' && result.__isReturn) {
-            break;
           }
         }
 
         // for loops don't return a value unless there was an early return
         if (!(result && typeof result === 'object' && result.__isReturn)) {
+          result = undefined;
+        }
+        break;
+      }
+
+      case 'for_iter': {
+        // Execute a loop body for each item in an iterable
+        const iterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
+
+        if (!Array.isArray(iterable)) {
+          log('warn', `[evaluateRule] for_iter: iterable is not an array: ${typeof iterable}`);
+          result = undefined;
+          break;
+        }
+
+        // Ensure we have a scope
+        if (localScope === null) {
+          log('warn', '[evaluateRule] for_iter used without local scope');
+          result = undefined;
+          break;
+        }
+
+        // Limit iterations to prevent infinite loops
+        const maxIterations = Math.min(iterable.length, 1000);
+        if (iterable.length > 1000) {
+          log('warn', `[evaluateRule] for_iter iterable length ${iterable.length} limited to 1000`);
+        }
+
+        let breakIterLoop = false;
+        for (let i = 0; i < maxIterations && !breakIterLoop; i++) {
+          const item = iterable[i];
+
+          // Set loop variable if specified (and not '_')
+          if (rule.var && rule.var !== '_') {
+            localScope[rule.var] = item;
+          }
+
+          // Execute body statements
+          if (Array.isArray(rule.body)) {
+            for (const stmt of rule.body) {
+              const stmtResult = evaluateRule(stmt, context, depth + 1, localScope);
+
+              // Check for early return
+              if (stmtResult && typeof stmtResult === 'object' && stmtResult.__isReturn) {
+                result = stmtResult;
+                breakIterLoop = true;
+                break;
+              }
+              // Check for break
+              if (stmtResult && typeof stmtResult === 'object' && stmtResult.__isBreak) {
+                breakIterLoop = true;
+                break;
+              }
+              // Check for continue
+              if (stmtResult && typeof stmtResult === 'object' && stmtResult.__isContinue) {
+                break; // break inner loop, continue outer loop
+              }
+            }
+          }
+        }
+
+        // for loops don't return a value unless there was an early return
+        if (!(result && typeof result === 'object' && result.__isReturn)) {
+          result = undefined;
+        }
+        break;
+      }
+
+      case 'break': {
+        // Signal to break out of the enclosing loop
+        result = { __isBreak: true };
+        break;
+      }
+
+      case 'continue': {
+        // Signal to continue to next iteration of the enclosing loop
+        result = { __isContinue: true };
+        break;
+      }
+
+      case 'if_statement': {
+        // Execute body or orelse statements based on test condition
+        const testResult = evaluateRule(rule.test, context, depth + 1, localScope);
+
+        if (testResult === undefined) {
+          result = undefined;
+          break;
+        }
+
+        const statementsToExecute = testResult ? rule.body : rule.orelse;
+
+        if (Array.isArray(statementsToExecute)) {
+          for (const stmt of statementsToExecute) {
+            const stmtResult = evaluateRule(stmt, context, depth + 1, localScope);
+
+            // Propagate control flow signals
+            if (stmtResult && typeof stmtResult === 'object') {
+              if (stmtResult.__isReturn || stmtResult.__isBreak || stmtResult.__isContinue) {
+                result = stmtResult;
+                break;
+              }
+            }
+          }
+        }
+
+        // if_statement doesn't return a value unless there was a control flow signal
+        if (!(result && typeof result === 'object' &&
+              (result.__isReturn || result.__isBreak || result.__isContinue))) {
           result = undefined;
         }
         break;

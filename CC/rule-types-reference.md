@@ -106,6 +106,10 @@ These types support complex helper functions with multi-statement bodies:
 | `assign` | Variable assignment | `name`, `value`, `op` | `count = 0` or `count += 1` |
 | `return` | Early return from block | `value` | `return True` |
 | `for_range` | Loop N times | `count`, `var`, `body: []` | `for i in range(5):` |
+| `for_iter` | Loop over iterable | `iterable`, `var`, `body: []` | `for item in list:` |
+| `if_statement` | Conditional execution (statement) | `test`, `body: []`, `orelse: []` | `if cond: stmt` |
+| `break` | Exit enclosing loop | (none) | `break` |
+| `continue` | Skip to next iteration | (none) | `continue` |
 
 ## Key Implementation Files
 
