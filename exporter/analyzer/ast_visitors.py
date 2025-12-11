@@ -1060,6 +1060,47 @@ class ASTVisitorMixin:
                     # Count is now in position 1 after player is filtered
                     count = filtered_args[1] if len(filtered_args) >= 2 else {'type': 'constant', 'value': 1}
                     result = {'type': 'count_check', 'item': item_value, 'count': count}
+                elif method == '_wargroove_has_item' and len(filtered_args) >= 1:
+                    # Wargroove: _wargroove_has_item(player, item) -> state.has(item, player)
+                    # Inline as item_check
+                    item_arg = filtered_args[0]
+                    if isinstance(item_arg, dict) and item_arg.get('type') == 'constant' and isinstance(item_arg.get('value'), str):
+                        item_value = item_arg.get('value')
+                    elif isinstance(item_arg, str):
+                        item_value = item_arg
+                    else:
+                        item_value = item_arg
+                    result = {'type': 'item_check', 'item': item_value}
+                elif method == '_wargroove_has_item_and_region' and len(filtered_args) >= 2:
+                    # Wargroove: _wargroove_has_item_and_region(player, item, region)
+                    # -> state.can_reach(region, 'Region', player) and state.has(item, player)
+                    # Inline as: and(can_reach(region, 'Region'), item_check(item))
+                    item_arg = filtered_args[0]
+                    region_arg = filtered_args[1]
+                    # Unwrap item
+                    if isinstance(item_arg, dict) and item_arg.get('type') == 'constant' and isinstance(item_arg.get('value'), str):
+                        item_value = item_arg.get('value')
+                    elif isinstance(item_arg, str):
+                        item_value = item_arg
+                    else:
+                        item_value = item_arg
+                    # Unwrap region
+                    if isinstance(region_arg, dict) and region_arg.get('type') == 'constant' and isinstance(region_arg.get('value'), str):
+                        region_value = region_arg.get('value')
+                    elif isinstance(region_arg, str):
+                        region_value = region_arg
+                    else:
+                        region_value = region_arg
+                    result = {
+                        'type': 'and',
+                        'conditions': [
+                            {'type': 'state_method', 'method': 'can_reach', 'args': [
+                                {'type': 'constant', 'value': region_value} if isinstance(region_value, str) else region_value,
+                                {'type': 'constant', 'value': 'Region'}
+                            ]},
+                            {'type': 'item_check', 'item': item_value}
+                        ]
+                    }
                 # Add other state methods like can_reach if needed
                 # elif method == 'can_reach': ...
                 else:

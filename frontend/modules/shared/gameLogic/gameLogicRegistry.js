@@ -258,7 +258,6 @@ import { stardewValleyStateModule } from './stardew_valley/stardewValleyLogic.js
 import * as terrariaLogic from './terraria/terrariaLogic.js';
 import * as timespinnerLogic from './timespinner/timespinnerLogic.js';
 import * as twwLogic from './tww/twwLogic.js';
-import * as wargrooveLogic from './wargroove/wargrooveLogic.js';
 import { helperFunctions as yoshisislandHelperFunctions } from './yoshisisland/yoshisislandLogic.js';
 import * as yugioh06Logic from './yugioh06/yugioh06Logic.js';
 import { helperFunctions as osrsHelperFunctions } from './osrs/osrsLogic.js';
@@ -493,13 +492,6 @@ const GAME_REGISTRY = {
     helperFunctions: twwLogic.default,
     worldClasses: ['TWWWorld'],
     aliases: ['The Wind Waker', 'TWW', 'Wind Waker']
-  },
-  'Wargroove': {
-    logicModule: genericLogic.genericStateModule,
-    helperFunctions: wargrooveLogic.helperFunctions,
-    stateMethods: wargrooveLogic.stateMethods,
-    worldClasses: ['WargrooveWorld'],
-    aliases: ['Wargroove', 'wargroove']
   },
   'The Witness': {
     logicModule: genericLogic.genericStateModule,  // Using generic for now
