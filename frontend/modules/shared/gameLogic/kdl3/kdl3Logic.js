@@ -386,33 +386,13 @@ export function can_fix_angel_wings(snapshot, staticData, copy_abilities) {
 }
 
 // Helper function registry
+// Note: Simple helpers (can_reach_*) are now inlined as item_check rules
+// in rules.json. Only the complex helpers that can't be analyzed are
+// exported here. The simple helper functions are kept as internal
+// dependencies for the complex helpers.
 export const helperFunctions = {
-  // Core inventory functions
-  has,
-  count,
-
-  // Animal friend helpers
-  can_reach_rick,
-  can_reach_kine,
-  can_reach_coo,
-  can_reach_nago,
-  can_reach_chuchu,
-  can_reach_pitch,
-
-  // Copy ability helpers
-  can_reach_burning,
-  can_reach_stone,
-  can_reach_ice,
-  can_reach_needle,
-  can_reach_clean,
-  can_reach_parasol,
-  can_reach_spark,
-  can_reach_cutter,
-
-  // Boss access helper
-  can_reach_boss,
-
-  // Complex enemy/ability helpers
-  can_assemble_rob,
-  can_fix_angel_wings,
+  // Complex helpers with loops that require JavaScript implementation
+  can_reach_boss,      // Has can_reach location and f-string lookup
+  can_assemble_rob,    // Has for/while loops
+  can_fix_angel_wings, // Has for loop
 };
