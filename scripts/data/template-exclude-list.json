@@ -26,6 +26,10 @@
       "reason": "Temporarily excluded.  It takes too long to process"
     },
     {
+      "name": "Pokemon Red and Blue.yaml",
+      "reason": "Temporarily excluded.  It takes too long to process"
+    },
+    {
       "name": "Sudoku.yaml",
       "reason": "Cannot be used for generating worlds"
     },
