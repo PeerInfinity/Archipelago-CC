@@ -32,5 +32,12 @@ export default defineConfig({
 
     // Timeout for tests
     testTimeout: 10000,
+
+    // Benchmark configuration
+    benchmark: {
+      include: ['frontend/**/*.bench.js'],
+      reporters: ['default'],
+      outputJson: './benchmark-results.json',
+    },
   },
 });

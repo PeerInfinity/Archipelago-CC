@@ -23,6 +23,8 @@
     "test:unit:watch": "vitest",
     "test:unit:ui": "vitest --ui",
     "test:unit:coverage": "vitest run --coverage",
+    "bench": "vitest bench",
+    "bench:json": "vitest bench --outputJson=./benchmark-results.json",
     "dev": "python3 scripts/utils/dev-server-nocache.py",
     "dev:cache": "python3 -m http.server 8000",
     "docs": "jsdoc -c jsdoc.json",

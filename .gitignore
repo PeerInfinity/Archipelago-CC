@@ -114,6 +114,7 @@ coverage.xml
 .pytest_cache/
 cover/
 coverage/
+benchmark-results.json
 
 
 # Flask stuff:
