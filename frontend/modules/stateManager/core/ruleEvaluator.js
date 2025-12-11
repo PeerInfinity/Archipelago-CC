@@ -144,7 +144,16 @@ export function executeStateMethod(manager, method, ...args) {
     // 2. Check special case for can_reach since it's commonly used
     if (method === 'can_reach' && args.length >= 1) {
       const targetName = args[0];
-      const targetType = args[1] || 'Region';
+      let targetType = args[1];
+
+      // If no type specified, auto-detect based on whether it's a location or region
+      // This handles cases like Factorio's state.can_reach(loc) where loc is a Location object
+      // that gets exported without a type argument
+      if (!targetType) {
+        const isLocation = manager.locations && manager.locations.has(targetName);
+        targetType = isLocation ? 'Location' : 'Region';
+      }
+
       // Normalize player ID, defaulting to current player if not specified
       const playerId = args[2] !== undefined ? PlayerIdUtils.normalize(args[2]) : manager.playerId;
       return manager.can_reach(targetName, targetType, playerId);

@@ -798,7 +798,16 @@ export function createStateSnapshotInterface(
       // Handle special can_reach method
       if (methodName === 'can_reach' && args.length >= 1) {
         const targetName = args[0];
-        const targetType = args[1] || 'Region';
+        let targetType = args[1];
+
+        // If no type specified, auto-detect based on whether it's a location or region
+        // This handles cases like Factorio's state.can_reach(loc) where loc is a Location object
+        // that gets exported without a type argument
+        if (!targetType) {
+          const isLocation = findLocationDataInStatic(targetName) !== null;
+          targetType = isLocation ? 'Location' : 'Region';
+        }
+
         if (targetType === 'Region')
           return finalSnapshotInterface.isRegionReachable(targetName);
         if (targetType === 'Location')
