@@ -1351,3 +1351,70 @@ After restoring blacklist with `can_buy` and `can_buy_unlimited`:
 - Spoiler Test: ✅ PASS
 - Sphere Reached: 22.1 / 22.1 (100%)
 - Exported helpers: 26 (vs 28 when blacklist was empty)
+
+---
+
+## Implementation: Computed Helpers for can_buy (December 2025)
+
+### Solution: Define Computed Helper Definitions
+
+Rather than trying to export the Python generator expressions directly, we define **computed helpers** in `get_helper_definitions()` that use the existing `shop_items` data structure:
+
+```python
+def get_helper_definitions(self, world) -> Dict[str, Any]:
+    helper_defs = super().get_helper_definitions(world)
+
+    # can_buy: check if any region in shop_items[item]["limited"] is reachable
+    helper_defs['can_buy'] = {
+        'params': ['item'],
+        'body': {
+            'type': 'any_of',
+            'iterator_info': {
+                'target': {'type': 'name', 'name': 'region'},
+                'iterator': {
+                    'type': 'subscript',
+                    'value': {
+                        'type': 'subscript',
+                        'value': {'type': 'setting_value', 'setting': 'shop_items'},
+                        'index': {'type': 'name', 'name': 'item'}
+                    },
+                    'index': {'type': 'constant', 'value': 'limited'}
+                }
+            },
+            'element_rule': {
+                'type': 'can_reach',
+                'region': {'type': 'name', 'name': 'region'}
+            }
+        }
+    }
+    # Similar for can_buy_unlimited with 'unlimited' key
+    return helper_defs
+```
+
+### Bug Fix in ruleEngine.js
+
+The `any_of` handler wasn't passing `localScope` when evaluating the iterator expression:
+
+```javascript
+// Before (broken):
+iterable = evaluateRule(rule.iterator_info.iterator, context, depth + 1);
+
+// After (fixed):
+iterable = evaluateRule(rule.iterator_info.iterator, context, depth + 1, localScope);
+```
+
+Without this fix, helper parameters (like `item` in `can_buy`) couldn't be resolved in the iterator expression.
+
+### Result
+
+- **Blacklist is now empty** - all ALTTP helpers can be exported
+- **Exported helpers increased from 26 to 28** (added can_buy and can_buy_unlimited)
+- **Tests pass with 100% sphere coverage**
+- **Removes ALTTP-specific special-case code from ruleEngine.js**
+
+### Final Configuration
+
+```python
+# exporter/games/alttp.py
+HELPERS_TO_EXPORT_BLACKLIST = set()  # All helpers now exported!
+```
