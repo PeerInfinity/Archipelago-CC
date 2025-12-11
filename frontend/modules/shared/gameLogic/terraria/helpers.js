@@ -1,22 +1,9 @@
 /**
  * Terraria-specific helper functions for rule evaluation.
+ *
+ * Note: check_setting was removed because settings are now exported at top level
+ * via COMPUTED_SETTINGS and resolved directly using 'name' type rules.
  */
-
-/**
- * Check if a game setting is enabled.
- * @param {Object} snapshot - Game state snapshot
- * @param {Object} staticData - Static game data (contains settings)
- * @param {string} settingName - Name of the setting to check
- * @returns {boolean} True if setting is enabled
- */
-export function check_setting(snapshot, staticData, settingName) {
-    const settings = staticData?.settings || {};
-    const settingValue = settings[settingName];
-
-    // Settings are typically boolean or numeric
-    // Treat truthy values as enabled
-    return !!settingValue;
-}
 
 /**
  * Check if player has at least N items from a list.

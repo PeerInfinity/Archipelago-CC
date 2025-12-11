@@ -139,14 +139,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -286,14 +280,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "check_setting",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "calamity"
-                    }
-                  ]
+                  "type": "name",
+                  "name": "calamity"
                 },
                 {
                   "type": "item_check",
@@ -1642,14 +1630,8 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "helper",
-                    "name": "check_setting",
-                    "args": [
-                      {
-                        "type": "constant",
-                        "value": "calamity"
-                      }
-                    ]
+                    "type": "name",
+                    "name": "calamity"
                   }
                 },
                 {
@@ -1793,14 +1775,8 @@
                     {
                       "type": "not",
                       "condition": {
-                        "type": "helper",
-                        "name": "check_setting",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "getfixedboi"
-                          }
-                        ]
+                        "type": "name",
+                        "name": "getfixedboi"
                       }
                     },
                     {
@@ -1944,14 +1920,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -1991,14 +1961,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -2337,14 +2301,8 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -2418,18 +2376,12 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": "Nature's Gift"
                     },
                     {
                       "type": "item_check",
-                      "item": "Ethereal Talisman"
+                      "item": "Tinkerer's Workshop"
                     }
                   ]
                 },
@@ -2437,12 +2389,12 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "item_check",
-                      "item": "Nature's Gift"
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
-                      "item": "Tinkerer's Workshop"
+                      "item": "Ethereal Talisman"
                     }
                   ]
                 }
@@ -2852,14 +2804,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -2948,14 +2894,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "or",
@@ -2981,14 +2921,8 @@
                               ]
                             },
                             {
-                              "type": "helper",
-                              "name": "check_setting",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "getfixedboi"
-                                }
-                              ]
+                              "type": "name",
+                              "name": "getfixedboi"
                             }
                           ]
                         },
@@ -3142,24 +3076,12 @@
                       ]
                     },
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "getfixedboi"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "getfixedboi"
                     }
                   ]
                 },
@@ -3276,14 +3198,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -3345,14 +3261,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -3450,14 +3360,8 @@
                     {
                       "type": "not",
                       "condition": {
-                        "type": "helper",
-                        "name": "check_setting",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "calamity"
-                          }
-                        ]
+                        "type": "name",
+                        "name": "calamity"
                       }
                     },
                     {
@@ -3532,14 +3436,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "or",
@@ -3588,14 +3486,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -3706,14 +3598,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -3778,14 +3664,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -3822,14 +3702,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "check_setting",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "calamity"
-                    }
-                  ]
+                  "type": "name",
+                  "name": "calamity"
                 },
                 {
                   "type": "item_check",
@@ -3883,14 +3757,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -3930,14 +3798,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -3977,14 +3839,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -4062,14 +3918,8 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "check_setting",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "getfixedboi"
-                    }
-                  ]
+                  "type": "name",
+                  "name": "getfixedboi"
                 }
               ]
             },
@@ -4218,14 +4068,8 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "helper",
-                              "name": "check_setting",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "calamity"
-                                }
-                              ]
+                              "type": "name",
+                              "name": "calamity"
                             },
                             {
                               "type": "item_check",
@@ -4239,14 +4083,8 @@
                             {
                               "type": "not",
                               "condition": {
-                                "type": "helper",
-                                "name": "check_setting",
-                                "args": [
-                                  {
-                                    "type": "constant",
-                                    "value": "calamity"
-                                  }
-                                ]
+                                "type": "name",
+                                "name": "calamity"
                               }
                             },
                             {
@@ -4404,14 +4242,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -4459,14 +4291,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "check_setting",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "calamity"
-                    }
-                  ]
+                  "type": "name",
+                  "name": "calamity"
                 },
                 {
                   "type": "item_check",
@@ -4524,14 +4350,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -4599,14 +4419,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -4738,14 +4552,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "or",
@@ -4754,47 +4562,12 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "helper",
-                              "name": "check_setting",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "getfixedboi"
-                                }
-                              ]
+                              "type": "name",
+                              "name": "getfixedboi"
                             },
                             {
                               "type": "or",
                               "conditions": [
-                                {
-                                  "type": "and",
-                                  "conditions": [
-                                    {
-                                      "type": "helper",
-                                      "name": "check_setting",
-                                      "args": [
-                                        {
-                                          "type": "constant",
-                                          "value": "calamity"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "type": "helper",
-                                      "name": "check_setting",
-                                      "args": [
-                                        {
-                                          "type": "constant",
-                                          "value": "getfixedboi"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "type": "item_check",
-                                      "item": "Titan Heart"
-                                    }
-                                  ]
-                                },
                                 {
                                   "type": "and",
                                   "conditions": [
@@ -4805,6 +4578,23 @@
                                     {
                                       "type": "item_check",
                                       "item": "Hardmode"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "and",
+                                  "conditions": [
+                                    {
+                                      "type": "name",
+                                      "name": "calamity"
+                                    },
+                                    {
+                                      "type": "name",
+                                      "name": "getfixedboi"
+                                    },
+                                    {
+                                      "type": "item_check",
+                                      "item": "Titan Heart"
                                     }
                                   ]
                                 }
@@ -4887,18 +4677,12 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "item_check",
+                      "item": "Hallowed Seeds"
                     },
                     {
                       "type": "item_check",
-                      "item": "Statis' Blessing"
+                      "item": "Pixie Dust"
                     }
                   ]
                 },
@@ -4906,12 +4690,12 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "item_check",
-                      "item": "Hallowed Seeds"
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
-                      "item": "Pixie Dust"
+                      "item": "Statis' Blessing"
                     }
                   ]
                 }
@@ -4965,14 +4749,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "or",
@@ -4981,47 +4759,12 @@
                           "type": "and",
                           "conditions": [
                             {
-                              "type": "helper",
-                              "name": "check_setting",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "getfixedboi"
-                                }
-                              ]
+                              "type": "name",
+                              "name": "getfixedboi"
                             },
                             {
                               "type": "or",
                               "conditions": [
-                                {
-                                  "type": "and",
-                                  "conditions": [
-                                    {
-                                      "type": "helper",
-                                      "name": "check_setting",
-                                      "args": [
-                                        {
-                                          "type": "constant",
-                                          "value": "calamity"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "type": "helper",
-                                      "name": "check_setting",
-                                      "args": [
-                                        {
-                                          "type": "constant",
-                                          "value": "getfixedboi"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "type": "item_check",
-                                      "item": "Titan Heart"
-                                    }
-                                  ]
-                                },
                                 {
                                   "type": "and",
                                   "conditions": [
@@ -5032,6 +4775,23 @@
                                     {
                                       "type": "item_check",
                                       "item": "Hardmode"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "and",
+                                  "conditions": [
+                                    {
+                                      "type": "name",
+                                      "name": "calamity"
+                                    },
+                                    {
+                                      "type": "name",
+                                      "name": "getfixedboi"
+                                    },
+                                    {
+                                      "type": "item_check",
+                                      "item": "Titan Heart"
                                     }
                                   ]
                                 }
@@ -5071,24 +4831,12 @@
                                   ]
                                 },
                                 {
-                                  "type": "helper",
-                                  "name": "check_setting",
-                                  "args": [
-                                    {
-                                      "type": "constant",
-                                      "value": "calamity"
-                                    }
-                                  ]
+                                  "type": "name",
+                                  "name": "calamity"
                                 },
                                 {
-                                  "type": "helper",
-                                  "name": "check_setting",
-                                  "args": [
-                                    {
-                                      "type": "constant",
-                                      "value": "getfixedboi"
-                                    }
-                                  ]
+                                  "type": "name",
+                                  "name": "getfixedboi"
                                 }
                               ]
                             },
@@ -5330,14 +5078,25 @@
                                       "type": "and",
                                       "conditions": [
                                         {
-                                          "type": "helper",
-                                          "name": "check_setting",
-                                          "args": [
-                                            {
-                                              "type": "constant",
-                                              "value": "calamity"
-                                            }
-                                          ]
+                                          "type": "item_check",
+                                          "item": "Hardmode"
+                                        },
+                                        {
+                                          "type": "item_check",
+                                          "item": "Lihzahrd Temple"
+                                        },
+                                        {
+                                          "type": "item_check",
+                                          "item": "Post-Plantera"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "and",
+                                      "conditions": [
+                                        {
+                                          "type": "name",
+                                          "name": "calamity"
                                         },
                                         {
                                           "type": "item_check",
@@ -5350,23 +5109,6 @@
                                         {
                                           "type": "item_check",
                                           "item": "Lihzahrd Temple"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "type": "and",
-                                      "conditions": [
-                                        {
-                                          "type": "item_check",
-                                          "item": "Hardmode"
-                                        },
-                                        {
-                                          "type": "item_check",
-                                          "item": "Lihzahrd Temple"
-                                        },
-                                        {
-                                          "type": "item_check",
-                                          "item": "Post-Plantera"
                                         }
                                       ]
                                     }
@@ -5425,14 +5167,8 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "check_setting",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "grindy_achievements"
-                    }
-                  ]
+                  "type": "name",
+                  "name": "grindy_achievements"
                 },
                 {
                   "type": "or",
@@ -5466,24 +5202,12 @@
                           ]
                         },
                         {
-                          "type": "helper",
-                          "name": "check_setting",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "calamity"
-                            }
-                          ]
+                          "type": "name",
+                          "name": "calamity"
                         },
                         {
-                          "type": "helper",
-                          "name": "check_setting",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "getfixedboi"
-                            }
-                          ]
+                          "type": "name",
+                          "name": "getfixedboi"
                         }
                       ]
                     },
@@ -5494,14 +5218,8 @@
                           "type": "or",
                           "conditions": [
                             {
-                              "type": "helper",
-                              "name": "check_setting",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "calamity"
-                                }
-                              ]
+                              "type": "name",
+                              "name": "calamity"
                             },
                             {
                               "type": "item_check",
@@ -5528,28 +5246,12 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "helper",
-                          "name": "check_setting",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "calamity"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "helper",
-                          "name": "check_setting",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "getfixedboi"
-                            }
-                          ]
+                          "type": "item_check",
+                          "item": "Bug Net"
                         },
                         {
                           "type": "item_check",
-                          "item": "Titan Heart"
+                          "item": "Hardmode"
                         }
                       ]
                     },
@@ -5557,12 +5259,16 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "item_check",
-                          "item": "Bug Net"
+                          "type": "name",
+                          "name": "calamity"
+                        },
+                        {
+                          "type": "name",
+                          "name": "getfixedboi"
                         },
                         {
                           "type": "item_check",
-                          "item": "Hardmode"
+                          "item": "Titan Heart"
                         }
                       ]
                     }
@@ -5744,24 +5450,12 @@
                       ]
                     },
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "getfixedboi"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "getfixedboi"
                     }
                   ]
                 },
@@ -5814,24 +5508,12 @@
                       ]
                     },
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "getfixedboi"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "getfixedboi"
                     }
                   ]
                 },
@@ -5929,16 +5611,6 @@
                           "conditions": [
                             {
                               "type": "helper",
-                              "name": "check_setting",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "calamity"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "helper",
                               "name": "has_n_from_list",
                               "args": [
                                 {
@@ -5954,6 +5626,10 @@
                                   "value": 1
                                 }
                               ]
+                            },
+                            {
+                              "type": "name",
+                              "name": "calamity"
                             }
                           ]
                         },
@@ -5963,14 +5639,8 @@
                             {
                               "type": "not",
                               "condition": {
-                                "type": "helper",
-                                "name": "check_setting",
-                                "args": [
-                                  {
-                                    "type": "constant",
-                                    "value": "calamity"
-                                  }
-                                ]
+                                "type": "name",
+                                "name": "calamity"
                               }
                             },
                             {
@@ -6088,14 +5758,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -6170,14 +5834,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -6191,14 +5849,8 @@
                     {
                       "type": "not",
                       "condition": {
-                        "type": "helper",
-                        "name": "check_setting",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "calamity"
-                          }
-                        ]
+                        "type": "name",
+                        "name": "calamity"
                       }
                     },
                     {
@@ -6218,16 +5870,6 @@
                           "conditions": [
                             {
                               "type": "helper",
-                              "name": "check_setting",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "calamity"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "helper",
                               "name": "has_n_from_list",
                               "args": [
                                 {
@@ -6243,6 +5885,10 @@
                                   "value": 2
                                 }
                               ]
+                            },
+                            {
+                              "type": "name",
+                              "name": "calamity"
                             }
                           ]
                         },
@@ -6252,14 +5898,8 @@
                             {
                               "type": "not",
                               "condition": {
-                                "type": "helper",
-                                "name": "check_setting",
-                                "args": [
-                                  {
-                                    "type": "constant",
-                                    "value": "calamity"
-                                  }
-                                ]
+                                "type": "name",
+                                "name": "calamity"
                               }
                             },
                             {
@@ -6482,14 +6122,8 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -6521,14 +6155,8 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -6560,14 +6188,8 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "calamity"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "calamity"
                     },
                     {
                       "type": "item_check",
@@ -6607,14 +6229,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "getfixedboi"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "getfixedboi"
                     },
                     {
                       "type": "item_check",
@@ -6628,14 +6244,8 @@
                     {
                       "type": "not",
                       "condition": {
-                        "type": "helper",
-                        "name": "check_setting",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "getfixedboi"
-                          }
-                        ]
+                        "type": "name",
+                        "name": "getfixedboi"
                       }
                     },
                     {
@@ -6664,14 +6274,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "getfixedboi"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "getfixedboi"
                     },
                     {
                       "type": "item_check",
@@ -6685,14 +6289,8 @@
                     {
                       "type": "not",
                       "condition": {
-                        "type": "helper",
-                        "name": "check_setting",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "getfixedboi"
-                          }
-                        ]
+                        "type": "name",
+                        "name": "getfixedboi"
                       }
                     },
                     {
@@ -6721,14 +6319,8 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "check_setting",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "getfixedboi"
-                        }
-                      ]
+                      "type": "name",
+                      "name": "getfixedboi"
                     },
                     {
                       "type": "item_check",
@@ -6742,14 +6334,8 @@
                     {
                       "type": "not",
                       "condition": {
-                        "type": "helper",
-                        "name": "check_setting",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "getfixedboi"
-                          }
-                        ]
+                        "type": "name",
+                        "name": "getfixedboi"
                       }
                     },
                     {
@@ -10782,7 +10368,10 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
-      }
+      },
+      "calamity": false,
+      "grindy_achievements": false,
+      "getfixedboi": false
     }
   },
   "game_info": {
