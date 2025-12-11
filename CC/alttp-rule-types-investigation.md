@@ -202,3 +202,294 @@ The current implementation fully supports ALTTP with default settings. Future wo
 - Glitch logic modes (overworld glitches, major glitches)
 - Triforce Hunt goal mode
 - Standard mode (vs open/inverted)
+
+---
+
+## Detailed Analysis of Blacklisted Helpers
+
+This section analyzes what would be required to export each blacklisted helper as JSON rules instead of using JavaScript fallback implementations.
+
+### 1. `GanonDefeatRule` - Could Be Exported
+
+**Python Implementation** (`worlds/alttp/Bosses.py:139-156`):
+```python
+def GanonDefeatRule(state, player: int) -> bool:
+    if state.multiworld.worlds[player].options.swordless:
+        return state.has('Hammer', player) and \
+               has_fire_source(state, player) and \
+               state.has('Silver Bow', player) and \
+               can_shoot_arrows(state, player)
+
+    can_hurt = has_beam_sword(state, player)
+    common = can_hurt and has_fire_source(state, player)
+    if state.multiworld.worlds[player].options.glitches_required != 'no_glitches':
+        return common and (state.has('Tempered Sword', player) or ...)
+    else:
+        return common and state.has('Silver Bow', player) and can_shoot_arrows(state, player)
+```
+
+**Rule Types Used**: `setting_value`, `item_check`, `helper`, `and`, `or`, `conditional`
+
+**Assessment**: ✅ **Could be exported** - Uses only patterns that are already supported. The function just checks settings and calls other helpers that are already exported.
+
+**Why Still Blacklisted**: Historical - was blacklisted before settings and helper call support was complete. The JavaScript implementation is functionally equivalent, so there's no urgency to change.
+
+---
+
+### 2. `can_buy` / `can_buy_unlimited` - Could Be Exported with New Rule Type
+
+**Python Implementation** (`worlds/alttp/StateHelpers.py:16-23`):
+```python
+def can_buy_unlimited(state, item, player) -> bool:
+    return any(shop.has_unlimited(item) and shop.region.can_reach(state) for
+               shop in state.multiworld.worlds[player].shops)
+
+def can_buy(state, item, player) -> bool:
+    return any(shop.has(item) and shop.region.can_reach(state) for
+               shop in state.multiworld.worlds[player].shops)
+```
+
+**Data Already Available**: The `shop_items` dictionary is exported in settings with structure:
+```json
+{
+  "Blue Potion": {"unlimited": ["Potion Shop"], "limited": ["Potion Shop"]},
+  "Single Arrow": {"unlimited": [], "limited": ["Light World Witch Shop"]}
+}
+```
+
+**New Rule Type Required**: `shop_check`
+
+**Proposed Implementation**:
+
+Python Analyzer (`ast_visitors.py`):
+```python
+# Recognize can_buy/can_buy_unlimited patterns and emit:
+{'type': 'shop_check', 'item': item_name, 'unlimited': True/False}
+```
+
+Frontend (`ruleEngine.js`):
+```javascript
+case 'shop_check': {
+  const itemName = evaluateRule(rule.item, context, depth + 1);
+  const shopItems = context.getStaticData()?.settings?.[playerId]?.shop_items;
+  const shopData = shopItems?.[itemName];
+
+  if (!shopData) {
+    result = false;
+    break;
+  }
+
+  const regions = rule.unlimited ? shopData.unlimited : shopData.limited;
+  // Check if any of these regions are reachable
+  result = regions.some(regionName => context.canReach(regionName));
+  break;
+}
+```
+
+**Effort Level**: Medium - requires new rule type, but data infrastructure already exists.
+
+---
+
+### 3. `location_item_name` - Requires Runtime Placement Data
+
+**Python Implementation** (`worlds/generic/Rules.py:163-168`):
+```python
+def location_item_name(state, location, player):
+    location = state.multiworld.get_location(location, player)
+    if location.item is None:
+        return None
+    return location.item.name, location.item.player
+```
+
+**Challenge**: This function returns what item was placed at a specific location during randomization. The rules engine needs access to `canonical_placements` data.
+
+**Data Already Available**: The `canonical_placements` data is exported in rules.json:
+```json
+{
+  "canonical_placements": {
+    "Eastern Palace - Big Key Chest": {"item": "Big Key (Eastern Palace)", "player": 1},
+    ...
+  }
+}
+```
+
+**New Rule Type Required**: `placement_lookup`
+
+**Proposed Implementation**:
+
+Python Analyzer:
+```python
+# Recognize location_item_name call pattern:
+{'type': 'placement_lookup', 'location': location_name}
+```
+
+Frontend:
+```javascript
+case 'placement_lookup': {
+  const locationName = evaluateRule(rule.location, context, depth + 1);
+  const placements = context.getStaticData()?.canonical_placements;
+  const placement = placements?.[locationName];
+
+  if (!placement) {
+    result = null;
+    break;
+  }
+  // Return [itemName, player] tuple
+  result = [placement.item, placement.player];
+  break;
+}
+```
+
+**Effort Level**: Medium - requires new rule type and tuple handling in comparisons.
+
+---
+
+### 4. `item_name_in_location_names` - Depends on `location_item_name`
+
+**Python Implementation** (`worlds/generic/Rules.py:147-152`):
+```python
+def item_name_in_location_names(state, item, player, location_name_player_pairs):
+    for location in location_name_player_pairs:
+        if location_item_name(state, location[0], location[1]) == (item, player):
+            return True
+    return False
+```
+
+**New Rule Type Required**: `placement_search`
+
+**Proposed Implementation**:
+
+Python Analyzer:
+```python
+# Recognize item_name_in_location_names pattern:
+{
+  'type': 'placement_search',
+  'item': item_name,
+  'player': player_id,
+  'locations': [[loc_name, loc_player], ...]
+}
+```
+
+Frontend:
+```javascript
+case 'placement_search': {
+  const searchItem = evaluateRule(rule.item, context, depth + 1);
+  const searchPlayer = evaluateRule(rule.player, context, depth + 1);
+  const locations = evaluateRule(rule.locations, context, depth + 1);
+  const placements = context.getStaticData()?.canonical_placements;
+
+  for (const [locName, locPlayer] of locations) {
+    const placement = placements?.[locName];
+    if (placement?.item === searchItem && placement?.player === searchPlayer) {
+      result = true;
+      break;
+    }
+  }
+  result = result || false;
+  break;
+}
+```
+
+**Effort Level**: Medium - depends on `placement_lookup` implementation first.
+
+---
+
+### 5. `tr_big_key_chest_keys_needed` - Depends on `location_item_name`
+
+**Python Implementation** (`worlds/alttp/Rules.py:1194-1202`):
+```python
+def tr_big_key_chest_keys_needed(state):
+    item = location_item_name(state, 'Turtle Rock - Big Key Chest', player)
+    if item in [('Small Key (Turtle Rock)', player)]:
+        return 0
+    if item in [('Big Key (Turtle Rock)', player)]:
+        return 4
+    return 6
+```
+
+**Assessment**: This helper is already simple enough to be exported once `placement_lookup` is implemented. It just:
+1. Calls `location_item_name`
+2. Compares the result
+3. Returns a number
+
+**New Rule Types Required**: Same as `location_item_name` (`placement_lookup`)
+
+**Effort Level**: Low (once `placement_lookup` exists)
+
+---
+
+### 6. `can_defeat_boss` - Requires Boss Mapping Data
+
+**Python Implementation** (`worlds/alttp/Bosses.py:22-23`):
+```python
+class Boss:
+    def can_defeat(self, state) -> bool:
+        return self.defeat_rule(state, self.player)
+```
+
+**Challenge**: Boss objects are created dynamically based on boss shuffle settings. The boss at each location may vary per seed.
+
+**Data Required**: A mapping from (location, level) to boss defeat requirements:
+```json
+{
+  "boss_requirements": {
+    "Ganons Tower:bottom": "MoldormDefeatRule",
+    "Ganons Tower:middle": "ArmosKnightsDefeatRule",
+    ...
+  }
+}
+```
+
+**New Rule Type Required**: `boss_defeat`
+
+**Proposed Implementation**:
+
+Python Exporter (export boss mapping during generation):
+```python
+def get_boss_requirements(self, world):
+    requirements = {}
+    for dungeon_name, level in boss_location_table:
+        boss = world.dungeons[dungeon_name].bosses.get(level)
+        if boss:
+            requirements[f"{dungeon_name}:{level}"] = boss.name
+    return requirements
+```
+
+Each boss defeat rule would need to be exported as a helper (similar to how other helpers are exported).
+
+**Effort Level**: High - requires:
+1. Exporting boss placement data
+2. Exporting individual boss defeat rules as helpers
+3. New `boss_defeat` rule type that looks up the boss and calls its defeat rule
+
+---
+
+## Summary: Implementation Priority
+
+| Helper | Complexity | New Rule Types | Dependencies | Priority |
+|--------|------------|----------------|--------------|----------|
+| `GanonDefeatRule` | Low | None | None | ⭐ Easy win |
+| `can_buy` / `can_buy_unlimited` | Medium | `shop_check` | None | ⭐⭐ Good ROI |
+| `location_item_name` | Medium | `placement_lookup` | None | ⭐⭐ Core dependency |
+| `item_name_in_location_names` | Medium | `placement_search` | `placement_lookup` | Blocked |
+| `tr_big_key_chest_keys_needed` | Low | None | `placement_lookup` | Blocked |
+| `can_defeat_boss` | High | `boss_defeat` + boss helpers | Boss data export | ⭐⭐⭐ Complex |
+
+### Recommended Implementation Order
+
+1. **`GanonDefeatRule`** - Remove from blacklist, test (should "just work")
+2. **`placement_lookup`** - Enables 3 helpers
+3. **`shop_check`** - Enables 2 helpers
+4. **Boss defeat system** - Most complex, lower priority
+
+### Alternative: Keep JavaScript Implementations
+
+The current JavaScript implementations work correctly and the tests pass. The main benefits of exporting these helpers as JSON rules would be:
+- Consistency with other helpers
+- Easier maintenance (single source of truth)
+- Potential performance improvements (less context switching)
+
+However, the JavaScript implementations provide:
+- Better error handling for edge cases
+- More readable code
+- Direct access to static data structures
