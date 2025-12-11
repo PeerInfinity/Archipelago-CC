@@ -164,15 +164,19 @@ function createProgItemsProxy(snapshot) {
         // Return a proxy for the player's accumulator object
         return new Proxy(target[playerId], {
           get(playerTarget, accumKey) {
-            // First try direct access
             const directValue = playerTarget[accumKey];
-            if (directValue !== undefined) {
-              return directValue;
+
+            // For coin accumulators, always check aggregated value from inventory
+            // This handles the case where prog_items has initial 0 values but
+            // inventory has coin items that need to be aggregated
+            if (accumKey === ' coins' || accumKey === ' coins freemium') {
+              const aggregatedValue = aggregateCoinItems(snapshot.inventory, accumKey);
+              return Math.max(directValue || 0, aggregatedValue);
             }
 
-            // Fallback: manually aggregate items for coin-like accumulators
-            if (accumKey === ' coins' || accumKey === ' coins freemium') {
-              return aggregateCoinItems(snapshot.inventory, accumKey);
+            // For other accumulators, use direct value if available
+            if (directValue !== undefined) {
+              return directValue;
             }
 
             // Return 0 as default for missing accumulators
