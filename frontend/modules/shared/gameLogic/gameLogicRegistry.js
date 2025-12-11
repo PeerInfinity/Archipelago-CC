@@ -239,8 +239,6 @@ import * as ootLogic from './ocarina_of_time/ootLogic.js';
 import { ootStateModule } from './ocarina_of_time/ootLogic.js';
 import * as raftLogic from './raft/raftLogic.js';
 import { raftStateModule } from './raft/raftLogic.js';
-import * as sm64exLogic from './sm64ex/sm64exLogic.js';
-import { sm64exStateModule } from './sm64ex/sm64exLogic.js';
 import * as v6Logic from './v6/v6Logic.js';
 import { v6StateModule } from './v6/v6Logic.js';
 import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
@@ -408,12 +406,6 @@ const GAME_REGISTRY = {
     wrapState: sc2Logic.wrapState,
     worldClasses: ['SC2World'],
     aliases: ['Starcraft 2', 'SC2', 'StarCraft 2', 'StarCraft II']
-  },
-  'Super Mario 64': {
-    logicModule: sm64exLogic.sm64exStateModule,
-    helperFunctions: sm64exLogic.helperFunctions,
-    worldClasses: ['SM64World'],
-    aliases: ['Super Mario 64', 'SM64', 'sm64ex']
   },
   'Super Mario Land 2': {
     logicModule: genericLogic.genericStateModule,
