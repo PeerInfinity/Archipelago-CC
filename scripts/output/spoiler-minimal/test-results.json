@@ -22,7 +22,7 @@
       ],
       "last_updated": "2025-12-10T20:00:14.138642"
     },
-    "last_updated": "2025-12-10T20:00:14.138640",
+    "last_updated": "2025-12-11T01:26:23.688544",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2097,39 +2097,27 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "ce6d6b00d52fa2b2ae641f097667515055f197562760d08c07dd6c33a3a94bf0",
-          "new_sphere_log_hash": "b2bb25436e5c5e0a160f5468b20297af25f773b0f595dacf35cab79db4784ce8",
-          "original_rules_hash": "ce6d6b00d52fa2b2ae641f097667515055f197562760d08c07dd6c33a3a94bf0",
-          "original_sphere_log_hash": "b2bb25436e5c5e0a160f5468b20297af25f773b0f595dacf35cab79db4784ce8",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-10T19:57:28.901752"
-        }
-      },
       "game_name_from_filename": "mlss",
       "game_name_from_yaml": "Mario & Luigi Superstar Saga",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.94,
+        "processing_time_seconds": 7.24,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/mlss/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 378001,
-        "size_mb": 0.36
+        "size_bytes": 396713,
+        "size_mb": 0.38
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 9.85,
+        "processing_time_seconds": 11.81,
         "return_code": 0,
         "sphere_reached": 7.3,
         "success": true,
@@ -2137,16 +2125,16 @@
         "warning_count": 0
       },
       "template_filename": "Mario & Luigi Superstar Saga.yaml",
-      "timestamp": "2025-12-10T19:54:31.722998",
+      "timestamp": "2025-12-11T01:26:04.225070",
       "world_info": {
         "exporter_path": "exporter/games/mlss.py",
-        "exporter_size": 562,
-        "game_logic_path": "frontend/modules/shared/gameLogic/mlss/mlssLogic.js",
-        "game_logic_size": 9114,
+        "exporter_size": 636,
+        "game_logic_path": null,
+        "game_logic_size": 0,
         "game_name_from_filename": "mlss",
         "game_name_from_yaml": "Mario & Luigi Superstar Saga",
         "has_custom_exporter": true,
-        "has_custom_game_logic": true,
+        "has_custom_game_logic": false,
         "world_directory": "mlss"
       }
     },
