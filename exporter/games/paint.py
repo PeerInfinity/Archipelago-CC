@@ -1,6 +1,6 @@
 """Paint game-specific export handler."""
 
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Set
 from .generic import GenericGameExportHandler
 import logging
 import re
@@ -21,6 +21,19 @@ class PaintGameExportHandler(GenericGameExportHandler):
     """
 
     GAME_NAME = 'Paint'
+
+    # Paint helpers are too complex for automatic export:
+    # - paint_percent_available: has caching logic with state.paint_percent_stale
+    # - calculate_paint_percent_available: has if-block with multiple assignments
+    #   that the analyzer can't correctly export (conditional only exports first stmt)
+    # Both helpers must remain as JavaScript implementations.
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+
+    # Blacklist both paint helpers - they require JavaScript implementation
+    HELPERS_TO_EXPORT_BLACKLIST: Set[str] = {
+        'paint_percent_available',
+        'calculate_paint_percent_available'
+    }
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Export Paint-specific settings including canvas_size_increment and logic_percent."""
@@ -70,6 +83,7 @@ class PaintGameExportHandler(GenericGameExportHandler):
                 threshold_percent = float(match.group(1))
 
                 # Create the rule structure
+                # paint_percent_available is handled by JavaScript helper
                 return {
                     'type': 'compare',
                     'left': {

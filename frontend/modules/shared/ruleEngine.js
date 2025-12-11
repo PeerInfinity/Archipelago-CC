@@ -534,6 +534,17 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
 
+        if (rule.name === 'sqrt') {
+          // Python's math.sqrt() function - square root
+          const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (typeof value === 'number' && value >= 0) {
+            result = Math.sqrt(value);
+          } else {
+            result = undefined;
+          }
+          break;
+        }
+
         // Regular helper function handling
         const args = rule.args
           ? rule.args.map((arg) => evaluateRule(arg, context, depth + 1))
@@ -2002,6 +2013,14 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           case 'OR':
           case 'or':
             result = left || right;
+            break;
+          case '**':
+            // Python power operator
+            result = Math.pow(left, right);
+            break;
+          case '%':
+            // Python modulo operator
+            result = right !== 0 ? left % right : undefined;
             break;
           default:
             log('warn', `[evaluateRule] Unknown binary_op operator: ${op}`, {
