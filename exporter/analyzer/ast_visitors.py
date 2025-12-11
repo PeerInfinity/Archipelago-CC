@@ -1897,6 +1897,41 @@ class ASTVisitorMixin:
             logging.debug(f"visit_Subscript: Detected world attribute subscript pattern: {attr_name}[{index_val}]")
             return {'type': 'setting_value', 'setting': attr_name, 'index': index_val}
 
+        # OPTIMIZATION: Try direct resolution for attribute subscripts like world.dict[key]
+        # This avoids the dict-to-keys conversion that happens in visit_Attribute
+        # which would break subscript access (e.g., world.chapter_timepiece_costs[ChapterIndex.MAFIA])
+        if isinstance(node.value, ast.Attribute) and isinstance(node.value.value, ast.Name):
+            var_name = node.value.value.id
+            attr_name = node.value.attr
+            if var_name in self.closure_vars:
+                try:
+                    # Get the container directly from closure
+                    obj_value = self.closure_vars[var_name]
+                    container = getattr(obj_value, attr_name, None)
+                    if container is not None and isinstance(container, dict):
+                        # Try to resolve the index
+                        index_result = self.visit(node.slice)
+                        resolved_index = None
+                        if index_result and index_result.get('type') == 'constant':
+                            resolved_index = index_result['value']
+                        elif index_result and index_result.get('type') == 'name':
+                            resolved_index = self.expression_resolver.resolve_variable(index_result['name'])
+                        elif index_result and index_result.get('type') == 'attribute':
+                            resolved_index = self.expression_resolver.resolve_expression(index_result)
+
+                        if resolved_index is not None:
+                            try:
+                                subscript_result = container[resolved_index]
+                                logging.debug(f"visit_Subscript: Direct resolution {var_name}.{attr_name}[{resolved_index}] = {subscript_result}")
+                                if isinstance(subscript_result, (int, float, str, bool, type(None))):
+                                    return {'type': 'constant', 'value': subscript_result}
+                                elif hasattr(subscript_result, 'value') and isinstance(subscript_result.value, (int, float, str, bool)):
+                                    return {'type': 'constant', 'value': subscript_result.value}
+                            except (KeyError, IndexError, TypeError) as e:
+                                logging.debug(f"visit_Subscript: Direct resolution failed: {e}")
+                except Exception as e:
+                    logging.debug(f"visit_Subscript: Error in direct resolution optimization: {e}")
+
         # First visit the value (the object being subscripted)
         value_info = self.visit(node.value) # Get returned result
 
