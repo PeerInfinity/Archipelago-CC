@@ -20,6 +20,21 @@ const robot_masters = {
 };
 
 /**
+ * Weapon ID to weapon name mapping
+ * Used to convert weapon IDs in slot_data to item names for inventory checks
+ */
+const weapons_to_name = {
+  1: "Atomic Fire",
+  2: "Air Shooter",
+  3: "Leaf Shield",
+  4: "Bubble Lead",
+  5: "Quick Boomerang",
+  6: "Crash Bomber",
+  7: "Metal Blade",
+  8: "Time Stopper"
+};
+
+/**
  * Check if player has an item in their inventory
  * @param {Object} snapshot - Canonical state snapshot
  * @param {string} itemName - Name of the item to check
@@ -70,23 +85,30 @@ function has_all(snapshot, items) {
  * @param {Object} snapshot - Canonical state snapshot
  * @param {Object} staticData - Static game data (contains settings)
  * @param {number} required - Number of robot masters required to defeat
- * @param {Object} boss_requirements - Dict mapping boss_id to array of required weapon names
+ * @param {Object} boss_requirements - Dict mapping boss_id to array of required weapon IDs (may be incorrect due to exporter bug)
  * @returns {boolean} True if player can defeat enough robot masters
  */
 export function can_defeat_enough_rbms(snapshot, staticData, required, boss_requirements) {
-  // Get wily_5 data from settings
+  // Get wily_5 data from settings and slot_data
   const settings = staticData?.settings?.[1];
-  const wily_5_requirement = required || settings?.wily_5_requirement || 8;
-  const wily_5_weapons = boss_requirements || settings?.wily_5_weapons || {};
+  const slotData = staticData?.game_info?.[1]?.slot_data;
+  const wily_5_requirement = required || settings?.options?.wily_5_requirement || 8;
+
+  // The boss_requirements argument from the exporter may be incorrect (just keys instead of full dict).
+  // Always use the wily_5_weapons from slot_data which has the correct data.
+  const wily_5_weapons = slotData?.wily_5_weapons || {};
 
   let can_defeat = 0;
 
   // Iterate through all bosses in the requirements
-  for (const [boss_id_str, weapon_names] of Object.entries(wily_5_weapons)) {
+  for (const [boss_id_str, weapon_ids] of Object.entries(wily_5_weapons)) {
     const boss_id = parseInt(boss_id_str);
 
     // Only count robot masters (0-7), not Wily Machine (12)
     if (boss_id in robot_masters) {
+      // Convert weapon IDs to weapon names
+      const weapon_names = weapon_ids.map(id => weapons_to_name[id]).filter(name => name);
+
       // Check if player has all required weapons for this boss
       // If the weapon list is empty, boss can be defeated with buster (always available)
       if (weapon_names.length === 0 || has_all(snapshot, weapon_names)) {
