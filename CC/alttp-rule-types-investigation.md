@@ -1039,6 +1039,7 @@ The recommended Option 2 fix has been implemented. The changes enable proper res
      }
      ```
    - Updated internal recursive call in `isLocationAccessible` method to pass context
+   - Spread contextVariables onto the returned interface object so properties like `currentLocation` are directly accessible (needed by ruleEngine's `get_location` handler)
 
 2. **`frontend/modules/stateManager/stateManager.js`**
    - Updated wrapper method to accept and forward contextVariables:
@@ -1063,12 +1064,32 @@ All 5 ALTTP spoiler test seeds pass with 100% sphere coverage after these change
 - Seed 4: ✅ 133/133 events
 - Seed 5: ✅ 133/133 events
 
-### Remaining Work
+### Verification: Boss Defeat Rules Working
 
-The `can_defeat_boss` JavaScript fallback is still used for dungeon boss defeat checks. To fully utilize the exported boss defeat rules, the following would be needed:
+The exported boss defeat rules are now correctly evaluated via the rule engine. The complete chain works:
 
-1. Export boss placement data (which boss is at each dungeon)
-2. Export individual boss defeat rules as helpers (12 total)
-3. Update the `can_defeat_boss` helper to look up boss placements and call the appropriate defeat rule
+1. `state.multiworld.get_location('Desert Palace - Boss')` - returns location with `parent_region`
+2. `.parent_region` - returns the region object
+3. `.dungeon` - special handler looks up dungeon data by name from `staticData.dungeons`
+4. `.boss` - special handler returns `bosses["None"]` for standard dungeons
+5. `.can_defeat()` - special handler evaluates the boss's `defeat_rule`
 
-However, since the tests pass with the current implementation, this additional work is optional and can be deferred.
+The dungeon boss data with defeat rules is exported:
+```json
+{
+  "Desert Palace": {
+    "bosses": {
+      "None": {
+        "name": "Lanmolas",
+        "defeat_rule": {"type": "or", "conditions": [...]}
+      }
+    }
+  }
+}
+```
+
+### Remaining: `can_defeat_boss` Helper
+
+The `can_defeat_boss` JavaScript helper in `alttpLogic.js` is still available as a fallback but is not actively used by ALTTP's default settings. The exported rules use the `boss.can_defeat()` pattern which directly evaluates the boss's `defeat_rule`.
+
+No additional work is required - all tests pass with 100% sphere coverage.

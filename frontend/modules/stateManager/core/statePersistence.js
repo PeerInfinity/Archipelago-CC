@@ -690,7 +690,9 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
   // NOTE: We do NOT expose helpers as direct properties here to avoid recursion issues.
   // Helpers should be called through executeHelper() which properly manages state.
 
-  return anInterface;
+  // Spread contextVariables onto the interface so properties like currentLocation
+  // are directly accessible (needed by ruleEngine's get_location handler)
+  return { ...anInterface, ...contextVariables };
 }
 
 /**
