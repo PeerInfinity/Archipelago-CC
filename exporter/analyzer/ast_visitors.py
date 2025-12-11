@@ -151,12 +151,39 @@ class ASTVisitorMixin:
         """
         Determine if a function body needs block mode (multi-statement) analysis.
         Returns True if the body contains:
-        - For loops
+        - For loops (including inside If statements)
         - Multiple assignments followed by a return (including returns inside If statements)
-        - AugAssign statements
+        - AugAssign statements (including inside If statements)
         """
-        has_for = any(isinstance(n, ast.For) for n in body_nodes)
-        has_augassign = any(isinstance(n, ast.AugAssign) for n in body_nodes)
+        # Check for for loops recursively - they can be inside If statements' body or orelse
+        def has_for_recursive(nodes):
+            for node in nodes:
+                if isinstance(node, ast.For):
+                    return True
+                if isinstance(node, ast.If):
+                    if has_for_recursive(node.body):
+                        return True
+                    if has_for_recursive(node.orelse):
+                        return True
+            return False
+
+        # Check for augmented assignments recursively
+        def has_augassign_recursive(nodes):
+            for node in nodes:
+                if isinstance(node, ast.AugAssign):
+                    return True
+                if isinstance(node, ast.If):
+                    if has_augassign_recursive(node.body):
+                        return True
+                    if has_augassign_recursive(node.orelse):
+                        return True
+                if isinstance(node, ast.For):
+                    if has_augassign_recursive(node.body):
+                        return True
+            return False
+
+        has_for = has_for_recursive(body_nodes)
+        has_augassign = has_augassign_recursive(body_nodes)
 
         # Count assignments at the top level
         assign_count = sum(1 for n in body_nodes if isinstance(n, (ast.Assign, ast.AnnAssign)))
@@ -1690,15 +1717,26 @@ class ASTVisitorMixin:
                     # Don't convert to string here - let attribute access or other operations handle it
                     pass
 
-            # Also check function defaults for lambda parameters
-            # Skip this when preserve_parameter_names is True - we want to keep params as name references
-            if name not in self.closure_vars and not getattr(self, 'preserve_parameter_names', False):
+            # Also check function defaults and module globals
+            # When preserve_parameter_names is True, skip resolution for actual function parameters
+            # but still resolve module-level constants (like WORLDS, KEYBLADES, LOGIC_MINIMAL)
+            is_function_parameter = False
+            if getattr(self, 'preserve_parameter_names', False) and self.rule_func and hasattr(self.rule_func, '__code__'):
+                param_names = self.rule_func.__code__.co_varnames[:self.rule_func.__code__.co_argcount]
+                is_function_parameter = name in param_names
+
+            if name not in self.closure_vars and not is_function_parameter:
                 resolved_value = self.expression_resolver.resolve_variable(name)
                 if resolved_value is not None:
                     # Handle simple values
                     if isinstance(resolved_value, (int, float, str, bool)):
-                        logging.debug(f"visit_Name: Resolved '{name}' from function defaults to constant value: {resolved_value}")
+                        logging.debug(f"visit_Name: Resolved '{name}' from function defaults/globals to constant value: {resolved_value}")
                         return {'type': 'constant', 'value': resolved_value}
+                    # Handle list/tuple values - resolve to constant for iteration and subscript
+                    elif isinstance(resolved_value, (list, tuple)):
+                        list_value = list(resolved_value) if isinstance(resolved_value, tuple) else resolved_value
+                        logging.debug(f"visit_Name: Resolved '{name}' from globals to constant list: {list_value}")
+                        return {'type': 'constant', 'value': list_value}
                     # Handle enum values by extracting their .value attribute
                     elif hasattr(resolved_value, 'value') and isinstance(resolved_value.value, (int, float, str, bool)):
                         logging.debug(f"visit_Name: Resolved '{name}' from function defaults to enum constant value: {resolved_value.value}")
