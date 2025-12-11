@@ -6,22 +6,22 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-10 19:54:33
+**Generated:** 2025-12-11 04:55:31
 
 ## Summary
 
 - **Total Games:** 76
 - **Passed:** 72 (94.7%)
-- **Failed:** 1 (1.3%)
-- **Skipped (Prerequisites):** 3 (3.9%)
+- **Failed:** 0 (0.0%)
+- **Skipped (Prerequisites):** 4 (5.3%)
 - **Second Pass Tested:** 72
-- **Second Pass Passed:** 69
-- **Second Pass Failed:** 3
+- **Second Pass Passed:** 72
+- **Second Pass Failed:** 0
 
 ### Generic Exporter/Logic Statistics
 
 - **Passing with Generic Exporter:** 29/72 (40.3% of passed)
-- **Passing with Generic Logic:** 44/72 (61.1% of passed)
+- **Passing with Generic Logic:** 50/72 (69.4% of passed)
 - **Passing with Both Generic:** 29/72 (40.3% of passed)
 
 ## Test Results
@@ -29,7 +29,7 @@
 | Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |
 |-----------|------------|-------------|----------|---------|----------|----------|
 | A Hat in Time | ⚫ Skipped | — | 1 | N/A | 6.0KB | 10.3KB |
-| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 35.9KB | 59.8KB |
+| A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 39.4KB | 59.8KB |
 | A Short Hike | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
@@ -45,7 +45,7 @@
 | Choo-Choo Charles | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Civilization VI | ✅ Passed | ✅ Passed | 2 | 2 | 0.3KB | ✅ |
 | DLCQuest | ✅ Passed | ✅ Passed | 2 | 2 | 9.6KB | 9.4KB |
-| DOOM 1993 | ✅ Passed | ❌ Failed | 2 | 2 | ✅ | ✅ |
+| DOOM 1993 | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | DOOM II | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | ✅ Passed | 2 | 2 | 4.7KB | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
@@ -65,7 +65,7 @@
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | 4 | 4 | 0.6KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
-| Mega Man 2 | ✅ Passed | ❌ Failed | 4 | 4 | 0.6KB | 3.2KB |
+| Mega Man 2 | ✅ Passed | ✅ Passed | 4 | 4 | 0.6KB | 3.2KB |
 | MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | 4 | 4 | 3.5KB | ✅ |
 | Meritous | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Metamath | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
@@ -75,34 +75,34 @@
 | Overcooked! 2 | ✅ Passed | ✅ Passed | 5 | 5 | 26.1KB | 5.1KB |
 | Paint | ✅ Passed | ✅ Passed | 5 | 5 | 6.4KB | 4.4KB |
 | Raft | ✅ Passed | ✅ Passed | 5 | 5 | 11.8KB | 5.5KB |
-| Risk of Rain 2 | ✅ Passed | ❌ Failed | 5 | 5 | ✅ | ✅ |
+| Risk of Rain 2 | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | SMZ3 | ⚫ Skipped | — | 5 | N/A | 59.6KB | 51.2KB |
 | Saving Princess | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 19.3KB | 86.3KB |
+| Starcraft 2 | ⚫ Skipped | — | 6 | N/A | 19.7KB | 86.3KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 15.9KB | 10.7KB |
-| Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 5.2KB | 14.7KB |
-| Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 14.6KB | 3.3KB |
-| Super Mario Land 2 | ❌ Failed | — | 6 | 6 | 15.7KB | 15.3KB |
+| Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 2.3KB | 14.7KB |
+| Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 14.6KB | ✅ |
+| Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | 13.8KB | 4.9KB |
 | Super Mario World | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Super Metroid | ✅ Passed | ✅ Passed | 6 | 6 | 71.5KB | 114.6KB |
+| Super Metroid | ✅ Passed | ✅ Passed | 6 | 6 | 71.8KB | 114.6KB |
 | TOEM original | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
-| TUNIC | ✅ Passed | ✅ Passed | 7 | 7 | 6.4KB | ✅ |
-| Terraria | ✅ Passed | ✅ Passed | 7 | 7 | 11.8KB | 4.6KB |
-| The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | 6.9KB | 1.7KB |
-| The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 13.3KB | 3.3KB |
-| The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 3.6KB | 55.3KB |
-| The Witness | ⚫ Skipped | — | 6 | N/A | 23.7KB | 0.9KB |
-| Timespinner | ✅ Passed | ✅ Passed | 6 | 6 | 5.4KB | 10.5KB |
+| TUNIC | ✅ Passed | ✅ Passed | 7 | 7 | 2.4KB | ✅ |
+| Terraria | ✅ Passed | ✅ Passed | 6 | 6 | 12.3KB | 4.3KB |
+| The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | 6.9KB | ✅ |
+| The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 10.0KB | ✅ |
+| The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 4.8KB | 4.6KB |
+| The Witness | ⚫ Skipped | — | 7 | N/A | 23.7KB | ✅ |
+| Timespinner | ✅ Passed | ✅ Passed | 6 | 6 | 4.0KB | ✅ |
 | Undertale | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
-| VVVVVV | ✅ Passed | ✅ Passed | 7 | 7 | 5.2KB | 2.1KB |
+| VVVVVV | ✅ Passed | ✅ Passed | 7 | 7 | 5.4KB | ✅ |
 | Wargroove | ✅ Passed | ✅ Passed | 8 | 8 | 5.7KB | 2.6KB |
 | WebDevJourney | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
-| Yacht Dice | ✅ Passed | ✅ Passed | 8 | 8 | 2.3KB | 285.0KB |
-| Yoshi's Island | ✅ Passed | ✅ Passed | 8 | 8 | 8.1KB | 33.2KB |
+| Yacht Dice | ✅ Passed | ✅ Passed | 7 | 7 | 1.6KB | 285.0KB |
+| Yoshi's Island | ✅ Passed | ✅ Passed | 8 | 8 | 10.8KB | ✅ |
 | shapez | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
 
 ## Templates in Multiworld
@@ -521,17 +521,6 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Noita.yaml |
 | 6 | Sonic Adventure 2 Battle.yaml |
 
-### Starcraft 2 ✅
-
-| Player # | Template |
-|----------|----------|
-| 1 | APQuest.yaml |
-| 2 | ChocolateChipCookies.yaml |
-| 3 | Final Fantasy Mystic Quest.yaml |
-| 4 | Links Awakening DX.yaml |
-| 5 | Old School Runescape.yaml |
-| 6 | Starcraft 2.yaml |
-
 ### Stardew Valley ✅
 
 | Player # | Template |
@@ -565,7 +554,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Raft.yaml |
 | 6 | Super Mario 64.yaml |
 
-### Super Mario Land 2 ❌
+### Super Mario Land 2 ✅
 
 | Player # | Template |
 |----------|----------|
@@ -641,8 +630,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Links Awakening DX.yaml |
 | 5 | Old School Runescape.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | Terraria.yaml |
+| 6 | Terraria.yaml |
 
 ### The Legend of Zelda ✅
 
@@ -750,9 +738,8 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Links Awakening DX.yaml |
 | 5 | Old School Runescape.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | Terraria.yaml |
-| 8 | Yacht Dice.yaml |
+| 6 | Terraria.yaml |
+| 7 | Yacht Dice.yaml |
 
 ### Yoshi's Island ✅
 
@@ -781,23 +768,6 @@ Shows which templates were in the multiworld when each game was tested:
 | 8 | shapez.yaml |
 
 
-## Bisection Results
-
-When a multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
-
-### Super Mario Land 2 (Super Mario Land 2.yaml)
-
-**Failing pairs found:** 5
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| Bumper Stickers.yaml | ❌ | ✅ | ✅ | ❌ |
-| DOOM 1993.yaml | ❌ | ✅ | ✅ | ❌ |
-| Jak and Daxter The Precursor Legacy.yaml | ❌ | ✅ | ✅ | ❌ |
-| Mega Man 2.yaml | ❌ | ✅ | ✅ | ❌ |
-| Risk of Rain 2.yaml | ❌ | ✅ | ✅ | ❌ |
-
-
 ## Second Pass Results
 
 Templates tested in the first pass with fewer than the maximum number of players were retested (second pass) with the full multiworld.
@@ -806,65 +776,65 @@ Templates tested in the first pass with fewer than the maximum number of players
 |-----------|-------------------|---------------------|---------------------|--------------------|
 | A Link to the Past | 1 | 8 | 1 | ✅ Passed |
 | A Short Hike | 1 | 8 | 1 | ✅ Passed |
-| APQuest | 1 | 8 | 1 | ✅ Passed |
+| APQuest | 1 | 7 | 1 | ✅ Passed |
 | Adventure | 1 | 8 | 1 | ✅ Passed |
 | Aquaria | 1 | 8 | 1 | ✅ Passed |
 | Bomb Rush Cyberfunk | 1 | 7 | 1 | ✅ Passed |
-| Bumper Stickers | 1 | 5 | 1 | ✅ Passed |
+| Bumper Stickers | 1 | 6 | 1 | ✅ Passed |
 | Castlevania - Circle of the Moon | 1 | 6 | 1 | ✅ Passed |
 | Castlevania 64 | 1 | 7 | 1 | ✅ Passed |
 | Celeste (Open World) | 1 | 7 | 1 | ✅ Passed |
 | Celeste 64 | 2 | 8 | 2 | ✅ Passed |
 | ChecksFinder | 2 | 8 | 2 | ✅ Passed |
-| ChocolateChipCookies | 2 | 8 | 2 | ✅ Passed |
+| ChocolateChipCookies | 2 | 7 | 2 | ✅ Passed |
 | Choo-Choo Charles | 2 | 8 | 2 | ✅ Passed |
 | Civilization VI | 2 | 8 | 2 | ✅ Passed |
 | DLCQuest | 2 | 7 | 2 | ✅ Passed |
-| DOOM 1993 | 2 | 5 | 2 | ❌ Failed |
+| DOOM 1993 | 2 | 6 | 2 | ✅ Passed |
 | DOOM II | 2 | 6 | 2 | ✅ Passed |
 | Dark Souls III | 2 | 7 | 2 | ✅ Passed |
 | Donkey Kong Country 3 | 2 | 7 | 2 | ✅ Passed |
 | Factorio | 3 | 8 | 3 | ✅ Passed |
 | Faxanadu | 3 | 8 | 3 | ✅ Passed |
-| Final Fantasy Mystic Quest | 3 | 8 | 3 | ✅ Passed |
+| Final Fantasy Mystic Quest | 3 | 7 | 3 | ✅ Passed |
 | Heretic | 3 | 8 | 3 | ✅ Passed |
 | Hylics 2 | 3 | 8 | 3 | ✅ Passed |
 | Inscryption | 3 | 7 | 3 | ✅ Passed |
-| Jak and Daxter: The Precursor Legacy | 3 | 4 | 2 | ✅ Passed |
+| Jak and Daxter: The Precursor Legacy | 3 | 6 | 3 | ✅ Passed |
 | Kingdom Hearts | 3 | 7 | 3 | ✅ Passed |
 | Kingdom Hearts 2 | 3 | 6 | 3 | ✅ Passed |
 | Kirby's Dream Land 3 | 3 | 7 | 3 | ✅ Passed |
 | Landstalker - The Treasures of King Nole | 4 | 8 | 4 | ✅ Passed |
 | Lingo | 4 | 8 | 4 | ✅ Passed |
-| Links Awakening DX | 4 | 8 | 4 | ✅ Passed |
+| Links Awakening DX | 4 | 7 | 4 | ✅ Passed |
 | Lufia II Ancient Cave | 4 | 8 | 4 | ✅ Passed |
 | Mario & Luigi Superstar Saga | 4 | 8 | 4 | ✅ Passed |
 | MathProof2p2e4 | 4 | 7 | 4 | ✅ Passed |
-| Mega Man 2 | 4 | 4 | 3 | ❌ Failed |
+| Mega Man 2 | 4 | 6 | 4 | ✅ Passed |
 | MegaMan Battle Network 3 | 4 | 6 | 4 | ✅ Passed |
 | Meritous | 4 | 7 | 4 | ✅ Passed |
 | Metamath | 4 | 7 | 4 | ✅ Passed |
 | Muse Dash | 5 | 8 | 5 | ✅ Passed |
 | Noita | 5 | 8 | 5 | ✅ Passed |
-| Old School Runescape | 5 | 8 | 5 | ✅ Passed |
+| Old School Runescape | 5 | 7 | 5 | ✅ Passed |
 | Overcooked! 2 | 5 | 8 | 5 | ✅ Passed |
 | Paint | 5 | 8 | 5 | ✅ Passed |
 | Raft | 5 | 7 | 5 | ✅ Passed |
-| Risk of Rain 2 | 5 | 3 | 3 | ❌ Failed |
+| Risk of Rain 2 | 5 | 6 | 5 | ✅ Passed |
 | Saving Princess | 5 | 7 | 5 | ✅ Passed |
 | Secret of Evermore | 5 | 7 | 5 | ✅ Passed |
 | Shivers | 6 | 8 | 6 | ✅ Passed |
 | Sonic Adventure 2 Battle | 6 | 8 | 6 | ✅ Passed |
-| Starcraft 2 | 6 | 8 | 6 | ✅ Passed |
 | Stardew Valley | 6 | 8 | 6 | ✅ Passed |
 | Subnautica | 6 | 8 | 6 | ✅ Passed |
 | Super Mario 64 | 6 | 7 | 6 | ✅ Passed |
+| Super Mario Land 2 | 6 | 6 | 6 | ✅ Passed |
 | Super Mario World | 5 | 6 | 5 | ✅ Passed |
 | Super Metroid | 6 | 7 | 6 | ✅ Passed |
 | TOEM original | 6 | 7 | 6 | ✅ Passed |
 | TOEM rule builder | 7 | 8 | 7 | ✅ Passed |
 | TUNIC | 7 | 8 | 7 | ✅ Passed |
-| Terraria | 7 | 8 | 7 | ✅ Passed |
+| Terraria | 6 | 7 | 6 | ✅ Passed |
 | The Legend of Zelda | 7 | 8 | 7 | ✅ Passed |
 | The Messenger | 7 | 8 | 7 | ✅ Passed |
 | The Wind Waker | 7 | 7 | 7 | ✅ Passed |
@@ -873,7 +843,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | VVVVVV | 7 | 7 | 7 | ✅ Passed |
 | Wargroove | 8 | 8 | 8 | ✅ Passed |
 | WebDevJourney | 8 | 8 | 8 | ✅ Passed |
-| Yacht Dice | 8 | 8 | 8 | ✅ Passed |
+| Yacht Dice | 7 | 7 | 7 | ✅ Passed |
 | Yoshi's Island | 8 | 8 | 8 | ✅ Passed |
 | shapez | 8 | 8 | 8 | ✅ Passed |
 
@@ -916,9 +886,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Links Awakening DX.yaml |
 | 5 | Old School Runescape.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | Terraria.yaml |
-| 8 | Yacht Dice.yaml |
+| 6 | Terraria.yaml |
+| 7 | Yacht Dice.yaml |
 
 #### Adventure ✅
 
@@ -967,6 +936,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Jak and Daxter The Precursor Legacy.yaml |
 | 4 | Mega Man 2.yaml |
 | 5 | Risk of Rain 2.yaml |
+| 6 | Super Mario Land 2.yaml |
 
 #### Castlevania - Circle of the Moon ✅
 
@@ -1038,9 +1008,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Links Awakening DX.yaml |
 | 5 | Old School Runescape.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | Terraria.yaml |
-| 8 | Yacht Dice.yaml |
+| 6 | Terraria.yaml |
+| 7 | Yacht Dice.yaml |
 
 #### Choo-Choo Charles ✅
 
@@ -1080,7 +1049,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario 64.yaml |
 | 7 | The Wind Waker.yaml |
 
-#### DOOM 1993 ❌
+#### DOOM 1993 ✅
 
 | Player # | Template |
 |----------|----------|
@@ -1089,6 +1058,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Jak and Daxter The Precursor Legacy.yaml |
 | 4 | Mega Man 2.yaml |
 | 5 | Risk of Rain 2.yaml |
+| 6 | Super Mario Land 2.yaml |
 
 #### DOOM II ✅
 
@@ -1160,9 +1130,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Links Awakening DX.yaml |
 | 5 | Old School Runescape.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | Terraria.yaml |
-| 8 | Yacht Dice.yaml |
+| 6 | Terraria.yaml |
+| 7 | Yacht Dice.yaml |
 
 #### Heretic ✅
 
@@ -1207,9 +1176,11 @@ Shows which templates were in the multiworld when each game was tested in the se
 | Player # | Template |
 |----------|----------|
 | 1 | Bumper Stickers.yaml |
-| 2 | Jak and Daxter The Precursor Legacy.yaml |
-| 3 | Mega Man 2.yaml |
-| 4 | Risk of Rain 2.yaml |
+| 2 | DOOM 1993.yaml |
+| 3 | Jak and Daxter The Precursor Legacy.yaml |
+| 4 | Mega Man 2.yaml |
+| 5 | Risk of Rain 2.yaml |
+| 6 | Super Mario Land 2.yaml |
 
 #### Kingdom Hearts ✅
 
@@ -1281,9 +1252,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Links Awakening DX.yaml |
 | 5 | Old School Runescape.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | Terraria.yaml |
-| 8 | Yacht Dice.yaml |
+| 6 | Terraria.yaml |
+| 7 | Yacht Dice.yaml |
 
 #### Lufia II Ancient Cave ✅
 
@@ -1323,14 +1293,16 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario 64.yaml |
 | 7 | The Wind Waker.yaml |
 
-#### Mega Man 2 ❌
+#### Mega Man 2 ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | Bumper Stickers.yaml |
-| 2 | Jak and Daxter The Precursor Legacy.yaml |
-| 3 | Mega Man 2.yaml |
-| 4 | Risk of Rain 2.yaml |
+| 2 | DOOM 1993.yaml |
+| 3 | Jak and Daxter The Precursor Legacy.yaml |
+| 4 | Mega Man 2.yaml |
+| 5 | Risk of Rain 2.yaml |
+| 6 | Super Mario Land 2.yaml |
 
 #### MegaMan Battle Network 3 ✅
 
@@ -1402,9 +1374,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Links Awakening DX.yaml |
 | 5 | Old School Runescape.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | Terraria.yaml |
-| 8 | Yacht Dice.yaml |
+| 6 | Terraria.yaml |
+| 7 | Yacht Dice.yaml |
 
 #### Overcooked! 2 ✅
 
@@ -1444,13 +1415,16 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario 64.yaml |
 | 7 | The Wind Waker.yaml |
 
-#### Risk of Rain 2 ❌
+#### Risk of Rain 2 ✅
 
 | Player # | Template |
 |----------|----------|
 | 1 | Bumper Stickers.yaml |
-| 2 | Jak and Daxter The Precursor Legacy.yaml |
-| 3 | Risk of Rain 2.yaml |
+| 2 | DOOM 1993.yaml |
+| 3 | Jak and Daxter The Precursor Legacy.yaml |
+| 4 | Mega Man 2.yaml |
+| 5 | Risk of Rain 2.yaml |
+| 6 | Super Mario Land 2.yaml |
 
 #### Saving Princess ✅
 
@@ -1502,19 +1476,6 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TUNIC.yaml |
 | 8 | WebDevJourney.yaml |
 
-#### Starcraft 2 ✅
-
-| Player # | Template |
-|----------|----------|
-| 1 | APQuest.yaml |
-| 2 | ChocolateChipCookies.yaml |
-| 3 | Final Fantasy Mystic Quest.yaml |
-| 4 | Links Awakening DX.yaml |
-| 5 | Old School Runescape.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | Terraria.yaml |
-| 8 | Yacht Dice.yaml |
-
 #### Stardew Valley ✅
 
 | Player # | Template |
@@ -1552,6 +1513,17 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 5 | Raft.yaml |
 | 6 | Super Mario 64.yaml |
 | 7 | The Wind Waker.yaml |
+
+#### Super Mario Land 2 ✅
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bumper Stickers.yaml |
+| 2 | DOOM 1993.yaml |
+| 3 | Jak and Daxter The Precursor Legacy.yaml |
+| 4 | Mega Man 2.yaml |
+| 5 | Risk of Rain 2.yaml |
+| 6 | Super Mario Land 2.yaml |
 
 #### Super Mario World ✅
 
@@ -1623,9 +1595,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Links Awakening DX.yaml |
 | 5 | Old School Runescape.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | Terraria.yaml |
-| 8 | Yacht Dice.yaml |
+| 6 | Terraria.yaml |
+| 7 | Yacht Dice.yaml |
 
 #### The Legend of Zelda ✅
 
@@ -1735,9 +1706,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Links Awakening DX.yaml |
 | 5 | Old School Runescape.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | Terraria.yaml |
-| 8 | Yacht Dice.yaml |
+| 6 | Terraria.yaml |
+| 7 | Yacht Dice.yaml |
 
 #### Yoshi's Island ✅
 
@@ -1764,40 +1734,6 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Subnautica.yaml |
 | 7 | The Messenger.yaml |
 | 8 | shapez.yaml |
-
-### Second Pass Bisection Results
-
-When a second pass multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
-
-#### DOOM 1993 (DOOM 1993.yaml)
-
-**No failing pairs found** (failure may be due to combination of 3+ templates)
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| Bumper Stickers.yaml | ✅ | ✅ | ✅ | ✅ |
-| Jak and Daxter The Precursor Legacy.yaml | ✅ | ✅ | ✅ | ✅ |
-| Mega Man 2.yaml | ✅ | ✅ | ✅ | ✅ |
-| Risk of Rain 2.yaml | ✅ | ✅ | ✅ | ✅ |
-
-#### Mega Man 2 (Mega Man 2.yaml)
-
-**No failing pairs found** (failure may be due to combination of 3+ templates)
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| Bumper Stickers.yaml | ✅ | ✅ | ✅ | ✅ |
-| Jak and Daxter The Precursor Legacy.yaml | ✅ | ✅ | ✅ | ✅ |
-| Risk of Rain 2.yaml | ✅ | ✅ | ✅ | ✅ |
-
-#### Risk of Rain 2 (Risk of Rain 2.yaml)
-
-**No failing pairs found** (failure may be due to combination of 3+ templates)
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| Bumper Stickers.yaml | ✅ | ✅ | ✅ | ✅ |
-| Jak and Daxter The Precursor Legacy.yaml | ✅ | ✅ | ✅ | ✅ |
 
 
 ## Notes
