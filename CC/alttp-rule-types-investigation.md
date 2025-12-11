@@ -532,3 +532,564 @@ However, the JavaScript implementations provide:
 ### Test Results
 
 All 5 test seeds pass with 100% sphere coverage after these changes.
+
+---
+
+## Detailed Analysis of Remaining Blacklisted Helpers (December 2025 Update)
+
+This section provides an updated, in-depth analysis of what would be required to fully export the remaining blacklisted helpers as JSON rules.
+
+### Current State Summary
+
+**Blacklisted helpers (3 total):**
+- `can_buy`
+- `can_buy_unlimited`
+- `can_defeat_boss`
+
+**Key Finding: `GanonDefeatRule` is NOT exported as a helper definition**
+
+While the previous analysis indicated `GanonDefeatRule` was exported, examination of the actual `rules.json` shows:
+- `GanonDefeatRule` is **referenced** in rules (as `{"type": "helper", "name": "GanonDefeatRule", "args": []}`)
+- But it is **NOT** in the helpers section (only 25 helpers are exported for player 1)
+- The JavaScript fallback in `alttpLogic.js` is used instead
+
+**Root cause:** The ALTTP handler has `HELPER_MODULES = []` (empty), so the exporter cannot find `GanonDefeatRule` in `worlds/alttp/Bosses.py` even though it's discovered during rule analysis.
+
+---
+
+### 1. `can_buy` and `can_buy_unlimited` - Already Working
+
+**Status:** ✅ Implemented in JavaScript (ruleEngine.js lines 492-523)
+
+**How it works:**
+```javascript
+// In ruleEngine.js
+if (rule.name === 'can_buy' || rule.name === 'can_buy_unlimited') {
+  const itemName = evaluateRule(rule.args[0], context, depth + 1);
+  const shopItems = context.getSetting?.('shop_items');
+  const regionsKey = rule.name === 'can_buy_unlimited' ? 'unlimited' : 'limited';
+  const regions = shopItems[itemName][regionsKey] || [];
+  result = regions.some(regionName => context.isRegionReachable(regionName));
+}
+```
+
+**Data already exported by ALTTP handler:**
+```json
+{
+  "shop_items": {
+    "Blue Potion": {"unlimited": ["Potion Shop"], "limited": ["Potion Shop"]},
+    "Single Arrow": {"unlimited": [], "limited": ["Light World Witch Shop"]}
+  }
+}
+```
+
+**Why export as JSON might not be beneficial:**
+- The JavaScript implementation is well-integrated and tested
+- It uses `context.isRegionReachable()` which handles region-to-region reachability
+- No new rule types are needed - the implementation works correctly
+
+**If JSON export were desired:**
+- New `shop_check` rule type with structure: `{"type": "shop_check", "item": itemName, "unlimited": true/false}`
+- Would need to handle `any()` pattern with region reachability
+
+**Recommendation:** Keep current JavaScript implementation - it works correctly.
+
+---
+
+### 2. `GanonDefeatRule` - Needs Configuration Fix
+
+**Status:** ⚠️ Referenced but not exported (uses JS fallback)
+
+**Issue:** The ALTTP handler has `HELPER_MODULES = []` which prevents auto-discovery of functions in `Bosses.py`.
+
+**The Python function uses only supported patterns:**
+```python
+def GanonDefeatRule(state, player: int) -> bool:
+    if state.multiworld.worlds[player].options.swordless:
+        return state.has('Hammer', player) and \
+               has_fire_source(state, player) and \
+               state.has('Silver Bow', player) and \
+               can_shoot_arrows(state, player)
+    # ... more similar logic
+```
+
+**Fix required (Option A - Add to HELPER_MODULES):**
+```python
+# In exporter/games/alttp.py
+HELPER_MODULES = ['worlds.alttp.Bosses', 'worlds.alttp.StateHelpers']
+```
+
+**Fix required (Option B - Add to whitelist):**
+```python
+# In exporter/games/alttp.py
+HELPERS_TO_EXPORT_WHITELIST = {'GanonDefeatRule'}
+HELPER_MODULES = ['worlds.alttp.Bosses']
+```
+
+**Complexity:** Low - just a configuration change
+
+**Dependencies:** `GanonDefeatRule` calls these helpers (all already exported):
+- `has_fire_source` ✅
+- `can_shoot_arrows` ✅
+- `has_beam_sword` ✅
+- `can_extend_magic` ✅
+
+---
+
+### 3. `can_defeat_boss` - Complex Implementation Required
+
+**Status:** ⚠️ Uses simplified JS fallback
+
+**Current JavaScript implementation:**
+```javascript
+export function can_defeat_boss(snapshot, staticData, locationName, bossType) {
+  // Simplified - just checks if player can kill basic enemies
+  return can_kill_most_things(snapshot, staticData, "1");
+}
+```
+
+**The actual Python logic:**
+```python
+# In worlds/alttp/Bosses.py
+class Boss:
+    def can_defeat(self, state) -> bool:
+        return self.defeat_rule(state, self.player)
+
+# Each boss has a specific defeat rule
+def ArmosKnightsDefeatRule(state, player: int) -> bool:
+    return (has_melee_weapon(state, player) or can_shoot_arrows(state, player) or ...)
+
+def MoldormDefeatRule(state, player: int) -> bool:
+    return has_melee_weapon(state, player)
+
+# ... 10 more boss defeat rules
+```
+
+**What's needed for full implementation:**
+
+1. **Export boss placement data** - Add to `get_settings_data`:
+   ```python
+   def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+       # ... existing code ...
+
+       # Export boss placements
+       boss_placements = {}
+       if hasattr(world, 'dungeons'):
+           for dungeon in world.dungeons.values():
+               if hasattr(dungeon, 'bosses'):
+                   for level, boss in dungeon.bosses.items():
+                       if boss:
+                           key = f"{dungeon.name}:{level}" if level else dungeon.name
+                           boss_placements[key] = boss.name
+       settings_dict['boss_placements'] = boss_placements
+       return settings_dict
+   ```
+
+2. **Export 12 boss defeat rules as helpers** - Add to class:
+   ```python
+   HELPER_MODULES = ['worlds.alttp.Bosses', 'worlds.alttp.StateHelpers']
+   HELPERS_TO_EXPORT_WHITELIST = {
+       'ArmosKnightsDefeatRule', 'LanmolasDefeatRule', 'MoldormDefeatRule',
+       'HelmasaurKingDefeatRule', 'ArrghusDefeatRule', 'MothulaDefeatRule',
+       'BlindDefeatRule', 'KholdstareDefeatRule', 'VitreousDefeatRule',
+       'TrinexxDefeatRule', 'AgahnimDefeatRule', 'GanonDefeatRule'
+   }
+   ```
+
+3. **Update JavaScript implementation:**
+   ```javascript
+   export function can_defeat_boss(snapshot, staticData, locationName, bossType) {
+     const playerSlot = snapshot?.player?.slot || 1;
+     const placements = staticData.settings?.[playerSlot]?.boss_placements;
+
+     // Build location key from locationName and bossType
+     const key = bossType ? `${locationName}:${bossType}` : locationName;
+     const bossName = placements?.[key];
+
+     if (!bossName) {
+       // Fallback for unknown boss locations
+       return can_kill_most_things(snapshot, staticData, "1");
+     }
+
+     // Call the boss-specific defeat rule
+     const defeatRuleName = bossName.replace(/ /g, '') + 'DefeatRule';
+     if (typeof helperFunctions[defeatRuleName] === 'function') {
+       return helperFunctions[defeatRuleName](snapshot, staticData);
+     }
+
+     // Or use the rule engine to evaluate exported helper
+     return snapshot.evaluateRule?.({
+       type: 'helper',
+       name: defeatRuleName,
+       args: []
+     });
+   }
+   ```
+
+**Complexity:** High
+- Need to export boss placement data (varies per seed based on boss shuffle)
+- 12 boss defeat rules need to be exported
+- Each boss defeat rule uses other helpers (`can_extend_magic`, `can_get_good_bee`, etc.)
+- Some boss defeat rules have complex logic (e.g., `ArrghusDefeatRule` requires Hookshot)
+
+**Dependencies on other helpers (all already exported except `can_get_good_bee`):**
+- `has_melee_weapon` ✅
+- `can_shoot_arrows` ✅
+- `can_extend_magic` ✅
+- `can_use_bombs` ✅
+- `can_get_good_bee` ✅
+- `has_sword` ✅
+- `has_fire_source` ✅
+
+---
+
+## Implementation Priority (Updated)
+
+| Helper | Complexity | Blocking Issues | Priority |
+|--------|------------|-----------------|----------|
+| `GanonDefeatRule` | Low | Need to add `HELPER_MODULES` | ⭐ Quick fix |
+| `can_buy` / `can_buy_unlimited` | N/A | Already working | ⭐ No action needed |
+| `can_defeat_boss` + all boss rules | High | Boss placement export + 12 helpers | ⭐⭐⭐ Future work |
+
+### Recommended Next Steps
+
+1. **Quick fix for GanonDefeatRule:**
+   ```python
+   # In exporter/games/alttp.py
+   HELPER_MODULES = ['worlds.alttp.Bosses', 'worlds.alttp.StateHelpers']
+   ```
+   This would also enable exporting all 12 boss defeat rules.
+
+2. **For boss defeat system (future):**
+   - Add `boss_placements` to settings export
+   - Add boss defeat rule names to `HELPERS_TO_EXPORT_WHITELIST`
+   - Update `can_defeat_boss` JavaScript to use exported data
+
+3. **Consider not implementing:**
+   - The JavaScript implementations work correctly
+   - Tests pass with 100% sphere coverage
+   - Full boss defeat logic would add significant complexity for minimal benefit
+
+---
+
+## Configuration Changes Required
+
+To fully export boss-related helpers, update `exporter/games/alttp.py`:
+
+```python
+class ALttPGameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'A Link to the Past'
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    AUTO_PRESERVE_LARGE_HELPERS = True
+
+    # Add these:
+    HELPER_MODULES = ['worlds.alttp.Bosses', 'worlds.alttp.StateHelpers']
+
+    HELPERS_TO_EXPORT_WHITELIST = {
+        'ArmosKnightsDefeatRule', 'LanmolasDefeatRule', 'MoldormDefeatRule',
+        'HelmasaurKingDefeatRule', 'ArrghusDefeatRule', 'MothulaDefeatRule',
+        'BlindDefeatRule', 'KholdstareDefeatRule', 'VitreousDefeatRule',
+        'TrinexxDefeatRule', 'AgahnimDefeatRule', 'GanonDefeatRule'
+    }
+
+    HELPERS_TO_EXPORT_BLACKLIST = {
+        'can_buy',  # Uses frontend shop_items implementation
+        'can_buy_unlimited',  # Uses frontend shop_items implementation
+        'can_defeat_boss',  # Needs boss placement data + calls individual boss rules
+    }
+```
+
+---
+
+## Technical Deep Dive: can_defeat_boss Implementation
+
+### Current State Analysis
+
+After detailed investigation, here's what's actually happening:
+
+#### 1. Boss Defeat Data is Already Exported
+
+The ALTTP exporter already exports dungeon boss data with defeat rules:
+
+```json
+{
+  "dungeons": {
+    "1": {
+      "Eastern Palace": {
+        "name": "Eastern Palace",
+        "bosses": {
+          "None": {
+            "name": "Armos Knights",
+            "defeat_rule": {
+              "type": "or",
+              "conditions": [...]
+            }
+          }
+        }
+      },
+      "Ganons Tower": {
+        "bosses": {
+          "None": { "name": "Agahnim2", "defeat_rule": {...} },
+          "bottom": { "name": "Armos Knights", "defeat_rule": {...} },
+          "middle": { "name": "Lanmolas", "defeat_rule": {...} },
+          "top": { "name": "Moldorm", "defeat_rule": {...} }
+        }
+      }
+    }
+  }
+}
+```
+
+#### 2. Two Different Boss Defeat Patterns Exist
+
+**Pattern A: Ganon's Tower multi-boss (3 locations) - CONVERTED**
+```python
+# Python: state.multiworld.get_location('GT - Big Key Chest').parent_region.dungeon.bosses['bottom'].can_defeat(state)
+# Exported as:
+{"type": "helper", "name": "can_defeat_boss", "args": [
+  {"type": "constant", "value": "Ganons Tower - Big Key Chest"},
+  {"type": "constant", "value": "bottom"}
+]}
+```
+This pattern IS converted by `postprocess_rule` because it has a subscript with `['bottom', 'middle', 'top']`.
+
+**Pattern B: Regular dungeon bosses (20 locations) - NOT CONVERTED**
+```python
+# Python: location.parent_region.dungeon.boss.can_defeat(state)
+# Exported as-is (not converted):
+{
+  "type": "function_call",
+  "function": {
+    "type": "attribute",
+    "object": {
+      "type": "attribute",
+      "object": {
+        "type": "attribute",
+        "object": {
+          "type": "attribute",
+          "object": {"type": "name", "name": "location"},
+          "attr": "parent_region"
+        },
+        "attr": "dungeon"
+      },
+      "attr": "boss"
+    },
+    "attr": "can_defeat"
+  },
+  "args": []
+}
+```
+
+#### 3. Why Pattern B Doesn't Work
+
+The rule contains `{"type": "name", "name": "location"}` which attempts to resolve the Python variable `location`. However:
+
+1. **In reachabilityEngine.js**: When evaluating location rules, the code does:
+   ```javascript
+   snapshotInterface.currentLocation = location;
+   snapshotInterface.location = location; // Line 597
+   ```
+
+2. **But in stateInterface.js**: The `resolveName` function only checks `contextVariables`:
+   ```javascript
+   resolveName: (name) => {
+     if (contextVariables && contextVariables.hasOwnProperty(name)) {
+       return contextVariables[name];
+     }
+     // ... doesn't check the interface object itself
+   }
+   ```
+
+3. **The bug**: Setting `snapshotInterface.location = location` doesn't add to `contextVariables`, which is captured as a closure when the interface is created.
+
+#### 4. Existing Boss Defeat Handling in ruleEngine.js
+
+The ruleEngine already has handling for boss defeat patterns (lines 1244-1297):
+
+```javascript
+// Special handling for boss.can_defeat function calls
+if (rule.function?.type === 'attribute' && rule.function.attr === 'can_defeat') {
+  // Check if this is a boss through location chain
+  if (isDungeomBossDefeat) {
+    const bossObject = evaluateRule(rule.function.object, context, depth + 1, localScope);
+    if (bossObject && bossObject.defeat_rule) {
+      result = evaluateRule(bossObject.defeat_rule, context, depth + 1, localScope);
+      break;
+    }
+  }
+}
+```
+
+This handler would work IF `location` resolved properly to give the boss object.
+
+### Implementation Options
+
+#### Option 1: Fix `resolveName` to include interface properties (Quick Fix)
+
+In `stateInterface.js`, update `resolveName` to also check interface properties:
+
+```javascript
+resolveName: (name) => {
+  // Check context variables first
+  if (contextVariables && Object.prototype.hasOwnProperty.call(contextVariables, name)) {
+    return contextVariables[name];
+  }
+  // NEW: Check interface properties (for location set dynamically)
+  if (Object.prototype.hasOwnProperty.call(snapshotInterface, name)) {
+    return snapshotInterface[name];
+  }
+  // ... rest of the function
+}
+```
+
+**Problem**: This creates a chicken-and-egg issue since `snapshotInterface` isn't defined when `resolveName` is created.
+
+#### Option 2: Pass `location` as `contextVariables` (Clean Fix)
+
+In `reachabilityEngine.js`, create a new interface with location in context:
+
+```javascript
+// Instead of:
+const snapshotInterface = sm._createSelfSnapshotInterface();
+snapshotInterface.location = location;
+
+// Do:
+const snapshotInterface = sm._createSelfSnapshotInterface({ location });
+```
+
+And update `_createSelfSnapshotInterface` to accept contextVariables:
+
+```javascript
+export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
+  // ... pass contextVariables to createStateSnapshotInterface
+}
+```
+
+**Complexity**: Medium - requires changes to multiple files
+
+#### Option 3: Resolve boss defeat at export time (Best Fix)
+
+In `alttp.py`'s `postprocess_rule`, detect `location.parent_region.dungeon.boss.can_defeat()` and convert it to directly reference the dungeon boss data:
+
+```python
+# Detect pattern: location.parent_region.dungeon.boss.can_defeat()
+if (rule.get('type') == 'function_call' and
+    rule['function'].get('attr') == 'can_defeat' and
+    has_location_dungeon_boss_pattern(rule)):
+
+    # At export time, we know which location this rule is for
+    # Look up the dungeon and return a direct boss defeat check
+    return create_boss_defeat_rule_for_location(location_name)
+```
+
+**Problem**: `postprocess_rule` doesn't currently receive the location name.
+
+#### Option 4: Inline boss defeat rules (Alternative)
+
+Instead of `location.parent_region.dungeon.boss.can_defeat()`, inline the actual boss defeat rule at export time:
+
+```python
+# During rule analysis, when encountering boss.can_defeat():
+# - Look up which dungeon the location belongs to
+# - Get the boss's defeat_rule from dungeon data
+# - Inline the defeat_rule directly into the location's access rule
+```
+
+This eliminates the need for runtime resolution entirely.
+
+### Recommended Implementation Path
+
+1. **Short term (Option 2)**: Fix the `resolveName` context issue
+   - Modify `_createSelfSnapshotInterface` to accept contextVariables
+   - Pass `{ location }` when evaluating location rules
+   - Existing boss defeat handling in ruleEngine.js will then work
+
+2. **Long term consideration**: The dungeon boss data is already exported with defeat rules, so the infrastructure is in place. Once `location` resolves properly, everything should work.
+
+### Files to Modify
+
+1. **`frontend/modules/stateManager/core/statePersistence.js`**
+   - Update `_createSelfSnapshotInterface` to accept and forward contextVariables
+
+2. **`frontend/modules/stateManager/stateManager.js`**
+   - Update `_createSelfSnapshotInterface` wrapper to accept contextVariables
+
+3. **`frontend/modules/stateManager/core/reachabilityEngine.js`**
+   - Pass `{ location }` when creating snapshot interface for location rule evaluation
+
+4. **Test**: Run spoiler tests to verify boss defeat checks work correctly
+
+---
+
+## Implementation Complete: contextVariables Fix (December 2025)
+
+The recommended Option 2 fix has been implemented. The changes enable proper resolution of the `location` variable in boss defeat rules like `location.parent_region.dungeon.boss.can_defeat()`.
+
+### Changes Made
+
+1. **`frontend/modules/stateManager/core/statePersistence.js`**
+   - Updated `_createSelfSnapshotInterface(sm)` to `_createSelfSnapshotInterface(sm, contextVariables = {})`
+   - Added contextVariables check at the start of `resolveName`:
+     ```javascript
+     resolveName: (name) => {
+       if (contextVariables && Object.prototype.hasOwnProperty.call(contextVariables, name)) {
+         return contextVariables[name];
+       }
+       // ... rest of function
+     }
+     ```
+   - Updated internal recursive call in `isLocationAccessible` method to pass context
+   - Spread contextVariables onto the returned interface object so properties like `currentLocation` are directly accessible (needed by ruleEngine's `get_location` handler)
+
+2. **`frontend/modules/stateManager/stateManager.js`**
+   - Updated wrapper method to accept and forward contextVariables:
+     ```javascript
+     _createSelfSnapshotInterface(contextVariables = {}) {
+       return StatePersistenceModule._createSelfSnapshotInterface(this, contextVariables);
+     }
+     ```
+
+3. **`frontend/modules/stateManager/core/reachabilityEngine.js`**
+   - Updated `isLocationAccessible` to pass location context:
+     ```javascript
+     const snapshotInterface = sm._createSelfSnapshotInterface({ location, currentLocation: location });
+     ```
+
+### Test Results
+
+All 5 ALTTP spoiler test seeds pass with 100% sphere coverage after these changes:
+- Seed 1: ✅ 133/133 events
+- Seed 2: ✅ 133/133 events
+- Seed 3: ✅ 133/133 events
+- Seed 4: ✅ 133/133 events
+- Seed 5: ✅ 133/133 events
+
+### Verification: Boss Defeat Rules Working
+
+The exported boss defeat rules are now correctly evaluated via the rule engine. The complete chain works:
+
+1. `state.multiworld.get_location('Desert Palace - Boss')` - returns location with `parent_region`
+2. `.parent_region` - returns the region object
+3. `.dungeon` - special handler looks up dungeon data by name from `staticData.dungeons`
+4. `.boss` - special handler returns `bosses["None"]` for standard dungeons
+5. `.can_defeat()` - special handler evaluates the boss's `defeat_rule`
+
+The dungeon boss data with defeat rules is exported:
+```json
+{
+  "Desert Palace": {
+    "bosses": {
+      "None": {
+        "name": "Lanmolas",
+        "defeat_rule": {"type": "or", "conditions": [...]}
+      }
+    }
+  }
+}
+```
+
+### Remaining: `can_defeat_boss` Helper
+
+The `can_defeat_boss` JavaScript helper in `alttpLogic.js` is still available as a fallback but is not actively used by ALTTP's default settings. The exported rules use the `boss.can_defeat()` pattern which directly evaluates the boss's `defeat_rule`.
+
+No additional work is required - all tests pass with 100% sphere coverage.

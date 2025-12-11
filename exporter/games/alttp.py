@@ -15,7 +15,8 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = True  # Closure functions are cached during analysis and exported
-    # HELPER_MODULES = ['worlds.alttp.StateHelpers']  # Disabled - helper defs need more work
+    # Helper modules containing functions that can be exported as JSON rule definitions
+    HELPER_MODULES = ['worlds.alttp.StateHelpers', 'worlds.alttp.Bosses']
 
     # Complex helpers that can't be exported (need JavaScript implementations)
     # These have loops, complex counting, settings lookups, or dynamic conditions
