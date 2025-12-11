@@ -304,8 +304,7 @@ COMPUTED_SETTINGS: Dict[str, Callable] = {}
 
 The following games have achieved **complete removal** of all game-specific files (custom exporter, JavaScript helpers, game logic directory, and registry entry):
 
-- **shapez** - Complex shape-building logic now fully exported
-- **Shivers** - Ixupi capture helpers inlined as has_all patterns
+- **A Link to the Past** - Complex helper functions (can_buy, can_defeat_boss, etc.) exported with imperative block support
 - **Adventure** - Classic Atari game rules exported
 - **Bumper Stickers** - Puzzle game logic exported
 - **ChecksFinder** - All rules exported
@@ -314,8 +313,11 @@ The following games have achieved **complete removal** of all game-specific file
 - **Donkey Kong Country 3** - Platformer rules exported
 - **Faxanadu** - Action RPG rules exported
 - **Metamath** - Mathematical puzzle logic exported
+- **shapez** - Complex shape-building logic now fully exported
+- **Shivers** - Ixupi capture helpers inlined as has_all patterns
 - **Sonic Adventure 2 Battle** - Platform game rules exported
 - **Super Mario World** - Platformer rules exported
+- **Timespinner** - Time-manipulation game rules exported
 - **Undertale** - RPG game rules exported
 
 These games use only the generic infrastructure. No custom Python exporter, no JavaScript helper files, no game logic directory, and no entry in the game logic registry.

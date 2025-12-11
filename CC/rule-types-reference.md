@@ -48,6 +48,13 @@ Both layers must support a rule type for it to work end-to-end.
 | `capability` | Check player capability | `capability` | `{"type": "capability", "capability": "can_swim"}` |
 | `state_method` | Call StateManager methods | `method`, `args: []` | `{"type": "state_method", "method": "can_reach", "args": [...]}` |
 
+### Placement Lookups
+
+| Type | Description | Fields | Example |
+|------|-------------|--------|---------|
+| `placement_lookup` | Get item placed at a location | `location` | Returns `[itemName, player]` tuple or null |
+| `placement_search` | Check if item is at any of given locations | `item`, `player`, `locations` | Returns true/false |
+
 ### Data & Values
 
 | Type | Description | Fields | Example |
@@ -55,7 +62,7 @@ Both layers must support a rule type for it to work end-to-end.
 | `constant` / `value` | Literal constant values | `value` | `{"type": "constant", "value": 5}` |
 | `name` | Variable/name reference | `name` | `{"type": "name", "name": "player"}` |
 | `attribute` | Property access (obj.attr) | `object`, `attr` | `{"type": "attribute", "object": {...}, "attr": "name"}` |
-| `subscript` | Array/dict indexing | `value`/`object`, `index` | `{"type": "subscript", "value": {...}, "index": {...}}` |
+| `subscript` / `index` | Array/dict indexing | `value`/`object`, `index` | `{"type": "subscript", "value": {...}, "index": {...}}` |
 | `list` | Array literal | `value: []` | `{"type": "list", "value": [...]}` |
 | `tuple` | Fixed array | `elements: []` | `{"type": "tuple", "elements": [...]}` |
 | `world_reference` | Reference to world object | (none) | `{"type": "world_reference"}` |
@@ -77,7 +84,7 @@ Both layers must support a rule type for it to work end-to-end.
 | Type | Description | Fields | Operators |
 |------|-------------|--------|-----------|
 | `binary_op` / `binop` | Arithmetic operations | `left`, `right`, `op` | `+`, `-`, `*`, `/`, `//`, `%` |
-| `compare` / `comparison` | Comparison operations | `left`, `right`, `op` | `==`, `!=`, `<`, `>`, `<=`, `>=`, `in` |
+| `compare` / `comparison` | Comparison operations | `left`, `right`, `op` | `==`, `!=`, `<`, `>`, `<=`, `>=`, `in`, `is` |
 | `min` | Return minimum of values | `args: []` | N/A |
 | `max` | Return maximum of values | `args: []` | N/A |
 
