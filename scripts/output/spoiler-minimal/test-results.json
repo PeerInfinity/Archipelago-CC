@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-11T01:26:53.632096",
-    "last_updated": "2025-12-11T01:26:53.632103",
+    "last_updated": "2025-12-11T03:33:00.084053",
     "script_version": "1.0.0"
   },
   "results": {
@@ -4084,39 +4084,27 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "ba6dcdd4848148b6d99930b6bd8447c1c3375af0c49d3a834941ebb8d47d800a",
-          "new_sphere_log_hash": "6d4b9620affad4b85e7474fd12d514b741d95252524da8feba5aa855e8dbc697",
-          "original_rules_hash": "ba6dcdd4848148b6d99930b6bd8447c1c3375af0c49d3a834941ebb8d47d800a",
-          "original_sphere_log_hash": "6d4b9620affad4b85e7474fd12d514b741d95252524da8feba5aa855e8dbc697",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-11T01:19:26.671598"
-        }
-      },
       "game_name_from_filename": "timespinner",
       "game_name_from_yaml": "Timespinner",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.68,
+        "processing_time_seconds": 7.07,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/timespinner/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 240436,
-        "size_mb": 0.23
+        "size_bytes": 250436,
+        "size_mb": 0.24
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.82,
+        "processing_time_seconds": 10.96,
         "return_code": 0,
         "sphere_reached": 7.1,
         "success": true,
@@ -4124,16 +4112,16 @@
         "warning_count": 0
       },
       "template_filename": "Timespinner.yaml",
-      "timestamp": "2025-12-11T01:18:38.485667",
+      "timestamp": "2025-12-11T03:32:41.635052",
       "world_info": {
         "exporter_path": "exporter/games/timespinner.py",
-        "exporter_size": 5532,
-        "game_logic_path": "frontend/modules/shared/gameLogic/timespinner/timespinnerLogic.js",
-        "game_logic_size": 10794,
+        "exporter_size": 4108,
+        "game_logic_path": null,
+        "game_logic_size": 0,
         "game_name_from_filename": "timespinner",
         "game_name_from_yaml": "Timespinner",
         "has_custom_exporter": true,
-        "has_custom_game_logic": true,
+        "has_custom_game_logic": false,
         "world_directory": "timespinner"
       }
     },
