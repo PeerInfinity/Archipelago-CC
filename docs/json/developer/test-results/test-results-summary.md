@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-11 04:55:31
+**Generated:** 2025-12-11 07:37:16
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -17,44 +17,44 @@ Additional test results:
 
 ### Individual Test Results
 
-- **Minimal Test:** 74/76 passed (97.4%)
-- **Full Test:** 74/76 passed (97.4%)
-- **Multiclient Test:** 72/76 passed (94.7%)
-- **Multiworld Test:** 72/76 passed (94.7%)
+- **Minimal Test:** 72/76 passed (94.7%)
+- **Full Test:** 72/76 passed (94.7%)
+- **Multiclient Test:** 74/76 passed (97.4%)
+- **Multiworld Test:** 70/76 passed (92.1%)
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 0 game(s), 0 total failure(s)
-- **Full Spoilers Test:** 2 game(s), 2 total failure(s)
+- **Minimal Spoilers Test:** 2 game(s), 2 total failure(s)
+- **Full Spoilers Test:** 4 game(s), 4 total failure(s)
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 72/76 (94.7%)
+- **Templates passing all 4 tests:** 70/76 (92.1%)
 - **Templates passing 3 tests:** 0/76 (0.0%)
 - **Templates passing 2 tests:** 2/76 (2.6%)
-- **Templates passing 1 test:** 0/76 (0.0%)
-- **Templates passing 0 tests:** 2/76 (2.6%)
+- **Templates passing 1 test:** 4/76 (5.3%)
+- **Templates passing 0 tests:** 0/76 (0.0%)
 
 ### Generic Exporter/Logic Statistics
 
-Of the 72 templates passing all 4 tests:
+Of the 70 templates passing all 4 tests:
 
-- **Passing with Generic Exporter:** 29/72 (40.3%)
-- **Passing with Generic Logic:** 50/72 (69.4%)
-- **Passing with Both Generic:** 29/72 (40.3%)
+- **Passing with Generic Exporter:** 28/70 (40.0%)
+- **Passing with Generic Logic:** 48/70 (68.6%)
+- **Passing with Both Generic:** 28/70 (40.0%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 639.2KB
+- **Total Exporter Code:** 640.9KB
 - **Total Game Logic Code:** 871.5KB
-- **Combined Total:** 1510.7KB
+- **Combined Total:** 1512.3KB
 
 ## Test Results
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic |
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|
-| A Hat in Time | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | 6.0KB | 10.3KB |
-| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 39.4KB | 59.8KB |
+| A Hat in Time | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.6KB | 10.3KB |
+| A Link to the Past | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | 39.5KB | 59.8KB |
 | A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
@@ -62,7 +62,7 @@ Of the 72 templates passing all 4 tests:
 | Bomb Rush Cyberfunk | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.6KB | 38.2KB |
 | Bumper Stickers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 15.1KB | ✅ |
-| Castlevania 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Castlevania 64 | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | ✅ | ✅ |
 | Celeste (Open World) | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.1KB | ✅ |
 | Celeste 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 9.4KB | ✅ |
 | ChecksFinder | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
@@ -106,7 +106,7 @@ Of the 72 templates passing all 4 tests:
 | Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Starcraft 2 | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | 19.7KB | 86.3KB |
+| Starcraft 2 | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | 19.7KB | 86.3KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 15.9KB | 10.7KB |
 | Subnautica | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.3KB | 14.7KB |
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.6KB | ✅ |
@@ -127,7 +127,7 @@ Of the 72 templates passing all 4 tests:
 | Wargroove | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.7KB | 2.6KB |
 | WebDevJourney | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Yacht Dice | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.6KB | 285.0KB |
-| Yoshi's Island | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 10.8KB | ✅ |
+| Yoshi's Island | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | 10.8KB | ✅ |
 | shapez | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 
 ## Multi-Template Test Results
