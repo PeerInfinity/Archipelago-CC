@@ -170,8 +170,6 @@
  * - A Hat in Time (AHIT)
  * - Blasphemous
  * - Bomb Rush Cyberfunk
- * - Celeste 64
- * - Civilization VI
  * - Castlevania - Circle of the Moon
  * - DLCQuest
  * - Hollow Knight
@@ -218,8 +216,6 @@ import * as ahitLogic from './ahit/ahitLogic.js';
 import * as blasphemousLogic from './blasphemous/blasphemousLogic.js';
 import { blasphemousStateModule } from './blasphemous/blasphemousLogic.js';
 import { helperFunctions as bombRushCyberfunkHelperFunctions } from './bomb_rush_cyberfunk/bombRushCyberfunkLogic.js';
-import * as civ6Logic from './civ_6/civ6Logic.js';
-import { civ6StateModule } from './civ_6/civ6Logic.js';
 import * as dlcquestLogic from './dlcquest/dlcquestLogic.js';
 import { dlcquestStateModule, wrapState as dlcquestWrapState } from './dlcquest/dlcquestLogic.js';
 import * as factorioLogic from './factorio/factorioLogic.js';
@@ -307,12 +303,6 @@ const GAME_REGISTRY = {
     helperFunctions: bombRushCyberfunkHelperFunctions,
     worldClasses: ['BombRushCyberfunkWorld'],
     aliases: ['Bomb Rush Cyberfunk', 'BRC']
-  },
-  'Civilization VI': {
-    logicModule: civ6Logic.civ6StateModule,
-    helperFunctions: civ6Logic.helperFunctions,
-    worldClasses: ['CivVIWorld'],
-    aliases: ['Civilization VI', 'Civ VI', 'Civ6']
   },
   'Castlevania - Circle of the Moon': {
     logicModule: genericLogic.genericStateModule,
