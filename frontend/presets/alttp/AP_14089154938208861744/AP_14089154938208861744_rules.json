@@ -3118,8 +3118,16 @@
                   ]
                 },
                 {
-                  "type": "can_reach",
-                  "region": "Desert Palace Main (Outer)"
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "region_reference",
+                      "region": "Desert Palace Main (Outer)"
+                    },
+                    "attr": "can_reach"
+                  },
+                  "args": []
                 }
               ]
             },
@@ -20097,6 +20105,80 @@
           "fullrefill": false
         }
       },
+      "can_get_good_bee": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "cave",
+            "value": {
+              "type": "region_reference",
+              "region": "Good Bee Cave"
+            }
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "group_check",
+                  "group": "Bottles"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Bug Catching Net"
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Pegasus Boots"
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "has_sword",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Quake"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "cave"
+                    },
+                    "attr": "can_reach"
+                  },
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "is_not_bunny",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "cave"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
       "can_hold_arrows": {
         "params": [
           "quantity"
@@ -20734,6 +20816,53 @@
             }
           }
         ]
+      },
+      "is_not_bunny": {
+        "params": [
+          "region"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "item_check",
+            "item": "Moon Pearl"
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "setting_value",
+                "setting": "mode"
+              },
+              "op": "!=",
+              "right": {
+                "type": "constant",
+                "value": "inverted"
+              }
+            },
+            "if_true": {
+              "type": "region_attribute",
+              "region": {
+                "type": "name",
+                "name": "region"
+              },
+              "attr": "is_light_world"
+            },
+            "if_false": {
+              "type": "region_attribute",
+              "region": {
+                "type": "name",
+                "name": "region"
+              },
+              "attr": "is_dark_world"
+            }
+          }
+        }
       }
     }
   }

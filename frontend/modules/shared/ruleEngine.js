@@ -933,6 +933,14 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         if (baseObject && typeof baseObject === 'object') {
+          // Special handling for region reference objects
+          // When we access .can_reach on a region reference, return a special marker
+          // that the function_call handler will recognize
+          if (baseObject.__regionRef && rule.attr === 'can_reach') {
+            // Return a marker that indicates this is a region reachability check
+            return { __regionCanReach: true, regionName: baseObject.regionName };
+          }
+
           // Special handling for parent_region attribute on location objects
           if (rule.attr === 'parent_region' && baseObject.parent_region_name) {
             // Dynamically resolve the parent region from the context
@@ -1224,6 +1232,32 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           }
         }
 
+        // Special handling for variable.can_reach() calls where variable is a region reference
+        // This handles patterns like: cave.can_reach(state) where cave was assigned from get_region
+        if (
+          rule.function?.type === 'attribute' &&
+          rule.function.attr === 'can_reach' &&
+          rule.function.object?.type === 'name'
+        ) {
+          const varName = rule.function.object.name;
+          // Try to resolve the variable from local scope or context
+          let regionRef = localScope?.[varName];
+
+          if (regionRef && regionRef.__regionRef) {
+            // This is a region reference - check if the region is reachable
+            const regionName = regionRef.regionName;
+            if (typeof context.isRegionReachable === 'function') {
+              result = context.isRegionReachable(regionName);
+              break;
+            } else {
+              log('warn', `[evaluateRule] Cannot check region reachability for '${regionName}' - context.isRegionReachable not available`);
+              result = undefined;
+              break;
+            }
+          }
+          // If not a region reference, fall through to other handlers
+        }
+
         // Special handling for self.method_name() calls (e.g., self.explore_score())
         // These should be treated as helper function calls
         if (
@@ -1270,6 +1304,19 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
         if (typeof func === 'undefined') {
           result = undefined;
+          break;
+        }
+
+        // Special case: If func is a __regionCanReach marker from attribute access on region reference
+        // This handles patterns like: cave.can_reach() where cave is a region_reference
+        if (func && typeof func === 'object' && func.__regionCanReach) {
+          const regionName = func.regionName;
+          if (typeof context.isRegionReachable === 'function') {
+            result = context.isRegionReachable(regionName);
+          } else {
+            log('warn', `[evaluateRule] Cannot check region reachability for '${regionName}' - context.isRegionReachable not available`);
+            result = undefined;
+          }
           break;
         }
 
@@ -2216,6 +2263,91 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         } else {
           // No access rule means the entrance is accessible if the region is reachable
           result = true;
+        }
+        break;
+      }
+
+      case 'region_reference': {
+        // Returns a region reference object that can be used to access region attributes
+        // or passed to helpers that take a region parameter
+        // Format: { type: 'region_reference', region: 'Region Name' }
+        const regionName = rule.region;
+        if (!regionName) {
+          log('warn', '[evaluateRule] region_reference rule missing region name', { rule });
+          result = undefined;
+          break;
+        }
+        // Return an object with the region name that can be used later
+        // to look up region attributes or check reachability
+        result = { __regionRef: true, regionName };
+        break;
+      }
+
+      case 'region_attribute': {
+        // Access an attribute of a region (e.g., region.is_light_world)
+        // Used by helpers like is_not_bunny that take a region parameter
+        // Format: { type: 'region_attribute', region: {...}, attr: 'is_light_world' }
+        const regionExpr = evaluateRule(rule.region, context, depth + 1, localScope);
+        const attrName = rule.attr;
+
+        if (regionExpr === undefined) {
+          log('debug', '[evaluateRule] region_attribute: region evaluated to undefined', { rule });
+          result = undefined;
+          break;
+        }
+
+        if (!attrName) {
+          log('warn', '[evaluateRule] region_attribute rule missing attr', { rule });
+          result = undefined;
+          break;
+        }
+
+        // Get the region name from the expression
+        let regionName;
+        if (typeof regionExpr === 'string') {
+          regionName = regionExpr;
+        } else if (regionExpr?.__regionRef) {
+          regionName = regionExpr.regionName;
+        } else {
+          log('warn', '[evaluateRule] region_attribute: cannot determine region name', { regionExpr, rule });
+          result = undefined;
+          break;
+        }
+
+        // Look up the region in static data
+        if (typeof context.getStaticData !== 'function') {
+          log('warn', '[evaluateRule] region_attribute: context.getStaticData not available');
+          result = undefined;
+          break;
+        }
+
+        const staticData = context.getStaticData();
+        const regionsData = staticData?.regions;
+
+        if (!regionsData) {
+          log('warn', '[evaluateRule] region_attribute: no regions data in staticData');
+          result = undefined;
+          break;
+        }
+
+        // Regions can be a Map or plain object
+        let regionData;
+        if (regionsData instanceof Map) {
+          regionData = regionsData.get(regionName);
+        } else {
+          regionData = regionsData[regionName];
+        }
+
+        if (!regionData) {
+          log('debug', `[evaluateRule] region_attribute: region '${regionName}' not found`);
+          result = undefined;
+          break;
+        }
+
+        // Get the attribute value
+        result = regionData[attrName];
+        if (result === undefined) {
+          log('debug', `[evaluateRule] region_attribute: attribute '${attrName}' not found on region '${regionName}'`);
         }
         break;
       }
