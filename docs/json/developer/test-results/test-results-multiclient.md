@@ -6,51 +6,51 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-10 20:58:26
+**Generated:** 2025-12-11 01:44:16
 
 ## Summary
 
-- **Total Games:** 79
-- **Passed:** 75 (94.9%)
-- **Failed:** 4 (5.1%)
+- **Total Games:** 77
+- **Passed:** 73 (94.8%)
+- **Failed:** 4 (5.2%)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Exporter | GameLogic |
 |-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|----------|----------|
 | A Hat in Time | ❌ Failed | 1 | ✅ | 232/232 | 223/223 | 9/9 | ✅ | 232/232 | 6.0KB | 10.3KB |
-| A Link to the Past | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 19/19 | ✅ | 268/268 | 33.0KB | 59.8KB |
+| A Link to the Past | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 19/19 | ✅ | 268/268 | 35.7KB | 59.8KB |
 | A Short Hike | ✅ Passed | 0 | ✅ | 131/131 | 131/131 | 0/0 | ✅ | 131/131 | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | ✅ | 8/8 | 6/6 | 2/2 | ✅ | 8/8 | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | ✅ | 25/25 | 24/24 | 1/1 | ✅ | 25/25 | ✅ | ✅ |
 | Aquaria | ✅ Passed | 0 | ✅ | 237/237 | 218/218 | 19/19 | ✅ | 237/237 | 4.8KB | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | 0 | ✅ | 252/252 | 247/247 | 5/5 | ✅ | 252/252 | 1.6KB | 38.2KB |
 | Bumper Stickers | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | ✅ | ✅ |
-| Castlevania - Circle of the Moon | ✅ Passed | 0 | ✅ | 125/125 | 124/124 | 1/1 | ✅ | 125/125 | 10.2KB | 5.7KB |
-| Castlevania 64 | ✅ Passed | 0 | ✅ | 215/215 | 213/213 | 2/2 | ✅ | 215/215 | 15.3KB | 2.0KB |
+| Castlevania - Circle of the Moon | ✅ Passed | 0 | ✅ | 125/125 | 124/124 | 1/1 | ✅ | 125/125 | 15.1KB | ✅ |
+| Castlevania 64 | ✅ Passed | 0 | ✅ | 215/215 | 213/213 | 2/2 | ✅ | 215/215 | ✅ | ✅ |
 | Celeste (Open World) | ✅ Passed | 0 | ✅ | 237/237 | 233/233 | 4/4 | ✅ | 237/237 | 7.1KB | ✅ |
-| Celeste 64 | ✅ Passed | 0 | ✅ | 40/40 | 40/40 | 0/0 | ✅ | 40/40 | 4.2KB | 5.9KB |
+| Celeste 64 | ✅ Passed | 0 | ✅ | 40/40 | 40/40 | 0/0 | ✅ | 40/40 | 9.4KB | ✅ |
 | ChecksFinder | ✅ Passed | 0 | ✅ | 25/25 | 25/25 | 0/0 | ✅ | 25/25 | ✅ | ✅ |
 | ChocolateChipCookies | ✅ Passed | 0 | ✅ | 16/16 | 15/15 | 1/1 | ✅ | 16/16 | ✅ | ✅ |
 | Choo-Choo Charles | ✅ Passed | 0 | ✅ | 692/692 | 691/691 | 1/1 | ✅ | 692/692 | ✅ | ✅ |
-| Civilization VI | ✅ Passed | 0 | ✅ | 149/149 | 148/148 | 1/1 | ✅ | 149/149 | 6.3KB | 5.1KB |
+| Civilization VI | ✅ Passed | 0 | ✅ | 149/149 | 148/148 | 1/1 | ✅ | 149/149 | 0.3KB | ✅ |
 | DLCQuest | ✅ Passed | 0 | ✅ | 42/42 | 29/29 | 1/1 | ✅ | 42/42 | 9.6KB | 9.4KB |
 | DOOM 1993 | ✅ Passed | 0 | ✅ | 348/348 | 348/348 | 0/0 | ✅ | 348/348 | ✅ | ✅ |
 | DOOM II | ✅ Passed | 0 | ✅ | 453/453 | 453/453 | 0/0 | ✅ | 453/453 | ✅ | ✅ |
-| Dark Souls III | ✅ Passed | 0 | ✅ | 1194/1194 | 1190/1190 | 4/4 | ✅ | 1194/1194 | 10.8KB | 4.4KB |
+| Dark Souls III | ✅ Passed | 0 | ✅ | 1194/1194 | 1190/1190 | 4/4 | ✅ | 1194/1194 | 4.7KB | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | ✅ | 180/180 | 180/180 | 0/0 | ✅ | 180/180 | ✅ | ✅ |
 | Factorio | ✅ Passed | 0 | ✅ | 186/186 | 179/179 | 7/7 | ✅ | 186/186 | 11.4KB | 4.2KB |
 | Faxanadu | ✅ Passed | 0 | ✅ | 114/114 | 110/110 | 4/4 | ✅ | 114/114 | ✅ | ✅ |
-| Final Fantasy Mystic Quest | ✅ Passed | 0 | ✅ | 299/299 | 251/251 | 48/48 | ✅ | 299/299 | 11.2KB | ✅ |
+| Final Fantasy Mystic Quest | ✅ Passed | 0 | ✅ | 299/299 | 251/251 | 48/48 | ✅ | 299/299 | 7.5KB | ✅ |
 | Heretic | ✅ Passed | 0 | ✅ | 502/502 | 502/502 | 0/0 | ✅ | 502/502 | ✅ | ✅ |
-| Hylics 2 | ✅ Passed | 0 | ✅ | 134/134 | 133/133 | 1/1 | ✅ | 134/134 | 1.0KB | 6.6KB |
-| Inscryption | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | 11.3KB | 6.2KB |
-| Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | ✅ | 239/239 | 239/239 | 0/0 | ✅ | 239/239 | 13.2KB | 4.2KB |
-| Kingdom Hearts | ❌ Failed | 0 | ❌ | 510/512 | 510/511 | 0/1 | ❌ | 510/512 | 50.8KB | 19.5KB |
-| Kingdom Hearts 2 | ✅ Passed | 0 | ✅ | 705/705 | 643/643 | 62/62 | ✅ | 705/705 | 11.2KB | 112.6KB |
-| Kirby's Dream Land 3 | ✅ Passed | 0 | ✅ | 567/567 | 65/65 | 502/502 | ✅ | 567/567 | 10.1KB | 14.9KB |
-| Landstalker - The Treasures of King Nole | ✅ Passed | 0 | ✅ | 298/298 | 291/291 | 7/7 | ✅ | 298/298 | 16.4KB | 9.1KB |
-| Lingo | ✅ Passed | 0 | ✅ | 156/156 | 155/155 | 1/1 | ✅ | 156/156 | 32.2KB | 11.3KB |
+| Hylics 2 | ✅ Passed | 0 | ✅ | 134/134 | 133/133 | 1/1 | ✅ | 134/134 | 1.0KB | ✅ |
+| Inscryption | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | 8.0KB | ✅ |
+| Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | ✅ | 239/239 | 239/239 | 0/0 | ✅ | 239/239 | 13.1KB | 2.5KB |
+| Kingdom Hearts | ✅ Passed | 0 | ✅ | 512/512 | 511/511 | 1/1 | ✅ | 512/512 | 58.1KB | 5.4KB |
+| Kingdom Hearts 2 | ✅ Passed | 0 | ✅ | 705/705 | 643/643 | 62/62 | ✅ | 705/705 | 14.6KB | 105.3KB |
+| Kirby's Dream Land 3 | ✅ Passed | 0 | ✅ | 567/567 | 65/65 | 502/502 | ✅ | 567/567 | 9.7KB | 14.9KB |
+| Landstalker - The Treasures of King Nole | ✅ Passed | 0 | ✅ | 298/298 | 291/291 | 7/7 | ✅ | 298/298 | 16.4KB | ✅ |
+| Lingo | ✅ Passed | 0 | ✅ | 156/156 | 155/155 | 1/1 | ✅ | 156/156 | 32.9KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | ✅ | 226/226 | 220/220 | 6/6 | ✅ | 226/226 | 15.8KB | 5.3KB |
 | Lufia II Ancient Cave | ✅ Passed | 0 | ✅ | 40/40 | 35/35 | 5/5 | ✅ | 40/40 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | ✅ | 557/557 | 556/556 | 1/1 | ✅ | 557/557 | 0.5KB | 8.9KB |
@@ -64,8 +64,7 @@
 | Old School Runescape | ✅ Passed | 0 | ✅ | 76/76 | 76/76 | 22/22 | ✅ | 76/76 | 3.0KB | 1.2KB |
 | Overcooked! 2 | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | 26.5KB | 7.2KB |
 | Paint | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | 5.8KB | 4.4KB |
-| Pokemon Emerald | ✅ Passed | 0 | ✅ | 1061/1061 | 203/203 | 867/867 | ✅ | 1061/1061 | 6.2KB | 8.7KB |
-| Pokemon Red and Blue | ✅ Passed | 0 | ✅ | 1010/1010 | 161/161 | 845/845 | ✅ | 1010/1010 | 12.2KB | 13.0KB |
+| Pokemon Red and Blue | ❌ Failed | 0 | ❌ | 1004/1010 | 161/161 | 839/845 | ❌ | 1000/1010 | 12.2KB | 13.0KB |
 | Raft | ✅ Passed | 0 | ✅ | 155/155 | 154/154 | 1/1 | ✅ | 155/155 | 6.8KB | 16.4KB |
 | Risk of Rain 2 | ✅ Passed | 0 | ✅ | 223/223 | 221/221 | 2/2 | ✅ | 223/223 | ✅ | ✅ |
 | SMZ3 | ❌ Failed | 0 | ❌ | 70/316 | 70/316 | 0/0 | ❌ | 70/316 | 59.5KB | 51.2KB |
@@ -95,7 +94,6 @@
 | WebDevJourney | ✅ Passed | 0 | ✅ | 62/62 | 61/61 | 1/1 | ✅ | 62/62 | ✅ | ✅ |
 | Yacht Dice | ✅ Passed | 0 | ✅ | 90/90 | 90/90 | 1/1 | ✅ | 90/90 | 2.3KB | 285.0KB |
 | Yoshi's Island | ✅ Passed | 0 | ✅ | 207/207 | 191/191 | 16/16 | ✅ | 207/207 | 8.1KB | 33.2KB |
-| Yu-Gi-Oh! 2006 | ✅ Passed | 0 | ✅ | 981/981 | 84/84 | 897/897 | ✅ | 981/981 | 1.6KB | 21.4KB |
 | shapez | ✅ Passed | 0 | ✅ | 140/140 | 139/139 | 1/1 | ✅ | 140/140 | ✅ | ✅ |
 
 ## Notes
