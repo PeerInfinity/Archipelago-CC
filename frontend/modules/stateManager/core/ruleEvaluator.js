@@ -156,6 +156,61 @@ export function executeStateMethod(manager, method, ...args) {
       return manager.inventory[itemName] || 0;
     }
 
+    // 2c. Handle count_group_unique - returns count of unique items from a group
+    if (method === 'count_group_unique' && args.length >= 1) {
+      const groupName = args[0];
+      if (typeof groupName !== 'string') return 0;
+
+      const staticData = manager.getStaticGameData();
+      const playerItemGroups = staticData?.item_groups?.[manager.playerId] || staticData?.item_groups;
+
+      let uniqueItemsFound = 0;
+
+      if (Array.isArray(playerItemGroups)) {
+        // ALTTP-style with group names as array
+        const playerItemsData = staticData.itemsByPlayer && staticData.itemsByPlayer[manager.playerId];
+        if (playerItemsData) {
+          for (const itemName in playerItemsData) {
+            if (playerItemsData[itemName]?.groups?.includes(groupName)) {
+              const itemCount = manager.inventory[itemName] || 0;
+              if (itemCount > 0) {
+                uniqueItemsFound++;
+              }
+            }
+          }
+        }
+      } else if (
+        typeof playerItemGroups === 'object' &&
+        playerItemGroups[groupName] &&
+        Array.isArray(playerItemGroups[groupName])
+      ) {
+        // Item_groups is an object { groupName: [itemNames...] }
+        for (const itemInGroup of playerItemGroups[groupName]) {
+          const itemCount = manager.inventory[itemInGroup] || 0;
+          if (itemCount > 0) {
+            uniqueItemsFound++;
+          }
+        }
+      } else if (staticData?.groups) {
+        // Fallback to old groups structure if available
+        const playerGroups = staticData.groups[manager.playerId] || staticData.groups;
+        if (
+          typeof playerGroups === 'object' &&
+          playerGroups[groupName] &&
+          Array.isArray(playerGroups[groupName])
+        ) {
+          for (const itemInGroup of playerGroups[groupName]) {
+            const itemCount = manager.inventory[itemInGroup] || 0;
+            if (itemCount > 0) {
+              uniqueItemsFound++;
+            }
+          }
+        }
+      }
+
+      return uniqueItemsFound;
+    }
+
     // 3. Check for game-specific state methods (e.g., has_from_list_unique for Mario Land 2)
     if (manager.stateMethods && typeof manager.stateMethods[method] === 'function') {
       const snapshot = manager.getSnapshot();
