@@ -20,6 +20,12 @@ class KH2GameExportHandler(BaseGameExportHandler):
     # Module paths containing item name constants
     ITEM_NAME_MODULES = ['worlds.kh2.Names']
 
+    # Mapping of self.<attr> to setting names for the analyzer
+    # This enables conversion of patterns like self.fight_logic to setting_value rules
+    SELF_ATTR_TO_SETTING = {
+        'fight_logic': 'FightLogic',  # self.fight_logic = world.options.FightLogic.current_key
+    }
+
     # Helpers too complex for automatic export (loops, sums, closures)
     HELPERS_TO_EXPORT_BLACKLIST = {
         # Form-related helpers with complex logic
@@ -35,8 +41,8 @@ class KH2GameExportHandler(BaseGameExportHandler):
         'kh2_list_any_sum',           # List comprehension with sum and has_any
         'kh2_dict_count',             # Dict comprehension with all()
         'kh2_dict_one_count',         # Dict comprehension with sum
-        'kh2_has_all',                # Wraps state.has_all
-        'kh2_has_any',                # Wraps state.has_any
+        # 'kh2_has_all' - Now supported via self.player → player_id
+        # 'kh2_has_any' - Now supported via self.player → player_id
 
         # Location-based helpers
         'kh2_can_reach',              # Uses multiworld.get_location
@@ -67,9 +73,9 @@ class KH2GameExportHandler(BaseGameExportHandler):
         'get_thresholder_rules', 'get_titan_cup_rules', 'get_transport_fight_rules',
         'get_transport_movement_rules', 'get_xaldin_rules', 'get_xemnas_rules', 'get_xigbar_rules',
 
-        # Static methods that return True
-        'get_axel_one_rules', 'get_axel_two_rules', 'get_twilight_thorn_rules',
-        'get_beast_rules', 'get_grim_reaper1_rules', 'get_old_pete_rules', 'get_oogie_rules',
+        # Static methods that return True - now handled via helper_map expansion
+        # 'get_axel_one_rules', 'get_axel_two_rules', 'get_twilight_thorn_rules',
+        # 'get_beast_rules', 'get_grim_reaper1_rules', 'get_old_pete_rules', 'get_oogie_rules',
         'limit_form_region_access', 'multi_form_region_access',
     }
 
@@ -84,6 +90,14 @@ class KH2GameExportHandler(BaseGameExportHandler):
         helper_map = {
             'limit_form_region_access': {'type': 'constant', 'value': True},
             'multi_form_region_access': {'type': 'constant', 'value': True},
+            # Static methods that return True (no parameters needed)
+            'get_axel_one_rules': {'type': 'constant', 'value': True},
+            'get_axel_two_rules': {'type': 'constant', 'value': True},
+            'get_twilight_thorn_rules': {'type': 'constant', 'value': True},
+            'get_beast_rules': {'type': 'constant', 'value': True},
+            'get_grim_reaper1_rules': {'type': 'constant', 'value': True},
+            'get_old_pete_rules': {'type': 'constant', 'value': True},
+            'get_oogie_rules': {'type': 'constant', 'value': True},
             # final_form_region_access has complex logic - leave as helper
             # valor, wisdom, master forms need investigation
         }

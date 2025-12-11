@@ -2,146 +2,112 @@
 
 ## Summary
 
-This document summarizes the investigation into what rule types are needed to support KH2 helper functions in the Archipelago-CC frontend.
+This document summarizes the investigation into what rule types are needed to support KH2 helper functions in the Archipelago-CC frontend, and the implementation progress.
 
-## Current State
+## Implementation Status
 
-### What's Working
+### Completed (Option B - New Rule Types)
 
-1. **Simple unlock helpers** are exported as JSON rule definitions:
-   - `ag_unlocked`, `bc_unlocked`, `dc_unlocked`, `hb_unlocked`, `ht_unlocked`, `lod_unlocked`, `oc_unlocked`, `pl_unlocked`, `pr_unlocked`, `sp_unlocked`, `stt_unlocked`, `tt_unlocked`, `twtnw_unlocked`
-   - `at_three_unlocked`, `at_four_unlocked`, `hundred_acre_unlocked`
+The following new rule types and patterns have been implemented:
 
-2. **Complex helpers** are blacklisted from JSON export but have **JavaScript fallback implementations** in `frontend/modules/shared/gameLogic/kh2/kh2Logic.js`:
-   - `form_list_unlock` - Form access with AutoFormLogic support
-   - `get_form_level_requirement` - Counts available forms
-   - `level_locking_unlock` - Visit locking with Promise Charm check
-   - `final_form_region_access` - Can reach leveling locations
-   - All 60+ fight rule helpers (e.g., `get_data_xigbar_rules`, `get_shan_yu_rules`)
-   - `kh2_list_any_sum` - Counts categories with items
-   - `kh2_dict_count` - Checks item counts against dict requirements
+#### 1. `self.player` Pattern → `player_id` Rule Type
+- **Files modified:**
+  - `exporter/analyzer/ast_visitors.py` - Added pattern detection for `self.player`
+  - `frontend/modules/shared/ruleEngine.js` - Added `player_id` case handler
+- **Usage:** Converts `self.player` in Python helpers to a `player_id` rule that returns the current player ID
 
-3. **Spoiler tests pass** because the JavaScript fallback system works correctly.
+#### 2. `self.<attr>` → `setting_value` Mapping
+- **Files modified:**
+  - `exporter/analyzer/ast_visitors.py` - Added pattern detection via `SELF_ATTR_TO_SETTING`
+  - `exporter/games/kh2.py` - Added `SELF_ATTR_TO_SETTING = {'fight_logic': 'FightLogic'}`
+- **Usage:** Converts `self.fight_logic` to `{'type': 'setting_value', 'setting': 'FightLogic'}`
 
-### What's Missing
+#### 3. Dict Subscript with Rule Values
+- **Files modified:**
+  - `frontend/modules/shared/ruleEngine.js` - Added recursive evaluation in `subscript` case
+- **Usage:** When `dict[setting_value]` returns a rule object, it's automatically evaluated
 
-Three helpers are referenced in the exported rules but have no JavaScript implementation:
+#### 4. Python Built-in Functions (`set`, `list`)
+- **Files modified:**
+  - `frontend/modules/shared/ruleEngine.js` - Added `set` and `list` helper handlers
+- **Usage:** Handles `set(items)` in helpers like `state.has_all(set(items), player)`
 
-| Helper | Python Implementation | Priority |
-|--------|----------------------|----------|
-| `get_grim_reaper1_rules` | `return True` (static) | Low - trivial |
-| `get_grim_reaper2_rules` | Uses `kh2_list_any_sum` | Medium |
-| `kh2_has_all` | Wraps `state.has_all(items, player)` | High - used in goal checks |
+### Helpers Now Exportable as JSON
 
-## Recommended Next Steps
+| Helper | Status | Notes |
+|--------|--------|-------|
+| `kh2_has_all` | ✅ Exported | Uses `self.player` → `player_id` |
+| `kh2_has_any` | ✅ Exported | Uses `self.player` → `player_id` |
+| `get_beast_rules` | ✅ Expanded | Expanded to `constant: true` |
+| `get_grim_reaper1_rules` | ✅ Expanded | Expanded to `constant: true` |
+| `get_old_pete_rules` | ✅ Expanded | Expanded to `constant: true` |
+| `get_oogie_rules` | ✅ Expanded | Expanded to `constant: true` |
+| `get_axel_one_rules` | ✅ Expanded | Expanded to `constant: true` |
+| `get_axel_two_rules` | ✅ Expanded | Expanded to `constant: true` |
+| `get_twilight_thorn_rules` | ✅ Expanded | Expanded to `constant: true` |
 
-### Option A: Quick Fix - Add Missing JavaScript Implementations
+### Helpers Still Using JavaScript Fallbacks
 
-Add the 3 missing helpers to `frontend/modules/shared/gameLogic/kh2/kh2Logic.js`:
+These helpers are still blacklisted due to complex patterns not yet supported:
 
-```javascript
-// 1. get_grim_reaper1_rules - trivial
-get_grim_reaper1_rules() {
-  return true;
-},
+| Helper | Reason | Pattern Needed |
+|--------|--------|----------------|
+| `form_list_unlock` | Conditional logic based on AutoFormLogic | Setting-based conditional branches |
+| `get_form_level_requirement` | Loops counting forms | Loop with counter |
+| `level_locking_unlock` | Sum over list | List sum pattern |
+| `kh2_list_count_sum` | List comprehension with sum | Generator with sum |
+| `kh2_list_any_sum` | List comprehension with has_any | Generator with any() |
+| `kh2_dict_count` | Dict comprehension with all() | Dict iteration with all() |
+| `kh2_dict_one_count` | Dict comprehension with sum | Dict iteration with sum |
+| `get_*_rules` (60+) | Uses `kh2_list_any_sum` | Depends on above |
 
-// 2. get_grim_reaper2_rules - uses existing kh2_list_any_sum
-get_grim_reaper2_rules(snapshot, staticData) {
-  const playerSlot = snapshot?.player?.id || snapshot?.player?.slot || 1;
-  const settings = staticData?.settings?.[playerSlot] || {};
-  const fightLogic = settings.FightLogic ?? 'normal';
+## Files Modified
 
-  const defensiveTool = ['Reflect Element', 'Guard'];
-  const blackMagic = ['Fire Element', 'Blizzard Element', 'Thunder Element'];
+### Python (Exporter)
+- `exporter/analyzer/ast_visitors.py`
+  - Added `self.player` → `player_id` pattern detection
+  - Added `self.<attr>` → `setting_value` via `SELF_ATTR_TO_SETTING` lookup
 
-  switch (fightLogic) {
-    case 'easy':
-      return helperFunctions.kh2_list_any_sum(
-        [defensiveTool, ['Master Form', 'Thunder Element']], snapshot) >= 2;
-    case 'normal':
-      return helperFunctions.kh2_list_any_sum(
-        [defensiveTool, ['Master Form', 'Stitch'], ['Thunder Element']], snapshot) >= 3;
-    case 'hard':
-      return helperFunctions.kh2_list_any_sum([blackMagic, defensiveTool], snapshot) >= 2;
-    default:
-      return true;
-  }
-},
+- `exporter/games/kh2.py`
+  - Added `SELF_ATTR_TO_SETTING = {'fight_logic': 'FightLogic'}`
+  - Removed `kh2_has_all`, `kh2_has_any` from blacklist
+  - Added static method helpers to `helper_map` for inline expansion
 
-// 3. kh2_has_all - check if player has all items
-kh2_has_all(items, snapshot) {
-  if (!snapshot?.inventory) return false;
-  return items.every(item => snapshot.inventory[item] > 0);
-},
-```
-
-**Pros:** Fast, minimal changes, maintains existing approach
-**Cons:** Continues dual Python/JavaScript implementation pattern
-
-### Option B: Implement New Rule Types (Long-term Solution)
-
-To export blacklisted helpers as JSON rule definitions, implement support for these Python patterns:
-
-#### 1. Dict Key Access Pattern
-**Python:** `rules[self.fight_logic]`
-**Needed:** Support for subscript access on dict literals with dynamic keys (setting values)
-
-#### 2. List Comprehension with Sum
-**Python:** `sum([1 for items in list_of_lists if state.has_any(items, player)])`
-**Current:** `kh2_list_any_sum` is implemented in JavaScript
-**Alternative:** Could be exported as `for_iter` + conditional increment + `return`
-
-#### 3. Instance Attribute Access
-**Python:** `self.player`, `self.world.options.FightLogic`
-**Needed:** Pattern detection for `self.world.options.X` to convert to `setting_value` rule type
-
-#### 4. All/Any with Generator
-**Python:** `all([state.has(item, player, count) for item, count in dict.items()])`
-**Current:** Partially supported via `all_of` type
-**Needed:** Better support for dict iteration with tuple unpacking
-
-### Priority Recommendation
-
-1. **Immediate:** Implement Option A (add 3 missing JavaScript helpers)
-2. **Future:** Consider Option B for maintainability if more games need similar patterns
-
-## KH2 Blacklisted Helpers Reference
-
-The following helpers in `exporter/games/kh2.py` are blacklisted with their reasons:
-
-| Helper | Reason |
-|--------|--------|
-| `form_list_unlock` | Conditional logic based on AutoFormLogic setting |
-| `get_form_level_requirement` | Loops counting forms with FinalFormLogic checks |
-| `level_locking_unlock` | Sum over visit_locking_dict list |
-| `summon_levels_unlocked` | Sum over summons list |
-| `kh2_list_count_sum` | List comprehension with sum |
-| `kh2_list_any_sum` | List comprehension with sum and has_any |
-| `kh2_dict_count` | Dict comprehension with all() |
-| `kh2_dict_one_count` | Dict comprehension with sum |
-| `kh2_has_all` | Wraps state.has_all |
-| `kh2_has_any` | Wraps state.has_any |
-| `kh2_can_reach` | Uses multiworld.get_location |
-| `kh2_can_reach_any` | Loop over locations |
-| `kh2_can_reach_all` | Loop over locations |
-| `final_form_region_access` | Uses any() over location.can_reach |
-| `get_*_rules` (60+) | Reference self.fight_logic and use dict key access |
-
-## Files Modified/Created
-
-- **Investigation only** - no changes made yet
-- This document: `CC/kh2-rule-types-investigation.md`
+### JavaScript (Frontend)
+- `frontend/modules/shared/ruleEngine.js`
+  - Added `player_id` rule type handler
+  - Added `set` and `list` built-in function handlers
+  - Added recursive rule evaluation in `subscript` case for rule objects
 
 ## Testing
 
-To verify KH2 rules work correctly:
-
 ```bash
 # Generate KH2 multiworld
+source .venv/bin/activate
 python Generate.py --weights_file_path "Templates/Kingdom Hearts 2.yaml" --multi 1 --seed 1
 
 # Run spoiler test
 npm test -- --mode=test-spoilers --game=kh2 --seed=1
 ```
 
-Current status: **Tests pass** (using JavaScript fallbacks for complex helpers)
+Current status: **Tests pass** ✅
+
+## Future Work
+
+To enable more KH2 helpers to be exported as JSON (instead of requiring JavaScript fallbacks):
+
+1. **Sum with Generator Pattern** - For `kh2_list_any_sum`, `kh2_list_count_sum`:
+   - Export as `for_iter` with counter variable and conditional increment
+   - Or add a `count_matching` rule type
+
+2. **Dict Iteration with All/Any** - For `kh2_dict_count`, `kh2_dict_one_count`:
+   - Support `for item, count in dict.items()` pattern
+   - Add tuple unpacking in `for_iter`
+
+3. **Conditional Setting Branches** - For `form_list_unlock`:
+   - Export conditional branches based on setting values
+   - Already partially supported via `conditional` rule type
+
+4. **Fight Rules** - Once `kh2_list_any_sum` is exportable:
+   - Most fight rules will automatically become exportable
+   - They use dict subscript (now working) with rule values
