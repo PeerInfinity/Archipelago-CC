@@ -11,6 +11,9 @@ class LADXGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'Links Awakening DX'
     """Export handler for Links Awakening DX."""
 
+    # Enable automatic helper export (even though LADX uses LADXR conditions, not helper functions)
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+
     def expand_helper(self, helper_name: str):
         """Expand game-specific helper functions for LADX."""
         # Start with generic expansion
@@ -375,3 +378,28 @@ class LADXGameExportHandler(GenericGameExportHandler):
         settings_dict = super().get_settings_data(world, multiworld, player)
         settings_dict['use_resolved_items'] = True
         return settings_dict
+
+    def get_game_info(self, world):
+        """Export LADX game info including RUPEES accumulator rules."""
+        game_info = super().get_game_info(world)
+
+        # Define accumulator rules for rupee items
+        # This allows the frontend to compute total RUPEES from collected rupee items
+        # matching the Python behavior in worlds/ladx/__init__.py collect() method
+        # Pattern matches items like "20 Rupees", "50 Rupees", etc.
+        # and accumulates their numeric value into the "RUPEES" target
+        game_info['accumulator_rules'] = [
+            {
+                'pattern': r'^(\d+) Rupees$',    # Regex to match rupee items
+                'extract_value': True,           # Extract numeric value from group 1
+                'target': 'RUPEES',              # Target accumulator name
+                'discriminator': None            # No dynamic target selection
+            }
+        ]
+
+        # Initialize RUPEES accumulator to 0
+        game_info['prog_items_init'] = {
+            'RUPEES': 0
+        }
+
+        return game_info

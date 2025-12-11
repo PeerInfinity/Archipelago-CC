@@ -22,7 +22,7 @@
       ],
       "last_updated": "2025-12-10T20:00:14.138642"
     },
-    "last_updated": "2025-12-10T20:00:14.138640",
+    "last_updated": "2025-12-11T01:36:38.319017",
     "script_version": "1.0.0"
   },
   "results": {
@@ -976,27 +976,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "1ac1f685f5c408cfb975a44400bc722386545131dedc06cd671be9dc25367ae2",
-          "new_sphere_log_hash": "89b2a869ad7b109d5193504f5744b7807b24b064a7010432a8b7698cdb19d5e8",
-          "original_rules_hash": "1ac1f685f5c408cfb975a44400bc722386545131dedc06cd671be9dc25367ae2",
-          "original_sphere_log_hash": "89b2a869ad7b109d5193504f5744b7807b24b064a7010432a8b7698cdb19d5e8",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-10T19:58:45.378819"
-        }
-      },
       "game_name_from_filename": "dlcquest",
       "game_name_from_yaml": "DLCQuest",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.62,
+        "processing_time_seconds": 7.02,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/dlcquest/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -1008,7 +996,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.82,
+        "processing_time_seconds": 9.87,
         "return_code": 0,
         "sphere_reached": 8.1,
         "success": true,
@@ -1016,7 +1004,7 @@
         "warning_count": 0
       },
       "template_filename": "DLCQuest.yaml",
-      "timestamp": "2025-12-10T19:54:20.440199",
+      "timestamp": "2025-12-11T01:36:21.000299",
       "world_info": {
         "exporter_path": "exporter/games/dlcquest.py",
         "exporter_size": 9846,
@@ -1979,31 +1967,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "bca9cf34c919673772e5d8706ffbc23b0b836faa03ef283d81f1268f1c759393",
-          "new_sphere_log_hash": "bc5f4424e79806863c230f950e800c62a489a7a5669c8932bfdfbd125b1c5090",
-          "original_rules_hash": "bca9cf34c919673772e5d8706ffbc23b0b836faa03ef283d81f1268f1c759393",
-          "original_sphere_log_hash": "bc5f4424e79806863c230f950e800c62a489a7a5669c8932bfdfbd125b1c5090",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-10T19:55:55.826386"
-        }
-      },
       "game_name_from_filename": "links_awakening_dx",
       "game_name_from_yaml": "Links Awakening DX",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 7.37,
+        "processing_time_seconds": 11.36,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/ladx/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 670914,
+        "size_bytes": 671163,
         "size_mb": 0.64
       },
       "seed": "1",
@@ -2011,7 +1987,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 15.86,
+        "processing_time_seconds": 20.05,
         "return_code": 0,
         "sphere_reached": 15.1,
         "success": true,
@@ -2019,10 +1995,10 @@
         "warning_count": 0
       },
       "template_filename": "Links Awakening DX.yaml",
-      "timestamp": "2025-12-10T19:54:20.498982",
+      "timestamp": "2025-12-11T01:34:51.027601",
       "world_info": {
         "exporter_path": "exporter/games/ladx.py",
-        "exporter_size": 16149,
+        "exporter_size": 17356,
         "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
         "game_logic_size": 5427,
         "game_name_from_filename": "links_awakening_dx",
