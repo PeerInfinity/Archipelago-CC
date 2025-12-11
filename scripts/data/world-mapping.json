@@ -1,7 +1,7 @@
 {
   "A Hat in Time": {
     "exporter_path": "exporter/games/ahit.py",
-    "exporter_size": 6156,
+    "exporter_size": 7756,
     "game_logic_path": "frontend/modules/shared/gameLogic/ahit/ahitLogic.js",
     "game_logic_size": 10533,
     "has_custom_exporter": true,
@@ -19,7 +19,7 @@
   },
   "A Link to the Past": {
     "exporter_path": "exporter/games/alttp.py",
-    "exporter_size": 36761,
+    "exporter_size": 43991,
     "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
     "game_logic_size": 61286,
     "has_custom_exporter": true,
@@ -1036,7 +1036,7 @@
   },
   "Starcraft 2": {
     "exporter_path": "exporter/games/sc2.py",
-    "exporter_size": 19748,
+    "exporter_size": 20202,
     "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
     "game_logic_size": 88384,
     "has_custom_exporter": true,
@@ -1072,7 +1072,7 @@
   },
   "Subnautica": {
     "exporter_path": "exporter/games/subnautica.py",
-    "exporter_size": 5293,
+    "exporter_size": 2397,
     "game_logic_path": "frontend/modules/shared/gameLogic/subnautica/subnauticaLogic.js",
     "game_logic_size": 15085,
     "has_custom_exporter": true,
@@ -1099,11 +1099,11 @@
   },
   "Super Mario 64": {
     "exporter_path": "exporter/games/sm64ex.py",
-    "exporter_size": 14991,
-    "game_logic_path": "frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js",
-    "game_logic_size": 3382,
+    "exporter_size": 14996,
+    "game_logic_path": null,
+    "game_logic_size": 0,
     "has_custom_exporter": true,
-    "has_custom_game_logic": true,
+    "has_custom_game_logic": false,
     "world_directory": "sm64ex"
   },
   "Super Mario 64 WorldGen": {
@@ -1117,9 +1117,9 @@
   },
   "Super Mario Land 2": {
     "exporter_path": "exporter/games/marioland2.py",
-    "exporter_size": 16096,
+    "exporter_size": 14109,
     "game_logic_path": "frontend/modules/shared/gameLogic/marioland2/marioland2Logic.js",
-    "game_logic_size": 15682,
+    "game_logic_size": 5037,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "marioland2"
@@ -1153,7 +1153,7 @@
   },
   "Super Metroid": {
     "exporter_path": "exporter/games/sm.py",
-    "exporter_size": 73172,
+    "exporter_size": 73522,
     "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
     "game_logic_size": 117398,
     "has_custom_exporter": true,
@@ -1207,7 +1207,7 @@
   },
   "TUNIC": {
     "exporter_path": "exporter/games/tunic.py",
-    "exporter_size": 6529,
+    "exporter_size": 2427,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1225,9 +1225,9 @@
   },
   "Terraria": {
     "exporter_path": "exporter/games/terraria.py",
-    "exporter_size": 12066,
+    "exporter_size": 12584,
     "game_logic_path": "frontend/modules/shared/gameLogic/terraria/terrariaLogic.js",
-    "game_logic_size": 4687,
+    "game_logic_size": 4389,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "terraria"
@@ -1243,11 +1243,11 @@
   },
   "The Legend of Zelda": {
     "exporter_path": "exporter/games/tloz.py",
-    "exporter_size": 7069,
-    "game_logic_path": "frontend/modules/shared/gameLogic/tloz/tlozLogic.js",
-    "game_logic_size": 1789,
+    "exporter_size": 7048,
+    "game_logic_path": null,
+    "game_logic_size": 0,
     "has_custom_exporter": true,
-    "has_custom_game_logic": true,
+    "has_custom_game_logic": false,
     "world_directory": "tloz"
   },
   "The Legend of Zelda WorldGen": {
@@ -1261,11 +1261,11 @@
   },
   "The Messenger": {
     "exporter_path": "exporter/games/messenger.py",
-    "exporter_size": 13645,
-    "game_logic_path": "frontend/modules/shared/gameLogic/messenger/messengerLogic.js",
-    "game_logic_size": 3347,
+    "exporter_size": 10198,
+    "game_logic_path": null,
+    "game_logic_size": 0,
     "has_custom_exporter": true,
-    "has_custom_game_logic": true,
+    "has_custom_game_logic": false,
     "world_directory": "messenger"
   },
   "The Messenger WorldGen": {
@@ -1279,9 +1279,9 @@
   },
   "The Wind Waker": {
     "exporter_path": "exporter/games/tww.py",
-    "exporter_size": 3652,
+    "exporter_size": 4901,
     "game_logic_path": "frontend/modules/shared/gameLogic/tww/twwLogic.js",
-    "game_logic_size": 56586,
+    "game_logic_size": 4711,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "tww"
@@ -1297,11 +1297,11 @@
   },
   "The Witness": {
     "exporter_path": "exporter/games/witness.py",
-    "exporter_size": 24301,
-    "game_logic_path": "frontend/modules/shared/gameLogic/witness/witnessLogic.js",
-    "game_logic_size": 896,
+    "exporter_size": 24275,
+    "game_logic_path": null,
+    "game_logic_size": 0,
     "has_custom_exporter": true,
-    "has_custom_game_logic": true,
+    "has_custom_game_logic": false,
     "world_directory": "witness"
   },
   "The Witness WorldGen": {
@@ -1315,11 +1315,11 @@
   },
   "Timespinner": {
     "exporter_path": "exporter/games/timespinner.py",
-    "exporter_size": 5532,
-    "game_logic_path": "frontend/modules/shared/gameLogic/timespinner/timespinnerLogic.js",
-    "game_logic_size": 10794,
+    "exporter_size": 4108,
+    "game_logic_path": null,
+    "game_logic_size": 0,
     "has_custom_exporter": true,
-    "has_custom_game_logic": true,
+    "has_custom_game_logic": false,
     "world_directory": "timespinner"
   },
   "Timespinner WorldGen": {
@@ -1360,11 +1360,11 @@
   },
   "VVVVVV": {
     "exporter_path": "exporter/games/v6.py",
-    "exporter_size": 5287,
-    "game_logic_path": "frontend/modules/shared/gameLogic/v6/v6Logic.js",
-    "game_logic_size": 2198,
+    "exporter_size": 5531,
+    "game_logic_path": null,
+    "game_logic_size": 0,
     "has_custom_exporter": true,
-    "has_custom_game_logic": true,
+    "has_custom_game_logic": false,
     "world_directory": "v6"
   },
   "VVVVVV WorldGen": {
@@ -1414,7 +1414,7 @@
   },
   "Yacht Dice": {
     "exporter_path": "exporter/games/yachtdice.py",
-    "exporter_size": 2338,
+    "exporter_size": 1677,
     "game_logic_path": "frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js",
     "game_logic_size": 291890,
     "has_custom_exporter": true,
@@ -1432,11 +1432,11 @@
   },
   "Yoshi's Island": {
     "exporter_path": "exporter/games/yoshisisland.py",
-    "exporter_size": 8248,
-    "game_logic_path": "frontend/modules/shared/gameLogic/yoshisisland/yoshisislandLogic.js",
-    "game_logic_size": 34039,
+    "exporter_size": 11103,
+    "game_logic_path": null,
+    "game_logic_size": 0,
     "has_custom_exporter": true,
-    "has_custom_game_logic": true,
+    "has_custom_game_logic": false,
     "world_directory": "yoshisisland"
   },
   "Yoshi's Island WorldGen": {

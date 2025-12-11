@@ -860,6 +860,19 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             }
         }
 
+        # Define computed helper for can_defeat_boss
+        # This is a synthetic helper created by postprocess_rule for GT multi-boss locations.
+        # The simplified implementation just calls can_kill_most_things(1), matching JS behavior.
+        # For proper boss-specific logic, we'd need to export boss placements and defeat rules.
+        helper_defs['can_defeat_boss'] = {
+            'params': ['location_name', 'boss_type'],
+            'body': {
+                'type': 'helper',
+                'name': 'can_kill_most_things',
+                'args': [{'type': 'constant', 'value': 1}]
+            }
+        }
+
         return helper_defs
 
 # Reminder: Ensure get_game_export_handler in exporter/games/__init__.py

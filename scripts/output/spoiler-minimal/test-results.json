@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-11T04:29:29.972745",
-    "last_updated": "2025-12-11T04:29:29.972750",
+    "last_updated": "2025-12-11T15:51:58.967161",
     "script_version": "1.0.0"
   },
   "results": {
@@ -72,31 +72,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "60592fe37d85313c25a8880da90e9305f9eda366723d4d64319984ca9cbcdce5",
-          "new_sphere_log_hash": "d36bc0bd35be1031e331f500e0dce8115d27796f983860130d3a4fc05f723225",
-          "original_rules_hash": "60592fe37d85313c25a8880da90e9305f9eda366723d4d64319984ca9cbcdce5",
-          "original_sphere_log_hash": "d36bc0bd35be1031e331f500e0dce8115d27796f983860130d3a4fc05f723225",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-11T04:28:01.146705"
-        }
-      },
       "game_name_from_filename": "alttp",
       "game_name_from_yaml": "A Link to the Past",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 9.81,
+        "processing_time_seconds": 13.36,
         "return_code": 0,
         "success": true,
-        "warning_count": 3
+        "warning_count": 2
       },
       "rules_file": {
         "path": "frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 616817,
+        "size_bytes": 619072,
         "size_mb": 0.59
       },
       "seed": "1",
@@ -104,7 +92,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 22.52,
+        "processing_time_seconds": 25.65,
         "return_code": 0,
         "sphere_reached": 22.1,
         "success": true,
@@ -112,10 +100,10 @@
         "warning_count": 0
       },
       "template_filename": "A Link to the Past.yaml",
-      "timestamp": "2025-12-11T04:25:48.780257",
+      "timestamp": "2025-12-11T15:51:19.540631",
       "world_info": {
         "exporter_path": "exporter/games/alttp.py",
-        "exporter_size": 40364,
+        "exporter_size": 43991,
         "game_logic_path": "frontend/modules/shared/gameLogic/alttp/alttpLogic.js",
         "game_logic_size": 61286,
         "game_name_from_filename": "alttp",
