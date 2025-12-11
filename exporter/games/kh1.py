@@ -16,15 +16,22 @@ class KH1GameExportHandler(BaseGameExportHandler):
     # Module paths containing helper functions
     HELPER_MODULES: List[str] = ['worlds.kh1.Rules']
 
-    # Helpers to export (whitelist) - simple helpers without loops
+    # Helpers to export (whitelist) - these will be exported as definitions
     HELPERS_TO_EXPORT_WHITELIST: Set[str] = {
         'has_all_magic_lvx',    # Simple checks, no loops
+        'has_x_worlds',         # Now exportable with block-mode support
+    }
+
+    # Helpers that should be preserved as helper calls (not inlined)
+    # Complex helpers with for loops, assignments, etc. need localScope
+    # which is only created when called as a helper, not when inlined
+    HELPERS_TO_PRESERVE: Set[str] = {
+        'has_x_worlds',         # Has for loop and variable assignments
     }
 
     # Helpers that are too complex to export (have loops/complex logic)
     # These require JavaScript implementations
     HELPERS_TO_EXPORT_BLACKLIST: Set[str] = {
-        'has_x_worlds',         # Has for loop over WORLDS array
         'has_emblems',          # Calls has_x_worlds which has loops
         'has_defensive_tools',  # Called without args but definition needs logic_difficulty param
         'has_puppies',          # Has loops over puppy items
