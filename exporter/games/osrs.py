@@ -17,9 +17,14 @@ logger = logging.getLogger(__name__)
 
 class OSRSGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'Old School Runescape'
-    # Disable automatic helper export (use old behavior)
-    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    # Enable automatic helper export
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
+
+    # Helpers too complex for automatic export (has loops)
+    HELPERS_TO_EXPORT_BLACKLIST = {
+        'quest_points',  # Has loop through QP locations
+    }
 
 
     def __init__(self):
