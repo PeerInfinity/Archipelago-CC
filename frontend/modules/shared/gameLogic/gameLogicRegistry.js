@@ -241,8 +241,6 @@ import * as raftLogic from './raft/raftLogic.js';
 import { raftStateModule } from './raft/raftLogic.js';
 import * as sm64exLogic from './sm64ex/sm64exLogic.js';
 import { sm64exStateModule } from './sm64ex/sm64exLogic.js';
-import * as v6Logic from './v6/v6Logic.js';
-import { v6StateModule } from './v6/v6Logic.js';
 import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
 import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
 import * as overcooked2Logic from './overcooked2/overcooked2Logic.js';
@@ -421,12 +419,6 @@ const GAME_REGISTRY = {
     stateMethods: marioland2Logic.stateMethods,
     worldClasses: ['MarioLand2World'],
     aliases: ['Super Mario Land 2', 'SML2', 'marioland2']
-  },
-  'VVVVVV': {
-    logicModule: v6Logic.v6StateModule,
-    helperFunctions: v6Logic.helperFunctions,
-    worldClasses: ['V6World'],
-    aliases: ['VVVVVV', 'V6']
   },
   'Overcooked! 2': {
     logicModule: overcooked2Logic.overcooked2StateModule,
