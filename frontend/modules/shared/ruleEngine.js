@@ -2371,6 +2371,135 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'placement_lookup': {
+        // Look up what item is placed at a specific location
+        // Used by location_item_name helper to check item placements
+        // Format: { type: 'placement_lookup', location: {...} }
+        // Returns: [itemName, player] tuple or null if not found
+        const locationName = evaluateRule(rule.location, context, depth + 1, localScope);
+
+        if (typeof locationName !== 'string') {
+          log('warn', '[evaluateRule] placement_lookup: location did not evaluate to string', { rule, locationName });
+          result = null;
+          break;
+        }
+
+        if (typeof context.getStaticData !== 'function') {
+          log('warn', '[evaluateRule] placement_lookup: context.getStaticData not available');
+          result = null;
+          break;
+        }
+
+        const staticData = context.getStaticData();
+
+        // Try locationItems Map first (this is the primary source)
+        if (staticData?.locationItems) {
+          const itemData = staticData.locationItems instanceof Map
+            ? staticData.locationItems.get(locationName)
+            : staticData.locationItems[locationName];
+
+          if (itemData && itemData.name) {
+            // Return as [itemName, player] tuple like Python's location_item_name
+            result = [itemData.name, itemData.player || 1];
+            break;
+          }
+        }
+
+        // Fallback: search through regions for location data
+        const regionsData = staticData?.regions;
+        if (regionsData) {
+          const regions = regionsData instanceof Map
+            ? Array.from(regionsData.values())
+            : Object.values(regionsData);
+
+          for (const region of regions) {
+            if (region?.locations) {
+              const loc = region.locations.find(l => l.name === locationName);
+              if (loc?.item?.name) {
+                result = [loc.item.name, loc.item.player || 1];
+                break;
+              }
+            }
+          }
+          if (result) break;
+        }
+
+        // Location not found or no item placed
+        log('debug', `[evaluateRule] placement_lookup: no item found at location '${locationName}'`);
+        result = null;
+        break;
+      }
+
+      case 'placement_search': {
+        // Search for an item across multiple locations
+        // Used by item_name_in_location_names to check if an item is at any of the given locations
+        // Format: { type: 'placement_search', item: {...}, player: {...}, locations: [...] }
+        // Returns: true if item is found at any location, false otherwise
+        const searchItem = evaluateRule(rule.item, context, depth + 1, localScope);
+        const searchPlayer = evaluateRule(rule.player, context, depth + 1, localScope);
+        const locations = evaluateRule(rule.locations, context, depth + 1, localScope);
+
+        if (typeof searchItem !== 'string') {
+          log('warn', '[evaluateRule] placement_search: item did not evaluate to string', { rule, searchItem });
+          result = false;
+          break;
+        }
+
+        if (!Array.isArray(locations)) {
+          log('warn', '[evaluateRule] placement_search: locations is not an array', { rule, locations });
+          result = false;
+          break;
+        }
+
+        if (typeof context.getStaticData !== 'function') {
+          log('warn', '[evaluateRule] placement_search: context.getStaticData not available');
+          result = false;
+          break;
+        }
+
+        const staticData = context.getStaticData();
+        result = false;
+
+        // Search through locations
+        for (const locPair of locations) {
+          if (!Array.isArray(locPair) || locPair.length < 2) continue;
+          const [locName, locPlayer] = locPair;
+          if (typeof locName !== 'string') continue;
+
+          // Look up item at this location
+          let itemData = null;
+          if (staticData?.locationItems) {
+            itemData = staticData.locationItems instanceof Map
+              ? staticData.locationItems.get(locName)
+              : staticData.locationItems[locName];
+          }
+
+          // Fallback: search regions
+          if (!itemData?.name && staticData?.regions) {
+            const regions = staticData.regions instanceof Map
+              ? Array.from(staticData.regions.values())
+              : Object.values(staticData.regions);
+
+            for (const region of regions) {
+              if (region?.locations) {
+                const loc = region.locations.find(l => l.name === locName);
+                if (loc?.item?.name) {
+                  itemData = { name: loc.item.name, player: loc.item.player || 1 };
+                  break;
+                }
+              }
+            }
+          }
+
+          // Check if this is the item we're looking for
+          if (itemData?.name === searchItem && itemData?.player === locPlayer) {
+            result = true;
+            break;
+          }
+        }
+        break;
+      }
+
       case 'capability': {
         // Handle capability rules - inferred rules that check if player has a certain capability
         // The capability name (e.g., "gain_lp_every_turn") corresponds to a helper function
