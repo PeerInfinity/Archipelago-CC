@@ -1577,9 +1577,22 @@ class ASTVisitorMixin:
                     'attr': region_attr
                 }
 
-            # Specifically log if we are processing self.player
+            # Handle self.player - convert to player_id reference
+            # This is used in class-based rule helpers like KH2's KH2Rules
             if isinstance(node.value, ast.Name) and node.value.id == 'self' and attr_name == 'player':
-                 logging.debug("visit_Attribute: Detected access to self.player")
+                logging.debug("visit_Attribute: Detected self.player, converting to player_id")
+                return {'type': 'player_id'}
+
+            # Handle self.<attr> patterns that map to settings
+            # This is used for patterns like self.fight_logic which is set from world.options.FightLogic
+            if isinstance(node.value, ast.Name) and node.value.id == 'self':
+                # Check if the game handler has a mapping for this attribute to a setting
+                if hasattr(self, 'game_handler') and self.game_handler is not None:
+                    setting_mapping = getattr(self.game_handler, 'SELF_ATTR_TO_SETTING', {})
+                    if attr_name in setting_mapping:
+                        setting_name = setting_mapping[attr_name]
+                        logging.debug(f"visit_Attribute: Detected self.{attr_name}, converting to setting_value '{setting_name}'")
+                        return {'type': 'setting_value', 'setting': setting_name}
 
             # OPTIMIZATION: If the object is a simple Name node in closure_vars, try to resolve
             # the attribute directly BEFORE visiting the object. This handles NamedTuples and
