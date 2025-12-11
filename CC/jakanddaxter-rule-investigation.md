@@ -184,8 +184,23 @@ npm test -- --mode=test-spoilers --game=jakanddaxter --seed=2
 
 | Issue | Status | Solution |
 |-------|--------|----------|
-| Default config (orbsanity off) | Working | No changes needed |
-| Per-level orbsanity | Failing | Implement `can_reach_orbs_level` in JavaScript |
+| Default config (orbsanity off) | ✅ Working | No changes needed |
+| Per-level orbsanity | ✅ Fixed | Implemented `can_reach_orbs_level` in JavaScript |
 | Global orbsanity | Not tested | Likely same as default (uses `can_reach_orbs`) |
 
-The infrastructure for orb counting helpers is already in place. The remaining work is extending the JavaScript helper to handle level-specific orb counting.
+## Implementation Complete
+
+The per-level orbsanity support has been implemented with the following changes:
+
+1. **JavaScript helper** (`frontend/modules/shared/gameLogic/jakanddaxter/helpers.js`):
+   - Added `can_reach_orbs_level` function to count reachable orbs per level
+
+2. **Exporter** (`exporter/games/jakanddaxter.py`):
+   - Added `HELPERS_TO_PRESERVE = {'can_reach_orbs_level'}` to preserve helper as function call
+   - Added `get_game_info` method with `accumulator_rules` for Tradeable Orbs tracking
+   - Pattern `^(\d+) Precursor Orbs?$` extracts orb values and accumulates to "Tradeable Orbs"
+
+3. **Generic logic** (`frontend/modules/shared/gameLogic/generic/genericLogic.js`):
+   - Enhanced `count` helper to check `prog_items` for virtual items like "Tradeable Orbs"
+
+Both default (orbsanity off) and per-level orbsanity configurations pass spoiler tests.
