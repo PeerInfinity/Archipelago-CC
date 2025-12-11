@@ -798,3 +798,223 @@ class ALttPGameExportHandler(BaseGameExportHandler):
         'can_defeat_boss',  # Needs boss placement data + calls individual boss rules
     }
 ```
+
+---
+
+## Technical Deep Dive: can_defeat_boss Implementation
+
+### Current State Analysis
+
+After detailed investigation, here's what's actually happening:
+
+#### 1. Boss Defeat Data is Already Exported
+
+The ALTTP exporter already exports dungeon boss data with defeat rules:
+
+```json
+{
+  "dungeons": {
+    "1": {
+      "Eastern Palace": {
+        "name": "Eastern Palace",
+        "bosses": {
+          "None": {
+            "name": "Armos Knights",
+            "defeat_rule": {
+              "type": "or",
+              "conditions": [...]
+            }
+          }
+        }
+      },
+      "Ganons Tower": {
+        "bosses": {
+          "None": { "name": "Agahnim2", "defeat_rule": {...} },
+          "bottom": { "name": "Armos Knights", "defeat_rule": {...} },
+          "middle": { "name": "Lanmolas", "defeat_rule": {...} },
+          "top": { "name": "Moldorm", "defeat_rule": {...} }
+        }
+      }
+    }
+  }
+}
+```
+
+#### 2. Two Different Boss Defeat Patterns Exist
+
+**Pattern A: Ganon's Tower multi-boss (3 locations) - CONVERTED**
+```python
+# Python: state.multiworld.get_location('GT - Big Key Chest').parent_region.dungeon.bosses['bottom'].can_defeat(state)
+# Exported as:
+{"type": "helper", "name": "can_defeat_boss", "args": [
+  {"type": "constant", "value": "Ganons Tower - Big Key Chest"},
+  {"type": "constant", "value": "bottom"}
+]}
+```
+This pattern IS converted by `postprocess_rule` because it has a subscript with `['bottom', 'middle', 'top']`.
+
+**Pattern B: Regular dungeon bosses (20 locations) - NOT CONVERTED**
+```python
+# Python: location.parent_region.dungeon.boss.can_defeat(state)
+# Exported as-is (not converted):
+{
+  "type": "function_call",
+  "function": {
+    "type": "attribute",
+    "object": {
+      "type": "attribute",
+      "object": {
+        "type": "attribute",
+        "object": {
+          "type": "attribute",
+          "object": {"type": "name", "name": "location"},
+          "attr": "parent_region"
+        },
+        "attr": "dungeon"
+      },
+      "attr": "boss"
+    },
+    "attr": "can_defeat"
+  },
+  "args": []
+}
+```
+
+#### 3. Why Pattern B Doesn't Work
+
+The rule contains `{"type": "name", "name": "location"}` which attempts to resolve the Python variable `location`. However:
+
+1. **In reachabilityEngine.js**: When evaluating location rules, the code does:
+   ```javascript
+   snapshotInterface.currentLocation = location;
+   snapshotInterface.location = location; // Line 597
+   ```
+
+2. **But in stateInterface.js**: The `resolveName` function only checks `contextVariables`:
+   ```javascript
+   resolveName: (name) => {
+     if (contextVariables && contextVariables.hasOwnProperty(name)) {
+       return contextVariables[name];
+     }
+     // ... doesn't check the interface object itself
+   }
+   ```
+
+3. **The bug**: Setting `snapshotInterface.location = location` doesn't add to `contextVariables`, which is captured as a closure when the interface is created.
+
+#### 4. Existing Boss Defeat Handling in ruleEngine.js
+
+The ruleEngine already has handling for boss defeat patterns (lines 1244-1297):
+
+```javascript
+// Special handling for boss.can_defeat function calls
+if (rule.function?.type === 'attribute' && rule.function.attr === 'can_defeat') {
+  // Check if this is a boss through location chain
+  if (isDungeomBossDefeat) {
+    const bossObject = evaluateRule(rule.function.object, context, depth + 1, localScope);
+    if (bossObject && bossObject.defeat_rule) {
+      result = evaluateRule(bossObject.defeat_rule, context, depth + 1, localScope);
+      break;
+    }
+  }
+}
+```
+
+This handler would work IF `location` resolved properly to give the boss object.
+
+### Implementation Options
+
+#### Option 1: Fix `resolveName` to include interface properties (Quick Fix)
+
+In `stateInterface.js`, update `resolveName` to also check interface properties:
+
+```javascript
+resolveName: (name) => {
+  // Check context variables first
+  if (contextVariables && Object.prototype.hasOwnProperty.call(contextVariables, name)) {
+    return contextVariables[name];
+  }
+  // NEW: Check interface properties (for location set dynamically)
+  if (Object.prototype.hasOwnProperty.call(snapshotInterface, name)) {
+    return snapshotInterface[name];
+  }
+  // ... rest of the function
+}
+```
+
+**Problem**: This creates a chicken-and-egg issue since `snapshotInterface` isn't defined when `resolveName` is created.
+
+#### Option 2: Pass `location` as `contextVariables` (Clean Fix)
+
+In `reachabilityEngine.js`, create a new interface with location in context:
+
+```javascript
+// Instead of:
+const snapshotInterface = sm._createSelfSnapshotInterface();
+snapshotInterface.location = location;
+
+// Do:
+const snapshotInterface = sm._createSelfSnapshotInterface({ location });
+```
+
+And update `_createSelfSnapshotInterface` to accept contextVariables:
+
+```javascript
+export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
+  // ... pass contextVariables to createStateSnapshotInterface
+}
+```
+
+**Complexity**: Medium - requires changes to multiple files
+
+#### Option 3: Resolve boss defeat at export time (Best Fix)
+
+In `alttp.py`'s `postprocess_rule`, detect `location.parent_region.dungeon.boss.can_defeat()` and convert it to directly reference the dungeon boss data:
+
+```python
+# Detect pattern: location.parent_region.dungeon.boss.can_defeat()
+if (rule.get('type') == 'function_call' and
+    rule['function'].get('attr') == 'can_defeat' and
+    has_location_dungeon_boss_pattern(rule)):
+
+    # At export time, we know which location this rule is for
+    # Look up the dungeon and return a direct boss defeat check
+    return create_boss_defeat_rule_for_location(location_name)
+```
+
+**Problem**: `postprocess_rule` doesn't currently receive the location name.
+
+#### Option 4: Inline boss defeat rules (Alternative)
+
+Instead of `location.parent_region.dungeon.boss.can_defeat()`, inline the actual boss defeat rule at export time:
+
+```python
+# During rule analysis, when encountering boss.can_defeat():
+# - Look up which dungeon the location belongs to
+# - Get the boss's defeat_rule from dungeon data
+# - Inline the defeat_rule directly into the location's access rule
+```
+
+This eliminates the need for runtime resolution entirely.
+
+### Recommended Implementation Path
+
+1. **Short term (Option 2)**: Fix the `resolveName` context issue
+   - Modify `_createSelfSnapshotInterface` to accept contextVariables
+   - Pass `{ location }` when evaluating location rules
+   - Existing boss defeat handling in ruleEngine.js will then work
+
+2. **Long term consideration**: The dungeon boss data is already exported with defeat rules, so the infrastructure is in place. Once `location` resolves properly, everything should work.
+
+### Files to Modify
+
+1. **`frontend/modules/stateManager/core/statePersistence.js`**
+   - Update `_createSelfSnapshotInterface` to accept and forward contextVariables
+
+2. **`frontend/modules/stateManager/stateManager.js`**
+   - Update `_createSelfSnapshotInterface` wrapper to accept contextVariables
+
+3. **`frontend/modules/stateManager/core/reachabilityEngine.js`**
+   - Pass `{ location }` when creating snapshot interface for location rule evaluation
+
+4. **Test**: Run spoiler tests to verify boss defeat checks work correctly
