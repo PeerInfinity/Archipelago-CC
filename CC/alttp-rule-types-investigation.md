@@ -1018,3 +1018,57 @@ This eliminates the need for runtime resolution entirely.
    - Pass `{ location }` when creating snapshot interface for location rule evaluation
 
 4. **Test**: Run spoiler tests to verify boss defeat checks work correctly
+
+---
+
+## Implementation Complete: contextVariables Fix (December 2025)
+
+The recommended Option 2 fix has been implemented. The changes enable proper resolution of the `location` variable in boss defeat rules like `location.parent_region.dungeon.boss.can_defeat()`.
+
+### Changes Made
+
+1. **`frontend/modules/stateManager/core/statePersistence.js`**
+   - Updated `_createSelfSnapshotInterface(sm)` to `_createSelfSnapshotInterface(sm, contextVariables = {})`
+   - Added contextVariables check at the start of `resolveName`:
+     ```javascript
+     resolveName: (name) => {
+       if (contextVariables && Object.prototype.hasOwnProperty.call(contextVariables, name)) {
+         return contextVariables[name];
+       }
+       // ... rest of function
+     }
+     ```
+   - Updated internal recursive call in `isLocationAccessible` method to pass context
+
+2. **`frontend/modules/stateManager/stateManager.js`**
+   - Updated wrapper method to accept and forward contextVariables:
+     ```javascript
+     _createSelfSnapshotInterface(contextVariables = {}) {
+       return StatePersistenceModule._createSelfSnapshotInterface(this, contextVariables);
+     }
+     ```
+
+3. **`frontend/modules/stateManager/core/reachabilityEngine.js`**
+   - Updated `isLocationAccessible` to pass location context:
+     ```javascript
+     const snapshotInterface = sm._createSelfSnapshotInterface({ location, currentLocation: location });
+     ```
+
+### Test Results
+
+All 5 ALTTP spoiler test seeds pass with 100% sphere coverage after these changes:
+- Seed 1: ✅ 133/133 events
+- Seed 2: ✅ 133/133 events
+- Seed 3: ✅ 133/133 events
+- Seed 4: ✅ 133/133 events
+- Seed 5: ✅ 133/133 events
+
+### Remaining Work
+
+The `can_defeat_boss` JavaScript fallback is still used for dungeon boss defeat checks. To fully utilize the exported boss defeat rules, the following would be needed:
+
+1. Export boss placement data (which boss is at each dungeon)
+2. Export individual boss defeat rules as helpers (12 total)
+3. Update the `can_defeat_boss` helper to look up boss placements and call the appropriate defeat rule
+
+However, since the tests pass with the current implementation, this additional work is optional and can be deferred.

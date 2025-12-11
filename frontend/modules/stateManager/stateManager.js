@@ -724,8 +724,8 @@ export class StateManager {
 
   // Helper to create a snapshot-like interface from the instance itself
   // Needed for internal methods that rely on rule evaluation (like isLocationAccessible)
-  _createSelfSnapshotInterface() {
-    return StatePersistenceModule._createSelfSnapshotInterface(this);
+  _createSelfSnapshotInterface(contextVariables = {}) {
+    return StatePersistenceModule._createSelfSnapshotInterface(this, contextVariables);
   }
 
   /**
