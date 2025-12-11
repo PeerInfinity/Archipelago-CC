@@ -34,8 +34,10 @@ class AHitGameExportHandler(BaseGameExportHandler):
 
     # Blacklist helpers that are too complex to analyze automatically:
     # - can_clear_required_act: Uses multiworld.get_entrance and region reachability
+    # - get_hat_cost: Uses for loop over world.hat_craft_order (not range())
     HELPERS_TO_EXPORT_BLACKLIST: Set[str] = {
         'can_clear_required_act',
+        'get_hat_cost',
     }
 
     # Preserve these helpers as helper calls (don't inline their bodies)
@@ -151,3 +153,39 @@ class AHitGameExportHandler(BaseGameExportHandler):
                 "hat_info": {},
                 "relic_groups": {}
             }
+
+    def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
+        """Return A Hat in Time item data with classifications."""
+        items_data = {}
+        try:
+            # Import the item_table from the world module
+            from worlds.ahit.Items import item_table
+            from BaseClasses import ItemClassification
+
+            # Classification mapping
+            classification_map = {
+                ItemClassification.progression: 'progression',
+                ItemClassification.progression_skip_balancing: 'progression',
+                ItemClassification.useful: 'useful',
+                ItemClassification.filler: 'filler',
+                ItemClassification.trap: 'trap',
+            }
+
+            for item_name, item_data in item_table.items():
+                # ItemData is a NamedTuple with (code, classification, dlc_flags)
+                classification = classification_map.get(item_data.classification, 'filler')
+                items_data[item_name] = {
+                    'name': item_name,
+                    'id': item_data.code,
+                    'classification': classification,
+                    'groups': [],
+                    'event': False,
+                    'type': None,
+                    'max_count': 1
+                }
+
+            logger.debug(f"Exported {len(items_data)} items for A Hat in Time")
+        except Exception as e:
+            logger.error(f"Error getting A Hat in Time item data: {e}")
+
+        return items_data

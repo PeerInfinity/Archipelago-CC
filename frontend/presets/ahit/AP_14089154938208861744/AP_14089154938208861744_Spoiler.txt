@@ -543,8 +543,8 @@ Act Completion (The Subcon Well)
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
    =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 5: Connection 1
-   =>   Heating Up Mafia Town -> Battle of the Birds - Finale A: Connection 2
+   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> Battle of the Birds - Finale A: Connection 1
    =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
    =>   The Subcon Well
 Act Completion (The Twilight Bell)
@@ -780,53 +780,43 @@ Birdhouse Cleared
    =>   The Birdhouse
 Dead Bird Studio (Rift) - Page: Above Horse Picture
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
-   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
-   =>   The Illness has Spread -> Time Rift - Alpine Skyline Portal - Entrance 2
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> Time Rift - Alpine Skyline Portal - Entrance 1
    =>   Time Rift - Dead Bird Studio
 Dead Bird Studio (Rift) - Page: Above TV Room
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
-   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
-   =>   The Illness has Spread -> Time Rift - Alpine Skyline Portal - Entrance 2
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> Time Rift - Alpine Skyline Portal - Entrance 1
    =>   Time Rift - Dead Bird Studio
 Dead Bird Studio (Rift) - Page: In The Corner
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
-   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
-   =>   The Illness has Spread -> Time Rift - Alpine Skyline Portal - Entrance 2
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> Time Rift - Alpine Skyline Portal - Entrance 1
    =>   Time Rift - Dead Bird Studio
 Dead Bird Studio (Rift) - Page: Lava Lamp
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
-   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
-   =>   The Illness has Spread -> Time Rift - Alpine Skyline Portal - Entrance 2
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> Time Rift - Alpine Skyline Portal - Entrance 1
    =>   Time Rift - Dead Bird Studio
 Dead Bird Studio (Rift) - Page: Top of Metal Bar
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
-   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Mafia Town - Act 6: Connection 1
-   =>   Picture Perfect -> Mafia Town - Act 5: Connection 1
-   =>   The Illness has Spread -> Time Rift - Alpine Skyline Portal - Entrance 2
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> Time Rift - Alpine Skyline Portal - Entrance 1
    =>   Time Rift - Dead Bird Studio
 Dead Bird Studio - Behind Water Tower
         Menu -> Save File -> Spaceship
@@ -1264,8 +1254,8 @@ Subcon Well - Mushroom
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
    =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
-   =>   Train Rush -> Battle of the Birds - Act 5: Connection 1
-   =>   Heating Up Mafia Town -> Battle of the Birds - Finale A: Connection 2
+   =>   Train Rush -> Battle of the Birds - Act 4: Connection 1
+   =>   Alpine Free Roam -> Battle of the Birds - Finale A: Connection 1
    =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
    =>   The Subcon Well
 TIHS Access
