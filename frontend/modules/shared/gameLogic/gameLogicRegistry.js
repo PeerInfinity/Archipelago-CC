@@ -253,7 +253,7 @@ import * as terrariaLogic from './terraria/terrariaLogic.js';
 // timespinnerLogic removed - helpers now exported to rules.json
 import * as twwLogic from './tww/twwLogic.js';
 import * as wargrooveLogic from './wargroove/wargrooveLogic.js';
-import { helperFunctions as yoshisislandHelperFunctions } from './yoshisisland/yoshisislandLogic.js';
+// yoshisisland helpers have been exported to rules.json - no JavaScript needed
 import * as yugioh06Logic from './yugioh06/yugioh06Logic.js';
 import { helperFunctions as osrsHelperFunctions } from './osrs/osrsLogic.js';
 import * as tlozLogic from './tloz/tlozLogic.js';
@@ -484,9 +484,10 @@ const GAME_REGISTRY = {
     worldClasses: ['WitnessWorld'],
     aliases: ['The Witness', 'Witness']
   },
+  // Yoshi's Island helpers are exported to rules.json - uses Generic
   "Yoshi's Island": {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: yoshisislandHelperFunctions,
+    helperFunctions: genericLogic.helperFunctions,
     worldClasses: ['YoshisIslandWorld'],
     aliases: ["Yoshi's Island"]
   },
