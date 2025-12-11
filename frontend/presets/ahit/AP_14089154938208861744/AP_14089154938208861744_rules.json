@@ -8155,6 +8155,85 @@
           }
         ]
       },
+      "get_hat_cost": {
+        "params": [
+          "hat"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "cost",
+              "value": {
+                "type": "constant",
+                "value": 0
+              }
+            },
+            {
+              "type": "for_iter",
+              "var": "h",
+              "iterable": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "world"
+                },
+                "attr": "hat_craft_order"
+              },
+              "body": [
+                {
+                  "type": "assign",
+                  "name": "cost",
+                  "op": "+=",
+                  "value": {
+                    "type": "subscript",
+                    "value": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "world"
+                      },
+                      "attr": "hat_yarn_costs"
+                    },
+                    "index": {
+                      "type": "name",
+                      "name": "h"
+                    }
+                  }
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "name",
+                      "name": "h"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "name",
+                      "name": "hat"
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "break"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "name",
+                "name": "cost"
+              }
+            }
+          ]
+        }
+      },
       "has_relic_combo": {
         "params": [
           "relic"

@@ -199,16 +199,26 @@ class ASTVisitorMixin:
         try:
             logging.debug("\n--- Analyzing Return ---")
             logging.debug(f"Return value type: {type(node.value).__name__}")
-            
+
             if isinstance(node.value, ast.BoolOp):
                 logging.debug(f"BoolOp type: {type(node.value.op).__name__}")
                 logging.debug(f"BoolOp values count: {len(node.value.values)}")
-            
+
             # Visit the return value and return its result
             return self.visit(node.value)
         except Exception as e:
             logging.error("Error in visit_Return", e)
             return None
+
+    def visit_Break(self, node):
+        """Handle break statements - used to exit loops early."""
+        logging.debug("\n--- Analyzing Break ---")
+        return {'type': 'break'}
+
+    def visit_Continue(self, node):
+        """Handle continue statements - skip to next iteration."""
+        logging.debug("\n--- Analyzing Continue ---")
+        return {'type': 'continue'}
 
     def visit_Call(self, node):
         """
@@ -2519,8 +2529,9 @@ class ASTVisitorMixin:
 
     def visit_For(self, node: ast.For):
         """
-        Handle for loops, specifically for range() iterations.
-        Produces a for_range rule type for use in imperative helper evaluation.
+        Handle for loops.
+        Produces a for_range rule type for range() iterations,
+        or a for_iter rule type for iterating over arbitrary iterables.
         """
         try:
             logging.debug(f"\n--- visit_For ---")
@@ -2532,24 +2543,6 @@ class ASTVisitorMixin:
             if isinstance(node.target, ast.Name):
                 var_name = node.target.id
 
-            # Check if this is a range() call
-            if not (isinstance(node.iter, ast.Call) and
-                    isinstance(node.iter.func, ast.Name) and
-                    node.iter.func.id == 'range'):
-                logging.warning(f"visit_For: Only range() loops are supported, got: {ast.dump(node.iter)}")
-                return None
-
-            # Get the count argument for range()
-            if not node.iter.args:
-                logging.error("visit_For: range() called without arguments")
-                return None
-
-            count_arg = node.iter.args[0]
-            count_result = self.visit(count_arg)
-            if count_result is None:
-                logging.error(f"visit_For: Failed to analyze range count: {ast.dump(count_arg)}")
-                return None
-
             # Analyze the loop body
             body_results = []
             for stmt in node.body:
@@ -2557,12 +2550,41 @@ class ASTVisitorMixin:
                 if stmt_result is not None:
                     body_results.append(stmt_result)
 
-            return {
-                'type': 'for_range',
-                'var': var_name,
-                'count': count_result,
-                'body': body_results
-            }
+            # Check if this is a range() call
+            if (isinstance(node.iter, ast.Call) and
+                    isinstance(node.iter.func, ast.Name) and
+                    node.iter.func.id == 'range'):
+                # Get the count argument for range()
+                if not node.iter.args:
+                    logging.error("visit_For: range() called without arguments")
+                    return None
+
+                count_arg = node.iter.args[0]
+                count_result = self.visit(count_arg)
+                if count_result is None:
+                    logging.error(f"visit_For: Failed to analyze range count: {ast.dump(count_arg)}")
+                    return None
+
+                return {
+                    'type': 'for_range',
+                    'var': var_name,
+                    'count': count_result,
+                    'body': body_results
+                }
+            else:
+                # Handle iteration over arbitrary iterables (for_iter)
+                iterable_result = self.visit(node.iter)
+                if iterable_result is None:
+                    logging.error(f"visit_For: Failed to analyze iterable: {ast.dump(node.iter)}")
+                    return None
+
+                logging.debug(f"visit_For: Creating for_iter with iterable: {iterable_result}")
+                return {
+                    'type': 'for_iter',
+                    'var': var_name,
+                    'iterable': iterable_result,
+                    'body': body_results
+                }
         except Exception as e:
             logging.error(f"Error in visit_For: {e}")
             return None
@@ -2644,16 +2666,63 @@ class ASTVisitorMixin:
                 assign_result = self._try_convert_if_to_assign(node)
                 if assign_result is not None:
                     return assign_result
-                # Otherwise, fall back to regular conditional handling
-                return self.visit_If(node)
+                # Use statement-based if handling for imperative contexts
+                return self._visit_If_statement(node)
             elif isinstance(node, ast.Expr):
                 # Expression statement - just evaluate it
                 return self.visit(node.value)
+            elif isinstance(node, ast.Break):
+                # Break statement - used to exit loops early
+                return {'type': 'break'}
+            elif isinstance(node, ast.Continue):
+                # Continue statement - skip to next iteration
+                return {'type': 'continue'}
             else:
                 logging.warning(f"visit_statement: Unsupported statement type: {type(node).__name__}")
                 return None
         except Exception as e:
             logging.error(f"Error in visit_statement: {e}")
+            return None
+
+    def _visit_If_statement(self, node: ast.If) -> Optional[Dict[str, Any]]:
+        """
+        Handle If statements in imperative/statement context.
+        Produces an if_statement rule type that can contain break/continue/return.
+        """
+        try:
+            logging.debug(f"\n--- _visit_If_statement ---")
+            test_result = self.visit(node.test)
+            if test_result is None:
+                logging.error(f"_visit_If_statement: Failed to analyze test: {ast.dump(node.test)}")
+                return None
+
+            # Analyze the if-body as statements
+            body_results = []
+            for stmt in node.body:
+                stmt_result = self.visit_statement(stmt)
+                if stmt_result is not None:
+                    body_results.append(stmt_result)
+
+            # Analyze the else-body as statements (if present)
+            orelse_results = []
+            if node.orelse:
+                for stmt in node.orelse:
+                    stmt_result = self.visit_statement(stmt)
+                    if stmt_result is not None:
+                        orelse_results.append(stmt_result)
+
+            result = {
+                'type': 'if_statement',
+                'test': test_result,
+                'body': body_results
+            }
+
+            if orelse_results:
+                result['orelse'] = orelse_results
+
+            return result
+        except Exception as e:
+            logging.error(f"Error in _visit_If_statement: {e}")
             return None
 
     def _try_convert_if_to_assign(self, node: ast.If) -> Optional[Dict[str, Any]]:

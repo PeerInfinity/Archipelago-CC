@@ -28,11 +28,17 @@ grep -r "HELPERS_TO_EXPORT_BLACKLIST" exporter/games/
 | A Link to the Past | `can_extend_magic` | Complex counting logic |
 | A Link to the Past | `has_crystals` | Dynamic crystal counting |
 | A Link to the Past | `has_hearts` | Heart piece counting loop |
-| A Hat in Time | `can_use_hat` | Loop through `hat_craft_order` |
-| A Hat in Time | `get_hat_cost` | Loop calculating cumulative costs |
-| A Hat in Time | `has_relic_combo` | Uses `state.has_group` |
-| A Hat in Time | `get_relic_count` | Uses `state.count_group` |
+| A Hat in Time | `can_clear_required_act` | Uses `multiworld.get_entrance` and region reachability |
 | Castlevania 64 | `location_item_name` | Dynamic item name lookup |
+
+**Previously blacklisted, now supported:**
+
+| Game | Helper | Now Uses |
+|------|--------|----------|
+| A Hat in Time | `can_use_hat` | Exported (uses `for_iter` via `get_hat_cost`) |
+| A Hat in Time | `get_hat_cost` | Exported (uses `for_iter`, `if_statement`, `break`) |
+| A Hat in Time | `has_relic_combo` | Exported (uses `group_check`) |
+| A Hat in Time | `get_relic_count` | Exported (uses `group_count`) |
 
 ### Method 2: Check Browser Console
 
