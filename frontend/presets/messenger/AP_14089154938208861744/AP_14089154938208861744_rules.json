@@ -3012,25 +3012,8 @@
                   "function": {
                     "type": "attribute",
                     "object": {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "state"
-                          },
-                          "attr": "multiworld"
-                        },
-                        "attr": "get_region"
-                      },
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Howling Grotto - Emerald Golem Shop"
-                        }
-                      ]
+                      "type": "region_reference",
+                      "region": "Howling Grotto - Emerald Golem Shop"
                     },
                     "attr": "can_reach"
                   },

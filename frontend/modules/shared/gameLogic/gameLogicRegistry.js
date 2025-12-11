@@ -228,8 +228,6 @@ import * as kdl3Logic from './kdl3/kdl3Logic.js';
 import * as ladxLogic from './ladx/ladxLogic.js';
 import { helperFunctions as lingoHelperFunctions } from './lingo/lingoLogic.js';
 import * as marioland2Logic from './marioland2/marioland2Logic.js';
-import * as messengerLogic from './messenger/messengerLogic.js';
-import { messengerStateModule } from './messenger/messengerLogic.js';
 import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
 import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 import * as pokemon_emeraldLogic from './pokemon_emerald/pokemon_emeraldLogic.js';
@@ -340,12 +338,6 @@ const GAME_REGISTRY = {
     helperFunctions: kdl3Logic.helperFunctions,
     worldClasses: ['KDL3World'],
     aliases: ["Kirby's Dream Land 3", 'KDL3']
-  },
-  'The Messenger': {
-    logicModule: messengerLogic.messengerStateModule,
-    helperFunctions: messengerLogic.helperFunctions,
-    worldClasses: ['MessengerWorld'],
-    aliases: ['The Messenger', 'Messenger']
   },
   'Pokemon Red and Blue': {
     logicModule: pokemon_rbLogic.pokemon_rbStateModule,
