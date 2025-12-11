@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-11T04:29:29.972745",
-    "last_updated": "2025-12-11T04:56:58.857356",
+    "last_updated": "2025-12-11T05:15:45.372218",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3148,9 +3148,9 @@
           "game_name_from_filename": "sc2",
           "game_name_from_yaml": "Starcraft 2",
           "generation": {
-            "error_count": 2,
+            "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 9.55,
+            "processing_time_seconds": 10.23,
             "return_code": 0,
             "success": true,
             "warning_count": 0
@@ -3165,7 +3165,7 @@
           "spoiler_test": {
             "error_count": 0,
             "pass_fail": "passed",
-            "processing_time_seconds": 45.88,
+            "processing_time_seconds": 45.09,
             "return_code": 0,
             "sphere_reached": 15.5,
             "success": true,
@@ -3173,7 +3173,7 @@
             "warning_count": 0
           },
           "template_filename": "Starcraft 2.yaml",
-          "timestamp": "2025-12-11T04:51:54.584599",
+          "timestamp": "2025-12-11T05:14:49.618559",
           "world_info": {
             "exporter_path": "exporter/games/sc2.py",
             "exporter_size": 20202,
@@ -3385,7 +3385,7 @@
         "failure_rate": 0.0
       },
       "template_filename": "Starcraft 2.yaml",
-      "timestamp": "2025-12-11T04:51:54.503645",
+      "timestamp": "2025-12-11T05:14:49.618559",
       "total_seeds_tested": 5
     },
     "Stardew Valley.yaml": {

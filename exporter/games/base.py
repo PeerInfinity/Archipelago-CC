@@ -11,6 +11,7 @@ See exporter/games/generic.py for details on the enhanced functionality.
 from typing import Dict, Any, List, Set, Optional, Callable
 import collections
 import importlib
+import inspect
 import logging
 
 logger = logging.getLogger(__name__)
@@ -841,6 +842,13 @@ class BaseGameExportHandler:
                     # Not found in helper modules - this is normal for built-in helpers
                     # like 'has', 'count', etc. that the frontend implements directly
                     logger.debug(f"Helper function '{helper_name}' not found in helper modules (may be a built-in)")
+                    continue
+
+                # Skip built-in functions (e.g., math.floor imported at module level)
+                # These can't be analyzed via source inspection and are typically
+                # handled directly by the frontend rule engine
+                if inspect.isbuiltin(helper_func):
+                    logger.debug(f"Helper '{helper_name}' is a built-in function, skipping analysis (handled by frontend)")
                     continue
 
                 # Analyze the function to get its rule structure
