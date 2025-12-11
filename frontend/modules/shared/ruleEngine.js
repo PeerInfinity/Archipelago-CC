@@ -2221,13 +2221,14 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         // Extract iterator information
+        // NOTE: Pass localScope so that helper parameters (like 'item' in can_buy) can be resolved
         let iterable;
         if (rule.iterator_info && rule.iterator_info.iterator) {
           // Get the iterator from the iterator_info
-          iterable = evaluateRule(rule.iterator_info.iterator, context, depth + 1);
+          iterable = evaluateRule(rule.iterator_info.iterator, context, depth + 1, localScope);
         } else if (rule.iterable) {
           // Fallback for direct iterable field
-          iterable = evaluateRule(rule.iterable, context, depth + 1);
+          iterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
         } else {
           log('warn', '[evaluateRule] any_of rule missing iterator information', { rule });
           result = undefined;

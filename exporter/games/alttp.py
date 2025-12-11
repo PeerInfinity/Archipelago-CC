@@ -19,17 +19,14 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
     HELPER_MODULES = ['worlds.alttp.StateHelpers', 'worlds.alttp.Bosses']
 
     # Complex helpers that can't be exported (need JavaScript implementations)
-    # These have loops, complex counting, settings lookups, or dynamic conditions
     # NOTE: Use set() for empty blacklist - {} creates an empty dict!
-    HELPERS_TO_EXPORT_BLACKLIST = {
-        # These helpers iterate over Shop objects and call methods (shop.has(), region.can_reach())
-        # that don't exist in exported JSON. They use ruleEngine.js implementation with shop_items data.
-        'can_buy',
-        'can_buy_unlimited',
-    }
+    # All helpers now exported via computed definitions or other mechanisms
+    HELPERS_TO_EXPORT_BLACKLIST = set()
     # Blacklist history (all now exported or handled via other mechanisms):
     # - 'GanonDefeatRule': Now exported - uses supported patterns (settings, item checks, helpers)
     # - 'can_extend_magic': Now works with shop region reachability
+    # - 'can_buy': Now exported as computed helper using shop_items data
+    # - 'can_buy_unlimited': Now exported as computed helper using shop_items data
     # - 'can_get_good_bee': Now works with region_reference and region_attribute support
     # - 'can_kill_most_things': Now works with default parameter values support
     # - 'can_shoot_arrows': Now works with can_buy and can_hold_arrows
@@ -794,6 +791,76 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         """
         data = self.get_collection_data(name)
         return len(data) if data is not None else None
+
+    def get_helper_definitions(self, world) -> Dict[str, Any]:
+        """
+        Get helper definitions, including computed helpers for can_buy/can_buy_unlimited.
+
+        The can_buy and can_buy_unlimited helpers in Python iterate over Shop objects
+        with method calls (shop.has(), region.can_reach()) that can't be directly exported.
+        Instead, we define computed helpers that use the exported shop_items data structure
+        to achieve the same logic:
+
+        Python: any(shop.has(item) and shop.region.can_reach(state) for shop in shops)
+        JSON:   any_of(region in shop_items[item][key], can_reach(region))
+
+        This allows these helpers to be evaluated natively by the rule engine without
+        special-case handling.
+        """
+        # Get standard exported helpers from base class
+        helper_defs = super().get_helper_definitions(world)
+
+        # Define computed helper for can_buy
+        # Logic: check if any region in shop_items[item]["limited"] is reachable
+        helper_defs['can_buy'] = {
+            'params': ['item'],
+            'body': {
+                'type': 'any_of',
+                'iterator_info': {
+                    'target': {'type': 'name', 'name': 'region'},
+                    'iterator': {
+                        'type': 'subscript',
+                        'value': {
+                            'type': 'subscript',
+                            'value': {'type': 'setting_value', 'setting': 'shop_items'},
+                            'index': {'type': 'name', 'name': 'item'}
+                        },
+                        'index': {'type': 'constant', 'value': 'limited'}
+                    }
+                },
+                'element_rule': {
+                    'type': 'can_reach',
+                    'region': {'type': 'name', 'name': 'region'}
+                }
+            }
+        }
+
+        # Define computed helper for can_buy_unlimited
+        # Logic: check if any region in shop_items[item]["unlimited"] is reachable
+        helper_defs['can_buy_unlimited'] = {
+            'params': ['item'],
+            'body': {
+                'type': 'any_of',
+                'iterator_info': {
+                    'target': {'type': 'name', 'name': 'region'},
+                    'iterator': {
+                        'type': 'subscript',
+                        'value': {
+                            'type': 'subscript',
+                            'value': {'type': 'setting_value', 'setting': 'shop_items'},
+                            'index': {'type': 'name', 'name': 'item'}
+                        },
+                        'index': {'type': 'constant', 'value': 'unlimited'}
+                    }
+                },
+                'element_rule': {
+                    'type': 'can_reach',
+                    'region': {'type': 'name', 'name': 'region'}
+                }
+            }
+        }
+
+        return helper_defs
 
 # Reminder: Ensure get_game_export_handler in exporter/games/__init__.py
 # returns an instance of ALttPGameExportHandler for the 'A Link to the Past' game.
