@@ -6,20 +6,26 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-11 01:57:09
+**Generated:** 2025-12-10 19:54:33
 
 ## Summary
 
-- **Total Games:** 77
-- **Passed:** 73 (94.8%)
-- **Failed:** 4 (5.2%)
+- **Total Games:** 76
+- **Passed:** 73 (96.1%)
+- **Failed:** 3 (3.9%)
+
+### Generic Exporter/Logic Statistics
+
+- **Passing with Generic Exporter:** 29/73 (39.7% of passed)
+- **Passing with Generic Logic:** 44/73 (60.3% of passed)
+- **Passing with Both Generic:** 29/73 (39.7% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Exporter | GameLogic |
 |-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|----------|----------|
 | A Hat in Time | ❌ Failed | 1 | ✅ | 232/232 | 223/223 | 9/9 | ✅ | 232/232 | 6.0KB | 10.3KB |
-| A Link to the Past | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 19/19 | ✅ | 268/268 | 35.7KB | 59.8KB |
+| A Link to the Past | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 19/19 | ✅ | 268/268 | 35.9KB | 59.8KB |
 | A Short Hike | ✅ Passed | 0 | ✅ | 131/131 | 131/131 | 0/0 | ✅ | 131/131 | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | ✅ | 8/8 | 6/6 | 2/2 | ✅ | 8/8 | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | ✅ | 25/25 | 24/24 | 1/1 | ✅ | 25/25 | ✅ | ✅ |
@@ -51,24 +57,23 @@
 | Kirby's Dream Land 3 | ✅ Passed | 0 | ✅ | 567/567 | 65/65 | 502/502 | ✅ | 567/567 | 9.7KB | 14.9KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | ✅ | 298/298 | 291/291 | 7/7 | ✅ | 298/298 | 16.4KB | ✅ |
 | Lingo | ✅ Passed | 0 | ✅ | 156/156 | 155/155 | 1/1 | ✅ | 156/156 | 32.9KB | 10.7KB |
-| Links Awakening DX | ✅ Passed | 0 | ✅ | 226/226 | 220/220 | 6/6 | ✅ | 226/226 | 15.8KB | 5.3KB |
+| Links Awakening DX | ✅ Passed | 0 | ✅ | 226/226 | 220/220 | 6/6 | ✅ | 226/226 | 16.9KB | 5.3KB |
 | Lufia II Ancient Cave | ✅ Passed | 0 | ✅ | 40/40 | 35/35 | 5/5 | ✅ | 40/40 | ✅ | ✅ |
-| Mario & Luigi Superstar Saga | ✅ Passed | 0 | ✅ | 557/557 | 556/556 | 1/1 | ✅ | 557/557 | 0.5KB | 8.9KB |
+| Mario & Luigi Superstar Saga | ✅ Passed | 0 | ✅ | 557/557 | 556/556 | 1/1 | ✅ | 557/557 | 0.6KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | 0 | ✅ | 11/11 | 10/10 | 1/1 | ✅ | 11/11 | ✅ | ✅ |
-| Mega Man 2 | ✅ Passed | 0 | ✅ | 50/50 | 44/44 | 6/6 | ✅ | 50/50 | 3.7KB | 3.2KB |
-| MegaMan Battle Network 3 | ✅ Passed | 0 | ✅ | 264/264 | 263/263 | 1/1 | ✅ | 264/264 | 0.7KB | 2.7KB |
+| Mega Man 2 | ✅ Passed | 0 | ✅ | 50/50 | 44/44 | 6/6 | ✅ | 50/50 | 0.6KB | 3.2KB |
+| MegaMan Battle Network 3 | ✅ Passed | 0 | ✅ | 264/264 | 263/263 | 1/1 | ✅ | 264/264 | 3.5KB | ✅ |
 | Meritous | ✅ Passed | 0 | ✅ | 109/109 | 104/104 | 5/5 | ✅ | 109/109 | ✅ | ✅ |
 | Metamath | ✅ Passed | 0 | ✅ | 9/9 | 9/9 | 0/0 | ✅ | 9/9 | ✅ | ✅ |
 | Muse Dash | ✅ Passed | 0 | ✅ | 90/90 | 90/90 | 0/0 | ✅ | 90/90 | ✅ | ✅ |
 | Noita | ✅ Passed | 0 | ✅ | 117/117 | 109/109 | 8/8 | ✅ | 117/117 | ✅ | ✅ |
-| Old School Runescape | ✅ Passed | 0 | ✅ | 76/76 | 76/76 | 22/22 | ✅ | 76/76 | 3.0KB | 1.2KB |
-| Overcooked! 2 | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | 26.5KB | 7.2KB |
-| Paint | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | 5.8KB | 4.4KB |
-| Pokemon Red and Blue | ❌ Failed | 0 | ❌ | 1004/1010 | 161/161 | 839/845 | ❌ | 1000/1010 | 12.2KB | 13.0KB |
-| Raft | ✅ Passed | 0 | ✅ | 155/155 | 154/154 | 1/1 | ✅ | 155/155 | 6.8KB | 16.4KB |
+| Old School Runescape | ✅ Passed | 0 | ✅ | 76/76 | 76/76 | 22/22 | ✅ | 76/76 | 3.1KB | 1.2KB |
+| Overcooked! 2 | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | 26.1KB | 5.1KB |
+| Paint | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | 6.4KB | 4.4KB |
+| Raft | ✅ Passed | 0 | ✅ | 155/155 | 154/154 | 1/1 | ✅ | 155/155 | 11.8KB | 5.5KB |
 | Risk of Rain 2 | ✅ Passed | 0 | ✅ | 223/223 | 221/221 | 2/2 | ✅ | 223/223 | ✅ | ✅ |
-| SMZ3 | ❌ Failed | 0 | ❌ | 70/316 | 70/316 | 0/0 | ❌ | 70/316 | 59.5KB | 51.2KB |
-| Saving Princess | ✅ Passed | 0 | ✅ | 37/37 | 36/36 | 1/1 | ✅ | 37/37 | 3.1KB | ✅ |
+| SMZ3 | ❌ Failed | 0 | ❌ | 70/316 | 70/316 | 0/0 | ❌ | 70/316 | 59.6KB | 51.2KB |
+| Saving Princess | ✅ Passed | 0 | ✅ | 37/37 | 36/36 | 1/1 | ✅ | 37/37 | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | 0 | ✅ | 340/340 | 339/339 | 1/1 | ✅ | 340/340 | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | ✅ | 114/114 | 76/76 | 38/38 | ✅ | 114/114 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | ✅ | 207/207 | 206/206 | 1/1 | ✅ | 207/207 | ✅ | ✅ |

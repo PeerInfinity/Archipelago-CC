@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-11 01:57:09
+**Generated:** 2025-12-10 19:54:33
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -17,30 +17,44 @@ Additional test results:
 
 ### Individual Test Results
 
-- **Minimal Test:** 75/77 passed (97.4%)
-- **Full Test:** 76/77 passed (98.7%)
-- **Multiclient Test:** 73/77 passed (94.8%)
-- **Multiworld Test:** 72/77 passed (93.5%)
+- **Minimal Test:** 75/76 passed (98.7%)
+- **Full Test:** 75/76 passed (98.7%)
+- **Multiclient Test:** 73/76 passed (96.1%)
+- **Multiworld Test:** 72/76 passed (94.7%)
 
 ### Intermittent Failures
 
 - **Minimal Spoilers Test:** 0 game(s), 0 total failure(s)
-- **Full Spoilers Test:** 0 game(s), 0 total failure(s)
+- **Full Spoilers Test:** 1 game(s), 1 total failure(s)
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 72/77 (93.5%)
-- **Templates passing 3 tests:** 1/77 (1.3%)
-- **Templates passing 2 tests:** 2/77 (2.6%)
-- **Templates passing 1 test:** 1/77 (1.3%)
-- **Templates passing 0 tests:** 1/77 (1.3%)
+- **Templates passing all 4 tests:** 72/76 (94.7%)
+- **Templates passing 3 tests:** 1/76 (1.3%)
+- **Templates passing 2 tests:** 2/76 (2.6%)
+- **Templates passing 1 test:** 0/76 (0.0%)
+- **Templates passing 0 tests:** 1/76 (1.3%)
+
+### Generic Exporter/Logic Statistics
+
+Of the 72 templates passing all 4 tests:
+
+- **Passing with Generic Exporter:** 29/72 (40.3%)
+- **Passing with Generic Logic:** 44/72 (61.1%)
+- **Passing with Both Generic:** 29/72 (40.3%)
+
+**Combined Custom Code Size:**
+
+- **Total Exporter Code:** 644.4KB
+- **Total Game Logic Code:** 987.9KB
+- **Combined Total:** 1632.3KB
 
 ## Test Results
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic |
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|
 | A Hat in Time | ❌ Failed | ❌ Failed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | 6.0KB | 10.3KB |
-| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 35.7KB | 59.8KB |
+| A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 35.9KB | 59.8KB |
 | A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Adventure | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
@@ -72,24 +86,23 @@ Additional test results:
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 9.7KB | 14.9KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 16.4KB | ✅ |
 | Lingo | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 32.9KB | 10.7KB |
-| Links Awakening DX | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 15.8KB | 5.3KB |
+| Links Awakening DX | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 16.9KB | 5.3KB |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.5KB | 8.9KB |
+| Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.6KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Mega Man 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.7KB | 3.2KB |
-| MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.7KB | 2.7KB |
+| Mega Man 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.6KB | 3.2KB |
+| MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.5KB | ✅ |
 | Meritous | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Metamath | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ |
 | Muse Dash | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Noita | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Old School Runescape | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.0KB | 1.2KB |
-| Overcooked! 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 26.5KB | 7.2KB |
-| Paint | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.8KB | 4.4KB |
-| Pokemon Red and Blue | ❌ Failed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | 12.2KB | 13.0KB |
-| Raft | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 6.8KB | 16.4KB |
+| Old School Runescape | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.1KB | 1.2KB |
+| Overcooked! 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 26.1KB | 5.1KB |
+| Paint | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 6.4KB | 4.4KB |
+| Raft | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 11.8KB | 5.5KB |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| SMZ3 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | 59.5KB | 51.2KB |
-| Saving Princess | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.1KB | ✅ |
+| SMZ3 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | 59.6KB | 51.2KB |
+| Saving Princess | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
@@ -137,6 +150,7 @@ The following games are excluded from automated testing:
 | Hollow Knight | The spoiler test currently freezes |
 | Ocarina of Time | The default yaml file fails to generate |
 | Pokemon Emerald | Temporarily excluded.  It takes too long to process |
+| Pokemon Red and Blue | Temporarily excluded.  It takes too long to process |
 | Sudoku | Cannot be used for generating worlds |
 | Universal Tracker | Not a game |
 | Yu-Gi-Oh! 2006 | Temporarily excluded.  It takes too long to process |
