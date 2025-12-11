@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2025-12-10 20:58:26
+**Generated:** 2025-12-11 01:26:54
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -127,9 +127,10 @@ The following games are excluded from automated testing:
 | Final Fantasy | Requires manual configuration and is not compatible with automated testing |
 | Hollow Knight | The spoiler test currently freezes |
 | Ocarina of Time | The default yaml file fails to generate |
+| Pokemon Emerald | Temporarily excluded.  It takes too long to process |
 | Sudoku | Cannot be used for generating worlds |
 | Universal Tracker | Not a game |
-| Yu-Gi-Oh! 2006 | Takes too long to process |
+| Yu-Gi-Oh! 2006 | Temporarily excluded.  It takes too long to process |
 | Zillion | Uses the external zilliandomizer tool for its logic, which is not compatible with this system |
 
 ## Notes
