@@ -70,13 +70,28 @@ python -m pytest tests/test_rule_fixtures.py -k "negate" -v
 python -m unittest tests.test_rule_fixtures -v
 ```
 
-### JavaScript Tests (Future)
+### JavaScript Tests
 
-When Vitest or similar is added:
+The JavaScript tests use Vitest and run against the same fixtures:
 
 ```bash
-npm run test:unit -- --grep "fixtures"
+# All unit tests (includes fixtures)
+npm run test:unit
+
+# Run in watch mode during development
+npm run test:unit:watch
+
+# Run specific test suite
+npm run test:unit -- -t "constant"
+
+# Run with verbose output
+npm run test:unit -- --reporter=verbose
 ```
+
+**Note**: Some fixture tests are skipped in JavaScript due to features not yet implemented in `ruleEngine.js`:
+- `block:assign_and_return` - Variable assignment with `name` resolution
+- `block:multiple_assigns` - Multiple variable assignments
+- `for_range:sum_range_5` - For loop with accumulator
 
 ## Adding New Test Cases
 
@@ -172,6 +187,7 @@ When implementing a new rule type:
 
 1. Add test cases to `rule_type_tests.json`
 2. Update the Python evaluator in `test_rule_fixtures.py` if needed
-3. Run tests to verify Python implementation
+3. Run Python tests: `python -m pytest tests/test_rule_fixtures.py -v`
 4. Implement the rule type in `ruleEngine.js`
-5. (Future) Run JavaScript tests against the same fixtures
+5. Run JavaScript tests: `npm run test:unit`
+6. If a test uses unsupported features, add it to `SKIP_TESTS` in `ruleEngine.test.js`

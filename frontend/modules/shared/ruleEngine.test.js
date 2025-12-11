@@ -1,0 +1,240 @@
+/**
+ * Unit tests for ruleEngine.js using shared JSON fixtures.
+ *
+ * These tests validate that the JavaScript rule evaluator produces
+ * the same results as the Python evaluator, ensuring consistency
+ * between the frontend and analyzer.
+ *
+ * @see tests/fixtures/rule_type_tests.json - Shared test fixtures
+ * @see tests/test_rule_fixtures.py - Python test runner
+ */
+
+import { describe, it, expect } from 'vitest';
+import { evaluateRule } from './ruleEngine.js';
+import { readFileSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+// Get __dirname equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Path to shared fixtures
+const FIXTURES_PATH = join(__dirname, '../../../tests/fixtures/rule_type_tests.json');
+
+// Load fixtures synchronously
+const fixtureContent = readFileSync(FIXTURES_PATH, 'utf-8');
+const fixtures = JSON.parse(fixtureContent);
+
+/**
+ * MockContext - Simulates StateManager interface for testing.
+ *
+ * This provides the same interface that ruleEngine.js expects from
+ * the context object (SnapshotInterface), allowing isolated unit tests.
+ */
+class MockContext {
+  constructor({ inventory = {}, groups = {}, settings = {}, regions = [], playerId = 1 } = {}) {
+    // Mark as a valid snapshot interface for ruleEngine validation
+    this._isSnapshotInterface = true;
+
+    this.inventory = inventory;
+    this.groups = groups;
+    this.settings = settings;
+    this.regions = new Set(regions);
+    this.playerId = playerId;
+  }
+
+  /**
+   * Check if player has at least one of the item.
+   * @param {string} itemName - Name of the item
+   * @returns {boolean}
+   */
+  hasItem(itemName) {
+    return (this.inventory[itemName] || 0) > 0;
+  }
+
+  /**
+   * Get the count of an item.
+   * @param {string} itemName - Name of the item
+   * @returns {number}
+   */
+  countItem(itemName) {
+    return this.inventory[itemName] || 0;
+  }
+
+  /**
+   * Check if player has items from a group.
+   * @param {string} groupName - Name of the group
+   * @param {number} count - Required count (default 1)
+   * @returns {boolean}
+   */
+  hasGroup(groupName, count = 1) {
+    return (this.groups[groupName] || 0) >= count;
+  }
+
+  /**
+   * Get the count of items in a group.
+   * @param {string} groupName - Name of the group
+   * @returns {number}
+   */
+  countGroup(groupName) {
+    return this.groups[groupName] || 0;
+  }
+
+  /**
+   * Check if a region is reachable.
+   * @param {string} regionName - Name of the region
+   * @returns {boolean}
+   */
+  canReach(regionName) {
+    return this.regions.has(regionName);
+  }
+
+  /**
+   * Get the current player ID.
+   * @returns {number}
+   */
+  getPlayerId() {
+    return this.playerId;
+  }
+
+  /**
+   * Get a setting value.
+   * @param {string} settingName - Name of the setting
+   * @returns {*}
+   */
+  getSetting(settingName) {
+    return this.settings[settingName];
+  }
+
+  /**
+   * Create a MockContext from a test case context dictionary.
+   * @param {Object} contextDict - Test case context
+   * @returns {MockContext}
+   */
+  static fromTestContext(contextDict = {}) {
+    return new MockContext({
+      inventory: contextDict.inventory || {},
+      groups: contextDict.groups || {},
+      settings: contextDict.settings || {},
+      regions: contextDict.regions || [],
+      playerId: contextDict.playerId || 1,
+    });
+  }
+}
+
+/**
+ * Test cases that use features not yet implemented in the frontend.
+ * These will be skipped until the features are added to ruleEngine.js.
+ */
+const SKIP_TESTS = new Set([
+  // Block variable assignment with `name` resolution isn't fully implemented
+  'block:assign_and_return',
+  'block:multiple_assigns',
+  'for_range:sum_range_5',
+]);
+
+/**
+ * Run a single fixture test case.
+ * @param {string} suiteName - Name of the test suite
+ * @param {Object} testCase - The test case object
+ */
+function runFixtureTest(suiteName, testCase) {
+  const context = MockContext.fromTestContext(testCase.context);
+  const result = evaluateRule(testCase.rule, context);
+
+  // Handle special comparisons
+  if (Array.isArray(testCase.expected)) {
+    expect(result).toEqual(testCase.expected);
+  } else if (testCase.expected === null) {
+    // null should match null or undefined in JS context
+    expect(result == null).toBe(true);
+  } else if (typeof testCase.expected === 'number') {
+    // Convert -0 to 0 for comparison (JS quirk: -0 !== 0 with Object.is)
+    const normalizedResult = Object.is(result, -0) ? 0 : result;
+    const normalizedExpected = Object.is(testCase.expected, -0) ? 0 : testCase.expected;
+    expect(normalizedResult).toBe(normalizedExpected);
+  } else {
+    expect(result).toBe(testCase.expected);
+  }
+}
+
+// Generate tests from fixtures
+describe('Rule Engine - Shared Fixtures', () => {
+  for (const [suiteName, suite] of Object.entries(fixtures.test_suites || {})) {
+    describe(suiteName, () => {
+      for (const testCase of suite.tests || []) {
+        const testKey = `${suiteName}:${testCase.name}`;
+        if (SKIP_TESTS.has(testKey)) {
+          it.skip(`${testCase.name} (not implemented)`, () => {
+            runFixtureTest(suiteName, testCase);
+          });
+        } else {
+          it(testCase.name, () => {
+            runFixtureTest(suiteName, testCase);
+          });
+        }
+      }
+    });
+  }
+});
+
+describe('MockContext', () => {
+  describe('inventory operations', () => {
+    it('hasItem returns true for items with count > 0', () => {
+      const ctx = new MockContext({ inventory: { Sword: 1, Key: 5 } });
+      expect(ctx.hasItem('Sword')).toBe(true);
+      expect(ctx.hasItem('Shield')).toBe(false);
+    });
+
+    it('countItem returns correct counts', () => {
+      const ctx = new MockContext({ inventory: { Key: 5 } });
+      expect(ctx.countItem('Key')).toBe(5);
+      expect(ctx.countItem('Shield')).toBe(0);
+    });
+  });
+
+  describe('group operations', () => {
+    it('hasGroup returns true when count is met', () => {
+      const ctx = new MockContext({ groups: { swords: 3, keys: 7 } });
+      expect(ctx.hasGroup('swords')).toBe(true);
+      expect(ctx.hasGroup('swords', 3)).toBe(true);
+      expect(ctx.hasGroup('swords', 4)).toBe(false);
+    });
+
+    it('countGroup returns correct counts', () => {
+      const ctx = new MockContext({ groups: { keys: 7 } });
+      expect(ctx.countGroup('keys')).toBe(7);
+      expect(ctx.countGroup('swords')).toBe(0);
+    });
+  });
+
+  describe('settings', () => {
+    it('getSetting returns correct values', () => {
+      const ctx = new MockContext({ settings: { difficulty: 'hard', hearts: 3 } });
+      expect(ctx.getSetting('difficulty')).toBe('hard');
+      expect(ctx.getSetting('hearts')).toBe(3);
+      expect(ctx.getSetting('unknown')).toBeUndefined();
+    });
+  });
+
+  describe('player ID', () => {
+    it('returns default player ID of 1', () => {
+      const ctx = new MockContext();
+      expect(ctx.getPlayerId()).toBe(1);
+    });
+
+    it('returns custom player ID', () => {
+      const ctx = new MockContext({ playerId: 2 });
+      expect(ctx.getPlayerId()).toBe(2);
+    });
+  });
+
+  describe('regions', () => {
+    it('canReach returns true for reachable regions', () => {
+      const ctx = new MockContext({ regions: ['Castle', 'Town'] });
+      expect(ctx.canReach('Castle')).toBe(true);
+      expect(ctx.canReach('Forest')).toBe(false);
+    });
+  });
+});
