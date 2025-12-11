@@ -1,0 +1,531 @@
+{
+  "$schema": "./rule_type_tests.schema.json",
+  "version": 1,
+  "description": "Shared test fixtures for rule type evaluation. Used by both Python and JavaScript test suites.",
+  "test_suites": {
+    "constant": {
+      "description": "Constant value tests",
+      "tests": [
+        {
+          "name": "true_constant",
+          "rule": {"type": "constant", "value": true},
+          "expected": true
+        },
+        {
+          "name": "false_constant",
+          "rule": {"type": "constant", "value": false},
+          "expected": false
+        },
+        {
+          "name": "integer_constant",
+          "rule": {"type": "constant", "value": 42},
+          "expected": 42
+        },
+        {
+          "name": "negative_constant",
+          "rule": {"type": "constant", "value": -5},
+          "expected": -5
+        },
+        {
+          "name": "float_constant",
+          "rule": {"type": "constant", "value": 3.14},
+          "expected": 3.14
+        },
+        {
+          "name": "string_constant",
+          "rule": {"type": "constant", "value": "hello"},
+          "expected": "hello"
+        },
+        {
+          "name": "null_constant",
+          "rule": {"type": "constant", "value": null},
+          "expected": null
+        }
+      ]
+    },
+    "negate": {
+      "description": "Unary minus operation tests",
+      "tests": [
+        {
+          "name": "negate_positive",
+          "rule": {"type": "negate", "operand": {"type": "constant", "value": 5}},
+          "expected": -5
+        },
+        {
+          "name": "negate_negative",
+          "rule": {"type": "negate", "operand": {"type": "constant", "value": -3}},
+          "expected": 3
+        },
+        {
+          "name": "negate_zero",
+          "rule": {"type": "negate", "operand": {"type": "constant", "value": 0}},
+          "expected": 0
+        },
+        {
+          "name": "negate_float",
+          "rule": {"type": "negate", "operand": {"type": "constant", "value": 2.5}},
+          "expected": -2.5
+        },
+        {
+          "name": "negate_inventory_count",
+          "rule": {"type": "negate", "operand": {"type": "count_item", "item": "Key"}},
+          "context": {"inventory": {"Key": 3}},
+          "expected": -3
+        }
+      ]
+    },
+    "player_id": {
+      "description": "Player ID reference tests",
+      "tests": [
+        {
+          "name": "returns_player_1_default",
+          "rule": {"type": "player_id"},
+          "expected": 1
+        },
+        {
+          "name": "returns_player_2",
+          "rule": {"type": "player_id"},
+          "context": {"playerId": 2},
+          "expected": 2
+        },
+        {
+          "name": "returns_player_3",
+          "rule": {"type": "player_id"},
+          "context": {"playerId": 3},
+          "expected": 3
+        }
+      ]
+    },
+    "binary_op": {
+      "description": "Binary arithmetic operation tests",
+      "tests": [
+        {
+          "name": "addition",
+          "rule": {"type": "binary_op", "op": "+", "left": {"type": "constant", "value": 2}, "right": {"type": "constant", "value": 3}},
+          "expected": 5
+        },
+        {
+          "name": "subtraction",
+          "rule": {"type": "binary_op", "op": "-", "left": {"type": "constant", "value": 10}, "right": {"type": "constant", "value": 4}},
+          "expected": 6
+        },
+        {
+          "name": "multiplication",
+          "rule": {"type": "binary_op", "op": "*", "left": {"type": "constant", "value": 6}, "right": {"type": "constant", "value": 7}},
+          "expected": 42
+        },
+        {
+          "name": "division",
+          "rule": {"type": "binary_op", "op": "/", "left": {"type": "constant", "value": 15}, "right": {"type": "constant", "value": 3}},
+          "expected": 5
+        },
+        {
+          "name": "floor_division",
+          "rule": {"type": "binary_op", "op": "//", "left": {"type": "constant", "value": 7}, "right": {"type": "constant", "value": 2}},
+          "expected": 3
+        },
+        {
+          "name": "modulo",
+          "rule": {"type": "binary_op", "op": "%", "left": {"type": "constant", "value": 10}, "right": {"type": "constant", "value": 3}},
+          "expected": 1
+        },
+        {
+          "name": "power",
+          "rule": {"type": "binary_op", "op": "**", "left": {"type": "constant", "value": 2}, "right": {"type": "constant", "value": 8}},
+          "expected": 256
+        },
+        {
+          "name": "nested_operations",
+          "rule": {
+            "type": "binary_op",
+            "op": "+",
+            "left": {"type": "binary_op", "op": "*", "left": {"type": "constant", "value": 2}, "right": {"type": "constant", "value": 3}},
+            "right": {"type": "constant", "value": 4}
+          },
+          "expected": 10
+        }
+      ]
+    },
+    "compare": {
+      "description": "Comparison operation tests",
+      "tests": [
+        {
+          "name": "equal_true",
+          "rule": {"type": "compare", "op": "==", "left": {"type": "constant", "value": 5}, "right": {"type": "constant", "value": 5}},
+          "expected": true
+        },
+        {
+          "name": "equal_false",
+          "rule": {"type": "compare", "op": "==", "left": {"type": "constant", "value": 5}, "right": {"type": "constant", "value": 3}},
+          "expected": false
+        },
+        {
+          "name": "not_equal_true",
+          "rule": {"type": "compare", "op": "!=", "left": {"type": "constant", "value": 5}, "right": {"type": "constant", "value": 3}},
+          "expected": true
+        },
+        {
+          "name": "less_than_true",
+          "rule": {"type": "compare", "op": "<", "left": {"type": "constant", "value": 3}, "right": {"type": "constant", "value": 5}},
+          "expected": true
+        },
+        {
+          "name": "less_than_false",
+          "rule": {"type": "compare", "op": "<", "left": {"type": "constant", "value": 5}, "right": {"type": "constant", "value": 3}},
+          "expected": false
+        },
+        {
+          "name": "greater_than_true",
+          "rule": {"type": "compare", "op": ">", "left": {"type": "constant", "value": 5}, "right": {"type": "constant", "value": 3}},
+          "expected": true
+        },
+        {
+          "name": "less_than_or_equal_equal",
+          "rule": {"type": "compare", "op": "<=", "left": {"type": "constant", "value": 5}, "right": {"type": "constant", "value": 5}},
+          "expected": true
+        },
+        {
+          "name": "greater_than_or_equal_equal",
+          "rule": {"type": "compare", "op": ">=", "left": {"type": "constant", "value": 5}, "right": {"type": "constant", "value": 5}},
+          "expected": true
+        },
+        {
+          "name": "in_list_true",
+          "rule": {"type": "compare", "op": "in", "left": {"type": "constant", "value": 2}, "right": {"type": "list", "value": [{"type": "constant", "value": 1}, {"type": "constant", "value": 2}, {"type": "constant", "value": 3}]}},
+          "expected": true
+        },
+        {
+          "name": "in_list_false",
+          "rule": {"type": "compare", "op": "in", "left": {"type": "constant", "value": 5}, "right": {"type": "list", "value": [{"type": "constant", "value": 1}, {"type": "constant", "value": 2}, {"type": "constant", "value": 3}]}},
+          "expected": false
+        }
+      ]
+    },
+    "and": {
+      "description": "Logical AND operation tests",
+      "tests": [
+        {
+          "name": "all_true",
+          "rule": {"type": "and", "conditions": [{"type": "constant", "value": true}, {"type": "constant", "value": true}]},
+          "expected": true
+        },
+        {
+          "name": "one_false",
+          "rule": {"type": "and", "conditions": [{"type": "constant", "value": true}, {"type": "constant", "value": false}]},
+          "expected": false
+        },
+        {
+          "name": "all_false",
+          "rule": {"type": "and", "conditions": [{"type": "constant", "value": false}, {"type": "constant", "value": false}]},
+          "expected": false
+        },
+        {
+          "name": "three_conditions_all_true",
+          "rule": {"type": "and", "conditions": [{"type": "constant", "value": true}, {"type": "constant", "value": true}, {"type": "constant", "value": true}]},
+          "expected": true
+        },
+        {
+          "name": "empty_conditions",
+          "rule": {"type": "and", "conditions": []},
+          "expected": true,
+          "note": "Empty AND is vacuously true"
+        }
+      ]
+    },
+    "or": {
+      "description": "Logical OR operation tests",
+      "tests": [
+        {
+          "name": "all_false",
+          "rule": {"type": "or", "conditions": [{"type": "constant", "value": false}, {"type": "constant", "value": false}]},
+          "expected": false
+        },
+        {
+          "name": "one_true",
+          "rule": {"type": "or", "conditions": [{"type": "constant", "value": false}, {"type": "constant", "value": true}]},
+          "expected": true
+        },
+        {
+          "name": "all_true",
+          "rule": {"type": "or", "conditions": [{"type": "constant", "value": true}, {"type": "constant", "value": true}]},
+          "expected": true
+        },
+        {
+          "name": "empty_conditions",
+          "rule": {"type": "or", "conditions": []},
+          "expected": false,
+          "note": "Empty OR is vacuously false"
+        }
+      ]
+    },
+    "not": {
+      "description": "Logical NOT operation tests",
+      "tests": [
+        {
+          "name": "not_true",
+          "rule": {"type": "not", "operand": {"type": "constant", "value": true}},
+          "expected": false
+        },
+        {
+          "name": "not_false",
+          "rule": {"type": "not", "operand": {"type": "constant", "value": false}},
+          "expected": true
+        },
+        {
+          "name": "not_with_condition_field",
+          "rule": {"type": "not", "condition": {"type": "constant", "value": true}},
+          "expected": false,
+          "note": "Some rules use 'condition' instead of 'operand'"
+        }
+      ]
+    },
+    "conditional": {
+      "description": "Ternary conditional tests",
+      "tests": [
+        {
+          "name": "condition_true",
+          "rule": {"type": "conditional", "test": {"type": "constant", "value": true}, "if_true": {"type": "constant", "value": "yes"}, "if_false": {"type": "constant", "value": "no"}},
+          "expected": "yes"
+        },
+        {
+          "name": "condition_false",
+          "rule": {"type": "conditional", "test": {"type": "constant", "value": false}, "if_true": {"type": "constant", "value": "yes"}, "if_false": {"type": "constant", "value": "no"}},
+          "expected": "no"
+        },
+        {
+          "name": "nested_conditional",
+          "rule": {
+            "type": "conditional",
+            "test": {"type": "constant", "value": true},
+            "if_true": {"type": "conditional", "test": {"type": "constant", "value": false}, "if_true": {"type": "constant", "value": 1}, "if_false": {"type": "constant", "value": 2}},
+            "if_false": {"type": "constant", "value": 3}
+          },
+          "expected": 2
+        }
+      ]
+    },
+    "min": {
+      "description": "Minimum value tests",
+      "tests": [
+        {
+          "name": "min_two_values",
+          "rule": {"type": "min", "args": [{"type": "constant", "value": 5}, {"type": "constant", "value": 3}]},
+          "expected": 3
+        },
+        {
+          "name": "min_three_values",
+          "rule": {"type": "min", "args": [{"type": "constant", "value": 10}, {"type": "constant", "value": 5}, {"type": "constant", "value": 8}]},
+          "expected": 5
+        },
+        {
+          "name": "min_with_negative",
+          "rule": {"type": "min", "args": [{"type": "constant", "value": -2}, {"type": "constant", "value": 3}]},
+          "expected": -2
+        }
+      ]
+    },
+    "max": {
+      "description": "Maximum value tests",
+      "tests": [
+        {
+          "name": "max_two_values",
+          "rule": {"type": "max", "args": [{"type": "constant", "value": 5}, {"type": "constant", "value": 3}]},
+          "expected": 5
+        },
+        {
+          "name": "max_three_values",
+          "rule": {"type": "max", "args": [{"type": "constant", "value": 10}, {"type": "constant", "value": 5}, {"type": "constant", "value": 8}]},
+          "expected": 10
+        },
+        {
+          "name": "max_with_negative",
+          "rule": {"type": "max", "args": [{"type": "constant", "value": -2}, {"type": "constant", "value": -5}]},
+          "expected": -2
+        }
+      ]
+    },
+    "item_check": {
+      "description": "Item check tests",
+      "tests": [
+        {
+          "name": "has_item_true",
+          "rule": {"type": "item_check", "item": "Sword"},
+          "context": {"inventory": {"Sword": 1}},
+          "expected": true
+        },
+        {
+          "name": "has_item_false",
+          "rule": {"type": "item_check", "item": "Sword"},
+          "context": {"inventory": {}},
+          "expected": false
+        },
+        {
+          "name": "has_item_with_count_satisfied",
+          "rule": {"type": "item_check", "item": "Key", "count": {"type": "constant", "value": 3}},
+          "context": {"inventory": {"Key": 5}},
+          "expected": true
+        },
+        {
+          "name": "has_item_with_count_not_satisfied",
+          "rule": {"type": "item_check", "item": "Key", "count": {"type": "constant", "value": 3}},
+          "context": {"inventory": {"Key": 2}},
+          "expected": false
+        }
+      ]
+    },
+    "count_item": {
+      "description": "Count item tests",
+      "tests": [
+        {
+          "name": "count_existing_item",
+          "rule": {"type": "count_item", "item": "Rupee"},
+          "context": {"inventory": {"Rupee": 50}},
+          "expected": 50
+        },
+        {
+          "name": "count_missing_item",
+          "rule": {"type": "count_item", "item": "Rupee"},
+          "context": {"inventory": {}},
+          "expected": 0
+        }
+      ]
+    },
+    "group_check": {
+      "description": "Group check tests",
+      "tests": [
+        {
+          "name": "has_group_true",
+          "rule": {"type": "group_check", "group": "swords"},
+          "context": {"groups": {"swords": 1}},
+          "expected": true
+        },
+        {
+          "name": "has_group_false",
+          "rule": {"type": "group_check", "group": "swords"},
+          "context": {"groups": {}},
+          "expected": false
+        },
+        {
+          "name": "has_group_with_count",
+          "rule": {"type": "group_check", "group": "keys", "count": 3},
+          "context": {"groups": {"keys": 5}},
+          "expected": true
+        }
+      ]
+    },
+    "group_count": {
+      "description": "Group count tests",
+      "tests": [
+        {
+          "name": "count_existing_group",
+          "rule": {"type": "group_count", "group": "keys"},
+          "context": {"groups": {"keys": 7}},
+          "expected": 7
+        },
+        {
+          "name": "count_missing_group",
+          "rule": {"type": "group_count", "group": "keys"},
+          "context": {"groups": {}},
+          "expected": 0
+        }
+      ]
+    },
+    "list": {
+      "description": "List literal tests",
+      "tests": [
+        {
+          "name": "empty_list",
+          "rule": {"type": "list", "value": []},
+          "expected": []
+        },
+        {
+          "name": "list_of_constants",
+          "rule": {"type": "list", "value": [{"type": "constant", "value": 1}, {"type": "constant", "value": 2}, {"type": "constant", "value": 3}]},
+          "expected": [1, 2, 3]
+        }
+      ]
+    },
+    "block": {
+      "description": "Block execution tests",
+      "tests": [
+        {
+          "name": "simple_return",
+          "rule": {"type": "block", "statements": [{"type": "return", "value": {"type": "constant", "value": 42}}]},
+          "expected": 42
+        },
+        {
+          "name": "assign_and_return",
+          "rule": {
+            "type": "block",
+            "statements": [
+              {"type": "assign", "var": "x", "value": {"type": "constant", "value": 10}},
+              {"type": "return", "value": {"type": "name", "name": "x"}}
+            ]
+          },
+          "expected": 10
+        },
+        {
+          "name": "multiple_assigns",
+          "rule": {
+            "type": "block",
+            "statements": [
+              {"type": "assign", "var": "a", "value": {"type": "constant", "value": 5}},
+              {"type": "assign", "var": "b", "value": {"type": "constant", "value": 3}},
+              {"type": "return", "value": {"type": "binary_op", "op": "+", "left": {"type": "name", "name": "a"}, "right": {"type": "name", "name": "b"}}}
+            ]
+          },
+          "expected": 8
+        }
+      ]
+    },
+    "for_range": {
+      "description": "For range loop tests",
+      "tests": [
+        {
+          "name": "sum_range_5",
+          "rule": {
+            "type": "block",
+            "statements": [
+              {"type": "assign", "var": "total", "value": {"type": "constant", "value": 0}},
+              {
+                "type": "for_range",
+                "var": "i",
+                "start": {"type": "constant", "value": 0},
+                "end": {"type": "constant", "value": 5},
+                "body": [
+                  {"type": "assign", "var": "total", "op": "+=", "value": {"type": "name", "name": "i"}}
+                ]
+              },
+              {"type": "return", "value": {"type": "name", "name": "total"}}
+            ]
+          },
+          "expected": 10,
+          "note": "0+1+2+3+4 = 10"
+        }
+      ]
+    },
+    "setting_value": {
+      "description": "Setting value lookup tests",
+      "tests": [
+        {
+          "name": "get_existing_setting",
+          "rule": {"type": "setting_value", "setting": "difficulty"},
+          "context": {"settings": {"difficulty": "hard"}},
+          "expected": "hard"
+        },
+        {
+          "name": "get_boolean_setting",
+          "rule": {"type": "setting_value", "setting": "enable_glitches"},
+          "context": {"settings": {"enable_glitches": true}},
+          "expected": true
+        },
+        {
+          "name": "get_numeric_setting",
+          "rule": {"type": "setting_value", "setting": "starting_hearts"},
+          "context": {"settings": {"starting_hearts": 3}},
+          "expected": 3
+        }
+      ]
+    }
+  }
+}
