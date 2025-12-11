@@ -6,17 +6,17 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2025-12-10 20:58:26
+**Generated:** 2025-12-11 01:57:09
 
-**Source Data Created:** 2025-12-10T20:15:53.438646
+**Source Data Created:** 2025-12-11T01:36:29.793233
 
-**Source Data Last Updated:** 2025-12-10T20:15:53.438652
+**Source Data Last Updated:** 2025-12-11T01:36:29.793240
 
 ## Summary
 
-- **Total Games:** 79
-- **Passed:** 77 (97.5%)
-- **Failed:** 2 (2.5%)
+- **Total Games:** 77
+- **Passed:** 76 (98.7%)
+- **Failed:** 1 (1.3%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
@@ -25,38 +25,38 @@
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time | ❌ Failed | 1 | 5.21 | 5.21 | 🟡 100.0% | 6.0KB | 10.3KB |
-| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 33.0KB | 59.8KB |
+| A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 35.7KB | 59.8KB |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Aquaria | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 4.8KB | ✅ |
 | Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.18 | 10.18 | 🟢 Complete | 1.6KB | 38.2KB |
 | Bumper Stickers | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
-| Castlevania - Circle of the Moon | ✅ Passed | 0 | 4.41 | 4.41 | 🟢 Complete | 10.2KB | 5.7KB |
-| Castlevania 64 | ✅ Passed | 0 | 5.6 | 5.6 | 🟢 Complete | 15.3KB | 2.0KB |
+| Castlevania - Circle of the Moon | ✅ Passed | 0 | 4.41 | 4.41 | 🟢 Complete | 15.1KB | ✅ |
+| Castlevania 64 | ✅ Passed | 0 | 5.6 | 5.6 | 🟢 Complete | ✅ | ✅ |
 | Celeste (Open World) | ✅ Passed | 0 | 16.5 | 16.5 | 🟢 Complete | 7.1KB | ✅ |
-| Celeste 64 | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 4.2KB | 5.9KB |
+| Celeste 64 | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 9.4KB | ✅ |
 | ChecksFinder | ✅ Passed | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ✅ |
 | ChocolateChipCookies | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | Choo-Choo Charles | ✅ Passed | 0 | 4.3 | 4.3 | 🟢 Complete | ✅ | ✅ |
-| Civilization VI | ✅ Passed | 0 | 8.15 | 8.15 | 🟢 Complete | 6.3KB | 5.1KB |
+| Civilization VI | ✅ Passed | 0 | 8.15 | 8.15 | 🟢 Complete | 0.3KB | ✅ |
 | DLCQuest | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 9.6KB | 9.4KB |
 | DOOM 1993 | ✅ Passed | 0 | 18.5 | 18.5 | 🟢 Complete | ✅ | ✅ |
 | DOOM II | ✅ Passed | 0 | 21.4 | 21.4 | 🟢 Complete | ✅ | ✅ |
-| Dark Souls III | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | 10.8KB | 4.4KB |
+| Dark Souls III | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | 4.7KB | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Factorio | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 11.4KB | 4.2KB |
 | Faxanadu | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
-| Final Fantasy Mystic Quest | ✅ Passed | 0 | 19.6 | 19.6 | 🟢 Complete | 11.2KB | ✅ |
+| Final Fantasy Mystic Quest | ✅ Passed | 0 | 19.6 | 19.6 | 🟢 Complete | 7.5KB | ✅ |
 | Heretic | ✅ Passed | 0 | 24.4 | 24.4 | 🟢 Complete | ✅ | ✅ |
-| Hylics 2 | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 1.0KB | 6.6KB |
-| Inscryption | ✅ Passed | 0 | 10.2 | 10.2 | 🟢 Complete | 11.3KB | 6.2KB |
-| Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | 14.1 | 14.1 | 🟢 Complete | 13.2KB | 4.2KB |
-| Kingdom Hearts | ❌ Failed | 0 | 9.39 | 10.8 | 🟡 86.9% | 50.8KB | 19.5KB |
-| Kingdom Hearts 2 | ✅ Passed | 0 | 15.2 | 15.2 | 🟢 Complete | 11.2KB | 112.6KB |
-| Kirby's Dream Land 3 | ✅ Passed | 0 | 11.3 | 11.3 | 🟢 Complete | 10.1KB | 14.9KB |
-| Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 16.4KB | 9.1KB |
-| Lingo | ✅ Passed | 0 | 6.12 | 6.12 | 🟢 Complete | 32.2KB | 11.3KB |
+| Hylics 2 | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 1.0KB | ✅ |
+| Inscryption | ✅ Passed | 0 | 10.2 | 10.2 | 🟢 Complete | 8.0KB | ✅ |
+| Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | 14.1 | 14.1 | 🟢 Complete | 13.1KB | 2.5KB |
+| Kingdom Hearts | ✅ Passed | 0 | 10.8 | 10.8 | 🟢 Complete | 58.1KB | 5.4KB |
+| Kingdom Hearts 2 | ✅ Passed | 0 | 15.2 | 15.2 | 🟢 Complete | 14.6KB | 105.3KB |
+| Kirby's Dream Land 3 | ✅ Passed | 0 | 11.3 | 11.3 | 🟢 Complete | 9.7KB | 14.9KB |
+| Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 16.4KB | ✅ |
+| Lingo | ✅ Passed | 0 | 6.12 | 6.12 | 🟢 Complete | 32.9KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 15.8KB | 5.3KB |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.16 | 4.16 | 🟢 Complete | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | 8.8 | 8.8 | 🟢 Complete | 0.5KB | 8.9KB |
@@ -70,7 +70,6 @@
 | Old School Runescape | ✅ Passed | 0 | 7.6 | 7.6 | 🟢 Complete | 3.0KB | 1.2KB |
 | Overcooked! 2 | ✅ Passed | 0 | 18.3 | 18.3 | 🟢 Complete | 26.5KB | 7.2KB |
 | Paint | ✅ Passed | 0 | 13.2 | 13.2 | 🟢 Complete | 5.8KB | 4.4KB |
-| Pokemon Emerald | ✅ Passed | 0 | 19.4 | 19.4 | 🟢 Complete | 6.2KB | 8.7KB |
 | Pokemon Red and Blue | ✅ Passed | 0 | 10.9 | 10.9 | 🟢 Complete | 12.2KB | 13.0KB |
 | Raft | ✅ Passed | 0 | 11.6 | 11.6 | 🟢 Complete | 6.8KB | 16.4KB |
 | Risk of Rain 2 | ✅ Passed | 0 | 8.35 | 8.35 | 🟢 Complete | ✅ | ✅ |
@@ -101,7 +100,6 @@
 | WebDevJourney | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Yacht Dice | ✅ Passed | 0 | 21.1 | 21.1 | 🟢 Complete | 2.3KB | 285.0KB |
 | Yoshi's Island | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | 8.1KB | 33.2KB |
-| Yu-Gi-Oh! 2006 | ✅ Passed | 0 | 21.23 | 21.23 | 🟢 Complete | 1.6KB | 21.4KB |
 | shapez | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ✅ |
 
 ## Notes
