@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-11T01:26:53.632096",
-    "last_updated": "2025-12-11T01:26:53.632103",
+    "last_updated": "2025-12-11T03:22:50.293690",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3376,31 +3376,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "2dd9d9addc1a828b3f2f2d0cfbd2313417ee52a4df7d2bdcd9ffc465ea79907c",
-          "new_sphere_log_hash": "a44ac1d06a17612aa6b5d4dc6e08a4b00196851dc3dcfe6c6d658660fca2a017",
-          "original_rules_hash": "2dd9d9addc1a828b3f2f2d0cfbd2313417ee52a4df7d2bdcd9ffc465ea79907c",
-          "original_sphere_log_hash": "a44ac1d06a17612aa6b5d4dc6e08a4b00196851dc3dcfe6c6d658660fca2a017",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-11T01:18:57.804313"
-        }
-      },
       "game_name_from_filename": "sm64ex",
       "game_name_from_yaml": "Super Mario 64",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.31,
+        "processing_time_seconds": 5.94,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/sm64ex/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 98724,
+        "size_bytes": 98730,
         "size_mb": 0.09
       },
       "seed": "1",
@@ -3408,7 +3396,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 12.93,
+        "processing_time_seconds": 16.62,
         "return_code": 0,
         "sphere_reached": 5.4,
         "success": true,
@@ -3416,16 +3404,16 @@
         "warning_count": 0
       },
       "template_filename": "Super Mario 64.yaml",
-      "timestamp": "2025-12-11T01:18:03.404099",
+      "timestamp": "2025-12-11T03:22:27.326265",
       "world_info": {
         "exporter_path": "exporter/games/sm64ex.py",
-        "exporter_size": 14991,
-        "game_logic_path": "frontend/modules/shared/gameLogic/sm64ex/sm64exLogic.js",
-        "game_logic_size": 3382,
+        "exporter_size": 14996,
+        "game_logic_path": null,
+        "game_logic_size": 0,
         "game_name_from_filename": "sm64ex",
         "game_name_from_yaml": "Super Mario 64",
         "has_custom_exporter": true,
-        "has_custom_game_logic": true,
+        "has_custom_game_logic": false,
         "world_directory": "sm64ex"
       }
     },
