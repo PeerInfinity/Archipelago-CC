@@ -257,7 +257,6 @@ import * as wargrooveLogic from './wargroove/wargrooveLogic.js';
 import * as yugioh06Logic from './yugioh06/yugioh06Logic.js';
 import { helperFunctions as osrsHelperFunctions } from './osrs/osrsLogic.js';
 import * as tlozLogic from './tloz/tlozLogic.js';
-import * as witnessLogic from './witness/witnessLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -478,13 +477,6 @@ const GAME_REGISTRY = {
     worldClasses: ['WargrooveWorld'],
     aliases: ['Wargroove', 'wargroove']
   },
-  'The Witness': {
-    logicModule: genericLogic.genericStateModule,  // Using generic for now
-    helperFunctions: witnessLogic.helperFunctions,
-    worldClasses: ['WitnessWorld'],
-    aliases: ['The Witness', 'Witness']
-  },
-  // Yoshi's Island helpers are exported to rules.json - uses Generic
   "Yoshi's Island": {
     logicModule: genericLogic.genericStateModule,
     helperFunctions: genericLogic.helperFunctions,

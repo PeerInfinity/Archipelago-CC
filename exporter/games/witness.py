@@ -9,6 +9,9 @@ logger = logging.getLogger(__name__)
 class WitnessGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'The Witness'
 
+    # Enable automatic helper export
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+
     # Mapping of laser activation locations to the regions containing their panels
     LASER_ACTIVATION_TO_REGION = {
         'Bunker Laser Activated': 'Bunker Laser Platform',
@@ -430,30 +433,30 @@ class WitnessGameExportHandler(GenericGameExportHandler):
         # Check if this is a laser activation location
         if self._current_location_name and self._current_location_name in self.LASER_ACTIVATION_TO_REGION:
             region_name = self.LASER_ACTIVATION_TO_REGION[self._current_location_name]
+            # Use native can_reach rule type instead of helper call
             can_reach_rule = {
-                'type': 'helper',
-                'name': 'can_reach_region',
-                'args': [{'type': 'constant', 'value': region_name}]
+                'type': 'can_reach',
+                'region': region_name
             }
 
             # Check if the simplified rule is a region reachability pattern or constant True
             if self._is_region_reachability_pattern(simplified_rule):
-                # Already a region reachability pattern - just convert to can_reach_region
-                logger.info(f"Converting {self._current_location_name} to can_reach_region('{region_name}')")
+                # Already a region reachability pattern - just convert to can_reach
+                logger.info(f"Converting {self._current_location_name} to can_reach('{region_name}')")
                 return can_reach_rule
             elif simplified_rule and simplified_rule.get('type') == 'constant' and simplified_rule.get('value') is True:
-                # Constant True - use can_reach_region
-                logger.info(f"Converting {self._current_location_name} (simplified to True) to can_reach_region('{region_name}')")
+                # Constant True - use can_reach
+                logger.info(f"Converting {self._current_location_name} (simplified to True) to can_reach('{region_name}')")
                 return can_reach_rule
-            elif simplified_rule and simplified_rule.get('type') == 'helper' and simplified_rule.get('name') == 'can_reach_region':
-                # Already a can_reach_region helper - keep it
-                logger.info(f"Keeping existing can_reach_region for {self._current_location_name}")
+            elif simplified_rule and simplified_rule.get('type') == 'can_reach':
+                # Already a can_reach rule - keep it
+                logger.info(f"Keeping existing can_reach for {self._current_location_name}")
                 return simplified_rule
             elif simplified_rule and simplified_rule.get('type') != 'constant':
                 # Has item requirements but no region check - combine with AND
                 # The item requirements capture what symbols are needed, but we also need
                 # to be able to reach the region containing the laser panel
-                logger.info(f"Combining {self._current_location_name} item requirements with can_reach_region('{region_name}')")
+                logger.info(f"Combining {self._current_location_name} item requirements with can_reach('{region_name}')")
                 return {
                     'type': 'and',
                     'conditions': [can_reach_rule, simplified_rule]
