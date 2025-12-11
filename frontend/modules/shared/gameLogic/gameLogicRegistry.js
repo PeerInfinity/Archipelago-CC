@@ -262,7 +262,6 @@ import * as wargrooveLogic from './wargroove/wargrooveLogic.js';
 import { helperFunctions as yoshisislandHelperFunctions } from './yoshisisland/yoshisislandLogic.js';
 import * as yugioh06Logic from './yugioh06/yugioh06Logic.js';
 import { helperFunctions as osrsHelperFunctions } from './osrs/osrsLogic.js';
-import * as tlozLogic from './tloz/tlozLogic.js';
 import * as witnessLogic from './witness/witnessLogic.js';
 
 /**
@@ -475,12 +474,6 @@ const GAME_REGISTRY = {
     helperFunctions: terrariaLogic.helperFunctions,
     worldClasses: ['TerrariaWorld'],
     aliases: ['Terraria']
-  },
-  'The Legend of Zelda': {
-    logicModule: genericLogic.genericStateModule,
-    helperFunctions: tlozLogic.helperFunctions,
-    worldClasses: ['TLoZWorld'],
-    aliases: ['The Legend of Zelda', 'TLoZ', 'TLOZ']
   },
   'Timespinner': {
     logicModule: timespinnerLogic.timespinnerStateModule,
