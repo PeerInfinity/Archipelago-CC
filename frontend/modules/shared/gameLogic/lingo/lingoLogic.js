@@ -70,21 +70,6 @@ export function lingo_can_use_entrance(snapshot, staticData, room, door) {
 }
 
 /**
- * Check if player can access a location
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data including rules
- * @param {*} location - Location access requirements
- * @returns {boolean} True if location can be accessed
- */
-export function lingo_can_use_location(snapshot, staticData, location) {
-  // This is a placeholder implementation
-  // The actual logic would need to evaluate AccessRequirements
-  // For now, return true to allow progression
-  // TODO: Implement proper location access checking
-  return true;
-}
-
-/**
  * Check if player has achieved enough mastery requirements
  * @param {Object} snapshot - Canonical state snapshot
  * @param {Object} staticData - Static game data including rules
@@ -324,7 +309,6 @@ export function lingo_can_use_level_2_location(snapshot, staticData) {
  */
 export const helperFunctions = {
   lingo_can_use_entrance,
-  lingo_can_use_location,
   lingo_can_use_mastery_location,
   lingo_can_use_level_2_location,
   _lingo_can_satisfy_requirements,
