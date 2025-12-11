@@ -25,7 +25,7 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         'can_buy',  # Uses frontend shop_items implementation
         'can_buy_unlimited',  # Uses frontend shop_items implementation
         # 'can_get_good_bee',  # Now works with region_reference and region_attribute support
-        'can_kill_most_things',
+        # 'can_kill_most_things',  # Now works with default parameter values support
         # 'can_shoot_arrows',  # Now works with can_buy and can_hold_arrows
         # 'can_use_bombs',  # Now works with min/max and setting_value support
         # 'has_crystals',  # Now works with group_count support

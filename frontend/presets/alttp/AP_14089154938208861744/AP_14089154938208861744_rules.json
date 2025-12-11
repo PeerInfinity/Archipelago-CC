@@ -20232,6 +20232,169 @@
           }
         }
       },
+      "can_kill_most_things": {
+        "params": [
+          "enemies"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "setting_value",
+            "setting": "enemy_shuffle"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "has_melee_weapon",
+                "args": []
+              },
+              {
+                "type": "item_check",
+                "item": "Cane of Somaria"
+              },
+              {
+                "type": "item_check",
+                "item": "Cane of Byrna"
+              },
+              {
+                "type": "helper",
+                "name": "can_extend_magic",
+                "args": []
+              },
+              {
+                "type": "helper",
+                "name": "can_shoot_arrows",
+                "args": []
+              },
+              {
+                "type": "item_check",
+                "item": "Fire Rod"
+              },
+              {
+                "type": "helper",
+                "name": "can_use_bombs",
+                "args": [
+                  {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "name",
+                      "name": "enemies"
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 4
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "has_melee_weapon",
+                "args": []
+              },
+              {
+                "type": "item_check",
+                "item": "Cane of Somaria"
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Cane of Byrna"
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "compare",
+                        "left": {
+                          "type": "name",
+                          "name": "enemies"
+                        },
+                        "op": "<",
+                        "right": {
+                          "type": "constant",
+                          "value": 6
+                        }
+                      },
+                      {
+                        "type": "helper",
+                        "name": "can_extend_magic",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "can_shoot_arrows",
+                "args": []
+              },
+              {
+                "type": "item_check",
+                "item": "Fire Rod"
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "compare",
+                    "left": {
+                      "type": "setting_value",
+                      "setting": "enemy_health"
+                    },
+                    "op": "in",
+                    "right": {
+                      "type": "list",
+                      "value": [
+                        {
+                          "type": "constant",
+                          "value": "easy"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "default"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "type": "helper",
+                    "name": "can_use_bombs",
+                    "args": [
+                      {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "name",
+                          "name": "enemies"
+                        },
+                        "op": "*",
+                        "right": {
+                          "type": "constant",
+                          "value": 4
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "defaults": {
+          "enemies": 5
+        }
+      },
       "can_lift_heavy_rocks": {
         "type": "item_check",
         "item": "Titans Mitts"
@@ -20372,8 +20535,8 @@
                 "name": "can_hold_arrows",
                 "args": [
                   {
-                    "type": "constant",
-                    "value": 0
+                    "type": "name",
+                    "name": "count"
                   }
                 ]
               }
@@ -20559,8 +20722,8 @@
                   "type": "min",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": 1
+                      "type": "name",
+                      "name": "quantity"
                     },
                     {
                       "type": "constant",

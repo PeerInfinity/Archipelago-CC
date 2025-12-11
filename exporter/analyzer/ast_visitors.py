@@ -242,58 +242,60 @@ class ASTVisitorMixin:
 
             # Filter arguments for game handler and result creation
             filtered_args = self._filter_special_args(args_with_nodes)
-            
-            # Resolve variable references in arguments (e.g., lambda defaults)
-            resolved_args = []
-            for arg in filtered_args:
-                if arg and arg.get('type') == 'name':
-                    # Skip 'world' - it should have been filtered already but double-check
-                    if arg['name'] == 'world':
-                        logging.debug(f"Skipping resolution of 'world' argument")
-                        continue
 
-                    # Try to resolve the variable
-                    resolved_value = self.expression_resolver.resolve_variable(arg['name'])
-                    if resolved_value is not None and is_simple_value(resolved_value):
-                        # Only create constant for simple values
-                        # Handle enum values - extract the numeric value
-                        if hasattr(resolved_value, 'value'):
-                            final_value = resolved_value.value
+            # Resolve variable references in arguments (e.g., lambda defaults)
+            # Skip this when preserve_parameter_names is True - we want to keep params as name references
+            if not getattr(self, 'preserve_parameter_names', False):
+                resolved_args = []
+                for arg in filtered_args:
+                    if arg and arg.get('type') == 'name':
+                        # Skip 'world' - it should have been filtered already but double-check
+                        if arg['name'] == 'world':
+                            logging.debug(f"Skipping resolution of 'world' argument")
+                            continue
+
+                        # Try to resolve the variable
+                        resolved_value = self.expression_resolver.resolve_variable(arg['name'])
+                        if resolved_value is not None and is_simple_value(resolved_value):
+                            # Only create constant for simple values
+                            # Handle enum values - extract the numeric value
+                            if hasattr(resolved_value, 'value'):
+                                final_value = resolved_value.value
+                            else:
+                                final_value = resolved_value
+                            # Ensure the final value is JSON-serializable
+                            final_value = make_json_serializable(final_value)
+                            logging.debug(f"Resolved argument variable '{arg['name']}' to {final_value}")
+                            resolved_args.append({'type': 'constant', 'value': final_value})
+                        # Handle Region objects - extract the .name attribute
+                        elif resolved_value is not None and hasattr(resolved_value, 'name') and hasattr(resolved_value, 'entrances'):
+                            region_name = resolved_value.name
+                            logging.debug(f"Resolved argument variable '{arg['name']}' (Region object) to region name: {region_name}")
+                            resolved_args.append({'type': 'constant', 'value': region_name})
                         else:
-                            final_value = resolved_value
-                        # Ensure the final value is JSON-serializable
-                        final_value = make_json_serializable(final_value)
-                        logging.debug(f"Resolved argument variable '{arg['name']}' to {final_value}")
-                        resolved_args.append({'type': 'constant', 'value': final_value})
-                    # Handle Region objects - extract the .name attribute
-                    elif resolved_value is not None and hasattr(resolved_value, 'name') and hasattr(resolved_value, 'entrances'):
-                        region_name = resolved_value.name
-                        logging.debug(f"Resolved argument variable '{arg['name']}' (Region object) to region name: {region_name}")
-                        resolved_args.append({'type': 'constant', 'value': region_name})
-                    else:
-                        # Keep unresolved or complex objects as name references
-                        resolved_args.append(arg)
-                elif arg and arg.get('type') == 'attribute':
-                    # Try to resolve attribute expressions like HatType.BREWING
-                    resolved_value = self.expression_resolver.resolve_expression(arg)
-                    if resolved_value is not None and is_simple_value(resolved_value):
-                        # Only create constant for simple values
-                        # Handle enum values - extract the numeric value
-                        if hasattr(resolved_value, 'value'):
-                            final_value = resolved_value.value
+                            # Keep unresolved or complex objects as name references
+                            resolved_args.append(arg)
+                    elif arg and arg.get('type') == 'attribute':
+                        # Try to resolve attribute expressions like HatType.BREWING
+                        resolved_value = self.expression_resolver.resolve_expression(arg)
+                        if resolved_value is not None and is_simple_value(resolved_value):
+                            # Only create constant for simple values
+                            # Handle enum values - extract the numeric value
+                            if hasattr(resolved_value, 'value'):
+                                final_value = resolved_value.value
+                            else:
+                                final_value = resolved_value
+                            # Ensure the final value is JSON-serializable
+                            final_value = make_json_serializable(final_value)
+                            logging.debug(f"Resolved argument attribute to {final_value}")
+                            resolved_args.append({'type': 'constant', 'value': final_value})
                         else:
-                            final_value = resolved_value
-                        # Ensure the final value is JSON-serializable
-                        final_value = make_json_serializable(final_value)
-                        logging.debug(f"Resolved argument attribute to {final_value}")
-                        resolved_args.append({'type': 'constant', 'value': final_value})
+                            # Keep unresolved or complex objects as attribute references
+                            resolved_args.append(arg)
                     else:
-                        # Keep unresolved or complex objects as attribute references
                         resolved_args.append(arg)
-                else:
-                    resolved_args.append(arg)
-            
-            filtered_args = resolved_args
+
+                filtered_args = resolved_args
 
             # Check for game-specific special function calls
             if self.game_handler and hasattr(self.game_handler, 'handle_special_function_call'):
