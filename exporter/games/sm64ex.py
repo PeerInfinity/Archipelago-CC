@@ -252,8 +252,8 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
             if len(items) == 1:
                 return {'type': 'item_check', 'item': items[0]}
             return {
-                'type': 'helper',
-                'name': 'has_all_items',
+                'type': 'state_method',
+                'method': 'has_all',
                 'args': [{'type': 'constant', 'value': items}]
             }
 
@@ -271,8 +271,8 @@ class SM64EXGameExportHandler(GenericGameExportHandler):
             if len(items) == 1:
                 return {'type': 'item_check', 'item': items[0]}
             return {
-                'type': 'helper',
-                'name': 'has_any_item',
+                'type': 'state_method',
+                'method': 'has_any',
                 'args': [{'type': 'constant', 'value': items}]
             }
 
