@@ -8,7 +8,9 @@ This document summarizes the investigation into what rule types are needed to su
 
 **Update**: The `region_reference` and `region_attribute` rule types have been implemented, enabling export of `can_get_good_bee` and `is_not_bunny` helpers.
 
-### Exported Helpers (24 total)
+**Update**: Fixed parameter name resolution in helper export. Parameters like `quantity` and `count` are now preserved as name references instead of being resolved to default values. This enabled `can_kill_most_things` export.
+
+### Exported Helpers (25 total)
 
 These helpers are successfully exported as JSON rule definitions and evaluated by the frontend rule engine:
 
@@ -38,8 +40,9 @@ These helpers are successfully exported as JSON rule definitions and evaluated b
 | `heart_count` | min, count_item, setting_value, binary_op |
 | `can_get_good_bee` | block, assign, region_reference, helper calls |
 | `is_not_bunny` | conditional, item_check, region_attribute, setting_value |
+| `can_kill_most_things` | conditional, setting_value, helper calls, default params |
 
-### Blacklisted Helpers (8 total)
+### Blacklisted Helpers (7 total)
 
 These helpers are NOT exported as JSON. They use JavaScript fallback implementations:
 
@@ -48,7 +51,6 @@ These helpers are NOT exported as JSON. They use JavaScript fallback implementat
 | `GanonDefeatRule` | Complex game-specific logic | Yes, in alttpLogic.js |
 | `can_buy` | Uses shop_items data | Yes, in ruleEngine.js |
 | `can_buy_unlimited` | Uses shop_items data | Yes, in ruleEngine.js |
-| `can_kill_most_things` | Complex logic, already has JS impl | Yes, in alttpLogic.js |
 | `item_name_in_location_names` | Dynamic item/location lookup | Complex dungeon logic |
 | `tr_big_key_chest_keys_needed` | Complex dungeon key logic | Complex dungeon logic |
 | `location_item_name` | Dynamic item/location lookup | Complex dungeon logic |
@@ -142,7 +144,8 @@ For reference, this was the suggested approach that has now been implemented:
 
 ## Conclusion
 
-The ALTTP helper export system is working correctly with the new region attribute support:
-1. `can_get_good_bee` and `is_not_bunny` are now exported as JSON rules
-2. The remaining blacklisted helpers are appropriate - shop logic, boss logic, and key counting are better handled in JavaScript
-3. 24 helpers are now exported as JSON, up from 22
+The ALTTP helper export system is working correctly:
+1. `can_get_good_bee` and `is_not_bunny` are now exported as JSON rules (region_reference/region_attribute support)
+2. `can_kill_most_things` is now exported as JSON rules (fixed parameter name preservation)
+3. The remaining blacklisted helpers are appropriate - shop logic, boss logic, and key counting are better handled in JavaScript
+4. 25 helpers are now exported as JSON, up from 22
