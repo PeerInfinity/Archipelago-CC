@@ -2116,7 +2116,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
         const minArgs = rule.args.map((arg) =>
-          evaluateRule(arg, context, depth + 1)
+          evaluateRule(arg, context, depth + 1, localScope)
         );
         if (minArgs.some((arg) => arg === undefined)) {
           result = undefined;
@@ -2134,7 +2134,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
         const maxArgs = rule.args.map((arg) =>
-          evaluateRule(arg, context, depth + 1)
+          evaluateRule(arg, context, depth + 1, localScope)
         );
         if (maxArgs.some((arg) => arg === undefined)) {
           result = undefined;

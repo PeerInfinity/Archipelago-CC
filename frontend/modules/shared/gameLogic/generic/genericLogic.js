@@ -47,24 +47,84 @@ export const genericStateModule = {
 export const helperFunctions = {
   /**
    * Check if the player has an item (generic implementation)
+   * Handles progressive items by checking if the player has the progressive base item
+   * at a level that would grant the requested resolved item.
    * @param {Object} snapshot - Game state snapshot
    * @param {Object} staticData - Static game data
    * @param {string} itemName - Name of the item to check
    * @returns {boolean} True if player has the item
    */
   has(snapshot, staticData, itemName) {
-    return !!(snapshot?.inventory && snapshot.inventory[itemName] > 0);
+    // Direct check first
+    if (snapshot?.inventory && snapshot.inventory[itemName] > 0) {
+      return true;
+    }
+
+    // Check if this item is a resolved form of a progressive item
+    const playerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || '1';
+    const playerIdKey = String(playerId);
+    const progressionMapping = staticData?.progression_mapping?.[playerIdKey];
+
+    if (progressionMapping) {
+      // Search through all progressive items to find if itemName is a resolved form
+      for (const [baseItem, mapping] of Object.entries(progressionMapping)) {
+        const items = mapping.items || [];
+        const itemIndex = items.findIndex(item => item.name === itemName);
+        if (itemIndex !== -1) {
+          // itemName is a resolved form of this progressive item
+          // Check if player has enough of the base item to reach this level
+          const requiredLevel = items[itemIndex].level || (itemIndex + 1);
+          const baseItemCount = snapshot?.inventory?.[baseItem] || 0;
+          if (baseItemCount >= requiredLevel) {
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
   },
 
   /**
    * Count how many of an item the player has (generic implementation)
+   * For progressive items, returns the resolved count at the current level.
    * @param {Object} snapshot - Game state snapshot
    * @param {Object} staticData - Static game data
    * @param {string} itemName - Name of the item to count
    * @returns {number} Count of the item
    */
   count(snapshot, staticData, itemName) {
-    return snapshot?.inventory?.[itemName] || 0;
+    // Direct count first
+    const directCount = snapshot?.inventory?.[itemName] || 0;
+    if (directCount > 0) {
+      return directCount;
+    }
+
+    // Check if this item is a resolved form of a progressive item
+    const playerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || '1';
+    const playerIdKey = String(playerId);
+    const progressionMapping = staticData?.progression_mapping?.[playerIdKey];
+
+    if (progressionMapping) {
+      // Search through all progressive items to find if itemName is a resolved form
+      for (const [baseItem, mapping] of Object.entries(progressionMapping)) {
+        const items = mapping.items || [];
+        const itemIndex = items.findIndex(item => item.name === itemName);
+        if (itemIndex !== -1) {
+          // itemName is a resolved form of this progressive item
+          // Check if player has enough of the base item to reach this level
+          const requiredLevel = items[itemIndex].level || (itemIndex + 1);
+          const baseItemCount = snapshot?.inventory?.[baseItem] || 0;
+          if (baseItemCount >= requiredLevel) {
+            // Player has at least this level - count how many times they've "passed" this level
+            // For most games, having the item once is enough (return 1)
+            return 1;
+          }
+        }
+      }
+    }
+
+    return 0;
   },
 
   /**

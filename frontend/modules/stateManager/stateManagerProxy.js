@@ -30,7 +30,7 @@ if (!isWorkerContext && window.logger) {
 import { evaluateRule } from '../shared/ruleEngine.js';
 // Legacy GameSnapshotHelpers import removed - using agnostic helpers directly
 import { STATE_MANAGER_COMMANDS } from './stateManagerCommands.js'; // Import shared commands
-import { helperFunctions as alttpLogic } from '../shared/gameLogic/alttp/alttpLogic.js';
+// alttpLogic import removed - helpers now exported to rules.json
 import { helperFunctions as genericLogic } from '../shared/gameLogic/generic/genericLogic.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 

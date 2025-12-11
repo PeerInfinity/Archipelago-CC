@@ -208,8 +208,7 @@
  */
 
 // Import all game logic modules
-import * as alttpLogic from './alttp/alttpLogic.js';
-import { alttpStateModule } from './alttp/alttpLogic.js';
+// alttpLogic removed - helpers now exported to rules.json
 import * as genericLogic from './generic/genericLogic.js';
 import * as ahitLogic from './ahit/ahitLogic.js';
 import * as blasphemousLogic from './blasphemous/blasphemousLogic.js';
@@ -262,8 +261,8 @@ import { helperFunctions as osrsHelperFunctions } from './osrs/osrsLogic.js';
  */
 const GAME_REGISTRY = {
   'A Link to the Past': {
-    logicModule: alttpLogic.alttpStateModule,
-    helperFunctions: alttpLogic.helperFunctions,
+    logicModule: genericLogic.genericStateModule,
+    // Helper functions now exported to rules.json - no JavaScript needed
     worldClasses: ['ALTTPWorld'],
     aliases: ['A Link to the Past', 'ALTTP']
   },
