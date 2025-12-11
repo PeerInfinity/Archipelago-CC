@@ -1,6 +1,6 @@
 """The Wind Waker game-specific export handler."""
 
-from typing import Dict, Any
+from typing import Dict, Any, Set
 from .generic import GenericGameExportHandler
 import logging
 
@@ -14,6 +14,61 @@ class TWWGameExportHandler(GenericGameExportHandler):
 
     # Define where to find helper functions
     HELPER_MODULES = ['worlds.tww.Macros']
+
+    # Entrance access helpers that are dynamically called via getattr and not discovered
+    # during static rule analysis. These must be explicitly whitelisted for export.
+    HELPERS_TO_EXPORT_WHITELIST: Set[str] = {
+        # Boss entrance functions
+        'can_access_boss_entrance_in_dragon_roost_cavern',
+        'can_access_boss_entrance_in_earth_temple',
+        'can_access_boss_entrance_in_forbidden_woods',
+        'can_access_boss_entrance_in_forsaken_fortress',
+        'can_access_boss_entrance_in_tower_of_the_gods',
+        'can_access_boss_entrance_in_wind_temple',
+        # Dungeon entrance functions
+        'can_access_dungeon_entrance_in_forest_haven_sector',
+        'can_access_dungeon_entrance_in_tower_of_the_gods_sector',
+        'can_access_dungeon_entrance_on_dragon_roost_island',
+        'can_access_dungeon_entrance_on_gale_isle',
+        'can_access_dungeon_entrance_on_headstone_island',
+        # Fairy fountain entrance functions
+        'can_access_fairy_fountain_entrance_on_eastern_fairy_island',
+        'can_access_fairy_fountain_entrance_on_northern_fairy_island',
+        'can_access_fairy_fountain_entrance_on_outset_island',
+        'can_access_fairy_fountain_entrance_on_southern_fairy_island',
+        'can_access_fairy_fountain_entrance_on_thorned_fairy_island',
+        'can_access_fairy_fountain_entrance_on_western_fairy_island',
+        # Inner entrance functions
+        'can_access_inner_entrance_in_cliff_plateau_isles_secret_cave',
+        'can_access_inner_entrance_in_ice_ring_isle_secret_cave',
+        # Miniboss entrance functions
+        'can_access_miniboss_entrance_in_earth_temple',
+        'can_access_miniboss_entrance_in_forbidden_woods',
+        'can_access_miniboss_entrance_in_hyrule_castle',
+        'can_access_miniboss_entrance_in_tower_of_the_gods',
+        'can_access_miniboss_entrance_in_wind_temple',
+        # Secret cave entrance functions
+        'can_access_secret_cave_entrance_on_angular_isles',
+        'can_access_secret_cave_entrance_on_birds_peak_rock',
+        'can_access_secret_cave_entrance_on_boating_course',
+        'can_access_secret_cave_entrance_on_bomb_island',
+        'can_access_secret_cave_entrance_on_cliff_plateau_isles',
+        'can_access_secret_cave_entrance_on_diamond_steppe_island',
+        'can_access_secret_cave_entrance_on_dragon_roost_island',
+        'can_access_secret_cave_entrance_on_fire_mountain',
+        'can_access_secret_cave_entrance_on_horseshoe_island',
+        'can_access_secret_cave_entrance_on_ice_ring_isle',
+        'can_access_secret_cave_entrance_on_needle_rock_isle',
+        'can_access_secret_cave_entrance_on_outset_island',
+        'can_access_secret_cave_entrance_on_overlook_island',
+        'can_access_secret_cave_entrance_on_pawprint_isle',
+        'can_access_secret_cave_entrance_on_pawprint_isle_side_isle',
+        'can_access_secret_cave_entrance_on_private_oasis',
+        'can_access_secret_cave_entrance_on_rock_spire_isle',
+        'can_access_secret_cave_entrance_on_shark_island',
+        'can_access_secret_cave_entrance_on_star_island',
+        'can_access_secret_cave_entrance_on_stone_watcher_island',
+    }
 
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
@@ -47,52 +102,3 @@ class TWWGameExportHandler(GenericGameExportHandler):
                 settings[attr] = False
 
         return settings
-
-    def should_preserve_as_helper(self, func_name: str) -> bool:
-        """
-        Determine if a function should be preserved as a helper call instead of being inlined.
-
-        For TWW, we preserve all helper functions from Macros.py to avoid creating
-        extremely large inlined rules. This dramatically reduces rule complexity.
-
-        Args:
-            func_name: Name of the function to check
-
-        Returns:
-            True if the function should be preserved as a helper, False if it should be inlined
-        """
-        # All helper functions from Macros.py follow these naming patterns
-        helper_prefixes = [
-            'can_',      # e.g., can_play_winds_requiem, can_fly_with_deku_leaf_indoors
-            'has_',      # e.g., has_heros_sword, has_magic_meter
-        ]
-
-        return any(func_name.startswith(prefix) for prefix in helper_prefixes)
-
-    def expand_rule(self, rule):
-        """
-        Override expand_rule to prevent TWW helpers from being expanded into capability rules.
-
-        The generic exporter tries to expand 'helper' type rules with 'can_*' or 'has_*' names
-        into 'capability' or 'item_check' type rules. For TWW, we want to keep these as
-        callable helpers since they contain complex game logic that needs to be implemented
-        in JavaScript.
-
-        Args:
-            rule: The rule to expand
-
-        Returns:
-            The rule (either expanded or unchanged)
-        """
-        if not rule:
-            return rule
-
-        # For helper rules that match our preserved patterns, don't expand them
-        if rule.get('type') == 'helper':
-            helper_name = rule.get('name', '')
-            if self.should_preserve_as_helper(helper_name):
-                # Return the helper rule unchanged - don't expand it
-                return rule
-
-        # For all other rules, use the default expansion logic
-        return super().expand_rule(rule)

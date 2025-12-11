@@ -491,6 +491,7 @@ const GAME_REGISTRY = {
   'The Wind Waker': {
     logicModule: genericLogic.genericStateModule, // Using generic state module for now
     helperFunctions: twwLogic.default,
+    stateMethods: twwLogic.stateMethods,
     worldClasses: ['TWWWorld'],
     aliases: ['The Wind Waker', 'TWW', 'Wind Waker']
   },
