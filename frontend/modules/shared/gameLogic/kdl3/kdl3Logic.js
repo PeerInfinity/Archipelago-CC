@@ -262,10 +262,16 @@ export function can_reach_boss(snapshot, staticData, level, open_world, ow_boss_
  * Corresponds to can_assemble_rob in worlds/kdl3/rules.py:89
  * @param {Object} snapshot - Canonical state snapshot
  * @param {Object} staticData - Static game data
- * @param {Object} copy_abilities - Dictionary mapping enemy names to their abilities
+ * @param {any} _unused - Unused parameter (copy_abilities is looked up from settings)
  * @returns {boolean} True if player can assemble R.O.B
  */
-export function can_assemble_rob(snapshot, staticData, copy_abilities) {
+export function can_assemble_rob(snapshot, staticData, _unused) {
+  // Get copy_abilities from settings (the passed argument may not be the dictionary)
+  // Settings are keyed by player ID (string), typically "1" for single player
+  const playerId = snapshot?.player?.id || snapshot?.player?.slot || "1";
+  const playerSettings = staticData?.settings?.[playerId] || staticData?.settings?.["1"] || {};
+  const copy_abilities = playerSettings.copy_abilities || {};
+
   // Check animal requirements: must have both Coo and Kine
   if (!can_reach_coo(snapshot, staticData) || !can_reach_kine(snapshot, staticData)) {
     return false;
@@ -342,10 +348,16 @@ export function can_assemble_rob(snapshot, staticData, copy_abilities) {
  * Corresponds to can_fix_angel_wings in worlds/kdl3/rules.py:106
  * @param {Object} snapshot - Canonical state snapshot
  * @param {Object} staticData - Static game data
- * @param {Object} copy_abilities - Dictionary mapping enemy names to their abilities
+ * @param {any} _unused - Unused parameter (copy_abilities is looked up from settings)
  * @returns {boolean} True if player can fix Angel Wings
  */
-export function can_fix_angel_wings(snapshot, staticData, copy_abilities) {
+export function can_fix_angel_wings(snapshot, staticData, _unused) {
+  // Get copy_abilities from settings (the passed argument may not be the dictionary)
+  // Settings are keyed by player ID (string), typically "1" for single player
+  const playerId = snapshot?.player?.id || snapshot?.player?.slot || "1";
+  const playerSettings = staticData?.settings?.[playerId] || staticData?.settings?.["1"] || {};
+  const copy_abilities = playerSettings.copy_abilities || {};
+
   // Must be able to reach the abilities of these specific enemies
   const required_enemies = [
     'Sparky', 'Blocky', 'Jumper Shoot', 'Yuki',
