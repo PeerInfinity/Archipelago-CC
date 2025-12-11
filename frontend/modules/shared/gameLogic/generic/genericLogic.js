@@ -55,8 +55,18 @@ export const helperFunctions = {
    * @returns {boolean} True if player has the item
    */
   has(snapshot, staticData, itemName) {
-    // Direct check first
-    if (snapshot?.inventory && snapshot.inventory[itemName] > 0) {
+    // Check flags (events, checked locations, etc.)
+    if (snapshot?.flags?.includes(itemName)) {
+      return true;
+    }
+
+    // Check events
+    if (snapshot?.events?.includes(itemName)) {
+      return true;
+    }
+
+    // Check inventory
+    if (snapshot?.inventory?.[itemName] > 0) {
       return true;
     }
 
@@ -94,7 +104,17 @@ export const helperFunctions = {
    * @returns {number} Count of the item
    */
   count(snapshot, staticData, itemName) {
-    // Direct count first
+    // Check events first (events are binary - either 1 or 0)
+    if (snapshot?.events?.includes(itemName)) {
+      return 1;
+    }
+
+    // Check flags (also binary)
+    if (snapshot?.flags?.includes(itemName)) {
+      return 1;
+    }
+
+    // Check inventory
     const directCount = snapshot?.inventory?.[itemName] || 0;
     if (directCount > 0) {
       return directCount;
