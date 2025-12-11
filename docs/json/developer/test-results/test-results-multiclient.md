@@ -6,13 +6,19 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-11 03:39:58
+**Generated:** 2025-12-10 19:54:33
 
 ## Summary
 
 - **Total Games:** 76
 - **Passed:** 73 (96.1%)
 - **Failed:** 3 (3.9%)
+
+### Generic Exporter/Logic Statistics
+
+- **Passing with Generic Exporter:** 29/73 (39.7% of passed)
+- **Passing with Generic Logic:** 44/73 (60.3% of passed)
+- **Passing with Both Generic:** 29/73 (39.7% of passed)
 
 ## Test Results
 

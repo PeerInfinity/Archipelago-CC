@@ -20,7 +20,7 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
     # Complex helpers that can't be exported (need JavaScript implementations)
     # These have loops, complex counting, settings lookups, or dynamic conditions
     HELPERS_TO_EXPORT_BLACKLIST = {
-        'GanonDefeatRule',
+        # 'GanonDefeatRule',  # Now exported - uses supported patterns (settings, item checks, helpers)
         # 'can_extend_magic',  # Debugging - shop region reachability
         'can_buy',  # Uses frontend shop_items implementation
         'can_buy_unlimited',  # Uses frontend shop_items implementation
@@ -33,9 +33,9 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         # 'has_hearts',  # Now works with logical_heart settings
         # 'has_misery_mire_medallion',  # Now works with setting_value index support
         # 'has_turtle_rock_medallion',  # Now works with setting_value index support
-        'item_name_in_location_names',
-        'tr_big_key_chest_keys_needed',
-        'location_item_name',
+        # 'item_name_in_location_names',  # Now converted to placement_search rule type
+        # 'tr_big_key_chest_keys_needed',  # Now inlined with placement_lookup logic
+        # 'location_item_name',  # Now converted to placement_lookup rule type
         'can_defeat_boss',
         # 'can_reach_region',  # Now uses native can_reach rule type
         # 'can_take_damage',  # Now uses setting_value instead of helper
@@ -99,9 +99,9 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             'has_misery_mire_medallion',  # Exported with setting_value index support
             # 'has_sword',  # Removed - multiple item checks, can be inlined
             'has_turtle_rock_medallion',  # Exported with setting_value index support
-            'item_name_in_location_names',
-            'tr_big_key_chest_keys_needed',
-            'location_item_name',
+            # 'item_name_in_location_names',  # Now converted to placement_search rule type
+            # 'tr_big_key_chest_keys_needed',  # Now inlined with placement_lookup logic
+            # 'location_item_name',  # Now converted to placement_lookup rule type
             # Added in postprocess_rule
             'can_defeat_boss',
             # 'can_reach_region',  # Now uses native can_reach rule type
@@ -157,12 +157,75 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
     def handle_special_function_call(self, func_name: str, processed_args: list) -> dict:
         """Handle ALTTP-specific special function calls."""
         if func_name == 'tr_big_key_chest_keys_needed':
-            logger.debug(f"ALTTP: Converting local function {func_name} to helper call")
+            # Inline the tr_big_key_chest_keys_needed logic using placement_lookup
+            # Original logic:
+            #   item = location_item_name(state, 'Turtle Rock - Big Key Chest', player)
+            #   if item == ('Small Key (Turtle Rock)', player): return 0
+            #   if item == ('Big Key (Turtle Rock)', player): return 4
+            #   return 6
+            logger.debug(f"ALTTP: Inlining {func_name} logic with placement_lookup")
             return {
-                'type': 'helper',
-                'name': func_name,
-                'args': processed_args
+                'type': 'conditional',
+                'test': {
+                    'type': 'compare',
+                    'left': {'type': 'placement_lookup', 'location': {'type': 'constant', 'value': 'Turtle Rock - Big Key Chest'}},
+                    'op': '==',
+                    'right': {'type': 'list', 'value': [
+                        {'type': 'constant', 'value': 'Small Key (Turtle Rock)'},
+                        {'type': 'constant', 'value': 1}
+                    ]}
+                },
+                'if_true': {'type': 'constant', 'value': 0},
+                'if_false': {
+                    'type': 'conditional',
+                    'test': {
+                        'type': 'compare',
+                        'left': {'type': 'placement_lookup', 'location': {'type': 'constant', 'value': 'Turtle Rock - Big Key Chest'}},
+                        'op': '==',
+                        'right': {'type': 'list', 'value': [
+                            {'type': 'constant', 'value': 'Big Key (Turtle Rock)'},
+                            {'type': 'constant', 'value': 1}
+                        ]}
+                    },
+                    'if_true': {'type': 'constant', 'value': 4},
+                    'if_false': {'type': 'constant', 'value': 6}
+                }
             }
+
+        # Convert location_item_name calls to placement_lookup rule type
+        if func_name == 'location_item_name':
+            logger.debug(f"ALTTP: Converting {func_name} to placement_lookup rule")
+            # location_item_name takes (state, location_name, player) - we only need location_name
+            if processed_args:
+                return {
+                    'type': 'placement_lookup',
+                    'location': processed_args[0]  # First arg is location name
+                }
+            else:
+                logger.warning(f"ALTTP: location_item_name called without location argument")
+                return None
+
+        # Convert item_name_in_location_names calls to placement_search rule type
+        if func_name == 'item_name_in_location_names':
+            logger.debug(f"ALTTP: Converting {func_name} to placement_search rule")
+            # item_name_in_location_names takes (state, item, player, location_pairs)
+            # After filtering state/player, we have: [item, location_pairs]
+            if len(processed_args) >= 2:
+                item_arg = processed_args[0]
+                locations_arg = processed_args[1]
+
+                # Extract the player ID from the context if available
+                # For now, assume player 1 (single-player mode)
+                return {
+                    'type': 'placement_search',
+                    'item': item_arg,
+                    'player': {'type': 'constant', 'value': 1},
+                    'locations': locations_arg
+                }
+            else:
+                logger.warning(f"ALTTP: item_name_in_location_names missing arguments: {processed_args}")
+                return None
+
         return None
     
     def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:

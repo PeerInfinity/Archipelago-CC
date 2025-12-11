@@ -152,15 +152,28 @@ class ASTVisitorMixin:
         Determine if a function body needs block mode (multi-statement) analysis.
         Returns True if the body contains:
         - For loops
-        - Multiple assignments followed by a return
+        - Multiple assignments followed by a return (including returns inside If statements)
         - AugAssign statements
         """
         has_for = any(isinstance(n, ast.For) for n in body_nodes)
         has_augassign = any(isinstance(n, ast.AugAssign) for n in body_nodes)
 
-        # Count assignments followed by return
+        # Count assignments at the top level
         assign_count = sum(1 for n in body_nodes if isinstance(n, (ast.Assign, ast.AnnAssign)))
-        has_return = any(isinstance(n, ast.Return) for n in body_nodes)
+
+        # Check for return statements - both at top level and inside If statements
+        def has_return_recursive(nodes):
+            for node in nodes:
+                if isinstance(node, ast.Return):
+                    return True
+                if isinstance(node, ast.If):
+                    if has_return_recursive(node.body):
+                        return True
+                    if has_return_recursive(node.orelse):
+                        return True
+            return False
+
+        has_return = has_return_recursive(body_nodes)
 
         # Use block mode if we have for loops, augmented assignments,
         # or any assignments before a return (need to capture variable bindings)

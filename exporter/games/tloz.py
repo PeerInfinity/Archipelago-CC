@@ -10,8 +10,8 @@ class TLoZGameExportHandler(GenericGameExportHandler):
     """Export handler for The Legend of Zelda."""
 
     GAME_NAME = 'The Legend of Zelda'
-    # Disable automatic helper export (use old behavior)
-    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    # Enable automatic helper export
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
 
 

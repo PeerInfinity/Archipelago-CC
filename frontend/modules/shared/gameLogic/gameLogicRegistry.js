@@ -228,8 +228,6 @@ import * as kdl3Logic from './kdl3/kdl3Logic.js';
 import * as ladxLogic from './ladx/ladxLogic.js';
 import { helperFunctions as lingoHelperFunctions } from './lingo/lingoLogic.js';
 import * as marioland2Logic from './marioland2/marioland2Logic.js';
-import * as messengerLogic from './messenger/messengerLogic.js';
-import { messengerStateModule } from './messenger/messengerLogic.js';
 import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
 import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 import * as pokemon_emeraldLogic from './pokemon_emerald/pokemon_emeraldLogic.js';
@@ -239,10 +237,6 @@ import * as ootLogic from './ocarina_of_time/ootLogic.js';
 import { ootStateModule } from './ocarina_of_time/ootLogic.js';
 import * as raftLogic from './raft/raftLogic.js';
 import { raftStateModule } from './raft/raftLogic.js';
-import * as sm64exLogic from './sm64ex/sm64exLogic.js';
-import { sm64exStateModule } from './sm64ex/sm64exLogic.js';
-import * as v6Logic from './v6/v6Logic.js';
-import { v6StateModule } from './v6/v6Logic.js';
 import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
 import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
 import * as overcooked2Logic from './overcooked2/overcooked2Logic.js';
@@ -256,14 +250,12 @@ import { helperFunctions as smHelperFunctions, smStateModule } from './sm/smLogi
 import * as stardewValleyLogic from './stardew_valley/stardewValleyLogic.js';
 import { stardewValleyStateModule } from './stardew_valley/stardewValleyLogic.js';
 import * as terrariaLogic from './terraria/terrariaLogic.js';
-import * as timespinnerLogic from './timespinner/timespinnerLogic.js';
+// timespinnerLogic removed - helpers now exported to rules.json
 import * as twwLogic from './tww/twwLogic.js';
 import * as wargrooveLogic from './wargroove/wargrooveLogic.js';
-import { helperFunctions as yoshisislandHelperFunctions } from './yoshisisland/yoshisislandLogic.js';
+// yoshisisland helpers have been exported to rules.json - no JavaScript needed
 import * as yugioh06Logic from './yugioh06/yugioh06Logic.js';
 import { helperFunctions as osrsHelperFunctions } from './osrs/osrsLogic.js';
-import * as tlozLogic from './tloz/tlozLogic.js';
-import * as witnessLogic from './witness/witnessLogic.js';
 
 /**
  * Registry of all supported games and their logic modules
@@ -341,12 +333,6 @@ const GAME_REGISTRY = {
     worldClasses: ['KDL3World'],
     aliases: ["Kirby's Dream Land 3", 'KDL3']
   },
-  'The Messenger': {
-    logicModule: messengerLogic.messengerStateModule,
-    helperFunctions: messengerLogic.helperFunctions,
-    worldClasses: ['MessengerWorld'],
-    aliases: ['The Messenger', 'Messenger']
-  },
   'Pokemon Red and Blue': {
     logicModule: pokemon_rbLogic.pokemon_rbStateModule,
     helperFunctions: pokemon_rbLogic.helperFunctions,
@@ -409,24 +395,12 @@ const GAME_REGISTRY = {
     worldClasses: ['SC2World'],
     aliases: ['Starcraft 2', 'SC2', 'StarCraft 2', 'StarCraft II']
   },
-  'Super Mario 64': {
-    logicModule: sm64exLogic.sm64exStateModule,
-    helperFunctions: sm64exLogic.helperFunctions,
-    worldClasses: ['SM64World'],
-    aliases: ['Super Mario 64', 'SM64', 'sm64ex']
-  },
   'Super Mario Land 2': {
     logicModule: genericLogic.genericStateModule,
     helperFunctions: marioland2Logic.helperFunctions,
     stateMethods: marioland2Logic.stateMethods,
     worldClasses: ['MarioLand2World'],
     aliases: ['Super Mario Land 2', 'SML2', 'marioland2']
-  },
-  'VVVVVV': {
-    logicModule: v6Logic.v6StateModule,
-    helperFunctions: v6Logic.helperFunctions,
-    worldClasses: ['V6World'],
-    aliases: ['VVVVVV', 'V6']
   },
   'Overcooked! 2': {
     logicModule: overcooked2Logic.overcooked2StateModule,
@@ -476,21 +450,16 @@ const GAME_REGISTRY = {
     worldClasses: ['TerrariaWorld'],
     aliases: ['Terraria']
   },
-  'The Legend of Zelda': {
-    logicModule: genericLogic.genericStateModule,
-    helperFunctions: tlozLogic.helperFunctions,
-    worldClasses: ['TLoZWorld'],
-    aliases: ['The Legend of Zelda', 'TLoZ', 'TLOZ']
-  },
   'Timespinner': {
-    logicModule: timespinnerLogic.timespinnerStateModule,
-    helperFunctions: timespinnerLogic.helperFunctions,
+    logicModule: genericLogic.genericStateModule,
+    // Helper functions and state management now handled generically with rules.json exports
     worldClasses: ['TimespinnerWorld'],
     aliases: ['Timespinner']
   },
   'The Wind Waker': {
     logicModule: genericLogic.genericStateModule, // Using generic state module for now
     helperFunctions: twwLogic.default,
+    stateMethods: twwLogic.stateMethods,
     worldClasses: ['TWWWorld'],
     aliases: ['The Wind Waker', 'TWW', 'Wind Waker']
   },
@@ -501,15 +470,9 @@ const GAME_REGISTRY = {
     worldClasses: ['WargrooveWorld'],
     aliases: ['Wargroove', 'wargroove']
   },
-  'The Witness': {
-    logicModule: genericLogic.genericStateModule,  // Using generic for now
-    helperFunctions: witnessLogic.helperFunctions,
-    worldClasses: ['WitnessWorld'],
-    aliases: ['The Witness', 'Witness']
-  },
   "Yoshi's Island": {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: yoshisislandHelperFunctions,
+    helperFunctions: genericLogic.helperFunctions,
     worldClasses: ['YoshisIslandWorld'],
     aliases: ["Yoshi's Island"]
   },

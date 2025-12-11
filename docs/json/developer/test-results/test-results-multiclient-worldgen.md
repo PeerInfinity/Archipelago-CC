@@ -6,13 +6,19 @@
 
 [View Original Template Results](./test-results-multiclient.md)
 
-**Generated:** 2025-12-11 03:39:58
+**Generated:** 2025-12-10 19:54:33
 
 ## Summary
 
 - **Total Games:** 79
 - **Passed:** 61 (77.2%)
 - **Failed:** 18 (22.8%)
+
+### Generic Exporter/Logic Statistics
+
+- **Passing with Generic Exporter:** 61/61 (100.0% of passed)
+- **Passing with Generic Logic:** 61/61 (100.0% of passed)
+- **Passing with Both Generic:** 61/61 (100.0% of passed)
 
 ## Test Results
 

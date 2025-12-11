@@ -39,6 +39,10 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
     """
     Load the default template exclude list from scripts/data/template-exclude-list.json.
 
+    Automatically includes WorldGen versions of each excluded template.
+    For example, if "Blasphemous.yaml" is excluded, "Blasphemous WorldGen.yaml"
+    will also be excluded.
+
     Args:
         project_root: Optional project root path. If not provided, will be inferred.
         include_reasons: If True, returns list of dicts with 'name' and 'reason' keys.
@@ -58,6 +62,26 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
     # Default fallback list (old format)
     default_exclude_list = ['Archipelago.yaml', 'Universal Tracker.yaml', 'Final Fantasy.yaml', 'Sudoku.yaml']
 
+    def add_worldgen_variants(items, with_reasons=False):
+        """Add WorldGen variants for each item in the list."""
+        result = []
+        for item in items:
+            if with_reasons:
+                name = item['name']
+                reason = item['reason']
+                result.append(item)
+                # Add WorldGen variant if the template ends in .yaml
+                if name.endswith('.yaml'):
+                    worldgen_name = name[:-5] + ' WorldGen.yaml'
+                    result.append({'name': worldgen_name, 'reason': reason})
+            else:
+                result.append(item)
+                # Add WorldGen variant if the template ends in .yaml
+                if item.endswith('.yaml'):
+                    worldgen_name = item[:-5] + ' WorldGen.yaml'
+                    result.append(worldgen_name)
+        return result
+
     try:
         with open(exclude_list_file, 'r') as f:
             data = json.load(f)
@@ -67,22 +91,25 @@ def load_template_exclude_list(project_root: str = None, include_reasons: bool =
             if exclude_list and isinstance(exclude_list[0], dict):
                 # New format: list of objects with 'name' and 'reason'
                 if include_reasons:
-                    return exclude_list
+                    return add_worldgen_variants(exclude_list, with_reasons=True)
                 else:
-                    return [item['name'] for item in exclude_list]
+                    names = [item['name'] for item in exclude_list]
+                    return add_worldgen_variants(names, with_reasons=False)
             else:
                 # Old format: list of strings
                 if include_reasons:
                     # Convert to new format with empty reasons
-                    return [{'name': name, 'reason': ''} for name in exclude_list]
+                    items_with_reasons = [{'name': name, 'reason': ''} for name in exclude_list]
+                    return add_worldgen_variants(items_with_reasons, with_reasons=True)
                 else:
-                    return exclude_list
+                    return add_worldgen_variants(exclude_list, with_reasons=False)
     except (FileNotFoundError, json.JSONDecodeError, KeyError) as e:
         # If file doesn't exist or is malformed, return default list
         if include_reasons:
-            return [{'name': name, 'reason': ''} for name in default_exclude_list]
+            items_with_reasons = [{'name': name, 'reason': ''} for name in default_exclude_list]
+            return add_worldgen_variants(items_with_reasons, with_reasons=True)
         else:
-            return default_exclude_list
+            return add_worldgen_variants(default_exclude_list, with_reasons=False)
 
 
 def build_and_load_world_mapping(project_root: str) -> Dict[str, Dict]:

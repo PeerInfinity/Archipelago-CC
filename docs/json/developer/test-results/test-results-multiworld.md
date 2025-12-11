@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-11 03:39:58
+**Generated:** 2025-12-10 19:54:33
 
 ## Summary
 
@@ -17,6 +17,12 @@
 - **Second Pass Tested:** 72
 - **Second Pass Passed:** 69
 - **Second Pass Failed:** 3
+
+### Generic Exporter/Logic Statistics
+
+- **Passing with Generic Exporter:** 29/72 (40.3% of passed)
+- **Passing with Generic Logic:** 44/72 (61.1% of passed)
+- **Passing with Both Generic:** 29/72 (40.3% of passed)
 
 ## Test Results
 

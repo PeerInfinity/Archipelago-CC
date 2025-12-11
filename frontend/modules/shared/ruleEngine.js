@@ -1100,6 +1100,59 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           }
         }
 
+        // Special handling for math module functions (math.sqrt, math.pow, etc.)
+        // Python's math module functions need to be mapped to JavaScript Math equivalents
+        if (
+          rule.function?.type === 'attribute' &&
+          rule.function.object?.type === 'name' &&
+          rule.function.object.name === 'math'
+        ) {
+          const mathFunc = rule.function.attr;
+          const args = (rule.args || []).map(arg => evaluateRule(arg, context, depth + 1, localScope));
+
+          switch (mathFunc) {
+            case 'sqrt':
+              if (typeof args[0] === 'number' && args[0] >= 0) {
+                result = Math.sqrt(args[0]);
+              } else {
+                result = undefined;
+              }
+              break;
+            case 'pow':
+              if (typeof args[0] === 'number' && typeof args[1] === 'number') {
+                result = Math.pow(args[0], args[1]);
+              } else {
+                result = undefined;
+              }
+              break;
+            case 'floor':
+              if (typeof args[0] === 'number') {
+                result = Math.floor(args[0]);
+              } else {
+                result = undefined;
+              }
+              break;
+            case 'ceil':
+              if (typeof args[0] === 'number') {
+                result = Math.ceil(args[0]);
+              } else {
+                result = undefined;
+              }
+              break;
+            case 'abs':
+              if (typeof args[0] === 'number') {
+                result = Math.abs(args[0]);
+              } else {
+                result = undefined;
+              }
+              break;
+            default:
+              log('warn', `[evaluateRule] Unknown math function: math.${mathFunc}`);
+              result = undefined;
+          }
+          break;
+        }
+
         // Special handling for state.multiworld.get_location() calls
         // These are used in location access rules to reference the location's parent_region
         if (rule.function?.type === 'attribute' &&
@@ -1307,6 +1360,30 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
               `[ruleEngine] [evaluateRule] No executeHelper method in context for helper '${helperName}'`
             );
             result = undefined;
+            break;
+          }
+        }
+
+        // Special handling for dict.get(key, default) pattern
+        // Python dicts have a .get() method, but JavaScript plain objects don't
+        // This converts obj.get(key, default) to obj[key] ?? default
+        if (
+          rule.function?.type === 'attribute' &&
+          rule.function.attr === 'get' &&
+          rule.function.object
+        ) {
+          const obj = evaluateRule(rule.function.object, context, depth + 1, localScope);
+          if (obj && typeof obj === 'object' && !Array.isArray(obj) && !(obj instanceof Map)) {
+            // This is a plain object - handle .get() as property access with default
+            const args = (rule.args || []).map(arg => evaluateRule(arg, context, depth + 1, localScope));
+            const key = args[0];
+            const defaultValue = args.length > 1 ? args[1] : undefined;
+
+            if (key !== undefined && Object.prototype.hasOwnProperty.call(obj, key)) {
+              result = obj[key];
+            } else {
+              result = defaultValue;
+            }
             break;
           }
         }
@@ -2367,6 +2444,135 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         result = regionData[attrName];
         if (result === undefined) {
           log('debug', `[evaluateRule] region_attribute: attribute '${attrName}' not found on region '${regionName}'`);
+        }
+        break;
+      }
+
+      case 'placement_lookup': {
+        // Look up what item is placed at a specific location
+        // Used by location_item_name helper to check item placements
+        // Format: { type: 'placement_lookup', location: {...} }
+        // Returns: [itemName, player] tuple or null if not found
+        const locationName = evaluateRule(rule.location, context, depth + 1, localScope);
+
+        if (typeof locationName !== 'string') {
+          log('warn', '[evaluateRule] placement_lookup: location did not evaluate to string', { rule, locationName });
+          result = null;
+          break;
+        }
+
+        if (typeof context.getStaticData !== 'function') {
+          log('warn', '[evaluateRule] placement_lookup: context.getStaticData not available');
+          result = null;
+          break;
+        }
+
+        const staticData = context.getStaticData();
+
+        // Try locationItems Map first (this is the primary source)
+        if (staticData?.locationItems) {
+          const itemData = staticData.locationItems instanceof Map
+            ? staticData.locationItems.get(locationName)
+            : staticData.locationItems[locationName];
+
+          if (itemData && itemData.name) {
+            // Return as [itemName, player] tuple like Python's location_item_name
+            result = [itemData.name, itemData.player || 1];
+            break;
+          }
+        }
+
+        // Fallback: search through regions for location data
+        const regionsData = staticData?.regions;
+        if (regionsData) {
+          const regions = regionsData instanceof Map
+            ? Array.from(regionsData.values())
+            : Object.values(regionsData);
+
+          for (const region of regions) {
+            if (region?.locations) {
+              const loc = region.locations.find(l => l.name === locationName);
+              if (loc?.item?.name) {
+                result = [loc.item.name, loc.item.player || 1];
+                break;
+              }
+            }
+          }
+          if (result) break;
+        }
+
+        // Location not found or no item placed
+        log('debug', `[evaluateRule] placement_lookup: no item found at location '${locationName}'`);
+        result = null;
+        break;
+      }
+
+      case 'placement_search': {
+        // Search for an item across multiple locations
+        // Used by item_name_in_location_names to check if an item is at any of the given locations
+        // Format: { type: 'placement_search', item: {...}, player: {...}, locations: [...] }
+        // Returns: true if item is found at any location, false otherwise
+        const searchItem = evaluateRule(rule.item, context, depth + 1, localScope);
+        const searchPlayer = evaluateRule(rule.player, context, depth + 1, localScope);
+        const locations = evaluateRule(rule.locations, context, depth + 1, localScope);
+
+        if (typeof searchItem !== 'string') {
+          log('warn', '[evaluateRule] placement_search: item did not evaluate to string', { rule, searchItem });
+          result = false;
+          break;
+        }
+
+        if (!Array.isArray(locations)) {
+          log('warn', '[evaluateRule] placement_search: locations is not an array', { rule, locations });
+          result = false;
+          break;
+        }
+
+        if (typeof context.getStaticData !== 'function') {
+          log('warn', '[evaluateRule] placement_search: context.getStaticData not available');
+          result = false;
+          break;
+        }
+
+        const staticData = context.getStaticData();
+        result = false;
+
+        // Search through locations
+        for (const locPair of locations) {
+          if (!Array.isArray(locPair) || locPair.length < 2) continue;
+          const [locName, locPlayer] = locPair;
+          if (typeof locName !== 'string') continue;
+
+          // Look up item at this location
+          let itemData = null;
+          if (staticData?.locationItems) {
+            itemData = staticData.locationItems instanceof Map
+              ? staticData.locationItems.get(locName)
+              : staticData.locationItems[locName];
+          }
+
+          // Fallback: search regions
+          if (!itemData?.name && staticData?.regions) {
+            const regions = staticData.regions instanceof Map
+              ? Array.from(staticData.regions.values())
+              : Object.values(staticData.regions);
+
+            for (const region of regions) {
+              if (region?.locations) {
+                const loc = region.locations.find(l => l.name === locName);
+                if (loc?.item?.name) {
+                  itemData = { name: loc.item.name, player: loc.item.player || 1 };
+                  break;
+                }
+              }
+            }
+          }
+
+          // Check if this is the item we're looking for
+          if (itemData?.name === searchItem && itemData?.player === locPlayer) {
+            result = true;
+            break;
+          }
         }
         break;
       }

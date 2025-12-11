@@ -52,11 +52,12 @@ def load_test_results(results_file: str) -> Dict[str, Any]:
         return {}
 
 
-def extract_spoiler_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, int, float, float, bool, bool, Optional[bool], Optional[bool]]]:
+def extract_spoiler_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, int, float, float, bool, bool, Optional[bool], Optional[bool], Optional[float]]]:
     """
     Extract spoiler test chart data from results.
     Returns list of tuples: (game_name, pass_fail, gen_error_count, sphere_reached, max_spheres,
-                             has_custom_exporter, has_custom_game_logic, rules_consistent, spoilers_consistent)
+                             has_custom_exporter, has_custom_game_logic, rules_consistent, spoilers_consistent,
+                             test_time_seconds)
 
     Consistency values:
     - True: all seeds have identical files
@@ -103,6 +104,9 @@ def extract_spoiler_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, 
             game_name = world_info.get('game_name_from_yaml') or template_filename.replace('.yaml', '')
             has_custom_exporter = world_info.get('has_custom_exporter', False)
             has_custom_game_logic = world_info.get('has_custom_game_logic', False)
+            # Get test time from seed 1 if available
+            seed_1_result = individual_results.get('1', {})
+            test_time_seconds = seed_1_result.get('spoiler_test', {}).get('processing_time_seconds')
         else:
             # Handle single seed results
             world_info = template_data.get('world_info', {})
@@ -117,6 +121,7 @@ def extract_spoiler_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, 
             max_spheres = template_data.get('spoiler_test', {}).get('total_spheres', 0)
             has_custom_exporter = world_info.get('has_custom_exporter', False)
             has_custom_game_logic = world_info.get('has_custom_game_logic', False)
+            test_time_seconds = template_data.get('spoiler_test', {}).get('processing_time_seconds')
 
             # Apply stricter pass criteria
             if original_pass_fail.lower() == 'passed' and gen_error_count == 0 and max_spheres > 0:
@@ -142,7 +147,7 @@ def extract_spoiler_chart_data(results: Dict[str, Any]) -> List[Tuple[str, str, 
                 # If any value is False, overall is False; if all True, overall is True
                 spoilers_consistent = all(v is True for v in spoilers_values) if spoilers_values else None
 
-        chart_data.append((game_name, pass_fail, gen_error_count, sphere_reached, max_spheres, has_custom_exporter, has_custom_game_logic, rules_consistent, spoilers_consistent))
+        chart_data.append((game_name, pass_fail, gen_error_count, sphere_reached, max_spheres, has_custom_exporter, has_custom_game_logic, rules_consistent, spoilers_consistent, test_time_seconds))
 
     chart_data.sort(key=lambda x: x[0])
     return chart_data
@@ -248,7 +253,7 @@ def extract_multiclient_chart_data(results: Dict[str, Any]) -> List[Tuple[str, s
     return chart_data
 
 
-def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float, bool, bool, Optional[bool], Optional[bool]]],
+def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float, bool, bool, Optional[bool], Optional[bool], Optional[float]]],
                               metadata: Dict[str, Any], subtitle: str = "", is_worldgen: bool = False,
                               other_version_link: Optional[str] = None,
                               world_mapping: Optional[Dict[str, Dict[str, Any]]] = None) -> str:
@@ -275,8 +280,8 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
 
     if chart_data:
         total_games = len(chart_data)
-        passed = sum(1 for _, pf, _, _, _, _, _, _, _ in chart_data if 'passed' in pf.lower())
-        failed = sum(1 for _, pf, _, _, _, _, _, _, _ in chart_data if 'failed' in pf.lower())
+        passed = sum(1 for _, pf, _, _, _, _, _, _, _, _ in chart_data if 'passed' in pf.lower())
+        failed = sum(1 for _, pf, _, _, _, _, _, _, _, _ in chart_data if 'failed' in pf.lower())
 
         # Get intermittent failures counts
         intermittent_games_count = 0
@@ -296,11 +301,24 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
         md_content += f"- **Games with Intermittent Failures:** {intermittent_games_count}\n"
         md_content += f"- **Total Intermittent Failures:** {intermittent_total_count}\n\n"
 
-    md_content += "## Test Results\n\n"
-    md_content += "| Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |\n"
-    md_content += "|-----------|-------------|------------|----------------|-------------|----------|----------|----------|\n"
+        # Calculate generic exporter/logic statistics
+        passed_with_generic_exporter = sum(1 for _, pf, _, _, _, has_exporter, _, _, _, _ in chart_data
+                                           if 'passed' in pf.lower() and not has_exporter)
+        passed_with_generic_logic = sum(1 for _, pf, _, _, _, _, has_logic, _, _, _ in chart_data
+                                        if 'passed' in pf.lower() and not has_logic)
+        passed_with_both_generic = sum(1 for _, pf, _, _, _, has_exporter, has_logic, _, _, _ in chart_data
+                                       if 'passed' in pf.lower() and not has_exporter and not has_logic)
 
-    for game_name, pass_fail, gen_error_count, sphere_reached, max_spheres, has_custom_exporter, has_custom_game_logic, rules_consistent, spoilers_consistent in chart_data:
+        md_content += "### Generic Exporter/Logic Statistics\n\n"
+        md_content += f"- **Passing with Generic Exporter:** {passed_with_generic_exporter}/{passed} ({passed_with_generic_exporter/passed*100:.1f}% of passed)\n" if passed > 0 else f"- **Passing with Generic Exporter:** 0/0\n"
+        md_content += f"- **Passing with Generic Logic:** {passed_with_generic_logic}/{passed} ({passed_with_generic_logic/passed*100:.1f}% of passed)\n" if passed > 0 else f"- **Passing with Generic Logic:** 0/0\n"
+        md_content += f"- **Passing with Both Generic:** {passed_with_both_generic}/{passed} ({passed_with_both_generic/passed*100:.1f}% of passed)\n\n" if passed > 0 else f"- **Passing with Both Generic:** 0/0\n\n"
+
+    md_content += "## Test Results\n\n"
+    md_content += "| Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Test Time | Exporter | GameLogic |\n"
+    md_content += "|-----------|-------------|------------|----------------|-------------|----------|-----------|----------|----------|\n"
+
+    for game_name, pass_fail, gen_error_count, sphere_reached, max_spheres, has_custom_exporter, has_custom_game_logic, rules_consistent, spoilers_consistent, test_time_seconds in chart_data:
         if 'passed' in pass_fail.lower():
             progress = "🟢 Complete"
         elif sphere_reached >= 1.0:
@@ -321,6 +339,12 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
         else:
             result_display = "❌ Failed"
 
+        # Format test time
+        if test_time_seconds is not None:
+            test_time_display = f"{test_time_seconds:.1f}s"
+        else:
+            test_time_display = "N/A"
+
         # Look up file sizes from world_mapping if available
         if world_mapping and game_name in world_mapping:
             exporter_size = world_mapping[game_name].get('exporter_size', 0)
@@ -331,10 +355,10 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
             exporter_indicator = "⚫" if has_custom_exporter else "✅"
             game_logic_indicator = "⚫" if has_custom_game_logic else "✅"
 
-        md_content += f"| {game_name} | {result_display} | {gen_error_count} | {sphere_reached:g} | {max_spheres:g} | {progress} | {exporter_indicator} | {game_logic_indicator} |\n"
+        md_content += f"| {game_name} | {result_display} | {gen_error_count} | {sphere_reached:g} | {max_spheres:g} | {progress} | {test_time_display} | {exporter_indicator} | {game_logic_indicator} |\n"
 
     if not chart_data:
-        md_content += "| No data available | - | - | - | - | - | - | - |\n"
+        md_content += "| No data available | - | - | - | - | - | - | - | - |\n"
 
     # Add Intermittent Failures section if there are any
     if metadata and 'intermittent_tracking' in metadata:
@@ -376,6 +400,7 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
     md_content += "- **Sphere Reached:** The logical sphere the test reached before completion/failure\n"
     md_content += "- **Max Spheres:** Total logical spheres available in the game\n"
     md_content += "- **Progress:** Percentage of logical spheres completed\n"
+    md_content += "- **Test Time:** Time to run the spoiler test for seed 1 (in seconds)\n"
     md_content += "- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script\n"
     md_content += "- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files\n\n"
     md_content += "**Pass Criteria:** Generation errors = 0, Max spheres > 0, Spoiler test completed successfully\n"
@@ -429,6 +454,20 @@ def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int
         md_content += f"- **Total Games:** {total_games}\n"
         md_content += f"- **Passed:** {passed} ({passed/total_games*100:.1f}%)\n"
         md_content += f"- **Failed:** {total_games - passed} ({(total_games-passed)/total_games*100:.1f}%)\n\n"
+
+        # Calculate generic exporter/logic statistics
+        # Tuple indices: 0=name, 1=pass_fail, ..., 13=has_custom_exporter, 14=has_custom_game_logic
+        passed_with_generic_exporter = sum(1 for row in chart_data
+                                           if row[1].lower() == 'passed' and not row[13])
+        passed_with_generic_logic = sum(1 for row in chart_data
+                                        if row[1].lower() == 'passed' and not row[14])
+        passed_with_both_generic = sum(1 for row in chart_data
+                                       if row[1].lower() == 'passed' and not row[13] and not row[14])
+
+        md_content += "### Generic Exporter/Logic Statistics\n\n"
+        md_content += f"- **Passing with Generic Exporter:** {passed_with_generic_exporter}/{passed} ({passed_with_generic_exporter/passed*100:.1f}% of passed)\n" if passed > 0 else f"- **Passing with Generic Exporter:** 0/0\n"
+        md_content += f"- **Passing with Generic Logic:** {passed_with_generic_logic}/{passed} ({passed_with_generic_logic/passed*100:.1f}% of passed)\n" if passed > 0 else f"- **Passing with Generic Logic:** 0/0\n"
+        md_content += f"- **Passing with Both Generic:** {passed_with_both_generic}/{passed} ({passed_with_both_generic/passed*100:.1f}% of passed)\n\n" if passed > 0 else f"- **Passing with Both Generic:** 0/0\n\n"
 
     md_content += "## Test Results\n\n"
     md_content += "| Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Exporter | GameLogic |\n"
@@ -626,6 +665,19 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
             md_content += f"- **Second Pass Failed:** {second_pass_failed}\n"
 
         md_content += "\n"
+
+        # Calculate generic exporter/logic statistics
+        passed_with_generic_exporter = sum(1 for d in chart_data
+                                           if d['pass_fail'].lower() == 'passed' and not d.get('has_custom_exporter', False))
+        passed_with_generic_logic = sum(1 for d in chart_data
+                                        if d['pass_fail'].lower() == 'passed' and not d.get('has_custom_game_logic', False))
+        passed_with_both_generic = sum(1 for d in chart_data
+                                       if d['pass_fail'].lower() == 'passed' and not d.get('has_custom_exporter', False) and not d.get('has_custom_game_logic', False))
+
+        md_content += "### Generic Exporter/Logic Statistics\n\n"
+        md_content += f"- **Passing with Generic Exporter:** {passed_with_generic_exporter}/{passed} ({passed_with_generic_exporter/passed*100:.1f}% of passed)\n" if passed > 0 else f"- **Passing with Generic Exporter:** 0/0\n"
+        md_content += f"- **Passing with Generic Logic:** {passed_with_generic_logic}/{passed} ({passed_with_generic_logic/passed*100:.1f}% of passed)\n" if passed > 0 else f"- **Passing with Generic Logic:** 0/0\n"
+        md_content += f"- **Passing with Both Generic:** {passed_with_both_generic}/{passed} ({passed_with_both_generic/passed*100:.1f}% of passed)\n\n" if passed > 0 else f"- **Passing with Both Generic:** 0/0\n\n"
 
     md_content += "## Test Results\n\n"
 
@@ -1058,7 +1110,7 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
     # Extract custom exporter/logic info and consistency data (from minimal_data as it has all games)
     games_exporter_logic = {}
     games_consistency = {}
-    for name, result, gen_errors, sphere, max_sphere, has_exporter, has_logic, rules_consistent, spoilers_consistent in minimal_data:
+    for name, result, gen_errors, sphere, max_sphere, has_exporter, has_logic, rules_consistent, spoilers_consistent, test_time in minimal_data:
         games_exporter_logic[name] = (has_exporter, has_logic)
         games_consistency[name] = (rules_consistent, spoilers_consistent)
 
@@ -1148,6 +1200,50 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
             md_content += f"- **Templates passing {i} test{'s' if i > 1 else ''}:** {passed_counts[i]}/{total_templates} ({passed_counts[i]/total_templates*100:.1f}%)\n"
         else:
             md_content += f"- **Templates passing 0 tests:** {passed_counts[0]}/{total_templates} ({passed_counts[0]/total_templates*100:.1f}%)\n"
+
+    # Calculate generic exporter/logic statistics for games passing all tests
+    passed_all_with_generic_exporter = 0
+    passed_all_with_generic_logic = 0
+    passed_all_with_both_generic = 0
+
+    for game in all_games:
+        if tests_passed_count.get(game, 0) == num_tests:
+            has_exporter, has_logic = games_exporter_logic.get(game, (False, False))
+            if not has_exporter:
+                passed_all_with_generic_exporter += 1
+            if not has_logic:
+                passed_all_with_generic_logic += 1
+            if not has_exporter and not has_logic:
+                passed_all_with_both_generic += 1
+
+    # Calculate combined file sizes from world_mapping
+    total_exporter_size = 0
+    total_logic_size = 0
+    if world_mapping:
+        for game in all_games:
+            if game in world_mapping:
+                total_exporter_size += world_mapping[game].get('exporter_size', 0)
+                total_logic_size += world_mapping[game].get('game_logic_size', 0)
+
+    def format_size_kb(size_bytes):
+        """Format size in KB with one decimal."""
+        return f"{size_bytes / 1024:.1f}KB"
+
+    md_content += "\n### Generic Exporter/Logic Statistics\n\n"
+    md_content += f"Of the {passed_all} templates passing all {num_tests} tests:\n\n"
+    if passed_all > 0:
+        md_content += f"- **Passing with Generic Exporter:** {passed_all_with_generic_exporter}/{passed_all} ({passed_all_with_generic_exporter/passed_all*100:.1f}%)\n"
+        md_content += f"- **Passing with Generic Logic:** {passed_all_with_generic_logic}/{passed_all} ({passed_all_with_generic_logic/passed_all*100:.1f}%)\n"
+        md_content += f"- **Passing with Both Generic:** {passed_all_with_both_generic}/{passed_all} ({passed_all_with_both_generic/passed_all*100:.1f}%)\n"
+    else:
+        md_content += f"- **Passing with Generic Exporter:** 0/0\n"
+        md_content += f"- **Passing with Generic Logic:** 0/0\n"
+        md_content += f"- **Passing with Both Generic:** 0/0\n"
+
+    md_content += f"\n**Combined Custom Code Size:**\n\n"
+    md_content += f"- **Total Exporter Code:** {format_size_kb(total_exporter_size)}\n"
+    md_content += f"- **Total Game Logic Code:** {format_size_kb(total_logic_size)}\n"
+    md_content += f"- **Combined Total:** {format_size_kb(total_exporter_size + total_logic_size)}\n"
 
     # Add Test Results table
     md_content += "\n## Test Results\n\n"
@@ -1249,16 +1345,22 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
 
         # Check if excluded_games contains dicts (with reasons) or strings (without)
         if excluded_games and isinstance(excluded_games[0], dict):
-            # New format with reasons
+            # New format with reasons - filter out WorldGen variants
             md_content += "| Game | Reason |\n"
             md_content += "|------|--------|\n"
             for item in excluded_games:
+                # Skip WorldGen variants
+                if ' WorldGen.yaml' in item['name']:
+                    continue
                 game_name = item['name'].replace('.yaml', '')
                 reason = item.get('reason', 'Not specified')
                 md_content += f"| {game_name} | {reason} |\n"
         else:
-            # Old format (list of strings)
+            # Old format (list of strings) - filter out WorldGen variants
             for game in excluded_games:
+                # Skip WorldGen variants
+                if ' WorldGen.yaml' in game:
+                    continue
                 game_name = game.replace('.yaml', '')
                 md_content += f"- {game_name}\n"
         md_content += "\n"

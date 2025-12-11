@@ -6,7 +6,7 @@
 
 [View Original Template Results](./test-results-multiworld.md)
 
-**Generated:** 2025-12-11 03:39:58
+**Generated:** 2025-12-10 19:54:33
 
 ## Summary
 
@@ -14,6 +14,12 @@
 - **Passed:** 0 (0.0%)
 - **Failed:** 0 (0.0%)
 - **Skipped (Prerequisites):** 79 (100.0%)
+
+### Generic Exporter/Logic Statistics
+
+- **Passing with Generic Exporter:** 0/0
+- **Passing with Generic Logic:** 0/0
+- **Passing with Both Generic:** 0/0
 
 ## Test Results
 

@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-11 03:39:58
+**Generated:** 2025-12-10 19:54:33
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -34,6 +34,20 @@ Additional test results:
 - **Templates passing 2 tests:** 2/76 (2.6%)
 - **Templates passing 1 test:** 0/76 (0.0%)
 - **Templates passing 0 tests:** 1/76 (1.3%)
+
+### Generic Exporter/Logic Statistics
+
+Of the 72 templates passing all 4 tests:
+
+- **Passing with Generic Exporter:** 29/72 (40.3%)
+- **Passing with Generic Logic:** 44/72 (61.1%)
+- **Passing with Both Generic:** 29/72 (40.3%)
+
+**Combined Custom Code Size:**
+
+- **Total Exporter Code:** 644.4KB
+- **Total Game Logic Code:** 987.9KB
+- **Combined Total:** 1632.3KB
 
 ## Test Results
 
