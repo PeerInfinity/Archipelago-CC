@@ -11,12 +11,14 @@ V6_AREAS = ["Laboratory", "The Tower", "Space Station 2", "Warp Zone"]
 
 
 class V6GameExportHandler(GenericGameExportHandler):
-    """Export handler for VVVVVV that exports door_cost and area_cost_map."""
+    """Export handler for VVVVVV.
+
+    This exporter is needed because the Python rules use lambdas with closures
+    that capture loop variables. The post-processor replaces complex closure-based
+    rules with simple inlined item_check rules.
+    """
 
     GAME_NAME = 'VVVVVV'
-    # Disable automatic helper export (use old behavior)
-    AUTO_EXPORT_DISCOVERED_HELPERS = False
-    AUTO_PRESERVE_LARGE_HELPERS = False
 
     # Store world data for post-processing
     _world_data: Dict[int, Dict[str, Any]] = {}
@@ -66,9 +68,9 @@ class V6GameExportHandler(GenericGameExportHandler):
         """
         Post-process the exported data to fix region exit rules.
 
-        The standard analyzer produces complex "block" rules with for_range loops
-        for the _has_trinket_range function. This method replaces those with
-        simplified helper calls using pre-calculated start/end values.
+        The Python rules use lambdas with closures to check trinket ranges.
+        This method replaces those complex rules with inlined item_check
+        conditions based on the door_cost and area_cost_map settings.
         """
         if 'regions' not in data:
             return data
@@ -106,15 +108,16 @@ class V6GameExportHandler(GenericGameExportHandler):
                         start = door_cost * (area_cost - 1)
                         end = door_cost * area_cost
 
-                        # Replace the complex rule with a helper call
+                        # Generate trinket names for the range
+                        # _has_trinket_range checks trinkets from start to end-1 (exclusive)
+                        # Trinket names are "Trinket 01", "Trinket 02", etc. (1-indexed, zero-padded)
+                        trinket_names = [f"Trinket {str(i + 1).zfill(2)}" for i in range(start, end)]
+
+                        # Replace with inline rule using 'and' of item_check conditions
                         exit_data['access_rule'] = {
-                            'type': 'helper',
-                            'name': '_has_trinket_range',
-                            'args': [
-                                {'type': 'constant', 'value': start},
-                                {'type': 'constant', 'value': end}
-                            ]
+                            'type': 'and',
+                            'conditions': [{'type': 'item_check', 'item': name} for name in trinket_names]
                         }
-                        logger.debug(f"Fixed exit rule for {connected_region}: start={start}, end={end}")
+                        logger.debug(f"Fixed exit rule for {connected_region}: requires {trinket_names}")
 
         return data
