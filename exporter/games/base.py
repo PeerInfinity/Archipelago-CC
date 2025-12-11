@@ -10,6 +10,7 @@ See exporter/games/generic.py for details on the enhanced functionality.
 
 from typing import Dict, Any, List, Set, Optional, Callable
 import collections
+import enum
 import importlib
 import inspect
 import logging
@@ -849,6 +850,20 @@ class BaseGameExportHandler:
                 # handled directly by the frontend rule engine
                 if inspect.isbuiltin(helper_func):
                     logger.debug(f"Helper '{helper_name}' is a built-in function, skipping analysis (handled by frontend)")
+                    continue
+
+                # Check if this is an enum class (e.g., Difficulty, HatType)
+                # Enum constructors like Difficulty(value) are essentially identity functions
+                # for rule purposes - they take a numeric value and return the enum member,
+                # but for comparisons we only care about the underlying numeric value.
+                if isinstance(helper_func, type) and issubclass(helper_func, enum.Enum):
+                    logger.debug(f"Helper '{helper_name}' is an enum class - exporting as identity function")
+                    # Export as a simple passthrough: takes one arg and returns it
+                    # This allows Difficulty(world.options.LogicDifficulty) to work correctly
+                    helper_definitions[helper_name] = {
+                        'params': ['value'],
+                        'body': {'type': 'name', 'name': 'value'}
+                    }
                     continue
 
                 # Analyze the function to get its rule structure

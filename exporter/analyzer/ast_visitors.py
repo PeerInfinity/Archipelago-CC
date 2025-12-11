@@ -2001,7 +2001,25 @@ class ASTVisitorMixin:
                     return {'type': 'constant', 'value': result_value}
                 else:
                     return {'type': 'not', 'condition': operand_result}
-            # Add other unary ops (e.g., UAdd, USub) if needed for rules
+            elif isinstance(node.op, ast.USub):
+                # Unary minus (e.g., -1, -x)
+                if operand_result.get('type') == 'constant':
+                    constant_value = operand_result['value']
+                    if isinstance(constant_value, (int, float)):
+                        result_value = -constant_value
+                        logging.debug(f"Evaluated -{constant_value} = {result_value}")
+                        return {'type': 'constant', 'value': result_value}
+                # For non-constant operands, return a negation structure
+                return {'type': 'negate', 'operand': operand_result}
+            elif isinstance(node.op, ast.UAdd):
+                # Unary plus (e.g., +1, +x) - essentially a no-op for constants
+                if operand_result.get('type') == 'constant':
+                    constant_value = operand_result['value']
+                    if isinstance(constant_value, (int, float)):
+                        logging.debug(f"Evaluated +{constant_value} = {constant_value}")
+                        return {'type': 'constant', 'value': constant_value}
+                # For non-constant operands, just return the operand as-is
+                return operand_result
             else:
                 logging.error(f"Unhandled unary operator: {op_name}")
                 return None # Or a generic representation
