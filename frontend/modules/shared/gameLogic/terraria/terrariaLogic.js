@@ -2,17 +2,19 @@
  * Terraria Game Logic Module
  *
  * Provides game-specific logic for Terraria including helper functions
- * for checking settings, NPC counts, tool power levels, and minion slots.
+ * for NPC counts, tool power levels, and minion slots.
+ *
+ * Note: check_setting was removed because settings are now exported at top level
+ * via COMPUTED_SETTINGS and resolved directly using 'name' type rules.
  */
 
-import { check_setting, has_n_from_list, has_minions } from './helpers.js';
+import { has_n_from_list, has_minions } from './helpers.js';
 
 /**
  * Terraria Helper Functions
  * These can be called from rules using the helper type.
  */
 export const helperFunctions = {
-    check_setting,
     has_n_from_list,
     has_minions
 };

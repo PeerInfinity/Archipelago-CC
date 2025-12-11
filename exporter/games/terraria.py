@@ -14,6 +14,13 @@ logger = logging.getLogger(__name__)
 class TerrariaGameExportHandler(BaseGameExportHandler):
     GAME_NAME = 'Terraria'
 
+    # Export settings at top level so they can be resolved by 'name' type rules
+    COMPUTED_SETTINGS = {
+        'calamity': lambda w, m, p: bool(w.options.calamity.value) if hasattr(w.options, 'calamity') else False,
+        'grindy_achievements': lambda w, m, p: bool(w.options.grindy_achievements.value) if hasattr(w.options, 'grindy_achievements') else False,
+        'getfixedboi': lambda w, m, p: bool(w.options.getfixedboi.value) if hasattr(w.options, 'getfixedboi') else False,
+    }
+
     def __init__(self):
         super().__init__()
         # Import Terraria-specific constants and types
@@ -234,14 +241,12 @@ class TerrariaGameExportHandler(BaseGameExportHandler):
         }
 
     def _create_setting_check(self, setting_name: str) -> Dict[str, Any]:
-        """Create a rule to check a game setting."""
-        return {
-            'type': 'helper',
-            'name': 'check_setting',
-            'args': [
-                {'type': 'constant', 'value': setting_name}
-            ]
-        }
+        """Create a rule to check a game setting.
+
+        Uses 'name' type rule which resolves from COMPUTED_SETTINGS export.
+        The setting value is exported at top level via COMPUTED_SETTINGS.
+        """
+        return {'type': 'name', 'name': setting_name}
 
     def _create_pickaxe_check(self, required_power: int) -> Dict[str, Any]:
         """Create a rule to check if player has a pickaxe with at least N power."""
