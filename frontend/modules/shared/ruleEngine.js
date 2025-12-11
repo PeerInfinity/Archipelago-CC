@@ -1100,6 +1100,59 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           }
         }
 
+        // Special handling for math module functions (math.sqrt, math.pow, etc.)
+        // Python's math module functions need to be mapped to JavaScript Math equivalents
+        if (
+          rule.function?.type === 'attribute' &&
+          rule.function.object?.type === 'name' &&
+          rule.function.object.name === 'math'
+        ) {
+          const mathFunc = rule.function.attr;
+          const args = (rule.args || []).map(arg => evaluateRule(arg, context, depth + 1, localScope));
+
+          switch (mathFunc) {
+            case 'sqrt':
+              if (typeof args[0] === 'number' && args[0] >= 0) {
+                result = Math.sqrt(args[0]);
+              } else {
+                result = undefined;
+              }
+              break;
+            case 'pow':
+              if (typeof args[0] === 'number' && typeof args[1] === 'number') {
+                result = Math.pow(args[0], args[1]);
+              } else {
+                result = undefined;
+              }
+              break;
+            case 'floor':
+              if (typeof args[0] === 'number') {
+                result = Math.floor(args[0]);
+              } else {
+                result = undefined;
+              }
+              break;
+            case 'ceil':
+              if (typeof args[0] === 'number') {
+                result = Math.ceil(args[0]);
+              } else {
+                result = undefined;
+              }
+              break;
+            case 'abs':
+              if (typeof args[0] === 'number') {
+                result = Math.abs(args[0]);
+              } else {
+                result = undefined;
+              }
+              break;
+            default:
+              log('warn', `[evaluateRule] Unknown math function: math.${mathFunc}`);
+              result = undefined;
+          }
+          break;
+        }
+
         // Special handling for state.multiworld.get_location() calls
         // These are used in location access rules to reference the location's parent_region
         if (rule.function?.type === 'attribute' &&
@@ -1307,6 +1360,30 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
               `[ruleEngine] [evaluateRule] No executeHelper method in context for helper '${helperName}'`
             );
             result = undefined;
+            break;
+          }
+        }
+
+        // Special handling for dict.get(key, default) pattern
+        // Python dicts have a .get() method, but JavaScript plain objects don't
+        // This converts obj.get(key, default) to obj[key] ?? default
+        if (
+          rule.function?.type === 'attribute' &&
+          rule.function.attr === 'get' &&
+          rule.function.object
+        ) {
+          const obj = evaluateRule(rule.function.object, context, depth + 1, localScope);
+          if (obj && typeof obj === 'object' && !Array.isArray(obj) && !(obj instanceof Map)) {
+            // This is a plain object - handle .get() as property access with default
+            const args = (rule.args || []).map(arg => evaluateRule(arg, context, depth + 1, localScope));
+            const key = args[0];
+            const defaultValue = args.length > 1 ? args[1] : undefined;
+
+            if (key !== undefined && Object.prototype.hasOwnProperty.call(obj, key)) {
+              result = obj[key];
+            } else {
+              result = defaultValue;
+            }
             break;
           }
         }
