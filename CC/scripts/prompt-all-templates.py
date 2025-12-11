@@ -303,6 +303,18 @@ def has_custom_code(game_name, world_mapping):
     return has_custom_exporter or has_custom_game_logic
 
 
+def has_javascript_helpers(game_name, world_mapping):
+    """Check if a game has custom JavaScript helpers.
+
+    Returns True if the game has custom game logic (JavaScript helpers).
+    """
+    if game_name not in world_mapping:
+        return False
+
+    game_info = world_mapping[game_name]
+    return game_info.get('has_custom_game_logic', False)
+
+
 def get_custom_code_info(game_name, world_mapping):
     """Get information about custom code for a game.
 
@@ -325,6 +337,83 @@ def get_custom_code_info(game_name, world_mapping):
         'helpers_path': game_info.get('game_logic_path'),
         'world_directory': game_info.get('world_directory')
     }
+
+
+def run_all_promptfiles(project_root):
+    """Run all prompt-generating modes and output to separate files.
+
+    Creates CC/scripts/prompts/ directory and generates a separate prompt file for each mode.
+    """
+    prompts_dir = Path(project_root) / 'CC' / 'scripts' / 'prompts'
+    prompts_dir.mkdir(exist_ok=True)
+
+    # Define all the modes to run with their output filenames
+    modes = [
+        (['--minimal-spoilers', '--CC'], 'minimal-spoilers.txt'),
+        (['--full-spoilers', '--CC'], 'full-spoilers.txt'),
+        (['--multiclient', '--CC'], 'multiclient.txt'),
+        (['--multiworld', '--CC'], 'multiworld.txt'),
+        (['--basic-spoiler-debug', '--CC'], 'basic-spoiler-debug.txt'),
+        (['--helper-export', '--CC'], 'helper-export.txt'),
+        (['--new-rule-types', '--CC'], 'new-rule-types.txt'),
+    ]
+
+    script_path = Path(__file__).resolve()
+    results = []
+
+    for mode_args, output_filename in modes:
+        output_file = prompts_dir / output_filename
+        print(f"Running mode: {' '.join(mode_args)}...")
+
+        # Run the script with --promptfile and capture the output
+        cmd = ['python', str(script_path), '--promptfile'] + mode_args
+        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+
+        if result.returncode != 0:
+            print(f"  Warning: Mode {mode_args} returned non-zero exit code")
+            if result.stderr:
+                print(f"  stderr: {result.stderr[:200]}")
+
+        # The script writes to CC/scripts/prompts.txt, so move it to the mode-specific file
+        default_output = Path(project_root) / 'CC' / 'scripts' / 'prompts.txt'
+        if default_output.exists():
+            # Read the content and count prompts
+            with open(default_output, 'r') as f:
+                content = f.read()
+
+            # Count prompts by counting separator blocks (or 1 if no separators)
+            if content.strip():
+                prompt_count = content.count('=' * 80) + 1
+                # Write to mode-specific file
+                with open(output_file, 'w') as f:
+                    f.write(content)
+                results.append((output_filename, prompt_count))
+                print(f"  Created {output_file} with {prompt_count} prompts")
+            else:
+                results.append((output_filename, 0))
+                print(f"  No prompts generated for this mode")
+
+            # Remove the default file
+            default_output.unlink()
+        else:
+            results.append((output_filename, 0))
+            print(f"  No prompts generated for this mode")
+
+    # Print summary
+    print(f"\n{'='*60}")
+    print("Summary:")
+    print(f"{'='*60}")
+    total_prompts = 0
+    for filename, count in results:
+        if count > 0:
+            print(f"  {filename}: {count} prompts")
+            total_prompts += count
+        else:
+            print(f"  {filename}: (empty)")
+    print(f"\nTotal: {total_prompts} prompts across {len([r for r in results if r[1] > 0])} files")
+    print(f"Output directory: {prompts_dir}")
+
+    return 0
 
 
 def generate_helper_export_prompt(template_file, game_name, custom_code_info, seed=1, use_cloud_docs=False):
@@ -394,6 +483,20 @@ python scripts/test/test-all-templates.py --include-list "{template_file}" --min
 
 - Python world: `worlds/{world_dir}/`
 - Rules file: `worlds/{world_dir}/Rules.py`
+"""
+
+
+def generate_new_rule_types_prompt(game_name):
+    """Generate a prompt for investigating new rule types needed by a game's helpers.
+
+    This prompt refers to CC/implementing-new-rule-types.md for games that have
+    JavaScript helpers requiring new rule type support.
+    """
+    return f"""First, please read CC/cloud-setup.md and complete the environment setup if you haven't already.
+
+Then, please read CC/implementing-new-rule-types.md
+
+Then please investigate what needs to be done next to continue adding support for the rule types required by the helper functions in {game_name}.
 """
 
 
@@ -634,6 +737,10 @@ def main():
                        help='Generate prompts for basic games (no custom exporter/helpers) failing minimal spoiler tests')
     parser.add_argument('--helper-export', action='store_true',
                        help='Generate prompts for games with custom exporter/helpers to convert them to use helper export')
+    parser.add_argument('--new-rule-types', action='store_true',
+                       help='Generate prompts for games with JavaScript helpers to investigate implementing new rule types')
+    parser.add_argument('--all-promptfiles', action='store_true',
+                       help='Run all prompt-generating modes and output to separate files in CC/scripts/prompts/')
     parser.add_argument('--exclude-pattern', type=str,
                        help='Exclude template files matching this pattern (e.g., "WorldGen" to exclude WorldGen templates)')
     parser.add_argument('--include-pattern', type=str,
@@ -678,6 +785,18 @@ def main():
         print("Error: --helper-export and --basic-spoiler-debug are mutually exclusive")
         sys.exit(1)
 
+    if args.new_rule_types and (args.multiclient or args.multiworld):
+        print("Error: --new-rule-types cannot be combined with --multiclient or --multiworld")
+        sys.exit(1)
+
+    if args.new_rule_types and args.basic_spoiler_debug:
+        print("Error: --new-rule-types and --basic-spoiler-debug are mutually exclusive")
+        sys.exit(1)
+
+    if args.new_rule_types and args.helper_export:
+        print("Error: --new-rule-types and --helper-export are mutually exclusive")
+        sys.exit(1)
+
     if args.include_pattern and args.exclude_pattern:
         print("Error: --include-pattern and --exclude-pattern are mutually exclusive")
         sys.exit(1)
@@ -704,6 +823,10 @@ def main():
 
     # Determine project root
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+
+    # Handle --all-promptfiles mode: run all prompt-generating modes with separate output files
+    if args.all_promptfiles:
+        return run_all_promptfiles(project_root)
 
     # Load world mapping (needed for filtering by custom code status)
     # Used by: --basic-spoiler-debug, --helper-export, and normal mode (to exclude basic games)
@@ -814,6 +937,66 @@ def main():
                         template_file, game_name_from_yaml, custom_code_info, args.seed, args.CC
                     )
                     print(helper_prompt)
+
+                    # Exit immediately if -t or -p was specified
+                    if args.text or args.prompt:
+                        return 0
+
+                files_processed += 1
+
+            # Check if we've reached the max files limit
+            if args.max_files and files_processed >= args.max_files:
+                if not quiet_mode:
+                    print(f"\n✅ Reached maximum file limit ({args.max_files}), stopping...")
+                break
+
+            # Move to next template
+            current_index = (current_index + 1) % len(template_files)
+            processed_count += 1
+
+            # If we've completed a full cycle, show progress
+            if processed_count % len(template_files) == 0:
+                cycle_num = processed_count // len(template_files)
+                print(f"\n🔄 Completed cycle {cycle_num}")
+
+                # Check if we've reached the max loops limit
+                if cycle_num >= args.max_loops:
+                    print(f"✅ Reached maximum loop limit ({args.max_loops}), stopping...")
+                    break
+
+            continue  # Skip the normal test-based processing below
+
+        # For --new-rule-types mode, we don't check test results - we look for games with JavaScript helpers
+        if args.new_rule_types:
+            # Extract game name from template YAML
+            game_name_from_yaml = extract_game_name_from_yaml(template_path)
+            if not game_name_from_yaml:
+                if not quiet_mode:
+                    print(f"Could not extract game name from {template_file}, skipping...")
+            else:
+                if not quiet_mode:
+                    print(f"Game name: {game_name_from_yaml}")
+
+                # Skip games without JavaScript helpers
+                if not has_javascript_helpers(game_name_from_yaml, world_mapping):
+                    if not quiet_mode:
+                        print(f"Skipping {game_name_from_yaml} - no JavaScript helpers")
+                    current_index = (current_index + 1) % len(template_files)
+                    processed_count += 1
+                    if processed_count % len(template_files) == 0:
+                        cycle_num = processed_count // len(template_files)
+                        if cycle_num >= args.max_loops:
+                            break
+                    continue
+
+                # Handle --promptfile mode
+                if args.promptfile:
+                    new_rule_types_prompt = generate_new_rule_types_prompt(game_name_from_yaml)
+                    collected_prompts.append(new_rule_types_prompt)
+                else:
+                    # Output the prompt directly
+                    new_rule_types_prompt = generate_new_rule_types_prompt(game_name_from_yaml)
+                    print(new_rule_types_prompt)
 
                     # Exit immediately if -t or -p was specified
                     if args.text or args.prompt:

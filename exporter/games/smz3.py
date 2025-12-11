@@ -522,10 +522,45 @@ class SMZ3GameExportHandler(GenericGameExportHandler):
 
             # Handle items.AttributeName - convert to item check
             if isinstance(obj, dict) and obj.get('type') == 'name' and obj.get('name') == 'items':
-                logger.debug(f"Converting items.{attr} to item_check")
+                # SMZ3 uses "progression flags" that represent having multiple progressive items.
+                # These flags need to be converted to count comparisons, not simple item checks.
+                # See worlds/smz3/TotalSMZ3/Item.py for how these flags are set:
+                #   - MasterSword = True when ProgressiveSword >= 2
+                #   - Mitt = True when ProgressiveGlove >= 2
+                #   - TwoPowerBombs = True when PowerBomb >= 2
+                progression_count_flags = {
+                    'MasterSword': ('ProgressiveSword', 2),
+                    'Mitt': ('ProgressiveGlove', 2),
+                    'TwoPowerBombs': ('PowerBomb', 2),
+                }
+
+                if attr in progression_count_flags:
+                    item_name, min_count = progression_count_flags[attr]
+                    logger.debug(f"Converting items.{attr} to {item_name} >= {min_count}")
+                    return {
+                        'type': 'compare',
+                        'left': {'type': 'item_check', 'item': item_name},
+                        'op': '>=',
+                        'right': {'type': 'constant', 'value': min_count}
+                    }
+
+                # SMZ3 also uses boolean flags that represent having the base progressive item.
+                # These are simple name mappings (presence check):
+                #   - Sword = ProgressiveSword
+                #   - Glove = ProgressiveGlove
+                item_name_mappings = {
+                    'Sword': 'ProgressiveSword',
+                    'Glove': 'ProgressiveGlove',
+                }
+
+                actual_item_name = item_name_mappings.get(attr, attr)
+                if actual_item_name != attr:
+                    logger.debug(f"Mapping items.{attr} to {actual_item_name}")
+
+                logger.debug(f"Converting items.{attr} to item_check for {actual_item_name}")
                 return {
                     'type': 'item_check',
-                    'item': attr
+                    'item': actual_item_name
                 }
 
             # Handle self.AttributeName - try to resolve to static data or constant

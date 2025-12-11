@@ -523,6 +523,36 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         // Handle built-in Python functions
+        if (rule.name === 'set') {
+          // Python's set() function - convert iterable to set
+          // In JS context, we just return the array as-is since has_all/has_any work with arrays
+          const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (Array.isArray(value)) {
+            result = value;
+          } else if (value && typeof value === 'object') {
+            // Handle object (like dict keys) - convert to array
+            result = Object.keys(value);
+          } else {
+            result = value;
+          }
+          break;
+        }
+
+        if (rule.name === 'list') {
+          // Python's list() function - convert iterable to list
+          const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (Array.isArray(value)) {
+            result = value;
+          } else if (value && typeof value === 'object') {
+            result = Object.values(value);
+          } else if (typeof value === 'string') {
+            result = value.split('');
+          } else {
+            result = value ? [value] : [];
+          }
+          break;
+        }
+
         if (rule.name === 'int') {
           // Python's int() function - truncate a float to an integer
           const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
@@ -1514,6 +1544,14 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         } else if (list && typeof list === 'object') {
           result = list[index]; // Access property/index
           // If list[index] itself is undefined (property doesn't exist), result remains undefined.
+
+          // If the result is itself a rule object (has a 'type' property), evaluate it recursively.
+          // This handles patterns like dict[setting_value] where dict values are rules.
+          // Example: {"easy": <rule1>, "normal": <rule2>}[fight_logic] should evaluate the selected rule.
+          if (result && typeof result === 'object' && result.type && typeof result.type === 'string') {
+            log('debug', `[evaluateRule] Subscript result is a rule object (type: ${result.type}), evaluating recursively`);
+            result = evaluateRule(result, context, depth + 1, localScope);
+          }
         } else {
           log(
             'warn',
@@ -1860,6 +1898,22 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             '[evaluateRule SnapshotIF] context.countGroup is not a function for group_count.'
           );
           result = undefined;
+        }
+        break;
+      }
+
+      case 'player_id': {
+        // Return the current player ID
+        // This is used for self.player references in class-based rule helpers (like KH2)
+        if (typeof context.getPlayerId === 'function') {
+          result = context.getPlayerId();
+        } else if (context.playerId !== undefined) {
+          result = context.playerId;
+        } else if (typeof context.getPlayerSlot === 'function') {
+          result = context.getPlayerSlot();
+        } else {
+          log('debug', '[evaluateRule] player_id: No player ID available in context, defaulting to 1');
+          result = 1; // Default to player 1 for single-player scenarios
         }
         break;
       }

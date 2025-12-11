@@ -137,6 +137,45 @@ class MessengerGameExportHandler(GenericGameExportHandler):
                     if location_args:
                         return {'type': 'location_check', 'location': location_args[0]}
 
+        # Handle state_method has_any/has_all rules - convert to or/and with item_check
+        # The frontend's executeStateManagerMethod doesn't handle these correctly,
+        # so we expand them to standard rule types that work reliably
+        if rule.get('type') == 'state_method':
+            method = rule.get('method')
+            args = rule.get('args', [])
+
+            if method == 'has_any' and args:
+                # has_any([item1, item2, ...]) -> or([item_check(item1), item_check(item2), ...])
+                items_arg = args[0]
+                items = []
+                if items_arg.get('type') == 'constant' and isinstance(items_arg.get('value'), list):
+                    items = items_arg.get('value')
+
+                if items:
+                    return {
+                        'type': 'or',
+                        'conditions': [
+                            {'type': 'item_check', 'item': {'type': 'constant', 'value': item_name}}
+                            for item_name in items
+                        ]
+                    }
+
+            if method == 'has_all' and args:
+                # has_all([item1, item2, ...]) -> and([item_check(item1), item_check(item2), ...])
+                items_arg = args[0]
+                items = []
+                if items_arg.get('type') == 'constant' and isinstance(items_arg.get('value'), list):
+                    items = items_arg.get('value')
+
+                if items:
+                    return {
+                        'type': 'and',
+                        'conditions': [
+                            {'type': 'item_check', 'item': {'type': 'constant', 'value': item_name}}
+                            for item_name in items
+                        ]
+                    }
+
         # Recursively expand conditions in and/or rules
         if rule.get('type') in ['and', 'or']:
             rule['conditions'] = [self.expand_rule(cond) for cond in rule.get('conditions', [])]

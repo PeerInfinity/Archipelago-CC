@@ -151,12 +151,39 @@ class ASTVisitorMixin:
         """
         Determine if a function body needs block mode (multi-statement) analysis.
         Returns True if the body contains:
-        - For loops
+        - For loops (including inside If statements)
         - Multiple assignments followed by a return (including returns inside If statements)
-        - AugAssign statements
+        - AugAssign statements (including inside If statements)
         """
-        has_for = any(isinstance(n, ast.For) for n in body_nodes)
-        has_augassign = any(isinstance(n, ast.AugAssign) for n in body_nodes)
+        # Check for for loops recursively - they can be inside If statements' body or orelse
+        def has_for_recursive(nodes):
+            for node in nodes:
+                if isinstance(node, ast.For):
+                    return True
+                if isinstance(node, ast.If):
+                    if has_for_recursive(node.body):
+                        return True
+                    if has_for_recursive(node.orelse):
+                        return True
+            return False
+
+        # Check for augmented assignments recursively
+        def has_augassign_recursive(nodes):
+            for node in nodes:
+                if isinstance(node, ast.AugAssign):
+                    return True
+                if isinstance(node, ast.If):
+                    if has_augassign_recursive(node.body):
+                        return True
+                    if has_augassign_recursive(node.orelse):
+                        return True
+                if isinstance(node, ast.For):
+                    if has_augassign_recursive(node.body):
+                        return True
+            return False
+
+        has_for = has_for_recursive(body_nodes)
+        has_augassign = has_augassign_recursive(body_nodes)
 
         # Count assignments at the top level
         assign_count = sum(1 for n in body_nodes if isinstance(n, (ast.Assign, ast.AnnAssign)))
@@ -1577,9 +1604,22 @@ class ASTVisitorMixin:
                     'attr': region_attr
                 }
 
-            # Specifically log if we are processing self.player
+            # Handle self.player - convert to player_id reference
+            # This is used in class-based rule helpers like KH2's KH2Rules
             if isinstance(node.value, ast.Name) and node.value.id == 'self' and attr_name == 'player':
-                 logging.debug("visit_Attribute: Detected access to self.player")
+                logging.debug("visit_Attribute: Detected self.player, converting to player_id")
+                return {'type': 'player_id'}
+
+            # Handle self.<attr> patterns that map to settings
+            # This is used for patterns like self.fight_logic which is set from world.options.FightLogic
+            if isinstance(node.value, ast.Name) and node.value.id == 'self':
+                # Check if the game handler has a mapping for this attribute to a setting
+                if hasattr(self, 'game_handler') and self.game_handler is not None:
+                    setting_mapping = getattr(self.game_handler, 'SELF_ATTR_TO_SETTING', {})
+                    if attr_name in setting_mapping:
+                        setting_name = setting_mapping[attr_name]
+                        logging.debug(f"visit_Attribute: Detected self.{attr_name}, converting to setting_value '{setting_name}'")
+                        return {'type': 'setting_value', 'setting': setting_name}
 
             # OPTIMIZATION: If the object is a simple Name node in closure_vars, try to resolve
             # the attribute directly BEFORE visiting the object. This handles NamedTuples and
@@ -1690,15 +1730,26 @@ class ASTVisitorMixin:
                     # Don't convert to string here - let attribute access or other operations handle it
                     pass
 
-            # Also check function defaults for lambda parameters
-            # Skip this when preserve_parameter_names is True - we want to keep params as name references
-            if name not in self.closure_vars and not getattr(self, 'preserve_parameter_names', False):
+            # Also check function defaults and module globals
+            # When preserve_parameter_names is True, skip resolution for actual function parameters
+            # but still resolve module-level constants (like WORLDS, KEYBLADES, LOGIC_MINIMAL)
+            is_function_parameter = False
+            if getattr(self, 'preserve_parameter_names', False) and self.rule_func and hasattr(self.rule_func, '__code__'):
+                param_names = self.rule_func.__code__.co_varnames[:self.rule_func.__code__.co_argcount]
+                is_function_parameter = name in param_names
+
+            if name not in self.closure_vars and not is_function_parameter:
                 resolved_value = self.expression_resolver.resolve_variable(name)
                 if resolved_value is not None:
                     # Handle simple values
                     if isinstance(resolved_value, (int, float, str, bool)):
-                        logging.debug(f"visit_Name: Resolved '{name}' from function defaults to constant value: {resolved_value}")
+                        logging.debug(f"visit_Name: Resolved '{name}' from function defaults/globals to constant value: {resolved_value}")
                         return {'type': 'constant', 'value': resolved_value}
+                    # Handle list/tuple values - resolve to constant for iteration and subscript
+                    elif isinstance(resolved_value, (list, tuple)):
+                        list_value = list(resolved_value) if isinstance(resolved_value, tuple) else resolved_value
+                        logging.debug(f"visit_Name: Resolved '{name}' from globals to constant list: {list_value}")
+                        return {'type': 'constant', 'value': list_value}
                     # Handle enum values by extracting their .value attribute
                     elif hasattr(resolved_value, 'value') and isinstance(resolved_value.value, (int, float, str, bool)):
                         logging.debug(f"visit_Name: Resolved '{name}' from function defaults to enum constant value: {resolved_value.value}")
@@ -1845,6 +1896,41 @@ class ASTVisitorMixin:
         if attr_name is not None and index_val is not None:
             logging.debug(f"visit_Subscript: Detected world attribute subscript pattern: {attr_name}[{index_val}]")
             return {'type': 'setting_value', 'setting': attr_name, 'index': index_val}
+
+        # OPTIMIZATION: Try direct resolution for attribute subscripts like world.dict[key]
+        # This avoids the dict-to-keys conversion that happens in visit_Attribute
+        # which would break subscript access (e.g., world.chapter_timepiece_costs[ChapterIndex.MAFIA])
+        if isinstance(node.value, ast.Attribute) and isinstance(node.value.value, ast.Name):
+            var_name = node.value.value.id
+            attr_name = node.value.attr
+            if var_name in self.closure_vars:
+                try:
+                    # Get the container directly from closure
+                    obj_value = self.closure_vars[var_name]
+                    container = getattr(obj_value, attr_name, None)
+                    if container is not None and isinstance(container, dict):
+                        # Try to resolve the index
+                        index_result = self.visit(node.slice)
+                        resolved_index = None
+                        if index_result and index_result.get('type') == 'constant':
+                            resolved_index = index_result['value']
+                        elif index_result and index_result.get('type') == 'name':
+                            resolved_index = self.expression_resolver.resolve_variable(index_result['name'])
+                        elif index_result and index_result.get('type') == 'attribute':
+                            resolved_index = self.expression_resolver.resolve_expression(index_result)
+
+                        if resolved_index is not None:
+                            try:
+                                subscript_result = container[resolved_index]
+                                logging.debug(f"visit_Subscript: Direct resolution {var_name}.{attr_name}[{resolved_index}] = {subscript_result}")
+                                if isinstance(subscript_result, (int, float, str, bool, type(None))):
+                                    return {'type': 'constant', 'value': subscript_result}
+                                elif hasattr(subscript_result, 'value') and isinstance(subscript_result.value, (int, float, str, bool)):
+                                    return {'type': 'constant', 'value': subscript_result.value}
+                            except (KeyError, IndexError, TypeError) as e:
+                                logging.debug(f"visit_Subscript: Direct resolution failed: {e}")
+                except Exception as e:
+                    logging.debug(f"visit_Subscript: Error in direct resolution optimization: {e}")
 
         # First visit the value (the object being subscripted)
         value_info = self.visit(node.value) # Get returned result

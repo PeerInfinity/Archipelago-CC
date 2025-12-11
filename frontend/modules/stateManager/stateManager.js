@@ -687,7 +687,14 @@ export class StateManager {
   }
 
   // Delegate can_reach methods to ReachabilityModule (Python API compatibility)
-  can_reach(target, type = 'Region', playerId = null) {
+  can_reach(target, type = null, playerId = null) {
+    // If no type specified, auto-detect based on whether target is a location or region
+    // This handles cases like Factorio's state.can_reach(loc) where loc is a Location object
+    // that gets exported without a type argument
+    if (!type) {
+      const isLocation = this.locations && this.locations.has(target);
+      type = isLocation ? 'Location' : 'Region';
+    }
     return ReachabilityModule.can_reach(this, target, type, playerId);
   }
 
