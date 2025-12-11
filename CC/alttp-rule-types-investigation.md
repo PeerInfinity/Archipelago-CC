@@ -493,3 +493,42 @@ However, the JavaScript implementations provide:
 - Better error handling for edge cases
 - More readable code
 - Direct access to static data structures
+
+---
+
+## Implementation Status (Updated)
+
+### Completed Implementations
+
+| Helper | Status | Implementation |
+|--------|--------|----------------|
+| `GanonDefeatRule` | ✅ **Exported** | Fixed `_needs_block_mode` to detect returns inside If statements. Now uses block mode for multi-statement function bodies. |
+| `location_item_name` | ✅ **Exported** | New `placement_lookup` rule type in ruleEngine.js. Looks up item at a location using `staticData.locationItems`. |
+| `item_name_in_location_names` | ✅ **Exported** | New `placement_search` rule type in ruleEngine.js. Searches for an item across multiple locations. |
+| `tr_big_key_chest_keys_needed` | ✅ **Inlined** | Logic inlined in `handle_special_function_call` using `placement_lookup`. No longer needs helper export. |
+
+### Remaining with JavaScript Fallbacks
+
+| Helper | Status | Reason |
+|--------|--------|--------|
+| `can_buy` | ⚠️ JS fallback | Would need `shop_check` rule type with region reachability. Data available in `shop_items`. |
+| `can_buy_unlimited` | ⚠️ JS fallback | Same as `can_buy`. |
+| `can_defeat_boss` | ⚠️ JS fallback | Complex - requires boss placement data export and individual boss defeat rules. |
+
+### Summary of Changes
+
+**Analyzer (`ast_visitors.py`)**:
+- Fixed `_needs_block_mode` to recursively check for Return statements inside If statements
+
+**Rule Engine (`ruleEngine.js`)**:
+- Added `placement_lookup` rule type for looking up items at locations
+- Added `placement_search` rule type for searching items across multiple locations
+
+**ALTTP Exporter (`alttp.py`)**:
+- Removed `GanonDefeatRule`, `location_item_name`, `item_name_in_location_names`, `tr_big_key_chest_keys_needed` from blacklist
+- Added `handle_special_function_call` conversions for these helpers
+- Inlined `tr_big_key_chest_keys_needed` logic using `placement_lookup`
+
+### Test Results
+
+All 5 test seeds pass with 100% sphere coverage after these changes.
