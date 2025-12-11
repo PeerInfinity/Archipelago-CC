@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-11T01:26:53.632096",
-    "last_updated": "2025-12-11T01:26:53.632103",
+    "last_updated": "2025-12-11T03:27:14.253737",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3966,39 +3966,27 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "e08fa4220e3337fa73e05e1d0966e7ddc9e6e551302dc2949e088fa46fbc851b",
-          "new_sphere_log_hash": "17543bd414f95ddc5fcfac5878b81603b7f17f4f885bfc57e25ce0d3ca10771a",
-          "original_rules_hash": "e08fa4220e3337fa73e05e1d0966e7ddc9e6e551302dc2949e088fa46fbc851b",
-          "original_sphere_log_hash": "17543bd414f95ddc5fcfac5878b81603b7f17f4f885bfc57e25ce0d3ca10771a",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-11T01:19:02.320977"
-        }
-      },
       "game_name_from_filename": "tww",
       "game_name_from_yaml": "The Wind Waker",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.53,
+        "processing_time_seconds": 35.38,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/tww/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 209179,
-        "size_mb": 0.2
+        "size_bytes": 226647,
+        "size_mb": 0.22
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 9.79,
+        "processing_time_seconds": 12.81,
         "return_code": 0,
         "sphere_reached": 18.1,
         "success": true,
@@ -4006,12 +3994,12 @@
         "warning_count": 0
       },
       "template_filename": "The Wind Waker.yaml",
-      "timestamp": "2025-12-11T01:18:20.598084",
+      "timestamp": "2025-12-11T03:26:25.663100",
       "world_info": {
         "exporter_path": "exporter/games/tww.py",
-        "exporter_size": 3652,
+        "exporter_size": 4901,
         "game_logic_path": "frontend/modules/shared/gameLogic/tww/twwLogic.js",
-        "game_logic_size": 56586,
+        "game_logic_size": 4711,
         "game_name_from_filename": "tww",
         "game_name_from_yaml": "The Wind Waker",
         "has_custom_exporter": true,
