@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-11T01:26:53.632096",
-    "last_updated": "2025-12-11T01:26:53.632103",
+    "last_updated": "2025-12-11T03:27:26.346556",
     "script_version": "1.0.0"
   },
   "results": {
@@ -4261,39 +4261,27 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "fec9d6cccbd5a171515cd6bff2080bf0cf253642592c56f2f4f15a3298ddf2b3",
-          "new_sphere_log_hash": "b9f2a3de4020c40a579813da14efa51227af5f064453de607705b6fd9218568d",
-          "original_rules_hash": "fec9d6cccbd5a171515cd6bff2080bf0cf253642592c56f2f4f15a3298ddf2b3",
-          "original_sphere_log_hash": "b9f2a3de4020c40a579813da14efa51227af5f064453de607705b6fd9218568d",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-11T01:18:37.942847"
-        }
-      },
       "game_name_from_filename": "wargroove",
       "game_name_from_yaml": "Wargroove",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.23,
+        "processing_time_seconds": 6.52,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/wargroove/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 58313,
-        "size_mb": 0.06
+        "size_bytes": 50569,
+        "size_mb": 0.05
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.75,
+        "processing_time_seconds": 9.66,
         "return_code": 0,
         "sphere_reached": 9.1,
         "success": true,
@@ -4301,16 +4289,16 @@
         "warning_count": 0
       },
       "template_filename": "Wargroove.yaml",
-      "timestamp": "2025-12-11T01:17:58.940950",
+      "timestamp": "2025-12-11T03:27:09.751632",
       "world_info": {
         "exporter_path": "exporter/games/wargroove.py",
-        "exporter_size": 5839,
-        "game_logic_path": "frontend/modules/shared/gameLogic/wargroove/wargrooveLogic.js",
-        "game_logic_size": 2707,
+        "exporter_size": 3575,
+        "game_logic_path": null,
+        "game_logic_size": 0,
         "game_name_from_filename": "wargroove",
         "game_name_from_yaml": "Wargroove",
         "has_custom_exporter": true,
-        "has_custom_game_logic": true,
+        "has_custom_game_logic": false,
         "world_directory": "wargroove"
       }
     },
