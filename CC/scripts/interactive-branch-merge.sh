@@ -280,6 +280,19 @@ perform_merge_only() {
             done
             shopt -u nullglob
 
+            # Unstage and discard changes in scripts/data/world-mapping.json
+            if [ -f "scripts/data/world-mapping.json" ]; then
+                # First, resolve any merge conflicts by checking out ours
+                if git diff --name-only --diff-filter=U | grep -q "^scripts/data/world-mapping.json$"; then
+                    git checkout --ours "scripts/data/world-mapping.json"
+                    git add "scripts/data/world-mapping.json" 2>/dev/null || true
+                    echo "  Resolved conflict: scripts/data/world-mapping.json (kept ours)"
+                else
+                    git reset -- scripts/data/world-mapping.json 2>/dev/null || true
+                    git checkout -- scripts/data/world-mapping.json 2>/dev/null || true
+                fi
+            fi
+
             echo -e "${GREEN}Temporary files cleaned.${NC}"
         else
             echo -e "${BLUE}Skipped cleaning temporary files.${NC}"
@@ -471,6 +484,19 @@ fetch_and_merge() {
                 fi
             done
             shopt -u nullglob
+
+            # Unstage and discard changes in scripts/data/world-mapping.json
+            if [ -f "scripts/data/world-mapping.json" ]; then
+                # First, resolve any merge conflicts by checking out ours
+                if git diff --name-only --diff-filter=U | grep -q "^scripts/data/world-mapping.json$"; then
+                    git checkout --ours "scripts/data/world-mapping.json"
+                    git add "scripts/data/world-mapping.json" 2>/dev/null || true
+                    echo "  Resolved conflict: scripts/data/world-mapping.json (kept ours)"
+                else
+                    git reset -- scripts/data/world-mapping.json 2>/dev/null || true
+                    git checkout -- scripts/data/world-mapping.json 2>/dev/null || true
+                fi
+            fi
 
             echo -e "${GREEN}Temporary files cleaned.${NC}"
         else

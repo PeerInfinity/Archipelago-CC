@@ -384,16 +384,27 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             // Found a helper definition in rules.json - evaluate it recursively
             // Helper definitions may have params and body, or just be a rule directly
             const params = helperDefinition.params || [];
+            const defaults = helperDefinition.defaults || {};
             const body = helperDefinition.body || helperDefinition;
             const args = rule.args || [];
 
             // Create localScope mapping parameter names to evaluated argument values
             let helperLocalScope = localScope ? { ...localScope } : {};
+
+            // First, apply default values for all parameters that have defaults
+            for (const paramName of params) {
+              if (paramName in defaults) {
+                helperLocalScope[paramName] = defaults[paramName];
+              }
+            }
+
+            // Then, override with actual argument values
             for (let i = 0; i < params.length && i < args.length; i++) {
               helperLocalScope[params[i]] = evaluateRule(args[i], context, depth + 1, localScope);
             }
 
             result = evaluateRule(body, context, depth + 1, helperLocalScope);
+
             // Unwrap return marker if present (from block with return statement)
             if (result && typeof result === 'object' && result.__isReturn) {
               result = result.value;
@@ -474,6 +485,51 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             result = undefined;
           } else {
             result = Math.max(...evalArgs);
+          }
+          break;
+        }
+
+        // Handle can_buy and can_buy_unlimited using shop_items data
+        // TODO: This is ALttP-specific logic that should be moved to a game-specific module.
+        // Find a more generic solution (e.g., game-specific helper registry or exported helper definitions).
+        if (rule.name === 'can_buy' || rule.name === 'can_buy_unlimited') {
+          const itemName = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (itemName === undefined) {
+            result = undefined;
+            break;
+          }
+          // Get shop_items from settings
+          const shopItems = context.getSetting?.('shop_items');
+          if (!shopItems || !shopItems[itemName]) {
+            log('debug', `[evaluateRule] ${rule.name}: item '${itemName}' not found in shop_items`);
+            result = false;
+            break;
+          }
+          // Get the regions where this item can be bought
+          const regionsKey = rule.name === 'can_buy_unlimited' ? 'unlimited' : 'limited';
+          const regions = shopItems[itemName][regionsKey] || [];
+          if (regions.length === 0) {
+            result = false;
+            break;
+          }
+          // Check if ANY of the regions are reachable
+          if (typeof context.isRegionReachable !== 'function') {
+            log('warn', `[evaluateRule] ${rule.name}: context.isRegionReachable not available`);
+            result = undefined;
+            break;
+          }
+          result = regions.some(regionName => context.isRegionReachable(regionName));
+          break;
+        }
+
+        // Handle built-in Python functions
+        if (rule.name === 'int') {
+          // Python's int() function - truncate a float to an integer
+          const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (typeof value === 'number') {
+            result = Math.trunc(value);
+          } else {
+            result = undefined;
           }
           break;
         }
@@ -1534,12 +1590,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'item_check': {
-        const itemName = evaluateRule(rule.item, context, depth + 1);
+        const itemName = evaluateRule(rule.item, context, depth + 1, localScope);
         if (itemName === undefined) {
           result = undefined;
         } else if (rule.count !== undefined) {
           // If there's a count field, use count-based checking
-          const requiredCount = evaluateRule(rule.count, context, depth + 1);
+          const requiredCount = evaluateRule(rule.count, context, depth + 1, localScope);
           if (requiredCount === undefined) {
             result = undefined;
           } else if (typeof context.countItem === 'function') {
@@ -1675,15 +1731,40 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
       case 'setting_value': {
         // Retrieve a setting value (e.g. for self.world.options.difficulty)
+        // Supports dot notation for nested access (e.g. "difficulty_requirements.progressive_bottle_limit")
         // Note: Choice options in Python use 0 for "off"/"none" states, which are exported
         // as strings like 'off', 'none', 'false'. These should be treated as falsy in JS.
         let settingName = rule.setting;
         if (typeof settingName === 'string') {
-          const rawValue = context.getSetting(settingName);
-          // Normalize certain string values to be falsy
-          // This handles Choice options where 0='off'/'none' etc.
-          // The normalization of 'off'/'none' strings is now handled in stateInterface.getSetting
-          result = rawValue;
+          let rawValue;
+          // Handle dot notation for nested property access
+          if (settingName.includes('.')) {
+            const parts = settingName.split('.');
+            rawValue = context.getSetting(parts[0]);
+            // Traverse the path for nested properties
+            for (let i = 1; i < parts.length && rawValue !== undefined; i++) {
+              rawValue = rawValue?.[parts[i]];
+            }
+          } else {
+            rawValue = context.getSetting(settingName);
+          }
+          // If an index is provided, subscript the array value
+          if (rule.index !== undefined && rawValue !== undefined) {
+            if (Array.isArray(rawValue)) {
+              result = rawValue[rule.index];
+            } else {
+              log('warn', '[evaluateRule] setting_value has index but value is not an array', {
+                rule,
+                rawValue,
+              });
+              result = undefined;
+            }
+          } else {
+            // Normalize certain string values to be falsy
+            // This handles Choice options where 0='off'/'none' etc.
+            // The normalization of 'off'/'none' strings is now handled in stateInterface.getSetting
+            result = rawValue;
+          }
         } else {
           log('warn', '[evaluateRule] Invalid setting name for setting_value', {
             rule,
@@ -1815,8 +1896,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'binary_op': {
-        const left = evaluateRule(rule.left, context, depth + 1);
-        const right = evaluateRule(rule.right, context, depth + 1);
+        const left = evaluateRule(rule.left, context, depth + 1, localScope);
+        const right = evaluateRule(rule.right, context, depth + 1, localScope);
         const op = rule.op;
 
         if (left === undefined || right === undefined) {

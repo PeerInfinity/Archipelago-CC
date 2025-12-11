@@ -32,7 +32,8 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
     """
 
     def __init__(self, closure_vars=None, seen_funcs=None,
-                 game_handler=None, rule_func=None, player_context=None):
+                 game_handler=None, rule_func=None, player_context=None,
+                 preserve_parameter_names=False):
         """
         Initialize the RuleAnalyzer.
 
@@ -42,12 +43,15 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
             game_handler: Game-specific handler for name replacements and expansions
             rule_func: The rule function being analyzed (for accessing defaults/globals)
             player_context: The player number context for this analysis
+            preserve_parameter_names: If True, keep function parameters as name references
+                                     instead of resolving to default values
         """
         self.closure_vars = closure_vars or {}
         self.seen_funcs = seen_funcs or {}
         self.game_handler = game_handler
         self.rule_func = rule_func
         self.player_context = player_context
+        self.preserve_parameter_names = preserve_parameter_names
         self.debug_log = []
         self.error_log = []
 

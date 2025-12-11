@@ -170,13 +170,9 @@
  * - A Hat in Time (AHIT)
  * - Blasphemous
  * - Bomb Rush Cyberfunk
- * - Celeste 64
- * - Civilization VI
  * - Castlevania - Circle of the Moon
  * - DLCQuest
  * - Hollow Knight
- * - Hylics 2
- * - Inscryption
  * - Kingdom Hearts
  * - Pokemon Red and Blue
  * - Generic (fallback)
@@ -219,28 +215,17 @@ import * as ahitLogic from './ahit/ahitLogic.js';
 import * as blasphemousLogic from './blasphemous/blasphemousLogic.js';
 import { blasphemousStateModule } from './blasphemous/blasphemousLogic.js';
 import { helperFunctions as bombRushCyberfunkHelperFunctions } from './bomb_rush_cyberfunk/bombRushCyberfunkLogic.js';
-import * as celeste64Logic from './celeste64/celeste64Logic.js';
-import { celeste64StateModule } from './celeste64/celeste64Logic.js';
-import * as civ6Logic from './civ_6/civ6Logic.js';
-import { civ6StateModule } from './civ_6/civ6Logic.js';
-import { helperFunctions as cvcotmHelperFunctions } from './cvcotm/cvcotmLogic.js';
 import * as dlcquestLogic from './dlcquest/dlcquestLogic.js';
 import { dlcquestStateModule, wrapState as dlcquestWrapState } from './dlcquest/dlcquestLogic.js';
 import * as factorioLogic from './factorio/factorioLogic.js';
 import { factorioStateModule } from './factorio/factorioLogic.js';
 import * as hkLogic from './hk/hkLogic.js';
 import { hkStateModule } from './hk/hkLogic.js';
-import * as hylics2Logic from './hylics2/hylics2Logic.js';
-import { hylics2StateModule } from './hylics2/hylics2Logic.js';
-import * as inscryptionLogic from './inscryption/inscryptionLogic.js';
-import { inscryptionStateModule } from './inscryption/inscryptionLogic.js';
 import * as jakanddaxterLogic from './jakanddaxter/jakanddaxterLogic.js';
 import { kh1Logic } from './kh1/kh1Logic.js';
 import { helperFunctions as kh2HelperFunctions } from './kh2/kh2Logic.js';
 import * as kdl3Logic from './kdl3/kdl3Logic.js';
 import * as ladxLogic from './ladx/ladxLogic.js';
-import * as landstalkerLogic from './landstalker/landstalkerLogic.js';
-import { landstalkerStateModule } from './landstalker/landstalkerLogic.js';
 import { helperFunctions as lingoHelperFunctions } from './lingo/lingoLogic.js';
 import * as mlssLogic from './mlss/mlssLogic.js';
 import { mlssStateModule } from './mlss/mlssLogic.js';
@@ -264,9 +249,6 @@ import * as v6Logic from './v6/v6Logic.js';
 import { v6StateModule } from './v6/v6Logic.js';
 import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
 import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
-import * as cv64Logic from './cv64/cv64Logic.js';
-import * as darkSouls3Logic from './dark_souls_3/darkSouls3Logic.js';
-import { darkSouls3StateModule } from './dark_souls_3/darkSouls3Logic.js';
 import * as overcooked2Logic from './overcooked2/overcooked2Logic.js';
 import { overcooked2StateModule } from './overcooked2/overcooked2Logic.js';
 import * as paintLogic from './paint/paintLogic.js';
@@ -315,35 +297,10 @@ const GAME_REGISTRY = {
     worldClasses: ['BombRushCyberfunkWorld'],
     aliases: ['Bomb Rush Cyberfunk', 'BRC']
   },
-  'Celeste 64': {
-    logicModule: celeste64Logic.celeste64StateModule,
-    helperFunctions: celeste64Logic.helperFunctions,
-    worldClasses: ['Celeste64World'],
-    aliases: ['Celeste 64', 'Celeste64']
-  },
-  'Civilization VI': {
-    logicModule: civ6Logic.civ6StateModule,
-    helperFunctions: civ6Logic.helperFunctions,
-    worldClasses: ['CivVIWorld'],
-    aliases: ['Civilization VI', 'Civ VI', 'Civ6']
-  },
   'Castlevania - Circle of the Moon': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: cvcotmHelperFunctions,
     worldClasses: ['CVCotMWorld'],
     aliases: ['Castlevania - Circle of the Moon', 'CvCotM', 'cvcotm']
-  },
-  'Castlevania 64': {
-    logicModule: genericLogic.genericStateModule,
-    helperFunctions: cv64Logic.helperFunctions,
-    worldClasses: ['CV64World'],
-    aliases: ['Castlevania 64', 'CV64', 'cv64']
-  },
-  'Dark Souls III': {
-    logicModule: darkSouls3Logic.darkSouls3StateModule,
-    helperFunctions: darkSouls3Logic.helperFunctions,
-    worldClasses: ['DarkSouls3World'],
-    aliases: ['Dark Souls III', 'Dark Souls 3', 'dark_souls_3', 'DS3']
   },
   'DLCQuest': {
     logicModule: dlcquestLogic.dlcquestStateModule,
@@ -363,18 +320,6 @@ const GAME_REGISTRY = {
     helperFunctions: hkLogic.helperFunctions,
     worldClasses: ['HKWorld'],
     aliases: ['Hollow Knight', 'HK']
-  },
-  'Hylics 2': {
-    logicModule: hylics2Logic.hylics2StateModule,
-    helperFunctions: hylics2Logic.helperFunctions,
-    worldClasses: ['Hylics2World'],
-    aliases: ['Hylics 2', 'Hylics2']
-  },
-  'Inscryption': {
-    logicModule: inscryptionLogic.inscryptionStateModule,
-    helperFunctions: inscryptionLogic.helperFunctions,
-    worldClasses: ['InscryptionWorld'],
-    aliases: ['Inscryption']
   },
   'Jak and Daxter: The Precursor Legacy': {
     logicModule: genericLogic.genericStateModule,
@@ -429,12 +374,6 @@ const GAME_REGISTRY = {
     helperFunctions: pokemon_emeraldLogic.helperFunctions,
     worldClasses: ['PokemonEmeraldWorld'],
     aliases: ['Pokemon Emerald', 'pokemon_emerald']
-  },
-  'Landstalker - The Treasures of King Nole': {
-    logicModule: landstalkerLogic.landstalkerStateModule,
-    helperFunctions: landstalkerLogic.helperFunctions,
-    worldClasses: ['LandstalkerWorld'],
-    aliases: ['Landstalker - The Treasures of King Nole', 'Landstalker']
   },
   'Lingo': {
     logicModule: genericLogic.genericStateModule,

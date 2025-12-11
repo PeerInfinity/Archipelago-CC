@@ -22,6 +22,10 @@
       "reason": "The default yaml file fails to generate"
     },
     {
+      "name": "Pokemon Emerald.yaml",
+      "reason": "Temporarily excluded.  It takes too long to process"
+    },
+    {
       "name": "Sudoku.yaml",
       "reason": "Cannot be used for generating worlds"
     },
@@ -31,7 +35,7 @@
     },
     {
       "name": "Yu-Gi-Oh! 2006.yaml",
-      "reason": "Takes too long to process"
+      "reason": "Temporarily excluded.  It takes too long to process"
     },
     {
       "name": "Zillion.yaml",
