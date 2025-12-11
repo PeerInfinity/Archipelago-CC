@@ -222,7 +222,6 @@ import * as celeste64Logic from './celeste64/celeste64Logic.js';
 import { celeste64StateModule } from './celeste64/celeste64Logic.js';
 import * as civ6Logic from './civ_6/civ6Logic.js';
 import { civ6StateModule } from './civ_6/civ6Logic.js';
-import { helperFunctions as cvcotmHelperFunctions } from './cvcotm/cvcotmLogic.js';
 import * as dlcquestLogic from './dlcquest/dlcquestLogic.js';
 import { dlcquestStateModule, wrapState as dlcquestWrapState } from './dlcquest/dlcquestLogic.js';
 import * as factorioLogic from './factorio/factorioLogic.js';
@@ -325,7 +324,6 @@ const GAME_REGISTRY = {
   },
   'Castlevania - Circle of the Moon': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: cvcotmHelperFunctions,
     worldClasses: ['CVCotMWorld'],
     aliases: ['Castlevania - Circle of the Moon', 'CvCotM', 'cvcotm']
   },
