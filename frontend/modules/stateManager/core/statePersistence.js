@@ -260,9 +260,10 @@ export function _sendSnapshotUpdate(sm) {
  * Used for internal rule evaluation (like isLocationAccessible)
  *
  * @param {Object} sm - StateManager instance
+ * @param {Object} contextVariables - Optional context variables (e.g., { location: currentLocation })
  * @returns {Object} Snapshot interface with helper methods
  */
-export function _createSelfSnapshotInterface(sm) {
+export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
   const anInterface = {
     _isSnapshotInterface: true,
     hasItem: (itemName) => {
@@ -391,10 +392,8 @@ export function _createSelfSnapshotInterface(sm) {
       if (!location.access_rule) return true;
 
       // Evaluate the access rule
-      // Create a context with the location set
-      const locationContext = sm._createSelfSnapshotInterface();
-      locationContext.location = location;
-      locationContext.currentLocation = location;
+      // Create a context with the location set via contextVariables
+      const locationContext = sm._createSelfSnapshotInterface({ location, currentLocation: location });
 
       return sm.evaluateRuleFromEngine(location.access_rule, locationContext);
     },
@@ -413,6 +412,11 @@ export function _createSelfSnapshotInterface(sm) {
     getPlayerSlot: () => sm.playerId, // Deprecated: use getPlayerId
     helpers: sm.helpers,
     resolveName: (name) => {
+      // Check context variables first (e.g., 'location' when evaluating location access rules)
+      if (contextVariables && Object.prototype.hasOwnProperty.call(contextVariables, name)) {
+        return contextVariables[name];
+      }
+
       // Standard constants
       if (name === 'True') return true;
       if (name === 'False') return false;
@@ -686,7 +690,9 @@ export function _createSelfSnapshotInterface(sm) {
   // NOTE: We do NOT expose helpers as direct properties here to avoid recursion issues.
   // Helpers should be called through executeHelper() which properly manages state.
 
-  return anInterface;
+  // Spread contextVariables onto the interface so properties like currentLocation
+  // are directly accessible (needed by ruleEngine's get_location handler)
+  return { ...anInterface, ...contextVariables };
 }
 
 /**
