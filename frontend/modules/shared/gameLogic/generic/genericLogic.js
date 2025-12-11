@@ -120,9 +120,16 @@ export const helperFunctions = {
       return directCount;
     }
 
-    // Check if this item is a resolved form of a progressive item
+    // Check prog_items (virtual/computed items like "Tradeable Orbs", "Reachable Orbs", etc.)
+    // These are items that don't exist in the item pool but are computed/tracked by the game
     const playerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || '1';
     const playerIdKey = String(playerId);
+    const progItemCount = snapshot?.prog_items?.[playerIdKey]?.[itemName];
+    if (typeof progItemCount === 'number' && progItemCount > 0) {
+      return progItemCount;
+    }
+
+    // Check if this item is a resolved form of a progressive item
     const progressionMapping = staticData?.progression_mapping?.[playerIdKey];
 
     if (progressionMapping) {
