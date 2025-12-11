@@ -22,7 +22,7 @@
       ],
       "last_updated": "2025-12-10T20:00:14.138642"
     },
-    "last_updated": "2025-12-10T20:00:14.138640",
+    "last_updated": "2025-12-11T01:28:54.192900",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3041,31 +3041,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "67b7465d0b8f1e518ee7de9a59f3c5c44edd1f3eda1501f67c777e385d1c2181",
-          "new_sphere_log_hash": "8386113bea0719733fd4aa7aa5b0f071e2ebb1053603456283537f1ade1f561c",
-          "original_rules_hash": "67b7465d0b8f1e518ee7de9a59f3c5c44edd1f3eda1501f67c777e385d1c2181",
-          "original_sphere_log_hash": "8386113bea0719733fd4aa7aa5b0f071e2ebb1053603456283537f1ade1f561c",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-10T19:56:16.541133"
-        }
-      },
       "game_name_from_filename": "saving_princess",
       "game_name_from_yaml": "Saving Princess",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.4,
+        "processing_time_seconds": 7.07,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/saving_princess/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 33837,
+        "size_bytes": 30410,
         "size_mb": 0.03
       },
       "seed": "1",
@@ -3073,7 +3061,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 5.81,
+        "processing_time_seconds": 8.97,
         "return_code": 0,
         "sphere_reached": 5.1,
         "success": true,
@@ -3081,15 +3069,15 @@
         "warning_count": 0
       },
       "template_filename": "Saving Princess.yaml",
-      "timestamp": "2025-12-10T19:55:04.415695",
+      "timestamp": "2025-12-11T01:28:37.719278",
       "world_info": {
-        "exporter_path": "exporter/games/saving_princess.py",
-        "exporter_size": 3147,
+        "exporter_path": null,
+        "exporter_size": 0,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "saving_princess",
         "game_name_from_yaml": "Saving Princess",
-        "has_custom_exporter": true,
+        "has_custom_exporter": false,
         "has_custom_game_logic": false,
         "world_directory": "saving_princess"
       }
