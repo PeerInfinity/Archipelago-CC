@@ -288,9 +288,17 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_pipe_right",
-                  "args": []
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Pipe Traversal",
+                        "Pipe Traversal - Right"
+                      ]
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -313,9 +321,17 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_pipe_right",
-                  "args": []
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Pipe Traversal",
+                        "Pipe Traversal - Right"
+                      ]
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -338,9 +354,17 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_pipe_right",
-                  "args": []
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Pipe Traversal",
+                        "Pipe Traversal - Right"
+                      ]
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -427,14 +451,57 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_pipe_down",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "state_method",
+                          "method": "has_any",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": [
+                                "Pipe Traversal",
+                                "Pipe Traversal - Right"
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "state_method",
+                          "method": "has_any",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": [
+                                "Pipe Traversal",
+                                "Pipe Traversal - Up"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Tree Zone 4 Midway Bell"
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "tree_zone_4_midway_bell",
-                  "args": []
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Pipe Traversal",
+                        "Pipe Traversal - Down"
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -456,14 +523,30 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "has_pipe_right",
-                      "args": []
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Pipe Traversal",
+                            "Pipe Traversal - Right"
+                          ]
+                        }
+                      ]
                     },
                     {
-                      "type": "helper",
-                      "name": "has_pipe_up",
-                      "args": []
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Pipe Traversal",
+                            "Pipe Traversal - Up"
+                          ]
+                        }
+                      ]
                     }
                   ]
                 },
@@ -494,21 +577,37 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_pipe_right",
-                  "args": []
-                },
-                {
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "has_pipe_up",
-                      "args": []
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Pipe Traversal",
+                            "Pipe Traversal - Up"
+                          ]
+                        }
+                      ]
                     },
                     {
                       "type": "item_check",
                       "item": "Carrot"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Pipe Traversal",
+                        "Pipe Traversal - Right"
+                      ]
                     }
                   ]
                 }
@@ -758,9 +857,17 @@
             "access_rule": {
               "type": "conditional",
               "test": {
-                "type": "helper",
-                "name": "has_pipe_right",
-                "args": []
+                "type": "state_method",
+                "method": "has_any",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Pipe Traversal",
+                      "Pipe Traversal - Right"
+                    ]
+                  }
+                ]
               },
               "if_true": {
                 "type": "or",
@@ -773,8 +880,8 @@
                         {
                           "type": "not",
                           "condition": {
-                            "type": "constant",
-                            "value": 0
+                            "type": "setting_value",
+                            "setting": "shuffle_midway_bells"
                           }
                         },
                         {
@@ -918,9 +1025,17 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_pipe_down",
-                  "args": []
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Pipe Traversal",
+                        "Pipe Traversal - Down"
+                      ]
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -943,14 +1058,39 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_pipe_up",
-                  "args": []
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Pipe Traversal",
+                            "Pipe Traversal - Down"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Macro Zone 1 Midway Bell"
+                    }
+                  ]
                 },
                 {
-                  "type": "helper",
-                  "name": "macro_zone_1_midway_bell",
-                  "args": []
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Pipe Traversal",
+                        "Pipe Traversal - Up"
+                      ]
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -973,9 +1113,17 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_pipe_down",
-                  "args": []
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Pipe Traversal",
+                        "Pipe Traversal - Down"
+                      ]
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -1023,11 +1171,6 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_pipe_up",
-                  "args": []
-                },
-                {
                   "type": "not",
                   "condition": {
                     "type": "helper",
@@ -1044,13 +1187,34 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "has_pipe_down",
-                      "args": []
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Pipe Traversal",
+                            "Pipe Traversal - Down"
+                          ]
+                        }
+                      ]
                     },
                     {
                       "type": "item_check",
                       "item": "Macro Zone 2 Midway Bell"
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Pipe Traversal",
+                        "Pipe Traversal - Up"
+                      ]
                     }
                   ]
                 },
@@ -1078,9 +1242,17 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "has_pipe_down",
-                      "args": []
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Pipe Traversal",
+                            "Pipe Traversal - Down"
+                          ]
+                        }
+                      ]
                     },
                     {
                       "type": "item_check",
@@ -1137,14 +1309,30 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "has_pipe_down",
-                      "args": []
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Pipe Traversal",
+                            "Pipe Traversal - Down"
+                          ]
+                        }
+                      ]
                     },
                     {
-                      "type": "helper",
-                      "name": "has_pipe_up",
-                      "args": []
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Pipe Traversal",
+                            "Pipe Traversal - Up"
+                          ]
+                        }
+                      ]
                     }
                   ]
                 },
@@ -1172,14 +1360,30 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "has_pipe_down",
-                      "args": []
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Pipe Traversal",
+                            "Pipe Traversal - Down"
+                          ]
+                        }
+                      ]
                     },
                     {
-                      "type": "helper",
-                      "name": "has_pipe_up",
-                      "args": []
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Pipe Traversal",
+                            "Pipe Traversal - Up"
+                          ]
+                        }
+                      ]
                     }
                   ]
                 },
@@ -1216,9 +1420,17 @@
             "name": "Macro Zone 4 - Boss",
             "id": 29,
             "access_rule": {
-              "type": "helper",
-              "name": "has_pipe_right",
-              "args": []
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Pipe Traversal",
+                    "Pipe Traversal - Right"
+                  ]
+                }
+              ]
             },
             "item": {
               "name": "Macro Coin",
@@ -1298,9 +1510,44 @@
             "name": "Pumpkin Zone 1 - Normal Exit",
             "id": 32,
             "access_rule": {
-              "type": "helper",
-              "name": "pumpkin_zone_1_midway_bell",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "not",
+                      "condition": {
+                        "type": "helper",
+                        "name": "is_auto_scroll",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Pumpkin Zone 1"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Pipe Traversal",
+                            "Pipe Traversal - Down"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Pumpkin Zone 1 Midway Bell"
+                }
+              ]
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -1320,11 +1567,6 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "has_pipe_down",
-                      "args": []
-                    },
-                    {
                       "type": "not",
                       "condition": {
                         "type": "helper",
@@ -1336,6 +1578,19 @@
                           }
                         ]
                       }
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Pipe Traversal",
+                            "Pipe Traversal - Down"
+                          ]
+                        }
+                      ]
                     }
                   ]
                 },
@@ -1393,21 +1648,6 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_pipe_down",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "has_pipe_right",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "has_pipe_up",
-                  "args": []
-                },
-                {
                   "type": "not",
                   "condition": {
                     "type": "helper",
@@ -1419,6 +1659,45 @@
                       }
                     ]
                   }
+                },
+                {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Pipe Traversal",
+                        "Pipe Traversal - Down"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Pipe Traversal",
+                        "Pipe Traversal - Right"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Pipe Traversal",
+                        "Pipe Traversal - Up"
+                      ]
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -1441,9 +1720,65 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "pumpkin_zone_2_normal_exit",
-                  "args": []
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "not",
+                      "condition": {
+                        "type": "helper",
+                        "name": "is_auto_scroll",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Pumpkin Zone 2"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Pipe Traversal",
+                            "Pipe Traversal - Down"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Pipe Traversal",
+                            "Pipe Traversal - Right"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Pipe Traversal",
+                            "Pipe Traversal - Up"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Water Physics"
+                    }
+                  ]
                 },
                 {
                   "type": "state_method",
@@ -1571,9 +1906,17 @@
             "name": "Pumpkin Zone 4 - Boss",
             "id": 40,
             "access_rule": {
-              "type": "helper",
-              "name": "has_pipe_right",
-              "args": []
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Pipe Traversal",
+                    "Pipe Traversal - Right"
+                  ]
+                }
+              ]
             },
             "item": {
               "name": "Pumpkin Coin",
@@ -1668,11 +2011,6 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_pipe_right",
-                  "args": []
-                },
-                {
                   "type": "or",
                   "conditions": [
                     {
@@ -1704,6 +2042,19 @@
                       ]
                     }
                   ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Pipe Traversal",
+                        "Pipe Traversal - Right"
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -1725,11 +2076,6 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "has_pipe_right",
-                      "args": []
-                    },
-                    {
                       "type": "state_method",
                       "method": "has_any",
                       "args": [
@@ -1739,6 +2085,19 @@
                             "Carrot",
                             "Fire Flower",
                             "Mushroom"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Pipe Traversal",
+                            "Pipe Traversal - Right"
                           ]
                         }
                       ]
@@ -1879,9 +2238,17 @@
             "name": "Mario Zone 4 - Boss",
             "id": 50,
             "access_rule": {
-              "type": "helper",
-              "name": "has_pipe_right",
-              "args": []
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Pipe Traversal",
+                    "Pipe Traversal - Right"
+                  ]
+                }
+              ]
             },
             "item": {
               "name": "Mario Coin",
@@ -1998,26 +2365,6 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_pipe_down",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "has_pipe_left",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "has_pipe_right",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "has_pipe_up",
-                  "args": []
-                },
-                {
                   "type": "not",
                   "condition": {
                     "type": "helper",
@@ -2029,6 +2376,58 @@
                       }
                     ]
                   }
+                },
+                {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Pipe Traversal",
+                        "Pipe Traversal - Down"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Pipe Traversal",
+                        "Pipe Traversal - Left"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Pipe Traversal",
+                        "Pipe Traversal - Right"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Pipe Traversal",
+                        "Pipe Traversal - Up"
+                      ]
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -2051,11 +2450,6 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_pipe_up",
-                  "args": []
-                },
-                {
                   "type": "not",
                   "condition": {
                     "type": "helper",
@@ -2067,6 +2461,19 @@
                       }
                     ]
                   }
+                },
+                {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": [
+                        "Pipe Traversal",
+                        "Pipe Traversal - Up"
+                      ]
+                    }
+                  ]
                 },
                 {
                   "type": "item_check",
@@ -2134,9 +2541,17 @@
             "name": "Turtle Zone 3 - Boss",
             "id": 57,
             "access_rule": {
-              "type": "helper",
-              "name": "has_pipe_right",
-              "args": []
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Pipe Traversal",
+                    "Pipe Traversal - Right"
+                  ]
+                }
+              ]
             },
             "item": {
               "name": "Turtle Coin",
@@ -2207,14 +2622,30 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "has_pipe_left",
-                      "args": []
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Pipe Traversal",
+                            "Pipe Traversal - Left"
+                          ]
+                        }
+                      ]
                     },
                     {
-                      "type": "helper",
-                      "name": "has_pipe_right",
-                      "args": []
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": [
+                            "Pipe Traversal",
+                            "Pipe Traversal - Right"
+                          ]
+                        }
+                      ]
                     }
                   ]
                 },

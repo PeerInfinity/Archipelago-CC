@@ -12,89 +12,27 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
 
     Super Mario Land 2 uses custom helper functions for pipe traversal,
     auto-scroll checks, level progression, and zone-specific logic.
-    We inherit from GenericGameExportHandler to preserve these helpers.
     """
     GAME_NAME = 'Super Mario Land 2'
-    # Disable automatic helper export (use old behavior)
-    AUTO_EXPORT_DISCOVERED_HELPERS = False
+
+    # Enable automatic helper export
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
 
-
-    # Functions that should be exported as helper calls rather than analyzed
-    HELPER_FUNCTIONS = {
+    # Helpers that access runtime data and need JavaScript implementations.
+    # These are preserved as helper calls (not inlined) so JavaScript can evaluate them.
+    # Only helpers that are actually called in access rules need to be here.
+    HELPERS_TO_PRESERVE = {
+        # Accesses runtime auto_scroll_levels data
         'is_auto_scroll',
-        'has_pipe_right',
-        'has_pipe_left',
-        'has_pipe_down',
-        'has_pipe_up',
-        'has_level_progression',
-        'pumpkin_zone_1_midway_bell',
-        'pumpkin_zone_1_normal_exit',
+        # Accesses runtime sprite_data
         'not_blocked_by_sharks',
-        'turtle_zone_1_normal_exit',
-        'mario_zone_1_normal_exit',
-        'mario_zone_1_midway_bell',
-        'macro_zone_1_normal_exit',
-        'macro_zone_1_midway_bell',
-        'tree_zone_2_normal_exit',
-        'tree_zone_2_secret_exit',
-        'tree_zone_2_midway_bell',
-        'tree_zone_3_normal_exit',
-        'tree_zone_4_normal_exit',
-        'tree_zone_4_midway_bell',
-        'tree_zone_5_boss',
-        'pumpkin_zone_2_normal_exit',
-        'pumpkin_zone_2_secret_exit',
-        'pumpkin_zone_3_secret_exit',
-        'pumpkin_zone_4_boss',
-        'mario_zone_1_secret_exit',
-        'mario_zone_2_normal_exit',
-        'mario_zone_2_secret_exit',
-        'mario_zone_3_secret_exit',
-        'mario_zone_4_boss',
-        'turtle_zone_2_normal_exit',
-        'turtle_zone_2_midway_bell',
-        'turtle_zone_secret_course_normal_exit',
-        'space_zone_1_normal_exit',
-        'space_zone_1_secret_exit',
-        'space_zone_2_midway_bell',
-        'space_zone_2_normal_exit',
-        'space_zone_2_secret_exit',
-        'space_zone_3_boss',
-        'macro_zone_1_secret_exit',
-        'macro_zone_2_normal_exit',
-        'macro_zone_2_midway_bell',
-        'macro_zone_3_boss',
-        'mushroom_zone_coins',
-        'tree_zone_1_coins',
-        'tree_zone_2_coins',
-        'tree_zone_3_coins',
-        'tree_zone_4_coins',
-        'tree_zone_5_coins',
-        'pumpkin_zone_1_coins',
-        'pumpkin_zone_2_coins',
-        'pumpkin_zone_secret_course_1_coins',
-        'pumpkin_zone_3_coins',
-        'pumpkin_zone_4_coins',
-        'mario_zone_1_coins',
-        'mario_zone_2_coins',
-        'mario_zone_3_coins',
-        'mario_zone_4_coins',
-        'turtle_zone_1_coins',
-        'turtle_zone_2_coins',
-        'turtle_zone_secret_course_coins',
-        'space_zone_1_coins',
-        'space_zone_2_coins',
-        'space_zone_3_coins',
-        'macro_zone_1_coins',
-        'macro_zone_2_coins',
-        'macro_zone_3_coins',
-        'hippo_zone_coins'
+        # Uses count math with x2 variants
+        'has_level_progression',
     }
 
-    def should_preserve_as_helper(self, func_name: str) -> bool:
-        """Check if a function should be preserved as a helper call."""
-        return func_name in self.HELPER_FUNCTIONS
+    # Same helpers also go in blacklist to prevent automatic export
+    HELPERS_TO_EXPORT_BLACKLIST = HELPERS_TO_PRESERVE
 
     def should_process_multistatement_if_bodies(self) -> bool:
         """
@@ -299,10 +237,10 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
             # Continue with parent processing
             return super().expand_rule(rule)
 
-        # For our helper functions, preserve them without expansion
+        # For preserved helper functions, don't expand them - keep as helper calls for JavaScript
         if rule.get('type') == 'helper':
             helper_name = rule.get('name', '')
-            if helper_name in self.HELPER_FUNCTIONS:
+            if helper_name in self.HELPERS_TO_PRESERVE:
                 # Recursively expand any arguments, but preserve the helper itself
                 args = rule.get('args', [])
                 if args:
