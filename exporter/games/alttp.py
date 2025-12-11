@@ -19,28 +19,27 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
     HELPER_MODULES = ['worlds.alttp.StateHelpers', 'worlds.alttp.Bosses']
 
     # Complex helpers that can't be exported (need JavaScript implementations)
-    # These have loops, complex counting, settings lookups, or dynamic conditions
-    HELPERS_TO_EXPORT_BLACKLIST = {
-        # 'GanonDefeatRule',  # Now exported - uses supported patterns (settings, item checks, helpers)
-        # 'can_extend_magic',  # Debugging - shop region reachability
-        'can_buy',  # Uses frontend shop_items implementation
-        'can_buy_unlimited',  # Uses frontend shop_items implementation
-        # 'can_get_good_bee',  # Now works with region_reference and region_attribute support
-        # 'can_kill_most_things',  # Now works with default parameter values support
-        # 'can_shoot_arrows',  # Now works with can_buy and can_hold_arrows
-        # 'can_use_bombs',  # Now works with min/max and setting_value support
-        # 'has_crystals',  # Now works with group_count support
-        # 'has_crystals_for_ganon',  # Removed - has_crystals now handles dynamic arguments
-        # 'has_hearts',  # Now works with logical_heart settings
-        # 'has_misery_mire_medallion',  # Now works with setting_value index support
-        # 'has_turtle_rock_medallion',  # Now works with setting_value index support
-        # 'item_name_in_location_names',  # Now converted to placement_search rule type
-        # 'tr_big_key_chest_keys_needed',  # Now inlined with placement_lookup logic
-        # 'location_item_name',  # Now converted to placement_lookup rule type
-        'can_defeat_boss',
-        # 'can_reach_region',  # Now uses native can_reach rule type
-        # 'can_take_damage',  # Now uses setting_value instead of helper
-    }
+    # NOTE: Use set() for empty blacklist - {} creates an empty dict!
+    # All helpers now exported via computed definitions or other mechanisms
+    HELPERS_TO_EXPORT_BLACKLIST = set()
+    # Blacklist history (all now exported or handled via other mechanisms):
+    # - 'GanonDefeatRule': Now exported - uses supported patterns (settings, item checks, helpers)
+    # - 'can_extend_magic': Now works with shop region reachability
+    # - 'can_buy': Now exported as computed helper using shop_items data
+    # - 'can_buy_unlimited': Now exported as computed helper using shop_items data
+    # - 'can_get_good_bee': Now works with region_reference and region_attribute support
+    # - 'can_kill_most_things': Now works with default parameter values support
+    # - 'can_shoot_arrows': Now works with can_buy and can_hold_arrows
+    # - 'can_use_bombs': Now works with min/max and setting_value support
+    # - 'has_crystals': Now works with group_count support
+    # - 'has_misery_mire_medallion': Now works with setting_value index support
+    # - 'has_turtle_rock_medallion': Now works with setting_value index support
+    # - 'item_name_in_location_names': Now converted to placement_search rule type
+    # - 'tr_big_key_chest_keys_needed': Now inlined with placement_lookup logic
+    # - 'location_item_name': Now converted to placement_lookup rule type
+    # - 'can_defeat_boss': Now exported - postprocess_rule converts GT multi-boss to helper call
+    # - 'can_reach_region': Now uses native can_reach rule type
+    # - 'can_take_damage': Now uses setting_value instead of helper
 
     """No longer expands helpers - just validates they're known ALTTP helpers"""
     
@@ -792,6 +791,89 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         """
         data = self.get_collection_data(name)
         return len(data) if data is not None else None
+
+    def get_helper_definitions(self, world) -> Dict[str, Any]:
+        """
+        Get helper definitions, including computed helpers for can_buy/can_buy_unlimited.
+
+        The can_buy and can_buy_unlimited helpers in Python iterate over Shop objects
+        with method calls (shop.has(), region.can_reach()) that can't be directly exported.
+        Instead, we define computed helpers that use the exported shop_items data structure
+        to achieve the same logic:
+
+        Python: any(shop.has(item) and shop.region.can_reach(state) for shop in shops)
+        JSON:   any_of(region in shop_items[item][key], can_reach(region))
+
+        This allows these helpers to be evaluated natively by the rule engine without
+        special-case handling.
+        """
+        # Get standard exported helpers from base class
+        helper_defs = super().get_helper_definitions(world)
+
+        # Define computed helper for can_buy
+        # Logic: check if any region in shop_items[item]["limited"] is reachable
+        helper_defs['can_buy'] = {
+            'params': ['item'],
+            'body': {
+                'type': 'any_of',
+                'iterator_info': {
+                    'target': {'type': 'name', 'name': 'region'},
+                    'iterator': {
+                        'type': 'subscript',
+                        'value': {
+                            'type': 'subscript',
+                            'value': {'type': 'setting_value', 'setting': 'shop_items'},
+                            'index': {'type': 'name', 'name': 'item'}
+                        },
+                        'index': {'type': 'constant', 'value': 'limited'}
+                    }
+                },
+                'element_rule': {
+                    'type': 'can_reach',
+                    'region': {'type': 'name', 'name': 'region'}
+                }
+            }
+        }
+
+        # Define computed helper for can_buy_unlimited
+        # Logic: check if any region in shop_items[item]["unlimited"] is reachable
+        helper_defs['can_buy_unlimited'] = {
+            'params': ['item'],
+            'body': {
+                'type': 'any_of',
+                'iterator_info': {
+                    'target': {'type': 'name', 'name': 'region'},
+                    'iterator': {
+                        'type': 'subscript',
+                        'value': {
+                            'type': 'subscript',
+                            'value': {'type': 'setting_value', 'setting': 'shop_items'},
+                            'index': {'type': 'name', 'name': 'item'}
+                        },
+                        'index': {'type': 'constant', 'value': 'unlimited'}
+                    }
+                },
+                'element_rule': {
+                    'type': 'can_reach',
+                    'region': {'type': 'name', 'name': 'region'}
+                }
+            }
+        }
+
+        # Define computed helper for can_defeat_boss
+        # This is a synthetic helper created by postprocess_rule for GT multi-boss locations.
+        # The simplified implementation just calls can_kill_most_things(1), matching JS behavior.
+        # For proper boss-specific logic, we'd need to export boss placements and defeat rules.
+        helper_defs['can_defeat_boss'] = {
+            'params': ['location_name', 'boss_type'],
+            'body': {
+                'type': 'helper',
+                'name': 'can_kill_most_things',
+                'args': [{'type': 'constant', 'value': 1}]
+            }
+        }
+
+        return helper_defs
 
 # Reminder: Ensure get_game_export_handler in exporter/games/__init__.py
 # returns an instance of ALttPGameExportHandler for the 'A Link to the Past' game.
