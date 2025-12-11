@@ -111,6 +111,38 @@ The frontend infrastructure is already set up. When you enable helper export:
 2. The rule engine checks for definitions before calling JavaScript
 3. Settings are available for resolving `name` nodes in helper definitions
 
+### Generic `has` and `count` Functions
+
+The generic `has` and `count` functions in `frontend/modules/shared/gameLogic/generic/genericLogic.js` combine patterns from multiple game implementations to work universally:
+
+```javascript
+has(snapshot, staticData, itemName) {
+  // 1. Check flags (events, checked locations, etc.)
+  if (snapshot?.flags?.includes(itemName)) return true;
+
+  // 2. Check events
+  if (snapshot?.events?.includes(itemName)) return true;
+
+  // 3. Check inventory
+  if (snapshot?.inventory?.[itemName] > 0) return true;
+
+  // 4. Check progression_mapping for progressive items
+  // (e.g., "Fighter Sword" resolves from "Progressive Sword" at level 1)
+  // ...
+}
+```
+
+**Patterns combined from different games:**
+
+| Pattern | Source Games | Purpose |
+|---------|--------------|---------|
+| Check `flags` array | AHIT, KDL3, Pokemon Emerald, SM, Yugioh06 | Event items stored as flags |
+| Check `events` array | AHIT, KDL3, Pokemon Emerald, SM, Yugioh06 | Game events/triggers |
+| Check `inventory` | All games | Standard item counts |
+| Check `progression_mapping` | ALTTP | Progressive items (e.g., Progressive Sword → Fighter Sword) |
+
+This unified implementation means most games can use `genericLogic.helperFunctions` without needing custom `has`/`count` implementations. Games with truly unique requirements can still provide custom implementations in their game logic module.
+
 ### Removing JavaScript Helpers
 
 After enabling export, you can remove JavaScript helper implementations that are now exported. Keep only:
