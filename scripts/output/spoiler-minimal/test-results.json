@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-11T01:26:53.632096",
-    "last_updated": "2025-12-11T01:26:53.632103",
+    "last_updated": "2025-12-11T03:25:15.329618",
     "script_version": "1.0.0"
   },
   "results": {
@@ -4025,31 +4025,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "e4146bfe8e341195ab9de86fe065355d6b23b723c9eab2518fe483fce742ca3b",
-          "new_sphere_log_hash": "ccc3d9d2a955411bb04b937b3b3aaf14d435c200db3f5c7fcb492bbcc4db7c6f",
-          "original_rules_hash": "f1e11d93682bb4787adad0c32dffae7a9bd8057c4297a92786d110c3022c50f1",
-          "original_sphere_log_hash": "ccc3d9d2a955411bb04b937b3b3aaf14d435c200db3f5c7fcb492bbcc4db7c6f",
-          "rules_identical": false,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-11T01:19:19.629968"
-        }
-      },
       "game_name_from_filename": "witness",
       "game_name_from_yaml": "The Witness",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 8.5,
+        "processing_time_seconds": 10.85,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/witness/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 337054,
+        "size_bytes": 335218,
         "size_mb": 0.32
       },
       "seed": "1",
@@ -4057,7 +4045,7 @@
       "spoiler_test": {
         "error_count": 5,
         "pass_fail": "passed",
-        "processing_time_seconds": 6.72,
+        "processing_time_seconds": 10.8,
         "return_code": 0,
         "sphere_reached": 9.1,
         "success": true,
@@ -4065,16 +4053,16 @@
         "warning_count": 0
       },
       "template_filename": "The Witness.yaml",
-      "timestamp": "2025-12-11T01:18:29.807077",
+      "timestamp": "2025-12-11T03:24:53.262337",
       "world_info": {
         "exporter_path": "exporter/games/witness.py",
-        "exporter_size": 24301,
-        "game_logic_path": "frontend/modules/shared/gameLogic/witness/witnessLogic.js",
-        "game_logic_size": 896,
+        "exporter_size": 24275,
+        "game_logic_path": null,
+        "game_logic_size": 0,
         "game_name_from_filename": "witness",
         "game_name_from_yaml": "The Witness",
         "has_custom_exporter": true,
-        "has_custom_game_logic": true,
+        "has_custom_game_logic": false,
         "world_directory": "witness"
       }
     },
