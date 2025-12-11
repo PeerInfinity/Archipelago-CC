@@ -1299,3 +1299,55 @@ All ALTTP spoiler tests pass with 100% sphere coverage (22.1/22.1 spheres). The 
 - Sphere Reached: 22.1 / 22.1 (100%)
 - Error Count: 0
 - Warning Count: 0
+
+---
+
+## Verification: Testing Blacklist Removal (December 2025)
+
+### Test: Remove all helpers from blacklist
+
+**Attempted changes:**
+1. Removed `can_buy`, `can_buy_unlimited`, `can_defeat_boss` from `HELPERS_TO_EXPORT_BLACKLIST`
+2. Changed blacklist from `{}` to `set()` (important: `{}` creates empty dict, not empty set!)
+
+**Results:**
+
+| Helper | Exportable | Reason |
+|--------|------------|--------|
+| `can_buy` | ❌ No | Uses generator expression iterating over Shop objects with `shop.has(item)` method calls |
+| `can_buy_unlimited` | ❌ No | Uses generator expression iterating over Shop objects with `shop.has_unlimited(item)` method calls |
+| `can_defeat_boss` | N/A | Not a real Python function - synthetic helper created by `postprocess_rule` for GT multi-boss |
+
+**Key findings:**
+
+1. **`can_buy` / `can_buy_unlimited` cannot be exported as JSON** because:
+   - They use Python generator expressions: `any(shop.has(item) and shop.region.can_reach(state) for shop in ...)`
+   - The analyzer converts this to `any_of` rule type with `iterator_info`
+   - The exported rule references `shop.has()` and `shop.region.can_reach()` - methods that don't exist on exported JSON data
+   - The ruleEngine.js fallback (`shop_items` lookup + region reachability) is the only viable implementation
+
+2. **`can_defeat_boss` is not a real function** - it's a synthetic helper name:
+   - Created by `postprocess_rule` when converting `bosses['bottom'].can_defeat()` patterns
+   - No corresponding Python function exists in StateHelpers.py or Bosses.py
+   - The JS fallback (`can_kill_most_things`) handles these GT multi-boss locations
+
+3. **Empty blacklist gotcha**: Python `{}` creates an empty dict, not an empty set. Use `set()` for empty blacklist.
+
+### Final Blacklist Configuration
+
+```python
+HELPERS_TO_EXPORT_BLACKLIST = {
+    'can_buy',          # Iterates over Shop objects with method calls
+    'can_buy_unlimited',  # Iterates over Shop objects with method calls
+}
+```
+
+Note: `can_defeat_boss` doesn't need to be blacklisted since it's not a real Python function.
+
+### Verification Test
+
+After restoring blacklist with `can_buy` and `can_buy_unlimited`:
+- Generation: ✅ PASS
+- Spoiler Test: ✅ PASS
+- Sphere Reached: 22.1 / 22.1 (100%)
+- Exported helpers: 26 (vs 28 when blacklist was empty)

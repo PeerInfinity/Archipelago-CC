@@ -20,27 +20,29 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
 
     # Complex helpers that can't be exported (need JavaScript implementations)
     # These have loops, complex counting, settings lookups, or dynamic conditions
+    # NOTE: Use set() for empty blacklist - {} creates an empty dict!
     HELPERS_TO_EXPORT_BLACKLIST = {
-        # 'GanonDefeatRule',  # Now exported - uses supported patterns (settings, item checks, helpers)
-        # 'can_extend_magic',  # Debugging - shop region reachability
-        'can_buy',  # Uses frontend shop_items implementation
-        'can_buy_unlimited',  # Uses frontend shop_items implementation
-        # 'can_get_good_bee',  # Now works with region_reference and region_attribute support
-        # 'can_kill_most_things',  # Now works with default parameter values support
-        # 'can_shoot_arrows',  # Now works with can_buy and can_hold_arrows
-        # 'can_use_bombs',  # Now works with min/max and setting_value support
-        # 'has_crystals',  # Now works with group_count support
-        # 'has_crystals_for_ganon',  # Removed - has_crystals now handles dynamic arguments
-        # 'has_hearts',  # Now works with logical_heart settings
-        # 'has_misery_mire_medallion',  # Now works with setting_value index support
-        # 'has_turtle_rock_medallion',  # Now works with setting_value index support
-        # 'item_name_in_location_names',  # Now converted to placement_search rule type
-        # 'tr_big_key_chest_keys_needed',  # Now inlined with placement_lookup logic
-        # 'location_item_name',  # Now converted to placement_lookup rule type
-        'can_defeat_boss',
-        # 'can_reach_region',  # Now uses native can_reach rule type
-        # 'can_take_damage',  # Now uses setting_value instead of helper
+        # These helpers iterate over Shop objects and call methods (shop.has(), region.can_reach())
+        # that don't exist in exported JSON. They use ruleEngine.js implementation with shop_items data.
+        'can_buy',
+        'can_buy_unlimited',
     }
+    # Blacklist history (all now exported or handled via other mechanisms):
+    # - 'GanonDefeatRule': Now exported - uses supported patterns (settings, item checks, helpers)
+    # - 'can_extend_magic': Now works with shop region reachability
+    # - 'can_get_good_bee': Now works with region_reference and region_attribute support
+    # - 'can_kill_most_things': Now works with default parameter values support
+    # - 'can_shoot_arrows': Now works with can_buy and can_hold_arrows
+    # - 'can_use_bombs': Now works with min/max and setting_value support
+    # - 'has_crystals': Now works with group_count support
+    # - 'has_misery_mire_medallion': Now works with setting_value index support
+    # - 'has_turtle_rock_medallion': Now works with setting_value index support
+    # - 'item_name_in_location_names': Now converted to placement_search rule type
+    # - 'tr_big_key_chest_keys_needed': Now inlined with placement_lookup logic
+    # - 'location_item_name': Now converted to placement_lookup rule type
+    # - 'can_defeat_boss': Now exported - postprocess_rule converts GT multi-boss to helper call
+    # - 'can_reach_region': Now uses native can_reach rule type
+    # - 'can_take_damage': Now uses setting_value instead of helper
 
     """No longer expands helpers - just validates they're known ALTTP helpers"""
     
