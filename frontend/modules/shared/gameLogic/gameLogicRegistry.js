@@ -227,13 +227,9 @@ import { helperFunctions as kh2HelperFunctions } from './kh2/kh2Logic.js';
 import * as kdl3Logic from './kdl3/kdl3Logic.js';
 import * as ladxLogic from './ladx/ladxLogic.js';
 import { helperFunctions as lingoHelperFunctions } from './lingo/lingoLogic.js';
-import * as mlssLogic from './mlss/mlssLogic.js';
-import { mlssStateModule } from './mlss/mlssLogic.js';
 import * as marioland2Logic from './marioland2/marioland2Logic.js';
 import * as messengerLogic from './messenger/messengerLogic.js';
 import { messengerStateModule } from './messenger/messengerLogic.js';
-import * as mmbn3Logic from './mmbn3/mmbn3Logic.js';
-import { mmbn3StateModule } from './mmbn3/mmbn3Logic.js';
 import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
 import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 import * as pokemon_emeraldLogic from './pokemon_emerald/pokemon_emeraldLogic.js';
@@ -344,18 +340,6 @@ const GAME_REGISTRY = {
     helperFunctions: kdl3Logic.helperFunctions,
     worldClasses: ['KDL3World'],
     aliases: ["Kirby's Dream Land 3", 'KDL3']
-  },
-  'Mario & Luigi Superstar Saga': {
-    logicModule: mlssLogic.mlssStateModule,
-    helperFunctions: mlssLogic.helperFunctions,
-    worldClasses: ['MLSSWorld'],
-    aliases: ['Mario & Luigi Superstar Saga', 'MLSS']
-  },
-  'MegaMan Battle Network 3': {
-    logicModule: mmbn3Logic.mmbn3StateModule,
-    helperFunctions: mmbn3Logic.helperFunctions,
-    worldClasses: ['MMBN3World'],
-    aliases: ['MegaMan Battle Network 3', 'MMBN3', 'mmbn3']
   },
   'The Messenger': {
     logicModule: messengerLogic.messengerStateModule,

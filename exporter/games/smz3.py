@@ -16,6 +16,9 @@ logger = logging.getLogger(__name__)
 class SMZ3GameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'SMZ3'
 
+    # Enable automatic export of discovered helpers
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+
     def __init__(self):
         super().__init__()
         logger.info("SMZ3 exporter initialized")

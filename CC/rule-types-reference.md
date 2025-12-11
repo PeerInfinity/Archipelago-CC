@@ -43,6 +43,8 @@ Both layers must support a rule type for it to work end-to-end.
 | `can_reach_entrance` | Check if entrance is reachable | `entrance` | `{"type": "can_reach_entrance", "entrance": "Cave Door"}` |
 | `location_check` | Check if location is accessible | `location` | `{"type": "location_check", "location": "Chest A"}` |
 | `region_check` | Check if region is accessible | `region` | `{"type": "region_check", "region": "Dungeon 1"}` |
+| `region_reference` | Reference to a region (from get_region) | `region` | `{"type": "region_reference", "region": "Good Bee Cave"}` |
+| `region_attribute` | Access region property | `region`, `attr` | `{"type": "region_attribute", "region": {...}, "attr": "is_light_world"}` |
 | `capability` | Check player capability | `capability` | `{"type": "capability", "capability": "can_swim"}` |
 | `state_method` | Call StateManager methods | `method`, `args: []` | `{"type": "state_method", "method": "can_reach", "args": [...]}` |
 
