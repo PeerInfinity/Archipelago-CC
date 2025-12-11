@@ -1,7 +1,7 @@
 """Jak and Daxter: The Precursor Legacy game-specific export handler."""
 
 from .generic import GenericGameExportHandler
-from typing import Dict, Any
+from typing import Dict, Any, Set
 import logging
 
 logger = logging.getLogger(__name__)
@@ -12,6 +12,10 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
 
+    # Preserve can_reach_orbs_level as a helper call - it requires JavaScript
+    # implementation because it iterates regions and sums orb counts at runtime
+    HELPERS_TO_PRESERVE: Set[str] = {'can_reach_orbs_level'}
+
 
     def __init__(self, world=None):
         super().__init__()
@@ -21,6 +25,34 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
         # The item_table is a dict mapping item_id -> item_name
         from worlds.jakanddaxter.items import item_table
         self.item_id_to_name = dict(item_table)
+
+    def get_game_info(self, world) -> Dict[str, Any]:
+        """
+        Return game information including accumulator rules for Tradeable Orbs.
+
+        When orbsanity is enabled, the game tracks "Tradeable Orbs" which accumulate
+        when precursor orb items are collected. This allows trade locations (like
+        "Bring 90 Orbs To The Mayor") to check if the player has enough total orbs.
+        """
+        game_info = super().get_game_info(world)
+
+        # Add accumulator rules to track Tradeable Orbs from precursor orb items
+        # Items like "25 Precursor Orbs" add 25 to the Tradeable Orbs counter
+        game_info['accumulator_rules'] = [
+            {
+                'pattern': r'^(\d+) Precursor Orbs?$',  # Match "X Precursor Orbs" or "X Precursor Orb"
+                'extract_value': True,                  # Extract numeric value from group 1
+                'target': 'Tradeable Orbs',             # Target accumulator name
+                'discriminator': None                   # No dynamic target selection
+            }
+        ]
+
+        # Initialize Tradeable Orbs accumulator to 0
+        game_info['prog_items_init'] = {
+            'Tradeable Orbs': 0
+        }
+
+        return game_info
 
     def recalculate_collection_state_if_needed(self, current_collection_state, player_id, world):
         """
@@ -102,10 +134,28 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
                 rule['count'] = self._unwrap_constant(rule['count'])
             # Continue processing the rule after unwrapping
 
-        # Handle function_call rules, especially world.can_trade
+        # Handle function_call rules, especially world.can_trade and can_reach_orbs_level
         if rule.get('type') == 'function_call':
             function = rule.get('function', {})
             args = rule.get('args', [])
+
+            # Check if this is a can_reach_orbs_level call
+            # The function will be {type: 'name', name: 'can_reach_orbs_level'}
+            if (isinstance(function, dict) and
+                function.get('type') == 'name' and
+                function.get('name') == 'can_reach_orbs_level'):
+                # can_reach_orbs_level(state, player, world, level_name, orb_amount)
+                # We need args[3] (level_name) and args[4] (orb_amount)
+                if len(args) >= 5:
+                    level_name = self._unwrap_constant(args[3])
+                    orb_amount = self._unwrap_constant(args[4])
+                    return {
+                        'type': 'helper',
+                        'name': 'can_reach_orbs_level',
+                        'args': [level_name, orb_amount]
+                    }
+                else:
+                    logger.warning(f"can_reach_orbs_level call with insufficient args: {len(args)}")
 
             # Resolve the function to check if it's world.can_trade
             resolved_function = self._resolve_attribute(function)
