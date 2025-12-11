@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-11T01:26:53.632096",
-    "last_updated": "2025-12-11T01:26:53.632103",
+    "last_updated": "2025-12-11T03:20:11.447892",
     "script_version": "1.0.0"
   },
   "results": {
@@ -4379,27 +4379,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "408faccba03f9cdd07e08ad8abac142c6be065055c0a51b8a2ab78d94e950842",
-          "new_sphere_log_hash": "87f90b840d04850c0a2138e462240e8d6c63002c45938ac4134f3e44e4a9a984",
-          "original_rules_hash": "408faccba03f9cdd07e08ad8abac142c6be065055c0a51b8a2ab78d94e950842",
-          "original_sphere_log_hash": "87f90b840d04850c0a2138e462240e8d6c63002c45938ac4134f3e44e4a9a984",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-11T01:19:36.403248"
-        }
-      },
       "game_name_from_filename": "yachtdice",
       "game_name_from_yaml": "Yacht Dice",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 3.57,
+        "processing_time_seconds": 7.27,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/yachtdice/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -4411,7 +4399,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 8.76,
+        "processing_time_seconds": 12.84,
         "return_code": 0,
         "sphere_reached": 21.1,
         "success": true,
@@ -4419,10 +4407,10 @@
         "warning_count": 0
       },
       "template_filename": "Yacht Dice.yaml",
-      "timestamp": "2025-12-11T01:18:52.476950",
+      "timestamp": "2025-12-11T03:19:50.888027",
       "world_info": {
         "exporter_path": "exporter/games/yachtdice.py",
-        "exporter_size": 2338,
+        "exporter_size": 1677,
         "game_logic_path": "frontend/modules/shared/gameLogic/yachtdice/yachtdiceLogic.js",
         "game_logic_size": 291890,
         "game_name_from_filename": "yachtdice",
