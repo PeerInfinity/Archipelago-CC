@@ -21,22 +21,24 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
     # These have loops, complex counting, settings lookups, or dynamic conditions
     HELPERS_TO_EXPORT_BLACKLIST = {
         'GanonDefeatRule',
-        'can_extend_magic',
+        # 'can_extend_magic',  # Debugging - shop region reachability
+        'can_buy',  # Uses frontend shop_items implementation
+        'can_buy_unlimited',  # Uses frontend shop_items implementation
         'can_get_good_bee',
         'can_kill_most_things',
-        'can_shoot_arrows',
+        # 'can_shoot_arrows',  # Now works with can_buy and can_hold_arrows
         # 'can_use_bombs',  # Now works with min/max and setting_value support
-        'has_crystals',
-        'has_crystals_for_ganon',
-        'has_hearts',
-        'has_misery_mire_medallion',
-        'has_turtle_rock_medallion',
+        # 'has_crystals',  # Now works with group_count support
+        # 'has_crystals_for_ganon',  # Removed - has_crystals now handles dynamic arguments
+        # 'has_hearts',  # Now works with logical_heart settings
+        # 'has_misery_mire_medallion',  # Now works with setting_value index support
+        # 'has_turtle_rock_medallion',  # Now works with setting_value index support
         'item_name_in_location_names',
         'tr_big_key_chest_keys_needed',
         'location_item_name',
         'can_defeat_boss',
-        'can_reach_region',
-        'can_take_damage',
+        # 'can_reach_region',  # Now uses native can_reach rule type
+        # 'can_take_damage',  # Now uses setting_value instead of helper
     }
 
     """No longer expands helpers - just validates they're known ALTTP helpers"""
@@ -76,6 +78,8 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             # 'basement_key_rule',  # Removed - can be inlined, JS impl is incorrect
             # 'can_activate_crystal_switch',  # Removed - item checks + helper calls
             # 'can_bomb_or_bonk',  # Removed - item check + can_use_bombs, may need to preserve can_use_bombs
+            'can_buy',  # Implemented in frontend using shop_items data
+            'can_buy_unlimited',  # Implemented in frontend using shop_items data
             'can_extend_magic',
             'can_get_good_bee',
             'can_kill_most_things',
@@ -86,21 +90,21 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             'can_shoot_arrows',
             'can_use_bombs',
             # 'has_beam_sword',  # Removed - multiple item checks, can be inlined
-            'has_crystals',  # Preserved as helper call, definition exported to helpers section
-            'has_crystals_for_ganon',
+            'has_crystals',  # Exported with group_count support
+            # 'has_crystals_for_ganon',  # Removed - has_crystals now handles dynamic arguments
             # 'has_fire_source',  # Removed - simple item checks, can be inlined
-            'has_hearts',
+            'has_hearts',  # Exported with logical_heart settings
             # 'has_melee_weapon',  # Removed - calls has_sword + item check, can be inlined
-            'has_misery_mire_medallion',  # Keep - dynamic medallion lookup needs JS
+            'has_misery_mire_medallion',  # Exported with setting_value index support
             # 'has_sword',  # Removed - multiple item checks, can be inlined
-            'has_turtle_rock_medallion',
+            'has_turtle_rock_medallion',  # Exported with setting_value index support
             'item_name_in_location_names',
             'tr_big_key_chest_keys_needed',
             'location_item_name',
             # Added in postprocess_rule
             'can_defeat_boss',
-            'can_reach_region',
-            'can_take_damage',
+            # 'can_reach_region',  # Now uses native can_reach rule type
+            # 'can_take_damage',  # Now uses setting_value instead of helper
             # This function doesn't appear in the final export, but we get warning messages if we remove it from this list
             'orig_rule',
         }
@@ -163,57 +167,36 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
     def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
         Post-process rules to fix specific complex patterns that can't be handled by the frontend.
-        
-        Specifically replaces the complex has_crystals call that accesses 
-        state.multiworld.worlds[player].options.crystals_needed_for_ganon
-        with the simpler has_crystals_for_ganon helper.
         """
         if not isinstance(rule, dict):
             return rule
-            
-        # Check if this is a has_crystals helper with complex arguments
-        if (rule.get('type') == 'helper' and
-            rule.get('name') == 'has_crystals' and
-            rule.get('args')):
 
-            # Check if the argument is trying to access crystals_needed_for_ganon
-            if len(rule['args']) == 1:
-                arg = rule['args'][0]
-                # Check for the complex chain: state.multiworld.worlds[player].options.crystals_needed_for_ganon
-                # Also check for setting_value type (from analyzer pattern detection)
-                if (isinstance(arg, dict) and
-                    ((arg.get('type') == 'attribute' and arg.get('attr') == 'crystals_needed_for_ganon') or
-                     (arg.get('type') == 'setting_value' and arg.get('setting') == 'crystals_needed_for_ganon'))):
+        # Note: has_crystals now supports dynamic arguments via setting_value,
+        # so we no longer need to convert has_crystals(crystals_needed_for_ganon)
+        # to has_crystals_for_ganon()
 
-                    # Replace with the simpler helper
-                    return {
-                        'type': 'helper',
-                        'name': 'has_crystals_for_ganon',
-                        'args': []
-                    }
-        
         # Check for state.multiworld.get_region().can_reach() pattern
-        if (rule.get('type') == 'function_call' and 
+        # Convert to native can_reach rule type which frontend already supports
+        if (rule.get('type') == 'function_call' and
             isinstance(rule.get('function'), dict) and
             rule['function'].get('type') == 'attribute' and
             rule['function'].get('attr') == 'can_reach'):
-            
+
             # Check if object is a get_region call
             obj = rule['function'].get('object', {})
-            if (isinstance(obj, dict) and 
+            if (isinstance(obj, dict) and
                 obj.get('type') == 'function_call' and
                 isinstance(obj.get('function'), dict) and
                 obj['function'].get('attr') == 'get_region'):
-                
+
                 # Extract region name from args
                 args = obj.get('args', [])
                 if args and isinstance(args[0], dict) and args[0].get('type') == 'constant':
                     region_name = args[0].get('value')
-                    # Replace with a simpler region check
+                    # Replace with native can_reach rule type
                     return {
-                        'type': 'helper',
-                        'name': 'can_reach_region',
-                        'args': [{'type': 'constant', 'value': region_name}]
+                        'type': 'can_reach',
+                        'region': region_name
                     }
         
         # Check for state.multiworld.get_location().parent_region.dungeon.boss.can_defeat() pattern
@@ -250,18 +233,18 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
                             break
                     parent_obj = parent_obj.get('object') or parent_obj.get('value')
         
-        # Check for world.can_take_damage pattern
-        if (rule.get('type') == 'attribute' and 
+        # Check for world.can_take_damage pattern - convert to setting_value
+        # since can_take_damage is already exported in settings
+        if (rule.get('type') == 'attribute' and
             rule.get('attr') == 'can_take_damage' and
             isinstance(rule.get('object'), dict) and
             rule['object'].get('type') == 'name' and
             rule['object'].get('name') == 'world'):
-            
-            # Replace with a helper that checks if damage is allowed
+
+            # Replace with setting_value to use the exported setting
             return {
-                'type': 'helper',
-                'name': 'can_take_damage',
-                'args': []
+                'type': 'setting_value',
+                'setting': 'can_take_damage'
             }
         
         # Recursively process nested rules
@@ -485,6 +468,7 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             'pot_shuffle', 'dungeon_counters', 'glitch_boots', 'accessibility',
             'mode', # Mode is crucial
             'crystals_needed_for_gt', 'crystals_needed_for_ganon', # Crystal requirements
+            'item_functionality',  # Used by can_extend_magic
         ]
         for setting in alttp_settings_mw:
              settings_dict[setting] = extract_option(setting)
@@ -513,6 +497,11 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         else:
              settings_dict['difficulty_requirements'] = {}
 
+        # Logical heart limits (used by heart_count and has_hearts helpers)
+        # These can be modified during item pool generation from difficulty_requirements defaults
+        settings_dict['logical_heart_pieces'] = getattr(world, 'logical_heart_pieces', 24)
+        settings_dict['logical_heart_containers'] = getattr(world, 'logical_heart_containers', 10)
+
         # Medallions
         if hasattr(world, 'required_medallions'):
              # Extract medallion names (assuming they have a 'name' attribute or similar)
@@ -536,6 +525,46 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
              settings_dict['misery_mire_medallion'] = None
              settings_dict['turtle_rock_medallion'] = None
 
+        # Shop item data - maps items to regions where shops sell them
+        # This enables can_buy and can_buy_unlimited helper implementation
+        # Based on Shop.has() and Shop.has_unlimited() logic in worlds/alttp/Shops.py
+        shop_items = {}
+        if hasattr(world, 'shops'):
+            for shop in world.shops:
+                region_name = shop.region.name if hasattr(shop, 'region') and shop.region else None
+                if not region_name:
+                    continue
+                for inv in getattr(shop, 'inventory', []):
+                    if inv is None:
+                        continue
+                    item_name = inv.get('item')
+                    if not item_name:
+                        continue
+                    if item_name not in shop_items:
+                        shop_items[item_name] = {'unlimited': [], 'limited': []}
+
+                    # has_unlimited logic: if max is set, check replacement; else item is unlimited
+                    # has logic: just check if item exists in inventory
+                    if inv.get('max'):
+                        # Limited purchase with replacement when exhausted
+                        replacement = inv.get('replacement')
+                        if replacement:
+                            # Replacement item is unlimited
+                            if replacement not in shop_items:
+                                shop_items[replacement] = {'unlimited': [], 'limited': []}
+                            if region_name not in shop_items[replacement]['unlimited']:
+                                shop_items[replacement]['unlimited'].append(region_name)
+                        # Original item is limited (can only buy 'max' times)
+                        if region_name not in shop_items[item_name]['limited']:
+                            shop_items[item_name]['limited'].append(region_name)
+                    else:
+                        # No max = unlimited purchase
+                        if region_name not in shop_items[item_name]['unlimited']:
+                            shop_items[item_name]['unlimited'].append(region_name)
+                        # Also available as limited (can_buy returns true for unlimited items too)
+                        if region_name not in shop_items[item_name]['limited']:
+                            shop_items[item_name]['limited'].append(region_name)
+        settings_dict['shop_items'] = shop_items
 
         return settings_dict
 

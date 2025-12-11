@@ -792,19 +792,33 @@ class BaseGameExportHandler:
                 # Check if we have a cached definition (from auto-preservation due to size)
                 cached_def = self.get_cached_helper(helper_name)
                 if cached_def is not None:
-                    # Extract parameter names from the function (excluding state, player, world)
+                    # Extract parameter names and defaults from the function (excluding state, player, world)
                     params = []
+                    defaults = {}
                     if helper_func and hasattr(helper_func, '__code__'):
                         all_params = helper_func.__code__.co_varnames[:helper_func.__code__.co_argcount]
                         params = [p for p in all_params if p not in ('state', 'player', 'world')]
 
+                        # Extract default values for parameters
+                        if hasattr(helper_func, '__defaults__') and helper_func.__defaults__:
+                            func_defaults = helper_func.__defaults__
+                            num_defaults = len(func_defaults)
+                            params_with_defaults = all_params[-num_defaults:]
+                            for param_name, default_value in zip(params_with_defaults, func_defaults):
+                                if param_name in params:
+                                    if isinstance(default_value, (bool, int, float, str, type(None))):
+                                        defaults[param_name] = default_value
+
                     # Store with params if the helper has parameters
                     if params:
-                        helper_definitions[helper_name] = {
+                        helper_def = {
                             'params': params,
                             'body': cached_def
                         }
-                        logger.debug(f"Using cached definition for helper '{helper_name}' with params {params}")
+                        if defaults:
+                            helper_def['defaults'] = defaults
+                        helper_definitions[helper_name] = helper_def
+                        logger.debug(f"Using cached definition for helper '{helper_name}' with params {params}, defaults {defaults}")
                     else:
                         helper_definitions[helper_name] = cached_def
                         logger.debug(f"Using cached definition for helper '{helper_name}': {cached_def}")
@@ -818,30 +832,49 @@ class BaseGameExportHandler:
 
                 # Analyze the function to get its rule structure
                 # This may discover new helpers via register_helper_usage
+                # Use preserve_parameter_names=True so that default parameter values
+                # are kept as name references (not inlined) for runtime resolution
                 try:
                     rule = analyze_rule(
                         rule_func=helper_func,
                         game_handler=self,
-                        player_context=world.player if hasattr(world, 'player') else None
+                        player_context=world.player if hasattr(world, 'player') else None,
+                        preserve_parameter_names=True
                     )
 
                     # Clean up the rule - resolve item names, convert state methods to rule types
                     rule = self._clean_helper_rule(rule, world)
 
                     if rule and rule.get('type') != 'error':
-                        # Extract parameter names from the function (excluding state, player, world)
+                        # Extract parameter names and defaults from the function (excluding state, player, world)
                         params = []
+                        defaults = {}
                         if hasattr(helper_func, '__code__'):
                             all_params = helper_func.__code__.co_varnames[:helper_func.__code__.co_argcount]
                             params = [p for p in all_params if p not in ('state', 'player', 'world')]
 
+                            # Extract default values for parameters
+                            if hasattr(helper_func, '__defaults__') and helper_func.__defaults__:
+                                func_defaults = helper_func.__defaults__
+                                # Defaults apply to the last N parameters
+                                num_defaults = len(func_defaults)
+                                params_with_defaults = all_params[-num_defaults:]
+                                for param_name, default_value in zip(params_with_defaults, func_defaults):
+                                    if param_name in params:  # Only include if it's not state/player/world
+                                        # Only include simple JSON-serializable defaults
+                                        if isinstance(default_value, (bool, int, float, str, type(None))):
+                                            defaults[param_name] = default_value
+
                         # Store with params if the helper has parameters, otherwise just the rule
                         if params:
-                            helper_definitions[helper_name] = {
+                            helper_def = {
                                 'params': params,
                                 'body': rule
                             }
-                            logger.debug(f"Exported helper '{helper_name}' with params {params}: {rule}")
+                            if defaults:
+                                helper_def['defaults'] = defaults
+                            helper_definitions[helper_name] = helper_def
+                            logger.debug(f"Exported helper '{helper_name}' with params {params}, defaults {defaults}: {rule}")
                         else:
                             helper_definitions[helper_name] = rule
                             logger.debug(f"Exported helper '{helper_name}': {rule}")

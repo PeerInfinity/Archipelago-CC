@@ -163,10 +163,10 @@ class ASTVisitorMixin:
         has_return = any(isinstance(n, ast.Return) for n in body_nodes)
 
         # Use block mode if we have for loops, augmented assignments,
-        # or multiple assignments before a return
+        # or any assignments before a return (need to capture variable bindings)
         if has_for or has_augassign:
             return True
-        if assign_count > 0 and has_return and len(body_nodes) > 2:
+        if assign_count > 0 and has_return:
             return True
         return False
 
@@ -1292,52 +1292,138 @@ class ASTVisitorMixin:
         logging.debug(f"Fallback call result: {result}")
         return result # Return generic function call result
 
-    def _is_world_options_pattern(self, node):
+    def _is_world_player_subscript(self, node):
         """
-        Detect the pattern: state.multiworld.worlds[player].options.<setting>
-        Returns the setting name if matched, None otherwise.
+        Check if node is the pattern: state.multiworld.worlds[player]
+        Returns True if matched, False otherwise.
 
         AST structure:
-        Attribute(attr='<setting>')
-          value=Attribute(attr='options')
+        Subscript
+          value=Attribute(attr='worlds')
+            value=Attribute(attr='multiworld')
+              value=Name(id='state' or 'world')
+          slice=Name(id='player')
+        """
+        if not isinstance(node, ast.Subscript):
+            return False
+        if not isinstance(node.slice, ast.Name) or node.slice.id != 'player':
+            return False
+
+        # Check .worlds
+        worlds_attr = node.value
+        if not isinstance(worlds_attr, ast.Attribute) or worlds_attr.attr != 'worlds':
+            return False
+
+        # Check .multiworld
+        multiworld_attr = worlds_attr.value
+        if not isinstance(multiworld_attr, ast.Attribute) or multiworld_attr.attr != 'multiworld':
+            return False
+
+        # Check state (or world)
+        state_name = multiworld_attr.value
+        if not isinstance(state_name, ast.Name) or state_name.id not in ('state', 'world'):
+            return False
+
+        return True
+
+    def _is_world_options_pattern(self, node):
+        """
+        Detect patterns accessing world settings/attributes:
+        - state.multiworld.worlds[player].options.<setting>
+        - state.multiworld.worlds[player].<attr>
+        - state.multiworld.worlds[player].<attr1>.<attr2> (nested like difficulty_requirements.progressive_bottle_limit)
+
+        Returns the setting path as a dot-separated string if matched, None otherwise.
+        """
+        if not isinstance(node, ast.Attribute):
+            return None
+
+        # Collect attribute chain from bottom up
+        attrs = [node.attr]
+        current = node.value
+
+        # Walk up the attribute chain until we hit the worlds[player] subscript
+        while isinstance(current, ast.Attribute):
+            attrs.append(current.attr)
+            current = current.value
+
+        # Check if we've reached the world player subscript
+        if not self._is_world_player_subscript(current):
+            return None
+
+        # Reverse to get top-down order
+        attrs.reverse()
+
+        # Handle different patterns:
+        # - ['options', 'setting_name'] -> 'setting_name'
+        # - ['attr_name'] -> 'attr_name'
+        # - ['difficulty_requirements', 'progressive_bottle_limit'] -> 'difficulty_requirements.progressive_bottle_limit'
+        if attrs[0] == 'options' and len(attrs) >= 2:
+            # Remove 'options' prefix for .options.<setting> pattern
+            return '.'.join(attrs[1:])
+        else:
+            # Direct attribute or nested attribute
+            return '.'.join(attrs)
+
+    def _is_world_attribute_subscript_pattern(self, node):
+        """
+        Detect the pattern: state.multiworld.worlds[player].<attr>[index]
+        Returns (attr_name, index) tuple if matched, (None, None) otherwise.
+
+        This handles patterns like:
+        - state.multiworld.worlds[player].required_medallions[0]
+        - state.multiworld.worlds[player].some_array[1]
+
+        AST structure:
+        Subscript(slice=Constant(N))
+          value=Attribute(attr='<attr_name>')
             value=Subscript
               value=Attribute(attr='worlds')
                 value=Attribute(attr='multiworld')
                   value=Name(id='state')
               slice=Name(id='player')
         """
-        if not isinstance(node, ast.Attribute):
-            return None
+        if not isinstance(node, ast.Subscript):
+            return None, None
 
-        setting_name = node.attr
+        # Get the index
+        index_val = None
+        if isinstance(node.slice, ast.Constant):
+            index_val = node.slice.value
+        elif isinstance(node.slice, ast.Num):  # Python 3.7 compatibility
+            index_val = node.slice.n
+        else:
+            return None, None
 
-        # Check .options
-        if not isinstance(node.value, ast.Attribute) or node.value.attr != 'options':
-            return None
+        # Check that the value being subscripted is an attribute
+        if not isinstance(node.value, ast.Attribute):
+            return None, None
 
-        # Check [player] subscript
+        attr_name = node.value.attr
+
+        # Check [player] subscript on worlds
         subscript = node.value.value
         if not isinstance(subscript, ast.Subscript):
-            return None
+            return None, None
         if not isinstance(subscript.slice, ast.Name) or subscript.slice.id != 'player':
-            return None
+            return None, None
 
         # Check .worlds
         worlds_attr = subscript.value
         if not isinstance(worlds_attr, ast.Attribute) or worlds_attr.attr != 'worlds':
-            return None
+            return None, None
 
         # Check .multiworld
         multiworld_attr = worlds_attr.value
         if not isinstance(multiworld_attr, ast.Attribute) or multiworld_attr.attr != 'multiworld':
-            return None
+            return None, None
 
         # Check state (or world)
         state_name = multiworld_attr.value
         if not isinstance(state_name, ast.Name) or state_name.id not in ('state', 'world'):
-            return None
+            return None, None
 
-        return setting_name
+        return attr_name, index_val
 
     def visit_Attribute(self, node):
         try:
@@ -1452,7 +1538,8 @@ class ASTVisitorMixin:
                     pass
 
             # Also check function defaults for lambda parameters
-            if name not in self.closure_vars:
+            # Skip this when preserve_parameter_names is True - we want to keep params as name references
+            if name not in self.closure_vars and not getattr(self, 'preserve_parameter_names', False):
                 resolved_value = self.expression_resolver.resolve_variable(name)
                 if resolved_value is not None:
                     # Handle simple values
@@ -1598,6 +1685,13 @@ class ASTVisitorMixin:
         logging.debug(f"\nvisit_Subscript called:")
         logging.debug(f"Value: {ast.dump(node.value)}")
         logging.debug(f"Slice: {ast.dump(node.slice)}")
+
+        # Check for state.multiworld.worlds[player].<attr>[index] pattern
+        # Convert to setting_value rule type for frontend evaluation
+        attr_name, index_val = self._is_world_attribute_subscript_pattern(node)
+        if attr_name is not None and index_val is not None:
+            logging.debug(f"visit_Subscript: Detected world attribute subscript pattern: {attr_name}[{index_val}]")
+            return {'type': 'setting_value', 'setting': attr_name, 'index': index_val}
 
         # First visit the value (the object being subscripted)
         value_info = self.visit(node.value) # Get returned result
@@ -2412,6 +2506,11 @@ class ASTVisitorMixin:
             elif isinstance(node, ast.For):
                 return self.visit_For(node)
             elif isinstance(node, ast.If):
+                # Check if this is an if/elif/else that assigns to a single variable
+                assign_result = self._try_convert_if_to_assign(node)
+                if assign_result is not None:
+                    return assign_result
+                # Otherwise, fall back to regular conditional handling
                 return self.visit_If(node)
             elif isinstance(node, ast.Expr):
                 # Expression statement - just evaluate it
@@ -2422,6 +2521,121 @@ class ASTVisitorMixin:
         except Exception as e:
             logging.error(f"Error in visit_statement: {e}")
             return None
+
+    def _try_convert_if_to_assign(self, node: ast.If) -> Optional[Dict[str, Any]]:
+        """
+        Try to convert an If statement that assigns to a single variable in all branches
+        into an assign statement with a conditional value.
+
+        Pattern: if cond: var = val1; elif cond2: var = val2; ...
+        Also handles nested: if cond: if cond2: var = val1; ...
+
+        Converts to: {"type": "assign", "name": "var", "value": {"type": "conditional", ...}}
+
+        Returns None if the pattern doesn't match.
+        """
+        def get_assign_target(body):
+            """Get the variable name if the body is a single assignment, None otherwise."""
+            if len(body) == 1 and isinstance(body[0], ast.Assign):
+                if len(body[0].targets) == 1 and isinstance(body[0].targets[0], ast.Name):
+                    return body[0].targets[0].id
+            return None
+
+        def get_nested_assign_target(body):
+            """Get the variable name, handling both direct assignments and nested If assignments."""
+            # First try direct assignment
+            target = get_assign_target(body)
+            if target is not None:
+                return target
+            # Check if body is a single If statement that assigns to a variable
+            if len(body) == 1 and isinstance(body[0], ast.If):
+                return get_nested_assign_target(body[0].body)
+            return None
+
+        def get_assign_value_ast(body):
+            """Get the assignment value AST node if the body is a single assignment."""
+            if len(body) == 1 and isinstance(body[0], ast.Assign):
+                return body[0].value
+            return None
+
+        def build_conditional_value(if_node, expected_var):
+            """
+            Recursively build a conditional rule for the value of an if/elif/else chain.
+            Returns (conditional_rule, success) where success indicates all branches match.
+            """
+            # Check if body directly assigns to expected_var
+            body_var = get_assign_target(if_node.body)
+
+            # Visit the test condition
+            test_result = self.visit(if_node.test)
+            if test_result is None:
+                return None, False
+
+            if body_var == expected_var:
+                # Direct assignment in body
+                body_value_ast = get_assign_value_ast(if_node.body)
+                if_true_result = self.visit(body_value_ast)
+                if if_true_result is None:
+                    return None, False
+            elif len(if_node.body) == 1 and isinstance(if_node.body[0], ast.If):
+                # Nested If statement - recursively process it
+                nested_if = if_node.body[0]
+                nested_var = get_nested_assign_target(nested_if.body)
+                if nested_var != expected_var:
+                    return None, False
+                if_true_result, success = build_conditional_value(nested_if, expected_var)
+                if not success:
+                    return None, False
+            else:
+                return None, False
+
+            # Handle orelse (else or elif)
+            if_false_result = None
+            if if_node.orelse:
+                if len(if_node.orelse) == 1 and isinstance(if_node.orelse[0], ast.If):
+                    # This is an elif - recursively process
+                    if_false_result, success = build_conditional_value(if_node.orelse[0], expected_var)
+                    if not success:
+                        return None, False
+                elif len(if_node.orelse) == 1 and isinstance(if_node.orelse[0], ast.Assign):
+                    # This is a simple else assignment
+                    else_var = get_assign_target(if_node.orelse)
+                    if else_var != expected_var:
+                        return None, False
+                    else_value_ast = get_assign_value_ast(if_node.orelse)
+                    if_false_result = self.visit(else_value_ast)
+                    if if_false_result is None:
+                        return None, False
+                else:
+                    # Complex else branch - don't convert
+                    return None, False
+            else:
+                # No else branch - use the variable's current value
+                if_false_result = {'type': 'name', 'name': expected_var}
+
+            return {
+                'type': 'conditional',
+                'test': test_result,
+                'if_true': if_true_result,
+                'if_false': if_false_result
+            }, True
+
+        # Check if the if-body assigns to a variable (directly or via nested if)
+        target_var = get_nested_assign_target(node.body)
+        if target_var is None:
+            return None
+
+        # Try to build the conditional value
+        conditional_value, success = build_conditional_value(node, target_var)
+        if not success:
+            return None
+
+        logging.debug(f"_try_convert_if_to_assign: Converted if-assign chain for variable '{target_var}'")
+        return {
+            'type': 'assign',
+            'name': target_var,
+            'value': conditional_value
+        }
 
     def _substitute_variable_in_rule(self, rule: Dict[str, Any], var_name: str, value: Any) -> Optional[Dict[str, Any]]:
         """
