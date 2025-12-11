@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-11T04:29:29.972745",
-    "last_updated": "2025-12-11T04:29:29.972750",
+    "last_updated": "2025-12-11T04:50:02.852159",
     "script_version": "1.0.0"
   },
   "results": {
@@ -13,27 +13,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "af909b09367d33bee7d3d1dffc512be1dc2b9dfd43117398a091dc2eac49be48",
-          "new_sphere_log_hash": "1b423c75da4cbbd793f1a232a355e630c5d4d8f19afd2cee114b4f75eab6bf3c",
-          "original_rules_hash": "af909b09367d33bee7d3d1dffc512be1dc2b9dfd43117398a091dc2eac49be48",
-          "original_sphere_log_hash": "1b423c75da4cbbd793f1a232a355e630c5d4d8f19afd2cee114b4f75eab6bf3c",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-11T04:28:13.217522"
-        }
-      },
       "game_name_from_filename": "ahit",
       "game_name_from_yaml": "A Hat in Time",
       "generation": {
         "error_count": 1,
         "error_type": null,
-        "processing_time_seconds": 4.73,
+        "processing_time_seconds": 8.29,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/ahit/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -45,7 +33,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 14.74,
+        "processing_time_seconds": 17.24,
         "return_code": 0,
         "sphere_reached": 5.11,
         "success": true,
@@ -53,7 +41,7 @@
         "warning_count": 0
       },
       "template_filename": "A Hat in Time.yaml",
-      "timestamp": "2025-12-11T04:25:39.432480",
+      "timestamp": "2025-12-11T04:49:36.922036",
       "world_info": {
         "exporter_path": "exporter/games/ahit.py",
         "exporter_size": 6156,
