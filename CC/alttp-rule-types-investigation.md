@@ -532,3 +532,269 @@ However, the JavaScript implementations provide:
 ### Test Results
 
 All 5 test seeds pass with 100% sphere coverage after these changes.
+
+---
+
+## Detailed Analysis of Remaining Blacklisted Helpers (December 2025 Update)
+
+This section provides an updated, in-depth analysis of what would be required to fully export the remaining blacklisted helpers as JSON rules.
+
+### Current State Summary
+
+**Blacklisted helpers (3 total):**
+- `can_buy`
+- `can_buy_unlimited`
+- `can_defeat_boss`
+
+**Key Finding: `GanonDefeatRule` is NOT exported as a helper definition**
+
+While the previous analysis indicated `GanonDefeatRule` was exported, examination of the actual `rules.json` shows:
+- `GanonDefeatRule` is **referenced** in rules (as `{"type": "helper", "name": "GanonDefeatRule", "args": []}`)
+- But it is **NOT** in the helpers section (only 25 helpers are exported for player 1)
+- The JavaScript fallback in `alttpLogic.js` is used instead
+
+**Root cause:** The ALTTP handler has `HELPER_MODULES = []` (empty), so the exporter cannot find `GanonDefeatRule` in `worlds/alttp/Bosses.py` even though it's discovered during rule analysis.
+
+---
+
+### 1. `can_buy` and `can_buy_unlimited` - Already Working
+
+**Status:** ✅ Implemented in JavaScript (ruleEngine.js lines 492-523)
+
+**How it works:**
+```javascript
+// In ruleEngine.js
+if (rule.name === 'can_buy' || rule.name === 'can_buy_unlimited') {
+  const itemName = evaluateRule(rule.args[0], context, depth + 1);
+  const shopItems = context.getSetting?.('shop_items');
+  const regionsKey = rule.name === 'can_buy_unlimited' ? 'unlimited' : 'limited';
+  const regions = shopItems[itemName][regionsKey] || [];
+  result = regions.some(regionName => context.isRegionReachable(regionName));
+}
+```
+
+**Data already exported by ALTTP handler:**
+```json
+{
+  "shop_items": {
+    "Blue Potion": {"unlimited": ["Potion Shop"], "limited": ["Potion Shop"]},
+    "Single Arrow": {"unlimited": [], "limited": ["Light World Witch Shop"]}
+  }
+}
+```
+
+**Why export as JSON might not be beneficial:**
+- The JavaScript implementation is well-integrated and tested
+- It uses `context.isRegionReachable()` which handles region-to-region reachability
+- No new rule types are needed - the implementation works correctly
+
+**If JSON export were desired:**
+- New `shop_check` rule type with structure: `{"type": "shop_check", "item": itemName, "unlimited": true/false}`
+- Would need to handle `any()` pattern with region reachability
+
+**Recommendation:** Keep current JavaScript implementation - it works correctly.
+
+---
+
+### 2. `GanonDefeatRule` - Needs Configuration Fix
+
+**Status:** ⚠️ Referenced but not exported (uses JS fallback)
+
+**Issue:** The ALTTP handler has `HELPER_MODULES = []` which prevents auto-discovery of functions in `Bosses.py`.
+
+**The Python function uses only supported patterns:**
+```python
+def GanonDefeatRule(state, player: int) -> bool:
+    if state.multiworld.worlds[player].options.swordless:
+        return state.has('Hammer', player) and \
+               has_fire_source(state, player) and \
+               state.has('Silver Bow', player) and \
+               can_shoot_arrows(state, player)
+    # ... more similar logic
+```
+
+**Fix required (Option A - Add to HELPER_MODULES):**
+```python
+# In exporter/games/alttp.py
+HELPER_MODULES = ['worlds.alttp.Bosses', 'worlds.alttp.StateHelpers']
+```
+
+**Fix required (Option B - Add to whitelist):**
+```python
+# In exporter/games/alttp.py
+HELPERS_TO_EXPORT_WHITELIST = {'GanonDefeatRule'}
+HELPER_MODULES = ['worlds.alttp.Bosses']
+```
+
+**Complexity:** Low - just a configuration change
+
+**Dependencies:** `GanonDefeatRule` calls these helpers (all already exported):
+- `has_fire_source` ✅
+- `can_shoot_arrows` ✅
+- `has_beam_sword` ✅
+- `can_extend_magic` ✅
+
+---
+
+### 3. `can_defeat_boss` - Complex Implementation Required
+
+**Status:** ⚠️ Uses simplified JS fallback
+
+**Current JavaScript implementation:**
+```javascript
+export function can_defeat_boss(snapshot, staticData, locationName, bossType) {
+  // Simplified - just checks if player can kill basic enemies
+  return can_kill_most_things(snapshot, staticData, "1");
+}
+```
+
+**The actual Python logic:**
+```python
+# In worlds/alttp/Bosses.py
+class Boss:
+    def can_defeat(self, state) -> bool:
+        return self.defeat_rule(state, self.player)
+
+# Each boss has a specific defeat rule
+def ArmosKnightsDefeatRule(state, player: int) -> bool:
+    return (has_melee_weapon(state, player) or can_shoot_arrows(state, player) or ...)
+
+def MoldormDefeatRule(state, player: int) -> bool:
+    return has_melee_weapon(state, player)
+
+# ... 10 more boss defeat rules
+```
+
+**What's needed for full implementation:**
+
+1. **Export boss placement data** - Add to `get_settings_data`:
+   ```python
+   def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+       # ... existing code ...
+
+       # Export boss placements
+       boss_placements = {}
+       if hasattr(world, 'dungeons'):
+           for dungeon in world.dungeons.values():
+               if hasattr(dungeon, 'bosses'):
+                   for level, boss in dungeon.bosses.items():
+                       if boss:
+                           key = f"{dungeon.name}:{level}" if level else dungeon.name
+                           boss_placements[key] = boss.name
+       settings_dict['boss_placements'] = boss_placements
+       return settings_dict
+   ```
+
+2. **Export 12 boss defeat rules as helpers** - Add to class:
+   ```python
+   HELPER_MODULES = ['worlds.alttp.Bosses', 'worlds.alttp.StateHelpers']
+   HELPERS_TO_EXPORT_WHITELIST = {
+       'ArmosKnightsDefeatRule', 'LanmolasDefeatRule', 'MoldormDefeatRule',
+       'HelmasaurKingDefeatRule', 'ArrghusDefeatRule', 'MothulaDefeatRule',
+       'BlindDefeatRule', 'KholdstareDefeatRule', 'VitreousDefeatRule',
+       'TrinexxDefeatRule', 'AgahnimDefeatRule', 'GanonDefeatRule'
+   }
+   ```
+
+3. **Update JavaScript implementation:**
+   ```javascript
+   export function can_defeat_boss(snapshot, staticData, locationName, bossType) {
+     const playerSlot = snapshot?.player?.slot || 1;
+     const placements = staticData.settings?.[playerSlot]?.boss_placements;
+
+     // Build location key from locationName and bossType
+     const key = bossType ? `${locationName}:${bossType}` : locationName;
+     const bossName = placements?.[key];
+
+     if (!bossName) {
+       // Fallback for unknown boss locations
+       return can_kill_most_things(snapshot, staticData, "1");
+     }
+
+     // Call the boss-specific defeat rule
+     const defeatRuleName = bossName.replace(/ /g, '') + 'DefeatRule';
+     if (typeof helperFunctions[defeatRuleName] === 'function') {
+       return helperFunctions[defeatRuleName](snapshot, staticData);
+     }
+
+     // Or use the rule engine to evaluate exported helper
+     return snapshot.evaluateRule?.({
+       type: 'helper',
+       name: defeatRuleName,
+       args: []
+     });
+   }
+   ```
+
+**Complexity:** High
+- Need to export boss placement data (varies per seed based on boss shuffle)
+- 12 boss defeat rules need to be exported
+- Each boss defeat rule uses other helpers (`can_extend_magic`, `can_get_good_bee`, etc.)
+- Some boss defeat rules have complex logic (e.g., `ArrghusDefeatRule` requires Hookshot)
+
+**Dependencies on other helpers (all already exported except `can_get_good_bee`):**
+- `has_melee_weapon` ✅
+- `can_shoot_arrows` ✅
+- `can_extend_magic` ✅
+- `can_use_bombs` ✅
+- `can_get_good_bee` ✅
+- `has_sword` ✅
+- `has_fire_source` ✅
+
+---
+
+## Implementation Priority (Updated)
+
+| Helper | Complexity | Blocking Issues | Priority |
+|--------|------------|-----------------|----------|
+| `GanonDefeatRule` | Low | Need to add `HELPER_MODULES` | ⭐ Quick fix |
+| `can_buy` / `can_buy_unlimited` | N/A | Already working | ⭐ No action needed |
+| `can_defeat_boss` + all boss rules | High | Boss placement export + 12 helpers | ⭐⭐⭐ Future work |
+
+### Recommended Next Steps
+
+1. **Quick fix for GanonDefeatRule:**
+   ```python
+   # In exporter/games/alttp.py
+   HELPER_MODULES = ['worlds.alttp.Bosses', 'worlds.alttp.StateHelpers']
+   ```
+   This would also enable exporting all 12 boss defeat rules.
+
+2. **For boss defeat system (future):**
+   - Add `boss_placements` to settings export
+   - Add boss defeat rule names to `HELPERS_TO_EXPORT_WHITELIST`
+   - Update `can_defeat_boss` JavaScript to use exported data
+
+3. **Consider not implementing:**
+   - The JavaScript implementations work correctly
+   - Tests pass with 100% sphere coverage
+   - Full boss defeat logic would add significant complexity for minimal benefit
+
+---
+
+## Configuration Changes Required
+
+To fully export boss-related helpers, update `exporter/games/alttp.py`:
+
+```python
+class ALttPGameExportHandler(BaseGameExportHandler):
+    GAME_NAME = 'A Link to the Past'
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    AUTO_PRESERVE_LARGE_HELPERS = True
+
+    # Add these:
+    HELPER_MODULES = ['worlds.alttp.Bosses', 'worlds.alttp.StateHelpers']
+
+    HELPERS_TO_EXPORT_WHITELIST = {
+        'ArmosKnightsDefeatRule', 'LanmolasDefeatRule', 'MoldormDefeatRule',
+        'HelmasaurKingDefeatRule', 'ArrghusDefeatRule', 'MothulaDefeatRule',
+        'BlindDefeatRule', 'KholdstareDefeatRule', 'VitreousDefeatRule',
+        'TrinexxDefeatRule', 'AgahnimDefeatRule', 'GanonDefeatRule'
+    }
+
+    HELPERS_TO_EXPORT_BLACKLIST = {
+        'can_buy',  # Uses frontend shop_items implementation
+        'can_buy_unlimited',  # Uses frontend shop_items implementation
+        'can_defeat_boss',  # Needs boss placement data + calls individual boss rules
+    }
+```
