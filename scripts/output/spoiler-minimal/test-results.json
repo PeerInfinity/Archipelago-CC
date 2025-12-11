@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-11T01:26:53.632096",
-    "last_updated": "2025-12-11T01:26:53.632103",
+    "last_updated": "2025-12-11T03:21:26.964332",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3730,31 +3730,19 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "c39e604c7dcd34cb676cf8251c2287d3f02c7809ef3148b2d71687c448de7110",
-          "new_sphere_log_hash": "ecfa4479bac210da7e5c3c5983788c11cb83eb43c94338afdded0c7523eb3b92",
-          "original_rules_hash": "c39e604c7dcd34cb676cf8251c2287d3f02c7809ef3148b2d71687c448de7110",
-          "original_sphere_log_hash": "ecfa4479bac210da7e5c3c5983788c11cb83eb43c94338afdded0c7523eb3b92",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-11T01:19:22.225638"
-        }
-      },
       "game_name_from_filename": "tunic",
       "game_name_from_yaml": "TUNIC",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 6.39,
+        "processing_time_seconds": 9.62,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/tunic/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 936498,
+        "size_bytes": 936225,
         "size_mb": 0.89
       },
       "seed": "1",
@@ -3762,7 +3750,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 10.09,
+        "processing_time_seconds": 13.85,
         "return_code": 0,
         "sphere_reached": 5.1,
         "success": true,
@@ -3770,10 +3758,10 @@
         "warning_count": 0
       },
       "template_filename": "TUNIC.yaml",
-      "timestamp": "2025-12-11T01:18:15.984832",
+      "timestamp": "2025-12-11T03:21:03.079138",
       "world_info": {
         "exporter_path": "exporter/games/tunic.py",
-        "exporter_size": 6529,
+        "exporter_size": 2427,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "tunic",

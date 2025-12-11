@@ -23312,42 +23312,64 @@
                                               }
                                             },
                                             "if_true": {
-                                              "type": "list",
-                                              "value": [
+                                              "type": "block",
+                                              "statements": [
                                                 {
-                                                  "type": "binary_op",
-                                                  "left": {
-                                                    "type": "binary_op",
-                                                    "left": {
-                                                      "type": "constant",
-                                                      "value": 1
-                                                    },
-                                                    "op": "+",
-                                                    "right": {
-                                                      "type": "name",
-                                                      "name": "mp_offerings"
-                                                    }
-                                                  },
-                                                  "op": "+",
-                                                  "right": {
+                                                  "type": "assign",
+                                                  "name": "mp_offerings",
+                                                  "value": {
                                                     "type": "state_method",
-                                                    "method": "count_from_list",
+                                                    "method": "count",
                                                     "args": [
                                                       {
                                                         "type": "constant",
-                                                        "value": [
-                                                          "Hero Relic - MP",
-                                                          "Sacred Geometry",
-                                                          "Vintage",
-                                                          "Dusty"
-                                                        ]
+                                                        "value": "MP Offering"
                                                       }
                                                     ]
                                                   }
                                                 },
                                                 {
-                                                  "type": "name",
-                                                  "name": "mp_offerings"
+                                                  "type": "return",
+                                                  "value": {
+                                                    "type": "list",
+                                                    "value": [
+                                                      {
+                                                        "type": "binary_op",
+                                                        "left": {
+                                                          "type": "binary_op",
+                                                          "left": {
+                                                            "type": "constant",
+                                                            "value": 1
+                                                          },
+                                                          "op": "+",
+                                                          "right": {
+                                                            "type": "name",
+                                                            "name": "mp_offerings"
+                                                          }
+                                                        },
+                                                        "op": "+",
+                                                        "right": {
+                                                          "type": "state_method",
+                                                          "method": "count_from_list",
+                                                          "args": [
+                                                            {
+                                                              "type": "constant",
+                                                              "value": [
+                                                                "Hero Relic - MP",
+                                                                "Sacred Geometry",
+                                                                "Vintage",
+                                                                "Dusty"
+                                                              ]
+                                                            }
+                                                          ]
+                                                        }
+                                                      },
+                                                      {
+                                                        "type": "name",
+                                                        "name": "mp_offerings"
+                                                      }
+                                                    ]
+                                                  }
                                                 }
                                               ]
                                             },
@@ -23425,89 +23447,110 @@
                                             }
                                           },
                                           "if_true": {
-                                            "type": "list",
-                                            "value": [
+                                            "type": "block",
+                                            "statements": [
                                               {
-                                                "type": "binary_op",
-                                                "left": {
-                                                  "type": "binary_op",
-                                                  "left": {
-                                                    "type": "helper",
-                                                    "name": "min",
-                                                    "args": [
-                                                      {
-                                                        "type": "constant",
-                                                        "value": 8
-                                                      },
-                                                      {
-                                                        "type": "binary_op",
-                                                        "left": {
-                                                          "type": "binary_op",
-                                                          "left": {
-                                                            "type": "constant",
-                                                            "value": 1
-                                                          },
-                                                          "op": "+",
-                                                          "right": {
-                                                            "type": "name",
-                                                            "name": "def_offerings"
-                                                          }
-                                                        },
-                                                        "op": "+",
-                                                        "right": {
-                                                          "type": "state_method",
-                                                          "method": "count_from_list",
-                                                          "args": [
-                                                            {
-                                                              "type": "constant",
-                                                              "value": [
-                                                                "Hero Relic - DEF",
-                                                                "Secret Legend",
-                                                                "Phonomath"
-                                                              ]
-                                                            }
-                                                          ]
-                                                        }
-                                                      }
-                                                    ]
-                                                  },
-                                                  "op": "+",
-                                                  "right": {
-                                                    "type": "conditional",
-                                                    "test": {
-                                                      "type": "item_check",
-                                                      "item": "Shield"
-                                                    },
-                                                    "if_true": {
+                                                "type": "assign",
+                                                "name": "def_offerings",
+                                                "value": {
+                                                  "type": "state_method",
+                                                  "method": "count",
+                                                  "args": [
+                                                    {
                                                       "type": "constant",
-                                                      "value": 2
-                                                    },
-                                                    "if_false": {
-                                                      "type": "constant",
-                                                      "value": 0
+                                                      "value": "DEF Offering"
                                                     }
-                                                  }
-                                                },
-                                                "op": "+",
-                                                "right": {
-                                                  "type": "conditional",
-                                                  "test": {
-                                                    "type": "item_check",
-                                                    "item": "Hero's Laurels"
-                                                  },
-                                                  "if_true": {
-                                                    "type": "constant",
-                                                    "value": 2
-                                                  },
-                                                  "if_false": {
-                                                    "type": "constant",
-                                                    "value": 0
-                                                  }
+                                                  ]
                                                 }
                                               },
                                               {
-                                                "type": "name",
-                                                "name": "def_offerings"
+                                                "type": "return",
+                                                "value": {
+                                                  "type": "list",
+                                                  "value": [
+                                                    {
+                                                      "type": "binary_op",
+                                                      "left": {
+                                                        "type": "binary_op",
+                                                        "left": {
+                                                          "type": "min",
+                                                          "args": [
+                                                            {
+                                                              "type": "constant",
+                                                              "value": 8
+                                                            },
+                                                            {
+                                                              "type": "binary_op",
+                                                              "left": {
+                                                                "type": "binary_op",
+                                                                "left": {
+                                                                  "type": "constant",
+                                                                  "value": 1
+                                                                },
+                                                                "op": "+",
+                                                                "right": {
+                                                                  "type": "name",
+                                                                  "name": "def_offerings"
+                                                                }
+                                                              },
+                                                              "op": "+",
+                                                              "right": {
+                                                                "type": "state_method",
+                                                                "method": "count_from_list",
+                                                                "args": [
+                                                                  {
+                                                                    "type": "constant",
+                                                                    "value": [
+                                                                      "Hero Relic - DEF",
+                                                                      "Secret Legend",
+                                                                      "Phonomath"
+                                                                    ]
+                                                                  }
+                                                                ]
+                                                              }
+                                                            }
+                                                          ]
+                                                        },
+                                                        "op": "+",
+                                                        "right": {
+                                                          "type": "conditional",
+                                                          "test": {
+                                                            "type": "item_check",
+                                                            "item": "Shield"
+                                                          },
+                                                          "if_true": {
+                                                            "type": "constant",
+                                                            "value": 2
+                                                          },
+                                                          "if_false": {
+                                                            "type": "constant",
+                                                            "value": 0
+                                                          }
+                                                        }
+                                                      },
+                                                      "op": "+",
+                                                      "right": {
+                                                        "type": "conditional",
+                                                        "test": {
+                                                          "type": "item_check",
+                                                          "item": "Hero's Laurels"
+                                                        },
+                                                        "if_true": {
+                                                          "type": "constant",
+                                                          "value": 2
+                                                        },
+                                                        "if_false": {
+                                                          "type": "constant",
+                                                          "value": 0
+                                                        }
+                                                      }
+                                                    },
+                                                    {
+                                                      "type": "name",
+                                                      "name": "def_offerings"
+                                                    }
+                                                  ]
+                                                }
                                               }
                                             ]
                                           },
@@ -23716,8 +23759,7 @@
                                                   "type": "assign",
                                                   "name": "effigy_count",
                                                   "value": {
-                                                    "type": "helper",
-                                                    "name": "min",
+                                                    "type": "min",
                                                     "args": [
                                                       {
                                                         "type": "constant",
@@ -23765,8 +23807,7 @@
                                                       "type": "assign",
                                                       "name": "money_per_break",
                                                       "value": {
-                                                        "type": "helper",
-                                                        "name": "min",
+                                                        "type": "min",
                                                         "args": [
                                                           {
                                                             "type": "constant",
@@ -23845,24 +23886,9 @@
                               "if_false": null
                             },
                             {
-                              "type": "conditional",
-                              "test": {
-                                "type": "compare",
-                                "left": {
-                                  "type": "constant",
-                                  "value": "Swamp"
-                                },
-                                "op": "in",
-                                "right": {
-                                  "type": "name",
-                                  "name": "boss_areas"
-                                }
-                              },
-                              "if_true": {
-                                "type": "name",
-                                "name": "boss_areas"
-                              },
-                              "if_false": {
+                              "type": "assign",
+                              "name": "area_list",
+                              "value": {
                                 "type": "conditional",
                                 "test": {
                                   "type": "compare",
@@ -23873,21 +23899,40 @@
                                   "op": "in",
                                   "right": {
                                     "type": "name",
-                                    "name": "non_boss_areas"
+                                    "name": "boss_areas"
                                   }
                                 },
                                 "if_true": {
                                   "type": "name",
-                                  "name": "non_boss_areas"
+                                  "name": "boss_areas"
                                 },
                                 "if_false": {
-                                  "type": "list",
-                                  "value": [
-                                    {
+                                  "type": "conditional",
+                                  "test": {
+                                    "type": "compare",
+                                    "left": {
                                       "type": "constant",
                                       "value": "Swamp"
+                                    },
+                                    "op": "in",
+                                    "right": {
+                                      "type": "name",
+                                      "name": "non_boss_areas"
                                     }
-                                  ]
+                                  },
+                                  "if_true": {
+                                    "type": "name",
+                                    "name": "non_boss_areas"
+                                  },
+                                  "if_false": {
+                                    "type": "list",
+                                    "value": [
+                                      {
+                                        "type": "constant",
+                                        "value": "Swamp"
+                                      }
+                                    ]
+                                  }
                                 }
                               }
                             },
@@ -28927,17 +28972,7 @@
         "Pages 42-43 (Holy Cross)": 1,
         "Pages 52-53 (Icebolt)": 1,
         "Pages 24-25 (Prayer)": 1
-      },
-      "ability_shuffling": 1,
-      "hexagon_quest": 0,
-      "hexagon_quest_ability_type": 0,
-      "entrance_rando": 0,
-      "shuffle_ladders": 0,
-      "laurels_zips": 0,
-      "ice_grappling": 0,
-      "ladder_storage": 0,
-      "lanternless": 0,
-      "maskless": 0
+      }
     }
   },
   "game_info": {
