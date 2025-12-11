@@ -256,7 +256,7 @@ import { helperFunctions as smHelperFunctions, smStateModule } from './sm/smLogi
 import * as stardewValleyLogic from './stardew_valley/stardewValleyLogic.js';
 import { stardewValleyStateModule } from './stardew_valley/stardewValleyLogic.js';
 import * as terrariaLogic from './terraria/terrariaLogic.js';
-import * as timespinnerLogic from './timespinner/timespinnerLogic.js';
+// timespinnerLogic removed - helpers now exported to rules.json
 import * as twwLogic from './tww/twwLogic.js';
 import * as wargrooveLogic from './wargroove/wargrooveLogic.js';
 import { helperFunctions as yoshisislandHelperFunctions } from './yoshisisland/yoshisislandLogic.js';
@@ -483,8 +483,8 @@ const GAME_REGISTRY = {
     aliases: ['The Legend of Zelda', 'TLoZ', 'TLOZ']
   },
   'Timespinner': {
-    logicModule: timespinnerLogic.timespinnerStateModule,
-    helperFunctions: timespinnerLogic.helperFunctions,
+    logicModule: genericLogic.genericStateModule,
+    // Helper functions and state management now handled generically with rules.json exports
     worldClasses: ['TimespinnerWorld'],
     aliases: ['Timespinner']
   },
