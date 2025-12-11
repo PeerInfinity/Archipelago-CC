@@ -598,9 +598,16 @@ class ASTVisitorMixin:
                                         return {'type': 'and', 'conditions': expanded_conditions}
 
                 # Represent this as a specific 'all_of' rule type
+                # For nested generator expressions, recursively convert inner generators to all_of
+                element_rule = gen_exp['element']
+                if element_rule.get('type') == 'generator_expression':
+                    # Recursively convert nested generator_expression to all_of
+                    element_rule = self._convert_generator_exp_to_all_of(element_rule)
+                    logging.debug(f"all(GeneratorExp): Converted nested generator_expression to all_of")
+
                 result = {
                     'type': 'all_of',
-                    'element_rule': gen_exp['element'],
+                    'element_rule': element_rule,
                     'iterator_info': iterator_info
                 }
                 logging.debug(f"Created 'all_of' result: {result}")
@@ -761,9 +768,16 @@ class ASTVisitorMixin:
                                         return {'type': 'or', 'conditions': expanded_conditions}
 
                 # If we couldn't resolve, represent this as a specific 'any_of' rule type
+                # For nested generator expressions, recursively convert inner generators to any_of
+                element_rule = gen_exp['element']
+                if element_rule.get('type') == 'generator_expression':
+                    # Recursively convert nested generator_expression to any_of
+                    element_rule = self._convert_generator_exp_to_any_of(element_rule)
+                    logging.debug(f"any(GeneratorExp): Converted nested generator_expression to any_of")
+
                 result = {
                     'type': 'any_of',
-                    'element_rule': gen_exp['element'],
+                    'element_rule': element_rule,
                     'iterator_info': iterator_info
                 }
                 logging.debug(f"Created 'any_of' result: {result}")
@@ -1578,6 +1592,19 @@ class ASTVisitorMixin:
                             list_value = list(resolved_attr) if isinstance(resolved_attr, tuple) else resolved_attr
                             logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} to list: {list_value}")
                             return {'type': 'constant', 'value': list_value}
+                        elif isinstance(resolved_attr, dict):
+                            # Handle dict values - convert keys to list for iteration purposes
+                            # When iterating over a dict in Python, we iterate over its keys
+                            # For nested comprehensions like "for sub_ingredient in custom_recipe.ingredients"
+                            # we need to return the keys as a list for the frontend to iterate
+                            keys_list = list(resolved_attr.keys())
+                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} (dict) to keys list: {keys_list}")
+                            return {'type': 'constant', 'value': keys_list}
+                        elif isinstance(resolved_attr, (set, frozenset)):
+                            # Handle set/frozenset values - convert to list for JSON serialization
+                            list_value = list(resolved_attr)
+                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} (set) to list: {list_value}")
+                            return {'type': 'constant', 'value': list_value}
                     except AttributeError:
                         # If attribute doesn't exist, fall through to normal processing
                         logging.debug(f"visit_Attribute: Could not directly resolve {var_name}.{attr_name}")
@@ -2235,34 +2262,80 @@ class ASTVisitorMixin:
             return None
 
     def visit_GeneratorExp(self, node: ast.GeneratorExp):
-        """ Handle generator expressions. """
+        """ Handle generator expressions, including nested comprehensions.
+
+        For nested comprehensions like:
+            f(x, y) for x in A for y in B[x]
+
+        This is semantically equivalent to:
+            (f(x, y) for y in B[x]) for x in A
+
+        We transform this into nested generator_expression structures where
+        the inner generators become the element of outer generators.
+        """
         try:
-            logging.debug(f"\n--- visit_GeneratorExp ---")
+            logging.debug(f"\n--- visit_GeneratorExp --- (generators: {len(node.generators)})")
+
             # Analyze the element expression
             elt_result = self.visit(node.elt)
             if elt_result is None:
                 logging.error(f"Failed to analyze element expression in GeneratorExp: {ast.dump(node.elt)}")
                 return None
 
-            # Analyze the comprehension generators
-            # NOTE: Currently only supports one comprehension generator like `for target in iter`
-            if len(node.generators) != 1:
-                logging.error(f"Unsupported number of generators in GeneratorExp: {len(node.generators)}")
-                return None
+            # Handle single generator (simple case)
+            if len(node.generators) == 1:
+                comprehension_result = self.visit(node.generators[0])
+                if comprehension_result is None:
+                    logging.error(f"Failed to analyze comprehension in GeneratorExp")
+                    return None
 
-            comprehension_result = self.visit(node.generators[0])
-            if comprehension_result is None:
-                 logging.error(f"Failed to analyze comprehension in GeneratorExp")
-                 return None
+                return {
+                    'type': 'generator_expression',
+                    'element': elt_result,
+                    'comprehension': comprehension_result
+                }
 
-            # Combine results into a dedicated type
-            return {
-                'type': 'generator_expression',
-                'element': elt_result,
-                'comprehension': comprehension_result
-            }
+            # Handle multiple generators (nested comprehensions)
+            # Process from innermost (last) to outermost (first)
+            # e.g., for "f(x,y) for x in A for y in B[x]":
+            #   - Start with innermost: element=f(x,y), comprehension=for y in B[x]
+            #   - Wrap with outer: element=inner_gen_exp, comprehension=for x in A
+            logging.debug(f"Processing nested comprehension with {len(node.generators)} generators")
+
+            # Analyze all comprehension generators first
+            comprehension_results = []
+            for i, gen in enumerate(node.generators):
+                comp_result = self.visit(gen)
+                if comp_result is None:
+                    logging.error(f"Failed to analyze comprehension {i} in nested GeneratorExp")
+                    return None
+                comprehension_results.append(comp_result)
+                logging.debug(f"  Generator {i}: target={comp_result.get('target')}, iterator type={comp_result.get('iterator', {}).get('type')}")
+
+            # Build nested structure from inside out
+            # Start with the innermost generator and the original element
+            current_element = elt_result
+
+            # Process generators in reverse order (innermost first)
+            for i in range(len(comprehension_results) - 1, -1, -1):
+                current_element = {
+                    'type': 'generator_expression',
+                    'element': current_element,
+                    'comprehension': comprehension_results[i]
+                }
+                logging.debug(f"  Built nested level {len(comprehension_results) - i}: comprehension target={comprehension_results[i].get('target')}")
+
+            # The outermost wrapper is our final result
+            # But we need to unwrap one level since the loop creates one extra wrapper
+            # Actually, let me reconsider - we want the structure to be:
+            # gen_exp(element=gen_exp(element=f(x,y), comp=for y in B[x]), comp=for x in A)
+
+            # The current_element after the loop IS the correctly nested structure
+            logging.debug(f"Nested GeneratorExp complete: {len(node.generators)} levels")
+            return current_element
+
         except Exception as e:
-            logging.error("Error in visit_GeneratorExp", e)
+            logging.error(f"Error in visit_GeneratorExp: {e}")
             return None
 
     def visit_comprehension(self, node: ast.comprehension):
@@ -2770,6 +2843,78 @@ class ASTVisitorMixin:
             'name': target_var,
             'value': conditional_value
         }
+
+    def _convert_generator_exp_to_all_of(self, gen_exp: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert a generator_expression to an all_of rule structure.
+
+        This is used to handle nested comprehensions like:
+            all(f(x, y) for x in A for y in B[x])
+
+        Which becomes nested all_of structures:
+            all_of(element=all_of(element=f(x,y), iterator=B[x]), iterator=A)
+
+        Args:
+            gen_exp: A generator_expression rule structure
+
+        Returns:
+            An all_of rule structure
+        """
+        if gen_exp.get('type') != 'generator_expression':
+            logging.warning(f"_convert_generator_exp_to_all_of: Expected generator_expression, got {gen_exp.get('type')}")
+            return gen_exp
+
+        element_rule = gen_exp.get('element')
+        comprehension = gen_exp.get('comprehension')
+
+        # Recursively convert nested generator_expressions
+        if element_rule and element_rule.get('type') == 'generator_expression':
+            element_rule = self._convert_generator_exp_to_all_of(element_rule)
+            logging.debug(f"_convert_generator_exp_to_all_of: Recursively converted nested generator_expression")
+
+        result = {
+            'type': 'all_of',
+            'element_rule': element_rule,
+            'iterator_info': comprehension
+        }
+        logging.debug(f"_convert_generator_exp_to_all_of: Created all_of with iterator target={comprehension.get('target')}")
+        return result
+
+    def _convert_generator_exp_to_any_of(self, gen_exp: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert a generator_expression to an any_of rule structure.
+
+        This is used to handle nested comprehensions like:
+            any(f(x, y) for x in A for y in B[x])
+
+        Which becomes nested any_of structures:
+            any_of(element=any_of(element=f(x,y), iterator=B[x]), iterator=A)
+
+        Args:
+            gen_exp: A generator_expression rule structure
+
+        Returns:
+            An any_of rule structure
+        """
+        if gen_exp.get('type') != 'generator_expression':
+            logging.warning(f"_convert_generator_exp_to_any_of: Expected generator_expression, got {gen_exp.get('type')}")
+            return gen_exp
+
+        element_rule = gen_exp.get('element')
+        comprehension = gen_exp.get('comprehension')
+
+        # Recursively convert nested generator_expressions
+        if element_rule and element_rule.get('type') == 'generator_expression':
+            element_rule = self._convert_generator_exp_to_any_of(element_rule)
+            logging.debug(f"_convert_generator_exp_to_any_of: Recursively converted nested generator_expression")
+
+        result = {
+            'type': 'any_of',
+            'element_rule': element_rule,
+            'iterator_info': comprehension
+        }
+        logging.debug(f"_convert_generator_exp_to_any_of: Created any_of with iterator target={comprehension.get('target')}")
+        return result
 
     def _substitute_variable_in_rule(self, rule: Dict[str, Any], var_name: str, value: Any) -> Optional[Dict[str, Any]]:
         """
