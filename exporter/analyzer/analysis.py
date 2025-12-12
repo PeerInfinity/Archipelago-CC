@@ -14,7 +14,10 @@ from typing import Optional, Callable, Dict, Any
 from .rule_analyzer import RuleAnalyzer
 from .source_extraction import _clean_source
 from .utils import make_json_serializable
+from exporter.constants import MAX_ANALYZE_RULE_CALLS
 
+# Global counter for detecting infinite loops
+_analyze_rule_call_count = 0
 
 def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
                  closure_vars: Optional[Dict[str, Any]] = None,
@@ -44,6 +47,11 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
     Returns:
         A dictionary representing the structured rule, or an error structure.
     """
+    global _analyze_rule_call_count
+    _analyze_rule_call_count += 1
+    if _analyze_rule_call_count > MAX_ANALYZE_RULE_CALLS:
+        raise RuntimeError(f"analyze_rule called {_analyze_rule_call_count} times - likely infinite loop. Context: {context_info}")
+
     logging.debug("\n--- Starting Rule Analysis ---")
 
     # Initialize seen_funcs dict if not provided

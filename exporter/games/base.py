@@ -15,6 +15,8 @@ import importlib
 import inspect
 import logging
 
+from exporter.constants import MAX_RULE_EXPANSION_DEPTH, MAX_HELPER_DISCOVERY_ITERATIONS
+
 logger = logging.getLogger(__name__)
 
 
@@ -233,26 +235,31 @@ class BaseGameExportHandler:
 
         return count
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Recursively expand helper functions in a rule structure."""
+        if _depth > MAX_RULE_EXPANSION_DEPTH:
+            logging.error(f"Rule expansion exceeded maximum depth ({MAX_RULE_EXPANSION_DEPTH}). "
+                         f"This likely indicates a circular helper reference. Rule type: {rule.get('type') if rule else 'None'}")
+            return {'type': 'error', 'message': f'Max expansion depth ({MAX_RULE_EXPANSION_DEPTH}) exceeded'}
+
         if not rule or not isinstance(rule, dict):
             return rule
-            
+
         if rule.get('type') == 'helper':
             expanded = self.expand_helper(rule['name'], rule.get('args', []))
             if expanded:
-                return self.expand_rule(expanded)
-            
+                return self.expand_rule(expanded, _depth + 1)
+
         if rule.get('type') in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond) for cond in rule.get('conditions', [])]
-            
+            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
+
         if rule.get('type') == 'not':
-            rule['condition'] = self.expand_rule(rule.get('condition'))
+            rule['condition'] = self.expand_rule(rule.get('condition'), _depth + 1)
         if rule.get('type') == 'conditional':
-            rule['test'] = self.expand_rule(rule.get('test'))
-            rule['if_true'] = self.expand_rule(rule.get('if_true'))
-            rule['if_false'] = self.expand_rule(rule.get('if_false'))
-            
+            rule['test'] = self.expand_rule(rule.get('test'), _depth + 1)
+            rule['if_true'] = self.expand_rule(rule.get('if_true'), _depth + 1)
+            rule['if_false'] = self.expand_rule(rule.get('if_false'), _depth + 1)
+
         return rule
         
     def expand_helper(self, helper_name: str, args: List[Any] = None) -> Dict[str, Any]:
@@ -760,9 +767,8 @@ class BaseGameExportHandler:
         # When analyzing a helper, it may call other helpers which get registered
         # Keep iterating until no new helpers are discovered
         processed_helpers: Set[str] = set()
-        max_iterations = 10  # Safety limit to prevent infinite loops
 
-        for iteration in range(max_iterations):
+        for iteration in range(MAX_HELPER_DISCOVERY_ITERATIONS):
             # Get current set of helpers to export (may grow as we discover new ones)
             # Include auto-preserved helpers in each iteration (they may grow too)
             auto_preserved = self._auto_preserved_helpers if hasattr(self, '_auto_preserved_helpers') else set()
@@ -865,6 +871,38 @@ class BaseGameExportHandler:
                         'body': {'type': 'name', 'name': 'value'}
                     }
                     continue
+
+                # Check if function has dynamic for loops - if so, skip analysis
+                # These functions iterate over runtime data and can't be statically analyzed
+                try:
+                    import ast as _ast
+                    source = inspect.getsource(helper_func)
+                    tree = _ast.parse(source)
+                    has_dynamic_loops = False
+                    for node in _ast.walk(tree):
+                        if isinstance(node, _ast.For):
+                            # Check if iterator is a method call like .keys(), .values(), .items()
+                            if isinstance(node.iter, _ast.Call):
+                                if isinstance(node.iter.func, _ast.Attribute):
+                                    method_name = node.iter.func.attr
+                                    if method_name in ('keys', 'values', 'items'):
+                                        has_dynamic_loops = True
+                                        break
+                            # Check if iterator is a name (variable) - likely dynamic
+                            elif isinstance(node.iter, _ast.Name):
+                                has_dynamic_loops = True
+                                break
+                    if has_dynamic_loops:
+                        logger.warning(f"Helper '{helper_name}' has dynamic for loops - cannot export definition (frontend must implement)")
+                        # Export as unsupported - frontend will need a native implementation
+                        helper_definitions[helper_name] = {
+                            'type': 'error',
+                            'message': f'Helper {helper_name} has dynamic for loops and cannot be statically analyzed',
+                            'requires_native_impl': True
+                        }
+                        continue
+                except Exception as e:
+                    logger.debug(f"Could not check for dynamic loops in helper '{helper_name}': {e}")
 
                 # Analyze the function to get its rule structure
                 # This may discover new helpers via register_helper_usage

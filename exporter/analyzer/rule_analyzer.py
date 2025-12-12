@@ -13,6 +13,7 @@ from typing import Dict, Any, Optional, Callable
 from .expression_resolver import ExpressionResolver
 from .binary_ops import BinaryOpProcessor
 from .ast_visitors import ASTVisitorMixin
+from exporter.constants import MAX_ANALYZER_OPERATIONS
 
 
 class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
@@ -55,11 +56,24 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
         self.debug_log = []
         self.error_log = []
 
+        # Operation counter to detect infinite loops
+        self.operation_count = 0
+
         # Initialize helper components
         self.expression_resolver = ExpressionResolver(
             self.closure_vars, self.rule_func, self.player_context
         )
         self.binary_op_processor = BinaryOpProcessor(self.expression_resolver, self.game_handler)
+
+    def visit(self, node):
+        """Override visit to add operation counting and loop detection."""
+        self.operation_count += 1
+        if self.operation_count > MAX_ANALYZER_OPERATIONS:
+            raise RuntimeError(
+                f"Rule analysis exceeded maximum operations ({MAX_ANALYZER_OPERATIONS}). "
+                f"This likely indicates an infinite loop in rule expansion."
+            )
+        return super().visit(node)
 
     def log_debug(self, message: str):
         """

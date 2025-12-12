@@ -376,6 +376,40 @@ class ASTVisitorMixin:
                     # Recursive analysis logic for lambda default parameters (only if not preserving as helper)
                     if not should_preserve:
                         try:
+                            # Helper function to check if a function contains for loops over dynamic data
+                            def has_dynamic_for_loops_resolved(func):
+                                """Check if a function's body contains for loops over non-constant iterables."""
+                                try:
+                                    import inspect
+                                    source = inspect.getsource(func)
+                                    tree = ast.parse(source)
+                                    for n in ast.walk(tree):
+                                        if isinstance(n, ast.For):
+                                            # Check if iterator is a method call like .keys(), .values(), .items()
+                                            if isinstance(n.iter, ast.Call):
+                                                if isinstance(n.iter.func, ast.Attribute):
+                                                    method_name = n.iter.func.attr
+                                                    if method_name in ('keys', 'values', 'items'):
+                                                        return True
+                                            # Check if iterator is a name (variable)
+                                            elif isinstance(n.iter, ast.Name):
+                                                return True
+                                    return False
+                                except Exception:
+                                    return False
+
+                            # Check if function has dynamic for loops - if so, preserve as helper
+                            resolved_func_name = getattr(resolved_func, '__name__', func_name)
+                            if has_dynamic_for_loops_resolved(resolved_func):
+                                logging.debug(f"Function {resolved_func_name} has dynamic for loops, preserving as helper")
+                                if hasattr(self.game_handler, 'register_helper_usage'):
+                                    self.game_handler.register_helper_usage(resolved_func_name, resolved_func)
+                                return {
+                                    'type': 'helper',
+                                    'name': resolved_func_name,
+                                    'args': filtered_args
+                                }
+
                             # Check if 'state' is passed as an argument using original AST nodes
                             has_state_arg = any(isinstance(arg, ast.Name) and arg.id == 'state' for arg in node.args)
                             # Attempt recursion if state arg is present
@@ -461,6 +495,31 @@ class ASTVisitorMixin:
 
                  # --- Recursive analysis logic (enhanced for multiline lambdas) ---
                  try:
+                     # Helper function to check if a function contains for loops over dynamic data
+                     def has_dynamic_for_loops(func):
+                         """Check if a function's body contains for loops over non-constant iterables."""
+                         try:
+                             import inspect
+                             source = inspect.getsource(func)
+                             tree = ast.parse(source)
+                             for node in ast.walk(tree):
+                                 if isinstance(node, ast.For):
+                                     # Check if iterator is a method call like .keys(), .values(), .items()
+                                     if isinstance(node.iter, ast.Call):
+                                         if isinstance(node.iter.func, ast.Attribute):
+                                             method_name = node.iter.func.attr
+                                             if method_name in ('keys', 'values', 'items'):
+                                                 logging.debug(f"Function has for loop over .{method_name}()")
+                                                 return True
+                                     # Check if iterator is a name (variable) that's not a constant
+                                     elif isinstance(node.iter, ast.Name):
+                                         # Could be iterating over a variable - likely dynamic
+                                         logging.debug(f"Function has for loop over variable: {node.iter.id}")
+                                         return True
+                             return False
+                         except Exception:
+                             return False
+
                      # Helper function to check if an AST node references 'state'
                      def references_state(node):
                          """Check if an AST node references the name 'state' anywhere."""
@@ -477,6 +536,17 @@ class ASTVisitorMixin:
                              if isinstance(child, ast.Name) and child.id == 'state':
                                  return True
                          return False
+
+                     # Check if function has dynamic for loops - if so, preserve as helper
+                     if has_dynamic_for_loops(actual_func):
+                         logging.debug(f"Function {closure_func_name} has dynamic for loops, preserving as helper")
+                         if hasattr(self.game_handler, 'register_helper_usage'):
+                             self.game_handler.register_helper_usage(closure_func_name, actual_func)
+                         return {
+                             'type': 'helper',
+                             'name': closure_func_name,
+                             'args': filtered_args
+                         }
 
                      # Check if 'state' is passed as an argument (directly or indirectly)
                      has_state_arg = any(references_state(arg) for arg in node.args)
@@ -2889,6 +2959,23 @@ class ASTVisitorMixin:
             elif isinstance(node, ast.Continue):
                 # Continue statement - skip to next iteration
                 return {'type': 'continue'}
+            elif isinstance(node, ast.Pass):
+                # Pass statement - explicit no-op, safe to ignore
+                return None
+            elif isinstance(node, ast.AnnAssign):
+                # Annotated assignment (e.g., x: int = 5)
+                if isinstance(node.target, ast.Name):
+                    var_name = node.target.id
+                    if node.value is not None:
+                        value_result = self.visit(node.value)
+                        if value_result is not None:
+                            return {
+                                'type': 'assign',
+                                'name': var_name,
+                                'value': value_result
+                            }
+                # If no value or failed to analyze, just ignore (type annotation only)
+                return None
             else:
                 logging.warning(f"visit_statement: Unsupported statement type: {type(node).__name__}")
                 return None

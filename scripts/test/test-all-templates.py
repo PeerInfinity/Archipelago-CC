@@ -228,6 +228,12 @@ def main():
         help='When a multiworld test fails, run bisection tests to find which specific template pair causes the failure'
     )
     parser.add_argument(
+        '--retry-failed-players',
+        type=int,
+        default=0,
+        help='Number of times to retry a failed multiworld player test (default: 0). Tests that pass on retry are recorded as intermittent failures.'
+    )
+    parser.add_argument(
         '--multiworld-second-pass',
         action='store_true',
         help='After first pass completes, run a second pass to retest templates that were tested with fewer than max_templates players'
@@ -362,6 +368,14 @@ def main():
         print("Error: --multiworld-second-pass can only be used with --multiworld")
         sys.exit(1)
 
+    if args.retry_failed_players and not args.multiworld:
+        print("Error: --retry-failed-players can only be used with --multiworld")
+        sys.exit(1)
+
+    if args.retry_failed_players and args.retry_failed_players < 0:
+        print("Error: --retry-failed-players must be a non-negative integer")
+        sys.exit(1)
+
     if args.multitemplate and not args.templates_dir:
         print("Error: --multitemplate requires --templates-dir to be specified")
         sys.exit(1)
@@ -392,6 +406,11 @@ def main():
 
     if args.retest_seed_specific and not args.retest:
         print("Error: --retest-seed-specific can only be used with --retest")
+        sys.exit(1)
+
+    if args.retest and args.multiworld:
+        print("Error: --retest cannot be used with --multiworld")
+        print("For multiworld tests, use --retry-failed-players instead to retry failed player tests immediately.")
         sys.exit(1)
 
     if args.retest_seed_specific and args.seed_range:
@@ -1201,7 +1220,8 @@ def main():
                         require_prerequisites=not args.multiworld_skip_prerequisites,
                         include_error_details=args.include_error_details,
                         max_templates=args.multiworld_max_templates,
-                        dry_run=args.dry_run
+                        dry_run=args.dry_run,
+                        retry_failed_players=args.retry_failed_players
                     )
                 else:
                     # Single seed in multiworld mode
@@ -1215,7 +1235,8 @@ def main():
                         require_prerequisites=not args.multiworld_skip_prerequisites,
                         include_error_details=args.include_error_details,
                         max_templates=args.multiworld_max_templates,
-                        dry_run=args.dry_run
+                        dry_run=args.dry_run,
+                        retry_failed_players=args.retry_failed_players
                     )
 
                 # After multiworld test, synchronize player count with actual templates in directory
@@ -1474,7 +1495,8 @@ def main():
                         include_error_details=args.include_error_details,
                         max_templates=args.multiworld_max_templates,
                         dry_run=args.dry_run,
-                        is_second_pass=True
+                        is_second_pass=True,
+                        retry_failed_players=args.retry_failed_players
                     )
 
                     # Store second pass result

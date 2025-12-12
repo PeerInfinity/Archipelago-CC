@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2025-12-12 03:45:27
+**Generated:** 2025-12-11 19:22:50
 
-**Source Data Created:** 2025-12-12T03:45:26.744378
+**Source Data Created:** 2025-12-12T01:51:25.286643
 
-**Source Data Last Updated:** 2025-12-12T03:45:26.744384
+**Source Data Last Updated:** 2025-12-12T01:51:25.286648
 
 ## Summary
 
 - **Total Games:** 76
-- **Passed:** 75 (98.7%)
-- **Failed:** 1 (1.3%)
-- **Games with Intermittent Failures:** 1
-- **Total Intermittent Failures:** 1
+- **Passed:** 74 (97.4%)
+- **Failed:** 2 (2.6%)
+- **Games with Intermittent Failures:** 0
+- **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 29/75 (38.7% of passed)
-- **Passing with Generic Logic:** 54/75 (72.0% of passed)
-- **Passing with Both Generic:** 29/75 (38.7% of passed)
+- **Passing with Generic Exporter:** 29/74 (39.2% of passed)
+- **Passing with Generic Logic:** 52/74 (70.3% of passed)
+- **Passing with Both Generic:** 29/74 (39.2% of passed)
 
 ## Test Results
 
@@ -59,7 +59,7 @@
 | Inscryption | ✅ Passed | 0 | 10.2 | 10.2 | 🟢 Complete | 8.0KB | ✅ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | 14.1 | 14.1 | 🟢 Complete | 16.8KB | 4.6KB |
 | Kingdom Hearts | ✅ Passed | 0 | 10.8 | 10.8 | 🟢 Complete | 58.4KB | 5.4KB |
-| Kingdom Hearts 2 | ✅ Passed | 0 | 15.2 | 15.2 | 🟢 Complete | 15.5KB | 105.3KB |
+| Kingdom Hearts 2 | ❌ Failed | 21 | 15.2 | 15.2 | 🟡 100.0% | 15.5KB | 105.3KB |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | 11.3 | 11.3 | 🟢 Complete | 9.7KB | 15.7KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 16.4KB | ✅ |
 | Lingo | ✅ Passed | 0 | 6.12 | 6.12 | 🟢 Complete | 32.9KB | 10.7KB |
@@ -85,7 +85,7 @@
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.18 | 7.18 | 🟢 Complete | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | 0 | 15.14 | 15.14 | 🟢 Complete | 19.7KB | 86.3KB |
 | Stardew Valley | ✅ Passed | 0 | 44.2 | 44.2 | 🟢 Complete | 15.9KB | 10.7KB |
-| Subnautica | ❌ Failed | 0 | 0.6 | 6.1 | 🟠 9.8% | 2.3KB | 14.7KB |
+| Subnautica | ❌ Failed | 0 | 0 | 6.1 | 🔴 0.0% | 2.3KB | 14.7KB |
 | Super Mario 64 | ✅ Passed | 0 | 5.5 | 5.5 | 🟢 Complete | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 13.8KB | 4.9KB |
 | Super Mario World | ✅ Passed | 0 | 8.12 | 8.12 | 🟢 Complete | ✅ | ✅ |
@@ -106,15 +106,6 @@
 | Yacht Dice | ✅ Passed | 0 | 21.1 | 21.1 | 🟢 Complete | 1.6KB | 285.0KB |
 | Yoshi's Island | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | 10.8KB | ✅ |
 | shapez | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ✅ |
-
-## Intermittent Failures
-
-These seeds were previously failing but passed during a retest run:
-
-| Template | Seed | Timestamp | Notes |
-|----------|------|-----------|-------|
-| Stardew Valley | 1 | 2025-12-12 03:44 | Previously failed, now passing |
-
 
 ## Notes
 

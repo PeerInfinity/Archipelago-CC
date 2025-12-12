@@ -632,7 +632,8 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
                             keep_templates: bool = False, test_all_players: bool = False,
                             require_prerequisites: bool = True,
                             include_error_details: bool = False, max_templates: int = 10,
-                            dry_run: bool = False, is_second_pass: bool = False) -> Dict:
+                            dry_run: bool = False, is_second_pass: bool = False,
+                            retry_failed_players: int = 0) -> Dict:
     """
     Test a single template in multiworld mode.
 
@@ -662,6 +663,7 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
         dry_run: If True, show what would be done without making changes (default: False)
         is_second_pass: If True, this is a second pass retest (template already in multiworld,
                         skip adding, just test the player at its alphabetical position)
+        retry_failed_players: Number of times to retry a failed player test (default: 0)
 
     Returns:
         Dictionary with test results
@@ -705,7 +707,8 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
             'players_failed': 0,
             'first_failure_player': None,
             'player_results': {},
-            'processing_time_seconds': 0
+            'processing_time_seconds': 0,
+            'intermittent_failures': []  # Players that failed initially but passed on retry
         }
     }
 
@@ -1025,10 +1028,9 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
     test_start_time = time.time()
     all_players_passed = True
 
-    # Test the appropriate players
-    for player_num in players_to_test:
-        print(f"\n  Testing Player {player_num}...")
-
+    # Helper function to run a single player test
+    def run_player_test(player_num: int) -> dict:
+        """Run spoiler test for a single player and return the result."""
         # Use npm run test:headed if --headed flag is set
         if headed:
             spoiler_cmd = ["npm", "run", "test:headed", "--mode=test-spoilers",
@@ -1092,25 +1094,67 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
             'pass_fail': pass_fail,
             'error_count': test_error_count,
             'warning_count': test_warning_count,
-            # 'first_error_line': test_first_error,  # Disabled by default, use --include-error-details to enable
-            # 'first_warning_line': test_first_warning  # Disabled by default, use --include-error-details to enable
         }
 
         if include_error_details:
             player_result['first_error_line'] = test_first_error
             player_result['first_warning_line'] = test_first_warning
 
+        return player_result
+
+    # Test the appropriate players
+    for player_num in players_to_test:
+        print(f"\n  Testing Player {player_num}...")
+
+        # Run the initial test
+        player_result = run_player_test(player_num)
+        attempt = 1
+
+        # If test failed and retries are enabled, retry
+        if not player_result['passed'] and retry_failed_players > 0:
+            initial_sphere_reached = player_result['sphere_reached']
+            initial_total_spheres = player_result['total_spheres']
+            print(f"    Player {player_num}: FAIL (sphere {initial_sphere_reached}/{initial_total_spheres}) - will retry up to {retry_failed_players} time(s)")
+
+            for retry_num in range(1, retry_failed_players + 1):
+                print(f"    Retry {retry_num}/{retry_failed_players} for Player {player_num}...")
+                player_result = run_player_test(player_num)
+                attempt = retry_num + 1
+
+                if player_result['passed']:
+                    # Test passed on retry - record as intermittent failure
+                    print(f"    Player {player_num}: PASS on retry {retry_num} (sphere {player_result['sphere_reached']}/{player_result['total_spheres']})")
+                    result['multiworld_test']['intermittent_failures'].append({
+                        'player_number': player_num,
+                        'initial_sphere_reached': initial_sphere_reached,
+                        'initial_total_spheres': initial_total_spheres,
+                        'passed_on_attempt': attempt,
+                        'final_sphere_reached': player_result['sphere_reached'],
+                        'final_total_spheres': player_result['total_spheres']
+                    })
+                    # Mark the player result as having been an intermittent failure
+                    player_result['was_intermittent_failure'] = True
+                    player_result['passed_on_attempt'] = attempt
+                    break
+                else:
+                    print(f"    Player {player_num}: Still FAIL on retry {retry_num} (sphere {player_result['sphere_reached']}/{player_result['total_spheres']})")
+
+        # Store the final result
+        player_result['total_attempts'] = attempt
         result['multiworld_test']['player_results'][f'player_{player_num}'] = player_result
 
         if player_result['passed']:
             result['multiworld_test']['players_passed'] += 1
-            print(f"    Player {player_num}: PASS (sphere {sphere_reached}/{total_spheres})")
+            if attempt == 1:
+                print(f"    Player {player_num}: PASS (sphere {player_result['sphere_reached']}/{player_result['total_spheres']})")
+            # else: already printed the pass message in the retry loop
         else:
             result['multiworld_test']['players_failed'] += 1
             all_players_passed = False
             if result['multiworld_test']['first_failure_player'] is None:
                 result['multiworld_test']['first_failure_player'] = player_num
-            print(f"    Player {player_num}: FAIL (sphere {sphere_reached}/{total_spheres})")
+            if attempt == 1:
+                print(f"    Player {player_num}: FAIL (sphere {player_result['sphere_reached']}/{player_result['total_spheres']})")
 
     test_end_time = time.time()
     test_processing_time = round(test_end_time - test_start_time, 2)
