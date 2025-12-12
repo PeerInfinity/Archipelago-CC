@@ -1567,8 +1567,12 @@ class ASTVisitorMixin:
         - state.multiworld.worlds[player].options.<setting>
         - state.multiworld.worlds[player].<attr>
         - state.multiworld.worlds[player].<attr1>.<attr2> (nested like difficulty_requirements.progressive_bottle_limit)
+        - self.world.options.<setting> (class-based helpers like KH2)
 
         Returns the setting path as a dot-separated string if matched, None otherwise.
+
+        IMPORTANT: Does NOT match patterns ending with .value (e.g., self.world.options.X.value)
+        Those should be resolved by closure_vars to get the actual integer value.
         """
         if not isinstance(node, ast.Attribute):
             return None
@@ -1577,28 +1581,47 @@ class ASTVisitorMixin:
         attrs = [node.attr]
         current = node.value
 
-        # Walk up the attribute chain until we hit the worlds[player] subscript
+        # Walk up the attribute chain until we hit the worlds[player] subscript or self.world
         while isinstance(current, ast.Attribute):
             attrs.append(current.attr)
             current = current.value
 
-        # Check if we've reached the world player subscript
-        if not self._is_world_player_subscript(current):
-            return None
-
         # Reverse to get top-down order
         attrs.reverse()
 
-        # Handle different patterns:
-        # - ['options', 'setting_name'] -> 'setting_name'
-        # - ['attr_name'] -> 'attr_name'
-        # - ['difficulty_requirements', 'progressive_bottle_limit'] -> 'difficulty_requirements.progressive_bottle_limit'
-        if attrs[0] == 'options' and len(attrs) >= 2:
-            # Remove 'options' prefix for .options.<setting> pattern
-            return '.'.join(attrs[1:])
-        else:
-            # Direct attribute or nested attribute
-            return '.'.join(attrs)
+        # Check if we've reached the world player subscript (state.multiworld.worlds[player])
+        if self._is_world_player_subscript(current):
+            # Handle different patterns:
+            # - ['options', 'setting_name'] -> 'setting_name'
+            # - ['attr_name'] -> 'attr_name'
+            # - ['difficulty_requirements', 'progressive_bottle_limit'] -> 'difficulty_requirements.progressive_bottle_limit'
+            if attrs[0] == 'options' and len(attrs) >= 2:
+                # Remove 'options' prefix for .options.<setting> pattern
+                return '.'.join(attrs[1:])
+            else:
+                # Direct attribute or nested attribute
+                return '.'.join(attrs)
+
+        # Check for self.world.options.<setting> pattern
+        # This handles class-based helpers like KH2's level_locking_unlock
+        # AST: self.world.options.Promise_Charm
+        # attrs would be: ['world', 'options', 'Promise_Charm']
+        # current would be: Name(id='self')
+        #
+        # IMPORTANT: Do NOT match if the pattern ends with '.value'
+        # e.g., self.world.options.LuckyEmblemsRequired.value should NOT match
+        # because the .value accessor should be resolved via closure_vars to get
+        # the actual integer value, not create a setting_value lookup.
+        if isinstance(current, ast.Name) and current.id == 'self':
+            # Check for self.world.options.<setting> pattern
+            if len(attrs) >= 3 and attrs[0] == 'world' and attrs[1] == 'options':
+                # Do NOT match if pattern ends with .value - let closure_vars resolve it
+                if attrs[-1] == 'value':
+                    return None
+                # Return the setting name (everything after 'options')
+                return '.'.join(attrs[2:])
+
+        return None
 
     def _is_world_attribute_subscript_pattern(self, node):
         """
@@ -1792,6 +1815,33 @@ class ASTVisitorMixin:
         try:
             attr_name = node.attr
             logging.debug(f"visit_Attribute: Trying to access .{attr_name} on object of type {type(node.value).__name__}")
+
+            # Special handling for self.world.options.<setting>.value pattern
+            # This resolves option values to constants at export time instead of runtime lookup
+            # e.g., self.world.options.LuckyEmblemsRequired.value → 35
+            if attr_name == 'value' and 'self' in self.closure_vars:
+                self_obj = self.closure_vars['self']
+                try:
+                    # Collect full attribute chain to see if it matches self.world.options.X.value
+                    chain = ['value']
+                    current = node.value
+                    while isinstance(current, ast.Attribute):
+                        chain.insert(0, current.attr)
+                        current = current.value
+                    if isinstance(current, ast.Name) and current.id == 'self':
+                        # We have self.X.Y.Z.value pattern
+                        # Try to resolve the full chain via closure_vars
+                        resolved = self_obj
+                        for attr in chain:
+                            resolved = getattr(resolved, attr, None)
+                            if resolved is None:
+                                break
+                        if resolved is not None and isinstance(resolved, (int, float, str, bool)):
+                            logging.debug(f"visit_Attribute: Resolved self.{'.' .join(chain)} to constant: {resolved}")
+                            return {'type': 'constant', 'value': resolved}
+                except (AttributeError, TypeError) as e:
+                    logging.debug(f"visit_Attribute: Failed to resolve self.*.value pattern: {e}")
+                    pass
 
             # Check for state.multiworld.worlds[player].options.<setting> pattern
             # Convert to setting_value rule type for frontend evaluation

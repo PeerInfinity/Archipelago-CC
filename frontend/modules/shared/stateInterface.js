@@ -564,7 +564,13 @@ export function createStateSnapshotInterface(
           settingsToUse = settingsToUse[playerIdKey];
         }
       }
-      const rawValue = settingsToUse?.[settingName];
+      // First check direct lookup at top level
+      let rawValue = settingsToUse?.[settingName];
+      // If not found at top level, check inside 'options' object
+      // Many settings like LuckyEmblemsRequired are nested in options
+      if (rawValue === undefined && settingsToUse?.options) {
+        rawValue = settingsToUse.options[settingName];
+      }
       // Normalize "off"/"none" type strings to falsy values
       // Choice options in Python use 0 for "off"/"none" which get exported as strings
       if (typeof rawValue === 'string') {

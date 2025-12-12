@@ -1892,9 +1892,8 @@
             "name": "Timeless River -> Old Pete",
             "connected_region": "Old Pete",
             "access_rule": {
-              "type": "helper",
-              "name": "get_old_pete_rules",
-              "args": []
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -3243,9 +3242,8 @@
             "name": "Port Royal 2 -> Grim Reaper 1",
             "connected_region": "Grim Reaper 1",
             "access_rule": {
-              "type": "helper",
-              "name": "get_grim_reaper1_rules",
-              "args": []
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -4839,9 +4837,8 @@
             "name": "Thresholder -> Beast",
             "connected_region": "Beast",
             "access_rule": {
-              "type": "helper",
-              "name": "get_beast_rules",
-              "args": []
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -6101,9 +6098,8 @@
             "name": "Prison Keeper -> Oogie Boogie",
             "connected_region": "Oogie Boogie",
             "access_rule": {
-              "type": "helper",
-              "name": "get_oogie_rules",
-              "args": []
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -8404,9 +8400,8 @@
             "name": "Simulated Twilight Town -> Twilight Thorn",
             "connected_region": "Twilight Thorn",
             "access_rule": {
-              "type": "helper",
-              "name": "get_twilight_thorn_rules",
-              "args": []
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -8495,9 +8490,8 @@
             "name": "Twilight Thorn -> Axel 1",
             "connected_region": "Axel 1",
             "access_rule": {
-              "type": "helper",
-              "name": "get_axel_one_rules",
-              "args": []
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -8541,9 +8535,8 @@
             "name": "Axel 1 -> Axel 2",
             "connected_region": "Axel 2",
             "access_rule": {
-              "type": "helper",
-              "name": "get_axel_two_rules",
-              "args": []
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -17666,5 +17659,255 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "ag_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Scimitar",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "at_four_unlocked": {
+        "type": "item_check",
+        "item": "Thunder Element",
+        "count": {
+          "type": "constant",
+          "value": 3
+        }
+      },
+      "at_three_unlocked": {
+        "type": "item_check",
+        "item": "Magnet Element",
+        "count": {
+          "type": "constant",
+          "value": 2
+        }
+      },
+      "bc_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Beast's Claw",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "dc_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Disney Castle Key",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "get_axel_one_rules": {
+        "type": "constant",
+        "value": true
+      },
+      "get_axel_two_rules": {
+        "type": "constant",
+        "value": true
+      },
+      "get_beast_rules": {
+        "type": "constant",
+        "value": true
+      },
+      "get_grim_reaper1_rules": {
+        "type": "constant",
+        "value": true
+      },
+      "get_old_pete_rules": {
+        "type": "constant",
+        "value": true
+      },
+      "get_oogie_rules": {
+        "type": "constant",
+        "value": true
+      },
+      "get_twilight_thorn_rules": {
+        "type": "constant",
+        "value": true
+      },
+      "hb_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Membership Card",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "ht_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Bone Fist",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "hundred_acre_unlocked": {
+        "params": [
+          "amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Torn Page",
+          "count": {
+            "type": "name",
+            "name": "amount"
+          }
+        }
+      },
+      "kh2_has_all": {
+        "params": [
+          "items"
+        ],
+        "body": {
+          "type": "state_method",
+          "method": "has_all",
+          "args": [
+            {
+              "type": "helper",
+              "name": "set",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "items"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "lod_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Sword of the Ancestor",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "oc_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Battlefields of War",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "pl_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Proud Fang",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "pr_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Skill and Crossbones",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "sp_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Identity Disk",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "stt_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Namine Sketches",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "tt_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Ice Cream",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      },
+      "twtnw_unlocked": {
+        "params": [
+          "Amount"
+        ],
+        "body": {
+          "type": "item_check",
+          "item": "Way to the Dawn",
+          "count": {
+            "type": "name",
+            "name": "Amount"
+          }
+        }
+      }
+    }
+  }
 }
