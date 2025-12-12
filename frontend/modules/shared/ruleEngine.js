@@ -575,6 +575,25 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
 
+        if (rule.name === 'len') {
+          // Python's len() function - get length of a sequence or collection
+          const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (Array.isArray(value)) {
+            result = value.length;
+          } else if (typeof value === 'string') {
+            result = value.length;
+          } else if (value && typeof value === 'object') {
+            // For objects (dict-like), return number of keys
+            result = Object.keys(value).length;
+          } else if (value === null || value === undefined) {
+            result = undefined;
+          } else {
+            log('warn', '[evaluateRule] len() called on non-sequence type', { value, rule });
+            result = undefined;
+          }
+          break;
+        }
+
         // Regular helper function handling
         const args = rule.args
           ? rule.args.map((arg) => evaluateRule(arg, context, depth + 1))
