@@ -89,9 +89,12 @@ function has_all(snapshot, items) {
  * @returns {boolean} True if player can defeat enough robot masters
  */
 export function can_defeat_enough_rbms(snapshot, staticData, required, boss_requirements) {
-  // Get wily_5 data from settings and slot_data
-  const settings = staticData?.settings?.[1];
-  const slotData = staticData?.game_info?.[1]?.slot_data;
+  // Get player ID from staticData (dynamically determined for multiworld support)
+  const playerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || '1';
+
+  // Get wily_5 data from settings and slot_data for the correct player
+  const settings = staticData?.settings?.[playerId];
+  const slotData = staticData?.game_info?.[playerId]?.slot_data;
   const wily_5_requirement = required || settings?.options?.wily_5_requirement || 8;
 
   // The boss_requirements argument from the exporter may be incorrect (just keys instead of full dict).
