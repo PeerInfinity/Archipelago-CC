@@ -450,10 +450,23 @@ def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int
         total_games = len(chart_data)
         passed = sum(1 for _, pf, *_ in chart_data if pf.lower() == 'passed')
 
+        # Get intermittent failures counts
+        intermittent_games_count = 0
+        intermittent_total_count = 0
+        if metadata and 'intermittent_tracking' in metadata:
+            intermittent_failures = metadata['intermittent_tracking'].get('failures', [])
+            # Count unique templates (games)
+            unique_templates = set(failure.get('template') for failure in intermittent_failures)
+            intermittent_games_count = len(unique_templates)
+            # Count total intermittent failures
+            intermittent_total_count = len(intermittent_failures)
+
         md_content += "## Summary\n\n"
         md_content += f"- **Total Games:** {total_games}\n"
         md_content += f"- **Passed:** {passed} ({passed/total_games*100:.1f}%)\n"
-        md_content += f"- **Failed:** {total_games - passed} ({(total_games-passed)/total_games*100:.1f}%)\n\n"
+        md_content += f"- **Failed:** {total_games - passed} ({(total_games-passed)/total_games*100:.1f}%)\n"
+        md_content += f"- **Games with Intermittent Failures:** {intermittent_games_count}\n"
+        md_content += f"- **Total Intermittent Failures:** {intermittent_total_count}\n\n"
 
         # Calculate generic exporter/logic statistics
         # Tuple indices: 0=name, 1=pass_fail, ..., 13=has_custom_exporter, 14=has_custom_game_logic
@@ -503,6 +516,41 @@ def generate_multiclient_markdown(chart_data: List[Tuple[str, str, int, int, int
 
     if not chart_data:
         md_content += "| No data available | - | - | - | - | - | - | - | - | - | - |\n"
+
+    # Add Intermittent Failures section if there are any
+    if metadata and 'intermittent_tracking' in metadata:
+        intermittent_failures = metadata['intermittent_tracking'].get('failures', [])
+        if intermittent_failures:
+            # Sort by template name first, then by seed number
+            sorted_failures = sorted(intermittent_failures, key=lambda f: (
+                f.get('template', 'Unknown'),
+                f.get('seed') if f.get('seed') is not None else float('inf')
+            ))
+
+            md_content += "\n## Intermittent Failures\n\n"
+            md_content += "These tests were previously failing but passed during a retest run:\n\n"
+            md_content += "| Template | Seed | Timestamp | Notes |\n"
+            md_content += "|----------|------|-----------|-------|\n"
+
+            for failure in sorted_failures:
+                template_name = failure.get('template', 'Unknown').replace('.yaml', '')
+                seed = failure.get('seed', 'N/A')
+                timestamp = failure.get('timestamp', 'Unknown')
+                # Parse timestamp to make it more readable
+                try:
+                    from datetime import datetime as dt
+                    ts_obj = dt.fromisoformat(timestamp)
+                    timestamp_display = ts_obj.strftime('%Y-%m-%d %H:%M')
+                except:
+                    timestamp_display = timestamp
+
+                # Show seed or "N/A" if not available
+                seed_display = str(seed) if seed is not None else "N/A"
+
+                notes = "Previously failed, now passing"
+                md_content += f"| {template_name} | {seed_display} | {timestamp_display} | {notes} |\n"
+
+            md_content += "\n"
 
     md_content += "\n## Notes\n\n"
     md_content += "- **Gen Errors:** Number of errors during world generation\n"
@@ -1113,7 +1161,7 @@ def generate_multitemplate_markdown(chart_data: Dict[str, List[Tuple[str, str, i
     return md_content
 
 
-def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None, ut_comparison_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None, multiworld_metadata=None, has_ut_random=False, has_ut_fixed=False, world_mapping=None, is_worldgen=False, other_version_link=None) -> str:
+def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None, ut_comparison_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None, multiclient_metadata=None, multiworld_metadata=None, has_ut_random=False, has_ut_fixed=False, world_mapping=None, is_worldgen=False, other_version_link=None) -> str:
     """Generate a combined summary chart with all test results."""
     title_suffix = " (WorldGen)" if is_worldgen else ""
     md_content = f"# Archipelago Template Test Results Summary{title_suffix}\n\n"
@@ -1220,6 +1268,8 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
     minimal_total_count = 0
     full_games_count = 0
     full_total_count = 0
+    multiclient_games_count = 0
+    multiclient_total_count = 0
     multiworld_games_count = 0
     multiworld_total_count = 0
 
@@ -1239,6 +1289,14 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
         # Count total failures
         full_total_count = len(failures)
 
+    if multiclient_metadata and 'intermittent_tracking' in multiclient_metadata:
+        failures = multiclient_metadata['intermittent_tracking'].get('failures', [])
+        # Count unique templates (games)
+        unique_templates = set(failure.get('template') for failure in failures)
+        multiclient_games_count = len(unique_templates)
+        # Count total failures
+        multiclient_total_count = len(failures)
+
     if multiworld_metadata and 'intermittent_tracking' in multiworld_metadata:
         failures = multiworld_metadata['intermittent_tracking'].get('failures', [])
         # Count unique templates (games)
@@ -1249,6 +1307,7 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
 
     md_content += f"- **Minimal Spoilers Test:** {minimal_games_count} game(s), {minimal_total_count} total failure(s)\n"
     md_content += f"- **Full Spoilers Test:** {full_games_count} game(s), {full_total_count} total failure(s)\n"
+    md_content += f"- **Multiclient Test:** {multiclient_games_count} game(s), {multiclient_total_count} total failure(s)\n"
     if multiworld_data is not None:
         md_content += f"- **Multiworld Test:** {multiworld_games_count} game(s), {multiworld_total_count} total failure(s)\n"
 
@@ -1788,6 +1847,7 @@ def main():
         # Get metadata for intermittent failures
         minimal_meta = minimal_results.get('metadata', {}) if 'minimal_results' in locals() else None
         full_meta = full_results.get('metadata', {}) if 'full_results' in locals() else None
+        mp_meta = mp_results.get('metadata', {}) if 'mp_results' in locals() else None
         mw_meta = mw_results.get('metadata', {}) if 'mw_results' in locals() else None
 
         # Check if we have worldgen data for the summary
@@ -1796,7 +1856,7 @@ def main():
         # Generate original summary with cross-link to worldgen if available
         summary_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary.md')
         wg_summary_link = './test-results-summary-worldgen.md' if has_wg_summary else None
-        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data, ut_data, excluded_games, minimal_meta, full_meta, multiworld_metadata=mw_meta, has_ut_random=has_random, has_ut_fixed=has_fixed, world_mapping=full_world_mapping, is_worldgen=False, other_version_link=wg_summary_link)
+        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data, ut_data, excluded_games, minimal_meta, full_meta, multiclient_metadata=mp_meta, multiworld_metadata=mw_meta, has_ut_random=has_random, has_ut_fixed=has_fixed, world_mapping=full_world_mapping, is_worldgen=False, other_version_link=wg_summary_link)
         with open(summary_output, 'w') as f:
             f.write(summary_md)
 
@@ -1809,11 +1869,12 @@ def main():
         # Get metadata for intermittent failures from worldgen results
         minimal_wg_meta = minimal_wg_results.get('metadata', {}) if 'minimal_wg_results' in locals() else None
         full_wg_meta = full_wg_results.get('metadata', {}) if 'full_wg_results' in locals() else None
+        mp_wg_meta = mp_wg_results.get('metadata', {}) if 'mp_wg_results' in locals() else None
         mw_wg_meta = mw_wg_results.get('metadata', {}) if 'mw_wg_results' in locals() else None
 
         summary_wg_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary-worldgen.md')
         orig_summary_link = './test-results-summary.md'
-        summary_wg_md = generate_summary_chart(minimal_wg_data, full_wg_data, mp_wg_data, mw_wg_data, None, None, None, excluded_games, minimal_wg_meta, full_wg_meta, multiworld_metadata=mw_wg_meta, has_ut_random=False, has_ut_fixed=False, world_mapping=full_world_mapping, is_worldgen=True, other_version_link=orig_summary_link)
+        summary_wg_md = generate_summary_chart(minimal_wg_data, full_wg_data, mp_wg_data, mw_wg_data, None, None, None, excluded_games, minimal_wg_meta, full_wg_meta, multiclient_metadata=mp_wg_meta, multiworld_metadata=mw_wg_meta, has_ut_random=False, has_ut_fixed=False, world_mapping=full_world_mapping, is_worldgen=True, other_version_link=orig_summary_link)
         with open(summary_wg_output, 'w') as f:
             f.write(summary_wg_md)
 
