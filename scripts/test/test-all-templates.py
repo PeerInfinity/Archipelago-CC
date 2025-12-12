@@ -657,7 +657,7 @@ def main():
                 print("Error: --retest-seed-specific requires a valid seed number")
                 sys.exit(1)
 
-        failed_templates = get_failed_templates(existing_results['results'], args.multiclient, specific_seed)
+        failed_templates = get_failed_templates(existing_results['results'], args.multiclient, specific_seed, args.multiworld)
 
         # If --retest-continue is specified, also include templates that haven't been tested up to that threshold
         templates_to_test = set(failed_templates)
@@ -697,7 +697,7 @@ def main():
         # Build a dictionary mapping template to seed info for retest
         retest_seed_info = {}
         for template in templates_to_test:
-            seed_info = get_failing_seed_info(template, existing_results['results'], args.multiclient)
+            seed_info = get_failing_seed_info(template, existing_results['results'], args.multiclient, args.multiworld)
             retest_seed_info[template] = seed_info
 
         # Filter to only include templates that exist in the templates directory
@@ -1301,10 +1301,10 @@ def main():
 
             # In retest mode, check if this test is now passing and record intermittent failures
             if args.retest:
-                test_passed = is_test_passing(yaml_file, results['results'], args.multiclient)
+                test_passed = is_test_passing(yaml_file, results['results'], args.multiclient, args.multiworld)
 
                 # Check if this was previously failing and is now passing (intermittent failure)
-                was_failing = not is_test_passing(yaml_file, existing_results.get('results', {}), args.multiclient)
+                was_failing = not is_test_passing(yaml_file, existing_results.get('results', {}), args.multiclient, args.multiworld)
 
                 if test_passed and was_failing:
                     # Record intermittent failure with detailed information
@@ -1322,12 +1322,21 @@ def main():
                         except (ValueError, TypeError):
                             failing_seed = template_result['seed']
 
+                    # Determine the test type for the intermittent failure entry
+                    if args.multiworld:
+                        test_type = 'multiworld'
+                    elif args.multiclient:
+                        test_type = 'multiclient'
+                    else:
+                        test_type = 'spoiler'
+
                     intermittent_entry = {
                         'template': yaml_file,
                         'seed': failing_seed,
                         'timestamp': datetime.now().isoformat(),
                         'previously_failed': True,
-                        'now_passing': True
+                        'now_passing': True,
+                        'test_type': test_type
                     }
                     intermittent_failures.append(intermittent_entry)
                     print(f"✅ {yaml_file} is now passing (was previously failing)! Recording intermittent failure. Continuing to next failed test...")
@@ -1358,10 +1367,10 @@ def main():
 
             # In retest mode, check if we should stop
             if args.retest:
-                test_passed = is_test_passing(yaml_file, results['results'], args.multiclient)
+                test_passed = is_test_passing(yaml_file, results['results'], args.multiclient, args.multiworld)
 
                 if test_passed:
-                    was_failing = not is_test_passing(yaml_file, existing_results.get('results', {}), args.multiclient)
+                    was_failing = not is_test_passing(yaml_file, existing_results.get('results', {}), args.multiclient, args.multiworld)
                     if not was_failing:
                         print(f"✅ {yaml_file} is now passing! Continuing to next failed test...")
                 else:

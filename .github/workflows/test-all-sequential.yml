@@ -779,6 +779,30 @@ jobs:
             --no-backup \
             -p
 
+      - name: Retest multiclient failures
+        if: inputs.retest_failures != 'disabled'
+        env:
+          PYTHONUNBUFFERED: "1"
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiclient-worldgen' || 'multiclient' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
+        run: |
+          source .venv/bin/activate
+          ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
+          for i in $(seq 1 $ITERATIONS); do
+            echo "Retest iteration $i of $ITERATIONS"
+            python scripts/test/test-all-templates.py \
+              --multiclient \
+              --retest \
+              --retest-continue-after-failure \
+              --retest-from-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
+              --every-nth ${{ matrix.split_total }} \
+              --skip-first $((${{ matrix.split_num }} - 1)) \
+              --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
+              ${PATTERN_FLAG} \
+              --no-backup \
+              -p
+          done
+
       - name: Upload test results for split ${{ matrix.split_num }}
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
@@ -945,8 +969,47 @@ jobs:
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
             --multiworld \
-            --multiworld-bisect-failures \
             --multiworld-second-pass \
+            --output-file scripts/output/${OUTPUT_DIR}/test-results.json \
+            ${PATTERN_FLAG} \
+            --no-backup \
+            -p
+
+      - name: Retest multiworld failures
+        if: inputs.retest_failures != 'disabled'
+        env:
+          PYTHONUNBUFFERED: "1"
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
+        run: |
+          source .venv/bin/activate
+          ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
+          for i in $(seq 1 $ITERATIONS); do
+            echo "Retest iteration $i of $ITERATIONS"
+            python scripts/test/test-all-templates.py \
+              --multiworld \
+              --retest \
+              --retest-continue-after-failure \
+              --retest-from-file scripts/output/${OUTPUT_DIR}/test-results.json \
+              --output-file scripts/output/${OUTPUT_DIR}/test-results.json \
+              ${PATTERN_FLAG} \
+              --no-backup \
+              -p
+          done
+
+      - name: Run bisection for remaining failures
+        env:
+          PYTHONUNBUFFERED: "1"
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-all-templates.py \
+            --multiworld \
+            --multiworld-bisect-failures \
+            --retest \
+            --retest-continue-after-failure \
+            --retest-from-file scripts/output/${OUTPUT_DIR}/test-results.json \
             --output-file scripts/output/${OUTPUT_DIR}/test-results.json \
             ${PATTERN_FLAG} \
             --no-backup \
@@ -1116,8 +1179,51 @@ jobs:
           source .venv/bin/activate
           python scripts/test/test-all-templates.py \
             --multiworld \
-            --multiworld-bisect-failures \
             --multiworld-second-pass \
+            --every-nth ${{ matrix.split_total }} \
+            --skip-first $((${{ matrix.split_num }} - 1)) \
+            --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
+            ${PATTERN_FLAG} \
+            --no-backup \
+            -p
+
+      - name: Retest multiworld failures
+        if: inputs.retest_failures != 'disabled'
+        env:
+          PYTHONUNBUFFERED: "1"
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
+        run: |
+          source .venv/bin/activate
+          ITERATIONS=${{ inputs.retest_failures == '1-time' && 1 || inputs.retest_failures == '2-times' && 2 || 3 }}
+          for i in $(seq 1 $ITERATIONS); do
+            echo "Retest iteration $i of $ITERATIONS"
+            python scripts/test/test-all-templates.py \
+              --multiworld \
+              --retest \
+              --retest-continue-after-failure \
+              --retest-from-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
+              --every-nth ${{ matrix.split_total }} \
+              --skip-first $((${{ matrix.split_num }} - 1)) \
+              --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
+              ${PATTERN_FLAG} \
+              --no-backup \
+              -p
+          done
+
+      - name: Run bisection for remaining failures
+        env:
+          PYTHONUNBUFFERED: "1"
+          OUTPUT_DIR: ${{ inputs.template_type == 'worldgen' && 'multiworld-worldgen' || 'multiworld' }}
+          PATTERN_FLAG: ${{ inputs.template_type == 'worldgen' && '--include-pattern WorldGen' || '--exclude-pattern WorldGen' }}
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-all-templates.py \
+            --multiworld \
+            --multiworld-bisect-failures \
+            --retest \
+            --retest-continue-after-failure \
+            --retest-from-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
             --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \

@@ -282,9 +282,13 @@
           "$ref": "#/$defs/rule",
           "description": "Condition for 'not'."
         },
+        "operand": {
+          "$ref": "#/$defs/rule",
+          "description": "Operand for 'not' or 'negate' types."
+        },
         "element_rule": {
           "$ref": "#/$defs/rule",
-          "description": "Rule for each element in 'all_of'."
+          "description": "Rule for each element in 'all_of' or 'any_of'."
         },
         "iterator_info": {
           "type": "object",
@@ -294,7 +298,69 @@
             "iterator": { "$ref": "#/$defs/rule" }
           },
           "required": ["type", "target", "iterator"],
-          "description": "Iterator details for 'all_of'."
+          "description": "Iterator details for 'all_of' or 'any_of'."
+        },
+        "region": {
+          "oneOf": [{ "type": "string" }, { "$ref": "#/$defs/rule" }],
+          "description": "Region name for 'can_reach', 'region_reference', 'region_attribute'."
+        },
+        "entrance": {
+          "oneOf": [{ "type": "string" }, { "$ref": "#/$defs/rule" }],
+          "description": "Entrance name for 'can_reach_entrance'."
+        },
+        "location": {
+          "oneOf": [{ "type": "string" }, { "$ref": "#/$defs/rule" }],
+          "description": "Location name for 'location_check', 'placement_lookup'."
+        },
+        "setting": {
+          "type": "string",
+          "description": "Setting name for 'setting_value', 'setting_check'."
+        },
+        "capability": {
+          "type": "string",
+          "description": "Capability name for 'capability' type."
+        },
+        "statements": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rule" },
+          "description": "Statements for 'block' type."
+        },
+        "body": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rule" },
+          "description": "Body statements for 'for_range', 'for_iter', 'if_statement'."
+        },
+        "orelse": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rule" },
+          "description": "Else branch for 'if_statement'."
+        },
+        "var": {
+          "type": "string",
+          "description": "Loop variable name for 'for_range', 'for_iter'."
+        },
+        "iterable": {
+          "$ref": "#/$defs/rule",
+          "description": "Iterable expression for 'for_iter'."
+        },
+        "parts": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rule" },
+          "description": "Parts for 'f_string' type."
+        },
+        "elements": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rule" },
+          "description": "Elements for 'tuple' type."
+        },
+        "player": {
+          "oneOf": [{ "type": "integer" }, { "$ref": "#/$defs/rule" }],
+          "description": "Player ID for 'placement_search'."
+        },
+        "locations": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Location names for 'placement_search'."
         }
       },
       "required": ["type"]

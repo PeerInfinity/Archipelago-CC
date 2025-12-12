@@ -19,6 +19,12 @@
     "test:health": "node scripts/test/test-health-check.js",
     "test:analyze": "node scripts/test/analyze-test-results.js",
     "test:full-suite": "npm run test:health && npm test && npm run test:analyze",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
+    "test:unit:ui": "vitest --ui",
+    "test:unit:coverage": "vitest run --coverage",
+    "bench": "vitest bench",
+    "bench:json": "vitest bench --outputJson=./benchmark-results.json",
     "dev": "python3 scripts/utils/dev-server-nocache.py",
     "dev:cache": "python3 -m http.server 8000",
     "docs": "jsdoc -c jsdoc.json",
@@ -44,6 +50,8 @@
   "homepage": "https://github.com/PeerInfinity/Archipelago/tree/JSONExport#readme",
   "devDependencies": {
     "@playwright/test": "^1.52.0",
-    "jsdoc": "^4.0.5"
+    "@vitest/coverage-v8": "^4.0.15",
+    "jsdoc": "^4.0.5",
+    "vitest": "^4.0.15"
   }
 }

@@ -39,6 +39,8 @@ grep -r "HELPERS_TO_EXPORT_BLACKLIST" exporter/games/
 | A Hat in Time | `get_hat_cost` | Exported (uses `for_iter`, `if_statement`, `break`) |
 | A Hat in Time | `has_relic_combo` | Exported (uses `group_check`) |
 | A Hat in Time | `get_relic_count` | Exported (uses `group_count`) |
+| Kingdom Hearts 2 | Class-based helpers | Exported (uses `player_id` for `self.player`) |
+| A Link to the Past | `can_extend_magic` | Exported (uses `block`, `for_range`, `assign`) |
 
 ### Method 2: Check Browser Console
 
@@ -394,6 +396,83 @@ getSetting: (settingName) => {
 
 **Note:** The `stateInterface.js` version also needs to look in `staticData.settings` as a fallback, since the ComparisonEngine's snapshot may not have settings directly attached.
 
+### Example 6: `negate` for Unary Minus
+
+**Problem:** Helpers using unary minus on non-constant values couldn't be properly evaluated.
+
+**Python pattern:**
+```python
+# Unary minus on a variable or expression
+result = -some_count
+```
+
+**Analyzer change** (in `visit_UnaryOp()`):
+```python
+if isinstance(node.op, ast.USub):
+    operand_result = self.visit(node.operand)
+    # Try to evaluate at compile time if constant
+    if operand_result.get('type') == 'constant':
+        constant_value = operand_result['value']
+        if isinstance(constant_value, (int, float)):
+            return {'type': 'constant', 'value': -constant_value}
+    # For non-constant operands, return a negation structure
+    return {'type': 'negate', 'operand': operand_result}
+```
+
+**Frontend change:**
+```javascript
+case 'negate': {
+  // Unary minus operation: -value
+  const operand = evaluateRule(rule.operand, context, depth + 1, localScope);
+  if (operand === undefined) {
+    result = undefined;
+  } else if (typeof operand === 'number') {
+    result = -operand;
+  } else {
+    log('warn', '[evaluateRule] negate operand is not a number:', { operand, rule });
+    result = undefined;
+  }
+  break;
+}
+```
+
+### Example 7: `player_id` for Class-Based Helpers
+
+**Problem:** Games like Kingdom Hearts 2 use class-based helpers that reference `self.player`, which couldn't be exported.
+
+**Python pattern:**
+```python
+class KH2Rules:
+    def __init__(self, world):
+        self.world = world
+        self.player = world.player
+
+    def some_rule(self, state):
+        return state.has("Key", self.player)  # self.player needs to resolve
+```
+
+**Analyzer change** (in attribute resolution):
+```python
+# Handle self.player reference in class-based helpers
+if obj_name == 'self' and attr_name == 'player':
+    return {'type': 'player_id'}
+```
+
+**Frontend change:**
+```javascript
+case 'player_id': {
+  // Return the current player ID for self.player references
+  if (typeof context.getPlayerId === 'function') {
+    result = context.getPlayerId();
+  } else if (context.playerId !== undefined) {
+    result = context.playerId;
+  } else {
+    result = 1;  // Default to player 1
+  }
+  break;
+}
+```
+
 ## Debugging Tips
 
 ### Print Analyzer Output
@@ -435,6 +514,8 @@ Ensure the context object has the methods your rule type needs. Check `StateMana
 - `hasItem(itemName)` / `countItem(itemName)`
 - `hasGroup(groupName)` / `countGroup(groupName)`
 - `canReach(regionName)` / `canReachEntrance(entranceName)`
+- `getPlayerId()` - Returns the current player's slot ID
+- `getSetting(settingName)` - Get a game setting value
 - Settings via `context.settings`
 
 ## Checklist for New Rule Types
@@ -443,6 +524,8 @@ Ensure the context object has the methods your rule type needs. Check `StateMana
 - [ ] Added handling in `exporter/analyzer/ast_visitors.py`
 - [ ] Added case in `frontend/modules/shared/ruleEngine.js`
 - [ ] Handled `undefined` values appropriately
+- [ ] Updated `frontend/schema/rules.schema.json` with new fields (if applicable)
+- [ ] Updated `CC/rule-types-reference.md` with the new type
 - [ ] Tested with a game that uses this pattern
 - [ ] Removed helper from blacklist if applicable
 - [ ] Verified spoiler tests pass
