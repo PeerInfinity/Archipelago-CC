@@ -3,47 +3,51 @@
   "exclude_list": [
     {
       "name": "Archipelago.yaml",
-      "reason": "Not a game"
+      "reason": "Not a game."
     },
     {
       "name": "Blasphemous.yaml",
-      "reason": "The spoiler test currently freezes"
+      "reason": "The spoiler test currently freezes."
     },
     {
       "name": "Final Fantasy.yaml",
-      "reason": "Requires manual configuration and is not compatible with automated testing"
+      "reason": "Requires manual configuration and is not compatible with automated testing."
     },
     {
       "name": "Hollow Knight.yaml",
-      "reason": "The spoiler test currently freezes"
+      "reason": "The spoiler test currently freezes."
     },
     {
       "name": "Ocarina of Time.yaml",
-      "reason": "The default yaml file fails to generate"
+      "reason": "The default yaml file fails to generate."
     },
     {
       "name": "Pokemon Emerald.yaml",
-      "reason": "Temporarily excluded.  It takes too long to process"
+      "reason": "Temporarily excluded.  It takes too long to process."
     },
     {
       "name": "Pokemon Red and Blue.yaml",
-      "reason": "Temporarily excluded.  It takes too long to process"
+      "reason": "Temporarily excluded.  It takes too long to process."
+    },
+    {
+      "name": "SMZ3.yaml",
+      "reason": "Temporarily excluded.  It takes too long to process.  Also, self-locking locations cause the multiclient test to fail."
     },
     {
       "name": "Sudoku.yaml",
-      "reason": "Cannot be used for generating worlds"
+      "reason": "Cannot be used for generating worlds."
     },
     {
       "name": "Universal Tracker.yaml",
-      "reason": "Not a game"
+      "reason": "Not a game."
     },
     {
       "name": "Yu-Gi-Oh! 2006.yaml",
-      "reason": "Temporarily excluded.  It takes too long to process"
+      "reason": "Temporarily excluded.  It takes too long to process."
     },
     {
       "name": "Zillion.yaml",
-      "reason": "Uses the external zilliandomizer tool for its logic, which is not compatible with this system"
+      "reason": "Uses the external zilliandomizer tool for its logic, which is not compatible with this system."
     }
   ]
 }
