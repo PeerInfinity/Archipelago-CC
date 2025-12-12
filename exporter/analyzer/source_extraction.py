@@ -9,6 +9,7 @@ import ast
 import inspect
 import re
 import logging
+import textwrap
 import tokenize
 import io
 from typing import Optional, Callable
@@ -271,7 +272,36 @@ def _clean_source(func: Callable) -> Optional[str]:
         logging.error(f"Unexpected error getting source for {func}: {e}")
         return None
 
-    # More robust staticmethod check using AST
+    # Handle @staticmethod decorator syntax (as opposed to staticmethod() call syntax)
+    # inspect.getsource() returns decorator + indented method body, causing IndentationError
+    # when parsed as standalone code. We strip the decorator and dedent the method.
+    if source.startswith('@staticmethod'):
+        logging.debug(f"_clean_source: Detected '@staticmethod' decorator in source: {repr(source)}")
+        try:
+            # Split into lines, remove the decorator line(s), and dedent the rest
+            lines = source.split('\n')
+            # Find the first line that starts with 'def ' (after stripping leading whitespace)
+            def_line_idx = None
+            for i, line in enumerate(lines):
+                if line.strip().startswith('def '):
+                    def_line_idx = i
+                    break
+
+            if def_line_idx is not None:
+                # Take lines from def onwards and dedent
+                method_lines = lines[def_line_idx:]
+                method_source = textwrap.dedent('\n'.join(method_lines))
+                logging.debug(f"_clean_source: Dedented @staticmethod method: {repr(method_source)}")
+                # Return the dedented method source for normal processing
+                return method_source
+            else:
+                logging.warning(f"_clean_source: Could not find 'def' after @staticmethod decorator")
+                return None
+        except Exception as e:
+            logging.error(f"_clean_source: Error handling @staticmethod decorator: {e}", exc_info=True)
+            return None
+
+    # More robust staticmethod check using AST (for staticmethod() call syntax)
     if 'staticmethod(' in source:
         logging.debug(f"_clean_source: Detected 'staticmethod(' in source: {repr(source)}")
         try:
