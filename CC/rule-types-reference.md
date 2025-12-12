@@ -42,6 +42,7 @@ Both layers must support a rule type for it to work end-to-end.
 | `can_reach` | Check if region is reachable | `region` | `{"type": "can_reach", "region": "Death Mountain"}` |
 | `can_reach_entrance` | Check if entrance is reachable | `entrance` | `{"type": "can_reach_entrance", "entrance": "Cave Door"}` |
 | `location_check` | Check if location is accessible | `location` | `{"type": "location_check", "location": "Chest A"}` |
+| `location_rule_ref` | Evaluate another location's access rule | `location` | `{"type": "location_rule_ref", "location": "Act Completion (...)"}` |
 | `region_check` | Check if region is accessible | `region` | `{"type": "region_check", "region": "Dungeon 1"}` |
 | `region_reference` | Reference to a region (from get_region) | `region` | `{"type": "region_reference", "region": "Good Bee Cave"}` |
 | `region_attribute` | Access region property | `region`, `attr` | `{"type": "region_attribute", "region": {...}, "attr": "is_light_world"}` |
