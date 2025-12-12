@@ -1,0 +1,108 @@
+name: Unit Tests
+
+on:
+  push:
+    paths:
+      - 'frontend/**/*.js'
+      - 'frontend/**/*.test.js'
+      - 'tests/fixtures/**'
+      - 'tests/test_rule_fixtures.py'
+      - 'exporter/analyzer/**/*.py'
+      - 'vitest.config.js'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/unit-tests.yml'
+  pull_request:
+    paths:
+      - 'frontend/**/*.js'
+      - 'frontend/**/*.test.js'
+      - 'tests/fixtures/**'
+      - 'tests/test_rule_fixtures.py'
+      - 'exporter/analyzer/**/*.py'
+      - 'vitest.config.js'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/unit-tests.yml'
+  workflow_dispatch:
+
+jobs:
+  javascript-tests:
+    name: JavaScript Unit Tests (Vitest)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Vitest tests
+        run: npm run test:unit
+
+  python-fixture-tests:
+    name: Python Fixture Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          check-latest: true
+
+      - name: Run fixture tests
+        run: python -m pytest tests/test_rule_fixtures.py -v
+
+  python-analyzer-tests:
+    name: Python Analyzer Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          check-latest: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install python3-gi libgirepository1.0-dev
+
+      - name: Cache Python virtual environment
+        uses: actions/cache@v4
+        id: cache-venv
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements.txt') }}
+
+      - name: Create virtual environment and install dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run ModuleUpdate
+        run: |
+          source .venv/bin/activate
+          python ModuleUpdate.py --yes
+
+      - name: Run analyzer tests
+        run: |
+          source .venv/bin/activate
+          python -m pytest exporter/analyzer/test_ast_visitors.py -v
