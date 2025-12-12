@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-11 19:22:50
+**Generated:** 2025-12-12 03:36:05
 
-**Source Data Created:** 2025-12-12T01:42:15.819855
+**Source Data Created:** 2025-12-12T03:36:05.081796
 
-**Source Data Last Updated:** 2025-12-12T01:42:15.819862
+**Source Data Last Updated:** 2025-12-12T03:36:05.081805
 
 ## Summary
 
 - **Total Games:** 76
-- **Passed:** 74 (97.4%)
-- **Failed:** 2 (2.6%)
+- **Passed:** 75 (98.7%)
+- **Failed:** 1 (1.3%)
 - **Games with Intermittent Failures:** 1
 - **Total Intermittent Failures:** 1
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 29/74 (39.2% of passed)
-- **Passing with Generic Logic:** 52/74 (70.3% of passed)
-- **Passing with Both Generic:** 29/74 (39.2% of passed)
+- **Passing with Generic Exporter:** 29/75 (38.7% of passed)
+- **Passing with Generic Logic:** 54/75 (72.0% of passed)
+- **Passing with Both Generic:** 29/75 (38.7% of passed)
 
 ## Test Results
 
@@ -59,7 +59,7 @@
 | Inscryption | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | 8.0KB | ✅ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | 16.8KB | 4.6KB |
 | Kingdom Hearts | ✅ Passed | 0 | 10.3 | 10.3 | 🟢 Complete | 58.4KB | 5.4KB |
-| Kingdom Hearts 2 | ❌ Failed | 21 | 15.1 | 15.1 | 🟡 100.0% | 15.5KB | 105.3KB |
+| Kingdom Hearts 2 | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 15.5KB | 105.3KB |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 9.7KB | 15.7KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 16.4KB | ✅ |
 | Lingo | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 32.9KB | 10.7KB |
@@ -113,7 +113,7 @@ These seeds were previously failing but passed during a retest run:
 
 | Template | Seed | Timestamp | Notes |
 |----------|------|-----------|-------|
-| Kingdom Hearts 2 | 1 | 2025-12-12 01:37 | Previously failed, now passing |
+| WebDevJourney | 1 | 2025-12-12 03:32 | Previously failed, now passing |
 
 
 ## Notes
