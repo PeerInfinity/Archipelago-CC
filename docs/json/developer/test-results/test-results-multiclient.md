@@ -6,13 +6,15 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-11 21:38:57
+**Generated:** 2025-12-12 01:15:50
 
 ## Summary
 
 - **Total Games:** 76
 - **Passed:** 72 (94.7%)
 - **Failed:** 4 (5.3%)
+- **Games with Intermittent Failures:** 0
+- **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
