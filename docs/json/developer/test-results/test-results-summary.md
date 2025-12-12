@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-12 16:29:39
+**Generated:** 2025-12-12 08:31:38
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -12,6 +12,7 @@ This summary combines results from 4 types of tests:
 
 Additional test results:
 - **World Generator Test:** Tests world generation for all templates - [View Details](./test-results-world-generator.md)
+- **Processing Times:** Generation and test processing times - [View Details](./test-results-processing-times.md)
 
 ## Summary Statistics
 
@@ -24,7 +25,7 @@ Additional test results:
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 0 game(s), 0 total failure(s)
+- **Minimal Spoilers Test:** 1 game(s), 1 total failure(s)
 - **Full Spoilers Test:** 0 game(s), 0 total failure(s)
 - **Multiclient Test:** 0 game(s), 0 total failure(s)
 - **Multiworld Test:** 0 game(s), 0 total failure(s)

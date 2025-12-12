@@ -207,9 +207,9 @@ def main():
         help='Keep existing templates in Multiworld directory (do not clear or add new templates)'
     )
     parser.add_argument(
-        '--multiworld-skip-prerequisites',
+        '--multiworld-require-prerequisites',
         action='store_true',
-        help='Skip prerequisite checks and test all templates regardless of other test results'
+        help='Only test templates that passed spoiler-minimal, spoiler-full, and multiclient tests (default: test all templates)'
     )
     parser.add_argument(
         '--multiworld-test-all-players',
@@ -1217,11 +1217,12 @@ def main():
                         test_only=args.test_only, headed=args.headed,
                         keep_templates=args.multiworld_keep_templates,
                         test_all_players=args.multiworld_test_all_players,
-                        require_prerequisites=not args.multiworld_skip_prerequisites,
+                        require_prerequisites=args.multiworld_require_prerequisites,
                         include_error_details=args.include_error_details,
                         max_templates=args.multiworld_max_templates,
                         dry_run=args.dry_run,
-                        retry_failed_players=args.retry_failed_players
+                        retry_failed_players=args.retry_failed_players,
+                        split_number=args.skip_first + 1 if args.every_nth else None
                     )
                 else:
                     # Single seed in multiworld mode
@@ -1232,11 +1233,12 @@ def main():
                         test_only=args.test_only, headed=args.headed,
                         keep_templates=args.multiworld_keep_templates,
                         test_all_players=args.multiworld_test_all_players,
-                        require_prerequisites=not args.multiworld_skip_prerequisites,
+                        require_prerequisites=args.multiworld_require_prerequisites,
                         include_error_details=args.include_error_details,
                         max_templates=args.multiworld_max_templates,
                         dry_run=args.dry_run,
-                        retry_failed_players=args.retry_failed_players
+                        retry_failed_players=args.retry_failed_players,
+                        split_number=args.skip_first + 1 if args.every_nth else None
                     )
 
                 # After multiworld test, synchronize player count with actual templates in directory
@@ -1496,7 +1498,8 @@ def main():
                         max_templates=args.multiworld_max_templates,
                         dry_run=args.dry_run,
                         is_second_pass=True,
-                        retry_failed_players=args.retry_failed_players
+                        retry_failed_players=args.retry_failed_players,
+                        split_number=args.skip_first + 1 if args.every_nth else None
                     )
 
                     # Store second pass result
@@ -1690,7 +1693,7 @@ def main():
                 passed = sum(1 for r in results['results'].values()
                             if r.get('multiworld_test', {}).get('success', False))
                 skipped = sum(1 for r in results['results'].values()
-                            if not r.get('prerequisite_check', {}).get('all_prerequisites_passed', False))
+                            if r.get('multiworld_test', {}).get('skip_reason'))
                 failed = len(yaml_files) - passed - skipped
                 print(f"Multiworld Test Summary: {passed} passed, {failed} failed, {skipped} skipped (prerequisites not met)")
             elif args.multiclient:
@@ -1714,7 +1717,7 @@ def main():
                 passed = sum(1 for r in results['results'].values()
                             if r.get('multiworld_test', {}).get('success', False))
                 skipped = sum(1 for r in results['results'].values()
-                            if not r.get('prerequisite_check', {}).get('all_prerequisites_passed', False))
+                            if r.get('multiworld_test', {}).get('skip_reason'))
                 failed = len(yaml_files) - passed - skipped
                 print(f"Single Seed Test Summary: {passed} passed, {failed} failed, {skipped} skipped")
                 print(f"\nMultiworld Details:")

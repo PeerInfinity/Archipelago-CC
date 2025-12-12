@@ -6,19 +6,19 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-12 16:29:39
+**Generated:** 2025-12-12 08:31:38
 
-**Source Data Created:** 2025-12-12T15:49:25.110684
+**Source Data Created:** 2025-12-12T05:56:09.929398
 
-**Source Data Last Updated:** 2025-12-12T15:49:25.110689
+**Source Data Last Updated:** 2025-12-12T05:56:09.929405
 
 ## Summary
 
 - **Total Games:** 76
 - **Passed:** 76 (100.0%)
 - **Failed:** 0 (0.0%)
-- **Games with Intermittent Failures:** 0
-- **Total Intermittent Failures:** 0
+- **Games with Intermittent Failures:** 1
+- **Total Intermittent Failures:** 1
 
 ### Generic Exporter/Logic Statistics
 
@@ -106,6 +106,15 @@
 | Yacht Dice | ✅ Passed | 0 | 21.1 | 21.1 | 🟢 Complete | 1.6KB | 285.0KB |
 | Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 10.8KB | ✅ |
 | shapez | ✅ Passed | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
+
+## Intermittent Failures
+
+These seeds were previously failing but passed during a retest run:
+
+| Template | Seed | Timestamp | Notes |
+|----------|------|-----------|-------|
+| DOOM 1993 | 1 | 2025-12-12 05:54 | Previously failed, now passing |
+
 
 ## Notes
 

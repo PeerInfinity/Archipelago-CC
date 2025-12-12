@@ -970,6 +970,7 @@ jobs:
             --multiworld \
             --multiworld-second-pass \
             --retry-failed-players ${RETRY_COUNT} \
+            --multiworld-bisect-failures \
             --output-file scripts/output/${OUTPUT_DIR}/test-results.json \
             ${PATTERN_FLAG} \
             --no-backup \
@@ -1142,6 +1143,7 @@ jobs:
             --multiworld \
             --multiworld-second-pass \
             --retry-failed-players ${RETRY_COUNT} \
+            --multiworld-bisect-failures \
             --every-nth ${{ matrix.split_total }} \
             --skip-first $((${{ matrix.split_num }} - 1)) \
             --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
