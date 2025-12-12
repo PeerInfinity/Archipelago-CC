@@ -54,30 +54,30 @@ class KDL3GameExportHandler(BaseGameExportHandler):
 
         return settings
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Recursively expand and convert KDL3 rules, including f-strings."""
         if not rule:
             return rule
-            
+
         # Handle f_string conversion
         if rule.get('type') == 'f_string':
             return self._convert_f_string(rule)
-            
+
         # Handle item_check with f_string item names
         if rule.get('type') == 'item_check' and isinstance(rule.get('item'), dict):
             if rule['item'].get('type') == 'f_string':
                 rule['item'] = self._convert_f_string(rule['item'])
-            
+
         # Recursively process nested rules
         if rule.get('type') in ['and', 'or']:
             if 'conditions' in rule:
-                rule['conditions'] = [self.expand_rule(cond) for cond in rule['conditions']]
-                
+                rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule['conditions']]
+
         # Process other nested structures
         for key in ['access_rule', 'rule', 'condition']:
             if key in rule and isinstance(rule[key], dict):
-                rule[key] = self.expand_rule(rule[key])
-                
+                rule[key] = self.expand_rule(rule[key], _depth + 1)
+
         return rule
     
     def _convert_f_string(self, f_string_rule: Dict[str, Any]) -> Any:

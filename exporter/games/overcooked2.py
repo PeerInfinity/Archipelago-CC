@@ -271,7 +271,7 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
         # Return rule as-is for other types
         return rule
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Recursively expand rule functions with Overcooked! 2-specific handling."""
         if not rule:
             return rule
@@ -288,7 +288,7 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
                 # Just recursively process the args if any
                 if 'args' in rule:
                     rule = dict(rule)  # Make a copy
-                    rule['args'] = [self.expand_rule(arg) if isinstance(arg, dict) else arg
+                    rule['args'] = [self.expand_rule(arg, _depth + 1) if isinstance(arg, dict) else arg
                                    for arg in rule.get('args', [])]
                 return rule
 
@@ -301,7 +301,7 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
                 return self._expand_level_star_rule(rule)
 
         # Standard recursive processing
-        return super().expand_rule(rule)
+        return super().expand_rule(rule, _depth)
 
     def _expand_level_access_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Expand has_requirements_for_level_access helper into explicit rules.

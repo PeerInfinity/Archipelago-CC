@@ -156,7 +156,7 @@ class CvCotMGameExportHandler(GenericGameExportHandler):
 
         return helpers
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Recursively expand and fix rules for CvCotM."""
         if not rule:
             return rule
@@ -186,7 +186,7 @@ class CvCotMGameExportHandler(GenericGameExportHandler):
         # Recursively process conditions for and/or rules
         if rule_type in ['and', 'or']:
             if 'conditions' in rule:
-                rule['conditions'] = [self.expand_rule(cond) for cond in rule['conditions']]
+                rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule['conditions']]
 
         return rule
     

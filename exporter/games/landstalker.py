@@ -95,7 +95,7 @@ class LandstalkerGameExportHandler(GenericGameExportHandler):
 
         return None
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Recursively expand rule functions with Landstalker-specific handling.
 
         This method handles the complex pattern from make_path_requirement_lambda:
@@ -114,7 +114,7 @@ class LandstalkerGameExportHandler(GenericGameExportHandler):
         # First, recursively expand nested structures
         if 'conditions' in rule and isinstance(rule['conditions'], list):
             rule = rule.copy()  # Make a copy to avoid modifying the original
-            rule['conditions'] = [self.expand_rule(cond) for cond in rule['conditions']]
+            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule['conditions']]
 
         # Handle state_method: has_all with helper: set pattern
         # This comes from: state.has_all(set(required_items), player)
@@ -136,7 +136,7 @@ class LandstalkerGameExportHandler(GenericGameExportHandler):
                     return {"type": "item_check", "item": simplified_item}
 
         # Let parent handle standard cases
-        return super().expand_rule(rule)
+        return super().expand_rule(rule, _depth)
 
     def _resolve_all_of_iterator(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Resolve unresolved iterator in all_of rules.

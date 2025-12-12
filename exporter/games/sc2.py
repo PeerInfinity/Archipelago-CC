@@ -256,7 +256,7 @@ class SC2GameExportHandler(GenericGameExportHandler):
             'conditions': handled_rules
         }
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """
         Recursively expand rule functions with SC2-specific logic pattern recognition.
 
@@ -286,7 +286,7 @@ class SC2GameExportHandler(GenericGameExportHandler):
                     # This is a logic.method_name() call - convert to helper
                     method_name = function.get('attr')
                     # Recursively process args first
-                    args = [self.expand_rule(arg) for arg in rule.get('args', [])]
+                    args = [self.expand_rule(arg, _depth + 1) for arg in rule.get('args', [])]
 
                     logger.debug(f"[SC2] Converting logic.{method_name}() to helper call")
 
@@ -301,11 +301,11 @@ class SC2GameExportHandler(GenericGameExportHandler):
                     }
 
                     # Continue expanding the converted rule
-                    return super().expand_rule(converted_rule)
+                    return super().expand_rule(converted_rule, _depth)
 
             # For other function_calls, recursively process args
             if 'args' in rule:
-                rule['args'] = [self.expand_rule(arg) for arg in rule['args']]
+                rule['args'] = [self.expand_rule(arg, _depth + 1) for arg in rule['args']]
 
         # Check for the pattern: attribute access on "logic" (not a function call)
         # This pattern looks like:

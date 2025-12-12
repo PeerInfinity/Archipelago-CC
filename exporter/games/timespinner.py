@@ -51,7 +51,7 @@ class TimespinnerGameExportHandler(GenericGameExportHandler):
 
         return settings_dict
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Expand Timespinner-specific rules with variable name replacements."""
         if not rule:
             return rule
@@ -78,18 +78,18 @@ class TimespinnerGameExportHandler(GenericGameExportHandler):
         if rule.get('type') == 'helper':
             args = rule.get('args', [])
             if args:
-                rule['args'] = [self.expand_rule(arg) if isinstance(arg, dict) else arg for arg in args]
+                rule['args'] = [self.expand_rule(arg, _depth + 1) if isinstance(arg, dict) else arg for arg in args]
             return rule
 
         # Recursively check nested conditions
         if rule.get('type') in ['and', 'or']:
             rule['conditions'] = [
-                self.expand_rule(cond) for cond in rule.get('conditions', []) if cond
+                self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', []) if cond
             ]
 
         if rule.get('type') == 'not':
             cond = rule.get('condition')
             if cond:
-                rule['condition'] = self.expand_rule(cond)
+                rule['condition'] = self.expand_rule(cond, _depth + 1)
 
         return rule

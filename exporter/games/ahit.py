@@ -73,7 +73,7 @@ class AHitGameExportHandler(BaseGameExportHandler):
 
         return self._entrance_cache.get(entrance_name)
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Expand rules with special handling for can_clear_required_act.
 
         When we encounter a can_clear_required_act helper call with a constant
@@ -136,24 +136,24 @@ class AHitGameExportHandler(BaseGameExportHandler):
 
         # Recursively process nested rules
         if rule_type in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond) for cond in rule.get('conditions', [])]
+            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
 
         if rule_type == 'not':
             if 'condition' in rule:
-                rule['condition'] = self.expand_rule(rule['condition'])
+                rule['condition'] = self.expand_rule(rule['condition'], _depth + 1)
             if 'operand' in rule:
-                rule['operand'] = self.expand_rule(rule['operand'])
+                rule['operand'] = self.expand_rule(rule['operand'], _depth + 1)
 
         if rule_type == 'conditional':
             if 'test' in rule:
-                rule['test'] = self.expand_rule(rule['test'])
+                rule['test'] = self.expand_rule(rule['test'], _depth + 1)
             if 'if_true' in rule:
-                rule['if_true'] = self.expand_rule(rule['if_true'])
+                rule['if_true'] = self.expand_rule(rule['if_true'], _depth + 1)
             if 'if_false' in rule:
-                rule['if_false'] = self.expand_rule(rule['if_false'])
+                rule['if_false'] = self.expand_rule(rule['if_false'], _depth + 1)
 
         # Let the parent class handle other expansions
-        return super().expand_rule(rule)
+        return super().expand_rule(rule, _depth)
 
     def get_settings_data(self, world, multiworld, player):
         """Extract A Hat in Time settings."""

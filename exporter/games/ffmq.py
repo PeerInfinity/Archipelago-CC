@@ -28,7 +28,7 @@ class FFMQGameExportHandler(GenericGameExportHandler):
         if hasattr(world, 'item_name_groups'):
             self.item_groups = world.item_name_groups
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Recursively expand rules and resolve FFMQ-specific patterns.
 
         Handles:
@@ -46,8 +46,8 @@ class FFMQGameExportHandler(GenericGameExportHandler):
             op = rule.get('op')
 
             # First recursively expand left and right operands
-            expanded_left = self.expand_rule(left)
-            expanded_right = self.expand_rule(right)
+            expanded_left = self.expand_rule(left, _depth + 1)
+            expanded_right = self.expand_rule(right, _depth + 1)
 
             # Handle string concatenation ('+' operator)
             if op == '+':
@@ -109,7 +109,7 @@ class FFMQGameExportHandler(GenericGameExportHandler):
 
             if value.get('type') == 'name' and value.get('name') == 'item_groups':
                 # Resolve the index (which might be a binary operation)
-                resolved_index = self.expand_rule(index)
+                resolved_index = self.expand_rule(index, _depth + 1)
                 if resolved_index.get('type') == 'constant':
                     group_name = resolved_index.get('value')
 
@@ -126,7 +126,7 @@ class FFMQGameExportHandler(GenericGameExportHandler):
             args = rule.get('args', [])
 
             # Resolve args recursively
-            resolved_args = [self.expand_rule(arg) for arg in args]
+            resolved_args = [self.expand_rule(arg, _depth + 1) for arg in args]
 
             if method == 'has_any' and len(resolved_args) == 1:
                 # If the argument is a constant list of items
@@ -165,15 +165,15 @@ class FFMQGameExportHandler(GenericGameExportHandler):
         if rule.get('type') == 'helper':
             expanded = self.expand_helper(rule['name'], rule.get('args', []))
             if expanded:
-                return self.expand_rule(expanded)
+                return self.expand_rule(expanded, _depth + 1)
 
         # Recursively expand nested conditions
         if rule.get('type') in ['and', 'or']:
             rule['conditions'] = [
-                self.expand_rule(cond) for cond in rule.get('conditions', [])
+                self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])
             ]
 
         if rule.get('type') == 'not':
-            rule['condition'] = self.expand_rule(rule.get('condition'))
+            rule['condition'] = self.expand_rule(rule.get('condition'), _depth + 1)
 
         return rule

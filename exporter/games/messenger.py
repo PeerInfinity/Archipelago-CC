@@ -16,7 +16,7 @@ class MessengerGameExportHandler(GenericGameExportHandler):
         super().__init__()
         self.world = world
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """
         Expand rules with fixes for inferred item names and location dependency patterns.
         """
@@ -24,7 +24,7 @@ class MessengerGameExportHandler(GenericGameExportHandler):
             return rule
 
         # First, call parent implementation to handle standard expansion and recursion
-        rule = super().expand_rule(rule)
+        rule = super().expand_rule(rule, _depth)
 
         # Fix inferred item names that don't match actual item names
         if rule.get('type') == 'item_check' and rule.get('inferred'):
@@ -178,7 +178,7 @@ class MessengerGameExportHandler(GenericGameExportHandler):
 
         # Recursively expand conditions in and/or rules
         if rule.get('type') in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond) for cond in rule.get('conditions', [])]
+            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
 
         return rule
 

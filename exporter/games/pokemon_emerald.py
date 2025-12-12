@@ -105,7 +105,7 @@ class PokemonEmeraldGameExportHandler(GenericGameExportHandler):
 
         return item_data
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """
         Expand Pokemon Emerald specific rule patterns.
 
@@ -142,4 +142,4 @@ class PokemonEmeraldGameExportHandler(GenericGameExportHandler):
                     logger.warning(f"Unknown HM in hm_rules: {hm_name}")
 
         # Recursively expand nested rules
-        return super().expand_rule(rule)
+        return super().expand_rule(rule, _depth)
