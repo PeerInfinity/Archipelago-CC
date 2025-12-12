@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-12 08:31:38
+**Generated:** 2025-12-12 17:08:12
 
 ## Summary
 
