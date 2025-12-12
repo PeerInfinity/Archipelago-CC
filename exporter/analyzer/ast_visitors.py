@@ -2651,6 +2651,67 @@ class ASTVisitorMixin:
             logging.error(f"Error in visit_GeneratorExp: {e}")
             return None
 
+    def visit_ListComp(self, node: ast.ListComp):
+        """ Handle list comprehensions like [expr for x in items].
+
+        List comprehensions are treated similarly to generator expressions
+        for the purposes of analysis and can be used with sum(), all(), any(), etc.
+        """
+        try:
+            logging.debug(f"\n--- visit_ListComp --- (generators: {len(node.generators)})")
+
+            # Analyze the element expression
+            elt_result = self.visit(node.elt)
+            if elt_result is None:
+                logging.error(f"Failed to analyze element expression in ListComp: {ast.dump(node.elt)}")
+                return None
+
+            # Handle single generator (simple case)
+            if len(node.generators) == 1:
+                comprehension_result = self.visit(node.generators[0])
+                if comprehension_result is None:
+                    logging.error(f"Failed to analyze comprehension in ListComp")
+                    return None
+
+                # Return as generator_expression type - for sum()/all()/any() handling,
+                # list comprehensions and generator expressions are semantically equivalent
+                return {
+                    'type': 'generator_expression',
+                    'element': elt_result,
+                    'comprehension': comprehension_result
+                }
+
+            # Handle multiple generators (nested comprehensions)
+            logging.debug(f"Processing nested list comprehension with {len(node.generators)} generators")
+
+            # Analyze all comprehension generators first
+            comprehension_results = []
+            for i, gen in enumerate(node.generators):
+                comp_result = self.visit(gen)
+                if comp_result is None:
+                    logging.error(f"Failed to analyze comprehension {i} in nested ListComp")
+                    return None
+                comprehension_results.append(comp_result)
+                logging.debug(f"  Generator {i}: target={comp_result.get('target')}, iterator type={comp_result.get('iterator', {}).get('type')}")
+
+            # Build nested structure from inside out
+            current_element = elt_result
+
+            # Process generators in reverse order (innermost first)
+            for i in range(len(comprehension_results) - 1, -1, -1):
+                current_element = {
+                    'type': 'generator_expression',
+                    'element': current_element,
+                    'comprehension': comprehension_results[i]
+                }
+
+            logging.debug(f"Nested ListComp complete: {len(node.generators)} levels")
+            return current_element
+
+        except Exception as e:
+            logging.error(f"Error in visit_ListComp: {e}")
+            return None
+
     def visit_comprehension(self, node: ast.comprehension):
         """ Handle the 'for target in iter' part of comprehensions/generators. """
         try:

@@ -17,8 +17,8 @@ class KH2GameExportHandler(BaseGameExportHandler):
     # Module paths containing helper functions
     HELPER_MODULES = ['worlds.kh2.Rules']
 
-    # Module paths containing item name constants
-    ITEM_NAME_MODULES = ['worlds.kh2.Names']
+    # Module paths containing item name constants and other resolvable variables
+    ITEM_NAME_MODULES = ['worlds.kh2.Names', 'worlds.kh2.Logic', 'worlds.kh2.Items']
 
     # Mapping of self.<attr> to setting names for the analyzer
     # This enables conversion of patterns like self.fight_logic to setting_value rules
@@ -33,8 +33,8 @@ class KH2GameExportHandler(BaseGameExportHandler):
         'get_form_level_requirement', # Has loops counting forms
 
         # Helpers with sum/loop patterns
-        'level_locking_unlock',       # Sum over visit_locking_dict list
-        'summon_levels_unlocked',     # Sum over summons list
+        'level_locking_unlock',       # Sum over visit_locking_dict list + setting check
+        # 'summon_levels_unlocked' - Now supported via sum_of rule type
 
         # Utility functions with loops
         'kh2_list_count_sum',         # List comprehension with sum
