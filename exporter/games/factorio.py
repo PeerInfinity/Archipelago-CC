@@ -50,7 +50,7 @@ class FactorioGameExportHandler(BaseGameExportHandler):
             }
         }
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Recursively expand rule functions with Factorio-specific logic."""
         if not rule:
             return rule
@@ -61,7 +61,7 @@ class FactorioGameExportHandler(BaseGameExportHandler):
             return expanded if expanded else rule
 
         if rule.get('type') in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond) for cond in rule.get('conditions', [])]
+            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
 
         # Handle all_of rules that iterate over required_technologies
         # The Python code uses: all(state.has(technology.name, player) for technology in required_technologies[ingredient])
@@ -82,14 +82,14 @@ class FactorioGameExportHandler(BaseGameExportHandler):
                 element_rule = rule.get('element_rule', {})
                 simplified_element = self._simplify_technology_name_access(element_rule, iterator_info.get('target', {}).get('name'))
                 if simplified_element:
-                    rule['element_rule'] = self.expand_rule(simplified_element)
+                    rule['element_rule'] = self.expand_rule(simplified_element, _depth + 1)
                     logger.info(f"[Factorio Exporter] Simplified technology.name access in all_of rule")
                 else:
                     # No simplification needed, just recursively expand
-                    rule['element_rule'] = self.expand_rule(element_rule)
+                    rule['element_rule'] = self.expand_rule(element_rule, _depth + 1)
             else:
                 # Not a required_technologies iterator, just recursively expand
-                rule['element_rule'] = self.expand_rule(rule.get('element_rule', {}))
+                rule['element_rule'] = self.expand_rule(rule.get('element_rule', {}), _depth + 1)
 
         return rule
 

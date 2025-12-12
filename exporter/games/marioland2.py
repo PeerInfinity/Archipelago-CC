@@ -102,7 +102,7 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
 
         return item_data
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """
         Override expand_rule to prevent auto-expansion of our helper functions
         and to resolve self.options.* references to constant values.
@@ -206,36 +206,36 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
         if rule.get('type') in ('or', 'and'):
             conditions = rule.get('conditions', [])
             if conditions:
-                rule['conditions'] = [self.expand_rule(cond) if isinstance(cond, dict) and 'type' in cond else cond for cond in conditions]
+                rule['conditions'] = [self.expand_rule(cond, _depth + 1) if isinstance(cond, dict) and 'type' in cond else cond for cond in conditions]
             return rule
 
         # For 'conditional' rules, recursively expand test, if_true, and if_false
         if rule.get('type') == 'conditional':
             test = rule.get('test')
             if test and isinstance(test, dict):
-                rule['test'] = self.expand_rule(test)
+                rule['test'] = self.expand_rule(test, _depth + 1)
             if_true = rule.get('if_true')
             if if_true and isinstance(if_true, dict):
-                rule['if_true'] = self.expand_rule(if_true)
+                rule['if_true'] = self.expand_rule(if_true, _depth + 1)
             if_false = rule.get('if_false')
             if if_false and isinstance(if_false, dict):
-                rule['if_false'] = self.expand_rule(if_false)
+                rule['if_false'] = self.expand_rule(if_false, _depth + 1)
             return rule
 
         # For 'not' rules, recursively expand the condition
         if rule.get('type') == 'not':
             condition = rule.get('condition')
             if condition and isinstance(condition, dict):
-                rule['condition'] = self.expand_rule(condition)
+                rule['condition'] = self.expand_rule(condition, _depth + 1)
             return rule
 
         # For state_method rules, recursively expand args to catch nested attribute access
         if rule.get('type') == 'state_method':
             args = rule.get('args', [])
             if args:
-                rule['args'] = [self.expand_rule(arg) if isinstance(arg, dict) and 'type' in arg else arg for arg in args]
+                rule['args'] = [self.expand_rule(arg, _depth + 1) if isinstance(arg, dict) and 'type' in arg else arg for arg in args]
             # Continue with parent processing
-            return super().expand_rule(rule)
+            return super().expand_rule(rule, _depth)
 
         # For preserved helper functions, don't expand them - keep as helper calls for JavaScript
         if rule.get('type') == 'helper':
@@ -244,11 +244,11 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
                 # Recursively expand any arguments, but preserve the helper itself
                 args = rule.get('args', [])
                 if args:
-                    rule['args'] = [self.expand_rule(arg) if isinstance(arg, dict) and 'type' in arg else arg for arg in args]
+                    rule['args'] = [self.expand_rule(arg, _depth + 1) if isinstance(arg, dict) and 'type' in arg else arg for arg in args]
                 return rule
 
         # For all other rules, use the parent's expansion logic
-        return super().expand_rule(rule)
+        return super().expand_rule(rule, _depth)
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Extract Super Mario Land 2 settings including player options."""

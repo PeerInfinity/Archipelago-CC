@@ -113,11 +113,11 @@ class KH2GameExportHandler(BaseGameExportHandler):
         # For now, preserve helper nodes as-is until we identify specific helpers
         return None
         
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Recursively expand rule functions for KH2."""
         if not rule:
             return rule
-            
+
         # Special handling for function_call with self methods
         if rule.get('type') == 'function_call':
             func = rule.get('function', {})
@@ -132,27 +132,27 @@ class KH2GameExportHandler(BaseGameExportHandler):
                         # Try to expand this as a helper with args
                         expanded = self.expand_helper(method_name, args)
                         if expanded:
-                            return self.expand_rule(expanded)  # Recursively expand the result
+                            return self.expand_rule(expanded, _depth + 1)  # Recursively expand the result
                         # If not expandable, convert to a helper node with args
                         return {'type': 'helper', 'name': method_name, 'args': args}
-            
+
         # Special handling for __analyzed_func__
         if rule.get('type') == 'state_method' and rule.get('method') == '__analyzed_func__':
             if 'original' in rule:
                 return self._analyze_original_rule(rule['original'])
             return self._infer_rule_type(rule)
-            
+
         # Special handling for helper nodes
         if rule.get('type') == 'helper':
             expanded = self.expand_helper(rule.get('name'), rule.get('args'))
             if expanded:
-                return self.expand_rule(expanded)  # Recursively expand
+                return self.expand_rule(expanded, _depth + 1)  # Recursively expand
             return rule
-            
+
         # Handle and/or conditions recursively
         if rule.get('type') in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond) for cond in rule.get('conditions', [])]
-            
+            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
+
         return rule
     
     def _analyze_original_rule(self, original_rule):

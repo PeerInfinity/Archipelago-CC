@@ -376,7 +376,7 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
             logger.error(f"Error serializing StardewRule {type(rule_obj).__name__}: {e}", exc_info=True)
             return None
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Expand Stardew Valley-specific rules."""
         if not rule:
             return rule
@@ -392,4 +392,4 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
             return rule
 
         # Use default generic expansion for other rule types
-        return super().expand_rule(rule)
+        return super().expand_rule(rule, _depth)

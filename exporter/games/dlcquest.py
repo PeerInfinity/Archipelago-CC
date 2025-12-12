@@ -210,13 +210,13 @@ class DLCQuestGameExportHandler(BaseGameExportHandler):
         
         return data
                     
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Expand DLCQuest-specific rules."""
         if not rule:
             return rule
-            
+
         # Recursively process nested rules
         if rule.get('type') in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond) for cond in rule.get('conditions', [])]
-            
+            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
+
         return rule

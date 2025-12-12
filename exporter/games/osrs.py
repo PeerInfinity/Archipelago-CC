@@ -30,7 +30,7 @@ class OSRSGameExportHandler(GenericGameExportHandler):
     def __init__(self):
         super().__init__()
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """
         Recursively expand and resolve OSRS-specific rule patterns.
 
@@ -65,23 +65,23 @@ class OSRSGameExportHandler(GenericGameExportHandler):
 
         # Handle 'and' and 'or' conditions recursively
         if rule_type in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond) for cond in rule.get('conditions', [])]
+            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
 
         # Handle 'compare' operations recursively
         if rule_type == 'compare':
             if 'left' in rule:
-                rule['left'] = self.expand_rule(rule['left'])
+                rule['left'] = self.expand_rule(rule['left'], _depth + 1)
             if 'right' in rule:
-                rule['right'] = self.expand_rule(rule['right'])
+                rule['right'] = self.expand_rule(rule['right'], _depth + 1)
 
         # Handle state_method recursively (expand args)
         if rule_type == 'state_method':
             if 'args' in rule:
-                rule['args'] = [self.expand_rule(arg) if isinstance(arg, dict) else arg
+                rule['args'] = [self.expand_rule(arg, _depth + 1) if isinstance(arg, dict) else arg
                                for arg in rule.get('args', [])]
 
         # Let the parent class handle other cases
-        return super().expand_rule(rule)
+        return super().expand_rule(rule, _depth)
 
 
 # Ensure this handler is registered in exporter/games/__init__.py

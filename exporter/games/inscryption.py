@@ -34,7 +34,7 @@ class InscryptionGameExportHandler(GenericGameExportHandler):
             self._required_epitaph_count = world.required_epitaph_pieces_count
             logger.debug(f"Required epitaph pieces count: {self._required_epitaph_count}")
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Expand Inscryption-specific rules.
 
         Handles:
@@ -45,7 +45,7 @@ class InscryptionGameExportHandler(GenericGameExportHandler):
             return rule
 
         # First let parent handle standard expansion and recursion
-        rule = super().expand_rule(rule)
+        rule = super().expand_rule(rule, _depth)
 
         # Handle inferred item_checks with pseudo-items
         if rule.get('type') == 'item_check' and rule.get('inferred'):

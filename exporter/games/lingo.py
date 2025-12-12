@@ -53,7 +53,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
         ]
         return func_name in lingo_helpers
 
-    def expand_rule(self, analyzed_rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, analyzed_rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """
         Expand analyzed rule, with special handling for AccessRequirements string representations
         and door variable resolution.
@@ -63,7 +63,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
 
         Additionally, it resolves the 'door' variable in lingo_can_use_entrance calls to actual values.
         """
-        rule = super().expand_rule(analyzed_rule)
+        rule = super().expand_rule(analyzed_rule, _depth)
 
         # Resolve door variables in helper calls
         rule = self._resolve_door_variables(rule)

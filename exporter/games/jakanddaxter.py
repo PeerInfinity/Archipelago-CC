@@ -118,7 +118,7 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
 
         return attr_rule
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Expand Jak and Daxter-specific rules, particularly capability rules."""
         if not rule or not isinstance(rule, dict):
             return rule
@@ -350,16 +350,16 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
         # Handle nested rules recursively
         if rule.get('type') in ['and', 'or']:
             rule['conditions'] = [
-                self.expand_rule(cond) for cond in rule.get('conditions', [])
+                self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])
             ]
 
         if rule.get('type') == 'not':
-            rule['condition'] = self.expand_rule(rule.get('condition'))
+            rule['condition'] = self.expand_rule(rule.get('condition'), _depth + 1)
 
         if rule.get('type') == 'conditional':
-            rule['test'] = self.expand_rule(rule.get('test'))
-            rule['if_true'] = self.expand_rule(rule.get('if_true'))
-            rule['if_false'] = self.expand_rule(rule.get('if_false'))
+            rule['test'] = self.expand_rule(rule.get('test'), _depth + 1)
+            rule['if_true'] = self.expand_rule(rule.get('if_true'), _depth + 1)
+            rule['if_false'] = self.expand_rule(rule.get('if_false'), _depth + 1)
 
         return rule
 

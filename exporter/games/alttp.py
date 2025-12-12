@@ -114,7 +114,7 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         """Check if a function should be preserved as a helper call."""
         return func_name in self.known_helpers
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Override to validate helper names instead of expanding them."""
         if not rule or not isinstance(rule, dict):
             return rule
@@ -130,19 +130,19 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
 
         # Recursively process conditions in boolean operations
         if rule_type in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond) for cond in rule.get('conditions', [])]
-        
+            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
+
         # Recursively process nested conditions
         if rule_type == 'not':
-             rule['condition'] = self.expand_rule(rule.get('condition'))
+             rule['condition'] = self.expand_rule(rule.get('condition'), _depth + 1)
         if rule_type == 'conditional':
-             rule['test'] = self.expand_rule(rule.get('test'))
-             rule['if_true'] = self.expand_rule(rule.get('if_true'))
-             rule['if_false'] = self.expand_rule(rule.get('if_false'))
-             
+             rule['test'] = self.expand_rule(rule.get('test'), _depth + 1)
+             rule['if_true'] = self.expand_rule(rule.get('if_true'), _depth + 1)
+             rule['if_false'] = self.expand_rule(rule.get('if_false'), _depth + 1)
+
         # Handle other potential nested rules here
         if rule_type == 'all_of':
-             rule['element_rule'] = self.expand_rule(rule.get('element_rule'))
+             rule['element_rule'] = self.expand_rule(rule.get('element_rule'), _depth + 1)
              # Comprehension details usually don't contain rules to expand
 
         return rule
