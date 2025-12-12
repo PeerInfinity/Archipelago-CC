@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2025-12-12 17:08:12
+**Generated:** 2025-12-12 17:21:20
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -94,8 +94,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Subnautica | 35.2s | 6 | Aquaria.yaml, Civilization VI.yaml, Hylics 2.yaml, Mario & Luigi Superstar Saga.yaml, Paint.yaml (+1 more) |
+| 2 | The Wind Waker | 30.5s | 7 | Bomb Rush Cyberfunk.yaml, DLCQuest.yaml, Inscryption.yaml, MathProof2p2e4.yaml, Raft.yaml (+2 more) |
+| 3 | VVVVVV | 20.4s | 8 | A Hat in Time.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+3 more) |
+| 4 | Undertale | 20.2s | 7 | Castlevania 64.yaml, Dark Souls III.yaml, Kingdom Hearts.yaml, Meritous.yaml, Saving Princess.yaml (+2 more) |
+| 5 | TOEM original | 20.2s | 7 | A Hat in Time.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+2 more) |
+| 6 | Super Metroid | 20.1s | 6 | Castlevania 64.yaml, Dark Souls III.yaml, Kingdom Hearts.yaml, Meritous.yaml, Saving Princess.yaml (+1 more) |
+| 7 | Secret of Evermore | 19.2s | 6 | A Hat in Time.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+1 more) |
+| 8 | Yacht Dice | 17.9s | 8 | APQuest.yaml, ChocolateChipCookies.yaml, Final Fantasy Mystic Quest.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+3 more) |
+| 9 | Metamath | 17.4s | 5 | A Hat in Time.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml |
+| 10 | Terraria | 16.3s | 7 | APQuest.yaml, ChocolateChipCookies.yaml, Final Fantasy Mystic Quest.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+2 more) |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Mega Man 2 | 94.9s | 4 | Bumper Stickers.yaml, DOOM 1993.yaml, Jak and Daxter The Precursor Legacy.yaml, Mega Man 2.yaml |
+| 2 | Kirby's Dream Land 3 | 73.4s | 4 | A Hat in Time.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml |
+| 3 | Starcraft 2 | 67.3s | 6 | APQuest.yaml, ChocolateChipCookies.yaml, Final Fantasy Mystic Quest.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+1 more) |
+| 4 | Stardew Valley | 61.5s | 6 | Adventure.yaml, Choo-Choo Charles.yaml, Heretic.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+1 more) |
+| 5 | Kingdom Hearts 2 | 50.2s | 3 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts 2.yaml |
+| 6 | Secret of Evermore | 47.2s | 6 | A Hat in Time.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+1 more) |
+| 7 | Subnautica | 44.8s | 6 | Aquaria.yaml, Civilization VI.yaml, Hylics 2.yaml, Mario & Luigi Superstar Saga.yaml, Paint.yaml (+1 more) |
+| 8 | Yacht Dice | 43.0s | 8 | APQuest.yaml, ChocolateChipCookies.yaml, Final Fantasy Mystic Quest.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+3 more) |
+| 9 | SMZ3 | 39.3s | 5 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml, SMZ3.yaml |
+| 10 | Terraria | 37.1s | 7 | APQuest.yaml, ChocolateChipCookies.yaml, Final Fantasy Mystic Quest.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+2 more) |
