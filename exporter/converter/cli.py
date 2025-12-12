@@ -2,24 +2,26 @@
 """
 Command-line interface for rule format conversion.
 
+Supports conversion between:
+- Archipelago-CC JSON format (cc)
+- Rule Builder JSON format (rb)
+- Python code (python)
+
 Usage:
-    # Convert full file: Rule Builder -> Archipelago-CC
-    python -m exporter.converter.cli input.json -o output.json --format cc
+    # Convert JSON rule to Python code
+    python -m exporter.converter --rule '{"type": "item_check", "item": "Sword"}' --to-python
 
-    # Convert full file: Archipelago-CC -> Rule Builder
-    python -m exporter.converter.cli input.json -o output.json --format rb
+    # Convert Python code to JSON rule
+    python -m exporter.converter --python "lambda state: state.has('Sword')"
 
-    # Auto-detect input format for full file
-    python -m exporter.converter.cli input.json -o output.json
+    # Convert Python code from stdin to JSON
+    echo "state.has('Sword') and state.has('Shield')" | python -m exporter.converter --stdin --from-python
 
-    # Convert a single rule snippet from command line
-    python -m exporter.converter.cli --rule '{"type": "item_check", "item": "Sword"}'
+    # JSON format conversion (auto-detect and swap)
+    python -m exporter.converter --rule '{"type": "item_check", "item": "Sword"}'
 
-    # Convert a snippet from stdin
-    echo '{"type": "item_check", "item": "Sword"}' | python -m exporter.converter.cli --stdin
-
-    # Read snippet from file (without full file structure)
-    python -m exporter.converter.cli --snippet input_rule.json -o output_rule.json
+    # Full file conversion
+    python -m exporter.converter input.json -o output.json --format cc
 """
 
 import argparse
@@ -283,43 +285,123 @@ def convert_snippet(
     return 0, output_json
 
 
+def convert_python_code(
+    python_code: str,
+    indent: int = 2,
+    verbose: bool = False
+) -> Tuple[int, str]:
+    """
+    Convert Python code to JSON rule format.
+
+    Args:
+        python_code: Python code string (expression, lambda, or function)
+        indent: JSON indentation (default: 2)
+        verbose: Print warnings and info
+
+    Returns:
+        Tuple of (exit_code, output_json_string)
+    """
+    from .python_to_json import convert_python_to_json
+
+    try:
+        rule, warnings = convert_python_to_json(python_code)
+
+        if verbose:
+            print(f"Converted Python code to JSON", file=sys.stderr)
+            if warnings:
+                print(f"\nWarnings ({len(warnings)}):", file=sys.stderr)
+                for w in warnings:
+                    print(f"  - {w}", file=sys.stderr)
+
+        indent_val = indent if indent > 0 else None
+        output_json = json.dumps(rule, indent=indent_val, ensure_ascii=False)
+
+        return 0, output_json
+
+    except Exception as e:
+        return 1, f"Error converting Python code: {e}"
+
+
+def convert_json_to_python_code(
+    rule_json: str,
+    output_format: str = 'expression',
+    verbose: bool = False
+) -> Tuple[int, str]:
+    """
+    Convert JSON rule to Python code.
+
+    Args:
+        rule_json: JSON string containing a rule
+        output_format: 'expression', 'lambda', or 'function'
+        verbose: Print warnings and info
+
+    Returns:
+        Tuple of (exit_code, python_code_string)
+    """
+    from .json_to_python import convert_json_to_python, convert_json_to_lambda, convert_json_to_function
+
+    try:
+        rule = json.loads(rule_json)
+    except json.JSONDecodeError as e:
+        return 1, f"Error: Invalid JSON: {e}"
+
+    try:
+        if output_format == 'lambda':
+            code, warnings = convert_json_to_lambda(rule)
+        elif output_format == 'function':
+            code, warnings = convert_json_to_function(rule)
+        else:
+            code, warnings = convert_json_to_python(rule)
+
+        if verbose:
+            print(f"Converted JSON to Python code", file=sys.stderr)
+            if warnings:
+                print(f"\nWarnings ({len(warnings)}):", file=sys.stderr)
+                for w in warnings:
+                    print(f"  - {w}", file=sys.stderr)
+
+        return 0, code
+
+    except Exception as e:
+        return 1, f"Error converting JSON to Python: {e}"
+
+
 def main():
     """Main entry point for CLI."""
     parser = argparse.ArgumentParser(
-        description='Convert between Archipelago rule JSON formats',
+        description='Convert between Archipelago rule formats (JSON and Python)',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Full file conversion (auto-detect format)
-  python -m exporter.converter input.json -o output.json
+  # Python <-> JSON conversion
+  python -m exporter.converter --python "lambda state: state.has('Sword')"
+  python -m exporter.converter --rule '{"type": "item_check", "item": "Sword"}' --to-python
+  python -m exporter.converter --rule '{"type": "item_check", "item": "Sword"}' --to-python --py-format lambda
 
-  # Explicitly convert Rule Builder -> Archipelago-CC
-  python -m exporter.converter input.json -o output.json --format cc
+  # Convert Python from stdin to JSON
+  echo "state.has('Sword') and state.has('Shield')" | python -m exporter.converter --stdin --from-python
 
-  # Convert a single rule snippet from command line
+  # JSON format conversion (auto-detect and swap between cc/rb)
   python -m exporter.converter --rule '{"type": "item_check", "item": "Sword"}'
-
-  # Convert a snippet from stdin (pipe-friendly)
-  echo '{"type": "item_check", "item": "Sword"}' | python -m exporter.converter --stdin
-
-  # Read snippet from file (not a full rules file)
-  python -m exporter.converter --snippet rule.json -o converted.json
-
-  # Convert snippet with explicit format
   python -m exporter.converter --rule '{"rule": "Has", "options": [], "args": {"item_name": "Key"}}' --format cc
 
-Supported formats:
-  cc    Archipelago-CC format (this repository)
-  rb    Rule Builder format (PR #5048)
+  # Full file conversion
+  python -m exporter.converter input.json -o output.json --format cc
 
-Snippet mode vs File mode:
-  - File mode (default): Expects a full rules file with 'regions', 'locations', etc.
-  - Snippet mode (--rule, --stdin, --snippet): Converts a single rule dictionary
+Supported formats:
+  cc      Archipelago-CC JSON format (this repository)
+  rb      Rule Builder JSON format (PR #5048)
+  python  Python code (expressions, lambdas, or function definitions)
+
+Python code conversion:
+  --python CODE       Convert Python code to JSON
+  --from-python       Interpret stdin as Python code (use with --stdin)
+  --to-python         Convert JSON rule to Python code
+  --py-format FMT     Python output format: expression (default), lambda, or function
 
 Round-trip conversion:
-  Both converters preserve metadata to enable lossless round-trips.
-  Converting A -> B -> A or B -> A -> B will produce identical results
-  for compatible rule types.
+  Python -> JSON -> Python and JSON -> Python -> JSON should produce
+  semantically equivalent code for supported rule types.
         """
     )
 
@@ -336,9 +418,14 @@ Round-trip conversion:
         help='Single rule as JSON string (snippet mode)'
     )
     input_group.add_argument(
+        '-p', '--python',
+        metavar='CODE',
+        help='Python code to convert to JSON'
+    )
+    input_group.add_argument(
         '--stdin',
         action='store_true',
-        help='Read single rule from stdin (snippet mode)'
+        help='Read input from stdin'
     )
     input_group.add_argument(
         '-s', '--snippet',
@@ -348,13 +435,33 @@ Round-trip conversion:
 
     parser.add_argument(
         '-o', '--output',
-        help='Output JSON file path (default: stdout)'
+        help='Output file path (default: stdout)'
     )
 
     parser.add_argument(
         '-f', '--format',
         choices=['cc', 'rb'],
-        help='Target format (default: auto-detect and convert to opposite)'
+        help='Target JSON format (default: auto-detect and convert to opposite)'
+    )
+
+    # Python conversion options
+    parser.add_argument(
+        '--to-python',
+        action='store_true',
+        help='Convert JSON rule to Python code'
+    )
+
+    parser.add_argument(
+        '--from-python',
+        action='store_true',
+        help='Interpret stdin input as Python code (use with --stdin)'
+    )
+
+    parser.add_argument(
+        '--py-format',
+        choices=['expression', 'lambda', 'function'],
+        default='expression',
+        help='Python output format (default: expression)'
     )
 
     parser.add_argument(
@@ -374,27 +481,59 @@ Round-trip conversion:
 
     indent = args.indent if args.indent > 0 else None
 
-    # Determine input mode and get rule JSON
-    if args.rule:
-        # Direct JSON string from command line
-        exit_code, output = convert_snippet(
-            rule_json=args.rule,
-            target_format=args.format,
+    # Determine input mode and process
+    if args.python:
+        # Convert Python code to JSON
+        exit_code, output = convert_python_code(
+            python_code=args.python,
             indent=args.indent,
             verbose=args.verbose
         )
+    elif args.rule:
+        if args.to_python:
+            # Convert JSON rule to Python code
+            exit_code, output = convert_json_to_python_code(
+                rule_json=args.rule,
+                output_format=args.py_format,
+                verbose=args.verbose
+            )
+        else:
+            # JSON-to-JSON conversion (original behavior)
+            exit_code, output = convert_snippet(
+                rule_json=args.rule,
+                target_format=args.format,
+                indent=args.indent,
+                verbose=args.verbose
+            )
     elif args.stdin:
         # Read from stdin
-        rule_json = sys.stdin.read().strip()
-        if not rule_json:
+        input_text = sys.stdin.read().strip()
+        if not input_text:
             print("Error: No input provided on stdin", file=sys.stderr)
             sys.exit(1)
-        exit_code, output = convert_snippet(
-            rule_json=rule_json,
-            target_format=args.format,
-            indent=args.indent,
-            verbose=args.verbose
-        )
+
+        if args.from_python:
+            # Interpret stdin as Python code
+            exit_code, output = convert_python_code(
+                python_code=input_text,
+                indent=args.indent,
+                verbose=args.verbose
+            )
+        elif args.to_python:
+            # Convert JSON from stdin to Python
+            exit_code, output = convert_json_to_python_code(
+                rule_json=input_text,
+                output_format=args.py_format,
+                verbose=args.verbose
+            )
+        else:
+            # JSON-to-JSON conversion (original behavior)
+            exit_code, output = convert_snippet(
+                rule_json=input_text,
+                target_format=args.format,
+                indent=args.indent,
+                verbose=args.verbose
+            )
     elif args.snippet:
         # Read snippet from file
         try:
@@ -403,13 +542,23 @@ Round-trip conversion:
                 print(f"Error: File not found: {args.snippet}", file=sys.stderr)
                 sys.exit(1)
             with open(snippet_path, 'r', encoding='utf-8') as f:
-                rule_json = f.read()
-            exit_code, output = convert_snippet(
-                rule_json=rule_json,
-                target_format=args.format,
-                indent=args.indent,
-                verbose=args.verbose
-            )
+                file_content = f.read()
+
+            if args.to_python:
+                # Convert JSON file to Python
+                exit_code, output = convert_json_to_python_code(
+                    rule_json=file_content,
+                    output_format=args.py_format,
+                    verbose=args.verbose
+                )
+            else:
+                # JSON-to-JSON conversion
+                exit_code, output = convert_snippet(
+                    rule_json=file_content,
+                    target_format=args.format,
+                    indent=args.indent,
+                    verbose=args.verbose
+                )
         except Exception as e:
             print(f"Error reading snippet file: {e}", file=sys.stderr)
             sys.exit(1)
