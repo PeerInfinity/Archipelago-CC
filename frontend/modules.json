@@ -171,6 +171,10 @@
       "path": "./modules/windowManagerPanel/index.js",
       "enabled": true,
       "requires": ["windowAdapter", "windowPanel"]
+    },
+    "ruleConverter": {
+      "path": "./modules/ruleConverter/index.js",
+      "enabled": true
     }
   },
   "loadPriority": [
@@ -212,6 +216,7 @@
     "iframeManagerPanel",
     "windowAdapter",
     "windowPanel",
-    "windowManagerPanel"
+    "windowManagerPanel",
+    "ruleConverter"
   ]
 }
