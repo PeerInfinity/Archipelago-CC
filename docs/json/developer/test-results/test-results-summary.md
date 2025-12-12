@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-12 08:31:38
+**Generated:** 2025-12-12 10:29:31
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -21,7 +21,7 @@ Additional test results:
 - **Minimal Test:** 76/76 passed (100.0%)
 - **Full Test:** 76/76 passed (100.0%)
 - **Multiclient Test:** 75/76 passed (98.7%)
-- **Multiworld Test:** 73/76 passed (96.1%)
+- **Multiworld Test:** 74/76 passed (97.4%)
 
 ### Intermittent Failures
 
@@ -33,8 +33,8 @@ Additional test results:
 ### Combined Test Results
 
 - **Templates passing all 4 tests:** 73/76 (96.1%)
-- **Templates passing 3 tests:** 2/76 (2.6%)
-- **Templates passing 2 tests:** 1/76 (1.3%)
+- **Templates passing 3 tests:** 3/76 (3.9%)
+- **Templates passing 2 tests:** 0/76 (0.0%)
 - **Templates passing 1 test:** 0/76 (0.0%)
 - **Templates passing 0 tests:** 0/76 (0.0%)
 
@@ -104,7 +104,7 @@ Of the 73 templates passing all 4 tests:
 | Paint | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 6.4KB | 4.4KB |
 | Raft | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 11.8KB | 5.5KB |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| SMZ3 | ✅ Passed | ✅ Passed | ❌ Failed | ⚫ Skipped | ✅ | ✅ | 61.4KB | 51.3KB |
+| SMZ3 | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | 61.4KB | 51.3KB |
 | Saving Princess | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |

@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-12 08:31:38
+**Generated:** 2025-12-12 10:29:31
 
 ## Summary
 
 - **Total Games:** 76
-- **Passed:** 73 (96.1%)
+- **Passed:** 74 (97.4%)
 - **Failed:** 2 (2.6%)
-- **Skipped (Prerequisites):** 1 (1.3%)
+- **Skipped (Prerequisites):** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
-- **Second Pass Tested:** 73
-- **Second Pass Passed:** 73
+- **Second Pass Tested:** 74
+- **Second Pass Passed:** 74
 - **Second Pass Failed:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 29/73 (39.7% of passed)
-- **Passing with Generic Logic:** 54/73 (74.0% of passed)
-- **Passing with Both Generic:** 29/73 (39.7% of passed)
+- **Passing with Generic Exporter:** 29/74 (39.2% of passed)
+- **Passing with Generic Logic:** 54/74 (73.0% of passed)
+- **Passing with Both Generic:** 29/74 (39.2% of passed)
 
 ## Test Results
 
@@ -78,7 +78,7 @@
 | Paint | ✅ Passed | ✅ Passed | 5 | 5 | 6.4KB | 4.4KB |
 | Raft | ✅ Passed | ✅ Passed | 5 | 5 | 11.8KB | 5.5KB |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
-| SMZ3 | ⚫ Skipped | — | 5 | N/A | 61.4KB | 51.3KB |
+| SMZ3 | ✅ Passed | ✅ Passed | 5 | 5 | 61.4KB | 51.3KB |
 | Saving Princess | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | ✅ Passed | 6 | 6 | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
@@ -88,7 +88,7 @@
 | Subnautica | ❌ Failed | — | 6 | 6 | 2.4KB | 14.7KB |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | 5 | 5 | 13.9KB | 4.9KB |
-| Super Mario World | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
+| Super Mario World | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Super Metroid | ✅ Passed | ✅ Passed | 6 | 6 | 72.0KB | 114.6KB |
 | TOEM original | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
@@ -98,7 +98,7 @@
 | The Messenger | ✅ Passed | ✅ Passed | 6 | 6 | 11.7KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 4.8KB | 4.6KB |
 | The Witness | ✅ Passed | ✅ Passed | 6 | 6 | 28.9KB | ✅ |
-| Timespinner | ✅ Passed | ✅ Passed | 6 | 6 | 4.1KB | ✅ |
+| Timespinner | ✅ Passed | ✅ Passed | 7 | 7 | 4.1KB | ✅ |
 | Undertale | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | VVVVVV | ✅ Passed | ✅ Passed | 8 | 8 | 5.4KB | ✅ |
 | Wargroove | ✅ Passed | ✅ Passed | 8 | 8 | 5.7KB | 2.6KB |
@@ -111,137 +111,137 @@
 
 Shows which templates were in the multiworld when each game was tested:
 
-### A Hat in Time ✅
+### A Hat in Time ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Hat in Time.yaml |
 
-### A Link to the Past ✅
+### A Link to the Past ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Link to the Past.yaml |
 
-### A Short Hike ✅
+### A Short Hike ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
 
-### APQuest ✅
+### APQuest ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
 | 1 | APQuest.yaml |
 
-### Adventure ✅
+### Adventure ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Adventure.yaml |
 
-### Aquaria ✅
+### Aquaria ✅ (Split 6)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
 
-### Bomb Rush Cyberfunk ✅
+### Bomb Rush Cyberfunk ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Bomb Rush Cyberfunk.yaml |
 
-### Bumper Stickers ✅
+### Bumper Stickers ✅ (Split 8)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Bumper Stickers.yaml |
 
-### Castlevania - Circle of the Moon ✅
+### Castlevania - Circle of the Moon ✅ (Split 9)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Castlevania - Circle of the Moon.yaml |
 
-### Castlevania 64 ✅
+### Castlevania 64 ✅ (Split 10)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Castlevania 64.yaml |
 
-### Celeste (Open World) ✅
+### Celeste (Open World) ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Hat in Time.yaml |
 | 2 | Celeste (Open World).yaml |
 
-### Celeste 64 ✅
+### Celeste 64 ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Link to the Past.yaml |
 | 2 | Celeste 64.yaml |
 
-### ChecksFinder ✅
+### ChecksFinder ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
 | 1 | A Short Hike.yaml |
 | 2 | ChecksFinder.yaml |
 
-### ChocolateChipCookies ✅
+### ChocolateChipCookies ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
 | 1 | APQuest.yaml |
 | 2 | ChocolateChipCookies.yaml |
 
-### Choo-Choo Charles ✅
+### Choo-Choo Charles ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Adventure.yaml |
 | 2 | Choo-Choo Charles.yaml |
 
-### Civilization VI ✅
+### Civilization VI ✅ (Split 6)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Aquaria.yaml |
 | 2 | Civilization VI.yaml |
 
-### DLCQuest ✅
+### DLCQuest ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Bomb Rush Cyberfunk.yaml |
 | 2 | DLCQuest.yaml |
 
-### DOOM 1993 ✅
+### DOOM 1993 ✅ (Split 8)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Bumper Stickers.yaml |
 | 2 | DOOM 1993.yaml |
 
-### DOOM II ✅
+### DOOM II ✅ (Split 9)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Castlevania - Circle of the Moon.yaml |
 | 2 | DOOM II.yaml |
 
-### Dark Souls III ✅
+### Dark Souls III ✅ (Split 10)
 
 | Player # | Template |
 |----------|----------|
 | 1 | Castlevania 64.yaml |
 | 2 | Dark Souls III.yaml |
 
-### Donkey Kong Country 3 ✅
+### Donkey Kong Country 3 ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
@@ -249,7 +249,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Celeste (Open World).yaml |
 | 3 | Donkey Kong Country 3.yaml |
 
-### Factorio ✅
+### Factorio ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -257,7 +257,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Celeste 64.yaml |
 | 3 | Factorio.yaml |
 
-### Faxanadu ✅
+### Faxanadu ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
@@ -265,7 +265,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | ChecksFinder.yaml |
 | 3 | Faxanadu.yaml |
 
-### Final Fantasy Mystic Quest ✅
+### Final Fantasy Mystic Quest ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
@@ -273,7 +273,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | ChocolateChipCookies.yaml |
 | 3 | Final Fantasy Mystic Quest.yaml |
 
-### Heretic ✅
+### Heretic ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
@@ -281,7 +281,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Choo-Choo Charles.yaml |
 | 3 | Heretic.yaml |
 
-### Hylics 2 ✅
+### Hylics 2 ✅ (Split 6)
 
 | Player # | Template |
 |----------|----------|
@@ -289,7 +289,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Civilization VI.yaml |
 | 3 | Hylics 2.yaml |
 
-### Inscryption ✅
+### Inscryption ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
@@ -297,7 +297,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | DLCQuest.yaml |
 | 3 | Inscryption.yaml |
 
-### Jak and Daxter: The Precursor Legacy ✅
+### Jak and Daxter: The Precursor Legacy ✅ (Split 8)
 
 | Player # | Template |
 |----------|----------|
@@ -305,7 +305,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | DOOM 1993.yaml |
 | 3 | Jak and Daxter The Precursor Legacy.yaml |
 
-### Kingdom Hearts ✅
+### Kingdom Hearts ✅ (Split 10)
 
 | Player # | Template |
 |----------|----------|
@@ -313,7 +313,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | Dark Souls III.yaml |
 | 3 | Kingdom Hearts.yaml |
 
-### Kingdom Hearts 2 ✅
+### Kingdom Hearts 2 ✅ (Split 9)
 
 | Player # | Template |
 |----------|----------|
@@ -321,7 +321,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | DOOM II.yaml |
 | 3 | Kingdom Hearts 2.yaml |
 
-### Kirby's Dream Land 3 ✅
+### Kirby's Dream Land 3 ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
@@ -330,7 +330,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Donkey Kong Country 3.yaml |
 | 4 | Kirby's Dream Land 3.yaml |
 
-### Landstalker - The Treasures of King Nole ✅
+### Landstalker - The Treasures of King Nole ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -339,7 +339,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Factorio.yaml |
 | 4 | Landstalker - The Treasures of King Nole.yaml |
 
-### Lingo ✅
+### Lingo ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
@@ -348,7 +348,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Faxanadu.yaml |
 | 4 | Lingo.yaml |
 
-### Links Awakening DX ✅
+### Links Awakening DX ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
@@ -357,7 +357,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Final Fantasy Mystic Quest.yaml |
 | 4 | Links Awakening DX.yaml |
 
-### Lufia II Ancient Cave ✅
+### Lufia II Ancient Cave ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
@@ -366,7 +366,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Heretic.yaml |
 | 4 | Lufia II Ancient Cave.yaml |
 
-### Mario & Luigi Superstar Saga ✅
+### Mario & Luigi Superstar Saga ✅ (Split 6)
 
 | Player # | Template |
 |----------|----------|
@@ -375,7 +375,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Hylics 2.yaml |
 | 4 | Mario & Luigi Superstar Saga.yaml |
 
-### MathProof2p2e4 ✅
+### MathProof2p2e4 ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
@@ -384,7 +384,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Inscryption.yaml |
 | 4 | MathProof2p2e4.yaml |
 
-### Mega Man 2 ❌
+### Mega Man 2 ❌ (Split 8)
 
 | Player # | Template |
 |----------|----------|
@@ -393,7 +393,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Jak and Daxter The Precursor Legacy.yaml |
 | 4 | Mega Man 2.yaml |
 
-### MegaMan Battle Network 3 ✅
+### MegaMan Battle Network 3 ✅ (Split 9)
 
 | Player # | Template |
 |----------|----------|
@@ -402,7 +402,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Kingdom Hearts 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
 
-### Meritous ✅
+### Meritous ✅ (Split 10)
 
 | Player # | Template |
 |----------|----------|
@@ -411,7 +411,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Kingdom Hearts.yaml |
 | 4 | Meritous.yaml |
 
-### Metamath ✅
+### Metamath ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
@@ -421,7 +421,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Kirby's Dream Land 3.yaml |
 | 5 | Metamath.yaml |
 
-### Muse Dash ✅
+### Muse Dash ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -431,7 +431,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Landstalker - The Treasures of King Nole.yaml |
 | 5 | Muse Dash.yaml |
 
-### Noita ✅
+### Noita ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
@@ -441,7 +441,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Lingo.yaml |
 | 5 | Noita.yaml |
 
-### Old School Runescape ✅
+### Old School Runescape ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
@@ -451,7 +451,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Links Awakening DX.yaml |
 | 5 | Old School Runescape.yaml |
 
-### Overcooked! 2 ✅
+### Overcooked! 2 ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
@@ -461,7 +461,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Lufia II Ancient Cave.yaml |
 | 5 | Overcooked! 2.yaml |
 
-### Paint ✅
+### Paint ✅ (Split 6)
 
 | Player # | Template |
 |----------|----------|
@@ -471,7 +471,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Mario & Luigi Superstar Saga.yaml |
 | 5 | Paint.yaml |
 
-### Raft ✅
+### Raft ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
@@ -481,7 +481,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | MathProof2p2e4.yaml |
 | 5 | Raft.yaml |
 
-### Risk of Rain 2 ✅
+### Risk of Rain 2 ✅ (Split 8)
 
 | Player # | Template |
 |----------|----------|
@@ -490,7 +490,17 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Jak and Daxter The Precursor Legacy.yaml |
 | 4 | Risk of Rain 2.yaml |
 
-### Saving Princess ✅
+### SMZ3 ✅ (Split 9)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Castlevania - Circle of the Moon.yaml |
+| 2 | DOOM II.yaml |
+| 3 | Kingdom Hearts 2.yaml |
+| 4 | MegaMan Battle Network 3.yaml |
+| 5 | SMZ3.yaml |
+
+### Saving Princess ✅ (Split 10)
 
 | Player # | Template |
 |----------|----------|
@@ -500,7 +510,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Meritous.yaml |
 | 5 | Saving Princess.yaml |
 
-### Secret of Evermore ✅
+### Secret of Evermore ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
@@ -511,7 +521,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Metamath.yaml |
 | 6 | Secret of Evermore.yaml |
 
-### Shivers ✅
+### Shivers ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -522,7 +532,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Muse Dash.yaml |
 | 6 | Shivers.yaml |
 
-### Sonic Adventure 2 Battle ✅
+### Sonic Adventure 2 Battle ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
@@ -533,7 +543,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Noita.yaml |
 | 6 | Sonic Adventure 2 Battle.yaml |
 
-### Starcraft 2 ✅
+### Starcraft 2 ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
@@ -544,7 +554,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Old School Runescape.yaml |
 | 6 | Starcraft 2.yaml |
 
-### Stardew Valley ✅
+### Stardew Valley ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
@@ -555,7 +565,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Overcooked! 2.yaml |
 | 6 | Stardew Valley.yaml |
 
-### Subnautica ❌
+### Subnautica ❌ (Split 6)
 
 | Player # | Template |
 |----------|----------|
@@ -566,7 +576,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Paint.yaml |
 | 6 | Subnautica.yaml |
 
-### Super Mario 64 ✅
+### Super Mario 64 ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
@@ -577,7 +587,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Raft.yaml |
 | 6 | Super Mario 64.yaml |
 
-### Super Mario Land 2 ✅
+### Super Mario Land 2 ✅ (Split 8)
 
 | Player # | Template |
 |----------|----------|
@@ -587,7 +597,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 4 | Risk of Rain 2.yaml |
 | 5 | Super Mario Land 2.yaml |
 
-### Super Mario World ✅
+### Super Mario World ✅ (Split 9)
 
 | Player # | Template |
 |----------|----------|
@@ -595,9 +605,10 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | DOOM II.yaml |
 | 3 | Kingdom Hearts 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
-| 5 | Super Mario World.yaml |
+| 5 | SMZ3.yaml |
+| 6 | Super Mario World.yaml |
 
-### Super Metroid ✅
+### Super Metroid ✅ (Split 10)
 
 | Player # | Template |
 |----------|----------|
@@ -608,7 +619,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Saving Princess.yaml |
 | 6 | Super Metroid.yaml |
 
-### TOEM original ✅
+### TOEM original ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
@@ -620,7 +631,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 6 | Secret of Evermore.yaml |
 | 7 | TOEM original.yaml |
 
-### TOEM rule builder ✅
+### TOEM rule builder ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -632,7 +643,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 6 | Shivers.yaml |
 | 7 | TOEM rule builder.yaml |
 
-### TUNIC ✅
+### TUNIC ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
@@ -644,7 +655,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 6 | Sonic Adventure 2 Battle.yaml |
 | 7 | TUNIC.yaml |
 
-### Terraria ✅
+### Terraria ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
@@ -656,7 +667,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 6 | Starcraft 2.yaml |
 | 7 | Terraria.yaml |
 
-### The Legend of Zelda ✅
+### The Legend of Zelda ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
@@ -668,7 +679,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 6 | Stardew Valley.yaml |
 | 7 | The Legend of Zelda.yaml |
 
-### The Messenger ✅
+### The Messenger ✅ (Split 6)
 
 | Player # | Template |
 |----------|----------|
@@ -679,7 +690,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Paint.yaml |
 | 6 | The Messenger.yaml |
 
-### The Wind Waker ✅
+### The Wind Waker ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
@@ -691,7 +702,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 6 | Super Mario 64.yaml |
 | 7 | The Wind Waker.yaml |
 
-### The Witness ✅
+### The Witness ✅ (Split 8)
 
 | Player # | Template |
 |----------|----------|
@@ -702,7 +713,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Super Mario Land 2.yaml |
 | 6 | The Witness.yaml |
 
-### Timespinner ✅
+### Timespinner ✅ (Split 9)
 
 | Player # | Template |
 |----------|----------|
@@ -710,10 +721,11 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | DOOM II.yaml |
 | 3 | Kingdom Hearts 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
-| 5 | Super Mario World.yaml |
-| 6 | Timespinner.yaml |
+| 5 | SMZ3.yaml |
+| 6 | Super Mario World.yaml |
+| 7 | Timespinner.yaml |
 
-### Undertale ✅
+### Undertale ✅ (Split 10)
 
 | Player # | Template |
 |----------|----------|
@@ -725,7 +737,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 6 | Super Metroid.yaml |
 | 7 | Undertale.yaml |
 
-### VVVVVV ✅
+### VVVVVV ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
@@ -738,7 +750,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 7 | TOEM original.yaml |
 | 8 | VVVVVV.yaml |
 
-### Wargroove ✅
+### Wargroove ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -751,7 +763,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 7 | TOEM rule builder.yaml |
 | 8 | Wargroove.yaml |
 
-### WebDevJourney ✅
+### WebDevJourney ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
@@ -764,7 +776,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 7 | TUNIC.yaml |
 | 8 | WebDevJourney.yaml |
 
-### Yacht Dice ✅
+### Yacht Dice ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
@@ -777,7 +789,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 7 | Terraria.yaml |
 | 8 | Yacht Dice.yaml |
 
-### Yoshi's Island ✅
+### Yoshi's Island ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
@@ -790,7 +802,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 7 | The Legend of Zelda.yaml |
 | 8 | Yoshi's Island.yaml |
 
-### shapez ✅
+### shapez ✅ (Split 6)
 
 | Player # | Template |
 |----------|----------|
@@ -801,6 +813,33 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Paint.yaml |
 | 6 | The Messenger.yaml |
 | 7 | shapez.yaml |
+
+
+## Bisection Results
+
+When a multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
+
+### Mega Man 2 (Mega Man 2.yaml)
+
+**Failing pairs found:** 3
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| Bumper Stickers.yaml | ❌ | ✅ | ✅ | ❌ |
+| DOOM 1993.yaml | ❌ | ✅ | ✅ | ❌ |
+| Jak and Daxter The Precursor Legacy.yaml | ❌ | ✅ | ✅ | ❌ |
+
+### Subnautica (Subnautica.yaml)
+
+**No failing pairs found** (failure may be due to combination of 3+ templates)
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| Aquaria.yaml | ✅ | ✅ | ✅ | ✅ |
+| Civilization VI.yaml | ✅ | ✅ | ✅ | ✅ |
+| Hylics 2.yaml | ✅ | ✅ | ✅ | ✅ |
+| Mario & Luigi Superstar Saga.yaml | ✅ | ✅ | ✅ | ✅ |
+| Paint.yaml | ✅ | ✅ | ✅ | ✅ |
 
 
 ## Second Pass Results
@@ -817,7 +856,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Aquaria | 1 | 7 | 1 | ✅ Passed |
 | Bomb Rush Cyberfunk | 1 | 7 | 1 | ✅ Passed |
 | Bumper Stickers | 1 | 6 | 1 | ✅ Passed |
-| Castlevania - Circle of the Moon | 1 | 6 | 1 | ✅ Passed |
+| Castlevania - Circle of the Moon | 1 | 7 | 1 | ✅ Passed |
 | Castlevania 64 | 1 | 7 | 1 | ✅ Passed |
 | Celeste (Open World) | 2 | 8 | 2 | ✅ Passed |
 | Celeste 64 | 2 | 8 | 2 | ✅ Passed |
@@ -827,7 +866,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Civilization VI | 2 | 7 | 2 | ✅ Passed |
 | DLCQuest | 2 | 7 | 2 | ✅ Passed |
 | DOOM 1993 | 2 | 6 | 2 | ✅ Passed |
-| DOOM II | 2 | 6 | 2 | ✅ Passed |
+| DOOM II | 2 | 7 | 2 | ✅ Passed |
 | Dark Souls III | 2 | 7 | 2 | ✅ Passed |
 | Donkey Kong Country 3 | 3 | 8 | 3 | ✅ Passed |
 | Factorio | 3 | 8 | 3 | ✅ Passed |
@@ -838,7 +877,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Inscryption | 3 | 7 | 3 | ✅ Passed |
 | Jak and Daxter: The Precursor Legacy | 3 | 6 | 3 | ✅ Passed |
 | Kingdom Hearts | 3 | 7 | 3 | ✅ Passed |
-| Kingdom Hearts 2 | 3 | 6 | 3 | ✅ Passed |
+| Kingdom Hearts 2 | 3 | 7 | 3 | ✅ Passed |
 | Kirby's Dream Land 3 | 4 | 8 | 4 | ✅ Passed |
 | Landstalker - The Treasures of King Nole | 4 | 8 | 4 | ✅ Passed |
 | Lingo | 4 | 8 | 4 | ✅ Passed |
@@ -846,7 +885,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Lufia II Ancient Cave | 4 | 8 | 4 | ✅ Passed |
 | Mario & Luigi Superstar Saga | 4 | 7 | 4 | ✅ Passed |
 | MathProof2p2e4 | 4 | 7 | 4 | ✅ Passed |
-| MegaMan Battle Network 3 | 4 | 6 | 4 | ✅ Passed |
+| MegaMan Battle Network 3 | 4 | 7 | 4 | ✅ Passed |
 | Meritous | 4 | 7 | 4 | ✅ Passed |
 | Metamath | 5 | 8 | 5 | ✅ Passed |
 | Muse Dash | 5 | 8 | 5 | ✅ Passed |
@@ -856,6 +895,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Paint | 5 | 7 | 5 | ✅ Passed |
 | Raft | 5 | 7 | 5 | ✅ Passed |
 | Risk of Rain 2 | 4 | 6 | 4 | ✅ Passed |
+| SMZ3 | 5 | 7 | 5 | ✅ Passed |
 | Saving Princess | 5 | 7 | 5 | ✅ Passed |
 | Secret of Evermore | 6 | 8 | 6 | ✅ Passed |
 | Shivers | 6 | 8 | 6 | ✅ Passed |
@@ -864,7 +904,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Stardew Valley | 6 | 8 | 6 | ✅ Passed |
 | Super Mario 64 | 6 | 7 | 6 | ✅ Passed |
 | Super Mario Land 2 | 5 | 6 | 5 | ✅ Passed |
-| Super Mario World | 5 | 6 | 5 | ✅ Passed |
+| Super Mario World | 6 | 7 | 6 | ✅ Passed |
 | Super Metroid | 6 | 7 | 6 | ✅ Passed |
 | TOEM original | 7 | 8 | 7 | ✅ Passed |
 | TOEM rule builder | 7 | 8 | 7 | ✅ Passed |
@@ -874,7 +914,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | The Messenger | 6 | 7 | 6 | ✅ Passed |
 | The Wind Waker | 7 | 7 | 7 | ✅ Passed |
 | The Witness | 6 | 6 | 6 | ✅ Passed |
-| Timespinner | 6 | 6 | 6 | ✅ Passed |
+| Timespinner | 7 | 7 | 7 | ✅ Passed |
 | Undertale | 7 | 7 | 7 | ✅ Passed |
 | VVVVVV | 8 | 8 | 8 | ✅ Passed |
 | Wargroove | 8 | 8 | 8 | ✅ Passed |
@@ -887,7 +927,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 
 Shows which templates were in the multiworld when each game was tested in the second pass:
 
-#### A Hat in Time ✅
+#### A Hat in Time ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
@@ -900,7 +940,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TOEM original.yaml |
 | 8 | VVVVVV.yaml |
 
-#### A Link to the Past ✅
+#### A Link to the Past ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -913,7 +953,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TOEM rule builder.yaml |
 | 8 | Wargroove.yaml |
 
-#### A Short Hike ✅
+#### A Short Hike ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
@@ -926,7 +966,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TUNIC.yaml |
 | 8 | WebDevJourney.yaml |
 
-#### APQuest ✅
+#### APQuest ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
@@ -939,7 +979,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | Terraria.yaml |
 | 8 | Yacht Dice.yaml |
 
-#### Adventure ✅
+#### Adventure ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
@@ -952,7 +992,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | The Legend of Zelda.yaml |
 | 8 | Yoshi's Island.yaml |
 
-#### Aquaria ✅
+#### Aquaria ✅ (Split 6)
 
 | Player # | Template |
 |----------|----------|
@@ -964,7 +1004,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | The Messenger.yaml |
 | 7 | shapez.yaml |
 
-#### Bomb Rush Cyberfunk ✅
+#### Bomb Rush Cyberfunk ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
@@ -976,7 +1016,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario 64.yaml |
 | 7 | The Wind Waker.yaml |
 
-#### Bumper Stickers ✅
+#### Bumper Stickers ✅ (Split 8)
 
 | Player # | Template |
 |----------|----------|
@@ -987,7 +1027,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 5 | Super Mario Land 2.yaml |
 | 6 | The Witness.yaml |
 
-#### Castlevania - Circle of the Moon ✅
+#### Castlevania - Circle of the Moon ✅ (Split 9)
 
 | Player # | Template |
 |----------|----------|
@@ -995,10 +1035,11 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 2 | DOOM II.yaml |
 | 3 | Kingdom Hearts 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
-| 5 | Super Mario World.yaml |
-| 6 | Timespinner.yaml |
+| 5 | SMZ3.yaml |
+| 6 | Super Mario World.yaml |
+| 7 | Timespinner.yaml |
 
-#### Castlevania 64 ✅
+#### Castlevania 64 ✅ (Split 10)
 
 | Player # | Template |
 |----------|----------|
@@ -1010,7 +1051,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Metroid.yaml |
 | 7 | Undertale.yaml |
 
-#### Celeste (Open World) ✅
+#### Celeste (Open World) ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
@@ -1023,7 +1064,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TOEM original.yaml |
 | 8 | VVVVVV.yaml |
 
-#### Celeste 64 ✅
+#### Celeste 64 ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -1036,7 +1077,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TOEM rule builder.yaml |
 | 8 | Wargroove.yaml |
 
-#### ChecksFinder ✅
+#### ChecksFinder ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
@@ -1049,7 +1090,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TUNIC.yaml |
 | 8 | WebDevJourney.yaml |
 
-#### ChocolateChipCookies ✅
+#### ChocolateChipCookies ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
@@ -1062,7 +1103,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | Terraria.yaml |
 | 8 | Yacht Dice.yaml |
 
-#### Choo-Choo Charles ✅
+#### Choo-Choo Charles ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
@@ -1075,7 +1116,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | The Legend of Zelda.yaml |
 | 8 | Yoshi's Island.yaml |
 
-#### Civilization VI ✅
+#### Civilization VI ✅ (Split 6)
 
 | Player # | Template |
 |----------|----------|
@@ -1087,7 +1128,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | The Messenger.yaml |
 | 7 | shapez.yaml |
 
-#### DLCQuest ✅
+#### DLCQuest ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
@@ -1099,7 +1140,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario 64.yaml |
 | 7 | The Wind Waker.yaml |
 
-#### DOOM 1993 ✅
+#### DOOM 1993 ✅ (Split 8)
 
 | Player # | Template |
 |----------|----------|
@@ -1110,7 +1151,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 5 | Super Mario Land 2.yaml |
 | 6 | The Witness.yaml |
 
-#### DOOM II ✅
+#### DOOM II ✅ (Split 9)
 
 | Player # | Template |
 |----------|----------|
@@ -1118,10 +1159,11 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 2 | DOOM II.yaml |
 | 3 | Kingdom Hearts 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
-| 5 | Super Mario World.yaml |
-| 6 | Timespinner.yaml |
+| 5 | SMZ3.yaml |
+| 6 | Super Mario World.yaml |
+| 7 | Timespinner.yaml |
 
-#### Dark Souls III ✅
+#### Dark Souls III ✅ (Split 10)
 
 | Player # | Template |
 |----------|----------|
@@ -1133,7 +1175,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Metroid.yaml |
 | 7 | Undertale.yaml |
 
-#### Donkey Kong Country 3 ✅
+#### Donkey Kong Country 3 ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
@@ -1146,7 +1188,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TOEM original.yaml |
 | 8 | VVVVVV.yaml |
 
-#### Factorio ✅
+#### Factorio ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -1159,7 +1201,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TOEM rule builder.yaml |
 | 8 | Wargroove.yaml |
 
-#### Faxanadu ✅
+#### Faxanadu ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
@@ -1172,7 +1214,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TUNIC.yaml |
 | 8 | WebDevJourney.yaml |
 
-#### Final Fantasy Mystic Quest ✅
+#### Final Fantasy Mystic Quest ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
@@ -1185,7 +1227,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | Terraria.yaml |
 | 8 | Yacht Dice.yaml |
 
-#### Heretic ✅
+#### Heretic ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
@@ -1198,7 +1240,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | The Legend of Zelda.yaml |
 | 8 | Yoshi's Island.yaml |
 
-#### Hylics 2 ✅
+#### Hylics 2 ✅ (Split 6)
 
 | Player # | Template |
 |----------|----------|
@@ -1210,7 +1252,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | The Messenger.yaml |
 | 7 | shapez.yaml |
 
-#### Inscryption ✅
+#### Inscryption ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
@@ -1222,7 +1264,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario 64.yaml |
 | 7 | The Wind Waker.yaml |
 
-#### Jak and Daxter: The Precursor Legacy ✅
+#### Jak and Daxter: The Precursor Legacy ✅ (Split 8)
 
 | Player # | Template |
 |----------|----------|
@@ -1233,7 +1275,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 5 | Super Mario Land 2.yaml |
 | 6 | The Witness.yaml |
 
-#### Kingdom Hearts ✅
+#### Kingdom Hearts ✅ (Split 10)
 
 | Player # | Template |
 |----------|----------|
@@ -1245,7 +1287,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Metroid.yaml |
 | 7 | Undertale.yaml |
 
-#### Kingdom Hearts 2 ✅
+#### Kingdom Hearts 2 ✅ (Split 9)
 
 | Player # | Template |
 |----------|----------|
@@ -1253,10 +1295,11 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 2 | DOOM II.yaml |
 | 3 | Kingdom Hearts 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
-| 5 | Super Mario World.yaml |
-| 6 | Timespinner.yaml |
+| 5 | SMZ3.yaml |
+| 6 | Super Mario World.yaml |
+| 7 | Timespinner.yaml |
 
-#### Kirby's Dream Land 3 ✅
+#### Kirby's Dream Land 3 ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
@@ -1269,7 +1312,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TOEM original.yaml |
 | 8 | VVVVVV.yaml |
 
-#### Landstalker - The Treasures of King Nole ✅
+#### Landstalker - The Treasures of King Nole ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -1282,7 +1325,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TOEM rule builder.yaml |
 | 8 | Wargroove.yaml |
 
-#### Lingo ✅
+#### Lingo ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
@@ -1295,7 +1338,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TUNIC.yaml |
 | 8 | WebDevJourney.yaml |
 
-#### Links Awakening DX ✅
+#### Links Awakening DX ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
@@ -1308,7 +1351,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | Terraria.yaml |
 | 8 | Yacht Dice.yaml |
 
-#### Lufia II Ancient Cave ✅
+#### Lufia II Ancient Cave ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
@@ -1321,7 +1364,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | The Legend of Zelda.yaml |
 | 8 | Yoshi's Island.yaml |
 
-#### Mario & Luigi Superstar Saga ✅
+#### Mario & Luigi Superstar Saga ✅ (Split 6)
 
 | Player # | Template |
 |----------|----------|
@@ -1333,7 +1376,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | The Messenger.yaml |
 | 7 | shapez.yaml |
 
-#### MathProof2p2e4 ✅
+#### MathProof2p2e4 ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
@@ -1345,7 +1388,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario 64.yaml |
 | 7 | The Wind Waker.yaml |
 
-#### MegaMan Battle Network 3 ✅
+#### MegaMan Battle Network 3 ✅ (Split 9)
 
 | Player # | Template |
 |----------|----------|
@@ -1353,10 +1396,11 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 2 | DOOM II.yaml |
 | 3 | Kingdom Hearts 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
-| 5 | Super Mario World.yaml |
-| 6 | Timespinner.yaml |
+| 5 | SMZ3.yaml |
+| 6 | Super Mario World.yaml |
+| 7 | Timespinner.yaml |
 
-#### Meritous ✅
+#### Meritous ✅ (Split 10)
 
 | Player # | Template |
 |----------|----------|
@@ -1368,7 +1412,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Metroid.yaml |
 | 7 | Undertale.yaml |
 
-#### Metamath ✅
+#### Metamath ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
@@ -1381,7 +1425,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TOEM original.yaml |
 | 8 | VVVVVV.yaml |
 
-#### Muse Dash ✅
+#### Muse Dash ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -1394,7 +1438,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TOEM rule builder.yaml |
 | 8 | Wargroove.yaml |
 
-#### Noita ✅
+#### Noita ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
@@ -1407,7 +1451,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TUNIC.yaml |
 | 8 | WebDevJourney.yaml |
 
-#### Old School Runescape ✅
+#### Old School Runescape ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
@@ -1420,7 +1464,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | Terraria.yaml |
 | 8 | Yacht Dice.yaml |
 
-#### Overcooked! 2 ✅
+#### Overcooked! 2 ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
@@ -1433,7 +1477,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | The Legend of Zelda.yaml |
 | 8 | Yoshi's Island.yaml |
 
-#### Paint ✅
+#### Paint ✅ (Split 6)
 
 | Player # | Template |
 |----------|----------|
@@ -1445,7 +1489,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | The Messenger.yaml |
 | 7 | shapez.yaml |
 
-#### Raft ✅
+#### Raft ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
@@ -1457,7 +1501,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario 64.yaml |
 | 7 | The Wind Waker.yaml |
 
-#### Risk of Rain 2 ✅
+#### Risk of Rain 2 ✅ (Split 8)
 
 | Player # | Template |
 |----------|----------|
@@ -1468,107 +1512,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 5 | Super Mario Land 2.yaml |
 | 6 | The Witness.yaml |
 
-#### Saving Princess ✅
-
-| Player # | Template |
-|----------|----------|
-| 1 | Castlevania 64.yaml |
-| 2 | Dark Souls III.yaml |
-| 3 | Kingdom Hearts.yaml |
-| 4 | Meritous.yaml |
-| 5 | Saving Princess.yaml |
-| 6 | Super Metroid.yaml |
-| 7 | Undertale.yaml |
-
-#### Secret of Evermore ✅
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Hat in Time.yaml |
-| 2 | Celeste (Open World).yaml |
-| 3 | Donkey Kong Country 3.yaml |
-| 4 | Kirby's Dream Land 3.yaml |
-| 5 | Metamath.yaml |
-| 6 | Secret of Evermore.yaml |
-| 7 | TOEM original.yaml |
-| 8 | VVVVVV.yaml |
-
-#### Shivers ✅
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Link to the Past.yaml |
-| 2 | Celeste 64.yaml |
-| 3 | Factorio.yaml |
-| 4 | Landstalker - The Treasures of King Nole.yaml |
-| 5 | Muse Dash.yaml |
-| 6 | Shivers.yaml |
-| 7 | TOEM rule builder.yaml |
-| 8 | Wargroove.yaml |
-
-#### Sonic Adventure 2 Battle ✅
-
-| Player # | Template |
-|----------|----------|
-| 1 | A Short Hike.yaml |
-| 2 | ChecksFinder.yaml |
-| 3 | Faxanadu.yaml |
-| 4 | Lingo.yaml |
-| 5 | Noita.yaml |
-| 6 | Sonic Adventure 2 Battle.yaml |
-| 7 | TUNIC.yaml |
-| 8 | WebDevJourney.yaml |
-
-#### Starcraft 2 ✅
-
-| Player # | Template |
-|----------|----------|
-| 1 | APQuest.yaml |
-| 2 | ChocolateChipCookies.yaml |
-| 3 | Final Fantasy Mystic Quest.yaml |
-| 4 | Links Awakening DX.yaml |
-| 5 | Old School Runescape.yaml |
-| 6 | Starcraft 2.yaml |
-| 7 | Terraria.yaml |
-| 8 | Yacht Dice.yaml |
-
-#### Stardew Valley ✅
-
-| Player # | Template |
-|----------|----------|
-| 1 | Adventure.yaml |
-| 2 | Choo-Choo Charles.yaml |
-| 3 | Heretic.yaml |
-| 4 | Lufia II Ancient Cave.yaml |
-| 5 | Overcooked! 2.yaml |
-| 6 | Stardew Valley.yaml |
-| 7 | The Legend of Zelda.yaml |
-| 8 | Yoshi's Island.yaml |
-
-#### Super Mario 64 ✅
-
-| Player # | Template |
-|----------|----------|
-| 1 | Bomb Rush Cyberfunk.yaml |
-| 2 | DLCQuest.yaml |
-| 3 | Inscryption.yaml |
-| 4 | MathProof2p2e4.yaml |
-| 5 | Raft.yaml |
-| 6 | Super Mario 64.yaml |
-| 7 | The Wind Waker.yaml |
-
-#### Super Mario Land 2 ✅
-
-| Player # | Template |
-|----------|----------|
-| 1 | Bumper Stickers.yaml |
-| 2 | DOOM 1993.yaml |
-| 3 | Jak and Daxter The Precursor Legacy.yaml |
-| 4 | Risk of Rain 2.yaml |
-| 5 | Super Mario Land 2.yaml |
-| 6 | The Witness.yaml |
-
-#### Super Mario World ✅
+#### SMZ3 ✅ (Split 9)
 
 | Player # | Template |
 |----------|----------|
@@ -1576,10 +1520,11 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 2 | DOOM II.yaml |
 | 3 | Kingdom Hearts 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
-| 5 | Super Mario World.yaml |
-| 6 | Timespinner.yaml |
+| 5 | SMZ3.yaml |
+| 6 | Super Mario World.yaml |
+| 7 | Timespinner.yaml |
 
-#### Super Metroid ✅
+#### Saving Princess ✅ (Split 10)
 
 | Player # | Template |
 |----------|----------|
@@ -1591,7 +1536,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Metroid.yaml |
 | 7 | Undertale.yaml |
 
-#### TOEM original ✅
+#### Secret of Evermore ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
@@ -1604,7 +1549,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TOEM original.yaml |
 | 8 | VVVVVV.yaml |
 
-#### TOEM rule builder ✅
+#### Shivers ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -1617,7 +1562,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TOEM rule builder.yaml |
 | 8 | Wargroove.yaml |
 
-#### TUNIC ✅
+#### Sonic Adventure 2 Battle ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
@@ -1630,7 +1575,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TUNIC.yaml |
 | 8 | WebDevJourney.yaml |
 
-#### Terraria ✅
+#### Starcraft 2 ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
@@ -1643,7 +1588,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | Terraria.yaml |
 | 8 | Yacht Dice.yaml |
 
-#### The Legend of Zelda ✅
+#### Stardew Valley ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
@@ -1656,7 +1601,119 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | The Legend of Zelda.yaml |
 | 8 | Yoshi's Island.yaml |
 
-#### The Messenger ✅
+#### Super Mario 64 ✅ (Split 7)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bomb Rush Cyberfunk.yaml |
+| 2 | DLCQuest.yaml |
+| 3 | Inscryption.yaml |
+| 4 | MathProof2p2e4.yaml |
+| 5 | Raft.yaml |
+| 6 | Super Mario 64.yaml |
+| 7 | The Wind Waker.yaml |
+
+#### Super Mario Land 2 ✅ (Split 8)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Bumper Stickers.yaml |
+| 2 | DOOM 1993.yaml |
+| 3 | Jak and Daxter The Precursor Legacy.yaml |
+| 4 | Risk of Rain 2.yaml |
+| 5 | Super Mario Land 2.yaml |
+| 6 | The Witness.yaml |
+
+#### Super Mario World ✅ (Split 9)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Castlevania - Circle of the Moon.yaml |
+| 2 | DOOM II.yaml |
+| 3 | Kingdom Hearts 2.yaml |
+| 4 | MegaMan Battle Network 3.yaml |
+| 5 | SMZ3.yaml |
+| 6 | Super Mario World.yaml |
+| 7 | Timespinner.yaml |
+
+#### Super Metroid ✅ (Split 10)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Castlevania 64.yaml |
+| 2 | Dark Souls III.yaml |
+| 3 | Kingdom Hearts.yaml |
+| 4 | Meritous.yaml |
+| 5 | Saving Princess.yaml |
+| 6 | Super Metroid.yaml |
+| 7 | Undertale.yaml |
+
+#### TOEM original ✅ (Split 1)
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Hat in Time.yaml |
+| 2 | Celeste (Open World).yaml |
+| 3 | Donkey Kong Country 3.yaml |
+| 4 | Kirby's Dream Land 3.yaml |
+| 5 | Metamath.yaml |
+| 6 | Secret of Evermore.yaml |
+| 7 | TOEM original.yaml |
+| 8 | VVVVVV.yaml |
+
+#### TOEM rule builder ✅ (Split 2)
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Link to the Past.yaml |
+| 2 | Celeste 64.yaml |
+| 3 | Factorio.yaml |
+| 4 | Landstalker - The Treasures of King Nole.yaml |
+| 5 | Muse Dash.yaml |
+| 6 | Shivers.yaml |
+| 7 | TOEM rule builder.yaml |
+| 8 | Wargroove.yaml |
+
+#### TUNIC ✅ (Split 3)
+
+| Player # | Template |
+|----------|----------|
+| 1 | A Short Hike.yaml |
+| 2 | ChecksFinder.yaml |
+| 3 | Faxanadu.yaml |
+| 4 | Lingo.yaml |
+| 5 | Noita.yaml |
+| 6 | Sonic Adventure 2 Battle.yaml |
+| 7 | TUNIC.yaml |
+| 8 | WebDevJourney.yaml |
+
+#### Terraria ✅ (Split 4)
+
+| Player # | Template |
+|----------|----------|
+| 1 | APQuest.yaml |
+| 2 | ChocolateChipCookies.yaml |
+| 3 | Final Fantasy Mystic Quest.yaml |
+| 4 | Links Awakening DX.yaml |
+| 5 | Old School Runescape.yaml |
+| 6 | Starcraft 2.yaml |
+| 7 | Terraria.yaml |
+| 8 | Yacht Dice.yaml |
+
+#### The Legend of Zelda ✅ (Split 5)
+
+| Player # | Template |
+|----------|----------|
+| 1 | Adventure.yaml |
+| 2 | Choo-Choo Charles.yaml |
+| 3 | Heretic.yaml |
+| 4 | Lufia II Ancient Cave.yaml |
+| 5 | Overcooked! 2.yaml |
+| 6 | Stardew Valley.yaml |
+| 7 | The Legend of Zelda.yaml |
+| 8 | Yoshi's Island.yaml |
+
+#### The Messenger ✅ (Split 6)
 
 | Player # | Template |
 |----------|----------|
@@ -1668,7 +1725,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | The Messenger.yaml |
 | 7 | shapez.yaml |
 
-#### The Wind Waker ✅
+#### The Wind Waker ✅ (Split 7)
 
 | Player # | Template |
 |----------|----------|
@@ -1680,7 +1737,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Mario 64.yaml |
 | 7 | The Wind Waker.yaml |
 
-#### The Witness ✅
+#### The Witness ✅ (Split 8)
 
 | Player # | Template |
 |----------|----------|
@@ -1691,7 +1748,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 5 | Super Mario Land 2.yaml |
 | 6 | The Witness.yaml |
 
-#### Timespinner ✅
+#### Timespinner ✅ (Split 9)
 
 | Player # | Template |
 |----------|----------|
@@ -1699,10 +1756,11 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 2 | DOOM II.yaml |
 | 3 | Kingdom Hearts 2.yaml |
 | 4 | MegaMan Battle Network 3.yaml |
-| 5 | Super Mario World.yaml |
-| 6 | Timespinner.yaml |
+| 5 | SMZ3.yaml |
+| 6 | Super Mario World.yaml |
+| 7 | Timespinner.yaml |
 
-#### Undertale ✅
+#### Undertale ✅ (Split 10)
 
 | Player # | Template |
 |----------|----------|
@@ -1714,7 +1772,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Super Metroid.yaml |
 | 7 | Undertale.yaml |
 
-#### VVVVVV ✅
+#### VVVVVV ✅ (Split 1)
 
 | Player # | Template |
 |----------|----------|
@@ -1727,7 +1785,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TOEM original.yaml |
 | 8 | VVVVVV.yaml |
 
-#### Wargroove ✅
+#### Wargroove ✅ (Split 2)
 
 | Player # | Template |
 |----------|----------|
@@ -1740,7 +1798,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TOEM rule builder.yaml |
 | 8 | Wargroove.yaml |
 
-#### WebDevJourney ✅
+#### WebDevJourney ✅ (Split 3)
 
 | Player # | Template |
 |----------|----------|
@@ -1753,7 +1811,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | TUNIC.yaml |
 | 8 | WebDevJourney.yaml |
 
-#### Yacht Dice ✅
+#### Yacht Dice ✅ (Split 4)
 
 | Player # | Template |
 |----------|----------|
@@ -1766,7 +1824,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | Terraria.yaml |
 | 8 | Yacht Dice.yaml |
 
-#### Yoshi's Island ✅
+#### Yoshi's Island ✅ (Split 5)
 
 | Player # | Template |
 |----------|----------|
@@ -1779,7 +1837,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | The Legend of Zelda.yaml |
 | 8 | Yoshi's Island.yaml |
 
-#### shapez ✅
+#### shapez ✅ (Split 6)
 
 | Player # | Template |
 |----------|----------|
