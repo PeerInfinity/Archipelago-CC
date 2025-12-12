@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-11T21:07:20.331685",
-    "last_updated": "2025-12-11T21:07:20.331690",
+    "last_updated": "2025-12-12T01:11:16.055822",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2845,27 +2845,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "ab5f11d5e6b048e5449bbcd30be61e97fa80e647c5a5e9affa5047531fd798f1",
-          "new_sphere_log_hash": "0672cb629e07d4da229c82462f276dffbba49de7363686eb150495736552fec1",
-          "original_rules_hash": "ab5f11d5e6b048e5449bbcd30be61e97fa80e647c5a5e9affa5047531fd798f1",
-          "original_sphere_log_hash": "0672cb629e07d4da229c82462f276dffbba49de7363686eb150495736552fec1",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-11T21:02:07.759121"
-        }
-      },
       "game_name_from_filename": "smz3",
       "game_name_from_yaml": "SMZ3",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 5.16,
+        "processing_time_seconds": 7.74,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/smz3/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -2877,7 +2865,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 18.87,
+        "processing_time_seconds": 24.23,
         "return_code": 0,
         "sphere_reached": 16.2,
         "success": true,
@@ -2885,7 +2873,7 @@
         "warning_count": 0
       },
       "template_filename": "SMZ3.yaml",
-      "timestamp": "2025-12-11T21:00:55.701065",
+      "timestamp": "2025-12-12T01:10:43.653518",
       "world_info": {
         "exporter_path": "exporter/games/smz3.py",
         "exporter_size": 62879,

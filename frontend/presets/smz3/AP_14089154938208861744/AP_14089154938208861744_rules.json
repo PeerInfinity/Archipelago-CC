@@ -30,12 +30,20 @@
                   "type": "or",
                   "conditions": [
                     {
-                      "type": "item_check",
-                      "item": "Cape"
+                      "type": "compare",
+                      "left": {
+                        "type": "item_check",
+                        "item": "ProgressiveSword"
+                      },
+                      "op": ">=",
+                      "right": {
+                        "type": "constant",
+                        "value": 2
+                      }
                     },
                     {
                       "type": "item_check",
-                      "item": "MasterSword"
+                      "item": "Cape"
                     }
                   ]
                 }
@@ -4710,7 +4718,7 @@
                 },
                 {
                   "type": "item_check",
-                  "item": "Sword"
+                  "item": "ProgressiveSword"
                 }
               ]
             },
@@ -7103,6 +7111,18 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "compare",
+                  "left": {
+                    "type": "item_check",
+                    "item": "ProgressiveSword"
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 2
+                  }
+                },
+                {
                   "type": "or",
                   "conditions": [
                     {
@@ -7127,10 +7147,6 @@
                 {
                   "type": "item_check",
                   "item": "Book"
-                },
-                {
-                  "type": "item_check",
-                  "item": "MasterSword"
                 }
               ]
             },
@@ -8261,16 +8277,24 @@
               "type": "and",
               "conditions": [
                 {
+                  "type": "compare",
+                  "left": {
+                    "type": "item_check",
+                    "item": "ProgressiveSword"
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 2
+                  }
+                },
+                {
                   "type": "region_check",
                   "region": "Dark World South"
                 },
                 {
                   "type": "item_check",
                   "item": "Book"
-                },
-                {
-                  "type": "item_check",
-                  "item": "MasterSword"
                 },
                 {
                   "type": "item_check",
