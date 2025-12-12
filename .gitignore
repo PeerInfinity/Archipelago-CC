@@ -113,8 +113,6 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
-coverage/
-benchmark-results.json
 
 
 # Flask stuff:
@@ -262,6 +260,11 @@ scripts/output/multitemplate-minimal/test-results-*
 scripts/output/multitemplate-minimal/test-results_*
 scripts/output/multitemplate-full/test-results-*
 scripts/output/multitemplate-full/test-results_*
+
+!CC/scripts/prompts/gen-errors.txt
+
+coverage/
+benchmark-results.json
 
 test1/
 test2/

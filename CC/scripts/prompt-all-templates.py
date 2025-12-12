@@ -339,6 +339,35 @@ def get_custom_code_info(game_name, world_mapping):
     }
 
 
+def has_generation_errors_but_passes(template_file, test_results):
+    """Check if a template passes spoiler tests but has generation errors.
+
+    Returns a tuple of (has_errors, error_count) where:
+    - has_errors: True if the game passes but has generation errors
+    - error_count: Number of generation errors (0 if no errors or test fails)
+    """
+    if template_file not in test_results:
+        return (False, 0)
+
+    result = test_results[template_file]
+    if not isinstance(result, dict):
+        return (False, 0)
+
+    # Check if spoiler test passed
+    spoiler_test = result.get('spoiler_test', {})
+    if spoiler_test.get('pass_fail') != 'passed':
+        return (False, 0)
+
+    # Check for generation errors
+    generation = result.get('generation', {})
+    error_count = generation.get('error_count', 0)
+
+    if error_count > 0:
+        return (True, error_count)
+
+    return (False, 0)
+
+
 def run_all_promptfiles(project_root):
     """Run all prompt-generating modes and output to separate files.
 
@@ -356,6 +385,7 @@ def run_all_promptfiles(project_root):
         (['--basic-spoiler-debug', '--CC'], 'basic-spoiler-debug.txt'),
         (['--helper-export', '--CC'], 'helper-export.txt'),
         (['--new-rule-types', '--CC'], 'new-rule-types.txt'),
+        (['--gen-errors', '--CC'], 'gen-errors.txt'),
     ]
 
     script_path = Path(__file__).resolve()
@@ -497,6 +527,65 @@ def generate_new_rule_types_prompt(game_name):
 Then, please read CC/implementing-new-rule-types.md
 
 Then please investigate what needs to be done next to continue adding support for the rule types required by the helper functions in {game_name}.
+"""
+
+
+def generate_gen_errors_prompt(template_file, game_name, gen_error_count, seed=1, use_cloud_docs=False):
+    """Generate a prompt for investigating generation errors in a game that passes spoiler tests.
+
+    This is for games where the spoiler test passes but generation produced errors,
+    which may indicate issues with rule export or world generation.
+    """
+    setup_doc = "CC/cloud-setup.md"
+
+    return f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
+
+The game we are investigating is **{game_name}** (template: `{template_file}`).
+
+## Issue
+
+This game **passes** the spoiler test but has **{gen_error_count} generation error(s)**. This discrepancy suggests there may be issues with:
+- Rule export that produces errors but doesn't prevent test completion
+- World generation warnings being logged as errors
+- Non-critical errors that don't affect gameplay logic
+
+## Test Commands
+
+To reproduce and investigate:
+
+```bash
+source .venv/bin/activate
+
+# Run generation and watch for errors
+python Generate.py --weights_file_path "Templates/{template_file}" --multi 1 --seed {seed}
+
+# Run the spoiler test to confirm it passes
+npm test -- --mode=test-spoilers --game={game_name.lower().replace(' ', '')} --seed={seed}
+```
+
+## Investigation Steps
+
+1. **Run generation and capture output**
+   - Look for ERROR lines in the generation output
+   - Note what types of errors are occurring
+
+2. **Check the generated rules file**
+   - Location: `frontend/presets/<game>/AP_14089154938208861744/AP_14089154938208861744_rules.json`
+   - Look for any anomalies or missing data
+
+3. **Review the exporter code** (if custom exporter exists)
+   - Check `exporter/games/<game>.py` for error handling
+   - Look for places where errors might be logged but not raised
+
+4. **Determine if errors are critical**
+   - If errors don't affect gameplay, consider suppressing or downgrading to warnings
+   - If errors indicate real issues, fix the underlying cause
+
+## Goal
+
+Either:
+- Fix the generation errors so they no longer occur, OR
+- Determine the errors are non-critical and adjust logging level appropriately
 """
 
 
@@ -739,6 +828,8 @@ def main():
                        help='Generate prompts for games with custom exporter/helpers to convert them to use helper export')
     parser.add_argument('--new-rule-types', action='store_true',
                        help='Generate prompts for games with JavaScript helpers to investigate implementing new rule types')
+    parser.add_argument('--gen-errors', action='store_true',
+                       help='Generate prompts for games that pass spoiler tests but have generation errors')
     parser.add_argument('--all-promptfiles', action='store_true',
                        help='Run all prompt-generating modes and output to separate files in CC/scripts/prompts/')
     parser.add_argument('--exclude-pattern', type=str,
@@ -795,6 +886,22 @@ def main():
 
     if args.new_rule_types and args.helper_export:
         print("Error: --new-rule-types and --helper-export are mutually exclusive")
+        sys.exit(1)
+
+    if args.gen_errors and (args.multiclient or args.multiworld):
+        print("Error: --gen-errors cannot be combined with --multiclient or --multiworld")
+        sys.exit(1)
+
+    if args.gen_errors and args.basic_spoiler_debug:
+        print("Error: --gen-errors and --basic-spoiler-debug are mutually exclusive")
+        sys.exit(1)
+
+    if args.gen_errors and args.helper_export:
+        print("Error: --gen-errors and --helper-export are mutually exclusive")
+        sys.exit(1)
+
+    if args.gen_errors and args.new_rule_types:
+        print("Error: --gen-errors and --new-rule-types are mutually exclusive")
         sys.exit(1)
 
     if args.include_pattern and args.exclude_pattern:
@@ -997,6 +1104,79 @@ def main():
                     # Output the prompt directly
                     new_rule_types_prompt = generate_new_rule_types_prompt(game_name_from_yaml)
                     print(new_rule_types_prompt)
+
+                    # Exit immediately if -t or -p was specified
+                    if args.text or args.prompt:
+                        return 0
+
+                files_processed += 1
+
+            # Check if we've reached the max files limit
+            if args.max_files and files_processed >= args.max_files:
+                if not quiet_mode:
+                    print(f"\n✅ Reached maximum file limit ({args.max_files}), stopping...")
+                break
+
+            # Move to next template
+            current_index = (current_index + 1) % len(template_files)
+            processed_count += 1
+
+            # If we've completed a full cycle, show progress
+            if processed_count % len(template_files) == 0:
+                cycle_num = processed_count // len(template_files)
+                print(f"\n🔄 Completed cycle {cycle_num}")
+
+                # Check if we've reached the max loops limit
+                if cycle_num >= args.max_loops:
+                    print(f"✅ Reached maximum loop limit ({args.max_loops}), stopping...")
+                    break
+
+            continue  # Skip the normal test-based processing below
+
+        # For --gen-errors mode, we look for games that pass but have generation errors
+        if args.gen_errors:
+            # Load test results (use minimal spoilers by default for gen-errors)
+            use_minimal = args.minimal_spoilers or (not args.full_spoilers)
+            test_results = load_test_results(project_root, args.full_spoilers, use_minimal, False, False)
+
+            # Check if this template has generation errors but passes
+            has_errors, error_count = has_generation_errors_but_passes(template_file, test_results)
+
+            if not has_errors:
+                if not quiet_mode:
+                    print(f"✅ {template_file} has no generation errors (or test doesn't pass), skipping...")
+                current_index = (current_index + 1) % len(template_files)
+                processed_count += 1
+                if processed_count % len(template_files) == 0:
+                    cycle_num = processed_count // len(template_files)
+                    if cycle_num >= args.max_loops:
+                        break
+                continue
+
+            if not quiet_mode:
+                print(f"⚠️ {template_file} passes but has {error_count} generation error(s), processing...")
+
+            # Extract game name from template YAML
+            game_name_from_yaml = extract_game_name_from_yaml(template_path)
+            if not game_name_from_yaml:
+                if not quiet_mode:
+                    print(f"Could not extract game name from {template_file}, skipping...")
+            else:
+                if not quiet_mode:
+                    print(f"Game name: {game_name_from_yaml}")
+
+                # Handle --promptfile mode
+                if args.promptfile:
+                    gen_errors_prompt = generate_gen_errors_prompt(
+                        template_file, game_name_from_yaml, error_count, args.seed, args.CC
+                    )
+                    collected_prompts.append(gen_errors_prompt)
+                else:
+                    # Output the prompt directly
+                    gen_errors_prompt = generate_gen_errors_prompt(
+                        template_file, game_name_from_yaml, error_count, args.seed, args.CC
+                    )
+                    print(gen_errors_prompt)
 
                     # Exit immediately if -t or -p was specified
                     if args.text or args.prompt:
