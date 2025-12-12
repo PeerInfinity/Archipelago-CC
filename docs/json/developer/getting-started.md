@@ -240,7 +240,23 @@ python ModuleUpdate.py --yes
 
 This will install game-specific dependencies like `pyevermizer`, `zilliandomizer`, and others needed for the full testing pipeline.
 
-### 2. Generate Game Template Files
+### 2. Install WebHostLib Dependencies (Optional)
+
+If you want to use the web hosting service or the Flask-based code converter tool, install the WebHostLib dependencies:
+
+```bash
+# Make sure your virtual environment is active
+source .venv/bin/activate
+
+# Install WebHostLib dependencies (includes Flask)
+pip install -r WebHostLib/requirements.txt
+```
+
+This enables:
+- **Web Hosting Service**: Run `python WebHost.py` to host multiworld games via browser
+- **Code Converter Web UI**: Run `python -m exporter.converter.web` to use the Flask-based rule format converter
+
+### 3. Generate Game Template Files
 
 To work with the testing pipeline or add support for new games, you'll need template files:
 
@@ -256,7 +272,7 @@ This creates a `Players/Templates/` directory with YAML files for each supported
 
 **Note:** You may see some compilation warnings about `_speedups.c` - these are normal and don't affect functionality.
 
-### 3. Set Up Host Configuration
+### 4. Set Up Host Configuration
 
 For testing the generation pipeline, you need to create and configure a `host.yaml` file:
 

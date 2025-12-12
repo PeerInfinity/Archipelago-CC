@@ -118,6 +118,11 @@
               "type": "component",
               "componentType": "windowManagerPanel",
               "title": "Window Manager"
+            },
+            {
+              "type": "component",
+              "componentType": "ruleConverterPanel",
+              "title": "Rule Converter"
             }
           ]
         },

@@ -40,9 +40,6 @@ class RuleConverterUI {
     // Build UI
     this._createUI();
 
-    // Append to container
-    this.container.element.appendChild(this.rootElement);
-
     // Handle panel destruction
     this.container.on('destroy', () => this.onPanelDestroy());
 
@@ -612,6 +609,11 @@ class RuleConverterUI {
     if (this.debounceTimer) {
       clearTimeout(this.debounceTimer);
     }
+  }
+
+  // Required by Golden Layout
+  getRootElement() {
+    return this.rootElement;
   }
 }
 
