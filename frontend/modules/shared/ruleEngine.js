@@ -594,6 +594,19 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
 
+        if (rule.name === 'bool') {
+          // Python's bool() function - convert value to boolean
+          const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (value === undefined) {
+            result = undefined;
+          } else {
+            // Python bool() rules: false for 0, None, empty collections, empty string
+            // true for everything else
+            result = Boolean(value);
+          }
+          break;
+        }
+
         // Regular helper function handling
         const args = rule.args
           ? rule.args.map((arg) => evaluateRule(arg, context, depth + 1))
@@ -1946,11 +1959,11 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'group_check': {
-        const groupName = evaluateRule(rule.group, context, depth + 1);
+        const groupName = evaluateRule(rule.group, context, depth + 1, localScope);
         // Default count to 1 if not specified
         const requiredCount =
           rule.count !== undefined
-            ? evaluateRule(rule.count, context, depth + 1)
+            ? evaluateRule(rule.count, context, depth + 1, localScope)
             : 1;
 
         if (groupName === undefined || requiredCount === undefined) {
@@ -1974,7 +1987,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
       case 'group_count': {
         // Returns the count of items in a group (unlike group_check which returns a boolean)
-        const groupName = evaluateRule(rule.group, context, depth + 1);
+        const groupName = evaluateRule(rule.group, context, depth + 1, localScope);
 
         if (groupName === undefined) {
           result = undefined;

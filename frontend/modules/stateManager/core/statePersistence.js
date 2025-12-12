@@ -441,10 +441,40 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
           settingsToUse = sm.settings[sm.playerId];
         }
         const gameOptions = settingsToUse?.options || settingsToUse || {};
-        return {
-          player: sm.playerId,
-          options: gameOptions
+
+        // Get game-specific info from game_info (e.g., AHIT hat_yarn_costs)
+        const playerIdKey = String(sm.playerId);
+        const gameInfo = sm.gameInfo?.[playerIdKey] || sm.gameInfo || {};
+
+        // Build the world object with game-specific properties
+        // item_name_groups comes from multiple sources:
+        // - sm.itemGroups for standard item groups
+        // - gameInfo.relic_groups for AHIT relic combos
+        const itemNameGroups = {
+          ...(sm.itemGroups?.[playerIdKey] || sm.itemGroups || {}),
+          ...(gameInfo.relic_groups || {})
         };
+
+        const worldObj = {
+          player: sm.playerId,
+          options: gameOptions,
+          // Include item_name_groups for helpers like has_relic_combo
+          item_name_groups: itemNameGroups
+        };
+
+        // Merge in game-specific properties from game_info
+        // For AHIT: hat_yarn_costs, hat_craft_order come from hat_info
+        if (gameInfo.hat_info) {
+          worldObj.hat_yarn_costs = gameInfo.hat_info.hat_yarn_costs || {};
+          worldObj.hat_craft_order = gameInfo.hat_info.hat_craft_order || [];
+        }
+
+        // For other game-specific properties, spread them onto world
+        if (gameInfo.variables) {
+          Object.assign(worldObj, gameInfo.variables);
+        }
+
+        return worldObj;
       }
 
       // Logic object (game-specific helper functions)
@@ -642,6 +672,22 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
             }
           }
         }
+      }
+
+      // Built-in game constants for games that export helper definitions to rules.json
+      // These map Python module-level constants to JavaScript equivalents
+      const builtInGameConstants = {
+        // A Hat in Time: maps hat enum values to item names
+        'hat_type_to_item': {
+          0: 'Sprint Hat',
+          1: 'Brewing Hat',
+          2: 'Ice Hat',
+          3: 'Dweller Mask',
+          4: 'Time Stop Hat'
+        }
+      };
+      if (builtInGameConstants[name]) {
+        return builtInGameConstants[name];
       }
 
       // log('warn', `[StateManager SelfSnapshotInterface resolveName] Unhandled name: ${name}`);

@@ -115,54 +115,64 @@ export class TestSpoilerRuleEvaluator {
           try {
             args = rule.args ? rule.args.map(arg => evaluateRule(arg, snapshotInterface)) : [];
             this.log('info', `${indent}HELPER ${helperName}(${args.map(a => JSON.stringify(a)).join(', ')}): ${resultSymbol}`);
-            
-            // Check if helper function exists
-            if (snapshotInterface[helperName]) {
-              this.log('info', `${indent}  Helper function "${helperName}" found in snapshotInterface`);
-              
-              // Add specific analysis for commonly problematic helper functions
-              if (result === false) {
-                this.log('info', `${indent}  Helper function returned false - analyzing why:`);
-                
-                // Special analysis for medallion helpers
-                if (helperName.includes('medallion')) {
-                  this._analyzeMedallionHelper(helperName, snapshotInterface, indent);
-                }
-                
-                // Special analysis for weapon/sword helpers
-                if (helperName.includes('sword') || helperName === 'has_sword') {
-                  this._analyzeSwordHelper(helperName, snapshotInterface, indent);
-                }
-                
-                // Special analysis for item requirement helpers
-                if (helperName.includes('has_') && !helperName.includes('medallion') && !helperName.includes('sword')) {
-                  this._analyzeItemHelper(helperName, snapshotInterface, indent);
+
+            // Helper functions are evaluated via evaluateRule() which:
+            // 1. First checks for helper definitions in rules.json (staticData.helpers)
+            // 2. Falls back to executeHelper() for JS helper functions if definition returns undefined
+            // The 'result' variable already contains the evaluated result.
+
+            // Add specific analysis for commonly problematic helper functions
+            if (result === false) {
+              this.log('info', `${indent}  Helper returned false - analyzing why:`);
+
+              // Special analysis for medallion helpers
+              if (helperName.includes('medallion')) {
+                this._analyzeMedallionHelper(helperName, snapshotInterface, indent);
+              }
+
+              // Special analysis for weapon/sword helpers
+              if (helperName.includes('sword') || helperName === 'has_sword') {
+                this._analyzeSwordHelper(helperName, snapshotInterface, indent);
+              }
+
+              // Special analysis for item requirement helpers
+              if (helperName.includes('has_') && !helperName.includes('medallion') && !helperName.includes('sword')) {
+                this._analyzeItemHelper(helperName, snapshotInterface, indent);
+              }
+            }
+
+            // Add specific analysis for undefined results (common issue with complex helpers)
+            if (result === undefined) {
+              this.log('info', `${indent}  Helper returned undefined - analyzing why:`);
+              this.log('info', `${indent}    Args evaluated to: ${args.map(a => `${typeof a}: ${JSON.stringify(a)}`).join(', ')}`);
+
+              // Check if there's a helper definition in rules.json
+              const staticData = snapshotInterface.getStaticData ? snapshotInterface.getStaticData() : null;
+              const playerId = snapshotInterface.getPlayerId ? snapshotInterface.getPlayerId() : 1;
+              const helperDef = staticData?.helpers?.[String(playerId)]?.[helperName];
+              if (helperDef) {
+                this.log('info', `${indent}    Helper definition found in rules.json but evaluated to undefined`);
+              } else {
+                this.log('info', `${indent}    No helper definition in rules.json, checking JS fallback...`);
+                if (typeof snapshotInterface.executeHelper === 'function') {
+                  this.log('info', `${indent}    executeHelper() available but helper "${helperName}" not implemented`);
                 }
               }
-              
-              // Add specific analysis for undefined results (common issue with complex helpers)
-              if (result === undefined) {
-                this.log('info', `${indent}  Helper function returned undefined - analyzing why:`);
-                this.log('info', `${indent}    Args evaluated to: ${args.map(a => `${typeof a}: ${JSON.stringify(a)}`).join(', ')}`);
-                
-                // Special analysis for item_name_in_location_names helper
-                if (helperName === 'item_name_in_location_names') {
-                  this._analyzeItemNameInLocationNamesHelper(args, snapshotInterface, indent);
-                }
-                
-                // Special analysis for zip helper
-                if (helperName === 'zip') {
-                  this._analyzeZipHelper(args, snapshotInterface, indent);
-                }
-                
-                // Special analysis for len helper
-                if (helperName === 'len') {
-                  this._analyzeLenHelper(args, snapshotInterface, indent);
-                }
+
+              // Special analysis for item_name_in_location_names helper
+              if (helperName === 'item_name_in_location_names') {
+                this._analyzeItemNameInLocationNamesHelper(args, snapshotInterface, indent);
               }
-            } else {
-              this.log('error', `${indent}  Helper function "${helperName}" NOT FOUND in snapshotInterface`);
-              this.log('info', `${indent}  Available helper functions: ${Object.keys(snapshotInterface).filter(k => typeof snapshotInterface[k] === 'function').join(', ')}`);
+
+              // Special analysis for zip helper
+              if (helperName === 'zip') {
+                this._analyzeZipHelper(args, snapshotInterface, indent);
+              }
+
+              // Special analysis for len helper
+              if (helperName === 'len') {
+                this._analyzeLenHelper(args, snapshotInterface, indent);
+              }
             }
           } catch (helperError) {
             this.log('error', `${indent}HELPER evaluation error: ${helperError.message}`);
@@ -226,12 +236,12 @@ export class TestSpoilerRuleEvaluator {
           
         case 'identifier':
           this.log('info', `${indent}IDENTIFIER "${rule.name}": ${resultSymbol}`);
-          // Check if identifier exists in context
-          if (snapshotInterface[rule.name] !== undefined) {
-            this.log('info', `${indent}  Identifier "${rule.name}" found: ${JSON.stringify(snapshotInterface[rule.name])}`);
+          // Check if identifier exists in context (use resolveName for proper resolution)
+          const identifierValue = snapshotInterface.resolveName ? snapshotInterface.resolveName(rule.name) : snapshotInterface[rule.name];
+          if (identifierValue !== undefined) {
+            this.log('info', `${indent}  Identifier "${rule.name}" resolves to: ${JSON.stringify(identifierValue)}`);
           } else {
-            this.log('error', `${indent}  Identifier "${rule.name}" NOT FOUND in context`);
-            this.log('info', `${indent}  Available identifiers: ${Object.keys(snapshotInterface).join(', ')}`);
+            this.log('warn', `${indent}  Identifier "${rule.name}" resolved to undefined`);
           }
           break;
           
@@ -242,11 +252,12 @@ export class TestSpoilerRuleEvaluator {
         case 'name':
           this.log('info', `${indent}NAME: ${resultSymbol}`);
           this.log('info', `${indent}  name: ${rule.name}`);
-          // Check what this name resolves to
-          if (snapshotInterface[rule.name] !== undefined) {
-            this.log('info', `${indent}  Resolves to: ${JSON.stringify(snapshotInterface[rule.name])}`);
+          // Check what this name resolves to (use resolveName for proper resolution)
+          const nameValue = snapshotInterface.resolveName ? snapshotInterface.resolveName(rule.name) : snapshotInterface[rule.name];
+          if (nameValue !== undefined) {
+            this.log('info', `${indent}  Resolves to: ${JSON.stringify(nameValue)}`);
           } else {
-            this.log('error', `${indent}  Name "${rule.name}" NOT FOUND in context`);
+            this.log('warn', `${indent}  Name "${rule.name}" resolved to undefined`);
           }
           break;
 
