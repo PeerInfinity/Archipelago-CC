@@ -45,26 +45,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "subscript",
-                "value": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "prog_items"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "index": {
-                  "type": "constant",
-                  "value": " coins"
-                }
+                "type": "prog_item_count",
+                "key": " coins"
               },
               "op": ">=",
               "right": {
@@ -86,26 +68,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "subscript",
-                "value": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "prog_items"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "index": {
-                  "type": "constant",
-                  "value": " coins"
-                }
+                "type": "prog_item_count",
+                "key": " coins"
               },
               "op": ">=",
               "right": {
@@ -127,26 +91,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "subscript",
-                "value": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "prog_items"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "index": {
-                  "type": "constant",
-                  "value": " coins"
-                }
+                "type": "prog_item_count",
+                "key": " coins"
               },
               "op": ">=",
               "right": {
@@ -168,26 +114,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "subscript",
-                "value": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "prog_items"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "index": {
-                  "type": "constant",
-                  "value": " coins"
-                }
+                "type": "prog_item_count",
+                "key": " coins"
               },
               "op": ">=",
               "right": {
@@ -247,26 +175,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "subscript",
-                "value": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "prog_items"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "index": {
-                  "type": "constant",
-                  "value": " coins"
-                }
+                "type": "prog_item_count",
+                "key": " coins"
               },
               "op": ">=",
               "right": {
@@ -288,26 +198,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "subscript",
-                "value": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "prog_items"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "index": {
-                  "type": "constant",
-                  "value": " coins"
-                }
+                "type": "prog_item_count",
+                "key": " coins"
               },
               "op": ">=",
               "right": {
@@ -329,26 +221,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "subscript",
-                "value": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "prog_items"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "index": {
-                  "type": "constant",
-                  "value": " coins"
-                }
+                "type": "prog_item_count",
+                "key": " coins"
               },
               "op": ">=",
               "right": {
@@ -423,26 +297,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "subscript",
-                "value": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "prog_items"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "index": {
-                  "type": "constant",
-                  "value": " coins"
-                }
+                "type": "prog_item_count",
+                "key": " coins"
               },
               "op": ">=",
               "right": {
@@ -464,26 +320,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "subscript",
-                "value": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "prog_items"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "index": {
-                  "type": "constant",
-                  "value": " coins"
-                }
+                "type": "prog_item_count",
+                "key": " coins"
               },
               "op": ">=",
               "right": {
@@ -618,26 +456,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "subscript",
-                "value": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "prog_items"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "index": {
-                  "type": "constant",
-                  "value": " coins"
-                }
+                "type": "prog_item_count",
+                "key": " coins"
               },
               "op": ">=",
               "right": {
@@ -659,26 +479,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "subscript",
-                "value": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "prog_items"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "index": {
-                  "type": "constant",
-                  "value": " coins"
-                }
+                "type": "prog_item_count",
+                "key": " coins"
               },
               "op": ">=",
               "right": {
@@ -817,26 +619,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "subscript",
-                "value": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "prog_items"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "index": {
-                  "type": "constant",
-                  "value": " coins"
-                }
+                "type": "prog_item_count",
+                "key": " coins"
               },
               "op": ">=",
               "right": {
@@ -977,26 +761,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "subscript",
-                "value": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "prog_items"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "index": {
-                  "type": "constant",
-                  "value": " coins"
-                }
+                "type": "prog_item_count",
+                "key": " coins"
               },
               "op": ">=",
               "right": {
@@ -1018,26 +784,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "subscript",
-                "value": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "prog_items"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "index": {
-                  "type": "constant",
-                  "value": " coins"
-                }
+                "type": "prog_item_count",
+                "key": " coins"
               },
               "op": ">=",
               "right": {
@@ -1089,26 +837,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "subscript",
-                "value": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "prog_items"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "index": {
-                  "type": "constant",
-                  "value": " coins"
-                }
+                "type": "prog_item_count",
+                "key": " coins"
               },
               "op": ">=",
               "right": {
@@ -1202,26 +932,8 @@
             "access_rule": {
               "type": "compare",
               "left": {
-                "type": "subscript",
-                "value": {
-                  "type": "subscript",
-                  "value": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "state"
-                    },
-                    "attr": "prog_items"
-                  },
-                  "index": {
-                    "type": "constant",
-                    "value": 1
-                  }
-                },
-                "index": {
-                  "type": "constant",
-                  "value": " coins"
-                }
+                "type": "prog_item_count",
+                "key": " coins"
               },
               "op": ">=",
               "right": {

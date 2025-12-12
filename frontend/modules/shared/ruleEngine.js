@@ -1902,6 +1902,34 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'prog_item_count': {
+        // Return the count of a progression item from state.prog_items[player][key]
+        // This handles DLCQuest and other games that use accumulator items
+        // (e.g., " coins", " coins freemium", "rep", "RUPEES")
+        const progKey = rule.key;
+        if (progKey === undefined) {
+          log('warn', '[evaluateRule] prog_item_count: missing key');
+          result = undefined;
+        } else if (typeof context.countProgItem === 'function') {
+          // Use dedicated function if available
+          result = context.countProgItem(progKey) ?? 0;
+        } else {
+          // Fallback: check prog_items directly from snapshot
+          const snapshot = context.snapshot || context;
+          const playerId = context.playerId || context.getPlayerId?.() || 1;
+
+          // Try multiple key formats for player ID
+          const progItems = snapshot?.prog_items;
+          const count =
+            progItems?.[playerId]?.[progKey] ??
+            progItems?.[String(playerId)]?.[progKey] ??
+            progItems?.[parseInt(playerId)]?.[progKey] ??
+            0;
+          result = count;
+        }
+        break;
+      }
+
       case 'player_id': {
         // Return the current player ID
         // This is used for self.player references in class-based rule helpers (like KH2)

@@ -214,8 +214,7 @@ import * as ahitLogic from './ahit/ahitLogic.js';
 import * as blasphemousLogic from './blasphemous/blasphemousLogic.js';
 import { blasphemousStateModule } from './blasphemous/blasphemousLogic.js';
 import { helperFunctions as bombRushCyberfunkHelperFunctions } from './bomb_rush_cyberfunk/bombRushCyberfunkLogic.js';
-import * as dlcquestLogic from './dlcquest/dlcquestLogic.js';
-import { dlcquestStateModule, wrapState as dlcquestWrapState } from './dlcquest/dlcquestLogic.js';
+// dlcquestLogic removed - coin tracking now handled by prog_item_count rule type
 import * as factorioLogic from './factorio/factorioLogic.js';
 import { factorioStateModule } from './factorio/factorioLogic.js';
 import * as hkLogic from './hk/hkLogic.js';
@@ -290,9 +289,8 @@ const GAME_REGISTRY = {
     aliases: ['Castlevania - Circle of the Moon', 'CvCotM', 'cvcotm']
   },
   'DLCQuest': {
-    logicModule: dlcquestLogic.dlcquestStateModule,
-    helperFunctions: dlcquestLogic.helperFunctions,
-    wrapState: dlcquestWrapState,
+    logicModule: genericLogic.genericStateModule,
+    // Coin tracking now handled by prog_item_count rule type - no JavaScript needed
     worldClasses: ['DLCqworld'],
     aliases: ['DLCQuest', 'DLC Quest']
   },
