@@ -818,7 +818,8 @@ def main():
     yaml_files.sort()
 
     # Apply --every-nth and --skip-first filtering if specified
-    if args.every_nth:
+    # Skip this filtering in retest mode since we're already working with a filtered list of failures
+    if args.every_nth and not args.retest:
         # First skip the specified number of templates
         if args.skip_first > 0:
             if args.skip_first >= len(yaml_files):

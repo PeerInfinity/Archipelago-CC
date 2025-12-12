@@ -795,8 +795,6 @@ jobs:
               --retest \
               --retest-continue-after-failure \
               --retest-from-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
-              --every-nth ${{ matrix.split_total }} \
-              --skip-first $((${{ matrix.split_num }} - 1)) \
               --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
               ${PATTERN_FLAG} \
               --no-backup \
@@ -1203,8 +1201,6 @@ jobs:
               --retest \
               --retest-continue-after-failure \
               --retest-from-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
-              --every-nth ${{ matrix.split_total }} \
-              --skip-first $((${{ matrix.split_num }} - 1)) \
               --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
               ${PATTERN_FLAG} \
               --no-backup \
@@ -1224,8 +1220,6 @@ jobs:
             --retest \
             --retest-continue-after-failure \
             --retest-from-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
-            --every-nth ${{ matrix.split_total }} \
-            --skip-first $((${{ matrix.split_num }} - 1)) \
             --output-file scripts/output/${OUTPUT_DIR}/test-results-split-${{ matrix.split_num }}.json \
             ${PATTERN_FLAG} \
             --no-backup \
