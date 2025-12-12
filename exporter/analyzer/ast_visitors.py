@@ -891,6 +891,98 @@ class ASTVisitorMixin:
                 return result
             # *** END any() HANDLING ***
 
+            # *** Special handling for sum(GeneratorExp) or sum(ListComp) ***
+            if func_name == 'sum' and len(filtered_args) >= 1:
+                first_arg = filtered_args[0]
+                # Handle both generator expressions and list types (which may contain expanded comprehension results)
+                if first_arg.get('type') == 'generator_expression':
+                    logging.debug(f"Detected sum(GeneratorExp) pattern.")
+                    gen_exp = first_arg
+
+                    # Try to resolve the iterator if it's a name reference
+                    iterator_info = gen_exp['comprehension']
+                    iterator_type = iterator_info.get('iterator', {}).get('type')
+
+                    # Try to expand the comprehension if we can resolve the iterator
+                    if iterator_type == 'name':
+                        iterator_name = iterator_info['iterator']['name']
+                        logging.debug(f"sum(GeneratorExp): Attempting to resolve iterator '{iterator_name}'")
+
+                        resolved_value = self.expression_resolver.resolve_variable(iterator_name)
+
+                        # Convert frozensets/sets/tuples to lists for uniform handling
+                        if resolved_value is not None:
+                            if isinstance(resolved_value, (frozenset, set, tuple)):
+                                resolved_value = list(resolved_value)
+                                logging.debug(f"sum(GeneratorExp): Converted {type(resolved_value).__name__} to list")
+
+                        if resolved_value is not None and isinstance(resolved_value, list):
+                            logging.debug(f"sum(GeneratorExp): Resolved '{iterator_name}' to list with {len(resolved_value)} items")
+
+                            # Handle simple values - expand the comprehension
+                            target_name = iterator_info.get('target', {}).get('name')
+                            if target_name:
+                                element_rule = gen_exp['element']
+                                expanded_elements = []
+
+                                for value in resolved_value:
+                                    # Substitute the target variable with the current value in the element rule
+                                    substituted_rule = self._substitute_variable_in_rule(element_rule, target_name, value)
+                                    if substituted_rule:
+                                        expanded_elements.append(substituted_rule)
+                                    else:
+                                        logging.warning(f"sum(GeneratorExp): Failed to substitute {target_name}={value} in element rule")
+                                        expanded_elements = None
+                                        break
+
+                                if expanded_elements is not None:
+                                    logging.debug(f"sum(GeneratorExp): Successfully expanded to {len(expanded_elements)} elements")
+                                    if len(expanded_elements) == 0:
+                                        # Empty iterator - sum() of empty is 0
+                                        return {'type': 'constant', 'value': 0}
+                                    elif len(expanded_elements) == 1:
+                                        return expanded_elements[0]
+                                    else:
+                                        # Build a nested binary_op tree for addition
+                                        result = expanded_elements[0]
+                                        for elem in expanded_elements[1:]:
+                                            result = {
+                                                'type': 'binary_op',
+                                                'left': result,
+                                                'op': '+',
+                                                'right': elem
+                                            }
+                                        return result
+
+                    # If we couldn't expand, create a sum_of rule for runtime evaluation
+                    element_rule = gen_exp['element']
+                    result = {
+                        'type': 'sum_of',
+                        'element_rule': element_rule,
+                        'iterator_info': iterator_info
+                    }
+                    logging.debug(f"Created 'sum_of' result: {result}")
+                    return result
+
+                # Handle sum() with a list argument (e.g., sum([1 for x in items if condition]))
+                elif first_arg.get('type') == 'list':
+                    list_elements = first_arg.get('value', [])
+                    if list_elements:
+                        logging.debug(f"Detected sum(list) with {len(list_elements)} elements")
+                        # Build a nested binary_op tree for addition
+                        result = list_elements[0]
+                        for elem in list_elements[1:]:
+                            result = {
+                                'type': 'binary_op',
+                                'left': result,
+                                'op': '+',
+                                'right': elem
+                            }
+                        return result
+                    else:
+                        return {'type': 'constant', 'value': 0}
+            # *** END sum() HANDLING ***
+
             # *** Special handling for zip() function ***
             if func_name == 'zip':
                 logging.debug(f"Detected zip() function call with {len(filtered_args)} args")
@@ -2434,8 +2526,10 @@ class ASTVisitorMixin:
             if all(e.get('type') == 'constant' for e in elements):
                 elements.sort(key=lambda e: (str(type(e.get('value')).__name__), str(e.get('value'))))
 
-            # Represent as a list in the output JSON (consistent with tuple/list)
-            return {'type': 'list', 'value': elements}
+            # Represent as a set type in the output JSON
+            # This is used for set literals like {item1, item2} and helps track
+            # that this originated from a Python set (e.g., for has_any checks)
+            return {'type': 'set', 'elements': elements}
         except Exception as e:
             logging.error("Error in visit_Set", e)
             return None
