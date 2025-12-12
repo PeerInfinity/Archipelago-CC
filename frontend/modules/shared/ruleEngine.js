@@ -1812,6 +1812,76 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'location_rule_ref': {
+        // Evaluate another location's access rule directly
+        // Used for export-time resolution of helpers that reference location rules
+        // Format: { type: 'location_rule_ref', location: 'Act Completion (Down with the Mafia!)' }
+        const locationName = typeof rule.location === 'string'
+          ? rule.location
+          : evaluateRule(rule.location, context, depth + 1, localScope);
+
+        if (typeof locationName !== 'string') {
+          log('warn', '[evaluateRule] location_rule_ref: location did not evaluate to string', { rule, locationName });
+          result = undefined;
+          break;
+        }
+
+        if (typeof context.getStaticData !== 'function') {
+          log('warn', '[evaluateRule] location_rule_ref: context.getStaticData not available');
+          result = undefined;
+          break;
+        }
+
+        const staticData = context.getStaticData();
+        const regionsData = staticData?.regions;
+
+        if (!regionsData) {
+          log('warn', '[evaluateRule] location_rule_ref: no regions data in staticData');
+          result = undefined;
+          break;
+        }
+
+        // Search all regions for this location
+        let locationData = null;
+        if (regionsData instanceof Map) {
+          for (const [regionName, regionData] of regionsData.entries()) {
+            if (regionData.locations) {
+              const loc = regionData.locations.find(l => l.name === locationName);
+              if (loc) {
+                locationData = loc;
+                break;
+              }
+            }
+          }
+        } else {
+          // Plain object
+          for (const regionData of Object.values(regionsData)) {
+            if (regionData.locations) {
+              const loc = regionData.locations.find(l => l.name === locationName);
+              if (loc) {
+                locationData = loc;
+                break;
+              }
+            }
+          }
+        }
+
+        if (!locationData) {
+          log('debug', `[evaluateRule] location_rule_ref: location '${locationName}' not found`);
+          result = undefined;
+          break;
+        }
+
+        // Evaluate the location's access rule
+        if (locationData.access_rule) {
+          result = evaluateRule(locationData.access_rule, context, depth + 1, localScope);
+        } else {
+          // No access rule means the location has no item requirements (always accessible from region)
+          result = true;
+        }
+        break;
+      }
+
       case 'region_check': {
         // Check if a region is accessible (can be reached)
         const regionName = evaluateRule(rule.region, context, depth + 1);

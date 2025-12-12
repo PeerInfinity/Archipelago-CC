@@ -2,22 +2,20 @@
 
 This document summarizes the investigation into what rule types are needed to fully export the helper functions in A Hat in Time.
 
-## Current Status
+## Current Status ✅ IMPLEMENTED
 
-A Hat in Time has **1 helper function** that is blacklisted from export:
+All A Hat in Time helpers are now fully exported:
 
-| Helper | Reason | Current Workaround |
-|--------|--------|-------------------|
-| `can_clear_required_act` | Uses `multiworld.get_entrance()` and region reachability | JavaScript fallback in `ahitLogic.js` |
+| Helper | Status | Implementation |
+|--------|--------|----------------|
+| `can_clear_required_act` | ✅ Resolved at export-time | `can_reach` + `location_rule_ref` |
+| `can_use_hat` | ✅ Exported | Full definition in rules.json |
+| `get_hat_cost` | ✅ Exported | Full definition in rules.json |
+| `has_relic_combo` | ✅ Exported | Full definition in rules.json |
+| `painting_logic` | ✅ Exported | Full definition in rules.json |
+| `get_difficulty` | ✅ Exported | Full definition in rules.json |
 
-**Successfully exported helpers** (with full definitions in rules.json):
-- `can_use_hat`
-- `get_hat_cost`
-- `has_relic_combo`
-- `painting_logic`
-- `get_difficulty`
-
-The spoiler tests **pass** with the current implementation using JavaScript fallbacks.
+The spoiler tests **pass** with the export-time resolution implementation.
 
 ## Analysis of `can_clear_required_act`
 
@@ -116,24 +114,27 @@ Since `can_clear_required_act` is always called with **constant** entrance name 
 - Only works when arguments are constants (which is true for all current usages)
 - Requires access to world data during export (already available)
 
-## Recommended Next Steps
+## Implementation ✅ COMPLETE
 
-1. **Implement Approach 2 first** - It's simpler and sufficient for the current use case:
-   - Add `location_rule_ref` rule type (references another location's access rule)
-   - Implement export-time resolution in `AHitGameExportHandler.expand_rule()`
-   - Use the multiworld data to resolve entrance → region → location mappings
+Approach 2 (export-time resolution) has been implemented:
 
-2. **If Approach 2 isn't sufficient**, implement Approach 1:
-   - Add `str_contains` rule type (useful for other games too)
-   - Add `get_entrance` and `entrance_attribute` rule types
-   - Add `eval_location_rule` rule type
+1. **Added `location_rule_ref` rule type** (`frontend/modules/shared/ruleEngine.js`)
+   - Evaluates another location's access rule directly
+   - Looks up location in staticData.regions and evaluates its access_rule
 
-## Implementation Priority
+2. **Implemented export-time resolution** (`exporter/games/ahit.py`)
+   - Added `expand_rule()` method to detect `can_clear_required_act` helper calls
+   - Resolves entrance → connected_region mapping at export time
+   - Generates `can_reach` + `location_rule_ref` rules
 
-Given that the current JavaScript fallback works correctly, the priority for this work is **low**. However, implementing export-time resolution would:
-- Reduce reliance on JavaScript fallbacks
-- Make the exported rules more complete/self-contained
-- Enable better debugging and inspection of rules
+3. **Removed from blacklist**
+   - `can_clear_required_act` no longer in `HELPERS_TO_EXPORT_BLACKLIST`
+   - All 24 usages are now resolved at export time
+
+### Benefits Achieved
+- No reliance on JavaScript fallbacks for this helper
+- Exported rules are self-contained and inspectable
+- Better debugging - can see exact region and location names in rules.json
 
 ## Related Files
 
