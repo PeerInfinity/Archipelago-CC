@@ -125,11 +125,16 @@ def get_failed_templates(test_results: Dict, multiclient: bool = False, specific
         multiworld: If True, check multiworld test results
 
     Returns:
-        List of template file names that are failing
+        List of template file names that are failing (excludes skipped templates)
     """
     failed_templates = []
 
     for template_file, result in test_results.items():
+        # Skip templates that were intentionally skipped (not actually failed)
+        if multiworld and isinstance(result, dict):
+            if result.get('multiworld_test', {}).get('skip_reason'):
+                continue
+
         if specific_seed is not None:
             # Check if this specific seed is failing
             if is_seed_failing(template_file, test_results, specific_seed, multiclient):

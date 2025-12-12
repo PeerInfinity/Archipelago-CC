@@ -633,13 +633,13 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
                             require_prerequisites: bool = True,
                             include_error_details: bool = False, max_templates: int = 10,
                             dry_run: bool = False, is_second_pass: bool = False,
-                            retry_failed_players: int = 0) -> Dict:
+                            retry_failed_players: int = 0, split_number: int = None) -> Dict:
     """
     Test a single template in multiworld mode.
 
-    By default (require_prerequisites=True), only tests templates that have passed
-    spoiler minimal, spoiler full, and multiclient tests. If require_prerequisites
-    is False, tests all templates regardless of other test results.
+    By default (require_prerequisites=False), tests all templates regardless of other
+    test results. If require_prerequisites is True, only tests templates that have
+    passed spoiler minimal, spoiler full, and multiclient tests.
     Copies template to the multiworld directory, runs generation with all accumulated
     templates, and tests each player.
 
@@ -657,13 +657,14 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
         headed: If True, run Playwright tests in headed mode
         keep_templates: If True, don't copy template to multiworld directory (just test existing templates)
         test_all_players: If True, test all players; if False, only test the newly added player
-        require_prerequisites: If True, skip templates that haven't passed other test types (default: True)
+        require_prerequisites: If True, skip templates that haven't passed other test types (default: False)
         include_error_details: If True, include first error/warning lines in results
         max_templates: Maximum number of templates to keep in multiworld directory (default: 10)
         dry_run: If True, show what would be done without making changes (default: False)
         is_second_pass: If True, this is a second pass retest (template already in multiworld,
                         skip adding, just test the player at its alphabetical position)
         retry_failed_players: Number of times to retry a failed player test (default: 0)
+        split_number: The parallel job split number (for tracking which job ran this test)
 
     Returns:
         Dictionary with test results
@@ -708,7 +709,8 @@ def test_template_multiworld(template_file: str, templates_dir: str, project_roo
             'first_failure_player': None,
             'player_results': {},
             'processing_time_seconds': 0,
-            'intermittent_failures': []  # Players that failed initially but passed on retry
+            'intermittent_failures': [],  # Players that failed initially but passed on retry
+            'split_number': split_number  # Which parallel job ran this test
         }
     }
 

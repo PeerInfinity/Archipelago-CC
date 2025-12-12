@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-12 06:36:50
+**Generated:** 2025-12-12 08:31:38
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -12,6 +12,7 @@ This summary combines results from 4 types of tests:
 
 Additional test results:
 - **World Generator Test:** Tests world generation for all templates - [View Details](./test-results-world-generator.md)
+- **Processing Times:** Generation and test processing times - [View Details](./test-results-processing-times.md)
 
 ## Summary Statistics
 

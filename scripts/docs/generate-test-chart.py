@@ -598,7 +598,7 @@ def extract_multiworld_chart_data(results: Dict[str, Any], world_mapping: Option
         game_name, pass_fail, player_number, total_players_tested,
         total_players_in_multiworld, players_passed, players_failed,
         all_prereqs_passed, has_custom_exporter, has_custom_game_logic,
-        exporter_size, game_logic_size,
+        exporter_size, game_logic_size, split_number,
         templates_in_multiworld, bisection_results, second_pass
     """
     chart_data = []
@@ -631,12 +631,16 @@ def extract_multiworld_chart_data(results: Dict[str, Any], world_mapping: Option
         players_failed = multiworld_test.get('players_failed', 0)
         all_prereqs_passed = prerequisite_check.get('all_prerequisites_passed', False)
         templates_in_multiworld = multiworld_test.get('templates_in_multiworld', {})
+        split_number = multiworld_test.get('split_number', None)
+        skip_reason = multiworld_test.get('skip_reason', None)
         bisection_results = template_data.get('bisection_results', None)
 
         # Extract second pass data if available
         second_pass = template_data.get('second_pass', None)
 
-        if not all_prereqs_passed:
+        # Determine pass/fail status - check skip_reason first (actual skip),
+        # not just prerequisites (which may not have been required)
+        if skip_reason:
             pass_fail = 'Skipped (Prerequisites)'
         elif success:
             pass_fail = 'Passed'
@@ -657,6 +661,7 @@ def extract_multiworld_chart_data(results: Dict[str, Any], world_mapping: Option
             'has_custom_game_logic': has_custom_game_logic,
             'exporter_size': exporter_size,
             'game_logic_size': game_logic_size,
+            'split_number': split_number,
             'templates_in_multiworld': templates_in_multiworld,
             'bisection_results': bisection_results,
             'second_pass': second_pass
@@ -820,6 +825,7 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
             game_name = entry['game_name']
             templates_in_multiworld = entry['templates_in_multiworld']
             pass_fail = entry['pass_fail']
+            split_number = entry.get('split_number')
 
             # Determine result icon
             if pass_fail.lower() == 'passed':
@@ -829,7 +835,9 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
             else:
                 result_icon = "❌"
 
-            md_content += f"### {game_name} {result_icon}\n\n"
+            # Add split number to header if available
+            split_info = f" (Split {split_number})" if split_number is not None else ""
+            md_content += f"### {game_name} {result_icon}{split_info}\n\n"
             md_content += "| Player # | Template |\n"
             md_content += "|----------|----------|\n"
 
@@ -920,9 +928,12 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
 
             if second_pass_templates:
                 second_pass_success = second_pass.get('success', False)
+                second_pass_split = second_pass.get('split_number')
                 result_icon = "✅" if second_pass_success else "❌"
 
-                md_content += f"#### {game_name} {result_icon}\n\n"
+                # Add split number to header if available
+                split_info = f" (Split {second_pass_split})" if second_pass_split is not None else ""
+                md_content += f"#### {game_name} {result_icon}{split_info}\n\n"
                 md_content += "| Player # | Template |\n"
                 md_content += "|----------|----------|\n"
 
@@ -1171,6 +1182,247 @@ def generate_multitemplate_markdown(chart_data: Dict[str, List[Tuple[str, str, i
     return md_content
 
 
+def extract_processing_times_data(minimal_results: Dict, full_results: Dict, multiclient_results: Dict, multiworld_results: Dict) -> Dict[str, Any]:
+    """
+    Extract processing time data from all test result types.
+    For results with multiple seeds, only uses the first seed's data.
+
+    Returns dict with:
+        - games: list of dicts with processing times for each game
+        - multiworld_top_generation: top 10 longest generation times
+        - multiworld_top_test: top 10 longest test times
+    """
+    games = {}
+
+    # Process minimal spoiler results
+    if minimal_results and 'results' in minimal_results:
+        for template_name, data in minimal_results['results'].items():
+            if not isinstance(data, dict):
+                continue
+
+            game_name = data.get('world_info', {}).get('game_name_from_yaml') or template_name.replace('.yaml', '')
+
+            if game_name not in games:
+                games[game_name] = {
+                    'game_name': game_name,
+                    'template_filename': template_name,
+                    'minimal_gen_time': None,
+                    'minimal_test_time': None,
+                    'full_test_time': None,
+                    'multiclient_time': None
+                }
+
+            # Get generation time (from first seed if multiple)
+            gen_data = data.get('generation', {})
+            if 'individual_results' in data:
+                # Multiple seeds - get first seed
+                first_seed = min(data['individual_results'].keys(), key=lambda x: int(x))
+                gen_data = data['individual_results'][first_seed].get('generation', {})
+            games[game_name]['minimal_gen_time'] = gen_data.get('processing_time_seconds')
+
+            # Get spoiler test time
+            test_data = data.get('spoiler_test', {})
+            if 'individual_results' in data:
+                first_seed = min(data['individual_results'].keys(), key=lambda x: int(x))
+                test_data = data['individual_results'][first_seed].get('spoiler_test', {})
+            games[game_name]['minimal_test_time'] = test_data.get('processing_time_seconds')
+
+    # Process full spoiler results (only test time - generation is same as minimal)
+    if full_results and 'results' in full_results:
+        for template_name, data in full_results['results'].items():
+            if not isinstance(data, dict):
+                continue
+
+            game_name = data.get('world_info', {}).get('game_name_from_yaml') or template_name.replace('.yaml', '')
+
+            if game_name not in games:
+                games[game_name] = {
+                    'game_name': game_name,
+                    'template_filename': template_name,
+                    'minimal_gen_time': None,
+                    'minimal_test_time': None,
+                    'full_test_time': None,
+                    'multiclient_time': None
+                }
+
+            test_data = data.get('spoiler_test', {})
+            if 'individual_results' in data:
+                first_seed = min(data['individual_results'].keys(), key=lambda x: int(x))
+                test_data = data['individual_results'][first_seed].get('spoiler_test', {})
+            games[game_name]['full_test_time'] = test_data.get('processing_time_seconds')
+
+    # Process multiclient results
+    if multiclient_results and 'results' in multiclient_results:
+        for template_name, data in multiclient_results['results'].items():
+            if not isinstance(data, dict):
+                continue
+
+            game_name = data.get('world_info', {}).get('game_name_from_yaml') or template_name.replace('.yaml', '')
+
+            if game_name not in games:
+                games[game_name] = {
+                    'game_name': game_name,
+                    'template_filename': template_name,
+                    'minimal_gen_time': None,
+                    'minimal_test_time': None,
+                    'full_test_time': None,
+                    'multiclient_time': None
+                }
+
+            test_data = data.get('multiclient_test', {})
+            if 'individual_results' in data:
+                first_seed = min(data['individual_results'].keys(), key=lambda x: int(x))
+                test_data = data['individual_results'][first_seed].get('multiclient_test', {})
+            games[game_name]['multiclient_time'] = test_data.get('processing_time_seconds')
+
+    # Process multiworld results - collect top 10 generation and test times
+    multiworld_generation_times = []
+    multiworld_test_times = []
+
+    if multiworld_results and 'results' in multiworld_results:
+        for template_name, data in multiworld_results['results'].items():
+            if not isinstance(data, dict):
+                continue
+
+            game_name = data.get('world_info', {}).get('game_name_from_yaml') or template_name.replace('.yaml', '')
+            multiworld_test = data.get('multiworld_test', {})
+
+            # Get templates that were in the multiworld
+            templates_in_multiworld = multiworld_test.get('templates_in_multiworld', {})
+            template_list = list(templates_in_multiworld.values()) if templates_in_multiworld else [template_name]
+
+            # Generation time
+            gen_time = data.get('generation', {}).get('processing_time_seconds')
+            if gen_time is not None:
+                multiworld_generation_times.append({
+                    'game_name': game_name,
+                    'template_filename': template_name,
+                    'time': gen_time,
+                    'templates_in_multiworld': template_list,
+                    'player_count': len(template_list)
+                })
+
+            # Test time
+            test_time = multiworld_test.get('processing_time_seconds')
+            if test_time is not None:
+                multiworld_test_times.append({
+                    'game_name': game_name,
+                    'template_filename': template_name,
+                    'time': test_time,
+                    'templates_in_multiworld': template_list,
+                    'player_count': len(template_list)
+                })
+
+    # Sort and get top 10
+    multiworld_generation_times.sort(key=lambda x: x['time'], reverse=True)
+    multiworld_test_times.sort(key=lambda x: x['time'], reverse=True)
+
+    return {
+        'games': sorted(games.values(), key=lambda x: x['game_name']),
+        'multiworld_top_generation': multiworld_generation_times[:10],
+        'multiworld_top_test': multiworld_test_times[:10]
+    }
+
+
+def generate_processing_times_markdown(processing_data: Dict[str, Any]) -> str:
+    """Generate markdown content for processing times chart."""
+    md_content = "# Processing Times Chart\n\n"
+    md_content += f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+    md_content += "[← Back to Test Results Summary](./test-results-summary.md)\n\n"
+
+    md_content += "This chart shows processing times for each test phase. "
+    md_content += "Times are in seconds. For tests with multiple seeds, only the first seed's time is shown.\n\n"
+
+    games = processing_data.get('games', [])
+
+    # Summary statistics (before individual results)
+    if games:
+        gen_times = [(g['minimal_gen_time'], g['game_name']) for g in games if g['minimal_gen_time'] is not None]
+        min_times = [(g['minimal_test_time'], g['game_name']) for g in games if g['minimal_test_time'] is not None]
+        full_times = [(g['full_test_time'], g['game_name']) for g in games if g['full_test_time'] is not None]
+        mc_times = [(g['multiclient_time'], g['game_name']) for g in games if g['multiclient_time'] is not None]
+
+        if gen_times:
+            gen_vals = [t[0] for t in gen_times]
+            min_vals = [t[0] for t in min_times]
+            full_vals = [t[0] for t in full_times]
+            mc_vals = [t[0] for t in mc_times]
+
+            md_content += "## Summary Statistics\n\n"
+            md_content += "| Metric | Gen Time | Minimal Test | Full Test | Multiclient |\n"
+            md_content += "|--------|----------|--------------|-----------|-------------|\n"
+            md_content += f"| Total | {sum(gen_vals):.1f}s | {sum(min_vals):.1f}s | {sum(full_vals):.1f}s | {sum(mc_vals):.1f}s |\n"
+            md_content += f"| Average | {sum(gen_vals)/len(gen_vals):.1f}s | {sum(min_vals)/len(min_vals):.1f}s | {sum(full_vals)/len(full_vals):.1f}s | {sum(mc_vals)/len(mc_vals):.1f}s |\n"
+            md_content += f"| Max | {max(gen_vals):.1f}s | {max(min_vals):.1f}s | {max(full_vals):.1f}s | {max(mc_vals):.1f}s |\n"
+            md_content += f"| Min | {min(gen_vals):.1f}s | {min(min_vals):.1f}s | {min(full_vals):.1f}s | {min(mc_vals):.1f}s |\n"
+
+            # Find games with max/min times
+            gen_max = max(gen_times, key=lambda x: x[0])
+            gen_min = min(gen_times, key=lambda x: x[0])
+            min_max = max(min_times, key=lambda x: x[0])
+            min_min = min(min_times, key=lambda x: x[0])
+            full_max = max(full_times, key=lambda x: x[0])
+            full_min = min(full_times, key=lambda x: x[0])
+            mc_max = max(mc_times, key=lambda x: x[0])
+            mc_min = min(mc_times, key=lambda x: x[0])
+
+            md_content += "\n## Slowest and Fastest Games\n\n"
+            md_content += "| Metric | Gen Time | Minimal Test | Full Test | Multiclient |\n"
+            md_content += "|--------|----------|--------------|-----------|-------------|\n"
+            md_content += f"| Slowest | {gen_max[1]} ({gen_max[0]:.1f}s) | {min_max[1]} ({min_max[0]:.1f}s) | {full_max[1]} ({full_max[0]:.1f}s) | {mc_max[1]} ({mc_max[0]:.1f}s) |\n"
+            md_content += f"| Fastest | {gen_min[1]} ({gen_min[0]:.1f}s) | {min_min[1]} ({min_min[0]:.1f}s) | {full_min[1]} ({full_min[0]:.1f}s) | {mc_min[1]} ({mc_min[0]:.1f}s) |\n"
+
+    # Individual game processing times table
+    md_content += "\n## Individual Game Processing Times\n\n"
+    md_content += "| Game | Gen Time | Minimal Test | Full Test | Multiclient |\n"
+    md_content += "|------|----------|--------------|-----------|-------------|\n"
+
+    for game in games:
+        game_name = game['game_name']
+        gen_time = f"{game['minimal_gen_time']:.1f}s" if game['minimal_gen_time'] is not None else "-"
+        min_test = f"{game['minimal_test_time']:.1f}s" if game['minimal_test_time'] is not None else "-"
+        full_test = f"{game['full_test_time']:.1f}s" if game['full_test_time'] is not None else "-"
+        mc_test = f"{game['multiclient_time']:.1f}s" if game['multiclient_time'] is not None else "-"
+
+        md_content += f"| {game_name} | {gen_time} | {min_test} | {full_test} | {mc_test} |\n"
+
+    # Multiworld top 10 section
+    md_content += "\n## Multiworld Test - Longest Processing Times\n\n"
+    md_content += "Shows the 10 longest generation and test times from multiworld testing.\n\n"
+
+    # Top 10 generation times
+    top_gen = processing_data.get('multiworld_top_generation', [])
+    if top_gen:
+        md_content += "### Top 10 Longest Generation Times\n\n"
+        md_content += "| Rank | Game | Time | Players | Templates in Multiworld |\n"
+        md_content += "|------|------|------|---------|------------------------|\n"
+
+        for i, entry in enumerate(top_gen, 1):
+            templates_str = ", ".join(entry['templates_in_multiworld'][:5])
+            if len(entry['templates_in_multiworld']) > 5:
+                templates_str += f" (+{len(entry['templates_in_multiworld']) - 5} more)"
+            md_content += f"| {i} | {entry['game_name']} | {entry['time']:.1f}s | {entry['player_count']} | {templates_str} |\n"
+    else:
+        md_content += "### Top 10 Longest Generation Times\n\nNo multiworld generation data available.\n"
+
+    # Top 10 test times
+    top_test = processing_data.get('multiworld_top_test', [])
+    if top_test:
+        md_content += "\n### Top 10 Longest Test Times\n\n"
+        md_content += "| Rank | Game | Time | Players | Templates in Multiworld |\n"
+        md_content += "|------|------|------|---------|------------------------|\n"
+
+        for i, entry in enumerate(top_test, 1):
+            templates_str = ", ".join(entry['templates_in_multiworld'][:5])
+            if len(entry['templates_in_multiworld']) > 5:
+                templates_str += f" (+{len(entry['templates_in_multiworld']) - 5} more)"
+            md_content += f"| {i} | {entry['game_name']} | {entry['time']:.1f}s | {entry['player_count']} | {templates_str} |\n"
+    else:
+        md_content += "\n### Top 10 Longest Test Times\n\nNo multiworld test data available.\n"
+
+    return md_content
+
+
 def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None, ut_comparison_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None, multiclient_metadata=None, multiworld_metadata=None, has_ut_random=False, has_ut_fixed=False, world_mapping=None, is_worldgen=False, other_version_link=None) -> str:
     """Generate a combined summary chart with all test results."""
     title_suffix = " (WorldGen)" if is_worldgen else ""
@@ -1202,6 +1454,7 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
     if not is_worldgen:
         md_content += "\nAdditional test results:\n"
         md_content += "- **World Generator Test:** Tests world generation for all templates - [View Details](./test-results-world-generator.md)\n"
+        md_content += "- **Processing Times:** Generation and test processing times - [View Details](./test-results-processing-times.md)\n"
 
     md_content += "\n"
 
@@ -1893,6 +2146,20 @@ def main():
         summary_wg_md = generate_summary_chart(minimal_wg_data, full_wg_data, mp_wg_data, mw_wg_data, None, None, None, excluded_games, minimal_wg_meta, full_wg_meta, multiclient_metadata=mp_wg_meta, multiworld_metadata=mw_wg_meta, has_ut_random=False, has_ut_fixed=False, world_mapping=full_world_mapping, is_worldgen=True, other_version_link=orig_summary_link)
         with open(summary_wg_output, 'w') as f:
             f.write(summary_wg_md)
+
+    # Generate processing times chart if we have any results
+    if 'minimal_results' in locals() or 'full_results' in locals() or 'mp_results' in locals() or 'mw_results' in locals():
+        processing_times_data = extract_processing_times_data(
+            minimal_results if 'minimal_results' in locals() else {},
+            full_results if 'full_results' in locals() else {},
+            mp_results if 'mp_results' in locals() else {},
+            mw_results if 'mw_results' in locals() else {}
+        )
+        processing_times_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-processing-times.md')
+        processing_times_md = generate_processing_times_markdown(processing_times_data)
+        with open(processing_times_output, 'w') as f:
+            f.write(processing_times_md)
+        print(f"Generated: {processing_times_output}")
 
     print("\n=== Chart Generation Complete ===")
     return 0
