@@ -116,8 +116,6 @@
       "timerPanelModule": "WARN",
       "timerPanelUI": "WARN",
       "timerUI": "WARN",
-      "vanillaJsonEditorModule": "WARN",
-      "vanillaJsonEditorUI": "WARN",
       "iframeAdapter": "WARN",
       "iframeAdapterCore": "WARN",
       "iframePanel": "WARN",

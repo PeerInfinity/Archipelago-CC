@@ -41,6 +41,11 @@
       "enabled": true,
       "requires": ["editorCore"]
     },
+    "editorCodeMirror6": {
+      "path": "./modules/editorCodeMirror6/index.js",
+      "enabled": true,
+      "requires": ["editorCore"]
+    },
     "settings": {
       "path": "./modules/settings/index.js",
       "enabled": true
@@ -193,6 +198,7 @@
     "inventory",
     "editorCore",
     "editor",
+    "editorCodeMirror6",
     "settings",
     "commonUI",
     "locations",

@@ -76,6 +76,11 @@
             },
             {
               "type": "component",
+              "componentType": "editorCodeMirror6Panel",
+              "title": "Editor (CM6)"
+            },
+            {
+              "type": "component",
               "componentType": "settingsPanel",
               "title": "Settings"
             },
