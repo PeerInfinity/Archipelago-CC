@@ -282,6 +282,8 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
           // Include all game-specific data needed by helpers (e.g., Pokemon local_poke_data)
           const staticData = {
             progressionMapping: sm.progressionMapping,
+            // Also include snake_case with player key for generic helpers
+            progression_mapping: { [sm.playerId]: sm.progressionMapping },
             items: sm.itemData,
             game_info: sm.gameInfo,
             settings: sm.settings,
@@ -311,6 +313,7 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
           // Include all game-specific data needed by helpers (e.g., Pokemon local_poke_data)
           const staticData = {
             progressionMapping: sm.progressionMapping,
+            progression_mapping: sm.progressionMapping, // Also include snake_case for generic helpers
             items: sm.itemData,
             game_info: sm.gameInfo,
             settings: sm.settings,
