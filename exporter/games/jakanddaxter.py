@@ -12,9 +12,9 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
 
-    # Preserve can_reach_orbs_level as a helper call - it requires JavaScript
-    # implementation because it iterates regions and sums orb counts at runtime
-    HELPERS_TO_PRESERVE: Set[str] = {'can_reach_orbs_level'}
+    # Preserve orb reachability helpers as helper calls - they require JavaScript
+    # implementation because they iterate regions and sum orb counts at runtime
+    HELPERS_TO_PRESERVE: Set[str] = {'can_reach_orbs_level', 'can_reach_orbs_global'}
 
 
     def __init__(self, world=None):
@@ -156,6 +156,23 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
                     }
                 else:
                     logger.warning(f"can_reach_orbs_level call with insufficient args: {len(args)}")
+
+            # Check if this is a can_reach_orbs_global call
+            # The function will be {type: 'name', name: 'can_reach_orbs_global'}
+            if (isinstance(function, dict) and
+                function.get('type') == 'name' and
+                function.get('name') == 'can_reach_orbs_global'):
+                # can_reach_orbs_global(state, player, world, orb_amount)
+                # We need args[3] (orb_amount)
+                if len(args) >= 4:
+                    orb_amount = self._unwrap_constant(args[3])
+                    return {
+                        'type': 'helper',
+                        'name': 'can_reach_orbs',  # Maps to JavaScript helper
+                        'args': [orb_amount]
+                    }
+                else:
+                    logger.warning(f"can_reach_orbs_global call with insufficient args: {len(args)}")
 
             # Resolve the function to check if it's world.can_trade
             resolved_function = self._resolve_attribute(function)
@@ -320,6 +337,14 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
                             ]
                         }
                     ]
+                }
+            elif helper_name == 'can_reach_orbs_global':
+                # Transform to JavaScript helper name and unwrap args
+                orb_amount = self._unwrap_constant(args[0]) if args else 1
+                return {
+                    'type': 'helper',
+                    'name': 'can_reach_orbs',  # Maps to JavaScript helper
+                    'args': [orb_amount]
                 }
 
         # Handle nested rules recursively

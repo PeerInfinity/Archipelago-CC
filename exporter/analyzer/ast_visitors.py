@@ -1498,6 +1498,51 @@ class ASTVisitorMixin:
 
         return attr_name, index_val
 
+    def _is_prog_items_pattern(self, node):
+        """
+        Detect the pattern: state.prog_items[player][key]
+        Returns the key (e.g., " coins") if matched, None otherwise.
+
+        This handles DLCQuest and other games that use accumulator items
+        stored in state.prog_items.
+
+        AST structure:
+        Subscript(slice=Constant(" coins"))  <- outer node
+          value=Subscript(slice=Name("player"))
+            value=Attribute(attr='prog_items')
+              value=Name(id='state')
+        """
+        if not isinstance(node, ast.Subscript):
+            return None
+
+        # Get the key from the outer subscript slice
+        key = None
+        if isinstance(node.slice, ast.Constant):
+            key = node.slice.value
+        elif isinstance(node.slice, ast.Str):  # Python 3.7 compatibility
+            key = node.slice.s
+        else:
+            return None
+
+        # Check inner subscript: [player]
+        inner_subscript = node.value
+        if not isinstance(inner_subscript, ast.Subscript):
+            return None
+        if not isinstance(inner_subscript.slice, ast.Name) or inner_subscript.slice.id != 'player':
+            return None
+
+        # Check attribute: .prog_items
+        prog_items_attr = inner_subscript.value
+        if not isinstance(prog_items_attr, ast.Attribute) or prog_items_attr.attr != 'prog_items':
+            return None
+
+        # Check name: state
+        state_name = prog_items_attr.value
+        if not isinstance(state_name, ast.Name) or state_name.id != 'state':
+            return None
+
+        return key
+
     def _is_multiworld_get_region_call(self, node):
         """
         Detect the pattern: state.multiworld.get_region('Region Name', player)
@@ -1896,6 +1941,14 @@ class ASTVisitorMixin:
         if attr_name is not None and index_val is not None:
             logging.debug(f"visit_Subscript: Detected world attribute subscript pattern: {attr_name}[{index_val}]")
             return {'type': 'setting_value', 'setting': attr_name, 'index': index_val}
+
+        # Check for state.prog_items[player][key] pattern
+        # Convert to prog_item_count rule type for frontend evaluation
+        # This handles DLCQuest and other games that use accumulator items
+        prog_items_key = self._is_prog_items_pattern(node)
+        if prog_items_key is not None:
+            logging.debug(f"visit_Subscript: Detected prog_items pattern: state.prog_items[player][{prog_items_key!r}]")
+            return {'type': 'prog_item_count', 'key': prog_items_key}
 
         # OPTIMIZATION: Try direct resolution for attribute subscripts like world.dict[key]
         # This avoids the dict-to-keys conversion that happens in visit_Attribute

@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-12 02:26:25
+**Generated:** 2025-12-11 19:22:51
 
 ## Summary
 
@@ -30,7 +30,7 @@
 
 | Game Name | First Pass | Second Pass | Player # | MW Size | Exporter | GameLogic |
 |-----------|------------|-------------|----------|---------|----------|----------|
-| A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 7.5KB | 10.3KB |
+| A Hat in Time | ✅ Passed | ✅ Passed | 1 | 1 | 12.1KB | 10.3KB |
 | A Link to the Past | ✅ Passed | ✅ Passed | 1 | 1 | 43.0KB | ✅ |
 | A Short Hike | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | 1 | 1 | ✅ | ✅ |
@@ -46,18 +46,18 @@
 | ChocolateChipCookies | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Choo-Choo Charles | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Civilization VI | ✅ Passed | ✅ Passed | 2 | 2 | 10.2KB | ✅ |
-| DLCQuest | ✅ Passed | ✅ Passed | 2 | 2 | 10.3KB | 9.6KB |
+| DLCQuest | ✅ Passed | ✅ Passed | 2 | 2 | 10.3KB | ✅ |
 | DOOM 1993 | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | DOOM II | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | ✅ Passed | 2 | 2 | 4.7KB | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
-| Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 11.4KB | 4.2KB |
+| Factorio | ✅ Passed | ✅ Passed | 3 | 3 | 11.4KB | ✅ |
 | Faxanadu | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | 3 | 3 | 7.5KB | ✅ |
 | Heretic | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | ✅ Passed | 3 | 3 | 1.0KB | ✅ |
 | Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 8.0KB | ✅ |
-| Jak and Daxter: The Precursor Legacy | ✅ Passed | ✅ Passed | 3 | 3 | 15.5KB | 4.6KB |
+| Jak and Daxter: The Precursor Legacy | ✅ Passed | ✅ Passed | 3 | 3 | 16.8KB | 4.6KB |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | 3 | 3 | 58.4KB | 5.4KB |
 | Kingdom Hearts 2 | ⚫ Skipped | — | N/A | N/A | 15.5KB | 105.3KB |
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 4 | 4 | 9.7KB | 15.7KB |
@@ -97,7 +97,7 @@
 | The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | 6.9KB | ✅ |
 | The Messenger | ✅ Passed | ✅ Passed | 6 | 6 | 11.7KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 4.8KB | 4.6KB |
-| The Witness | ⚫ Skipped | — | N/A | N/A | 23.7KB | ✅ |
+| The Witness | ⚫ Skipped | — | N/A | N/A | 28.9KB | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | 5 | 5 | 4.0KB | ✅ |
 | Undertale | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | VVVVVV | ✅ Passed | ✅ Passed | 8 | 8 | 5.4KB | ✅ |

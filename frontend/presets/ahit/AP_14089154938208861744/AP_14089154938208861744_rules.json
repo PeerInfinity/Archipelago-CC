@@ -358,12 +358,15 @@
             "name": "Time Rift - Bazaar Portal - Entrance 1",
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 6"
+                  "type": "can_reach",
+                  "region": "Picture Perfect"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Picture Perfect)"
                 }
               ]
             }
@@ -372,12 +375,15 @@
             "name": "Time Rift - Sewers Portal - Entrance 1",
             "connected_region": "Time Rift - The Moon",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 4"
+                  "type": "can_reach",
+                  "region": "The Golden Vault"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Golden Vault)"
                 }
               ]
             }
@@ -445,12 +451,15 @@
             "name": "Time Rift - Bazaar Portal - Entrance 2",
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 6"
+                  "type": "can_reach",
+                  "region": "Picture Perfect"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Picture Perfect)"
                 }
               ]
             }
@@ -459,12 +468,15 @@
             "name": "Time Rift - Sewers Portal - Entrance 2",
             "connected_region": "Time Rift - The Moon",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 4"
+                  "type": "can_reach",
+                  "region": "The Golden Vault"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Golden Vault)"
                 }
               ]
             }
@@ -533,12 +545,15 @@
             "name": "Time Rift - Bazaar Portal - Entrance 3",
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 6"
+                  "type": "can_reach",
+                  "region": "Picture Perfect"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Picture Perfect)"
                 }
               ]
             }
@@ -547,12 +562,15 @@
             "name": "Time Rift - Sewers Portal - Entrance 3",
             "connected_region": "Time Rift - The Moon",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 4"
+                  "type": "can_reach",
+                  "region": "The Golden Vault"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Golden Vault)"
                 }
               ]
             }
@@ -613,12 +631,15 @@
             "name": "Time Rift - Bazaar Portal - Entrance 4",
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 6"
+                  "type": "can_reach",
+                  "region": "Picture Perfect"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Picture Perfect)"
                 }
               ]
             }
@@ -627,12 +648,15 @@
             "name": "Time Rift - Sewers Portal - Entrance 4",
             "connected_region": "Time Rift - The Moon",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 4"
+                  "type": "can_reach",
+                  "region": "The Golden Vault"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Golden Vault)"
                 }
               ]
             }
@@ -814,12 +838,15 @@
             "name": "Time Rift - Bazaar Portal - Entrance 6",
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 6"
+                  "type": "can_reach",
+                  "region": "Picture Perfect"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Picture Perfect)"
                 }
               ]
             }
@@ -828,12 +855,15 @@
             "name": "Time Rift - Sewers Portal - Entrance 6",
             "connected_region": "Time Rift - The Moon",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 4"
+                  "type": "can_reach",
+                  "region": "The Golden Vault"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Golden Vault)"
                 }
               ]
             }
@@ -910,12 +940,15 @@
             "name": "Time Rift - Bazaar Portal - Entrance 5",
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 6"
+                  "type": "can_reach",
+                  "region": "Picture Perfect"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Picture Perfect)"
                 }
               ]
             }
@@ -924,12 +957,15 @@
             "name": "Time Rift - Sewers Portal - Entrance 5",
             "connected_region": "Time Rift - The Moon",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 4"
+                  "type": "can_reach",
+                  "region": "The Golden Vault"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Golden Vault)"
                 }
               ]
             }
@@ -988,12 +1024,15 @@
             "name": "Time Rift - Bazaar Portal - Entrance 7",
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 6"
+                  "type": "can_reach",
+                  "region": "Picture Perfect"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Picture Perfect)"
                 }
               ]
             }
@@ -1002,12 +1041,15 @@
             "name": "Time Rift - Sewers Portal - Entrance 7",
             "connected_region": "Time Rift - The Moon",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 4"
+                  "type": "can_reach",
+                  "region": "The Golden Vault"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Golden Vault)"
                 }
               ]
             }
@@ -1217,22 +1259,28 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_clear_required_act",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": "Battle of the Birds - Act 2"
+                      "type": "can_reach",
+                      "region": "Mail Delivery Service"
+                    },
+                    {
+                      "type": "location_rule_ref",
+                      "location": "Act Completion (Mail Delivery Service)"
                     }
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_clear_required_act",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": "Battle of the Birds - Act 3"
+                      "type": "can_reach",
+                      "region": "Train Rush"
+                    },
+                    {
+                      "type": "location_rule_ref",
+                      "location": "Act Completion (Train Rush)"
                     }
                   ]
                 }
@@ -1372,24 +1420,21 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_clear_required_act",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": "Battle of the Birds - Act 4"
+                      "type": "can_reach",
+                      "region": "Heating Up Mafia Town"
+                    },
+                    {
+                      "type": "location_rule_ref",
+                      "location": "Act Completion (Heating Up Mafia Town)"
                     }
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_clear_required_act",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Battle of the Birds - Act 5"
-                    }
-                  ]
+                  "type": "can_reach",
+                  "region": "Alpine Free Roam"
                 }
               ]
             }
@@ -1570,24 +1615,21 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_clear_required_act",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": "Battle of the Birds - Act 4"
+                      "type": "can_reach",
+                      "region": "Heating Up Mafia Town"
+                    },
+                    {
+                      "type": "location_rule_ref",
+                      "location": "Act Completion (Heating Up Mafia Town)"
                     }
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_clear_required_act",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Battle of the Birds - Act 5"
-                    }
-                  ]
+                  "type": "can_reach",
+                  "region": "Alpine Free Roam"
                 }
               ]
             }
@@ -2420,12 +2462,15 @@
             "name": "Time Rift - Village Portal - Entrance 1",
             "connected_region": "Time Rift - Pipe",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Subcon Forest - Act 4"
+                  "type": "can_reach",
+                  "region": "Down with the Mafia!"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Down with the Mafia!)"
                 }
               ]
             }
@@ -2434,12 +2479,15 @@
             "name": "Time Rift - Pipe Portal - Entrance 1",
             "connected_region": "Time Rift - Bazaar",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Subcon Forest - Act 2"
+                  "type": "can_reach",
+                  "region": "Dead Bird Studio Basement"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Dead Bird Studio Basement)"
                 }
               ]
             }
@@ -2530,12 +2578,15 @@
             "name": "Time Rift - Village Portal - Entrance 2",
             "connected_region": "Time Rift - Pipe",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Subcon Forest - Act 4"
+                  "type": "can_reach",
+                  "region": "Down with the Mafia!"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Down with the Mafia!)"
                 }
               ]
             }
@@ -2544,12 +2595,15 @@
             "name": "Time Rift - Pipe Portal - Entrance 2",
             "connected_region": "Time Rift - Bazaar",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Subcon Forest - Act 2"
+                  "type": "can_reach",
+                  "region": "Dead Bird Studio Basement"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Dead Bird Studio Basement)"
                 }
               ]
             }
@@ -2662,12 +2716,15 @@
             "name": "Time Rift - Village Portal - Entrance 3",
             "connected_region": "Time Rift - Pipe",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Subcon Forest - Act 4"
+                  "type": "can_reach",
+                  "region": "Down with the Mafia!"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Down with the Mafia!)"
                 }
               ]
             }
@@ -2676,12 +2733,15 @@
             "name": "Time Rift - Pipe Portal - Entrance 3",
             "connected_region": "Time Rift - Bazaar",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Subcon Forest - Act 2"
+                  "type": "can_reach",
+                  "region": "Dead Bird Studio Basement"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Dead Bird Studio Basement)"
                 }
               ]
             }
@@ -3096,12 +3156,15 @@
             "name": "Time Rift - Village Portal - Entrance 4",
             "connected_region": "Time Rift - Pipe",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Subcon Forest - Act 4"
+                  "type": "can_reach",
+                  "region": "Down with the Mafia!"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Down with the Mafia!)"
                 }
               ]
             }
@@ -3110,12 +3173,15 @@
             "name": "Time Rift - Pipe Portal - Entrance 4",
             "connected_region": "Time Rift - Bazaar",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Subcon Forest - Act 2"
+                  "type": "can_reach",
+                  "region": "Dead Bird Studio Basement"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Dead Bird Studio Basement)"
                 }
               ]
             }
@@ -3299,12 +3365,15 @@
             "name": "Time Rift - Village Portal - Entrance 5",
             "connected_region": "Time Rift - Pipe",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Subcon Forest - Act 4"
+                  "type": "can_reach",
+                  "region": "Down with the Mafia!"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Down with the Mafia!)"
                 }
               ]
             }
@@ -3313,12 +3382,15 @@
             "name": "Time Rift - Pipe Portal - Entrance 5",
             "connected_region": "Time Rift - Bazaar",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Subcon Forest - Act 2"
+                  "type": "can_reach",
+                  "region": "Dead Bird Studio Basement"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Dead Bird Studio Basement)"
                 }
               ]
             }
@@ -8057,6 +8129,113 @@
         "body": {
           "type": "name",
           "name": "value"
+        }
+      },
+      "can_clear_required_act": {
+        "params": [
+          "act_entrance"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "not",
+                "condition": {
+                  "type": "state_method",
+                  "method": "can_reach",
+                  "args": [
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "entrance"
+                      },
+                      "attr": "connected_region"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Region"
+                    }
+                  ]
+                }
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": false
+                  }
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": "Free Roam"
+                },
+                "op": "in",
+                "right": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "entrance"
+                    },
+                    "attr": "connected_region"
+                  },
+                  "attr": "name"
+                }
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": true
+                  }
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "world"
+                        },
+                        "attr": "multiworld"
+                      },
+                      "attr": "get_location"
+                    },
+                    "args": [
+                      {
+                        "type": "name",
+                        "name": "name"
+                      }
+                    ]
+                  },
+                  "attr": "access_rule"
+                },
+                "args": []
+              }
+            }
+          ]
         }
       },
       "can_use_hat": {

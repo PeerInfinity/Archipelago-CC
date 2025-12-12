@@ -256,7 +256,8 @@ def extract_multiclient_chart_data(results: Dict[str, Any]) -> List[Tuple[str, s
 def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float, bool, bool, Optional[bool], Optional[bool], Optional[float]]],
                               metadata: Dict[str, Any], subtitle: str = "", is_worldgen: bool = False,
                               other_version_link: Optional[str] = None,
-                              world_mapping: Optional[Dict[str, Dict[str, Any]]] = None) -> str:
+                              world_mapping: Optional[Dict[str, Dict[str, Any]]] = None,
+                              include_timing: bool = False) -> str:
     """Generate a markdown table for spoiler test data."""
     md_content = "# Archipelago Template Test Results Chart\n\n"
 
@@ -315,8 +316,12 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
         md_content += f"- **Passing with Both Generic:** {passed_with_both_generic}/{passed} ({passed_with_both_generic/passed*100:.1f}% of passed)\n\n" if passed > 0 else f"- **Passing with Both Generic:** 0/0\n\n"
 
     md_content += "## Test Results\n\n"
-    md_content += "| Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Test Time | Exporter | GameLogic |\n"
-    md_content += "|-----------|-------------|------------|----------------|-------------|----------|-----------|----------|----------|\n"
+    if include_timing:
+        md_content += "| Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Test Time | Exporter | GameLogic |\n"
+        md_content += "|-----------|-------------|------------|----------------|-------------|----------|-----------|----------|----------|\n"
+    else:
+        md_content += "| Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |\n"
+        md_content += "|-----------|-------------|------------|----------------|-------------|----------|----------|----------|\n"
 
     for game_name, pass_fail, gen_error_count, sphere_reached, max_spheres, has_custom_exporter, has_custom_game_logic, rules_consistent, spoilers_consistent, test_time_seconds in chart_data:
         if 'passed' in pass_fail.lower():
@@ -339,12 +344,6 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
         else:
             result_display = "❌ Failed"
 
-        # Format test time
-        if test_time_seconds is not None:
-            test_time_display = f"{test_time_seconds:.1f}s"
-        else:
-            test_time_display = "N/A"
-
         # Look up file sizes from world_mapping if available
         if world_mapping and game_name in world_mapping:
             exporter_size = world_mapping[game_name].get('exporter_size', 0)
@@ -355,10 +354,21 @@ def generate_spoiler_markdown(chart_data: List[Tuple[str, str, int, float, float
             exporter_indicator = "⚫" if has_custom_exporter else "✅"
             game_logic_indicator = "⚫" if has_custom_game_logic else "✅"
 
-        md_content += f"| {game_name} | {result_display} | {gen_error_count} | {sphere_reached:g} | {max_spheres:g} | {progress} | {test_time_display} | {exporter_indicator} | {game_logic_indicator} |\n"
+        if include_timing:
+            # Format test time
+            if test_time_seconds is not None:
+                test_time_display = f"{test_time_seconds:.1f}s"
+            else:
+                test_time_display = "N/A"
+            md_content += f"| {game_name} | {result_display} | {gen_error_count} | {sphere_reached:g} | {max_spheres:g} | {progress} | {test_time_display} | {exporter_indicator} | {game_logic_indicator} |\n"
+        else:
+            md_content += f"| {game_name} | {result_display} | {gen_error_count} | {sphere_reached:g} | {max_spheres:g} | {progress} | {exporter_indicator} | {game_logic_indicator} |\n"
 
     if not chart_data:
-        md_content += "| No data available | - | - | - | - | - | - | - | - |\n"
+        if include_timing:
+            md_content += "| No data available | - | - | - | - | - | - | - | - |\n"
+        else:
+            md_content += "| No data available | - | - | - | - | - | - | - |\n"
 
     # Add Intermittent Failures section if there are any
     if metadata and 'intermittent_tracking' in metadata:
@@ -1505,6 +1515,8 @@ def main():
     parser.add_argument('--output-file', type=str, help='Output markdown file path')
     parser.add_argument('--test-type', type=str, choices=['minimal', 'full', 'multiclient', 'multiworld', 'multitemplate-minimal', 'multitemplate-full', 'ut-comparison'],
                        help='Test type when using --input-file')
+    parser.add_argument('--include-timing', action='store_true', default=False,
+                       help='Include test timing data in output (default: off)')
 
     args = parser.parse_args()
 
@@ -1533,7 +1545,7 @@ def main():
         if args.test_type in ['minimal', 'full']:
             chart_data = extract_spoiler_chart_data(results)
             subtitle = "Spoiler Test - Advancement Items Only" if args.test_type == 'minimal' else "Spoiler Test - All Locations"
-            md_content = generate_spoiler_markdown(chart_data, metadata, subtitle)
+            md_content = generate_spoiler_markdown(chart_data, metadata, subtitle, include_timing=args.include_timing)
         elif args.test_type == 'multiclient':
             chart_data = extract_multiclient_chart_data(results)
             # Extract top-level metadata for multiclient
@@ -1605,7 +1617,8 @@ def main():
         minimal_md = generate_spoiler_markdown(minimal_data, minimal_results.get('metadata', {}),
                                               "Spoiler Test - Advancement Items Only",
                                               is_worldgen=False, other_version_link=wg_link,
-                                              world_mapping=full_world_mapping)
+                                              world_mapping=full_world_mapping,
+                                              include_timing=args.include_timing)
         os.makedirs(os.path.dirname(minimal_output), exist_ok=True)
         with open(minimal_output, 'w') as f:
             f.write(minimal_md)
@@ -1621,7 +1634,8 @@ def main():
         minimal_wg_md = generate_spoiler_markdown(minimal_wg_data, minimal_wg_results.get('metadata', {}),
                                                   "Spoiler Test - Advancement Items Only (WorldGen)",
                                                   is_worldgen=True, other_version_link=orig_link,
-                                                  world_mapping=full_world_mapping)
+                                                  world_mapping=full_world_mapping,
+                                                  include_timing=args.include_timing)
         os.makedirs(os.path.dirname(minimal_wg_output), exist_ok=True)
         with open(minimal_wg_output, 'w') as f:
             f.write(minimal_wg_md)
@@ -1644,7 +1658,8 @@ def main():
         full_md = generate_spoiler_markdown(full_data, full_results.get('metadata', {}),
                                            "Spoiler Test - All Locations",
                                            is_worldgen=False, other_version_link=wg_link,
-                                           world_mapping=full_world_mapping)
+                                           world_mapping=full_world_mapping,
+                                           include_timing=args.include_timing)
         os.makedirs(os.path.dirname(full_output), exist_ok=True)
         with open(full_output, 'w') as f:
             f.write(full_md)
@@ -1659,7 +1674,8 @@ def main():
         full_wg_md = generate_spoiler_markdown(full_wg_data, full_wg_results.get('metadata', {}),
                                                "Spoiler Test - All Locations (WorldGen)",
                                                is_worldgen=True, other_version_link=orig_link,
-                                               world_mapping=full_world_mapping)
+                                               world_mapping=full_world_mapping,
+                                               include_timing=args.include_timing)
         os.makedirs(os.path.dirname(full_wg_output), exist_ok=True)
         with open(full_wg_output, 'w') as f:
             f.write(full_wg_md)

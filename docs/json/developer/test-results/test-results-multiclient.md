@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-12 02:26:25
+**Generated:** 2025-12-11 19:22:51
 
 ## Summary
 
@@ -26,7 +26,7 @@
 
 | Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Exporter | GameLogic |
 |-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|----------|----------|
-| A Hat in Time | ✅ Passed | 0 | ✅ | 232/232 | 223/223 | 9/9 | ✅ | 232/232 | 7.5KB | 10.3KB |
+| A Hat in Time | ✅ Passed | 0 | ✅ | 232/232 | 223/223 | 9/9 | ✅ | 232/232 | 12.1KB | 10.3KB |
 | A Link to the Past | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 19/19 | ✅ | 268/268 | 43.0KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | ✅ | 131/131 | 131/131 | 0/0 | ✅ | 131/131 | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | ✅ | 8/8 | 6/6 | 2/2 | ✅ | 8/8 | ✅ | ✅ |
@@ -42,18 +42,18 @@
 | ChocolateChipCookies | ✅ Passed | 0 | ✅ | 16/16 | 15/15 | 1/1 | ✅ | 16/16 | ✅ | ✅ |
 | Choo-Choo Charles | ✅ Passed | 0 | ✅ | 692/692 | 691/691 | 1/1 | ✅ | 692/692 | ✅ | ✅ |
 | Civilization VI | ✅ Passed | 0 | ✅ | 149/149 | 148/148 | 1/1 | ✅ | 149/149 | 10.2KB | ✅ |
-| DLCQuest | ✅ Passed | 0 | ✅ | 42/42 | 29/29 | 1/1 | ✅ | 42/42 | 10.3KB | 9.6KB |
+| DLCQuest | ✅ Passed | 0 | ✅ | 42/42 | 29/29 | 1/1 | ✅ | 42/42 | 10.3KB | ✅ |
 | DOOM 1993 | ✅ Passed | 0 | ✅ | 348/348 | 348/348 | 0/0 | ✅ | 348/348 | ✅ | ✅ |
 | DOOM II | ✅ Passed | 0 | ✅ | 453/453 | 453/453 | 0/0 | ✅ | 453/453 | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | 0 | ✅ | 1194/1194 | 1190/1190 | 4/4 | ✅ | 1194/1194 | 4.7KB | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | ✅ | 180/180 | 180/180 | 0/0 | ✅ | 180/180 | ✅ | ✅ |
-| Factorio | ✅ Passed | 0 | ✅ | 186/186 | 179/179 | 7/7 | ✅ | 186/186 | 11.4KB | 4.2KB |
+| Factorio | ✅ Passed | 0 | ✅ | 186/186 | 179/179 | 7/7 | ✅ | 186/186 | 11.4KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | ✅ | 114/114 | 110/110 | 4/4 | ✅ | 114/114 | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | 0 | ✅ | 299/299 | 251/251 | 48/48 | ✅ | 299/299 | 7.5KB | ✅ |
 | Heretic | ✅ Passed | 0 | ✅ | 502/502 | 502/502 | 0/0 | ✅ | 502/502 | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | ✅ | 134/134 | 133/133 | 1/1 | ✅ | 134/134 | 1.0KB | ✅ |
 | Inscryption | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | 8.0KB | ✅ |
-| Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | ✅ | 239/239 | 239/239 | 0/0 | ✅ | 239/239 | 15.5KB | 4.6KB |
+| Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | ✅ | 239/239 | 239/239 | 0/0 | ✅ | 239/239 | 16.8KB | 4.6KB |
 | Kingdom Hearts | ✅ Passed | 0 | ✅ | 512/512 | 511/511 | 1/1 | ✅ | 512/512 | 58.4KB | 5.4KB |
 | Kingdom Hearts 2 | ❌ Failed | 21 | ✅ | 705/705 | 643/643 | 62/62 | ✅ | 705/705 | 15.5KB | 105.3KB |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | ✅ | 567/567 | 65/65 | 502/502 | ✅ | 567/567 | 9.7KB | 15.7KB |
@@ -93,7 +93,7 @@
 | The Legend of Zelda | ✅ Passed | 0 | ✅ | 165/165 | 155/155 | 10/10 | ✅ | 165/165 | 6.9KB | ✅ |
 | The Messenger | ✅ Passed | 0 | ✅ | 113/113 | 106/106 | 7/7 | ✅ | 113/113 | 11.7KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | ✅ | 109/109 | 108/108 | 1/1 | ✅ | 109/109 | 4.8KB | 4.6KB |
-| The Witness | ❌ Failed | 0 | ❌ | 138/147 | 125/132 | 13/15 | ❌ | 135/147 | 23.7KB | ✅ |
+| The Witness | ❌ Failed | 0 | ❌ | 138/147 | 125/132 | 13/15 | ❌ | 135/147 | 28.9KB | ✅ |
 | Timespinner | ✅ Passed | 0 | ✅ | 185/185 | 180/180 | 5/5 | ✅ | 185/185 | 4.0KB | ✅ |
 | Undertale | ✅ Passed | 0 | ✅ | 51/51 | 48/48 | 3/3 | ✅ | 51/51 | ✅ | ✅ |
 | VVVVVV | ✅ Passed | 0 | ✅ | 20/20 | 20/20 | 0/0 | ✅ | 20/20 | 5.4KB | ✅ |

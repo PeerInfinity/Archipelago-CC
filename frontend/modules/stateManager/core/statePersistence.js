@@ -282,6 +282,8 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
           // Include all game-specific data needed by helpers (e.g., Pokemon local_poke_data)
           const staticData = {
             progressionMapping: sm.progressionMapping,
+            // Also include snake_case with player key for generic helpers
+            progression_mapping: { [sm.playerId]: sm.progressionMapping },
             items: sm.itemData,
             game_info: sm.gameInfo,
             settings: sm.settings,
@@ -311,6 +313,8 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
           // Include all game-specific data needed by helpers (e.g., Pokemon local_poke_data)
           const staticData = {
             progressionMapping: sm.progressionMapping,
+            // Also include snake_case with player key for generic helpers
+            progression_mapping: { [sm.playerId]: sm.progressionMapping },
             items: sm.itemData,
             game_info: sm.gameInfo,
             settings: sm.settings,
@@ -833,6 +837,25 @@ export function applyRuntimeState(sm, payload) {
     );
     // In canonical format, itemData and groupData are accessed from StateManager instance directly
     // No need to assign them to inventory object
+
+    // Re-add starting items (precollected items like keycards in SMZ3 when Keysanity is off)
+    // These should always be present after a reset, just like at initial load
+    const startingItems = sm.rules?.starting_items?.[sm.playerId] || [];
+    if (startingItems.length > 0) {
+      sm._logDebug(
+        `[StateManager applyRuntimeState] Re-adding ${startingItems.length} starting items for player ${sm.playerId}`
+      );
+      startingItems.forEach((itemName) => {
+        if (sm.itemData?.[itemName]) {
+          sm._addItemToInventory(itemName, 1);
+        } else {
+          log(
+            'warn',
+            `[StateManager applyRuntimeState] Starting item '${itemName}' not found in itemData`
+          );
+        }
+      });
+    }
   } else {
     sm._logDebug(
       '[StateManager applyRuntimeState] Preserving existing inventory (incremental update).'
