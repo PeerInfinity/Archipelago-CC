@@ -2086,7 +2086,7 @@
     "1": {
       "game": "DLCQuest",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
+      "use_resolved_items": true,
       "options": {
         "accessibility": 0,
         "campaign": 0,
@@ -2108,7 +2108,8 @@
         "start_inventory": {},
         "start_location_hints": [],
         "time_is_money": 0
-      }
+      },
+      "add_sphere_items_upfront": true
     }
   },
   "game_info": {
