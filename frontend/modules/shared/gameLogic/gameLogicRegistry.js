@@ -216,8 +216,7 @@ import { blasphemousStateModule } from './blasphemous/blasphemousLogic.js';
 import { helperFunctions as bombRushCyberfunkHelperFunctions } from './bomb_rush_cyberfunk/bombRushCyberfunkLogic.js';
 import * as dlcquestLogic from './dlcquest/dlcquestLogic.js';
 import { dlcquestStateModule, wrapState as dlcquestWrapState } from './dlcquest/dlcquestLogic.js';
-import * as factorioLogic from './factorio/factorioLogic.js';
-import { factorioStateModule } from './factorio/factorioLogic.js';
+// factorioLogic removed - uses generic module with progression_mapping from exporter
 import * as hkLogic from './hk/hkLogic.js';
 import { hkStateModule } from './hk/hkLogic.js';
 import * as jakanddaxterLogic from './jakanddaxter/jakanddaxterLogic.js';
@@ -296,12 +295,7 @@ const GAME_REGISTRY = {
     worldClasses: ['DLCqworld'],
     aliases: ['DLCQuest', 'DLC Quest']
   },
-  'Factorio': {
-    logicModule: factorioLogic.factorioStateModule,
-    helperFunctions: factorioLogic.helperFunctions,
-    worldClasses: ['FactorioWorld'],
-    aliases: ['Factorio']
-  },
+  // Factorio removed - uses generic module with progression_mapping from exporter
   'Hollow Knight': {
     logicModule: hkLogic.hkStateModule,
     helperFunctions: hkLogic.helperFunctions,
