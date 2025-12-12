@@ -1,7 +1,7 @@
 {
   "A Hat in Time": {
     "exporter_path": "exporter/games/ahit.py",
-    "exporter_size": 7756,
+    "exporter_size": 7655,
     "game_logic_path": "frontend/modules/shared/gameLogic/ahit/ahitLogic.js",
     "game_logic_size": 10533,
     "has_custom_exporter": true,
@@ -111,7 +111,7 @@
     "exporter_path": "exporter/games/generic.py",
     "exporter_size": 13661,
     "game_logic_path": "frontend/modules/shared/gameLogic/generic/genericLogic.js",
-    "game_logic_size": 6097,
+    "game_logic_size": 6462,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "generic"
@@ -129,7 +129,7 @@
     "exporter_path": "exporter/games/bomb_rush_cyberfunk.py",
     "exporter_size": 1634,
     "game_logic_path": null,
-    "game_logic_size": 39146,
+    "game_logic_size": 41277,
     "has_custom_exporter": true,
     "has_custom_game_logic": false,
     "world_directory": "bomb_rush_cyberfunk"
@@ -289,7 +289,7 @@
   },
   "Civilization VI": {
     "exporter_path": "exporter/games/civ_6.py",
-    "exporter_size": 339,
+    "exporter_size": 10417,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -307,9 +307,9 @@
   },
   "DLCQuest": {
     "exporter_path": "exporter/games/dlcquest.py",
-    "exporter_size": 9846,
+    "exporter_size": 10586,
     "game_logic_path": "frontend/modules/shared/gameLogic/dlcquest/dlcquestLogic.js",
-    "game_logic_size": 9576,
+    "game_logic_size": 9842,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "dlcquest"
@@ -532,16 +532,16 @@
   },
   "Jak and Daxter: The Precursor Legacy": {
     "exporter_path": "exporter/games/jakanddaxter.py",
-    "exporter_size": 13446,
+    "exporter_size": 15877,
     "game_logic_path": "frontend/modules/shared/gameLogic/jakanddaxter/jakanddaxterLogic.js",
-    "game_logic_size": 2555,
+    "game_logic_size": 4743,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "jakanddaxter"
   },
   "Kingdom Hearts": {
     "exporter_path": "exporter/games/kh1.py",
-    "exporter_size": 59445,
+    "exporter_size": 59790,
     "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
     "game_logic_size": 5572,
     "has_custom_exporter": true,
@@ -550,7 +550,7 @@
   },
   "Kingdom Hearts 2": {
     "exporter_path": "exporter/games/kh2.py",
-    "exporter_size": 14975,
+    "exporter_size": 15890,
     "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
     "game_logic_size": 107789,
     "has_custom_exporter": true,
@@ -579,7 +579,7 @@
     "exporter_path": "exporter/games/kdl3.py",
     "exporter_size": 9960,
     "game_logic_path": "frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js",
-    "game_logic_size": 15271,
+    "game_logic_size": 16055,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "kdl3"
@@ -705,7 +705,7 @@
     "exporter_path": "exporter/games/mm2.py",
     "exporter_size": 642,
     "game_logic_path": "frontend/modules/shared/gameLogic/mm2/mm2Logic.js",
-    "game_logic_size": 3286,
+    "game_logic_size": 4018,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "mm2"
@@ -946,7 +946,7 @@
   },
   "SMZ3": {
     "exporter_path": "exporter/games/smz3.py",
-    "exporter_size": 61040,
+    "exporter_size": 62879,
     "game_logic_path": "frontend/modules/shared/gameLogic/smz3/smz3Logic.js",
     "game_logic_size": 52544,
     "has_custom_exporter": true,
@@ -1261,7 +1261,7 @@
   },
   "The Messenger": {
     "exporter_path": "exporter/games/messenger.py",
-    "exporter_size": 10198,
+    "exporter_size": 11955,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1297,7 +1297,7 @@
   },
   "The Witness": {
     "exporter_path": "exporter/games/witness.py",
-    "exporter_size": 24275,
+    "exporter_size": 29638,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,

@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-11T21:25:45.013783",
-    "last_updated": "2025-12-11T21:25:45.013788",
+    "last_updated": "2025-12-12T01:21:48.849938",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3497,43 +3497,43 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 8.04,
+        "processing_time_seconds": 11.03,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "multiclient_test": {
         "client1_event_locations": 15,
-        "client1_event_locations_checked": 13,
-        "client1_locations_checked": 138,
+        "client1_event_locations_checked": 15,
+        "client1_locations_checked": 147,
         "client1_manually_checkable": 132,
-        "client1_manually_checkable_checked": 125,
-        "client1_passed": false,
+        "client1_manually_checkable_checked": 132,
+        "client1_passed": true,
         "client1_total_locations": 147,
-        "client2_locations_received": 135,
+        "client2_locations_received": 0,
         "client2_passed": false,
-        "client2_total_locations": 147,
-        "error_count": 156,
-        "locations_checked": 135,
-        "processing_time_seconds": 69.92,
-        "return_code": 1,
-        "single_client_mode": false,
-        "success": false,
-        "total_locations": 147,
-        "warning_count": 489
+        "client2_total_locations": 0,
+        "error_count": 1,
+        "locations_checked": 147,
+        "processing_time_seconds": 22.93,
+        "return_code": 0,
+        "single_client_mode": true,
+        "success": true,
+        "total_locations": 132,
+        "warning_count": 186
       },
       "rules_file": {
         "path": "frontend/presets/witness/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 335218,
-        "size_mb": 0.32
+        "size_bytes": 330075,
+        "size_mb": 0.31
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "The Witness.yaml",
-      "timestamp": "2025-12-11T21:20:05.513040",
+      "timestamp": "2025-12-12T01:21:14.874455",
       "world_info": {
         "exporter_path": "exporter/games/witness.py",
-        "exporter_size": 24275,
+        "exporter_size": 29638,
         "game_logic_path": null,
         "game_logic_size": 0,
         "game_name_from_filename": "witness",
