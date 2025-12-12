@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2025-12-12 19:12:16
+**Generated:** 2025-12-12 19:43:40
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -108,8 +108,30 @@ Shows the 10 longest generation and test times from multiworld testing.
 
 ### Top 10 Longest Generation Times
 
-No multiworld generation data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | shapez | 33.1s | 8 | Adventure.yaml, Choo-Choo Charles.yaml, Heretic.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+3 more) |
+| 2 | The Messenger | 31.1s | 7 | Adventure.yaml, Choo-Choo Charles.yaml, Heretic.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+2 more) |
+| 3 | Subnautica | 30.2s | 6 | Adventure.yaml, Choo-Choo Charles.yaml, Heretic.yaml, Lufia II Ancient Cave.yaml, Overcooked! 2.yaml (+1 more) |
+| 4 | The Wind Waker | 25.7s | 7 | Aquaria.yaml, Civilization VI.yaml, Hylics 2.yaml, Mario & Luigi Superstar Saga.yaml, Paint.yaml (+2 more) |
+| 5 | Yoshi's Island | 22.9s | 8 | APQuest.yaml, ChocolateChipCookies.yaml, Final Fantasy Mystic Quest.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+3 more) |
+| 6 | The Legend of Zelda | 21.4s | 7 | APQuest.yaml, ChocolateChipCookies.yaml, Final Fantasy Mystic Quest.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+2 more) |
+| 7 | The Witness | 19.6s | 7 | Bomb Rush Cyberfunk.yaml, DLCQuest.yaml, Inscryption.yaml, MathProof2p2e4.yaml, Raft.yaml (+2 more) |
+| 8 | Undertale | 18.9s | 7 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml, Saving Princess.yaml (+2 more) |
+| 9 | Stardew Valley | 18.1s | 6 | APQuest.yaml, ChocolateChipCookies.yaml, Final Fantasy Mystic Quest.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+1 more) |
+| 10 | Super Metroid | 18.1s | 6 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml, Saving Princess.yaml (+1 more) |
 
 ### Top 10 Longest Test Times
 
-No multiworld test data available.
+| Rank | Game | Time | Players | Templates in Multiworld |
+|------|------|------|---------|------------------------|
+| 1 | Mega Man 2 | 94.8s | 4 | Bumper Stickers.yaml, DOOM 1993.yaml, Jak and Daxter The Precursor Legacy.yaml, Mega Man 2.yaml |
+| 2 | Kirby's Dream Land 3 | 73.2s | 4 | A Hat in Time.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml |
+| 3 | Stardew Valley | 62.3s | 6 | APQuest.yaml, ChocolateChipCookies.yaml, Final Fantasy Mystic Quest.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+1 more) |
+| 4 | Super Metroid | 49.6s | 6 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts 2.yaml, MegaMan Battle Network 3.yaml, Saving Princess.yaml (+1 more) |
+| 5 | Kingdom Hearts 2 | 49.1s | 3 | Castlevania - Circle of the Moon.yaml, DOOM II.yaml, Kingdom Hearts 2.yaml |
+| 6 | Yoshi's Island | 45.6s | 8 | APQuest.yaml, ChocolateChipCookies.yaml, Final Fantasy Mystic Quest.yaml, Links Awakening DX.yaml, Old School Runescape.yaml (+3 more) |
+| 7 | Starcraft 2 | 44.2s | 6 | A Short Hike.yaml, ChecksFinder.yaml, Faxanadu.yaml, Lingo.yaml, Noita.yaml (+1 more) |
+| 8 | TOEM rule builder | 35.1s | 7 | A Hat in Time.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+2 more) |
+| 9 | Raft | 34.0s | 5 | Bomb Rush Cyberfunk.yaml, DLCQuest.yaml, Inscryption.yaml, MathProof2p2e4.yaml, Raft.yaml |
+| 10 | Shivers | 32.4s | 6 | A Hat in Time.yaml, Celeste (Open World).yaml, Donkey Kong Country 3.yaml, Kirby's Dream Land 3.yaml, Metamath.yaml (+1 more) |
