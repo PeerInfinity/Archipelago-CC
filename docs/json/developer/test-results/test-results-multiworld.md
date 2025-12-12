@@ -6,14 +6,14 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-12 01:29:00
+**Generated:** 2025-12-12 02:26:25
 
 ## Summary
 
 - **Total Games:** 76
 - **Passed:** 70 (92.1%)
-- **Failed:** 1 (1.3%)
-- **Skipped (Prerequisites):** 5 (6.6%)
+- **Failed:** 0 (0.0%)
+- **Skipped (Prerequisites):** 6 (7.9%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 - **Second Pass Tested:** 70
@@ -59,7 +59,7 @@
 | Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 8.0KB | ✅ |
 | Jak and Daxter: The Precursor Legacy | ✅ Passed | ✅ Passed | 3 | 3 | 15.5KB | 4.6KB |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | 3 | 3 | 58.4KB | 5.4KB |
-| Kingdom Hearts 2 | ⚫ Skipped | — | 3 | N/A | 15.5KB | 105.3KB |
+| Kingdom Hearts 2 | ⚫ Skipped | — | N/A | N/A | 15.5KB | 105.3KB |
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 4 | 4 | 9.7KB | 15.7KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | 4 | 4 | 16.4KB | ✅ |
 | Lingo | ✅ Passed | ✅ Passed | 4 | 4 | 32.9KB | 10.7KB |
@@ -67,7 +67,7 @@
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | 4 | 4 | 0.6KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
-| Mega Man 2 | ❌ Failed | — | 4 | 4 | 0.6KB | 3.9KB |
+| Mega Man 2 | ⚫ Skipped | — | N/A | N/A | 0.6KB | 3.9KB |
 | MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | 3 | 3 | 3.5KB | ✅ |
 | Meritous | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Metamath | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
@@ -78,26 +78,26 @@
 | Paint | ✅ Passed | ✅ Passed | 5 | 5 | 6.4KB | 4.4KB |
 | Raft | ✅ Passed | ✅ Passed | 5 | 5 | 11.8KB | 5.5KB |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
-| SMZ3 | ⚫ Skipped | — | 4 | N/A | 61.4KB | 51.3KB |
+| SMZ3 | ⚫ Skipped | — | N/A | N/A | 61.4KB | 51.3KB |
 | Saving Princess | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | ✅ Passed | 6 | 6 | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 19.7KB | 86.3KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 15.9KB | 10.7KB |
-| Subnautica | ⚫ Skipped | — | 6 | N/A | 2.3KB | 14.7KB |
+| Subnautica | ⚫ Skipped | — | N/A | N/A | 2.3KB | 14.7KB |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | 5 | 5 | 13.8KB | 4.9KB |
 | Super Mario World | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Super Metroid | ✅ Passed | ✅ Passed | 6 | 6 | 71.8KB | 114.6KB |
 | TOEM original | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
-| TUNIC | ⚫ Skipped | — | 7 | N/A | 2.4KB | ✅ |
+| TUNIC | ⚫ Skipped | — | N/A | N/A | 2.4KB | ✅ |
 | Terraria | ✅ Passed | ✅ Passed | 7 | 7 | 12.3KB | 4.3KB |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | 6.9KB | ✅ |
 | The Messenger | ✅ Passed | ✅ Passed | 6 | 6 | 11.7KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 4.8KB | 4.6KB |
-| The Witness | ⚫ Skipped | — | 6 | N/A | 23.7KB | ✅ |
+| The Witness | ⚫ Skipped | — | N/A | N/A | 23.7KB | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | 5 | 5 | 4.0KB | ✅ |
 | Undertale | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | VVVVVV | ✅ Passed | ✅ Passed | 8 | 8 | 5.4KB | ✅ |
@@ -375,15 +375,6 @@ Shows which templates were in the multiworld when each game was tested:
 | 2 | DLCQuest.yaml |
 | 3 | Inscryption.yaml |
 | 4 | MathProof2p2e4.yaml |
-
-### Mega Man 2 ❌
-
-| Player # | Template |
-|----------|----------|
-| 1 | Bumper Stickers.yaml |
-| 2 | DOOM 1993.yaml |
-| 3 | Jak and Daxter The Precursor Legacy.yaml |
-| 4 | Mega Man 2.yaml |
 
 ### MegaMan Battle Network 3 ✅
 
