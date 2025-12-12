@@ -2433,7 +2433,11 @@ class ASTVisitorMixin:
             return None
 
     def visit_Set(self, node: ast.Set):
-        """ Handle set literals. """
+        """ Handle set literals like {item1, item2} or {single_item}.
+
+        Returns a 'set_literal' type that the rule engine can handle for
+        mutation operations like .add() and eventual use in has_any().
+        """
         try:
             logging.debug(f"\n--- visit_Set ---")
             elements = []
@@ -2449,8 +2453,9 @@ class ASTVisitorMixin:
             if all(e.get('type') == 'constant' for e in elements):
                 elements.sort(key=lambda e: (str(type(e.get('value')).__name__), str(e.get('value'))))
 
-            # Represent as a list in the output JSON (consistent with tuple/list)
-            return {'type': 'list', 'value': elements}
+            # Return as set_literal type to distinguish from regular lists
+            # This enables proper handling of set operations like .add()
+            return {'type': 'set_literal', 'elements': elements}
         except Exception as e:
             logging.error("Error in visit_Set", e)
             return None

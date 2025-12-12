@@ -28,9 +28,11 @@ class KH2GameExportHandler(BaseGameExportHandler):
 
     # Helpers too complex for automatic export
     HELPERS_TO_EXPORT_BLACKLIST = {
-        # Form-related helpers with complex logic
-        'form_list_unlock',           # Has set operations (.add) and references auto_form_dict
-        'get_form_level_requirement', # Has loops counting forms with conditional removal
+        # Form-related helpers - expanded via expand_helper when called
+        # Keep in blacklist to prevent export of complex imperative definitions
+        # When called, expand_helper generates equivalent declarative rules
+        'form_list_unlock',           # Expanded to conditional has_any + get_form_level_requirement
+        'get_form_level_requirement', # Expanded to form count comparison with FinalFormLogic
 
         # Utility functions using sum() - NOW SUPPORTED via sum() rule type
         # 'kh2_list_count_sum' - Now supported
@@ -140,10 +142,244 @@ class KH2GameExportHandler(BaseGameExportHandler):
             'get_oogie_rules': {'type': 'constant', 'value': True},
         }
 
-        # form_list_unlock should be kept as a helper call for JavaScript evaluation
-        # Don't expand it - let it be processed as a helper in the frontend
-        if helper_name == 'form_list_unlock':
-            return None  # Return None to preserve as helper
+        # form_list_unlock(state, parent_form_list, level_required, fight_logic=False)
+        # Expands the set mutation logic into a conditional rule structure
+        if helper_name == 'form_list_unlock' and args and len(args) >= 2:
+            from worlds.kh2.Logic import auto_form_dict
+            from worlds.kh2.Names import ItemName
+
+            parent_form_arg = args[0]  # e.g., {'type': 'constant', 'value': 'Valor Form'}
+            level_required_arg = args[1]  # e.g., {'type': 'constant', 'value': 3}
+            fight_logic_arg = args[2] if len(args) >= 3 else {'type': 'constant', 'value': False}
+
+            # Extract the parent form value if it's a constant
+            parent_form_value = None
+            if isinstance(parent_form_arg, dict) and parent_form_arg.get('type') == 'constant':
+                parent_form_value = parent_form_arg.get('value')
+
+            # Get the auto form for this parent form
+            auto_form_value = None
+            if parent_form_value:
+                # Find the matching entry in auto_form_dict
+                for form_item, auto_item in auto_form_dict.items():
+                    if form_item == parent_form_value or str(form_item) == parent_form_value:
+                        auto_form_value = str(auto_item) if hasattr(auto_item, '__str__') else auto_item
+                        break
+
+            # Build the has_any(form_access) part with conditional logic
+            # Base case: just check parent form
+            base_form_check = {'type': 'item_check', 'item': parent_form_arg.get('value') if isinstance(parent_form_arg, dict) else parent_form_arg}
+
+            # With auto form: or(item_check(parent_form), item_check(auto_form))
+            # Using 'or' instead of 'has_any' since has_any isn't supported in ruleEngine
+            if auto_form_value:
+                with_auto_form_check = {
+                    'type': 'or',
+                    'conditions': [
+                        {'type': 'item_check', 'item': parent_form_value},
+                        {'type': 'item_check', 'item': auto_form_value}
+                    ]
+                }
+            else:
+                with_auto_form_check = base_form_check
+
+            # Determine if this is MasterForm
+            is_master_form = parent_form_value == str(ItemName.MasterForm) if parent_form_value else False
+
+            # Build the conditional form access logic
+            # If fight_logic is a constant False, we can simplify
+            fight_logic_is_false = (isinstance(fight_logic_arg, dict) and
+                                    fight_logic_arg.get('type') == 'constant' and
+                                    fight_logic_arg.get('value') == False)
+
+            if fight_logic_is_false:
+                # No fight_logic, so just check AutoFormLogic AND SecondChance
+                if is_master_form:
+                    # MasterForm requires DriveConverter for auto form
+                    form_access_rule = {
+                        'type': 'conditional',
+                        'test': {
+                            'type': 'and',
+                            'conditions': [
+                                {'type': 'setting_value', 'setting': 'AutoFormLogic'},
+                                {'type': 'item_check', 'item': 'Second Chance'},
+                                {'type': 'item_check', 'item': 'Drive Converter'}
+                            ]
+                        },
+                        'if_true': with_auto_form_check,
+                        'if_false': base_form_check
+                    }
+                else:
+                    # Non-MasterForm: auto form if AutoFormLogic AND SecondChance
+                    form_access_rule = {
+                        'type': 'conditional',
+                        'test': {
+                            'type': 'and',
+                            'conditions': [
+                                {'type': 'setting_value', 'setting': 'AutoFormLogic'},
+                                {'type': 'item_check', 'item': 'Second Chance'}
+                            ]
+                        },
+                        'if_true': with_auto_form_check,
+                        'if_false': base_form_check
+                    }
+            else:
+                # fight_logic could be True, need to include NOT fight_logic in condition
+                # For simplicity, if fight_logic is True, just use base form check
+                if isinstance(fight_logic_arg, dict) and fight_logic_arg.get('type') == 'constant' and fight_logic_arg.get('value') == True:
+                    form_access_rule = base_form_check
+                else:
+                    # fight_logic is dynamic parameter - use full conditional
+                    if is_master_form:
+                        form_access_rule = {
+                            'type': 'conditional',
+                            'test': {
+                                'type': 'and',
+                                'conditions': [
+                                    {'type': 'setting_value', 'setting': 'AutoFormLogic'},
+                                    {'type': 'item_check', 'item': 'Second Chance'},
+                                    {'type': 'not', 'condition': fight_logic_arg},
+                                    {'type': 'item_check', 'item': 'Drive Converter'}
+                                ]
+                            },
+                            'if_true': with_auto_form_check,
+                            'if_false': base_form_check
+                        }
+                    else:
+                        form_access_rule = {
+                            'type': 'conditional',
+                            'test': {
+                                'type': 'and',
+                                'conditions': [
+                                    {'type': 'setting_value', 'setting': 'AutoFormLogic'},
+                                    {'type': 'item_check', 'item': 'Second Chance'},
+                                    {'type': 'not', 'condition': fight_logic_arg}
+                                ]
+                            },
+                            'if_true': with_auto_form_check,
+                            'if_false': base_form_check
+                        }
+
+            # Combine with get_form_level_requirement
+            return {
+                'type': 'and',
+                'conditions': [
+                    form_access_rule,
+                    {'type': 'helper', 'name': 'get_form_level_requirement', 'args': [level_required_arg]}
+                ]
+            }
+
+        # get_form_level_requirement(state, amount)
+        # Checks if player has enough forms to meet the level requirement
+        # Logic varies based on FinalFormLogic setting
+        if helper_name == 'get_form_level_requirement' and args and len(args) >= 1:
+            from worlds.kh2.Names import ItemName
+
+            amount_arg = args[0]  # e.g., {'type': 'constant', 'value': 3}
+
+            # Form names
+            all_forms = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form', 'Final Form']
+            forms_without_final = ['Valor Form', 'Wisdom Form', 'Limit Form', 'Master Form']
+
+            # Helper to build form count sum
+            def build_form_count_sum(forms):
+                """Build a sum of item_checks for the given forms."""
+                return {
+                    'type': 'sum',
+                    'iterable': {
+                        'type': 'list',
+                        'value': [{'type': 'item_check', 'item': form} for form in forms]
+                    }
+                }
+
+            # Case 1: no_light_and_darkness - count all 5 forms
+            no_ld_check = {
+                'type': 'comparison',
+                'op': '>=',  # ruleEngine uses 'op' not 'operator'
+                'left': build_form_count_sum(all_forms),
+                'right': amount_arg
+            }
+
+            # Helper to build or(item_check, item_check, ...) for has_any
+            def build_has_any_as_or(forms):
+                """Convert has_any to or of item_checks since has_any isn't supported."""
+                if len(forms) == 1:
+                    return {'type': 'item_check', 'item': forms[0]}
+                return {
+                    'type': 'or',
+                    'conditions': [{'type': 'item_check', 'item': form} for form in forms]
+                }
+
+            # Case 2: light_and_darkness - bonus if has Light&Darkness + any form, count 4 forms
+            # forms_available = (1 if has(L&D) and has_any(all_forms) else 0) + count(4 forms without Final)
+            ld_bonus = {
+                'type': 'conditional',
+                'test': {
+                    'type': 'and',
+                    'conditions': [
+                        {'type': 'item_check', 'item': 'Light & Darkness'},
+                        build_has_any_as_or(all_forms)
+                    ]
+                },
+                'if_true': {'type': 'constant', 'value': 1},
+                'if_false': {'type': 'constant', 'value': 0}
+            }
+            ld_check = {
+                'type': 'comparison',
+                'op': '>=',  # ruleEngine uses 'op' not 'operator'
+                'left': {
+                    'type': 'binary_op',
+                    'op': '+',
+                    'left': ld_bonus,
+                    'right': build_form_count_sum(forms_without_final)
+                },
+                'right': amount_arg
+            }
+
+            # Case 3: just a form - bonus if has any of 4 forms, count 4 forms
+            # forms_available = (1 if has_any(4 forms) else 0) + count(4 forms without Final)
+            just_form_bonus = {
+                'type': 'conditional',
+                'test': build_has_any_as_or(forms_without_final),
+                'if_true': {'type': 'constant', 'value': 1},
+                'if_false': {'type': 'constant', 'value': 0}
+            }
+            just_form_check = {
+                'type': 'comparison',
+                'op': '>=',  # ruleEngine uses 'op' not 'operator'
+                'left': {
+                    'type': 'binary_op',
+                    'op': '+',
+                    'left': just_form_bonus,
+                    'right': build_form_count_sum(forms_without_final)
+                },
+                'right': amount_arg
+            }
+
+            # Build the full conditional based on FinalFormLogic setting
+            # FinalFormLogic options: 0=no_light_and_darkness, 1=light_and_darkness, 2=just_a_form
+            return {
+                'type': 'conditional',
+                'test': {
+                    'type': 'comparison',
+                    'op': '!=',  # ruleEngine uses 'op' not 'operator'
+                    'left': {'type': 'setting_value', 'setting': 'FinalFormLogic'},
+                    'right': {'type': 'constant', 'value': 0}  # no_light_and_darkness
+                },
+                'if_true': {
+                    # FinalFormLogic is either light_and_darkness (1) or just_a_form (2)
+                    'type': 'conditional',
+                    'test': {
+                        'type': 'comparison',
+                        'op': '==',  # ruleEngine uses 'op' not 'operator'
+                        'left': {'type': 'setting_value', 'setting': 'FinalFormLogic'},
+                        'right': {'type': 'constant', 'value': 1}  # light_and_darkness
+                    },
+                    'if_true': ld_check,
+                    'if_false': just_form_check
+                },
+                'if_false': no_ld_check
+            }
 
         if helper_name in helper_map:
             return helper_map[helper_name]
@@ -244,8 +480,38 @@ class KH2GameExportHandler(BaseGameExportHandler):
         # Handle and/or conditions recursively
         if rule.get('type') in ['and', 'or']:
             rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
+            return rule
 
-        return rule
+        # Recursively process all dict/list values to expand nested helpers
+        return self._recursive_expand(rule, _depth)
+
+    def _recursive_expand(self, obj: Any, depth: int = 0) -> Any:
+        """Recursively expand helper calls in any nested structure."""
+        if depth > 50:  # Prevent infinite recursion
+            return obj
+
+        if isinstance(obj, dict):
+            # First check if this is a helper node that can be expanded
+            if obj.get('type') == 'helper':
+                expanded = self.expand_helper(obj.get('name'), obj.get('args'))
+                if expanded:
+                    return self._recursive_expand(expanded, depth + 1)
+                # If not expandable, still process args
+                if 'args' in obj:
+                    obj['args'] = [self._recursive_expand(arg, depth + 1) for arg in obj['args']]
+                return obj
+
+            # Process all values in the dict
+            result = {}
+            for key, value in obj.items():
+                result[key] = self._recursive_expand(value, depth + 1)
+            return result
+
+        elif isinstance(obj, list):
+            return [self._recursive_expand(item, depth + 1) for item in obj]
+
+        else:
+            return obj
     
     def _analyze_original_rule(self, original_rule):
         """Analyze the original rule structure for KH2-specific patterns."""

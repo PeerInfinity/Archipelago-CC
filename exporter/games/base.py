@@ -919,6 +919,10 @@ class BaseGameExportHandler:
                     # Clean up the rule - resolve item names, convert state methods to rule types
                     rule = self._clean_helper_rule(rule, world)
 
+                    # Expand helper calls in the rule (game-specific expansions)
+                    if hasattr(self, 'expand_rule') and callable(self.expand_rule):
+                        rule = self.expand_rule(rule)
+
                     if rule and rule.get('type') != 'error':
                         # Extract parameter names and defaults from the function (excluding state, player, world, self)
                         params = []

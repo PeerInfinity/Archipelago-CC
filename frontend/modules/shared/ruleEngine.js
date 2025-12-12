@@ -2364,6 +2364,28 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'set_literal': {
+        // Handle set literals - similar to list but with 'elements' field
+        // Rule structure: { type: 'set_literal', elements: [...] }
+        if (!Array.isArray(rule.elements)) {
+          log(
+            'warn',
+            '[evaluateRule] set_literal rule does not have an array elements:',
+            rule
+          );
+          result = undefined;
+          break;
+        }
+        const evaluatedSetElements = rule.elements.map((itemRule) =>
+          evaluateRule(itemRule, context, depth + 1)
+        );
+        // If any element evaluation is undefined, the set as a whole is undefined
+        result = evaluatedSetElements.some((item) => item === undefined)
+          ? undefined
+          : evaluatedSetElements;
+        break;
+      }
+
       case 'all_of': {
         // all_of evaluates an element_rule against all items from an iterator
         if (!rule.element_rule) {
