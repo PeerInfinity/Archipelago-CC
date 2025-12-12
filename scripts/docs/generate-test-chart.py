@@ -1348,29 +1348,39 @@ def generate_processing_times_markdown(processing_data: Dict[str, Any]) -> str:
             full_vals = [t[0] for t in full_times]
             mc_vals = [t[0] for t in mc_times]
 
+            # Helper functions for safe calculations
+            def fmt_total(vals):
+                return f"{sum(vals):.1f}s" if vals else "-"
+
+            def fmt_avg(vals):
+                return f"{sum(vals)/len(vals):.1f}s" if vals else "-"
+
+            def fmt_max(vals):
+                return f"{max(vals):.1f}s" if vals else "-"
+
+            def fmt_min(vals):
+                return f"{min(vals):.1f}s" if vals else "-"
+
             md_content += "## Summary Statistics\n\n"
             md_content += "| Metric | Gen Time | Minimal Test | Full Test | Multiclient |\n"
             md_content += "|--------|----------|--------------|-----------|-------------|\n"
-            md_content += f"| Total | {sum(gen_vals):.1f}s | {sum(min_vals):.1f}s | {sum(full_vals):.1f}s | {sum(mc_vals):.1f}s |\n"
-            md_content += f"| Average | {sum(gen_vals)/len(gen_vals):.1f}s | {sum(min_vals)/len(min_vals):.1f}s | {sum(full_vals)/len(full_vals):.1f}s | {sum(mc_vals)/len(mc_vals):.1f}s |\n"
-            md_content += f"| Max | {max(gen_vals):.1f}s | {max(min_vals):.1f}s | {max(full_vals):.1f}s | {max(mc_vals):.1f}s |\n"
-            md_content += f"| Min | {min(gen_vals):.1f}s | {min(min_vals):.1f}s | {min(full_vals):.1f}s | {min(mc_vals):.1f}s |\n"
+            md_content += f"| Total | {fmt_total(gen_vals)} | {fmt_total(min_vals)} | {fmt_total(full_vals)} | {fmt_total(mc_vals)} |\n"
+            md_content += f"| Average | {fmt_avg(gen_vals)} | {fmt_avg(min_vals)} | {fmt_avg(full_vals)} | {fmt_avg(mc_vals)} |\n"
+            md_content += f"| Max | {fmt_max(gen_vals)} | {fmt_max(min_vals)} | {fmt_max(full_vals)} | {fmt_max(mc_vals)} |\n"
+            md_content += f"| Min | {fmt_min(gen_vals)} | {fmt_min(min_vals)} | {fmt_min(full_vals)} | {fmt_min(mc_vals)} |\n"
 
-            # Find games with max/min times
-            gen_max = max(gen_times, key=lambda x: x[0])
-            gen_min = min(gen_times, key=lambda x: x[0])
-            min_max = max(min_times, key=lambda x: x[0])
-            min_min = min(min_times, key=lambda x: x[0])
-            full_max = max(full_times, key=lambda x: x[0])
-            full_min = min(full_times, key=lambda x: x[0])
-            mc_max = max(mc_times, key=lambda x: x[0])
-            mc_min = min(mc_times, key=lambda x: x[0])
+            # Helper for slowest/fastest with game names
+            def fmt_extreme(times, is_max):
+                if not times:
+                    return "-"
+                extreme = max(times, key=lambda x: x[0]) if is_max else min(times, key=lambda x: x[0])
+                return f"{extreme[1]} ({extreme[0]:.1f}s)"
 
             md_content += "\n## Slowest and Fastest Games\n\n"
             md_content += "| Metric | Gen Time | Minimal Test | Full Test | Multiclient |\n"
             md_content += "|--------|----------|--------------|-----------|-------------|\n"
-            md_content += f"| Slowest | {gen_max[1]} ({gen_max[0]:.1f}s) | {min_max[1]} ({min_max[0]:.1f}s) | {full_max[1]} ({full_max[0]:.1f}s) | {mc_max[1]} ({mc_max[0]:.1f}s) |\n"
-            md_content += f"| Fastest | {gen_min[1]} ({gen_min[0]:.1f}s) | {min_min[1]} ({min_min[0]:.1f}s) | {full_min[1]} ({full_min[0]:.1f}s) | {mc_min[1]} ({mc_min[0]:.1f}s) |\n"
+            md_content += f"| Slowest | {fmt_extreme(gen_times, True)} | {fmt_extreme(min_times, True)} | {fmt_extreme(full_times, True)} | {fmt_extreme(mc_times, True)} |\n"
+            md_content += f"| Fastest | {fmt_extreme(gen_times, False)} | {fmt_extreme(min_times, False)} | {fmt_extreme(full_times, False)} | {fmt_extreme(mc_times, False)} |\n"
 
     # Individual game processing times table
     md_content += "\n## Individual Game Processing Times\n\n"
