@@ -195,10 +195,9 @@ def is_multiworld_test_passing(template_file, test_results):
 
     Returns True if:
     - The test passed (multiworld_test.success is True)
-    - The test was skipped due to prerequisites not being met
 
     Returns False if:
-    - The test failed (multiworld_test.success is False AND prerequisites passed)
+    - The test failed (multiworld_test.success is False)
     - The template is not in the results
     """
     if template_file not in test_results:
@@ -207,11 +206,6 @@ def is_multiworld_test_passing(template_file, test_results):
     result = test_results[template_file]
     if not isinstance(result, dict):
         return False
-
-    # Check if prerequisites were met - if not, treat as "passing" (skip it)
-    prereq = result.get('prerequisite_check', {})
-    if not prereq.get('all_prerequisites_passed', True):
-        return True  # Skipped due to prerequisites - don't generate prompt
 
     multiworld_test = result.get('multiworld_test', {})
     return multiworld_test.get('success', False)
@@ -252,6 +246,7 @@ def get_multiworld_failure_details(template_file, test_results):
         - player_results: results for each player tested
         - first_failure_player: which player failed first (if any)
         - generation_success: whether generation succeeded
+        - intermittent_failures: list of intermittent failures (tests that failed initially but passed on retry)
     """
     if template_file not in test_results:
         return None
@@ -268,7 +263,8 @@ def get_multiworld_failure_details(template_file, test_results):
         'player_results': multiworld_test.get('player_results', {}),
         'first_failure_player': multiworld_test.get('first_failure_player'),
         'generation_success': generation.get('success', False),
-        'templates_in_multiworld': multiworld_test.get('templates_in_multiworld', {})
+        'templates_in_multiworld': multiworld_test.get('templates_in_multiworld', {}),
+        'intermittent_failures': multiworld_test.get('intermittent_failures', [])
     }
 
 
@@ -640,6 +636,7 @@ def generate_multiworld_prompt(template_file, game_name, bisection_info, failure
     """Generate a debugging prompt for a failing multiworld test.
 
     Focuses on specific failing pairs from bisection results when available.
+    Also reports intermittent failures if any were detected.
     """
     prompt_parts = []
 
@@ -650,6 +647,19 @@ CC/game-debugging-multiworld-CC.md
 """)
 
     prompt_parts.append(f"The game we are debugging is **{game_name}** (template: `{template_file}`).\n")
+
+    # Check for intermittent failures
+    intermittent_failures = failure_details.get('intermittent_failures', []) if failure_details else []
+    if intermittent_failures:
+        prompt_parts.append(f"\n## Intermittent Failures Detected\n")
+        prompt_parts.append(f"This test had **{len(intermittent_failures)} intermittent failure(s)** - tests that failed initially but passed on retry:\n\n")
+        for failure in intermittent_failures:
+            player_num = failure.get('player_number', '?')
+            attempt = failure.get('attempt', '?')
+            sphere_reached = failure.get('sphere_reached', '?')
+            total_spheres = failure.get('total_spheres', '?')
+            prompt_parts.append(f"- Player {player_num}: Failed on attempt {attempt} at sphere {sphere_reached}/{total_spheres}, then passed on retry\n")
+        prompt_parts.append("\nIntermittent failures suggest timing issues, race conditions, or non-deterministic behavior in the rule evaluation.\n")
 
     # Check if we have bisection results with failing pairs
     if bisection_info['has_bisection'] and bisection_info['failing_pairs']:
@@ -737,10 +747,13 @@ cat frontend/presets/multiworld/AP_14089154938208861744/AP_14089154938208861744_
 """)
 
     elif bisection_info['has_bisection'] and not bisection_info['failing_pairs']:
-        # Bisection ran but found no failing pairs - might be an intermittent issue
+        # Bisection ran but found no failing pairs
         prompt_parts.append(f"\n## Bisection Results\n")
         prompt_parts.append("Bisection testing was triggered but found NO specific failing pairs.\n")
-        prompt_parts.append("This might indicate an intermittent failure or an issue that only occurs with more than 2 templates.\n")
+        if intermittent_failures:
+            prompt_parts.append("This is consistent with the intermittent failures detected above - the failure is not consistently reproducible with any specific pair.\n")
+        else:
+            prompt_parts.append("Since the default test uses 2 retries, intermittent failures are usually caught. This likely indicates an issue that only occurs with more than 2 templates in the multiworld.\n")
 
         prompt_parts.append(f"""
 ## Test Command
