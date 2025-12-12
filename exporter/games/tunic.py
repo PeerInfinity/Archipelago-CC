@@ -17,6 +17,9 @@ class TUNICGameExportHandler(GenericGameExportHandler):
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
 
+    # Note: has_combat_reqs is automatically detected as having dynamic for loops
+    # and is preserved as a helper without needing to be in HELPERS_TO_PRESERVE
+
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Extract TUNIC settings including ability_unlocks."""
         settings = super().get_settings_data(world, multiworld, player)

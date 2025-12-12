@@ -15,6 +15,7 @@ import Utils
 from .analyzer import analyze_rule
 from .analyzer.cache import clear_caches as clear_analyzer_caches
 from .games import get_game_export_handler, clear_handler_cache
+from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB
 from BaseClasses import ItemClassification
 
 logger = logging.getLogger(__name__)
@@ -738,7 +739,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
 
     for player in multiworld.player_ids:
         player_str = str(player) # Use player_str consistently
-        
+
         # Get game name, world, and handler
         game_name = multiworld.game[player]
         world = multiworld.worlds[player]
@@ -1085,6 +1086,19 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                 if expanded:
                     expanded = resolve_attribute_nodes_in_rule(expanded, world)
 
+                # Size check on individual rule to catch runaway expansion
+                if expanded:
+                    try:
+                        rule_size = len(json.dumps(expanded, default=str))
+                        rule_size_kb = rule_size / 1024
+                        if rule_size_kb > MAX_RULE_SIZE_KB:
+                            logger.error(f"Rule for {target_type} '{rule_target_name}' is too large "
+                                        f"({rule_size_kb:.1f} KB > {MAX_RULE_SIZE_KB} KB). "
+                                        f"This likely indicates a rule analysis loop. Returning None.")
+                            return None
+                    except (TypeError, ValueError):
+                        pass  # If serialization fails, continue anyway
+
                 # Cache the result before returning
                 if expanded:
                     _rule_analysis_cache[cache_key] = expanded
@@ -1191,8 +1205,10 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                     dungeons_data[dungeon_name] = dungeon_data
 
         # Second pass - process all regions
+        region_count = 0
         for region in player_regions:
             try:
+                region_count += 1
                 region_name = getattr(region, 'name', 'Unknown')
                 region_hint = getattr(region, 'hint_text', region_name)
 
@@ -1473,6 +1489,21 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                             logger.error(f"Error processing location {getattr(location, 'name', 'Unknown')}: {str(e)}")
 
                 regions_data[region.name] = region_data
+
+                # Size check every 10 regions to catch runaway data growth
+                if region_count % 10 == 0:
+                    try:
+                        current_size = len(json.dumps(regions_data, default=str))
+                        current_size_mb = current_size / (1024 * 1024)
+                        if current_size_mb > MAX_EXPORT_SIZE_MB:
+                            error_msg = (f"Export data size ({current_size_mb:.1f} MB) exceeded limit "
+                                        f"({MAX_EXPORT_SIZE_MB} MB) after processing region '{region_name}'. "
+                                        f"This likely indicates a rule analysis loop. Aborting export.")
+                            logger.error(error_msg)
+                            raise RuntimeError(error_msg)
+                    except (TypeError, ValueError) as e:
+                        # If serialization fails, just log and continue
+                        logger.warning(f"Could not check export size: {e}")
 
             except Exception as e:
                 logger.error(f"Error processing region {getattr(region, 'name', 'Unknown')}: {str(e)}")
