@@ -1072,7 +1072,7 @@
   },
   "Subnautica": {
     "exporter_path": "exporter/games/subnautica.py",
-    "exporter_size": 2426,
+    "exporter_size": 2442,
     "game_logic_path": "frontend/modules/shared/gameLogic/subnautica/subnauticaLogic.js",
     "game_logic_size": 15085,
     "has_custom_exporter": true,

@@ -2,16 +2,27 @@
   "schema_version": 3,
   "game_name": "Subnautica",
   "game_directory": "subnautica",
+  "playerId": "6",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
   "player_names": {
-    "1": "Player1"
+    "1": "Player1",
+    "2": "Player2",
+    "3": "Player3",
+    "4": "Player4",
+    "5": "Player5",
+    "6": "Player6"
   },
   "world_classes": {
-    "1": "SubnauticaWorld"
+    "1": "AquariaWorld",
+    "2": "CivVIWorld",
+    "3": "Hylics2World",
+    "4": "MLSSWorld",
+    "5": "PaintWorld",
+    "6": "SubnauticaWorld"
   },
   "regions": {
-    "1": {
+    "6": {
       "Planet 4546B": {
         "name": "Planet 4546B",
         "exits": [],
@@ -39,9 +50,9 @@
               ]
             },
             "item": {
-              "name": "Cyclops Engine Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Additional Palette Color",
+              "player": 5,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -69,8 +80,8 @@
               ]
             },
             "item": {
-              "name": "Spotlight",
-              "player": 1,
+              "name": "Cultural Heritage",
+              "player": 2,
               "advancement": false,
               "type": "None"
             },
@@ -99,9 +110,9 @@
               ]
             },
             "item": {
-              "name": "Large Room",
-              "player": 1,
-              "advancement": true,
+              "name": "Queen B. Jeans",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -129,8 +140,8 @@
               ]
             },
             "item": {
-              "name": "Cyclops Fire Suppression System",
-              "player": 1,
+              "name": "Chuckle Bean",
+              "player": 4,
               "advancement": false,
               "type": "None"
             },
@@ -159,9 +170,9 @@
               ]
             },
             "item": {
-              "name": "Laser Cutter Fragment",
+              "name": "Volcano Roll",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -189,9 +200,9 @@
               ]
             },
             "item": {
-              "name": "Cyclops Shield Generator",
+              "name": "Leaf Poultice",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -219,8 +230,8 @@
               ]
             },
             "item": {
-              "name": "Crystalline Sulfur",
-              "player": 1,
+              "name": "Ultra Mushroom",
+              "player": 4,
               "advancement": false,
               "type": "None"
             },
@@ -249,8 +260,8 @@
               ]
             },
             "item": {
-              "name": "Beacon Fragment",
-              "player": 1,
+              "name": "Mushroom",
+              "player": 4,
               "advancement": false,
               "type": "None"
             },
@@ -279,8 +290,8 @@
               ]
             },
             "item": {
-              "name": "Creature Decoy",
-              "player": 1,
+              "name": "JUICE",
+              "player": 3,
               "advancement": false,
               "type": "None"
             },
@@ -309,8 +320,8 @@
               ]
             },
             "item": {
-              "name": "Cyclops Bridge Fragment",
-              "player": 1,
+              "name": "Purple Chuckola Fruit",
+              "player": 4,
               "advancement": true,
               "type": "None"
             },
@@ -339,9 +350,9 @@
               ]
             },
             "item": {
-              "name": "Cyclops Engine Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "SOUL SPONGE",
+              "player": 3,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -369,9 +380,9 @@
               ]
             },
             "item": {
-              "name": "Bioreactor Fragment",
-              "player": 1,
-              "advancement": false,
+              "name": "Progressive Harbor",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -399,9 +410,9 @@
               ]
             },
             "item": {
-              "name": "Cyclops Hull Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Chuckle Bean",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -429,9 +440,9 @@
               ]
             },
             "item": {
-              "name": "Power Cell Charger Fragment",
-              "player": 1,
-              "advancement": false,
+              "name": "Ion Power Cell",
+              "player": 6,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -459,8 +470,8 @@
               ]
             },
             "item": {
-              "name": "Cyclops Thermal Reactor Module",
-              "player": 1,
+              "name": "Secret Scroll 1",
+              "player": 4,
               "advancement": false,
               "type": "None"
             },
@@ -489,8 +500,8 @@
               ]
             },
             "item": {
-              "name": "Seaglide Fragment",
-              "player": 1,
+              "name": "Seamoth Fragment",
+              "player": 6,
               "advancement": true,
               "type": "None"
             },
@@ -519,9 +530,9 @@
               ]
             },
             "item": {
-              "name": "Seamoth Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Hoo Bean",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -549,9 +560,9 @@
               ]
             },
             "item": {
-              "name": "Alien Containment",
-              "player": 1,
-              "advancement": true,
+              "name": "Chuckle Bean",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -579,8 +590,8 @@
               ]
             },
             "item": {
-              "name": "Thermal Plant Fragment",
-              "player": 1,
+              "name": "Cold War",
+              "player": 2,
               "advancement": false,
               "type": "None"
             },
@@ -609,8 +620,8 @@
               ]
             },
             "item": {
-              "name": "Grav Trap Fragment",
-              "player": 1,
+              "name": "Additional Palette Color",
+              "player": 5,
               "advancement": false,
               "type": "None"
             },
@@ -639,9 +650,9 @@
               ]
             },
             "item": {
-              "name": "Cyclops Hull Fragment",
+              "name": "Special Bulb",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -669,9 +680,9 @@
               ]
             },
             "item": {
-              "name": "Modification Station Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Mushroom",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -699,8 +710,8 @@
               ]
             },
             "item": {
-              "name": "Resources Bundle",
-              "player": 1,
+              "name": "Hoo Bean",
+              "player": 4,
               "advancement": false,
               "type": "None"
             },
@@ -729,12 +740,12 @@
               ]
             },
             "item": {
-              "name": "Seaglide Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "JUMPSUIT",
+              "player": 3,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Grassy Plateaus South Wreck - PDA",
@@ -759,8 +770,8 @@
               ]
             },
             "item": {
-              "name": "Cyclops Decoy Tube Upgrade",
-              "player": 1,
+              "name": "Chuckle Bean",
+              "player": 4,
               "advancement": false,
               "type": "None"
             },
@@ -789,9 +800,9 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Fragment",
+              "name": "Spicy Meat x 2",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -819,9 +830,9 @@
               ]
             },
             "item": {
-              "name": "Exterior Growbed",
+              "name": "Transturtle Open Waters top right",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -849,8 +860,8 @@
               ]
             },
             "item": {
-              "name": "Lightweight High Capacity Tank",
-              "player": 1,
+              "name": "Political Philosophy",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -879,9 +890,9 @@
               ]
             },
             "item": {
-              "name": "Mobile Vehicle Bay Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Chuckle Bean",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -909,9 +920,9 @@
               ]
             },
             "item": {
-              "name": "Moonpool Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Chuckle Bean",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -939,9 +950,9 @@
               ]
             },
             "item": {
-              "name": "Cyclops Bridge Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Chuckle Bean",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -969,12 +980,12 @@
               ]
             },
             "item": {
-              "name": "Seaglide Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Super Mushroom",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
-            "locked": true
+            "locked": false
           },
           {
             "name": "Kelp Forest Wreck - PDA",
@@ -999,9 +1010,9 @@
               ]
             },
             "item": {
-              "name": "Seamoth Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Beacon Fragment",
+              "player": 6,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1029,9 +1040,9 @@
               ]
             },
             "item": {
-              "name": "Propulsion Cannon Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Hoo Bean",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1059,8 +1070,8 @@
               ]
             },
             "item": {
-              "name": "Mobile Vehicle Bay Fragment",
-              "player": 1,
+              "name": "CAVE KEY",
+              "player": 3,
               "advancement": true,
               "type": "None"
             },
@@ -1089,9 +1100,9 @@
               ]
             },
             "item": {
-              "name": "Moonpool Fragment",
+              "name": "Dumbo Ice Cream",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1119,8 +1130,8 @@
               ]
             },
             "item": {
-              "name": "Nuclear Reactor Fragment",
-              "player": 1,
+              "name": "STEM CELL",
+              "player": 3,
               "advancement": false,
               "type": "None"
             },
@@ -1149,9 +1160,9 @@
               ]
             },
             "item": {
-              "name": "Cyclops Hull Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "POOLWINE",
+              "player": 3,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1179,9 +1190,9 @@
               ]
             },
             "item": {
-              "name": "Cyclops Bridge Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Additional Palette Color",
+              "player": 5,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1209,9 +1220,9 @@
               ]
             },
             "item": {
-              "name": "Stasis Rifle Fragment",
+              "name": "Leaf Poultice",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1239,9 +1250,9 @@
               ]
             },
             "item": {
-              "name": "Exterior Growbed",
-              "player": 1,
-              "advancement": false,
+              "name": "Large Room",
+              "player": 6,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1269,9 +1280,9 @@
               ]
             },
             "item": {
-              "name": "Ultra High Capacity Tank",
-              "player": 1,
-              "advancement": true,
+              "name": "Chuckle Bean",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1299,8 +1310,8 @@
               ]
             },
             "item": {
-              "name": "Scanner Room Fragment",
-              "player": 1,
+              "name": "B. Brand Jeans",
+              "player": 4,
               "advancement": false,
               "type": "None"
             },
@@ -1329,9 +1340,9 @@
               ]
             },
             "item": {
-              "name": "Moonpool Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Chuckle Bean",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1359,9 +1370,9 @@
               ]
             },
             "item": {
-              "name": "Propulsion Cannon Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Defensive Tactics",
+              "player": 2,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1389,8 +1400,8 @@
               ]
             },
             "item": {
-              "name": "Cyclops Depth Module MK1",
-              "player": 1,
+              "name": "Progressive Theater",
+              "player": 2,
               "advancement": true,
               "type": "None"
             },
@@ -1419,8 +1430,8 @@
               ]
             },
             "item": {
-              "name": "Swim Charge Fins",
-              "player": 1,
+              "name": "Steam Power",
+              "player": 2,
               "advancement": false,
               "type": "None"
             },
@@ -1449,7 +1460,7 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Propulsion Cannon Fragment",
+              "name": "Tasty Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1479,9 +1490,9 @@
               ]
             },
             "item": {
-              "name": "Modification Station Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Syrup",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1509,8 +1520,8 @@
               ]
             },
             "item": {
-              "name": "Scanner Room Fragment",
-              "player": 1,
+              "name": "Medieval Faires",
+              "player": 2,
               "advancement": false,
               "type": "None"
             },
@@ -1539,7 +1550,7 @@
               ]
             },
             "item": {
-              "name": "Laser Cutter Fragment",
+              "name": "Hot Soup",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1569,9 +1580,9 @@
               ]
             },
             "item": {
-              "name": "Power Transmitter Fragment",
-              "player": 1,
-              "advancement": false,
+              "name": "Progressive Encampment",
+              "player": 2,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1599,8 +1610,8 @@
               ]
             },
             "item": {
-              "name": "Battery Charger fragment",
-              "player": 1,
+              "name": "Max Syrup",
+              "player": 4,
               "advancement": false,
               "type": "None"
             },
@@ -1630,7 +1641,7 @@
               ]
             },
             "item": {
-              "name": "Power Cell Charger Fragment",
+              "name": "Hand Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1661,9 +1672,9 @@
               ]
             },
             "item": {
-              "name": "Ultra Glide Fins",
-              "player": 1,
-              "advancement": true,
+              "name": "Mushroom",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1691,9 +1702,9 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Propulsion Cannon Fragment",
-              "player": 1,
-              "advancement": false,
+              "name": "Red Chuckola Fruit",
+              "player": 4,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1721,8 +1732,8 @@
               ]
             },
             "item": {
-              "name": "Scanner Room Fragment",
-              "player": 1,
+              "name": "Hoo Bean",
+              "player": 4,
               "advancement": false,
               "type": "None"
             },
@@ -1751,9 +1762,9 @@
               ]
             },
             "item": {
-              "name": "Neptune Cockpit",
-              "player": 1,
-              "advancement": true,
+              "name": "Chuckle Bean",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1781,9 +1792,9 @@
               ]
             },
             "item": {
-              "name": "Laser Cutter Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Super Mushroom",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1811,9 +1822,9 @@
               ]
             },
             "item": {
-              "name": "Modification Station Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Great Force",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1841,9 +1852,9 @@
               ]
             },
             "item": {
-              "name": "Cyclops Engine Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Chuckle Bean",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1871,9 +1882,9 @@
               ]
             },
             "item": {
-              "name": "Mobile Vehicle Bay Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Hoo Bean",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1901,8 +1912,8 @@
               ]
             },
             "item": {
-              "name": "Modification Station Fragment",
-              "player": 1,
+              "name": "Progressive Color Depth (Blue)",
+              "player": 5,
               "advancement": true,
               "type": "None"
             },
@@ -1931,7 +1942,7 @@
               ]
             },
             "item": {
-              "name": "Beacon Fragment",
+              "name": "Arcane Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1961,9 +1972,9 @@
               ]
             },
             "item": {
-              "name": "Ion Power Cell",
-              "player": 1,
-              "advancement": true,
+              "name": "Chuckle Bean",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1991,8 +2002,8 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Torpedo Arm Fragment",
-              "player": 1,
+              "name": "Cyclops Docking Bay Repair Module",
+              "player": 6,
               "advancement": false,
               "type": "None"
             },
@@ -2021,9 +2032,9 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Torpedo Arm Fragment",
-              "player": 1,
-              "advancement": false,
+              "name": "UPPER CHAMBER KEY",
+              "player": 3,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2051,8 +2062,8 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Grappling Arm Fragment",
-              "player": 1,
+              "name": "Beauty Badge",
+              "player": 4,
               "advancement": false,
               "type": "None"
             },
@@ -2081,8 +2092,8 @@
               ]
             },
             "item": {
-              "name": "Crystalline Sulfur",
-              "player": 1,
+              "name": "Syrup",
+              "player": 4,
               "advancement": false,
               "type": "None"
             },
@@ -2111,9 +2122,9 @@
               ]
             },
             "item": {
-              "name": "Mobile Vehicle Bay Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Reinforced Dive Suit",
+              "player": 6,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2141,8 +2152,8 @@
               ]
             },
             "item": {
-              "name": "Mobile Vehicle Bay Fragment",
-              "player": 1,
+              "name": "Seaglide Fragment",
+              "player": 6,
               "advancement": true,
               "type": "None"
             },
@@ -2171,9 +2182,9 @@
               ]
             },
             "item": {
-              "name": "Gold",
-              "player": 1,
-              "advancement": false,
+              "name": "Progressive Color Depth (Red)",
+              "player": 5,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2201,9 +2212,9 @@
               ]
             },
             "item": {
-              "name": "Seamoth Fragment",
+              "name": "Fish Oil",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2231,7 +2242,7 @@
               ]
             },
             "item": {
-              "name": "Silver Ore",
+              "name": "Spicy Roll",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2261,9 +2272,9 @@
               ]
             },
             "item": {
-              "name": "Neptune Gantry",
-              "player": 1,
-              "advancement": true,
+              "name": "Ohoracle Badge",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2291,7 +2302,7 @@
               ]
             },
             "item": {
-              "name": "Observatory",
+              "name": "Turtle Egg",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2321,9 +2332,9 @@
               ]
             },
             "item": {
-              "name": "Cyclops Engine Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Additional Palette Color",
+              "player": 5,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2351,12 +2362,12 @@
               ]
             },
             "item": {
-              "name": "Bioreactor Fragment",
-              "player": 1,
-              "advancement": false,
+              "name": "Seaglide Fragment",
+              "player": 6,
+              "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Lifepod 3 - PDA",
@@ -2381,9 +2392,9 @@
               ]
             },
             "item": {
-              "name": "Seamoth Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "COFFEE CHIP",
+              "player": 3,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2411,8 +2422,8 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Drill Arm Fragment",
-              "player": 1,
+              "name": "Beanlet 3",
+              "player": 4,
               "advancement": false,
               "type": "None"
             },
@@ -2441,7 +2452,7 @@
               ]
             },
             "item": {
-              "name": "Repulsion Cannon",
+              "name": "Leeching Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2471,9 +2482,9 @@
               ]
             },
             "item": {
-              "name": "Neptune Fuel Reserve",
-              "player": 1,
-              "advancement": true,
+              "name": "Additional Palette Color",
+              "player": 5,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2501,8 +2512,8 @@
               ]
             },
             "item": {
-              "name": "Furniture",
-              "player": 1,
+              "name": "Additional Palette Color",
+              "player": 5,
               "advancement": false,
               "type": "None"
             },
@@ -2531,8 +2542,8 @@
               ]
             },
             "item": {
-              "name": "Nuclear Reactor Fragment",
-              "player": 1,
+              "name": "Ellipse",
+              "player": 5,
               "advancement": false,
               "type": "None"
             },
@@ -2561,9 +2572,9 @@
               ]
             },
             "item": {
-              "name": "Multipurpose Room",
+              "name": "Rotten Meat",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2591,9 +2602,9 @@
               ]
             },
             "item": {
-              "name": "Resources Bundle",
-              "player": 1,
-              "advancement": false,
+              "name": "SAGE TOKEN",
+              "player": 3,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2621,8 +2632,8 @@
               ]
             },
             "item": {
-              "name": "Salt Deposit",
-              "player": 1,
+              "name": "Engineering",
+              "player": 2,
               "advancement": false,
               "type": "None"
             },
@@ -2651,9 +2662,9 @@
               ]
             },
             "item": {
-              "name": "Seamoth Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Stirrups",
+              "player": 2,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2681,8 +2692,8 @@
               ]
             },
             "item": {
-              "name": "Kyanite",
-              "player": 1,
+              "name": "LONG GLOVES",
+              "player": 3,
               "advancement": false,
               "type": "None"
             },
@@ -2711,9 +2722,9 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Hoo Bean",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2741,9 +2752,9 @@
               ]
             },
             "item": {
-              "name": "Seamoth Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Chuckle Bean",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2771,8 +2782,8 @@
               ]
             },
             "item": {
-              "name": "Compass",
-              "player": 1,
+              "name": "Nuts",
+              "player": 4,
               "advancement": false,
               "type": "None"
             },
@@ -2801,9 +2812,9 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Fragment",
+              "name": "Jelly Plant",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2832,9 +2843,9 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "TELESCOPIC SLEEVE",
+              "player": 3,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2863,8 +2874,8 @@
               ]
             },
             "item": {
-              "name": "Titanium",
-              "player": 1,
+              "name": "Additional Palette Color",
+              "player": 5,
               "advancement": false,
               "type": "None"
             },
@@ -2894,7 +2905,7 @@
               ]
             },
             "item": {
-              "name": "Nuclear Reactor Fragment",
+              "name": "Anemone",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2924,8 +2935,8 @@
               ]
             },
             "item": {
-              "name": "Water Filtration Machine",
-              "player": 1,
+              "name": "Additional Palette Color",
+              "player": 5,
               "advancement": false,
               "type": "None"
             },
@@ -2954,8 +2965,8 @@
               ]
             },
             "item": {
-              "name": "Bulkhead",
-              "player": 1,
+              "name": "Scanner Room Fragment",
+              "player": 6,
               "advancement": false,
               "type": "None"
             },
@@ -2985,8 +2996,8 @@
               ]
             },
             "item": {
-              "name": "Cyclops Docking Bay Repair Module",
-              "player": 1,
+              "name": "Polygon",
+              "player": 5,
               "advancement": false,
               "type": "None"
             },
@@ -3016,9 +3027,9 @@
               ]
             },
             "item": {
-              "name": "Cyclops Bridge Fragment",
+              "name": "Spicy Roll",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3047,9 +3058,9 @@
               ]
             },
             "item": {
-              "name": "Seaglide Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Additional Palette Color",
+              "player": 5,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3078,8 +3089,8 @@
               ]
             },
             "item": {
-              "name": "Cyclops Bridge Fragment",
-              "player": 1,
+              "name": "Green Neon Egg",
+              "player": 4,
               "advancement": true,
               "type": "None"
             },
@@ -3109,8 +3120,8 @@
               ]
             },
             "item": {
-              "name": "Grav Trap Fragment",
-              "player": 1,
+              "name": "Chuckle Bean",
+              "player": 4,
               "advancement": false,
               "type": "None"
             },
@@ -3140,7 +3151,7 @@
               ]
             },
             "item": {
-              "name": "Furniture",
+              "name": "Ice Cream",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3171,9 +3182,9 @@
               ]
             },
             "item": {
-              "name": "Cyclops Hull Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Hoo Bean",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3202,9 +3213,9 @@
               ]
             },
             "item": {
-              "name": "Thermal Plant Fragment",
-              "player": 1,
-              "advancement": false,
+              "name": "Progressive Color Depth (Red)",
+              "player": 5,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3233,8 +3244,8 @@
               ]
             },
             "item": {
-              "name": "Water Filtration Suit",
-              "player": 1,
+              "name": "100 Bones",
+              "player": 3,
               "advancement": false,
               "type": "None"
             },
@@ -3264,9 +3275,9 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "ORGAN FORT",
+              "player": 3,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3295,8 +3306,8 @@
               ]
             },
             "item": {
-              "name": "Laser Cutter Fragment",
-              "player": 1,
+              "name": "Neptune Boosters",
+              "player": 6,
               "advancement": true,
               "type": "None"
             },
@@ -3325,7 +3336,7 @@
               ]
             },
             "item": {
-              "name": "Lithium",
+              "name": "Sea Cake",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3357,7 +3368,7 @@
             },
             "item": {
               "name": "Neptune Launch Platform",
-              "player": 1,
+              "player": 6,
               "advancement": true,
               "type": "None"
             },
@@ -3387,9 +3398,9 @@
               ]
             },
             "item": {
-              "name": "Ion Battery",
-              "player": 1,
-              "advancement": true,
+              "name": "Chuckle Bean",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3418,8 +3429,8 @@
               ]
             },
             "item": {
-              "name": "Battery Charger fragment",
-              "player": 1,
+              "name": "Hoo Bean",
+              "player": 4,
               "advancement": false,
               "type": "None"
             },
@@ -3448,9 +3459,9 @@
               ]
             },
             "item": {
-              "name": "Cyclops Engine Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Ultra Syrup",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3478,9 +3489,9 @@
               ]
             },
             "item": {
-              "name": "Vehicle Upgrade Console",
+              "name": "Magic Soup",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3508,7 +3519,7 @@
               ]
             },
             "item": {
-              "name": "Silver Ore",
+              "name": "Leeching Poultice",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3538,9 +3549,9 @@
               ]
             },
             "item": {
-              "name": "Cyclops Hull Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "BANANA",
+              "player": 3,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3568,9 +3579,9 @@
               ]
             },
             "item": {
-              "name": "Stasis Rifle Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Mushroom",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3598,9 +3609,9 @@
               ]
             },
             "item": {
-              "name": "Neptune Boosters",
-              "player": 1,
-              "advancement": true,
+              "name": "Chuckle Bean",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3628,9 +3639,9 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Chuckle Bean",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3658,9 +3669,9 @@
               ]
             },
             "item": {
-              "name": "Radiation Suit",
-              "player": 1,
-              "advancement": true,
+              "name": "Mushroom",
+              "player": 4,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3688,8 +3699,8 @@
               ]
             },
             "item": {
-              "name": "Cyclops Sonar Upgrade",
-              "player": 1,
+              "name": "Mushroom",
+              "player": 4,
               "advancement": false,
               "type": "None"
             },
@@ -3718,9 +3729,9 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Fragment",
-              "player": 1,
-              "advancement": true,
+              "name": "Construction",
+              "player": 2,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3748,8 +3759,8 @@
               ]
             },
             "item": {
-              "name": "Floodlight",
-              "player": 1,
+              "name": "BANANA",
+              "player": 3,
               "advancement": false,
               "type": "None"
             },
@@ -3778,7 +3789,7 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Grappling Arm Fragment",
+              "name": "Rainbow Mushroom",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3808,8 +3819,8 @@
               ]
             },
             "item": {
-              "name": "Farming",
-              "player": 1,
+              "name": "Hoo Bean",
+              "player": 4,
               "advancement": false,
               "type": "None"
             },
@@ -3838,8 +3849,8 @@
               ]
             },
             "item": {
-              "name": "Diamond",
-              "player": 1,
+              "name": "Additional Palette Color",
+              "player": 5,
               "advancement": false,
               "type": "None"
             },
@@ -3868,9 +3879,9 @@
               ]
             },
             "item": {
-              "name": "Farming",
-              "player": 1,
-              "advancement": false,
+              "name": "Progressive Color Depth (Green)",
+              "player": 5,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3898,12 +3909,12 @@
               ]
             },
             "item": {
-              "name": "Mobile Vehicle Bay Fragment",
-              "player": 1,
+              "name": "Seaglide Fragment",
+              "player": 6,
               "advancement": true,
               "type": "None"
             },
-            "locked": false
+            "locked": true
           },
           {
             "name": "Floating Island - Cave Entrance PDA",
@@ -3928,8 +3939,8 @@
               ]
             },
             "item": {
-              "name": "Reinforced Dive Suit",
-              "player": 1,
+              "name": "Additional Palette Color",
+              "player": 5,
               "advancement": false,
               "type": "None"
             },
@@ -3958,8 +3969,8 @@
               ]
             },
             "item": {
-              "name": "Prawn Suit Drill Arm Fragment",
-              "player": 1,
+              "name": "Machinery",
+              "player": 2,
               "advancement": false,
               "type": "None"
             },
@@ -4026,7 +4037,7 @@
             },
             "item": {
               "name": "Victory",
-              "player": 1,
+              "player": 6,
               "advancement": true,
               "type": "None"
             },
@@ -4050,7 +4061,7 @@
             },
             "item": {
               "name": "Disable Quarantine",
-              "player": 1,
+              "player": 6,
               "advancement": true,
               "type": "None"
             },
@@ -4074,7 +4085,7 @@
             },
             "item": {
               "name": "Full Infection",
-              "player": 1,
+              "player": 6,
               "advancement": true,
               "type": "None"
             },
@@ -4099,7 +4110,7 @@
             },
             "item": {
               "name": "Repair Aurora Drive",
-              "player": 1,
+              "player": 6,
               "advancement": true,
               "type": "None"
             },
@@ -4110,7 +4121,7 @@
     }
   },
   "start_regions": {
-    "1": {
+    "6": {
       "default": [
         "Planet 4546B"
       ],
@@ -4118,7 +4129,7 @@
     }
   },
   "items": {
-    "1": {
+    "6": {
       "Compass": {
         "name": "Compass",
         "id": 35000,
@@ -4128,7 +4139,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "useful"
+        "classification": "filler"
       },
       "Lightweight High Capacity Tank": {
         "name": "Lightweight High Capacity Tank",
@@ -4139,7 +4150,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "classification": "filler"
       },
       "Vehicle Upgrade Console": {
         "name": "Vehicle Upgrade Console",
@@ -4150,7 +4161,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "classification": "filler"
       },
       "Ultra Glide Fins": {
         "name": "Ultra Glide Fins",
@@ -4161,7 +4172,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "classification": "filler"
       },
       "Cyclops Sonar Upgrade": {
         "name": "Cyclops Sonar Upgrade",
@@ -4172,7 +4183,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "useful"
+        "classification": "filler"
       },
       "Reinforced Dive Suit": {
         "name": "Reinforced Dive Suit",
@@ -4194,7 +4205,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "useful"
+        "classification": "filler"
       },
       "Water Filtration Suit": {
         "name": "Water Filtration Suit",
@@ -4216,7 +4227,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "classification": "filler"
       },
       "Creature Decoy": {
         "name": "Creature Decoy",
@@ -4227,7 +4238,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "useful"
+        "classification": "filler"
       },
       "Cyclops Fire Suppression System": {
         "name": "Cyclops Fire Suppression System",
@@ -4238,7 +4249,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "useful"
+        "classification": "filler"
       },
       "Swim Charge Fins": {
         "name": "Swim Charge Fins",
@@ -4249,7 +4260,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "useful"
+        "classification": "filler"
       },
       "Repulsion Cannon": {
         "name": "Repulsion Cannon",
@@ -4260,7 +4271,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "useful"
+        "classification": "filler"
       },
       "Cyclops Decoy Tube Upgrade": {
         "name": "Cyclops Decoy Tube Upgrade",
@@ -4271,7 +4282,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "useful"
+        "classification": "filler"
       },
       "Cyclops Shield Generator": {
         "name": "Cyclops Shield Generator",
@@ -4282,7 +4293,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "classification": "filler"
       },
       "Cyclops Depth Module MK1": {
         "name": "Cyclops Depth Module MK1",
@@ -4293,7 +4304,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "classification": "filler"
       },
       "Cyclops Docking Bay Repair Module": {
         "name": "Cyclops Docking Bay Repair Module",
@@ -4315,7 +4326,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "classification": "filler"
       },
       "Beacon Fragment": {
         "name": "Beacon Fragment",
@@ -4337,7 +4348,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "classification": "filler"
       },
       "Cyclops Bridge Fragment": {
         "name": "Cyclops Bridge Fragment",
@@ -4348,7 +4359,7 @@
         "event": false,
         "type": null,
         "max_count": 5,
-        "classification": "progression"
+        "classification": "filler"
       },
       "Cyclops Engine Fragment": {
         "name": "Cyclops Engine Fragment",
@@ -4359,7 +4370,7 @@
         "event": false,
         "type": null,
         "max_count": 5,
-        "classification": "progression"
+        "classification": "filler"
       },
       "Cyclops Hull Fragment": {
         "name": "Cyclops Hull Fragment",
@@ -4370,7 +4381,7 @@
         "event": false,
         "type": null,
         "max_count": 5,
-        "classification": "progression"
+        "classification": "filler"
       },
       "Grav Trap Fragment": {
         "name": "Grav Trap Fragment",
@@ -4392,7 +4403,7 @@
         "event": false,
         "type": null,
         "max_count": 4,
-        "classification": "progression"
+        "classification": "filler"
       },
       "Light Stick Fragment": {
         "name": "Light Stick Fragment",
@@ -4414,7 +4425,7 @@
         "event": false,
         "type": null,
         "max_count": 6,
-        "classification": "progression"
+        "classification": "filler"
       },
       "Modification Station Fragment": {
         "name": "Modification Station Fragment",
@@ -4425,7 +4436,7 @@
         "event": false,
         "type": null,
         "max_count": 4,
-        "classification": "progression"
+        "classification": "filler"
       },
       "Moonpool Fragment": {
         "name": "Moonpool Fragment",
@@ -4436,7 +4447,7 @@
         "event": false,
         "type": null,
         "max_count": 3,
-        "classification": "progression"
+        "classification": "filler"
       },
       "Nuclear Reactor Fragment": {
         "name": "Nuclear Reactor Fragment",
@@ -4447,7 +4458,7 @@
         "event": false,
         "type": null,
         "max_count": 3,
-        "classification": "useful"
+        "classification": "filler"
       },
       "Power Cell Charger Fragment": {
         "name": "Power Cell Charger Fragment",
@@ -4458,7 +4469,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "classification": "filler"
       },
       "Power Transmitter Fragment": {
         "name": "Power Transmitter Fragment",
@@ -4480,7 +4491,7 @@
         "event": false,
         "type": null,
         "max_count": 7,
-        "classification": "progression"
+        "classification": "filler"
       },
       "Prawn Suit Drill Arm Fragment": {
         "name": "Prawn Suit Drill Arm Fragment",
@@ -4491,7 +4502,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "classification": "filler"
       },
       "Prawn Suit Grappling Arm Fragment": {
         "name": "Prawn Suit Grappling Arm Fragment",
@@ -4502,7 +4513,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "classification": "filler"
       },
       "Prawn Suit Propulsion Cannon Fragment": {
         "name": "Prawn Suit Propulsion Cannon Fragment",
@@ -4513,7 +4524,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "classification": "filler"
       },
       "Prawn Suit Torpedo Arm Fragment": {
         "name": "Prawn Suit Torpedo Arm Fragment",
@@ -4524,7 +4535,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "classification": "filler"
       },
       "Scanner Room Fragment": {
         "name": "Scanner Room Fragment",
@@ -4557,7 +4568,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "progression"
+        "classification": "filler"
       },
       "Thermal Plant Fragment": {
         "name": "Thermal Plant Fragment",
@@ -4568,7 +4579,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "useful"
+        "classification": "filler"
       },
       "Seaglide Fragment": {
         "name": "Seaglide Fragment",
@@ -4590,7 +4601,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "classification": "filler"
       },
       "Propulsion Cannon Fragment": {
         "name": "Propulsion Cannon Fragment",
@@ -4601,7 +4612,7 @@
         "event": false,
         "type": null,
         "max_count": 2,
-        "classification": "progression"
+        "classification": "filler"
       },
       "Neptune Launch Platform": {
         "name": "Neptune Launch Platform",
@@ -4711,7 +4722,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "classification": "filler"
       },
       "Bulkhead": {
         "name": "Bulkhead",
@@ -4722,7 +4733,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "useful"
+        "classification": "filler"
       },
       "Spotlight": {
         "name": "Spotlight",
@@ -4953,7 +4964,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "classification": "filler"
       },
       "Neptune Gantry": {
         "name": "Neptune Gantry",
@@ -4964,7 +4975,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "filler"
       },
       "Neptune Boosters": {
         "name": "Neptune Boosters",
@@ -4986,7 +4997,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "filler"
       },
       "Neptune Cockpit": {
         "name": "Neptune Cockpit",
@@ -4997,7 +5008,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression_skip_balancing"
+        "classification": "filler"
       },
       "Water Filtration Machine": {
         "name": "Water Filtration Machine",
@@ -5019,7 +5030,7 @@
         "event": false,
         "type": null,
         "max_count": 1,
-        "classification": "progression"
+        "classification": "filler"
       },
       "Large Room": {
         "name": "Large Room",
@@ -5117,7 +5128,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
+        "max_count": 2,
         "classification": "filler"
       },
       "Copper Ore": {
@@ -5216,7 +5227,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "filler"
       },
       "Salt Deposit": {
@@ -5306,24 +5317,681 @@
         "type": "Event",
         "max_count": 1,
         "classification": "progression"
+      },
+      "Additional Palette Color": {
+        "name": "Additional Palette Color",
+        "id": 198523,
+        "groups": [],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cultural Heritage": {
+        "name": "Cultural Heritage",
+        "id": 5041122,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Queen B. Jeans": {
+        "name": "Queen B. Jeans",
+        "id": 77771128,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Chuckle Bean": {
+        "name": "Chuckle Bean",
+        "id": 77771020,
+        "groups": [],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Volcano Roll": {
+        "name": "Volcano Roll",
+        "id": 698097,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Leaf Poultice": {
+        "name": "Leaf Poultice",
+        "id": 698055,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ultra Mushroom": {
+        "name": "Ultra Mushroom",
+        "id": 77771003,
+        "groups": [],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Mushroom": {
+        "name": "Mushroom",
+        "id": 77771001,
+        "groups": [],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "JUICE": {
+        "name": "JUICE",
+        "id": 200634,
+        "groups": [],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Purple Chuckola Fruit": {
+        "name": "Purple Chuckola Fruit",
+        "id": 77771034,
+        "groups": [],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "SOUL SPONGE": {
+        "name": "SOUL SPONGE",
+        "id": 200625,
+        "groups": [],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Harbor": {
+        "name": "Progressive Harbor",
+        "id": 5041143,
+        "groups": [],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Secret Scroll 1": {
+        "name": "Secret Scroll 1",
+        "id": 77771078,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hoo Bean": {
+        "name": "Hoo Bean",
+        "id": 77771019,
+        "groups": [],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Cold War": {
+        "name": "Cold War",
+        "id": 5041120,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Special Bulb": {
+        "name": "Special Bulb",
+        "id": 698082,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "JUMPSUIT": {
+        "name": "JUMPSUIT",
+        "id": 200669,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Spicy Meat x 2": {
+        "name": "Spicy Meat x 2",
+        "id": 698084,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Transturtle Open Waters top right": {
+        "name": "Transturtle Open Waters top right",
+        "id": 698127,
+        "groups": [],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Political Philosophy": {
+        "name": "Political Philosophy",
+        "id": 5041085,
+        "groups": [],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Super Mushroom": {
+        "name": "Super Mushroom",
+        "id": 77771002,
+        "groups": [],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "CAVE KEY": {
+        "name": "CAVE KEY",
+        "id": 200633,
+        "groups": [],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Dumbo Ice Cream": {
+        "name": "Dumbo Ice Cream",
+        "id": 698045,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "STEM CELL": {
+        "name": "STEM CELL",
+        "id": 200642,
+        "groups": [],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "POOLWINE": {
+        "name": "POOLWINE",
+        "id": 200627,
+        "groups": [],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "B. Brand Jeans": {
+        "name": "B. Brand Jeans",
+        "id": 77771129,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Defensive Tactics": {
+        "name": "Defensive Tactics",
+        "id": 5041088,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Theater": {
+        "name": "Progressive Theater",
+        "id": 5041139,
+        "groups": [],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Steam Power": {
+        "name": "Steam Power",
+        "id": 5041039,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Tasty Roll": {
+        "name": "Tasty Roll",
+        "id": 698090,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Syrup": {
+        "name": "Syrup",
+        "id": 77771009,
+        "groups": [],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Medieval Faires": {
+        "name": "Medieval Faires",
+        "id": 5041095,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hot Soup": {
+        "name": "Hot Soup",
+        "id": 698052,
+        "groups": [],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Encampment": {
+        "name": "Progressive Encampment",
+        "id": 5041141,
+        "groups": [],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Max Syrup": {
+        "name": "Max Syrup",
+        "id": 77771012,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Hand Roll": {
+        "name": "Hand Roll",
+        "id": 698048,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Red Chuckola Fruit": {
+        "name": "Red Chuckola Fruit",
+        "id": 77771032,
+        "groups": [],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Great Force": {
+        "name": "Great Force",
+        "id": 77771139,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Color Depth (Blue)": {
+        "name": "Progressive Color Depth (Blue)",
+        "id": 198505,
+        "groups": [],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Arcane Poultice": {
+        "name": "Arcane Poultice",
+        "id": 698038,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "UPPER CHAMBER KEY": {
+        "name": "UPPER CHAMBER KEY",
+        "id": 200643,
+        "groups": [],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Beauty Badge": {
+        "name": "Beauty Badge",
+        "id": 77771097,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Color Depth (Red)": {
+        "name": "Progressive Color Depth (Red)",
+        "id": 198503,
+        "groups": [],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Fish Oil": {
+        "name": "Fish Oil",
+        "id": 698046,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Spicy Roll": {
+        "name": "Spicy Roll",
+        "id": 698085,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ohoracle Badge": {
+        "name": "Ohoracle Badge",
+        "id": 77771087,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Turtle Egg": {
+        "name": "Turtle Egg",
+        "id": 698032,
+        "groups": [],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "COFFEE CHIP": {
+        "name": "COFFEE CHIP",
+        "id": 200672,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Beanlet 3": {
+        "name": "Beanlet 3",
+        "id": 77771065,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Leeching Poultice": {
+        "name": "Leeching Poultice",
+        "id": 698056,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ellipse": {
+        "name": "Ellipse",
+        "id": 198520,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rotten Meat": {
+        "name": "Rotten Meat",
+        "id": 698073,
+        "groups": [],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "SAGE TOKEN": {
+        "name": "SAGE TOKEN",
+        "id": 200656,
+        "groups": [],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Engineering": {
+        "name": "Engineering",
+        "id": 5041018,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Stirrups": {
+        "name": "Stirrups",
+        "id": 5041023,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "LONG GLOVES": {
+        "name": "LONG GLOVES",
+        "id": 200659,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Nuts": {
+        "name": "Nuts",
+        "id": 77771005,
+        "groups": [],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Jelly Plant": {
+        "name": "Jelly Plant",
+        "id": 698015,
+        "groups": [],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "TELESCOPIC SLEEVE": {
+        "name": "TELESCOPIC SLEEVE",
+        "id": 200664,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Anemone": {
+        "name": "Anemone",
+        "id": 698000,
+        "groups": [],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Polygon": {
+        "name": "Polygon",
+        "id": 198519,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Green Neon Egg": {
+        "name": "Green Neon Egg",
+        "id": 77771053,
+        "groups": [],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ice Cream": {
+        "name": "Ice Cream",
+        "id": 698053,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "100 Bones": {
+        "name": "100 Bones",
+        "id": 200686,
+        "groups": [],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "ORGAN FORT": {
+        "name": "ORGAN FORT",
+        "id": 200674,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Sea Cake": {
+        "name": "Sea Cake",
+        "id": 698075,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Ultra Syrup": {
+        "name": "Ultra Syrup",
+        "id": 77771011,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Magic Soup": {
+        "name": "Magic Soup",
+        "id": 698060,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "BANANA": {
+        "name": "BANANA",
+        "id": 200636,
+        "groups": [],
+        "classification": "filler",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Construction": {
+        "name": "Construction",
+        "id": 5041017,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Rainbow Mushroom": {
+        "name": "Rainbow Mushroom",
+        "id": 698067,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Progressive Color Depth (Green)": {
+        "name": "Progressive Color Depth (Green)",
+        "id": 198504,
+        "groups": [],
+        "classification": "progression",
+        "event": false,
+        "type": null,
+        "max_count": 1
+      },
+      "Machinery": {
+        "name": "Machinery",
+        "id": 5041021,
+        "groups": [],
+        "classification": "useful",
+        "event": false,
+        "type": null,
+        "max_count": 1
       }
     }
   },
   "item_groups": {
-    "1": [
+    "6": [
       "Everything"
     ]
   },
   "itempool_counts": {
-    "1": {
+    "6": {
       "Alien Containment": 1,
       "Battery Charger fragment": 2,
       "Beacon Fragment": 2,
       "Bioreactor Fragment": 2,
       "Bulkhead": 1,
       "Compass": 1,
+      "Copper Ore": 1,
       "Creature Decoy": 1,
-      "Crystalline Sulfur": 2,
       "Cyclops Bridge Fragment": 5,
       "Cyclops Decoy Tube Upgrade": 1,
       "Cyclops Depth Module MK1": 1,
@@ -5334,7 +6002,6 @@
       "Cyclops Shield Generator": 1,
       "Cyclops Sonar Upgrade": 1,
       "Cyclops Thermal Reactor Module": 1,
-      "Diamond": 1,
       "Disable Quarantine": 1,
       "Exterior Growbed": 2,
       "Farming": 2,
@@ -5345,7 +6012,6 @@
       "Grav Trap Fragment": 2,
       "Ion Battery": 1,
       "Ion Power Cell": 1,
-      "Kyanite": 1,
       "Large Room": 1,
       "Laser Cutter Fragment": 4,
       "Lightweight High Capacity Tank": 1,
@@ -5370,10 +6036,12 @@
       "Prawn Suit Torpedo Arm Fragment": 2,
       "Propulsion Cannon Fragment": 2,
       "Radiation Suit": 1,
+      "Reactor Rod": 1,
       "Reinforced Dive Suit": 1,
       "Repair Aurora Drive": 1,
       "Repulsion Cannon": 1,
       "Resources Bundle": 2,
+      "Ruby": 1,
       "Salt Deposit": 1,
       "Scanner Room Fragment": 3,
       "Seaglide Fragment": 4,
@@ -5383,7 +6051,7 @@
       "Stasis Rifle Fragment": 2,
       "Swim Charge Fins": 1,
       "Thermal Plant Fragment": 2,
-      "Titanium": 1,
+      "Titanium": 2,
       "Ultra Glide Fins": 1,
       "Ultra High Capacity Tank": 1,
       "Vehicle Upgrade Console": 1,
@@ -5393,16 +6061,16 @@
     }
   },
   "canonical_placements": {
-    "1": {}
+    "6": {}
   },
   "progression_mapping": {
-    "1": {}
+    "6": {}
   },
   "starting_items": {
-    "1": []
+    "6": []
   },
   "settings": {
-    "1": {
+    "6": {
       "game": "Subnautica",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
@@ -5447,7 +6115,7 @@
     }
   },
   "game_info": {
-    "1": {
+    "6": {
       "name": "Subnautica",
       "rule_format": {
         "version": "1.0"
@@ -5479,6 +6147,901 @@
   },
   "helpers": {
     "1": {
+      "_has_beast_and_soup_form": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "_has_beast_form",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "_has_hot_soup",
+            "args": []
+          }
+        ]
+      },
+      "_has_beast_form": {
+        "type": "item_check",
+        "item": "Beast Form"
+      },
+      "_has_beast_form_or_arnassi_armor": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "_has_beast_form",
+            "args": []
+          },
+          {
+            "type": "item_check",
+            "item": "Arnassi Armor"
+          }
+        ]
+      },
+      "_has_bind_song": {
+        "type": "item_check",
+        "item": "Bind Song"
+      },
+      "_has_damaging_item": {
+        "params": [
+          "damaging_items"
+        ],
+        "body": {
+          "type": "or",
+          "conditions": [
+            {
+              "type": "item_check",
+              "item": "Baby Blaster"
+            },
+            {
+              "type": "item_check",
+              "item": "Baby Nautilus"
+            },
+            {
+              "type": "item_check",
+              "item": "Baby Piranha"
+            },
+            {
+              "type": "item_check",
+              "item": "Beast Form"
+            },
+            {
+              "type": "item_check",
+              "item": "Energy Form"
+            },
+            {
+              "type": "item_check",
+              "item": "Li and Li Song"
+            },
+            {
+              "type": "item_check",
+              "item": "Nature Form"
+            }
+          ]
+        }
+      },
+      "_has_dual_form": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "_has_li",
+            "args": []
+          },
+          {
+            "type": "item_check",
+            "item": "Dual Form"
+          }
+        ]
+      },
+      "_has_energy_attack_item": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "_has_energy_form",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "_has_dual_form",
+            "args": []
+          }
+        ]
+      },
+      "_has_energy_form": {
+        "type": "item_check",
+        "item": "Energy Form"
+      },
+      "_has_fish_form": {
+        "type": "item_check",
+        "item": "Fish Form"
+      },
+      "_has_hot_soup": {
+        "type": "state_method",
+        "method": "has_any",
+        "args": [
+          {
+            "type": "constant",
+            "value": [
+              "Hot Soup",
+              "Hot Soup x 2"
+            ]
+          }
+        ]
+      },
+      "_has_li": {
+        "type": "item_check",
+        "item": "Li and Li Song"
+      },
+      "_has_light": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Baby Dumbo"
+          },
+          {
+            "type": "helper",
+            "name": "_has_sun_form",
+            "args": []
+          }
+        ]
+      },
+      "_has_nature_form": {
+        "type": "item_check",
+        "item": "Nature Form"
+      },
+      "_has_spirit_form": {
+        "type": "item_check",
+        "item": "Spirit Form"
+      },
+      "_has_sun_crystal": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Has Sun Crystal"
+          },
+          {
+            "type": "helper",
+            "name": "_has_bind_song",
+            "args": []
+          }
+        ]
+      },
+      "_has_sun_form": {
+        "type": "item_check",
+        "item": "Sun Form"
+      },
+      "_has_tongue_cleared": {
+        "type": "item_check",
+        "item": "Body Tongue cleared"
+      }
+    },
+    "4": {
+      "beanFruit": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Bean Fruit 1"
+          },
+          {
+            "type": "item_check",
+            "item": "Bean Fruit 2"
+          },
+          {
+            "type": "item_check",
+            "item": "Bean Fruit 3"
+          },
+          {
+            "type": "item_check",
+            "item": "Bean Fruit 4"
+          },
+          {
+            "type": "item_check",
+            "item": "Bean Fruit 5"
+          },
+          {
+            "type": "item_check",
+            "item": "Bean Fruit 6"
+          },
+          {
+            "type": "item_check",
+            "item": "Bean Fruit 7"
+          }
+        ]
+      },
+      "birdo_shop": {
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Shop Birdo Flag"
+          },
+          {
+            "type": "constant",
+            "value": "Region"
+          }
+        ]
+      },
+      "brooch": {
+        "type": "item_check",
+        "item": "Beanbean Brooch"
+      },
+      "canCrash": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Green Pearl Bean"
+          },
+          {
+            "type": "item_check",
+            "item": "Thunderhand"
+          }
+        ]
+      },
+      "canDash": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Red Pearl Bean"
+          },
+          {
+            "type": "item_check",
+            "item": "Firebrand"
+          }
+        ]
+      },
+      "canDig": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Green Goblet"
+          },
+          {
+            "type": "item_check",
+            "item": "Hammers"
+          }
+        ]
+      },
+      "canMini": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Red Goblet"
+          },
+          {
+            "type": "item_check",
+            "item": "Hammers"
+          }
+        ]
+      },
+      "castleTown": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Red Chuckola Fruit"
+              },
+              {
+                "type": "item_check",
+                "item": "Purple Chuckola Fruit"
+              },
+              {
+                "type": "item_check",
+                "item": "White Chuckola Fruit"
+              }
+            ]
+          },
+          {
+            "type": "item_check",
+            "item": "Beanbean Brooch"
+          }
+        ]
+      },
+      "fire": {
+        "type": "item_check",
+        "item": "Firebrand"
+      },
+      "fruits": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Red Chuckola Fruit"
+          },
+          {
+            "type": "item_check",
+            "item": "Purple Chuckola Fruit"
+          },
+          {
+            "type": "item_check",
+            "item": "White Chuckola Fruit"
+          }
+        ]
+      },
+      "fungitown": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Red Chuckola Fruit"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Purple Chuckola Fruit"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "White Chuckola Fruit"
+                  }
+                ]
+              },
+              {
+                "type": "item_check",
+                "item": "Beanbean Brooch"
+              }
+            ]
+          },
+          {
+            "type": "item_check",
+            "item": "Thunderhand"
+          },
+          {
+            "type": "item_check",
+            "item": "Peasley's Rose"
+          },
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Hammers",
+                "count": {
+                  "type": "constant",
+                  "value": 2
+                }
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Red Pearl Bean"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Firebrand"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "fungitown_birdo_shop": {
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Fungitown Shop Birdo Flag"
+          },
+          {
+            "type": "constant",
+            "value": "Region"
+          }
+        ]
+      },
+      "fungitown_shop": {
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Shop Enter Fungitown Flag"
+          },
+          {
+            "type": "constant",
+            "value": "Region"
+          }
+        ]
+      },
+      "hammers": {
+        "type": "item_check",
+        "item": "Hammers"
+      },
+      "membership": {
+        "type": "item_check",
+        "item": "Membership Card"
+      },
+      "neon": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Blue Neon Egg"
+          },
+          {
+            "type": "item_check",
+            "item": "Red Neon Egg"
+          },
+          {
+            "type": "item_check",
+            "item": "Green Neon Egg"
+          },
+          {
+            "type": "item_check",
+            "item": "Yellow Neon Egg"
+          },
+          {
+            "type": "item_check",
+            "item": "Purple Neon Egg"
+          },
+          {
+            "type": "item_check",
+            "item": "Orange Neon Egg"
+          },
+          {
+            "type": "item_check",
+            "item": "Azure Neon Egg"
+          }
+        ]
+      },
+      "pieces": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Beanstar Piece 1"
+          },
+          {
+            "type": "item_check",
+            "item": "Beanstar Piece 2"
+          },
+          {
+            "type": "item_check",
+            "item": "Beanstar Piece 3"
+          },
+          {
+            "type": "item_check",
+            "item": "Beanstar Piece 4"
+          }
+        ]
+      },
+      "piranha_shop": {
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Shop Mom Piranha Flag"
+          },
+          {
+            "type": "constant",
+            "value": "Region"
+          }
+        ]
+      },
+      "postJokes": {
+        "params": [
+          "goal"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "name",
+              "name": "goal"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": 0
+            }
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Hammers",
+                    "count": {
+                      "type": "constant",
+                      "value": 3
+                    }
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "Green Goblet"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Hammers"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "Red Goblet"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Hammers"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "Membership Card"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Firebrand"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Green Goblet"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Hammers"
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Peach's Extra Dress"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Fake Beanstar"
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Beanstar Piece 1"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Beanstar Piece 2"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Beanstar Piece 3"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Beanstar Piece 4"
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Red Chuckola Fruit"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Purple Chuckola Fruit"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "White Chuckola Fruit"
+                  }
+                ]
+              },
+              {
+                "type": "item_check",
+                "item": "Beanbean Brooch"
+              },
+              {
+                "type": "item_check",
+                "item": "Peasley's Rose"
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Red Pearl Bean"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Firebrand"
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Hammers",
+                    "count": {
+                      "type": "constant",
+                      "value": 3
+                    }
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "Green Goblet"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Hammers"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "item_check",
+                                "item": "Red Goblet"
+                              },
+                              {
+                                "type": "item_check",
+                                "item": "Hammers"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "item_check",
+                            "item": "Membership Card"
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Firebrand"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Green Goblet"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Hammers"
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Red Pearl Bean"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Firebrand"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "rose": {
+        "type": "item_check",
+        "item": "Peasley's Rose"
+      },
+      "spangle": {
+        "type": "item_check",
+        "item": "Spangle"
+      },
+      "star_shop": {
+        "type": "state_method",
+        "method": "can_reach",
+        "args": [
+          {
+            "type": "constant",
+            "value": "Shop Beanstar Complete Flag"
+          },
+          {
+            "type": "constant",
+            "value": "Region"
+          }
+        ]
+      },
+      "super": {
+        "type": "item_check",
+        "item": "Hammers",
+        "count": {
+          "type": "constant",
+          "value": 2
+        }
+      },
+      "surfable": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Hammers",
+            "count": {
+              "type": "constant",
+              "value": 3
+            }
+          },
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Green Goblet"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Hammers"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Red Goblet"
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Hammers"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Membership Card"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Firebrand"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "teehee": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Hammers",
+            "count": {
+              "type": "constant",
+              "value": 2
+            }
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Red Pearl Bean"
+              },
+              {
+                "type": "item_check",
+                "item": "Firebrand"
+              }
+            ]
+          }
+        ]
+      },
+      "thunder": {
+        "type": "item_check",
+        "item": "Thunderhand"
+      },
+      "ultra": {
+        "type": "item_check",
+        "item": "Hammers",
+        "count": {
+          "type": "constant",
+          "value": 3
+        }
+      },
+      "winkle": {
+        "type": "item_check",
+        "item": "Winkle Card"
+      }
+    },
+    "6": {
       "can_access_location": {
         "params": [
           "loc"

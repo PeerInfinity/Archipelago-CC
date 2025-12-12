@@ -467,31 +467,44 @@
           {
             "player": 1,
             "name": "Player1",
-            "game": "A Hat in Time"
+            "game": "Aquaria"
           },
           {
             "player": 2,
             "name": "Player2",
-            "game": "A Link to the Past"
+            "game": "Civilization VI"
           },
           {
             "player": 3,
             "name": "Player3",
-            "game": "A Short Hike"
+            "game": "Hylics 2"
           },
           {
             "player": 4,
             "name": "Player4",
-            "game": "Adventure"
+            "game": "Mario & Luigi Superstar Saga"
+          },
+          {
+            "player": 5,
+            "name": "Player5",
+            "game": "Paint"
+          },
+          {
+            "player": 6,
+            "name": "Player6",
+            "game": "Subnautica"
           }
         ],
         "files": [
           "AP_14089154938208861744.archipelago",
           "AP_14089154938208861744_P1_rules.json",
+          "AP_14089154938208861744_P2_Player2.apcivvi",
           "AP_14089154938208861744_P2_rules.json",
           "AP_14089154938208861744_P3_rules.json",
-          "AP_14089154938208861744_P4_Player4.apadvn",
+          "AP_14089154938208861744_P4_Player4.apmlss",
           "AP_14089154938208861744_P4_rules.json",
+          "AP_14089154938208861744_P5_rules.json",
+          "AP_14089154938208861744_P6_rules.json",
           "AP_14089154938208861744_Spoiler.txt",
           "AP_14089154938208861744_rules.json",
           "AP_14089154938208861744_sphere_log.jsonl"

@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-12T17:21:19.475967",
-    "last_updated": "2025-12-12T17:21:19.475971",
+    "last_updated": "2025-12-12T22:39:28.156584",
     "script_version": "1.0.0"
   },
   "results": {
@@ -5586,265 +5586,58 @@
       }
     },
     "Subnautica.yaml": {
-      "bisection_results": {
-        "failing_pairs": [],
-        "tested_pairs": [
-          {
-            "generation": {
-              "error_count": 0,
-              "error_type": null,
-              "processing_time_seconds": 32.94,
-              "return_code": 0,
-              "success": true,
-              "warning_count": 1
-            },
-            "generation_success": true,
-            "partner_template": "Aquaria.yaml",
-            "player_1_template": "Aquaria.yaml",
-            "player_2_template": "Subnautica.yaml",
-            "player_results": {
-              "player_1": {
-                "error_count": 1,
-                "pass_fail": "passed",
-                "passed": true,
-                "player_number": 1,
-                "return_code": 0,
-                "sphere_reached": 5.5,
-                "template": "Aquaria.yaml",
-                "total_spheres": 5.5,
-                "warning_count": 0
-              },
-              "player_2": {
-                "error_count": 1,
-                "pass_fail": "passed",
-                "passed": true,
-                "player_number": 2,
-                "return_code": 0,
-                "sphere_reached": 5.5,
-                "template": "Subnautica.yaml",
-                "total_spheres": 5.5,
-                "warning_count": 0
-              }
-            },
-            "success": true
-          },
-          {
-            "generation": {
-              "error_count": 0,
-              "error_type": null,
-              "processing_time_seconds": 28.54,
-              "return_code": 0,
-              "success": true,
-              "warning_count": 1
-            },
-            "generation_success": true,
-            "partner_template": "Civilization VI.yaml",
-            "player_1_template": "Civilization VI.yaml",
-            "player_2_template": "Subnautica.yaml",
-            "player_results": {
-              "player_1": {
-                "error_count": 1,
-                "pass_fail": "passed",
-                "passed": true,
-                "player_number": 1,
-                "return_code": 0,
-                "sphere_reached": 10.7,
-                "template": "Civilization VI.yaml",
-                "total_spheres": 10.7,
-                "warning_count": 0
-              },
-              "player_2": {
-                "error_count": 1,
-                "pass_fail": "passed",
-                "passed": true,
-                "player_number": 2,
-                "return_code": 0,
-                "sphere_reached": 10.6,
-                "template": "Subnautica.yaml",
-                "total_spheres": 10.6,
-                "warning_count": 0
-              }
-            },
-            "success": true
-          },
-          {
-            "generation": {
-              "error_count": 0,
-              "error_type": null,
-              "processing_time_seconds": 29.33,
-              "return_code": 0,
-              "success": true,
-              "warning_count": 1
-            },
-            "generation_success": true,
-            "partner_template": "Hylics 2.yaml",
-            "player_1_template": "Hylics 2.yaml",
-            "player_2_template": "Subnautica.yaml",
-            "player_results": {
-              "player_1": {
-                "error_count": 1,
-                "pass_fail": "passed",
-                "passed": true,
-                "player_number": 1,
-                "return_code": 0,
-                "sphere_reached": 8.1,
-                "template": "Hylics 2.yaml",
-                "total_spheres": 8.1,
-                "warning_count": 0
-              },
-              "player_2": {
-                "error_count": 1,
-                "pass_fail": "passed",
-                "passed": true,
-                "player_number": 2,
-                "return_code": 0,
-                "sphere_reached": 8.2,
-                "template": "Subnautica.yaml",
-                "total_spheres": 8.2,
-                "warning_count": 0
-              }
-            },
-            "success": true
-          },
-          {
-            "generation": {
-              "error_count": 0,
-              "error_type": null,
-              "processing_time_seconds": 28.8,
-              "return_code": 0,
-              "success": true,
-              "warning_count": 1
-            },
-            "generation_success": true,
-            "partner_template": "Mario & Luigi Superstar Saga.yaml",
-            "player_1_template": "Mario & Luigi Superstar Saga.yaml",
-            "player_2_template": "Subnautica.yaml",
-            "player_results": {
-              "player_1": {
-                "error_count": 1,
-                "pass_fail": "passed",
-                "passed": true,
-                "player_number": 1,
-                "return_code": 0,
-                "sphere_reached": 12.3,
-                "template": "Mario & Luigi Superstar Saga.yaml",
-                "total_spheres": 12.3,
-                "warning_count": 0
-              },
-              "player_2": {
-                "error_count": 1,
-                "pass_fail": "passed",
-                "passed": true,
-                "player_number": 2,
-                "return_code": 0,
-                "sphere_reached": 12.1,
-                "template": "Subnautica.yaml",
-                "total_spheres": 12.1,
-                "warning_count": 0
-              }
-            },
-            "success": true
-          },
-          {
-            "generation": {
-              "error_count": 0,
-              "error_type": null,
-              "processing_time_seconds": 27.89,
-              "return_code": 0,
-              "success": true,
-              "warning_count": 1
-            },
-            "generation_success": true,
-            "partner_template": "Paint.yaml",
-            "player_1_template": "Paint.yaml",
-            "player_2_template": "Subnautica.yaml",
-            "player_results": {
-              "player_1": {
-                "error_count": 1,
-                "pass_fail": "passed",
-                "passed": true,
-                "player_number": 1,
-                "return_code": 0,
-                "sphere_reached": 9.1,
-                "template": "Paint.yaml",
-                "total_spheres": 9.1,
-                "warning_count": 0
-              },
-              "player_2": {
-                "error_count": 1,
-                "pass_fail": "passed",
-                "passed": true,
-                "player_number": 2,
-                "return_code": 0,
-                "sphere_reached": 10.1,
-                "template": "Subnautica.yaml",
-                "total_spheres": 10.1,
-                "warning_count": 0
-              }
-            },
-            "success": true
-          }
-        ],
-        "timestamp": "2025-12-12T17:12:33.860544",
-        "triggered": true
-      },
       "game_name_from_filename": "subnautica",
       "game_name_from_yaml": "Subnautica",
       "generation": {
-        "error_count": 10,
+        "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 35.18,
+        "processing_time_seconds": 52.7,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "multiworld_test": {
-        "first_failure_player": 6,
+        "first_failure_player": null,
         "intermittent_failures": [],
         "is_second_pass": false,
-        "player_number": 6,
+        "player_number": 1,
         "player_results": {
-          "player_6": {
-            "error_count": 78,
-            "pass_fail": "failed",
-            "passed": false,
-            "player_number": 6,
-            "return_code": 1,
-            "sphere_reached": 0.0,
-            "total_attempts": 3,
-            "total_spheres": 13.3,
+          "player_1": {
+            "error_count": 3,
+            "pass_fail": "passed",
+            "passed": true,
+            "player_number": 1,
+            "return_code": 0,
+            "sphere_reached": 0,
+            "total_attempts": 1,
+            "total_spheres": 0,
             "warning_count": 3
           }
         },
-        "players_failed": 1,
-        "players_passed": 0,
-        "processing_time_seconds": 44.84,
-        "split_number": 6,
-        "success": false,
+        "players_failed": 0,
+        "players_passed": 1,
+        "processing_time_seconds": 22.55,
+        "split_number": null,
+        "success": true,
         "templates_in_multiworld": {
-          "player_1": "Aquaria.yaml",
-          "player_2": "Civilization VI.yaml",
-          "player_3": "Hylics 2.yaml",
-          "player_4": "Mario & Luigi Superstar Saga.yaml",
-          "player_5": "Paint.yaml",
-          "player_6": "Subnautica.yaml"
+          "player_1": "Subnautica.yaml"
         },
-        "total_players_in_multiworld": 6,
+        "total_players_in_multiworld": 1,
         "total_players_tested": 1
       },
       "prerequisite_check": {
-        "all_prerequisites_passed": false,
+        "all_prerequisites_passed": true,
         "multiclient_passed": true,
         "spoiler_full_passed": true,
-        "spoiler_minimal_passed": false
+        "spoiler_minimal_passed": true
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Subnautica.yaml",
-      "timestamp": "2025-12-12T17:11:13.841385",
+      "timestamp": "2025-12-12T22:38:12.892737",
       "world_info": {
         "exporter_path": "exporter/games/subnautica.py",
-        "exporter_size": 2426,
+        "exporter_size": 2442,
         "game_logic_path": "frontend/modules/shared/gameLogic/subnautica/subnauticaLogic.js",
         "game_logic_size": 15085,
         "game_name_from_filename": "subnautica",
