@@ -6,23 +6,25 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-11 21:38:57
+**Generated:** 2025-12-12 01:29:00
 
 ## Summary
 
 - **Total Games:** 76
-- **Passed:** 71 (93.4%)
+- **Passed:** 70 (92.1%)
 - **Failed:** 1 (1.3%)
-- **Skipped (Prerequisites):** 4 (5.3%)
-- **Second Pass Tested:** 71
-- **Second Pass Passed:** 71
+- **Skipped (Prerequisites):** 5 (6.6%)
+- **Games with Intermittent Failures:** 0
+- **Total Intermittent Failures:** 0
+- **Second Pass Tested:** 70
+- **Second Pass Passed:** 70
 - **Second Pass Failed:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 29/71 (40.8% of passed)
-- **Passing with Generic Logic:** 50/71 (70.4% of passed)
-- **Passing with Both Generic:** 29/71 (40.8% of passed)
+- **Passing with Generic Exporter:** 29/70 (41.4% of passed)
+- **Passing with Generic Logic:** 50/70 (71.4% of passed)
+- **Passing with Both Generic:** 29/70 (41.4% of passed)
 
 ## Test Results
 
@@ -83,7 +85,7 @@
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 19.7KB | 86.3KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 15.9KB | 10.7KB |
-| Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 2.3KB | 14.7KB |
+| Subnautica | ⚫ Skipped | — | 6 | N/A | 2.3KB | 14.7KB |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | 5 | 5 | 13.8KB | 4.9KB |
 | Super Mario World | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
@@ -93,7 +95,7 @@
 | TUNIC | ⚫ Skipped | — | 7 | N/A | 2.4KB | ✅ |
 | Terraria | ✅ Passed | ✅ Passed | 7 | 7 | 12.3KB | 4.3KB |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | 6.9KB | ✅ |
-| The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 11.7KB | ✅ |
+| The Messenger | ✅ Passed | ✅ Passed | 6 | 6 | 11.7KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 4.8KB | 4.6KB |
 | The Witness | ⚫ Skipped | — | 6 | N/A | 23.7KB | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | 5 | 5 | 4.0KB | ✅ |
@@ -103,7 +105,7 @@
 | WebDevJourney | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | Yacht Dice | ✅ Passed | ✅ Passed | 8 | 8 | 1.6KB | 285.0KB |
 | Yoshi's Island | ✅ Passed | ✅ Passed | 8 | 8 | 10.8KB | ✅ |
-| shapez | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
+| shapez | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 
 ## Templates in Multiworld
 
@@ -544,17 +546,6 @@ Shows which templates were in the multiworld when each game was tested:
 | 5 | Overcooked! 2.yaml |
 | 6 | Stardew Valley.yaml |
 
-### Subnautica ✅
-
-| Player # | Template |
-|----------|----------|
-| 1 | Aquaria.yaml |
-| 2 | Civilization VI.yaml |
-| 3 | Hylics 2.yaml |
-| 4 | Mario & Luigi Superstar Saga.yaml |
-| 5 | Paint.yaml |
-| 6 | Subnautica.yaml |
-
 ### Super Mario 64 ✅
 
 | Player # | Template |
@@ -653,8 +644,7 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Hylics 2.yaml |
 | 4 | Mario & Luigi Superstar Saga.yaml |
 | 5 | Paint.yaml |
-| 6 | Subnautica.yaml |
-| 7 | The Messenger.yaml |
+| 6 | The Messenger.yaml |
 
 ### The Wind Waker ✅
 
@@ -763,24 +753,8 @@ Shows which templates were in the multiworld when each game was tested:
 | 3 | Hylics 2.yaml |
 | 4 | Mario & Luigi Superstar Saga.yaml |
 | 5 | Paint.yaml |
-| 6 | Subnautica.yaml |
-| 7 | The Messenger.yaml |
-| 8 | shapez.yaml |
-
-
-## Bisection Results
-
-When a multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
-
-### Mega Man 2 (Mega Man 2.yaml)
-
-**Failing pairs found:** 3
-
-| Partner Template | Result | Generation | Player 1 | Player 2 |
-|------------------|--------|------------|----------|----------|
-| Bumper Stickers.yaml | ❌ | ✅ | ✅ | ❌ |
-| DOOM 1993.yaml | ❌ | ✅ | ✅ | ❌ |
-| Jak and Daxter The Precursor Legacy.yaml | ❌ | ✅ | ✅ | ❌ |
+| 6 | The Messenger.yaml |
+| 7 | shapez.yaml |
 
 
 ## Second Pass Results
@@ -794,7 +768,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | A Short Hike | 1 | 7 | 1 | ✅ Passed |
 | APQuest | 1 | 8 | 1 | ✅ Passed |
 | Adventure | 1 | 8 | 1 | ✅ Passed |
-| Aquaria | 1 | 8 | 1 | ✅ Passed |
+| Aquaria | 1 | 7 | 1 | ✅ Passed |
 | Bomb Rush Cyberfunk | 1 | 7 | 1 | ✅ Passed |
 | Bumper Stickers | 1 | 5 | 1 | ✅ Passed |
 | Castlevania - Circle of the Moon | 1 | 5 | 1 | ✅ Passed |
@@ -804,7 +778,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | ChecksFinder | 2 | 7 | 2 | ✅ Passed |
 | ChocolateChipCookies | 2 | 8 | 2 | ✅ Passed |
 | Choo-Choo Charles | 2 | 8 | 2 | ✅ Passed |
-| Civilization VI | 2 | 8 | 2 | ✅ Passed |
+| Civilization VI | 2 | 7 | 2 | ✅ Passed |
 | DLCQuest | 2 | 7 | 2 | ✅ Passed |
 | DOOM 1993 | 2 | 5 | 2 | ✅ Passed |
 | DOOM II | 2 | 5 | 2 | ✅ Passed |
@@ -814,7 +788,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Faxanadu | 3 | 7 | 3 | ✅ Passed |
 | Final Fantasy Mystic Quest | 3 | 8 | 3 | ✅ Passed |
 | Heretic | 3 | 8 | 3 | ✅ Passed |
-| Hylics 2 | 3 | 8 | 3 | ✅ Passed |
+| Hylics 2 | 3 | 7 | 3 | ✅ Passed |
 | Inscryption | 3 | 7 | 3 | ✅ Passed |
 | Jak and Daxter: The Precursor Legacy | 3 | 5 | 3 | ✅ Passed |
 | Kingdom Hearts | 3 | 7 | 3 | ✅ Passed |
@@ -823,7 +797,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Lingo | 4 | 7 | 4 | ✅ Passed |
 | Links Awakening DX | 4 | 8 | 4 | ✅ Passed |
 | Lufia II Ancient Cave | 4 | 8 | 4 | ✅ Passed |
-| Mario & Luigi Superstar Saga | 4 | 8 | 4 | ✅ Passed |
+| Mario & Luigi Superstar Saga | 4 | 7 | 4 | ✅ Passed |
 | MathProof2p2e4 | 4 | 7 | 4 | ✅ Passed |
 | MegaMan Battle Network 3 | 3 | 5 | 3 | ✅ Passed |
 | Meritous | 4 | 7 | 4 | ✅ Passed |
@@ -832,7 +806,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Noita | 5 | 7 | 5 | ✅ Passed |
 | Old School Runescape | 5 | 8 | 5 | ✅ Passed |
 | Overcooked! 2 | 5 | 8 | 5 | ✅ Passed |
-| Paint | 5 | 8 | 5 | ✅ Passed |
+| Paint | 5 | 7 | 5 | ✅ Passed |
 | Raft | 5 | 7 | 5 | ✅ Passed |
 | Risk of Rain 2 | 4 | 5 | 4 | ✅ Passed |
 | Saving Princess | 5 | 7 | 5 | ✅ Passed |
@@ -841,7 +815,6 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Sonic Adventure 2 Battle | 6 | 7 | 6 | ✅ Passed |
 | Starcraft 2 | 6 | 8 | 6 | ✅ Passed |
 | Stardew Valley | 6 | 8 | 6 | ✅ Passed |
-| Subnautica | 6 | 8 | 6 | ✅ Passed |
 | Super Mario 64 | 6 | 7 | 6 | ✅ Passed |
 | Super Mario Land 2 | 5 | 5 | 5 | ✅ Passed |
 | Super Mario World | 4 | 5 | 4 | ✅ Passed |
@@ -850,7 +823,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | TOEM rule builder | 7 | 8 | 7 | ✅ Passed |
 | Terraria | 7 | 8 | 7 | ✅ Passed |
 | The Legend of Zelda | 7 | 8 | 7 | ✅ Passed |
-| The Messenger | 7 | 8 | 7 | ✅ Passed |
+| The Messenger | 6 | 7 | 6 | ✅ Passed |
 | The Wind Waker | 7 | 7 | 7 | ✅ Passed |
 | Timespinner | 5 | 5 | 5 | ✅ Passed |
 | Undertale | 7 | 7 | 7 | ✅ Passed |
@@ -859,7 +832,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | WebDevJourney | 7 | 7 | 7 | ✅ Passed |
 | Yacht Dice | 8 | 8 | 8 | ✅ Passed |
 | Yoshi's Island | 8 | 8 | 8 | ✅ Passed |
-| shapez | 8 | 8 | 8 | ✅ Passed |
+| shapez | 7 | 7 | 7 | ✅ Passed |
 
 ### Second Pass Templates in Multiworld
 
@@ -938,9 +911,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Hylics 2.yaml |
 | 4 | Mario & Luigi Superstar Saga.yaml |
 | 5 | Paint.yaml |
-| 6 | Subnautica.yaml |
-| 7 | The Messenger.yaml |
-| 8 | shapez.yaml |
+| 6 | The Messenger.yaml |
+| 7 | shapez.yaml |
 
 #### Bomb Rush Cyberfunk ✅
 
@@ -1059,9 +1031,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Hylics 2.yaml |
 | 4 | Mario & Luigi Superstar Saga.yaml |
 | 5 | Paint.yaml |
-| 6 | Subnautica.yaml |
-| 7 | The Messenger.yaml |
-| 8 | shapez.yaml |
+| 6 | The Messenger.yaml |
+| 7 | shapez.yaml |
 
 #### DLCQuest ✅
 
@@ -1180,9 +1151,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Hylics 2.yaml |
 | 4 | Mario & Luigi Superstar Saga.yaml |
 | 5 | Paint.yaml |
-| 6 | Subnautica.yaml |
-| 7 | The Messenger.yaml |
-| 8 | shapez.yaml |
+| 6 | The Messenger.yaml |
+| 7 | shapez.yaml |
 
 #### Inscryption ✅
 
@@ -1291,9 +1261,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Hylics 2.yaml |
 | 4 | Mario & Luigi Superstar Saga.yaml |
 | 5 | Paint.yaml |
-| 6 | Subnautica.yaml |
-| 7 | The Messenger.yaml |
-| 8 | shapez.yaml |
+| 6 | The Messenger.yaml |
+| 7 | shapez.yaml |
 
 #### MathProof2p2e4 ✅
 
@@ -1402,9 +1371,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Hylics 2.yaml |
 | 4 | Mario & Luigi Superstar Saga.yaml |
 | 5 | Paint.yaml |
-| 6 | Subnautica.yaml |
-| 7 | The Messenger.yaml |
-| 8 | shapez.yaml |
+| 6 | The Messenger.yaml |
+| 7 | shapez.yaml |
 
 #### Raft ✅
 
@@ -1503,19 +1471,6 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 6 | Stardew Valley.yaml |
 | 7 | The Legend of Zelda.yaml |
 | 8 | Yoshi's Island.yaml |
-
-#### Subnautica ✅
-
-| Player # | Template |
-|----------|----------|
-| 1 | Aquaria.yaml |
-| 2 | Civilization VI.yaml |
-| 3 | Hylics 2.yaml |
-| 4 | Mario & Luigi Superstar Saga.yaml |
-| 5 | Paint.yaml |
-| 6 | Subnautica.yaml |
-| 7 | The Messenger.yaml |
-| 8 | shapez.yaml |
 
 #### Super Mario 64 ✅
 
@@ -1622,9 +1577,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Hylics 2.yaml |
 | 4 | Mario & Luigi Superstar Saga.yaml |
 | 5 | Paint.yaml |
-| 6 | Subnautica.yaml |
-| 7 | The Messenger.yaml |
-| 8 | shapez.yaml |
+| 6 | The Messenger.yaml |
+| 7 | shapez.yaml |
 
 #### The Wind Waker ✅
 
@@ -1733,9 +1687,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Hylics 2.yaml |
 | 4 | Mario & Luigi Superstar Saga.yaml |
 | 5 | Paint.yaml |
-| 6 | Subnautica.yaml |
-| 7 | The Messenger.yaml |
-| 8 | shapez.yaml |
+| 6 | The Messenger.yaml |
+| 7 | shapez.yaml |
 
 
 ## Notes
