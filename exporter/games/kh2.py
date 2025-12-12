@@ -42,13 +42,11 @@ class KH2GameExportHandler(BaseGameExportHandler):
         # 'kh2_has_all' - Supported via self.player → player_id
         # 'kh2_has_any' - Supported via self.player → player_id
 
-        # Location-based helpers - require multiworld.get_location which isn't available
-        'kh2_can_reach',              # Uses multiworld.get_location
-        'kh2_can_reach_any',          # Loop over locations with kh2_can_reach
-        'kh2_can_reach_all',          # Loop over locations with kh2_can_reach
-
-        # Form region access - uses location.can_reach pattern
-        'final_form_region_access',   # Uses any() over location.can_reach
+        # Location-based helpers - NOW SUPPORTED via expand_helper → location_rule_ref
+        # 'kh2_can_reach' - Converted to location_rule_ref
+        # 'kh2_can_reach_any' - Converted to OR of location_rule_refs
+        # 'kh2_can_reach_all' - Converted to AND of location_rule_refs
+        # 'final_form_region_access' - Expanded inline to OR of location_rule_refs
 
         # Fight rule helpers - NOW SUPPORTED via sum(), closure vars, and setting_value
         # These helpers use kh2_list_any_sum, kh2_dict_count, etc. which are now supported
@@ -140,8 +138,6 @@ class KH2GameExportHandler(BaseGameExportHandler):
             'get_grim_reaper1_rules': {'type': 'constant', 'value': True},
             'get_old_pete_rules': {'type': 'constant', 'value': True},
             'get_oogie_rules': {'type': 'constant', 'value': True},
-            # final_form_region_access has complex logic - leave as helper
-            # valor, wisdom, master forms need investigation
         }
 
         # form_list_unlock should be kept as a helper call for JavaScript evaluation
@@ -151,6 +147,60 @@ class KH2GameExportHandler(BaseGameExportHandler):
 
         if helper_name in helper_map:
             return helper_map[helper_name]
+
+        # Handle kh2_can_reach - convert to location_check
+        # kh2_can_reach(loc, state) checks if a location is reachable (region + access rule)
+        # location_check uses isLocationAccessible which checks both region reachability AND access rule
+        if helper_name == 'kh2_can_reach' and args and len(args) >= 1:
+            loc_arg = args[0]
+            # If loc_arg is a constant string, use it directly
+            if isinstance(loc_arg, dict) and loc_arg.get('type') == 'constant':
+                return {'type': 'location_check', 'location': {'type': 'constant', 'value': loc_arg.get('value')}}
+            # Otherwise, keep it as a dynamic reference
+            return {'type': 'location_check', 'location': loc_arg}
+
+        # Handle kh2_can_reach_any - convert to OR of location_checks
+        if helper_name == 'kh2_can_reach_any' and args and len(args) >= 1:
+            loc_list_arg = args[0]
+            # If loc_list_arg is a constant list, expand it inline
+            if isinstance(loc_list_arg, dict) and loc_list_arg.get('type') == 'constant':
+                locations = loc_list_arg.get('value', [])
+                if isinstance(locations, (list, set, tuple)):
+                    conditions = [{'type': 'location_check', 'location': {'type': 'constant', 'value': loc}} for loc in locations]
+                    if len(conditions) == 1:
+                        return conditions[0]
+                    return {'type': 'or', 'conditions': conditions}
+            # Otherwise preserve as any_of pattern
+            return None
+
+        # Handle kh2_can_reach_all - convert to AND of location_checks
+        if helper_name == 'kh2_can_reach_all' and args and len(args) >= 1:
+            loc_list_arg = args[0]
+            # If loc_list_arg is a constant list, expand it inline
+            if isinstance(loc_list_arg, dict) and loc_list_arg.get('type') == 'constant':
+                locations = loc_list_arg.get('value', [])
+                if isinstance(locations, (list, set, tuple)):
+                    conditions = [{'type': 'location_check', 'location': {'type': 'constant', 'value': loc}} for loc in locations]
+                    if len(conditions) == 1:
+                        return conditions[0]
+                    return {'type': 'and', 'conditions': conditions}
+            # Otherwise preserve as all_of pattern
+            return None
+
+        # Handle final_form_region_access - expands to any() over final_leveling_access locations
+        # Uses location_check which checks both region reachability AND location access rule
+        if helper_name == 'final_form_region_access':
+            try:
+                from worlds.kh2.Logic import final_leveling_access
+                # final_leveling_access is a set of location names
+                locations = list(final_leveling_access)
+                conditions = [{'type': 'location_check', 'location': {'type': 'constant', 'value': loc}} for loc in locations]
+                if len(conditions) == 1:
+                    return conditions[0]
+                return {'type': 'or', 'conditions': conditions}
+            except ImportError:
+                logger.warning("Could not import final_leveling_access for final_form_region_access expansion")
+                return None
 
         # For now, preserve helper nodes as-is until we identify specific helpers
         return None

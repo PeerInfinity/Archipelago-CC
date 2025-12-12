@@ -271,9 +271,44 @@
             "name": "Garden Of Assemblage -> Final Form",
             "connected_region": "Final Form",
             "access_rule": {
-              "type": "helper",
-              "name": "final_form_region_access",
-              "args": []
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "location_check",
+                  "location": {
+                    "type": "constant",
+                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
+                  }
+                },
+                {
+                  "type": "location_check",
+                  "location": {
+                    "type": "constant",
+                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
+                  }
+                },
+                {
+                  "type": "location_check",
+                  "location": {
+                    "type": "constant",
+                    "value": "(PR2) Grim Reaper 2 Bonus: Sora Slot 1"
+                  }
+                },
+                {
+                  "type": "location_check",
+                  "location": {
+                    "type": "constant",
+                    "value": "(TT3) Underground Concourse Mythril Gem"
+                  }
+                },
+                {
+                  "type": "location_check",
+                  "location": {
+                    "type": "constant",
+                    "value": "Roxas Event Location"
+                  }
+                }
+              ]
             }
           },
           {
@@ -17716,6 +17751,156 @@
           }
         }
       },
+      "final_form_region_access": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Roxas Event Location"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            },
+            "args": []
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            },
+            "args": []
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "(PR2) Grim Reaper 2 Bonus: Sora Slot 1"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            },
+            "args": []
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            },
+            "args": []
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "(TT3) Underground Concourse Mythril Gem"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            },
+            "args": []
+          }
+        ]
+      },
       "get_ansem_riku_rules": {
         "type": "block",
         "statements": [
@@ -26428,6 +26613,71 @@
           "count": {
             "type": "name",
             "name": "amount"
+          }
+        }
+      },
+      "kh2_can_reach": {
+        "params": [
+          "loc"
+        ],
+        "body": {
+          "type": "state_method",
+          "method": "can_reach",
+          "args": [
+            {
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "multiworld"
+                },
+                "attr": "get_location"
+              },
+              "args": [
+                {
+                  "type": "name",
+                  "name": "loc"
+                }
+              ]
+            },
+            {
+              "type": "constant",
+              "value": "location"
+            }
+          ]
+        }
+      },
+      "kh2_can_reach_any": {
+        "params": [
+          "loc_set"
+        ],
+        "body": {
+          "type": "any_of",
+          "element_rule": {
+            "type": "helper",
+            "name": "kh2_can_reach",
+            "args": [
+              {
+                "type": "name",
+                "name": "location"
+              }
+            ]
+          },
+          "iterator_info": {
+            "type": "comprehension_details",
+            "target": {
+              "type": "name",
+              "name": "location"
+            },
+            "iterator": {
+              "type": "name",
+              "name": "loc_set"
+            }
           }
         }
       },
