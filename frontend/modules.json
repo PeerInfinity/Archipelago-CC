@@ -32,9 +32,14 @@
       "path": "./modules/inventory/index.js",
       "enabled": true
     },
+    "editorCore": {
+      "path": "./modules/editorCore/index.js",
+      "enabled": true
+    },
     "editor": {
       "path": "./modules/editor/index.js",
-      "enabled": true
+      "enabled": true,
+      "requires": ["editorCore"]
     },
     "settings": {
       "path": "./modules/settings/index.js",
@@ -186,6 +191,7 @@
     "timer",
     "timerPanel",
     "inventory",
+    "editorCore",
     "editor",
     "settings",
     "commonUI",
