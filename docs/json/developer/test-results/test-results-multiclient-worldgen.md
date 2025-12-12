@@ -6,13 +6,15 @@
 
 [View Original Template Results](./test-results-multiclient.md)
 
-**Generated:** 2025-12-11 21:38:57
+**Generated:** 2025-12-12 01:29:00
 
 ## Summary
 
 - **Total Games:** 79
 - **Passed:** 61 (77.2%)
 - **Failed:** 18 (22.8%)
+- **Games with Intermittent Failures:** 0
+- **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 

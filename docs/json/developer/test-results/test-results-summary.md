@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-11 21:38:57
+**Generated:** 2025-12-12 01:29:00
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -17,31 +17,33 @@ Additional test results:
 
 ### Individual Test Results
 
-- **Minimal Test:** 75/76 passed (98.7%)
-- **Full Test:** 75/76 passed (98.7%)
+- **Minimal Test:** 74/76 passed (97.4%)
+- **Full Test:** 74/76 passed (97.4%)
 - **Multiclient Test:** 72/76 passed (94.7%)
-- **Multiworld Test:** 71/76 passed (93.4%)
+- **Multiworld Test:** 70/76 passed (92.1%)
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 0 game(s), 0 total failure(s)
+- **Minimal Spoilers Test:** 2 game(s), 2 total failure(s)
 - **Full Spoilers Test:** 0 game(s), 0 total failure(s)
+- **Multiclient Test:** 0 game(s), 0 total failure(s)
+- **Multiworld Test:** 0 game(s), 0 total failure(s)
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 71/76 (93.4%)
+- **Templates passing all 4 tests:** 70/76 (92.1%)
 - **Templates passing 3 tests:** 1/76 (1.3%)
 - **Templates passing 2 tests:** 3/76 (3.9%)
-- **Templates passing 1 test:** 0/76 (0.0%)
+- **Templates passing 1 test:** 1/76 (1.3%)
 - **Templates passing 0 tests:** 1/76 (1.3%)
 
 ### Generic Exporter/Logic Statistics
 
-Of the 71 templates passing all 4 tests:
+Of the 70 templates passing all 4 tests:
 
-- **Passing with Generic Exporter:** 29/71 (40.8%)
-- **Passing with Generic Logic:** 50/71 (70.4%)
-- **Passing with Both Generic:** 29/71 (40.8%)
+- **Passing with Generic Exporter:** 29/70 (41.4%)
+- **Passing with Generic Logic:** 50/70 (71.4%)
+- **Passing with Both Generic:** 29/70 (41.4%)
 
 **Combined Custom Code Size:**
 
@@ -108,7 +110,7 @@ Of the 71 templates passing all 4 tests:
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 19.7KB | 86.3KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 15.9KB | 10.7KB |
-| Subnautica | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.3KB | 14.7KB |
+| Subnautica | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ Skipped | ✅ | ✅ | 2.3KB | 14.7KB |
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.8KB | 4.9KB |
 | Super Mario World | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |

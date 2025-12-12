@@ -6,7 +6,7 @@
 
 [View Original Template Results](./test-results-multiworld.md)
 
-**Generated:** 2025-12-11 21:38:57
+**Generated:** 2025-12-12 01:29:00
 
 ## Summary
 
@@ -14,6 +14,8 @@
 - **Passed:** 0 (0.0%)
 - **Failed:** 0 (0.0%)
 - **Skipped (Prerequisites):** 79 (100.0%)
+- **Games with Intermittent Failures:** 0
+- **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
