@@ -26,54 +26,36 @@ class KH2GameExportHandler(BaseGameExportHandler):
         'fight_logic': 'FightLogic',  # self.fight_logic = world.options.FightLogic.current_key
     }
 
-    # Helpers too complex for automatic export (loops, sums, closures)
+    # Helpers too complex for automatic export
     HELPERS_TO_EXPORT_BLACKLIST = {
         # Form-related helpers with complex logic
-        'form_list_unlock',           # Has conditional logic based on AutoFormLogic
-        'get_form_level_requirement', # Has loops counting forms
+        'form_list_unlock',           # Has set operations (.add) and references auto_form_dict
+        'get_form_level_requirement', # Has loops counting forms with conditional removal
 
-        # Helpers with sum/loop patterns
-        'level_locking_unlock',       # Sum over visit_locking_dict list
-        'summon_levels_unlocked',     # Sum over summons list
+        # Utility functions using sum() - NOW SUPPORTED via sum() rule type
+        # 'kh2_list_count_sum' - Now supported
+        # 'kh2_list_any_sum' - Now supported
+        # 'kh2_dict_count' - Now supported (uses all() which is supported)
+        # 'kh2_dict_one_count' - Now supported
+        # 'level_locking_unlock' - Now supported
+        # 'summon_levels_unlocked' - Now supported
+        # 'kh2_has_all' - Supported via self.player → player_id
+        # 'kh2_has_any' - Supported via self.player → player_id
 
-        # Utility functions with loops
-        'kh2_list_count_sum',         # List comprehension with sum
-        'kh2_list_any_sum',           # List comprehension with sum and has_any
-        'kh2_dict_count',             # Dict comprehension with all()
-        'kh2_dict_one_count',         # Dict comprehension with sum
-        # 'kh2_has_all' - Now supported via self.player → player_id
-        # 'kh2_has_any' - Now supported via self.player → player_id
-
-        # Location-based helpers
+        # Location-based helpers - require multiworld.get_location which isn't available
         'kh2_can_reach',              # Uses multiworld.get_location
-        'kh2_can_reach_any',          # Loop over locations
-        'kh2_can_reach_all',          # Loop over locations
+        'kh2_can_reach_any',          # Loop over locations with kh2_can_reach
+        'kh2_can_reach_all',          # Loop over locations with kh2_can_reach
 
-        # Form region access
+        # Form region access - uses location.can_reach pattern
         'final_form_region_access',   # Uses any() over location.can_reach
 
-        # Fight rule helpers - all reference self.fight_logic and local dicts
-        'get_ansem_riku_rules', 'get_armored_xemnas_one_rules', 'get_armored_xemnas_two_rules',
-        'get_barbosa_rules', 'get_blizzard_lord_rules', 'get_cerberus_cup_rules',
-        'get_cerberus_rules', 'get_cor_first_fight_movement_rules', 'get_cor_first_fight_rules',
-        'get_cor_second_fight_movement_rules', 'get_cor_skip_first_rules', 'get_dark_thorn_rules',
-        'get_data_axel_rules', 'get_data_demyx_rules', 'get_data_larxene_rules',
-        'get_data_lexaeus_rules', 'get_data_luxord_rules', 'get_data_marluxia_rules',
-        'get_data_roxas_rules', 'get_data_saix_rules', 'get_data_vexen_rules',
-        'get_data_xaldin_rules', 'get_data_xemnas_rules', 'get_data_xigbar_rules',
-        'get_data_zexion_rules', 'get_demyx_rules', 'get_experiment_rules',
-        'get_final_xemnas_rules', 'get_fire_lord_rules', 'get_future_pete_rules',
-        'get_genie_jafar_rules', 'get_goddess_of_fate_cup_rules', 'get_grim_reaper2_rules',
-        'get_groundshaker_rules', 'get_hades_cup_rules', 'get_hades_rules',
-        'get_hostile_program_rules', 'get_hydra_rules', 'get_luxord_rules',
-        'get_mcp_rules', 'get_olympus_pete_rules', 'get_pain_and_panic_cup_rules',
-        'get_prison_keeper_rules', 'get_roxas_rules', 'get_saix_rules',
-        'get_scar_rules', 'get_sephiroth_rules', 'get_shan_yu_rules',
-        'get_storm_rider_rules', 'get_terra_rules', 'get_thousand_heartless_rules',
-        'get_thresholder_rules', 'get_titan_cup_rules', 'get_transport_fight_rules',
-        'get_transport_movement_rules', 'get_xaldin_rules', 'get_xemnas_rules', 'get_xigbar_rules',
+        # Fight rule helpers - NOW SUPPORTED via sum(), closure vars, and setting_value
+        # These helpers use kh2_list_any_sum, kh2_dict_count, etc. which are now supported
+        # They also access self.fight_logic which maps to setting_value 'FightLogic'
+        # Removing from blacklist to allow export
 
-        # Static methods that return True - now handled via helper_map expansion
+        # Static methods that return True - handled via helper_map expansion
         # 'get_axel_one_rules', 'get_axel_two_rules', 'get_twilight_thorn_rules',
         # 'get_beast_rules', 'get_grim_reaper1_rules', 'get_old_pete_rules', 'get_oogie_rules',
         'limit_form_region_access', 'multi_form_region_access',
@@ -83,7 +65,67 @@ class KH2GameExportHandler(BaseGameExportHandler):
         """Initialize with optional world reference."""
         super().__init__()
         self.world = world
-    
+
+    def prepare_closure_vars(self, rule_func, closure_vars: Dict[str, Any]) -> Dict[str, Any]:
+        """Inject KH2 module-level data structures into closure_vars for helper analysis.
+
+        This ensures that constants from Logic.py and Items.py are available
+        during rule analysis, even when they're not in the function's direct closure.
+        """
+        enhanced_closure = closure_vars.copy()
+
+        try:
+            # Import KH2 Logic module data
+            from worlds.kh2.Logic import (
+                auto_form_dict, summons, form_list, form_list_without_final,
+                gap_closer, defensive_tool, ground_finisher, party_limit,
+                donald_limit, aerial_move, black_magic, magic, three_proofs,
+                final_leveling_access, drive_form_list
+            )
+            from worlds.kh2.Items import visit_locking_dict
+            from worlds.kh2.Names import ItemName, RegionName, LocationName
+
+            # Add all the data structures to closure vars
+            data_to_inject = {
+                'auto_form_dict': auto_form_dict,
+                'summons': summons,
+                'form_list': form_list,
+                'form_list_without_final': form_list_without_final,
+                'gap_closer': gap_closer,
+                'defensive_tool': defensive_tool,
+                'ground_finisher': ground_finisher,
+                'party_limit': party_limit,
+                'donald_limit': donald_limit,
+                'aerial_move': aerial_move,
+                'black_magic': black_magic,
+                'magic': magic,
+                'three_proofs': three_proofs,
+                'final_leveling_access': final_leveling_access,
+                'drive_form_list': drive_form_list,
+                'visit_locking_dict': visit_locking_dict,
+                'ItemName': ItemName,
+                'RegionName': RegionName,
+                'LocationName': LocationName,
+            }
+
+            # Also import all the fight rule dicts from Logic.py
+            from worlds.kh2 import Logic
+            for name in dir(Logic):
+                if name.startswith(('easy_', 'normal_', 'hard_', 'not_hard_', 'transport_')):
+                    value = getattr(Logic, name)
+                    if isinstance(value, dict):
+                        data_to_inject[name] = value
+
+            for name, value in data_to_inject.items():
+                if name not in enhanced_closure:
+                    enhanced_closure[name] = value
+                    logger.debug(f"Injected {name} into closure_vars for KH2 helper analysis")
+
+        except ImportError as e:
+            logger.warning(f"Could not import KH2 modules for closure injection: {e}")
+
+        return enhanced_closure
+
     def expand_helper(self, helper_name: str, args=None):
         """Expand KH2-specific helper functions."""
         # Map of KH2 helper functions to their simplified rules

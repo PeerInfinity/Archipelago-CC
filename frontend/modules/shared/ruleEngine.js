@@ -2296,6 +2296,53 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'sum': {
+        // Sum the values in an iterable
+        // Rule structure: { type: 'sum', iterable: <rule>, start?: <rule> }
+        if (!rule.iterable) {
+          log('warn', '[evaluateRule] sum rule has no iterable', { rule });
+          result = 0;
+          break;
+        }
+        const sumIterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
+        const startValue = rule.start !== undefined
+          ? evaluateRule(rule.start, context, depth + 1, localScope)
+          : 0;
+
+        if (sumIterable === undefined) {
+          result = undefined;
+          break;
+        }
+        if (startValue === undefined) {
+          result = undefined;
+          break;
+        }
+        if (Array.isArray(sumIterable)) {
+          // Check if any element is undefined
+          if (sumIterable.some((v) => v === undefined)) {
+            result = undefined;
+            break;
+          }
+          // Sum all numeric values
+          result = sumIterable.reduce((acc, val) => {
+            if (typeof val === 'number') {
+              return acc + val;
+            } else if (typeof val === 'boolean') {
+              // Python sum() treats True as 1, False as 0
+              return acc + (val ? 1 : 0);
+            }
+            return acc;
+          }, startValue);
+        } else if (typeof sumIterable === 'number') {
+          // Single number - just return it plus start
+          result = sumIterable + startValue;
+        } else {
+          log('warn', '[evaluateRule] sum iterable is not an array or number', { sumIterable, rule });
+          result = undefined;
+        }
+        break;
+      }
+
       case 'list': {
         if (!Array.isArray(rule.value)) {
           log(
@@ -2843,6 +2890,49 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
         result = Math.max(...maxArgsBlock);
+        break;
+      }
+
+      case 'sum': {
+        // Sum the values in an iterable (block scope version)
+        // Rule structure: { type: 'sum', iterable: <rule>, start?: <rule> }
+        if (!rule.iterable) {
+          log('warn', '[evaluateRule] sum rule has no iterable', { rule });
+          result = 0;
+          break;
+        }
+        const sumIterableBlock = evaluateRule(rule.iterable, context, depth + 1, localScope);
+        const startValueBlock = rule.start !== undefined
+          ? evaluateRule(rule.start, context, depth + 1, localScope)
+          : 0;
+
+        if (sumIterableBlock === undefined) {
+          result = undefined;
+          break;
+        }
+        if (startValueBlock === undefined) {
+          result = undefined;
+          break;
+        }
+        if (Array.isArray(sumIterableBlock)) {
+          if (sumIterableBlock.some((v) => v === undefined)) {
+            result = undefined;
+            break;
+          }
+          result = sumIterableBlock.reduce((acc, val) => {
+            if (typeof val === 'number') {
+              return acc + val;
+            } else if (typeof val === 'boolean') {
+              return acc + (val ? 1 : 0);
+            }
+            return acc;
+          }, startValueBlock);
+        } else if (typeof sumIterableBlock === 'number') {
+          result = sumIterableBlock + startValueBlock;
+        } else {
+          log('warn', '[evaluateRule] sum iterable is not an array or number', { sumIterableBlock, rule });
+          result = undefined;
+        }
         break;
       }
 

@@ -929,6 +929,21 @@ class ASTVisitorMixin:
                 logging.debug(f"Created max result: {result}")
                 return result
 
+            # *** Special handling for sum() function ***
+            # sum() typically takes an iterable as its first argument
+            # sum([1, 2, 3]) or sum(generator_expr) or sum([...], start_value)
+            if func_name == 'sum' and len(filtered_args) >= 1:
+                logging.debug(f"Detected sum() function call with {len(filtered_args)} args")
+                result = {
+                    'type': 'sum',
+                    'iterable': filtered_args[0]
+                }
+                # Optional start value (second argument)
+                if len(filtered_args) >= 2:
+                    result['start'] = filtered_args[1]
+                logging.debug(f"Created sum result: {result}")
+                return result
+
             # Create helper result with filtered args (no state/player in JSON)
             result = {
                 'type': 'helper',
@@ -2555,6 +2570,96 @@ class ASTVisitorMixin:
 
         except Exception as e:
             logging.error(f"Error in visit_GeneratorExp: {e}")
+            return None
+
+    def visit_ListComp(self, node: ast.ListComp):
+        """ Handle list comprehensions like [expr for x in iter] or [expr for x in iter if cond].
+
+        List comprehensions are converted to 'list' rules containing evaluated elements.
+        If the iterator is a known list/set from closure_vars, we expand it inline.
+        Otherwise, we return a generator_expression structure that the frontend can iterate.
+        """
+        try:
+            logging.debug(f"\n--- visit_ListComp --- (generators: {len(node.generators)})")
+
+            # Analyze the element expression
+            elt_result = self.visit(node.elt)
+            if elt_result is None:
+                logging.error(f"Failed to analyze element expression in ListComp: {ast.dump(node.elt)}")
+                return None
+
+            # For now, handle single generator (most common case)
+            if len(node.generators) >= 1:
+                gen = node.generators[0]
+                target_result = self.visit(gen.target)
+                iter_result = self.visit(gen.iter)
+
+                if target_result is None or iter_result is None:
+                    logging.error(f"Failed to analyze target or iterator in ListComp")
+                    return None
+
+                # Process any conditions (if clauses) in the comprehension
+                conditions = []
+                for if_node in gen.ifs:
+                    cond_result = self.visit(if_node)
+                    if cond_result is not None:
+                        conditions.append(cond_result)
+
+                # Check if iterator is a resolvable constant (list/set from closure_vars)
+                if iter_result.get('type') == 'constant' and isinstance(iter_result.get('value'), (list, tuple, set)):
+                    # Expand the list comprehension inline
+                    resolved_values = list(iter_result['value'])
+                    target_name = target_result.get('name') if target_result.get('type') == 'name' else None
+
+                    if target_name and resolved_values:
+                        logging.debug(f"visit_ListComp: Expanding inline for {len(resolved_values)} values")
+                        expanded_elements = []
+                        for value in resolved_values:
+                            # Check if conditions pass for this value
+                            # For now, we include conditionally - the frontend will evaluate
+                            if conditions:
+                                # Create a conditional element that checks the condition first
+                                substituted_cond = self._substitute_variable_in_rule(conditions[0], target_name, value)
+                                substituted_elt = self._substitute_variable_in_rule(elt_result, target_name, value)
+                                if substituted_cond is not None and substituted_elt is not None:
+                                    # For conditional comprehensions, we can't just expand inline
+                                    # We need to preserve the conditional logic
+                                    pass  # Fall through to generator_expression representation
+                            else:
+                                # No conditions - safe to expand
+                                substituted_elt = self._substitute_variable_in_rule(elt_result, target_name, value)
+                                if substituted_elt is not None:
+                                    expanded_elements.append(substituted_elt)
+                                else:
+                                    logging.warning(f"visit_ListComp: Failed to substitute for value {value}")
+
+                        if expanded_elements and not conditions:
+                            logging.debug(f"visit_ListComp: Successfully expanded to {len(expanded_elements)} elements")
+                            return {'type': 'list', 'value': expanded_elements}
+
+                # Build a comprehension result with conditions
+                comprehension_result = {
+                    'type': 'comprehension_details',
+                    'target': target_result,
+                    'iterator': iter_result
+                }
+                if conditions:
+                    comprehension_result['conditions'] = conditions
+
+                # Return as a generator_expression (which the frontend can handle)
+                # List comprehensions are functionally equivalent to generator expressions
+                # wrapped in list(), so we can use the same structure
+                return {
+                    'type': 'generator_expression',
+                    'element': elt_result,
+                    'comprehension': comprehension_result
+                }
+
+            logging.error(f"visit_ListComp: Unexpected number of generators: {len(node.generators)}")
+            return None
+
+        except Exception as e:
+            logging.error(f"Error in visit_ListComp: {e}")
             return None
 
     def visit_comprehension(self, node: ast.comprehension):
