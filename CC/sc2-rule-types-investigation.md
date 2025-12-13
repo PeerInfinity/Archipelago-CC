@@ -21,13 +21,23 @@ We've implemented infrastructure to export rating dictionaries (like `tvx_defens
 - `terran_can_rescue` - simple `has_any` + settings check
 - `terran_cliffjumper` - simple `has`/`has_all`
 - `terran_able_to_snipe_defiler` - simple `has`/`has_any`/`has_all`
+- `soa_power_rating` - complex loops with `break` statements (rule engine supports this)
+- `terran_power_rating` - uses dictionary iteration and calls soa_power_rating
+- `basic_kerrigan` - iterates over imported list (removed from blacklist)
+
+### Kerrigan Item Groups Export
+
+Added export of kerrigan item groups as static data for helpers that iterate over these lists:
+- `kerrigan_non_ulimates`
+- `kerrigan_logic_active_abilities`
+- `kerrigan_abilities`
+- `kerrigan_passives`
+- `kerrigan_active_abilities`
 
 **Remaining Blacklisted:**
-- `protoss_defense_rating`, `zerg_defense_rating` - not used in current test seeds (would work if used)
-- `terran_power_rating`, etc. - require `soa_power_rating` which has loops with `break` statements
-- `kerrigan_levels` - calls external function `get_full_item_list()`
-- `basic_kerrigan` - iterates over imported list
-- `two_kerrigan_actives` - has logic bug (loop variable unused)
+- `kerrigan_levels` - calls external function `get_full_item_list()` which can't be resolved at export time
+- `two_kerrigan_actives` - has logic bug (loop variable unused, always checks same condition)
+- `competent_comp` helpers - complex conditional logic with many dependencies
 
 ## Current Status
 

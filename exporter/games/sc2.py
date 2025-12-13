@@ -20,6 +20,17 @@ except ImportError:
     SC2_RATING_DICTS_AVAILABLE = False
     logger.debug("Could not import SC2 rating dictionaries - static data export disabled")
 
+# Import SC2 item groups for kerrigan helpers
+try:
+    from worlds.sc2.item.item_groups import (
+        kerrigan_non_ulimates, kerrigan_logic_active_abilities,
+        kerrigan_abilities, kerrigan_passives, kerrigan_active_abilities
+    )
+    SC2_KERRIGAN_GROUPS_AVAILABLE = True
+except ImportError:
+    SC2_KERRIGAN_GROUPS_AVAILABLE = False
+    logger.debug("Could not import SC2 kerrigan item groups - kerrigan helper export disabled")
+
 class SC2GameExportHandler(GenericGameExportHandler):
     """Export handler for Starcraft 2 game-specific rules and items."""
     GAME_NAME = 'Starcraft 2'
@@ -38,8 +49,8 @@ class SC2GameExportHandler(GenericGameExportHandler):
         'terran_competent_comp', 'protoss_competent_comp', 'zerg_competent_comp',
         # defense_rating helpers - now exported with static_data support
         # 'terran_defense_rating', 'protoss_defense_rating', 'zerg_defense_rating',
-        # power_rating helpers - require soa_power_rating which has loops with break
-        'terran_power_rating', 'protoss_power_rating', 'zerg_power_rating',
+        # power_rating helpers - testing export (uses soa_power_rating with loops/break)
+        # 'terran_power_rating', 'protoss_power_rating', 'zerg_power_rating',
         # Mission requirements that call power_rating or other complex helpers
         'terran_havens_fall_requirement', 'terran_great_train_robbery_train_stopper',
         'terran_welcome_to_the_jungle_requirement', 'zerg_welcome_to_the_jungle_requirement',
@@ -47,8 +58,9 @@ class SC2GameExportHandler(GenericGameExportHandler):
         'terran_engine_of_destruction_requirement', 'engine_of_destruction_requirement',
         'terran_trouble_in_paradise_requirement', 'terran_media_blitz_requirement',
         'terran_gates_of_hell_requirement', 'terran_all_in_requirement',
-        # Kerrigan helpers - use external functions or imported lists
-        'basic_kerrigan', 'kerrigan_levels', 'two_kerrigan_actives',
+        # Kerrigan helpers - kerrigan_levels uses get_full_item_list(), two_kerrigan_actives has a bug
+        'kerrigan_levels', 'two_kerrigan_actives',
+        # basic_kerrigan - testing if it can be exported (iterates over imported list)
         # Helpers that call other blacklisted helpers
         'terran_competent_ground_to_air', 'protoss_competent_ground_to_air',
         'zerg_competent_ground_to_air', 'terran_beats_protoss_deathball',
@@ -506,3 +518,15 @@ class SC2GameExportHandler(GenericGameExportHandler):
 
         export_data['static_data'][player_str]['rating_tables'] = rating_dicts
         logger.debug(f"[SC2] Exported {len(rating_dicts)} rating dictionaries as static data")
+
+        # Export kerrigan item groups for kerrigan helpers
+        if SC2_KERRIGAN_GROUPS_AVAILABLE:
+            kerrigan_groups = {
+                'kerrigan_non_ulimates': list(kerrigan_non_ulimates),
+                'kerrigan_logic_active_abilities': list(kerrigan_logic_active_abilities),
+                'kerrigan_abilities': list(kerrigan_abilities),
+                'kerrigan_passives': list(kerrigan_passives),
+                'kerrigan_active_abilities': list(kerrigan_active_abilities),
+            }
+            export_data['static_data'][player_str]['kerrigan_groups'] = kerrigan_groups
+            logger.debug(f"[SC2] Exported {len(kerrigan_groups)} kerrigan item groups as static data")
