@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2025-12-12 10:29:31
+**Generated:** 2025-12-12 19:43:40
 
-**Source Data Created:** 2025-12-12T16:49:59.035904
+**Source Data Created:** 2025-12-12T19:06:12.439162
 
-**Source Data Last Updated:** 2025-12-12T16:49:59.035910
+**Source Data Last Updated:** 2025-12-12T19:06:12.439168
 
 ## Summary
 
-- **Total Games:** 76
-- **Passed:** 76 (100.0%)
+- **Total Games:** 75
+- **Passed:** 75 (100.0%)
 - **Failed:** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 29/76 (38.2% of passed)
-- **Passing with Generic Logic:** 54/76 (71.1% of passed)
-- **Passing with Both Generic:** 29/76 (38.2% of passed)
+- **Passing with Generic Exporter:** 29/75 (38.7% of passed)
+- **Passing with Generic Logic:** 54/75 (72.0% of passed)
+- **Passing with Both Generic:** 29/75 (38.7% of passed)
 
 ## Test Results
 
@@ -78,7 +78,6 @@
 | Paint | ✅ Passed | 0 | 13.2 | 13.2 | 🟢 Complete | 6.4KB | 4.4KB |
 | Raft | ✅ Passed | 0 | 11.6 | 11.6 | 🟢 Complete | 11.8KB | 5.5KB |
 | Risk of Rain 2 | ✅ Passed | 0 | 8.35 | 8.35 | 🟢 Complete | ✅ | ✅ |
-| SMZ3 | ✅ Passed | 0 | 16.1 | 16.1 | 🟢 Complete | 61.4KB | 51.3KB |
 | Saving Princess | ✅ Passed | 0 | 5.3 | 5.3 | 🟢 Complete | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |

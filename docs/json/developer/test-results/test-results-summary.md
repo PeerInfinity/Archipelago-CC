@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-12 10:29:31
+**Generated:** 2025-12-12 19:43:40
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -18,39 +18,39 @@ Additional test results:
 
 ### Individual Test Results
 
-- **Minimal Test:** 76/76 passed (100.0%)
-- **Full Test:** 76/76 passed (100.0%)
-- **Multiclient Test:** 75/76 passed (98.7%)
-- **Multiworld Test:** 74/76 passed (97.4%)
+- **Minimal Test:** 75/75 passed (100.0%)
+- **Full Test:** 75/75 passed (100.0%)
+- **Multiclient Test:** 75/75 passed (100.0%)
+- **Multiworld Test:** 73/75 passed (97.3%)
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 1 game(s), 1 total failure(s)
+- **Minimal Spoilers Test:** 0 game(s), 0 total failure(s)
 - **Full Spoilers Test:** 0 game(s), 0 total failure(s)
 - **Multiclient Test:** 0 game(s), 0 total failure(s)
 - **Multiworld Test:** 0 game(s), 0 total failure(s)
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 73/76 (96.1%)
-- **Templates passing 3 tests:** 3/76 (3.9%)
-- **Templates passing 2 tests:** 0/76 (0.0%)
-- **Templates passing 1 test:** 0/76 (0.0%)
-- **Templates passing 0 tests:** 0/76 (0.0%)
+- **Templates passing all 4 tests:** 73/75 (97.3%)
+- **Templates passing 3 tests:** 2/75 (2.7%)
+- **Templates passing 2 tests:** 0/75 (0.0%)
+- **Templates passing 1 test:** 0/75 (0.0%)
+- **Templates passing 0 tests:** 0/75 (0.0%)
 
 ### Generic Exporter/Logic Statistics
 
 Of the 73 templates passing all 4 tests:
 
 - **Passing with Generic Exporter:** 29/73 (39.7%)
-- **Passing with Generic Logic:** 54/73 (74.0%)
+- **Passing with Generic Logic:** 53/73 (72.6%)
 - **Passing with Both Generic:** 29/73 (39.7%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 674.6KB
-- **Total Game Logic Code:** 803.9KB
-- **Combined Total:** 1478.4KB
+- **Total Exporter Code:** 613.2KB
+- **Total Game Logic Code:** 752.5KB
+- **Combined Total:** 1365.7KB
 
 ## Test Results
 
@@ -104,14 +104,13 @@ Of the 73 templates passing all 4 tests:
 | Paint | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 6.4KB | 4.4KB |
 | Raft | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 11.8KB | 5.5KB |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| SMZ3 | ✅ Passed | ✅ Passed | ❌ Failed | ✅ Passed | ✅ | ✅ | 61.4KB | 51.3KB |
 | Saving Princess | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 19.8KB | 86.3KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 16.0KB | 10.7KB |
-| Subnautica | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 2.4KB | 14.7KB |
+| Subnautica | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.4KB | 14.7KB |
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.9KB | 4.9KB |
 | Super Mario World | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
@@ -130,7 +129,7 @@ Of the 73 templates passing all 4 tests:
 | Wargroove | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.7KB | 2.6KB |
 | WebDevJourney | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Yacht Dice | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.6KB | 285.0KB |
-| Yoshi's Island | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 10.8KB | ✅ |
+| Yoshi's Island | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 10.8KB | ✅ |
 | shapez | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 
 ## Multi-Template Test Results
@@ -147,17 +146,18 @@ The following games are excluded from automated testing:
 
 | Game | Reason |
 |------|--------|
-| Archipelago | Not a game |
-| Blasphemous | The spoiler test currently freezes |
-| Final Fantasy | Requires manual configuration and is not compatible with automated testing |
-| Hollow Knight | The spoiler test currently freezes |
-| Ocarina of Time | The default yaml file fails to generate |
-| Pokemon Emerald | Temporarily excluded.  It takes too long to process |
-| Pokemon Red and Blue | Temporarily excluded.  It takes too long to process |
-| Sudoku | Cannot be used for generating worlds |
-| Universal Tracker | Not a game |
-| Yu-Gi-Oh! 2006 | Temporarily excluded.  It takes too long to process |
-| Zillion | Uses the external zilliandomizer tool for its logic, which is not compatible with this system |
+| Archipelago | Not a game. |
+| Blasphemous | The spoiler test currently freezes. |
+| Final Fantasy | Requires manual configuration and is not compatible with automated testing. |
+| Hollow Knight | The spoiler test currently freezes. |
+| Ocarina of Time | The default yaml file fails to generate. |
+| Pokemon Emerald | Temporarily excluded.  It takes too long to process. |
+| Pokemon Red and Blue | Temporarily excluded.  It takes too long to process. |
+| SMZ3 | Temporarily excluded.  It takes too long to process.  Also, self-locking locations cause the multiclient test to fail. |
+| Sudoku | Cannot be used for generating worlds. |
+| Universal Tracker | Not a game. |
+| Yu-Gi-Oh! 2006 | Temporarily excluded.  It takes too long to process. |
+| Zillion | Uses the external zilliandomizer tool for its logic, which is not compatible with this system. |
 
 ## Notes
 
