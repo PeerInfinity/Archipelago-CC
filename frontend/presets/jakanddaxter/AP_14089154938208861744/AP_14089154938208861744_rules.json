@@ -697,11 +697,9 @@
             "name": "SV: Bring 90 Orbs To The Mayor",
             "id": 741000011,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_orbs",
-              "args": [
-                1530
-              ]
+              "type": "item_check",
+              "item": "Reachable Orbs",
+              "count": 1530
             },
             "item": {
               "name": "Scout Fly - Lava Tube",
@@ -715,11 +713,9 @@
             "name": "SV: Bring 90 Orbs to Your Uncle",
             "id": 741000012,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_orbs",
-              "args": [
-                1530
-              ]
+              "type": "item_check",
+              "item": "Reachable Orbs",
+              "count": 1530
             },
             "item": {
               "name": "Power Cell",
@@ -944,11 +940,9 @@
             "name": "SV: Bring 120 Orbs To The Oracle (1)",
             "id": 741000013,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_orbs",
-              "args": [
-                1530
-              ]
+              "type": "item_check",
+              "item": "Reachable Orbs",
+              "count": 1530
             },
             "item": {
               "name": "Power Cell",
@@ -965,15 +959,13 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_orbs",
-                  "args": [
-                    1530
-                  ]
-                },
-                {
                   "type": "location_check",
                   "location": "SV: Bring 120 Orbs To The Oracle (1)"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Reachable Orbs",
+                  "count": 1530
                 }
               ]
             },
@@ -3171,11 +3163,9 @@
             "name": "RV: Bring 90 Orbs To The Gambler",
             "id": 741000031,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_orbs",
-              "args": [
-                1530
-              ]
+              "type": "item_check",
+              "item": "Reachable Orbs",
+              "count": 1530
             },
             "item": {
               "name": "Power Cell",
@@ -3189,11 +3179,9 @@
             "name": "RV: Bring 90 Orbs To The Geologist",
             "id": 741000032,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_orbs",
-              "args": [
-                1530
-              ]
+              "type": "item_check",
+              "item": "Reachable Orbs",
+              "count": 1530
             },
             "item": {
               "name": "Scout Fly - Lost Precursor City",
@@ -3207,11 +3195,9 @@
             "name": "RV: Bring 90 Orbs To The Warrior",
             "id": 741000033,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_orbs",
-              "args": [
-                1530
-              ]
+              "type": "item_check",
+              "item": "Reachable Orbs",
+              "count": 1530
             },
             "item": {
               "name": "Scout Fly - Fire Canyon",
@@ -3225,11 +3211,9 @@
             "name": "RV: Bring 120 Orbs To The Oracle (1)",
             "id": 741000034,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_orbs",
-              "args": [
-                1530
-              ]
+              "type": "item_check",
+              "item": "Reachable Orbs",
+              "count": 1530
             },
             "item": {
               "name": "Scout Fly - Fire Canyon",
@@ -3246,15 +3230,13 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_orbs",
-                  "args": [
-                    1530
-                  ]
-                },
-                {
                   "type": "location_check",
                   "location": "RV: Bring 120 Orbs To The Oracle (1)"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Reachable Orbs",
+                  "count": 1530
                 }
               ]
             },
@@ -5850,11 +5832,9 @@
             "name": "VC: Bring 90 Orbs To The Miners (1)",
             "id": 741000096,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_orbs",
-              "args": [
-                1530
-              ]
+              "type": "item_check",
+              "item": "Reachable Orbs",
+              "count": 1530
             },
             "item": {
               "name": "Scout Fly - Snowy Mountain",
@@ -5871,15 +5851,13 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_orbs",
-                  "args": [
-                    1530
-                  ]
-                },
-                {
                   "type": "location_check",
                   "location": "VC: Bring 90 Orbs To The Miners (1)"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Reachable Orbs",
+                  "count": 1530
                 }
               ]
             },
@@ -5898,15 +5876,13 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_orbs",
-                  "args": [
-                    1530
-                  ]
-                },
-                {
                   "type": "location_check",
                   "location": "VC: Bring 90 Orbs To The Miners (2)"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Reachable Orbs",
+                  "count": 1530
                 }
               ]
             },
@@ -5925,15 +5901,13 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_orbs",
-                  "args": [
-                    1530
-                  ]
-                },
-                {
                   "type": "location_check",
                   "location": "VC: Bring 90 Orbs To The Miners (3)"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Reachable Orbs",
+                  "count": 1530
                 }
               ]
             },
@@ -5949,11 +5923,9 @@
             "name": "VC: Bring 120 Orbs To The Oracle (1)",
             "id": 741000100,
             "access_rule": {
-              "type": "helper",
-              "name": "can_reach_orbs",
-              "args": [
-                1530
-              ]
+              "type": "item_check",
+              "item": "Reachable Orbs",
+              "count": 1530
             },
             "item": {
               "name": "Green Eco Pill",
@@ -5970,15 +5942,13 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_orbs",
-                  "args": [
-                    1530
-                  ]
-                },
-                {
                   "type": "location_check",
                   "location": "VC: Bring 120 Orbs To The Oracle (1)"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Reachable Orbs",
+                  "count": 1530
                 }
               ]
             },
@@ -10154,6 +10124,215 @@
         "type": null,
         "max_count": 14,
         "classification": "filler"
+      },
+      "Tradeable Orbs": {
+        "name": "Tradeable Orbs",
+        "id": 0,
+        "groups": [
+          "Orb Tracking"
+        ],
+        "event": false,
+        "type": "computed",
+        "max_count": 9999,
+        "classification": "filler"
+      },
+      "Reachable Orbs": {
+        "name": "Reachable Orbs",
+        "id": 0,
+        "groups": [
+          "Orb Tracking"
+        ],
+        "event": false,
+        "type": "computed",
+        "max_count": 9999,
+        "classification": "filler"
+      },
+      "Reachable Orbs Fresh": {
+        "name": "Reachable Orbs Fresh",
+        "id": 0,
+        "groups": [
+          "Orb Tracking"
+        ],
+        "event": false,
+        "type": "computed",
+        "max_count": 9999,
+        "classification": "filler"
+      },
+      "Geyser Rock Reachable Orbs": {
+        "name": "Geyser Rock Reachable Orbs",
+        "id": 0,
+        "groups": [
+          "Orb Tracking"
+        ],
+        "event": false,
+        "type": "computed",
+        "max_count": 9999,
+        "classification": "filler"
+      },
+      "Sandover Village Reachable Orbs": {
+        "name": "Sandover Village Reachable Orbs",
+        "id": 0,
+        "groups": [
+          "Orb Tracking"
+        ],
+        "event": false,
+        "type": "computed",
+        "max_count": 9999,
+        "classification": "filler"
+      },
+      "Sentinel Beach Reachable Orbs": {
+        "name": "Sentinel Beach Reachable Orbs",
+        "id": 0,
+        "groups": [
+          "Orb Tracking"
+        ],
+        "event": false,
+        "type": "computed",
+        "max_count": 9999,
+        "classification": "filler"
+      },
+      "Forbidden Jungle Reachable Orbs": {
+        "name": "Forbidden Jungle Reachable Orbs",
+        "id": 0,
+        "groups": [
+          "Orb Tracking"
+        ],
+        "event": false,
+        "type": "computed",
+        "max_count": 9999,
+        "classification": "filler"
+      },
+      "Misty Island Reachable Orbs": {
+        "name": "Misty Island Reachable Orbs",
+        "id": 0,
+        "groups": [
+          "Orb Tracking"
+        ],
+        "event": false,
+        "type": "computed",
+        "max_count": 9999,
+        "classification": "filler"
+      },
+      "Fire Canyon Reachable Orbs": {
+        "name": "Fire Canyon Reachable Orbs",
+        "id": 0,
+        "groups": [
+          "Orb Tracking"
+        ],
+        "event": false,
+        "type": "computed",
+        "max_count": 9999,
+        "classification": "filler"
+      },
+      "Rock Village Reachable Orbs": {
+        "name": "Rock Village Reachable Orbs",
+        "id": 0,
+        "groups": [
+          "Orb Tracking"
+        ],
+        "event": false,
+        "type": "computed",
+        "max_count": 9999,
+        "classification": "filler"
+      },
+      "Lost Precursor City Reachable Orbs": {
+        "name": "Lost Precursor City Reachable Orbs",
+        "id": 0,
+        "groups": [
+          "Orb Tracking"
+        ],
+        "event": false,
+        "type": "computed",
+        "max_count": 9999,
+        "classification": "filler"
+      },
+      "Boggy Swamp Reachable Orbs": {
+        "name": "Boggy Swamp Reachable Orbs",
+        "id": 0,
+        "groups": [
+          "Orb Tracking"
+        ],
+        "event": false,
+        "type": "computed",
+        "max_count": 9999,
+        "classification": "filler"
+      },
+      "Precursor Basin Reachable Orbs": {
+        "name": "Precursor Basin Reachable Orbs",
+        "id": 0,
+        "groups": [
+          "Orb Tracking"
+        ],
+        "event": false,
+        "type": "computed",
+        "max_count": 9999,
+        "classification": "filler"
+      },
+      "Mountain Pass Reachable Orbs": {
+        "name": "Mountain Pass Reachable Orbs",
+        "id": 0,
+        "groups": [
+          "Orb Tracking"
+        ],
+        "event": false,
+        "type": "computed",
+        "max_count": 9999,
+        "classification": "filler"
+      },
+      "Volcanic Crater Reachable Orbs": {
+        "name": "Volcanic Crater Reachable Orbs",
+        "id": 0,
+        "groups": [
+          "Orb Tracking"
+        ],
+        "event": false,
+        "type": "computed",
+        "max_count": 9999,
+        "classification": "filler"
+      },
+      "Snowy Mountain Reachable Orbs": {
+        "name": "Snowy Mountain Reachable Orbs",
+        "id": 0,
+        "groups": [
+          "Orb Tracking"
+        ],
+        "event": false,
+        "type": "computed",
+        "max_count": 9999,
+        "classification": "filler"
+      },
+      "Spider Cave Reachable Orbs": {
+        "name": "Spider Cave Reachable Orbs",
+        "id": 0,
+        "groups": [
+          "Orb Tracking"
+        ],
+        "event": false,
+        "type": "computed",
+        "max_count": 9999,
+        "classification": "filler"
+      },
+      "Lava Tube Reachable Orbs": {
+        "name": "Lava Tube Reachable Orbs",
+        "id": 0,
+        "groups": [
+          "Orb Tracking"
+        ],
+        "event": false,
+        "type": "computed",
+        "max_count": 9999,
+        "classification": "filler"
+      },
+      "Gol and Maia's Citadel Reachable Orbs": {
+        "name": "Gol and Maia's Citadel Reachable Orbs",
+        "id": 0,
+        "groups": [
+          "Orb Tracking"
+        ],
+        "event": false,
+        "type": "computed",
+        "max_count": 9999,
+        "classification": "filler"
       }
     }
   },
@@ -10238,7 +10417,7 @@
     "1": {
       "game": "Jak and Daxter: The Precursor Legacy",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
+      "use_resolved_items": true,
       "options": {
         "accessibility": 0,
         "citizen_orb_trade_amount": 90,
@@ -10283,7 +10462,8 @@
           "Trip Trap": 1,
           "Zoomer Trap": 1
         }
-      }
+      },
+      "add_sphere_items_upfront": true
     }
   },
   "game_info": {
@@ -10337,6 +10517,35 @@
         },
         "jak_completion_condition": 112,
         "require_punch_for_klaww": 1
+      },
+      "accumulator_rules": [
+        {
+          "pattern": "^(\\d+) Precursor Orbs?$",
+          "extract_value": true,
+          "target": "Tradeable Orbs",
+          "discriminator": null
+        }
+      ],
+      "prog_items_init": {
+        "Tradeable Orbs": 0,
+        "Reachable Orbs": 0,
+        "Reachable Orbs Fresh": false,
+        "Geyser Rock Reachable Orbs": 0,
+        "Sandover Village Reachable Orbs": 0,
+        "Sentinel Beach Reachable Orbs": 0,
+        "Forbidden Jungle Reachable Orbs": 0,
+        "Misty Island Reachable Orbs": 0,
+        "Fire Canyon Reachable Orbs": 0,
+        "Rock Village Reachable Orbs": 0,
+        "Lost Precursor City Reachable Orbs": 0,
+        "Boggy Swamp Reachable Orbs": 0,
+        "Precursor Basin Reachable Orbs": 0,
+        "Mountain Pass Reachable Orbs": 0,
+        "Volcanic Crater Reachable Orbs": 0,
+        "Snowy Mountain Reachable Orbs": 0,
+        "Spider Cave Reachable Orbs": 0,
+        "Lava Tube Reachable Orbs": 0,
+        "Gol and Maia's Citadel Reachable Orbs": 0
       }
     }
   },
