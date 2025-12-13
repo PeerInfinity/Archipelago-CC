@@ -1358,6 +1358,33 @@ async function handleMessage(message) {
         }
         break;
 
+      case 'setProgItem':
+        if (!stateManagerInstance) {
+          log('error', '[stateManagerWorker] StateManager not initialized for setProgItem');
+          break;
+        }
+        try {
+          const { itemName, value, playerId } = message.payload;
+          const playerIdKey = playerId !== undefined ? String(playerId) : stateManagerInstance.playerId;
+
+          if (!stateManagerInstance.prog_items) {
+            stateManagerInstance.prog_items = {};
+          }
+          if (!stateManagerInstance.prog_items[playerIdKey]) {
+            stateManagerInstance.prog_items[playerIdKey] = {};
+          }
+
+          stateManagerInstance.prog_items[playerIdKey][itemName] = value;
+          log('debug', `[stateManagerWorker] Set prog_items["${playerIdKey}"]["${itemName}"] = ${value}`);
+
+          // Invalidate cache and send snapshot update
+          stateManagerInstance.invalidateCache();
+          stateManagerInstance._sendSnapshotUpdate();
+        } catch (e) {
+          log('error', '[stateManagerWorker] Error processing setProgItem:', e);
+        }
+        break;
+
       default:
         log(
           'warn',

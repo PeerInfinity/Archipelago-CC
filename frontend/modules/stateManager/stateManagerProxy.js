@@ -1517,6 +1517,23 @@ export class StateManagerProxy {
     );
   }
 
+  /**
+   * Sets a prog_item value directly.
+   * Used by spoiler tests to set accumulator values (e.g., RUPEES) from sphere log data.
+   *
+   * @param {string} itemName - Name of the prog_item (e.g., "RUPEES")
+   * @param {number} value - Value to set
+   * @param {number|string} playerId - Optional player ID (defaults to current player)
+   * @returns {Promise<void>}
+   */
+  async setProgItem(itemName, value, playerId = undefined) {
+    return this._sendCommand(
+      StateManagerProxy.COMMANDS.SET_PROG_ITEM,
+      { itemName, value, playerId },
+      false // No response expected, snapshot update provides confirmation
+    );
+  }
+
   async checkLocation(locationName, addItems = true, forceCheck = false) {
     return this._sendCommand(
       StateManagerProxy.COMMANDS.CHECK_LOCATION,
