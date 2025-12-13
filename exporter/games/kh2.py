@@ -33,14 +33,14 @@ class KH2GameExportHandler(BaseGameExportHandler):
         'get_form_level_requirement', # Has loops counting forms
 
         # Helpers with sum/loop patterns
-        'level_locking_unlock',       # Sum over visit_locking_dict list + setting check
+        # 'level_locking_unlock' - Now supported (setting check + sum_of)
         # 'summon_levels_unlocked' - Now supported via sum_of rule type
 
         # Utility functions with loops
-        'kh2_list_count_sum',         # List comprehension with sum
-        'kh2_list_any_sum',           # List comprehension with sum and has_any
-        'kh2_dict_count',             # Dict comprehension with all()
-        'kh2_dict_one_count',         # Dict comprehension with sum
+        # 'kh2_list_count_sum' - Now supported (sum over parameter list)
+        # 'kh2_list_any_sum' - Now supported (sum with if clause)
+        # 'kh2_dict_count' - Now supported (all_of with dict.items())
+        # 'kh2_dict_one_count' - Now supported (sum with if clause over dict.items())
         # 'kh2_has_all' - Now supported via self.player → player_id
         # 'kh2_has_any' - Now supported via self.player → player_id
 

@@ -26419,6 +26419,118 @@
           }
         }
       },
+      "kh2_dict_count": {
+        "params": [
+          "item_name_to_count"
+        ],
+        "body": {
+          "type": "all_of",
+          "element_rule": {
+            "type": "compare",
+            "left": {
+              "type": "state_method",
+              "method": "count",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "item_name"
+                }
+              ]
+            },
+            "op": ">=",
+            "right": {
+              "type": "name",
+              "name": "item_amount"
+            }
+          },
+          "iterator_info": {
+            "type": "comprehension_details",
+            "target": {
+              "type": "list",
+              "value": [
+                {
+                  "type": "name",
+                  "name": "item_name"
+                },
+                {
+                  "type": "name",
+                  "name": "item_amount"
+                }
+              ]
+            },
+            "iterator": {
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "item_name_to_count"
+                },
+                "attr": "items"
+              },
+              "args": []
+            }
+          }
+        }
+      },
+      "kh2_dict_one_count": {
+        "params": [
+          "item_name_to_count"
+        ],
+        "body": {
+          "type": "sum_of",
+          "element_rule": {
+            "type": "constant",
+            "value": 1
+          },
+          "iterator_info": {
+            "type": "comprehension_details",
+            "target": {
+              "type": "list",
+              "value": [
+                {
+                  "type": "name",
+                  "name": "item_name"
+                },
+                {
+                  "type": "name",
+                  "name": "item_amount"
+                }
+              ]
+            },
+            "iterator": {
+              "type": "function_call",
+              "function": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "item_name_to_count"
+                },
+                "attr": "items"
+              },
+              "args": []
+            },
+            "condition": {
+              "type": "compare",
+              "left": {
+                "type": "state_method",
+                "method": "count",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "item_name"
+                  }
+                ]
+              },
+              "op": ">=",
+              "right": {
+                "type": "name",
+                "name": "item_amount"
+              }
+            }
+          }
+        }
+      },
       "kh2_has_all": {
         "params": [
           "items"
@@ -26459,6 +26571,146 @@
               ]
             }
           ]
+        }
+      },
+      "kh2_list_any_sum": {
+        "params": [
+          "list_of_item_name_list"
+        ],
+        "body": {
+          "type": "sum_of",
+          "element_rule": {
+            "type": "constant",
+            "value": 1
+          },
+          "iterator_info": {
+            "type": "comprehension_details",
+            "target": {
+              "type": "name",
+              "name": "item_list"
+            },
+            "iterator": {
+              "type": "name",
+              "name": "list_of_item_name_list"
+            },
+            "condition": {
+              "type": "state_method",
+              "method": "has_any",
+              "args": [
+                {
+                  "type": "helper",
+                  "name": "set",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "item_list"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "kh2_list_count_sum": {
+        "params": [
+          "item_name_set"
+        ],
+        "body": {
+          "type": "sum_of",
+          "element_rule": {
+            "type": "state_method",
+            "method": "count",
+            "args": [
+              {
+                "type": "name",
+                "name": "item_name"
+              }
+            ]
+          },
+          "iterator_info": {
+            "type": "comprehension_details",
+            "target": {
+              "type": "name",
+              "name": "item_name"
+            },
+            "iterator": {
+              "type": "name",
+              "name": "item_name_set"
+            }
+          }
+        }
+      },
+      "level_locking_unlock": {
+        "params": [
+          "amount"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "setting_value",
+                "setting": "Promise_Charm"
+              },
+              {
+                "type": "item_check",
+                "item": "Promise Charm"
+              }
+            ]
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "compare",
+            "left": {
+              "type": "name",
+              "name": "amount"
+            },
+            "op": "<=",
+            "right": {
+              "type": "sum_of",
+              "element_rule": {
+                "type": "state_method",
+                "method": "count",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "item_name"
+                  }
+                ]
+              },
+              "iterator_info": {
+                "type": "comprehension_details",
+                "target": {
+                  "type": "name",
+                  "name": "item_name"
+                },
+                "iterator": {
+                  "type": "constant",
+                  "value": [
+                    "Disney Castle Key",
+                    "Battlefields of War",
+                    "Sword of the Ancestor",
+                    "Beast's Claw",
+                    "Bone Fist",
+                    "Proud Fang",
+                    "Skill and Crossbones",
+                    "Scimitar",
+                    "Membership Card",
+                    "Ice Cream",
+                    "Way to the Dawn",
+                    "Identity Disk",
+                    "Ice Cream",
+                    "Namine Sketches"
+                  ]
+                }
+              }
+            }
+          }
         }
       },
       "lod_unlocked": {

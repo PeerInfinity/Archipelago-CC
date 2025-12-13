@@ -2763,24 +2763,40 @@ class ASTVisitorMixin:
             return None
 
     def visit_comprehension(self, node: ast.comprehension):
-        """ Handle the 'for target in iter' part of comprehensions/generators. """
+        """ Handle the 'for target in iter [if condition]' part of comprehensions/generators. """
         try:
             logging.debug(f"\n--- visit_comprehension ---")
             target_result = self.visit(node.target)
             iter_result = self.visit(node.iter)
-            # Note: Ignoring ifs for now (e.g., for x in y if z)
 
             if target_result is None or iter_result is None:
                  logging.error(f"Failed to analyze target or iterator in comprehension")
                  return None
 
+            # Handle if conditions (e.g., for x in y if z)
+            conditions = []
+            if node.ifs:
+                for if_node in node.ifs:
+                    condition_result = self.visit(if_node)
+                    if condition_result is None:
+                        logging.error(f"Failed to analyze if condition in comprehension: {ast.dump(if_node)}")
+                        return None
+                    conditions.append(condition_result)
+                logging.debug(f"visit_comprehension: Found {len(conditions)} if condition(s)")
+
             # Return details needed to understand the iteration
-            return {
+            result = {
                 'type': 'comprehension_details',
                 'target': target_result,
                 'iterator': iter_result
-                # 'conditions': [self.visit(if_node) for if_node in node.ifs] # Future enhancement
             }
+            if conditions:
+                # If there's a single condition, use it directly; otherwise combine with 'and'
+                if len(conditions) == 1:
+                    result['condition'] = conditions[0]
+                else:
+                    result['condition'] = {'type': 'and', 'conditions': conditions}
+            return result
         except Exception as e:
             logging.error("Error in visit_comprehension", e)
             return None

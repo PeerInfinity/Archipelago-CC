@@ -2474,6 +2474,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       case 'sum_of': {
         // sum_of evaluates an element_rule against items from an iterator and sums the results
         // This is used for patterns like: sum([state.count(item, player) for item in items])
+        // Also supports conditional comprehensions: sum([1 for item in items if condition])
         if (!rule.element_rule) {
           log('warn', '[evaluateRule] sum_of rule missing element_rule', { rule });
           result = undefined;
@@ -2504,11 +2505,27 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
 
+        // Check if there's a condition (if clause in comprehension)
+        const hasCondition = rule.iterator_info && rule.iterator_info.condition;
+
         result = 0;
         let sumHasUndefined = false;
         for (const item of iterable) {
           // Create a new context with the iterator variable bound
           const boundContext = createBoundContext(context, rule.iterator_info, item);
+
+          // If there's a condition, evaluate it first
+          if (hasCondition) {
+            const conditionResult = evaluateRule(rule.iterator_info.condition, boundContext, depth + 1);
+            if (conditionResult === undefined) {
+              sumHasUndefined = true;
+              continue;
+            }
+            // Skip this item if condition is false
+            if (!conditionResult) {
+              continue;
+            }
+          }
 
           const itemResult = evaluateRule(rule.element_rule, boundContext, depth + 1);
           if (itemResult === undefined) {
