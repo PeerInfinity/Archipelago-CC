@@ -4,9 +4,7 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-[View Original Template Results](./test-results-multiclient.md)
-
-**Generated:** 2025-12-13 11:07:21
+**Generated:** 2025-12-13 19:21:57
 
 ## Summary
 
