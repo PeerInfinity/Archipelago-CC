@@ -534,6 +534,7 @@ export function countItem(sm, itemName) {
  * DATA FLOW:
  *   Input: groupName
  *   Processing: Iterate itemData, check groups array, sum inventory counts
+ *              Also check game_info.relic_groups for group definitions
  *   Output: Total count of all items in group
  *
  * @param {Object} sm - StateManager instance
@@ -543,6 +544,35 @@ export function countItem(sm, itemName) {
 export function countGroup(sm, groupName) {
   // In canonical format, inventory is a plain object, so we need to manually count group items
   let count = 0;
+
+  // First check game_info for group definitions (e.g., relic_groups in A Hat in Time)
+  // These are defined as {groupName: [itemNames...]}
+  const gameInfo = sm.gameInfo?.[sm.playerId];
+  if (gameInfo?.relic_groups?.[groupName]) {
+    const itemsInGroup = gameInfo.relic_groups[groupName];
+    if (Array.isArray(itemsInGroup)) {
+      for (const itemName of itemsInGroup) {
+        const itemCount = sm.inventory[itemName] || 0;
+        count += itemCount;
+      }
+      return count;
+    }
+  }
+
+  // Also check item_groups for explicit group definitions
+  const itemGroups = sm.itemGroups?.[sm.playerId] || sm.itemGroups;
+  if (itemGroups?.[groupName]) {
+    const itemsInGroup = itemGroups[groupName];
+    if (Array.isArray(itemsInGroup)) {
+      for (const itemName of itemsInGroup) {
+        const itemCount = sm.inventory[itemName] || 0;
+        count += itemCount;
+      }
+      return count;
+    }
+  }
+
+  // Fall back to checking itemData.groups array format
   if (sm.itemData) {
     for (const itemName in sm.itemData) {
       const itemInfo = sm.itemData[itemName];
@@ -684,6 +714,44 @@ export function has_group_unique(sm, groupName, count = 1) {
 
   // Count unique items from the group (items with count > 0)
   let uniqueItemsFound = 0;
+
+  // First check game_info for group definitions (e.g., relic_groups in A Hat in Time)
+  const gameInfo = sm.gameInfo?.[sm.playerId];
+  if (gameInfo?.relic_groups?.[groupName]) {
+    const itemsInGroup = gameInfo.relic_groups[groupName];
+    if (Array.isArray(itemsInGroup)) {
+      for (const itemName of itemsInGroup) {
+        const itemCount = sm.inventory[itemName] || 0;
+        if (itemCount > 0) {
+          uniqueItemsFound++;
+          if (uniqueItemsFound >= count) {
+            return true;
+          }
+        }
+      }
+      return uniqueItemsFound >= count;
+    }
+  }
+
+  // Also check item_groups for explicit group definitions
+  const itemGroups = sm.itemGroups?.[sm.playerId] || sm.itemGroups;
+  if (itemGroups?.[groupName]) {
+    const itemsInGroup = itemGroups[groupName];
+    if (Array.isArray(itemsInGroup)) {
+      for (const itemName of itemsInGroup) {
+        const itemCount = sm.inventory[itemName] || 0;
+        if (itemCount > 0) {
+          uniqueItemsFound++;
+          if (uniqueItemsFound >= count) {
+            return true;
+          }
+        }
+      }
+      return uniqueItemsFound >= count;
+    }
+  }
+
+  // Fall back to checking itemData.groups array format
   if (sm.itemData) {
     for (const itemName in sm.itemData) {
       const itemInfo = sm.itemData[itemName];

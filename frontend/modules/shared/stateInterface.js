@@ -342,16 +342,81 @@ export function createStateSnapshotInterface(
         case 'player':
           return snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
         case 'world':
-          // Return an object with player and options properties
+          // Return an object with player, options, and game-specific properties
+          // This matches the Python world object structure used in helper definitions
           const playerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
           // The settings structure may have game options nested under settings[playerId].options
           // (for games like Shivers with options like early_beth) or directly on settings[playerId]
           const playerSettings = staticData?.settings?.[playerId];
           const gameOptions = playerSettings?.options || playerSettings || staticData?.settings || {};
-          return {
+
+          // Get game-specific info from game_info (e.g., AHIT hat_yarn_costs, hat_craft_order)
+          const gameInfo = staticData?.game_info?.[playerId] || {};
+
+          // Build the world object with both options and game-specific properties
+          const worldObj = {
             player: playerId,
-            options: gameOptions
+            options: gameOptions,
+            // Include multiworld reference for helpers that need it
+            multiworld: {
+              get_entrance: (entranceName) => {
+                // Find entrance in regions and return it with connected_region
+                if (staticData?.regions) {
+                  for (const [regionName, regionData] of staticData.regions.entries()) {
+                    const exits = regionData.exits || [];
+                    const exit = exits.find(e => e.name === entranceName);
+                    if (exit) {
+                      return {
+                        name: exit.name,
+                        connected_region: {
+                          name: exit.connected_region
+                        }
+                      };
+                    }
+                  }
+                }
+                return null;
+              },
+              get_location: (locationName) => {
+                // Return location with access_rule method
+                if (staticData?.locations) {
+                  const loc = staticData.locations.get(locationName);
+                  if (loc) {
+                    return {
+                      ...loc,
+                      access_rule: () => {
+                        // Evaluate access rule through evaluateRule
+                        if (!loc.access_rule) return true;
+                        return evaluateRule(loc.access_rule, rawInterfaceForHelpers);
+                      }
+                    };
+                  }
+                }
+                return null;
+              }
+            },
+            // Include item_name_groups for helpers like has_relic_combo
+            // Combines standard item_groups with game-specific groups (e.g., AHIT relic_groups)
+            item_name_groups: {
+              ...(staticData?.item_groups?.[playerId] || staticData?.item_groups || {}),
+              ...(gameInfo.relic_groups || {})
+            }
           };
+
+          // Merge in game-specific properties from game_info
+          // For AHIT: hat_yarn_costs, hat_craft_order come from hat_info
+          if (gameInfo.hat_info) {
+            worldObj.hat_yarn_costs = gameInfo.hat_info.hat_yarn_costs || {};
+            worldObj.hat_craft_order = gameInfo.hat_info.hat_craft_order || [];
+          }
+
+          // For other game-specific properties, spread them onto world
+          // This allows helper definitions to access world.* properties as exported
+          if (gameInfo.variables) {
+            Object.assign(worldObj, gameInfo.variables);
+          }
+
+          return worldObj;
         case 'logic':
         case 'StateLogic':
           // Return game-specific helper functions as an object
@@ -410,6 +475,22 @@ export function createStateSnapshotInterface(
           const gameLogic = getGameLogic(gameName);
           if (gameLogic.constants && gameLogic.constants[name]) {
             return gameLogic.constants[name];
+          }
+
+          // Built-in game constants for games that export helper definitions to rules.json
+          // These map Python module-level constants to JavaScript equivalents
+          const builtInGameConstants = {
+            // A Hat in Time: maps hat enum values to item names
+            'hat_type_to_item': {
+              0: 'Sprint Hat',
+              1: 'Brewing Hat',
+              2: 'Ice Hat',
+              3: 'Dweller Mask',
+              4: 'Time Stop Hat'
+            }
+          };
+          if (builtInGameConstants[name]) {
+            return builtInGameConstants[name];
           }
 
           // Check if there's a helper function that computes this value
@@ -506,7 +587,19 @@ export function createStateSnapshotInterface(
       let count = 0;
       const playerId = snapshot?.player?.id || snapshot?.player?.slot || DEFAULT_PLAYER_ID;
 
-      // First check if we have item_groups (ALTTP-style with group names as array)
+      // First check game_info for group definitions (e.g., relic_groups in A Hat in Time)
+      const gameInfo = staticData?.game_info?.[playerId] || {};
+      if (gameInfo.relic_groups?.[groupName]) {
+        const itemsInGroup = gameInfo.relic_groups[groupName];
+        if (Array.isArray(itemsInGroup)) {
+          for (const itemName of itemsInGroup) {
+            count += snapshot.inventory[itemName] || 0;
+          }
+          return count;
+        }
+      }
+
+      // Then check if we have item_groups (ALTTP-style with group names as array)
       const playerItemGroups = staticData?.item_groups?.[playerId] || staticData?.item_groups;
 
       if (Array.isArray(playerItemGroups)) {
@@ -1055,16 +1148,9 @@ export function createStateSnapshotInterface(
     resolveName: rawInterfaceForHelpers.resolveName,
   };
 
-  // Add helper functions as direct properties for compatibility with spoiler tests
-  const selectedHelpers = getHelperFunctions(gameName);
-
-  if (selectedHelpers && selectedHelpers !== genericLogic) {
-    for (const [helperName, helperFunction] of Object.entries(selectedHelpers)) {
-      finalSnapshotInterface[helperName] = (...args) => {
-        return helperFunction(snapshot, staticData, ...args);
-      };
-    }
-  }
+  // Helper functions are now evaluated from rules.json helper definitions
+  // via evaluateRule() in ruleEngine.js, not as direct properties on the interface.
+  // The executeHelper() method remains as a fallback for games that still need JS helpers.
 
   return finalSnapshotInterface;
 }

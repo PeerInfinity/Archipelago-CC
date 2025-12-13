@@ -115,9 +115,13 @@ export class AnalysisReporter {
       .map(([region]) => region);
     this.logCallback('info', `  Reachable regions (${reachableRegions.length}): ${reachableRegions.slice(0, 10).join(', ')}${reachableRegions.length > 10 ? '...' : ''}`);
 
-    // Log available functions in snapshotInterface
-    const availableFunctions = Object.keys(snapshotInterface).filter(k => typeof snapshotInterface[k] === 'function');
-    this.logCallback('info', `  Available helper functions: ${availableFunctions.join(', ')}`);
+    // Log available interface methods (helpers are now evaluated from rules.json definitions)
+    const interfaceMethods = Object.keys(snapshotInterface).filter(k => typeof snapshotInterface[k] === 'function');
+    this.logCallback('info', `  Interface methods: ${interfaceMethods.join(', ')}`);
+
+    // Check if helper definitions are available in rules.json
+    const helpersAvailable = staticData?.helpers ? Object.keys(staticData.helpers).length > 0 : false;
+    this.logCallback('info', `  Helper definitions in rules.json: ${helpersAvailable ? 'yes' : 'no'}`);
 
     this.logCallback('info', ''); // Separator
 
