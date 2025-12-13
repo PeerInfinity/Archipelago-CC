@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2025-12-13 22:27:08
+**Generated:** 2025-12-13 23:07:25
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -10,8 +10,8 @@ This chart shows processing times for each test phase. Times are in seconds. For
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
-| Total | 362.4s | 891.5s | 1917.7s | 1705.2s |
-| Average | 5.0s | 12.2s | 26.3s | 23.4s |
+| Total | 366.3s | 894.4s | 1917.7s | 1705.2s |
+| Average | 5.0s | 12.3s | 26.3s | 23.4s |
 | Max | 28.5s | 77.8s | 286.8s | 163.6s |
 | Min | 3.1s | 5.5s | 5.6s | 12.2s |
 
@@ -81,7 +81,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 | Stardew Valley | 5.9s | 77.8s | 102.8s | 68.3s |
 | Subnautica | 28.5s | 14.7s | 19.8s | 17.3s |
 | Super Mario 64 | 3.2s | 12.6s | 14.7s | 17.7s |
-| Super Mario Land 2 | 4.0s | 8.7s | 10.8s | 15.8s |
+| Super Mario Land 2 | 8.0s | 11.6s | 10.8s | 15.8s |
 | Super Mario World | 4.5s | 6.7s | 11.7s | 14.8s |
 | Super Metroid | 11.8s | 10.7s | 15.8s | 17.3s |
 | TOEM original | 3.5s | 9.8s | 15.6s | 13.5s |
