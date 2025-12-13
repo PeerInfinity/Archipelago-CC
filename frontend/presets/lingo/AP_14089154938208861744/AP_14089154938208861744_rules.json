@@ -27752,6 +27752,364 @@
             }
           ]
         }
+      },
+      "_lingo_can_satisfy_requirements": {
+        "params": [
+          "access"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "for_iter",
+              "var": "req_room",
+              "iterable": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "access"
+                },
+                "attr": "rooms"
+              },
+              "body": [
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "not",
+                    "condition": {
+                      "type": "state_method",
+                      "method": "can_reach",
+                      "args": [
+                        {
+                          "type": "name",
+                          "name": "req_room"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Region"
+                        }
+                      ]
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "return",
+                      "value": {
+                        "type": "constant",
+                        "value": false
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "for_iter",
+              "var": "req_door",
+              "iterable": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "access"
+                },
+                "attr": "doors"
+              },
+              "body": [
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "not",
+                    "condition": {
+                      "type": "helper",
+                      "name": "_lingo_can_open_door",
+                      "args": [
+                        {
+                          "type": "attribute",
+                          "object": {
+                            "type": "name",
+                            "name": "req_door"
+                          },
+                          "attr": "room"
+                        },
+                        {
+                          "type": "attribute",
+                          "object": {
+                            "type": "name",
+                            "name": "req_door"
+                          },
+                          "attr": "door"
+                        }
+                      ]
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "return",
+                      "value": {
+                        "type": "constant",
+                        "value": false
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "compare",
+                    "left": {
+                      "type": "helper",
+                      "name": "len",
+                      "args": [
+                        {
+                          "type": "attribute",
+                          "object": {
+                            "type": "name",
+                            "name": "access"
+                          },
+                          "attr": "colors"
+                        }
+                      ]
+                    },
+                    "op": ">",
+                    "right": {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  },
+                  {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "settings"
+                    },
+                    "attr": "shuffle_colors"
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "for_iter",
+                  "var": "color",
+                  "iterable": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "access"
+                    },
+                    "attr": "colors"
+                  },
+                  "body": [
+                    {
+                      "type": "if_statement",
+                      "test": {
+                        "type": "not",
+                        "condition": {
+                          "type": "item_check",
+                          "item": {
+                            "type": "function_call",
+                            "function": {
+                              "type": "attribute",
+                              "object": {
+                                "type": "name",
+                                "name": "color"
+                              },
+                              "attr": "capitalize"
+                            },
+                            "args": []
+                          }
+                        }
+                      },
+                      "body": [
+                        {
+                          "type": "return",
+                          "value": {
+                            "type": "constant",
+                            "value": false
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "not",
+                "condition": {
+                  "type": "all_of",
+                  "element_rule": {
+                    "type": "item_check",
+                    "item": {
+                      "type": "name",
+                      "name": "item"
+                    }
+                  },
+                  "iterator_info": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "name",
+                      "name": "item"
+                    },
+                    "iterator": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "access"
+                      },
+                      "attr": "items"
+                    }
+                  }
+                }
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": false
+                  }
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "not",
+                "condition": {
+                  "type": "all_of",
+                  "element_rule": {
+                    "type": "item_check",
+                    "item": {
+                      "type": "name",
+                      "name": "item"
+                    },
+                    "count": {
+                      "type": "name",
+                      "name": "index"
+                    }
+                  },
+                  "iterator_info": {
+                    "type": "comprehension_details",
+                    "target": {
+                      "type": "list",
+                      "value": [
+                        {
+                          "type": "name",
+                          "name": "item"
+                        },
+                        {
+                          "type": "name",
+                          "name": "index"
+                        }
+                      ]
+                    },
+                    "iterator": {
+                      "type": "function_call",
+                      "function": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "attribute",
+                          "object": {
+                            "type": "name",
+                            "name": "access"
+                          },
+                          "attr": "progression"
+                        },
+                        "attr": "items"
+                      },
+                      "args": []
+                    }
+                  }
+                }
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": false
+                  }
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "access"
+                    },
+                    "attr": "the_master"
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "helper",
+                      "name": "lingo_can_use_mastery_location",
+                      "args": []
+                    }
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": false
+                  }
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "access"
+                    },
+                    "attr": "postgame"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Prevent Victory"
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": false
+                  }
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "constant",
+                "value": true
+              }
+            }
+          ]
+        }
       }
     }
   }
