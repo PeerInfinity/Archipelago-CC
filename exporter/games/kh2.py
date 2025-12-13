@@ -17,8 +17,8 @@ class KH2GameExportHandler(BaseGameExportHandler):
     # Module paths containing helper functions
     HELPER_MODULES = ['worlds.kh2.Rules']
 
-    # Module paths containing item name constants
-    ITEM_NAME_MODULES = ['worlds.kh2.Names']
+    # Module paths containing item name constants and other resolvable variables
+    ITEM_NAME_MODULES = ['worlds.kh2.Names', 'worlds.kh2.Logic', 'worlds.kh2.Items']
 
     # Mapping of self.<attr> to setting names for the analyzer
     # This enables conversion of patterns like self.fight_logic to setting_value rules
@@ -33,14 +33,14 @@ class KH2GameExportHandler(BaseGameExportHandler):
         'get_form_level_requirement', # Has loops counting forms
 
         # Helpers with sum/loop patterns
-        'level_locking_unlock',       # Sum over visit_locking_dict list
-        'summon_levels_unlocked',     # Sum over summons list
+        # 'level_locking_unlock' - Now supported (setting check + sum_of)
+        # 'summon_levels_unlocked' - Now supported via sum_of rule type
 
         # Utility functions with loops
-        'kh2_list_count_sum',         # List comprehension with sum
-        'kh2_list_any_sum',           # List comprehension with sum and has_any
-        'kh2_dict_count',             # Dict comprehension with all()
-        'kh2_dict_one_count',         # Dict comprehension with sum
+        # 'kh2_list_count_sum' - Now supported (sum over parameter list)
+        # 'kh2_list_any_sum' - Now supported (sum with if clause)
+        # 'kh2_dict_count' - Now supported (all_of with dict.items())
+        # 'kh2_dict_one_count' - Now supported (sum with if clause over dict.items())
         # 'kh2_has_all' - Now supported via self.player → player_id
         # 'kh2_has_any' - Now supported via self.player → player_id
 
@@ -52,26 +52,10 @@ class KH2GameExportHandler(BaseGameExportHandler):
         # Form region access
         'final_form_region_access',   # Uses any() over location.can_reach
 
-        # Fight rule helpers - all reference self.fight_logic and local dicts
-        'get_ansem_riku_rules', 'get_armored_xemnas_one_rules', 'get_armored_xemnas_two_rules',
-        'get_barbosa_rules', 'get_blizzard_lord_rules', 'get_cerberus_cup_rules',
-        'get_cerberus_rules', 'get_cor_first_fight_movement_rules', 'get_cor_first_fight_rules',
-        'get_cor_second_fight_movement_rules', 'get_cor_skip_first_rules', 'get_dark_thorn_rules',
-        'get_data_axel_rules', 'get_data_demyx_rules', 'get_data_larxene_rules',
-        'get_data_lexaeus_rules', 'get_data_luxord_rules', 'get_data_marluxia_rules',
-        'get_data_roxas_rules', 'get_data_saix_rules', 'get_data_vexen_rules',
-        'get_data_xaldin_rules', 'get_data_xemnas_rules', 'get_data_xigbar_rules',
-        'get_data_zexion_rules', 'get_demyx_rules', 'get_experiment_rules',
-        'get_final_xemnas_rules', 'get_fire_lord_rules', 'get_future_pete_rules',
-        'get_genie_jafar_rules', 'get_goddess_of_fate_cup_rules', 'get_grim_reaper2_rules',
-        'get_groundshaker_rules', 'get_hades_cup_rules', 'get_hades_rules',
-        'get_hostile_program_rules', 'get_hydra_rules', 'get_luxord_rules',
-        'get_mcp_rules', 'get_olympus_pete_rules', 'get_pain_and_panic_cup_rules',
-        'get_prison_keeper_rules', 'get_roxas_rules', 'get_saix_rules',
-        'get_scar_rules', 'get_sephiroth_rules', 'get_shan_yu_rules',
-        'get_storm_rider_rules', 'get_terra_rules', 'get_thousand_heartless_rules',
-        'get_thresholder_rules', 'get_titan_cup_rules', 'get_transport_fight_rules',
-        'get_transport_movement_rules', 'get_xaldin_rules', 'get_xemnas_rules', 'get_xigbar_rules',
+        # Fight rule helpers - now auto-exported via dict subscript with setting key
+        # These use patterns like: fight_rules_dict[self.fight_logic]
+        # The frontend evaluates the setting to get "easy"/"normal"/"hard" key,
+        # then evaluates the rule at that key.
 
         # Static methods that return True - now handled via helper_map expansion
         # 'get_axel_one_rules', 'get_axel_two_rules', 'get_twilight_thorn_rules',

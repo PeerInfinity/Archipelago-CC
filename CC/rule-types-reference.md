@@ -66,6 +66,7 @@ Both layers must support a rule type for it to work end-to-end.
 | `attribute` | Property access (obj.attr) | `object`, `attr` | `{"type": "attribute", "object": {...}, "attr": "name"}` |
 | `subscript` / `index` | Array/dict indexing | `value`/`object`, `index` | `{"type": "subscript", "value": {...}, "index": {...}}` |
 | `list` | Array literal | `value: []` | `{"type": "list", "value": [...]}` |
+| `set` | Set literal (unique values) | `elements: []` | `{"type": "set", "elements": [...]}` |
 | `tuple` | Fixed array | `elements: []` | `{"type": "tuple", "elements": [...]}` |
 | `world_reference` | Reference to world object | (none) | `{"type": "world_reference"}` |
 | `setting_value` | Get game setting value | `setting` | `{"type": "setting_value", "setting": "difficulty"}` |
@@ -126,7 +127,12 @@ Both layers must support a rule type for it to work end-to-end.
 |------|-------------|--------|---------|
 | `all_of` | Apply rule to all items (AND) | `element_rule`, `iterator_info` | All items in a list must satisfy condition |
 | `any_of` | Apply rule to any item (OR) | `element_rule`, `iterator_info` | At least one item must satisfy condition |
+| `sum_of` | Sum numeric results over items | `element_rule`, `iterator_info` | `sum([state.count(x) for x in items])` |
 | `generator_expression` | Python generator expression | `element`, `comprehension` | Complex iteration patterns |
+
+**Iterator info structure** (`iterator_info` field):
+- `target`: Variable binding - either `{type: "name", name: "x"}` for simple or `{type: "tuple", elements: [...]}` for unpacking
+- `iterator`: The collection to iterate over (e.g., name reference, list, dict.items() result)
 
 ### Imperative/Block Types
 
