@@ -6,27 +6,27 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-12 19:43:40
+**Generated:** 2025-12-13 07:30:29
 
 ## Summary
 
 - **Total Games:** 75
-- **Passed:** 75 (100.0%)
-- **Failed:** 0 (0.0%)
+- **Passed:** 74 (98.7%)
+- **Failed:** 1 (1.3%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 29/75 (38.7% of passed)
-- **Passing with Generic Logic:** 54/75 (72.0% of passed)
-- **Passing with Both Generic:** 29/75 (38.7% of passed)
+- **Passing with Generic Exporter:** 29/74 (39.2% of passed)
+- **Passing with Generic Logic:** 55/74 (74.3% of passed)
+- **Passing with Both Generic:** 29/74 (39.2% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | C1 Status | C1 Total | C1 Non-event | C1 Event | C2 Status | C2 Locations | Exporter | GameLogic |
 |-----------|-------------|------------|-----------|----------|--------------|----------|-----------|--------------|----------|----------|
-| A Hat in Time | ✅ Passed | 0 | ✅ | 232/232 | 223/223 | 9/9 | ✅ | 232/232 | 12.2KB | 10.3KB |
+| A Hat in Time | ✅ Passed | 0 | ✅ | 232/232 | 223/223 | 9/9 | ✅ | 232/232 | 12.2KB | ✅ |
 | A Link to the Past | ✅ Passed | 0 | ✅ | 268/268 | 249/249 | 19/19 | ✅ | 268/268 | 43.0KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | ✅ | 131/131 | 131/131 | 0/0 | ✅ | 131/131 | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | ✅ | 8/8 | 6/6 | 2/2 | ✅ | 8/8 | ✅ | ✅ |
@@ -53,9 +53,9 @@
 | Heretic | ✅ Passed | 0 | ✅ | 502/502 | 502/502 | 0/0 | ✅ | 502/502 | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | ✅ | 134/134 | 133/133 | 1/1 | ✅ | 134/134 | 1.0KB | ✅ |
 | Inscryption | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | 8.1KB | ✅ |
-| Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | ✅ | 239/239 | 239/239 | 0/0 | ✅ | 239/239 | 16.8KB | 4.6KB |
+| Jak and Daxter: The Precursor Legacy | ❌ Failed | 0 | ❌ | 214/239 | 214/239 | 0/0 | ❌ | 210/239 | 18.0KB | 4.6KB |
 | Kingdom Hearts | ✅ Passed | 0 | ✅ | 512/512 | 511/511 | 1/1 | ✅ | 512/512 | 58.5KB | 5.4KB |
-| Kingdom Hearts 2 | ✅ Passed | 0 | ✅ | 705/705 | 643/643 | 62/62 | ✅ | 705/705 | 15.5KB | 105.3KB |
+| Kingdom Hearts 2 | ✅ Passed | 0 | ✅ | 705/705 | 643/643 | 62/62 | ✅ | 705/705 | 33.1KB | 105.3KB |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | ✅ | 567/567 | 65/65 | 502/502 | ✅ | 567/567 | 9.7KB | 15.7KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | ✅ | 298/298 | 291/291 | 7/7 | ✅ | 298/298 | 16.4KB | ✅ |
 | Lingo | ✅ Passed | 0 | ✅ | 156/156 | 155/155 | 1/1 | ✅ | 156/156 | 33.0KB | 10.7KB |
@@ -63,7 +63,7 @@
 | Lufia II Ancient Cave | ✅ Passed | 0 | ✅ | 40/40 | 35/35 | 5/5 | ✅ | 40/40 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | ✅ | 557/557 | 556/556 | 1/1 | ✅ | 557/557 | 0.6KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | 0 | ✅ | 11/11 | 10/10 | 1/1 | ✅ | 11/11 | ✅ | ✅ |
-| Mega Man 2 | ✅ Passed | 0 | ✅ | 50/50 | 44/44 | 6/6 | ✅ | 50/50 | 0.6KB | 3.9KB |
+| Mega Man 2 | ✅ Passed | 0 | ✅ | 50/50 | 44/44 | 6/6 | ✅ | 50/50 | 0.6KB | 4.1KB |
 | MegaMan Battle Network 3 | ✅ Passed | 0 | ✅ | 264/264 | 263/263 | 1/1 | ✅ | 264/264 | 3.5KB | ✅ |
 | Meritous | ✅ Passed | 0 | ✅ | 109/109 | 104/104 | 5/5 | ✅ | 109/109 | ✅ | ✅ |
 | Metamath | ✅ Passed | 0 | ✅ | 9/9 | 9/9 | 0/0 | ✅ | 9/9 | ✅ | ✅ |

@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-12 19:43:40
+**Generated:** 2025-12-13 07:30:29
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -18,10 +18,10 @@ Additional test results:
 
 ### Individual Test Results
 
-- **Minimal Test:** 75/75 passed (100.0%)
-- **Full Test:** 75/75 passed (100.0%)
-- **Multiclient Test:** 75/75 passed (100.0%)
-- **Multiworld Test:** 73/75 passed (97.3%)
+- **Minimal Test:** 74/75 passed (98.7%)
+- **Full Test:** 74/75 passed (98.7%)
+- **Multiclient Test:** 74/75 passed (98.7%)
+- **Multiworld Test:** 72/75 passed (96.0%)
 
 ### Intermittent Failures
 
@@ -32,31 +32,31 @@ Additional test results:
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 73/75 (97.3%)
-- **Templates passing 3 tests:** 2/75 (2.7%)
-- **Templates passing 2 tests:** 0/75 (0.0%)
-- **Templates passing 1 test:** 0/75 (0.0%)
+- **Templates passing all 4 tests:** 72/75 (96.0%)
+- **Templates passing 3 tests:** 1/75 (1.3%)
+- **Templates passing 2 tests:** 1/75 (1.3%)
+- **Templates passing 1 test:** 1/75 (1.3%)
 - **Templates passing 0 tests:** 0/75 (0.0%)
 
 ### Generic Exporter/Logic Statistics
 
-Of the 73 templates passing all 4 tests:
+Of the 72 templates passing all 4 tests:
 
-- **Passing with Generic Exporter:** 29/73 (39.7%)
-- **Passing with Generic Logic:** 53/73 (72.6%)
-- **Passing with Both Generic:** 29/73 (39.7%)
+- **Passing with Generic Exporter:** 29/72 (40.3%)
+- **Passing with Generic Logic:** 53/72 (73.6%)
+- **Passing with Both Generic:** 29/72 (40.3%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 613.2KB
-- **Total Game Logic Code:** 752.5KB
-- **Combined Total:** 1365.7KB
+- **Total Exporter Code:** 632.0KB
+- **Total Game Logic Code:** 742.5KB
+- **Combined Total:** 1374.4KB
 
 ## Test Results
 
 | Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic |
 |-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|
-| A Hat in Time | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.2KB | 10.3KB |
+| A Hat in Time | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.2KB | ✅ |
 | A Link to the Past | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 43.0KB | ✅ |
 | A Short Hike | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | APQuest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
@@ -83,9 +83,9 @@ Of the 73 templates passing all 4 tests:
 | Heretic | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.0KB | ✅ |
 | Inscryption | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.1KB | ✅ |
-| Jak and Daxter: The Precursor Legacy | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 16.8KB | 4.6KB |
+| Jak and Daxter: The Precursor Legacy | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | 18.0KB | 4.6KB |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 58.5KB | 5.4KB |
-| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 15.5KB | 105.3KB |
+| Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 33.1KB | 105.3KB |
 | Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 9.7KB | 15.7KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 16.4KB | ✅ |
 | Lingo | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 33.0KB | 10.7KB |
@@ -93,7 +93,7 @@ Of the 73 templates passing all 4 tests:
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.6KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Mega Man 2 | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 0.6KB | 3.9KB |
+| Mega Man 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.6KB | 4.1KB |
 | MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.5KB | ✅ |
 | Meritous | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Metamath | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ |
@@ -120,7 +120,7 @@ Of the 73 templates passing all 4 tests:
 | TUNIC | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.5KB | ✅ |
 | Terraria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.3KB | 4.3KB |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.0KB | ✅ |
-| The Messenger | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 11.7KB | ✅ |
+| The Messenger | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | 11.7KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.8KB | 4.6KB |
 | The Witness | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 28.9KB | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.1KB | ✅ |
