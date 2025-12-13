@@ -360,7 +360,12 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
       if (sm.settings[playerIdKey] && typeof sm.settings[playerIdKey] === 'object') {
         settingsToUse = sm.settings[playerIdKey];
       }
-      const rawValue = settingsToUse[settingName];
+      let rawValue = settingsToUse[settingName];
+      // If not found at top level, check inside 'options' object
+      // Many settings like goal, difficulty, etc. are nested in options
+      if (rawValue === undefined && settingsToUse?.options) {
+        rawValue = settingsToUse.options[settingName];
+      }
       // Normalize "off"/"none" type strings to falsy values
       // Choice options in Python use 0 for "off"/"none" which get exported as strings
       if (typeof rawValue === 'string') {
