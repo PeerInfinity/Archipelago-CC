@@ -328,6 +328,15 @@ function createBoundContext(context, iterator_info, value) {
       });
     }
   }
+  // Handle list type (alternative format for tuple unpacking)
+  else if (target.type === 'list' && Array.isArray(target.value) && Array.isArray(value)) {
+    for (let i = 0; i < target.value.length && i < value.length; i++) {
+      const targetElem = target.value[i];
+      if (targetElem && targetElem.type === 'name' && targetElem.name) {
+        boundVariables[targetElem.name] = value[i];
+      }
+    }
+  }
   // Handle simple name binding
   else if (target.type === 'name' && target.name) {
     boundVariables[target.name] = value;
@@ -511,6 +520,24 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             result = undefined;
           } else {
             result = Math.max(...evalArgs);
+          }
+          break;
+        }
+
+        if (rule.name === 'set') {
+          // Python's set() converts an iterable to a set (deduplicates)
+          // For our purposes, just return the evaluated argument as an array with unique values
+          if (!rule.args || rule.args.length === 0) {
+            result = [];
+            break;
+          }
+          const setArg = evaluateRule(rule.args[0], context, depth + 1, localScope);
+          // If result is an array, deduplicate it (like Python set)
+          if (Array.isArray(setArg)) {
+            result = [...new Set(setArg)];
+          } else {
+            // If not an array, just return it as-is
+            result = setArg;
           }
           break;
         }
@@ -1476,6 +1503,34 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           }
         }
 
+        // Special handling for dict.items(), dict.keys(), dict.values() patterns
+        // Python dicts have these methods, JavaScript objects don't
+        if (
+          rule.function?.type === 'attribute' &&
+          ['items', 'keys', 'values'].includes(rule.function.attr) &&
+          rule.function.object
+        ) {
+          const obj = evaluateRule(rule.function.object, context, depth + 1, localScope);
+          if (obj && typeof obj === 'object' && !Array.isArray(obj) && !(obj instanceof Map)) {
+            // This is a plain object - handle Python dict methods
+            switch (rule.function.attr) {
+              case 'items':
+                // dict.items() returns list of [key, value] tuples
+                result = Object.entries(obj);
+                break;
+              case 'keys':
+                // dict.keys() returns list of keys
+                result = Object.keys(obj);
+                break;
+              case 'values':
+                // dict.values() returns list of values
+                result = Object.values(obj);
+                break;
+            }
+            break;
+          }
+        }
+
         const func = evaluateRule(rule.function, context, depth + 1, localScope);
 
         if (typeof func === 'undefined') {
@@ -2354,6 +2409,53 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'sum': {
+        // Sum the values in an iterable
+        // Rule structure: { type: 'sum', iterable: <rule>, start?: <rule> }
+        if (!rule.iterable) {
+          log('warn', '[evaluateRule] sum rule has no iterable', { rule });
+          result = 0;
+          break;
+        }
+        const sumIterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
+        const startValue = rule.start !== undefined
+          ? evaluateRule(rule.start, context, depth + 1, localScope)
+          : 0;
+
+        if (sumIterable === undefined) {
+          result = undefined;
+          break;
+        }
+        if (startValue === undefined) {
+          result = undefined;
+          break;
+        }
+        if (Array.isArray(sumIterable)) {
+          // Check if any element is undefined
+          if (sumIterable.some((v) => v === undefined)) {
+            result = undefined;
+            break;
+          }
+          // Sum all numeric values
+          result = sumIterable.reduce((acc, val) => {
+            if (typeof val === 'number') {
+              return acc + val;
+            } else if (typeof val === 'boolean') {
+              // Python sum() treats True as 1, False as 0
+              return acc + (val ? 1 : 0);
+            }
+            return acc;
+          }, startValue);
+        } else if (typeof sumIterable === 'number') {
+          // Single number - just return it plus start
+          result = sumIterable + startValue;
+        } else {
+          log('warn', '[evaluateRule] sum iterable is not an array or number', { sumIterable, rule });
+          result = undefined;
+        }
+        break;
+      }
+
       case 'list': {
         if (!Array.isArray(rule.value)) {
           log(
@@ -2408,13 +2510,14 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         // Extract iterator information
+        // NOTE: Pass localScope so that helper parameters can be resolved
         let iterable;
         if (rule.iterator_info && rule.iterator_info.iterator) {
           // Get the iterator from the iterator_info
-          iterable = evaluateRule(rule.iterator_info.iterator, context, depth + 1);
+          iterable = evaluateRule(rule.iterator_info.iterator, context, depth + 1, localScope);
         } else if (rule.iterable) {
           // Fallback for direct iterable field
-          iterable = evaluateRule(rule.iterable, context, depth + 1);
+          iterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
         } else {
           log('warn', '[evaluateRule] all_of rule missing iterator information', { rule });
           result = undefined;
@@ -2578,17 +2681,61 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
       case 'generator_expression': {
         // generator_expression represents a Python generator expression
-        // It has an element and potentially filters/conditions
+        // It has an element, a comprehension target/iterator, and optional conditions
+        // Example: (1 for item_list in list_of_items if condition)
         if (!rule.element) {
           log('warn', '[evaluateRule] generator_expression rule missing element', { rule });
           result = undefined;
           break;
         }
-        
-        // For now, evaluate the element directly
-        // This is a simplified implementation - real generator expressions would need
-        // proper iteration and filtering support
-        result = evaluateRule(rule.element, context, depth + 1);
+
+        // Check if we have comprehension details for proper iteration
+        if (rule.comprehension && rule.comprehension.iterator) {
+          const comp = rule.comprehension;
+          const targetName = comp.target?.name;
+          const iteratorRule = comp.iterator;
+          const conditions = comp.conditions || [];
+
+          // Evaluate the iterator (should be an array from localScope or context)
+          const iteratorValue = evaluateRule(iteratorRule, context, depth + 1, localScope);
+
+          if (!Array.isArray(iteratorValue)) {
+            log('debug', '[evaluateRule] generator_expression iterator is not an array', { iteratorValue, rule });
+            result = [];
+            break;
+          }
+
+          // Build result array by iterating and filtering
+          const generatedValues = [];
+          for (const item of iteratorValue) {
+            // Create new localScope with the target variable bound
+            const iterationScope = localScope ? { ...localScope } : {};
+            if (targetName) {
+              iterationScope[targetName] = item;
+            }
+
+            // Check all conditions
+            let conditionsPassed = true;
+            for (const condRule of conditions) {
+              const condResult = evaluateRule(condRule, context, depth + 1, iterationScope);
+              if (condResult !== true) {
+                conditionsPassed = false;
+                break;
+              }
+            }
+
+            // If conditions pass, evaluate and yield the element
+            if (conditionsPassed) {
+              const elementValue = evaluateRule(rule.element, context, depth + 1, iterationScope);
+              generatedValues.push(elementValue);
+            }
+          }
+
+          result = generatedValues;
+        } else {
+          // Fallback: just evaluate the element directly (legacy behavior)
+          result = evaluateRule(rule.element, context, depth + 1, localScope);
+        }
         break;
       }
 
@@ -2998,6 +3145,49 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
         result = Math.max(...maxArgsBlock);
+        break;
+      }
+
+      case 'sum': {
+        // Sum the values in an iterable (block scope version)
+        // Rule structure: { type: 'sum', iterable: <rule>, start?: <rule> }
+        if (!rule.iterable) {
+          log('warn', '[evaluateRule] sum rule has no iterable', { rule });
+          result = 0;
+          break;
+        }
+        const sumIterableBlock = evaluateRule(rule.iterable, context, depth + 1, localScope);
+        const startValueBlock = rule.start !== undefined
+          ? evaluateRule(rule.start, context, depth + 1, localScope)
+          : 0;
+
+        if (sumIterableBlock === undefined) {
+          result = undefined;
+          break;
+        }
+        if (startValueBlock === undefined) {
+          result = undefined;
+          break;
+        }
+        if (Array.isArray(sumIterableBlock)) {
+          if (sumIterableBlock.some((v) => v === undefined)) {
+            result = undefined;
+            break;
+          }
+          result = sumIterableBlock.reduce((acc, val) => {
+            if (typeof val === 'number') {
+              return acc + val;
+            } else if (typeof val === 'boolean') {
+              return acc + (val ? 1 : 0);
+            }
+            return acc;
+          }, startValueBlock);
+        } else if (typeof sumIterableBlock === 'number') {
+          result = sumIterableBlock + startValueBlock;
+        } else {
+          log('warn', '[evaluateRule] sum iterable is not an array or number', { sumIterableBlock, rule });
+          result = undefined;
+        }
         break;
       }
 

@@ -1021,6 +1021,21 @@ class ASTVisitorMixin:
                 logging.debug(f"Created max result: {result}")
                 return result
 
+            # *** Special handling for sum() function ***
+            # sum() typically takes an iterable as its first argument
+            # sum([1, 2, 3]) or sum(generator_expr) or sum([...], start_value)
+            if func_name == 'sum' and len(filtered_args) >= 1:
+                logging.debug(f"Detected sum() function call with {len(filtered_args)} args")
+                result = {
+                    'type': 'sum',
+                    'iterable': filtered_args[0]
+                }
+                # Optional start value (second argument)
+                if len(filtered_args) >= 2:
+                    result['start'] = filtered_args[1]
+                logging.debug(f"Created sum result: {result}")
+                return result
+
             # Create helper result with filtered args (no state/player in JSON)
             result = {
                 'type': 'helper',
@@ -2560,7 +2575,11 @@ class ASTVisitorMixin:
             return None
 
     def visit_Set(self, node: ast.Set):
-        """ Handle set literals. """
+        """ Handle set literals like {item1, item2} or {single_item}.
+
+        Returns a 'set_literal' type that the rule engine can handle for
+        mutation operations like .add() and eventual use in has_any().
+        """
         try:
             logging.debug(f"\n--- visit_Set ---")
             elements = []
