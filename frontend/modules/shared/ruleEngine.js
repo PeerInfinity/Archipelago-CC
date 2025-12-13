@@ -308,19 +308,36 @@ function isBossDefeatCheck(rule, stateSnapshotInterface) {
  * @returns {object} - A new context with the variable binding
  */
 function createBoundContext(context, iterator_info, value) {
-  if (!iterator_info || !iterator_info.target || !iterator_info.target.name) {
+  if (!iterator_info || !iterator_info.target) {
     // No variable to bind, return original context
     return context;
   }
 
-  const varName = iterator_info.target.name;
-  const boundVariables = { [varName]: value };
+  const boundVariables = {};
+  const target = iterator_info.target;
+
+  // Handle tuple unpacking: target is a list of names
+  // e.g., {"type": "list", "value": [{"type": "name", "name": "item_name"}, {"type": "name", "name": "item_amount"}]}
+  if (target.type === 'list' && Array.isArray(target.value) && Array.isArray(value)) {
+    for (let i = 0; i < target.value.length && i < value.length; i++) {
+      const targetElem = target.value[i];
+      if (targetElem && targetElem.type === 'name' && targetElem.name) {
+        boundVariables[targetElem.name] = value[i];
+      }
+    }
+  } else if (target.name) {
+    // Simple case: single variable binding
+    boundVariables[target.name] = value;
+  } else {
+    // No recognizable binding pattern
+    return context;
+  }
 
   // Create a wrapper context that intercepts resolveName calls
   return {
     ...context,
     resolveName: function(name) {
-      // Check if this is the bound variable
+      // Check if this is a bound variable
       if (name in boundVariables) {
         return boundVariables[name];
       }
@@ -1436,6 +1453,34 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           }
         }
 
+        // Special handling for dict.items(), dict.keys(), dict.values() patterns
+        // Python dicts have these methods, JavaScript objects don't
+        if (
+          rule.function?.type === 'attribute' &&
+          ['items', 'keys', 'values'].includes(rule.function.attr) &&
+          rule.function.object
+        ) {
+          const obj = evaluateRule(rule.function.object, context, depth + 1, localScope);
+          if (obj && typeof obj === 'object' && !Array.isArray(obj) && !(obj instanceof Map)) {
+            // This is a plain object - handle Python dict methods
+            switch (rule.function.attr) {
+              case 'items':
+                // dict.items() returns list of [key, value] tuples
+                result = Object.entries(obj);
+                break;
+              case 'keys':
+                // dict.keys() returns list of keys
+                result = Object.keys(obj);
+                break;
+              case 'values':
+                // dict.values() returns list of values
+                result = Object.values(obj);
+                break;
+            }
+            break;
+          }
+        }
+
         const func = evaluateRule(rule.function, context, depth + 1, localScope);
 
         if (typeof func === 'undefined') {
@@ -2413,13 +2458,14 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         // Extract iterator information
+        // NOTE: Pass localScope so that helper parameters can be resolved
         let iterable;
         if (rule.iterator_info && rule.iterator_info.iterator) {
           // Get the iterator from the iterator_info
-          iterable = evaluateRule(rule.iterator_info.iterator, context, depth + 1);
+          iterable = evaluateRule(rule.iterator_info.iterator, context, depth + 1, localScope);
         } else if (rule.iterable) {
           // Fallback for direct iterable field
-          iterable = evaluateRule(rule.iterable, context, depth + 1);
+          iterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
         } else {
           log('warn', '[evaluateRule] all_of rule missing iterator information', { rule });
           result = undefined;
@@ -2510,17 +2556,61 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
       case 'generator_expression': {
         // generator_expression represents a Python generator expression
-        // It has an element and potentially filters/conditions
+        // It has an element, a comprehension target/iterator, and optional conditions
+        // Example: (1 for item_list in list_of_items if condition)
         if (!rule.element) {
           log('warn', '[evaluateRule] generator_expression rule missing element', { rule });
           result = undefined;
           break;
         }
-        
-        // For now, evaluate the element directly
-        // This is a simplified implementation - real generator expressions would need
-        // proper iteration and filtering support
-        result = evaluateRule(rule.element, context, depth + 1);
+
+        // Check if we have comprehension details for proper iteration
+        if (rule.comprehension && rule.comprehension.iterator) {
+          const comp = rule.comprehension;
+          const targetName = comp.target?.name;
+          const iteratorRule = comp.iterator;
+          const conditions = comp.conditions || [];
+
+          // Evaluate the iterator (should be an array from localScope or context)
+          const iteratorValue = evaluateRule(iteratorRule, context, depth + 1, localScope);
+
+          if (!Array.isArray(iteratorValue)) {
+            log('debug', '[evaluateRule] generator_expression iterator is not an array', { iteratorValue, rule });
+            result = [];
+            break;
+          }
+
+          // Build result array by iterating and filtering
+          const generatedValues = [];
+          for (const item of iteratorValue) {
+            // Create new localScope with the target variable bound
+            const iterationScope = localScope ? { ...localScope } : {};
+            if (targetName) {
+              iterationScope[targetName] = item;
+            }
+
+            // Check all conditions
+            let conditionsPassed = true;
+            for (const condRule of conditions) {
+              const condResult = evaluateRule(condRule, context, depth + 1, iterationScope);
+              if (condResult !== true) {
+                conditionsPassed = false;
+                break;
+              }
+            }
+
+            // If conditions pass, evaluate and yield the element
+            if (conditionsPassed) {
+              const elementValue = evaluateRule(rule.element, context, depth + 1, iterationScope);
+              generatedValues.push(elementValue);
+            }
+          }
+
+          result = generatedValues;
+        } else {
+          // Fallback: just evaluate the element directly (legacy behavior)
+          result = evaluateRule(rule.element, context, depth + 1, localScope);
+        }
         break;
       }
 
