@@ -302,25 +302,60 @@ function isBossDefeatCheck(rule, stateSnapshotInterface) {
 
 /**
  * Creates a new context with bound iterator variables for all_of/any_of comprehensions.
+ * Supports both simple names and tuple unpacking (for dict.items() patterns).
  * @param {object} context - The original context
  * @param {object} iterator_info - Iterator information with target and iterator
  * @param {any} value - The value to bind to the iterator variable
  * @returns {object} - A new context with the variable binding
  */
 function createBoundContext(context, iterator_info, value) {
-  if (!iterator_info || !iterator_info.target || !iterator_info.target.name) {
+  if (!iterator_info || !iterator_info.target) {
     // No variable to bind, return original context
     return context;
   }
 
-  const varName = iterator_info.target.name;
-  const boundVariables = { [varName]: value };
+  const boundVariables = {};
+  const target = iterator_info.target;
+
+  // Handle tuple unpacking (e.g., for key, value in dict.items())
+  if (target.type === 'tuple' && target.elements && Array.isArray(target.elements)) {
+    // Value should be an array [key, value] for dict items
+    if (Array.isArray(value)) {
+      target.elements.forEach((element, index) => {
+        if (element.type === 'name' && element.name) {
+          boundVariables[element.name] = value[index];
+        }
+      });
+    }
+  }
+  // Handle list type (alternative format for tuple unpacking)
+  else if (target.type === 'list' && Array.isArray(target.value) && Array.isArray(value)) {
+    for (let i = 0; i < target.value.length && i < value.length; i++) {
+      const targetElem = target.value[i];
+      if (targetElem && targetElem.type === 'name' && targetElem.name) {
+        boundVariables[targetElem.name] = value[i];
+      }
+    }
+  }
+  // Handle simple name binding
+  else if (target.type === 'name' && target.name) {
+    boundVariables[target.name] = value;
+  }
+  // Fallback for direct name property (legacy format)
+  else if (target.name) {
+    boundVariables[target.name] = value;
+  }
+
+  // If no variables were bound, return original context
+  if (Object.keys(boundVariables).length === 0) {
+    return context;
+  }
 
   // Create a wrapper context that intercepts resolveName calls
   return {
     ...context,
     resolveName: function(name) {
-      // Check if this is the bound variable
+      // Check if this is one of the bound variables
       if (name in boundVariables) {
         return boundVariables[name];
       }
@@ -489,6 +524,24 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
 
+        if (rule.name === 'set') {
+          // Python's set() converts an iterable to a set (deduplicates)
+          // For our purposes, just return the evaluated argument as an array with unique values
+          if (!rule.args || rule.args.length === 0) {
+            result = [];
+            break;
+          }
+          const setArg = evaluateRule(rule.args[0], context, depth + 1, localScope);
+          // If result is an array, deduplicate it (like Python set)
+          if (Array.isArray(setArg)) {
+            result = [...new Set(setArg)];
+          } else {
+            // If not an array, just return it as-is
+            result = setArg;
+          }
+          break;
+        }
+
         // Handle can_buy and can_buy_unlimited using shop_items data
         // TODO: This is ALttP-specific logic that should be moved to a game-specific module.
         // Find a more generic solution (e.g., game-specific helper registry or exported helper definitions).
@@ -571,6 +624,38 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             result = Math.sqrt(value);
           } else {
             result = undefined;
+          }
+          break;
+        }
+
+        if (rule.name === 'len') {
+          // Python's len() function - get length of a sequence or collection
+          const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (Array.isArray(value)) {
+            result = value.length;
+          } else if (typeof value === 'string') {
+            result = value.length;
+          } else if (value && typeof value === 'object') {
+            // For objects (dict-like), return number of keys
+            result = Object.keys(value).length;
+          } else if (value === null || value === undefined) {
+            result = undefined;
+          } else {
+            log('warn', '[evaluateRule] len() called on non-sequence type', { value, rule });
+            result = undefined;
+          }
+          break;
+        }
+
+        if (rule.name === 'bool') {
+          // Python's bool() function - convert value to boolean
+          const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (value === undefined) {
+            result = undefined;
+          } else {
+            // Python bool() rules: false for 0, None, empty collections, empty string
+            // true for everything else
+            result = Boolean(value);
           }
           break;
         }
@@ -1418,6 +1503,34 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           }
         }
 
+        // Special handling for dict.items(), dict.keys(), dict.values() patterns
+        // Python dicts have these methods, JavaScript objects don't
+        if (
+          rule.function?.type === 'attribute' &&
+          ['items', 'keys', 'values'].includes(rule.function.attr) &&
+          rule.function.object
+        ) {
+          const obj = evaluateRule(rule.function.object, context, depth + 1, localScope);
+          if (obj && typeof obj === 'object' && !Array.isArray(obj) && !(obj instanceof Map)) {
+            // This is a plain object - handle Python dict methods
+            switch (rule.function.attr) {
+              case 'items':
+                // dict.items() returns list of [key, value] tuples
+                result = Object.entries(obj);
+                break;
+              case 'keys':
+                // dict.keys() returns list of keys
+                result = Object.keys(obj);
+                break;
+              case 'values':
+                // dict.values() returns list of values
+                result = Object.values(obj);
+                break;
+            }
+            break;
+          }
+        }
+
         const func = evaluateRule(rule.function, context, depth + 1, localScope);
 
         if (typeof func === 'undefined') {
@@ -1927,11 +2040,11 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'group_check': {
-        const groupName = evaluateRule(rule.group, context, depth + 1);
+        const groupName = evaluateRule(rule.group, context, depth + 1, localScope);
         // Default count to 1 if not specified
         const requiredCount =
           rule.count !== undefined
-            ? evaluateRule(rule.count, context, depth + 1)
+            ? evaluateRule(rule.count, context, depth + 1, localScope)
             : 1;
 
         if (groupName === undefined || requiredCount === undefined) {
@@ -1955,7 +2068,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
       case 'group_count': {
         // Returns the count of items in a group (unlike group_check which returns a boolean)
-        const groupName = evaluateRule(rule.group, context, depth + 1);
+        const groupName = evaluateRule(rule.group, context, depth + 1, localScope);
 
         if (groupName === undefined) {
           result = undefined;
@@ -2296,6 +2409,53 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'sum': {
+        // Sum the values in an iterable
+        // Rule structure: { type: 'sum', iterable: <rule>, start?: <rule> }
+        if (!rule.iterable) {
+          log('warn', '[evaluateRule] sum rule has no iterable', { rule });
+          result = 0;
+          break;
+        }
+        const sumIterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
+        const startValue = rule.start !== undefined
+          ? evaluateRule(rule.start, context, depth + 1, localScope)
+          : 0;
+
+        if (sumIterable === undefined) {
+          result = undefined;
+          break;
+        }
+        if (startValue === undefined) {
+          result = undefined;
+          break;
+        }
+        if (Array.isArray(sumIterable)) {
+          // Check if any element is undefined
+          if (sumIterable.some((v) => v === undefined)) {
+            result = undefined;
+            break;
+          }
+          // Sum all numeric values
+          result = sumIterable.reduce((acc, val) => {
+            if (typeof val === 'number') {
+              return acc + val;
+            } else if (typeof val === 'boolean') {
+              // Python sum() treats True as 1, False as 0
+              return acc + (val ? 1 : 0);
+            }
+            return acc;
+          }, startValue);
+        } else if (typeof sumIterable === 'number') {
+          // Single number - just return it plus start
+          result = sumIterable + startValue;
+        } else {
+          log('warn', '[evaluateRule] sum iterable is not an array or number', { sumIterable, rule });
+          result = undefined;
+        }
+        break;
+      }
+
       case 'list': {
         if (!Array.isArray(rule.value)) {
           log(
@@ -2317,6 +2477,30 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'set': {
+        // Set literal - evaluate elements and return as array (JS doesn't have set literals)
+        // The 'set' type indicates this came from a Python set, but for evaluation purposes
+        // it behaves like a list/array (used in has_any, iteration, etc.)
+        if (!Array.isArray(rule.elements)) {
+          log(
+            'warn',
+            '[evaluateRule] Set rule does not have an elements array:',
+            rule
+          );
+          result = undefined;
+          break;
+        }
+        const evaluatedSet = rule.elements.map((itemRule) =>
+          evaluateRule(itemRule, context, depth + 1)
+        );
+        // Remove duplicates (set semantics)
+        const uniqueSet = [...new Set(evaluatedSet)];
+        result = evaluatedSet.some((item) => item === undefined)
+          ? undefined
+          : uniqueSet;
+        break;
+      }
+
       case 'all_of': {
         // all_of evaluates an element_rule against all items from an iterator
         if (!rule.element_rule) {
@@ -2326,13 +2510,14 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         // Extract iterator information
+        // NOTE: Pass localScope so that helper parameters can be resolved
         let iterable;
         if (rule.iterator_info && rule.iterator_info.iterator) {
           // Get the iterator from the iterator_info
-          iterable = evaluateRule(rule.iterator_info.iterator, context, depth + 1);
+          iterable = evaluateRule(rule.iterator_info.iterator, context, depth + 1, localScope);
         } else if (rule.iterable) {
           // Fallback for direct iterable field
-          iterable = evaluateRule(rule.iterable, context, depth + 1);
+          iterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
         } else {
           log('warn', '[evaluateRule] all_of rule missing iterator information', { rule });
           result = undefined;
@@ -2421,19 +2606,136 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'sum_of': {
+        // sum_of evaluates an element_rule against items from an iterator and sums the results
+        // This is used for patterns like: sum([state.count(item, player) for item in items])
+        // Also supports conditional comprehensions: sum([1 for item in items if condition])
+        if (!rule.element_rule) {
+          log('warn', '[evaluateRule] sum_of rule missing element_rule', { rule });
+          result = undefined;
+          break;
+        }
+
+        // Extract iterator information
+        let iterable;
+        if (rule.iterator_info && rule.iterator_info.iterator) {
+          iterable = evaluateRule(rule.iterator_info.iterator, context, depth + 1, localScope);
+        } else if (rule.iterable) {
+          iterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
+        } else {
+          log('warn', '[evaluateRule] sum_of rule missing iterator information', { rule });
+          result = undefined;
+          break;
+        }
+
+        if (!Array.isArray(iterable)) {
+          log('warn', '[evaluateRule] sum_of iterator is not an array', { rule, iterable });
+          result = 0;
+          break;
+        }
+
+        // If the iterable is empty, sum_of should return 0
+        if (iterable.length === 0) {
+          result = 0;
+          break;
+        }
+
+        // Check if there's a condition (if clause in comprehension)
+        const hasCondition = rule.iterator_info && rule.iterator_info.condition;
+
+        result = 0;
+        let sumHasUndefined = false;
+        for (const item of iterable) {
+          // Create a new context with the iterator variable bound
+          const boundContext = createBoundContext(context, rule.iterator_info, item);
+
+          // If there's a condition, evaluate it first
+          if (hasCondition) {
+            const conditionResult = evaluateRule(rule.iterator_info.condition, boundContext, depth + 1);
+            if (conditionResult === undefined) {
+              sumHasUndefined = true;
+              continue;
+            }
+            // Skip this item if condition is false
+            if (!conditionResult) {
+              continue;
+            }
+          }
+
+          const itemResult = evaluateRule(rule.element_rule, boundContext, depth + 1);
+          if (itemResult === undefined) {
+            sumHasUndefined = true;
+          } else if (typeof itemResult === 'number') {
+            result += itemResult;
+          } else {
+            // Non-numeric result - treat as 0 or log warning
+            log('debug', '[evaluateRule] sum_of element returned non-numeric value', { item, itemResult });
+          }
+        }
+        // If any item returned undefined, result should be undefined
+        if (sumHasUndefined) {
+          result = undefined;
+        }
+        break;
+      }
+
       case 'generator_expression': {
         // generator_expression represents a Python generator expression
-        // It has an element and potentially filters/conditions
+        // It has an element, a comprehension target/iterator, and optional conditions
+        // Example: (1 for item_list in list_of_items if condition)
         if (!rule.element) {
           log('warn', '[evaluateRule] generator_expression rule missing element', { rule });
           result = undefined;
           break;
         }
-        
-        // For now, evaluate the element directly
-        // This is a simplified implementation - real generator expressions would need
-        // proper iteration and filtering support
-        result = evaluateRule(rule.element, context, depth + 1);
+
+        // Check if we have comprehension details for proper iteration
+        if (rule.comprehension && rule.comprehension.iterator) {
+          const comp = rule.comprehension;
+          const targetName = comp.target?.name;
+          const iteratorRule = comp.iterator;
+          const conditions = comp.conditions || [];
+
+          // Evaluate the iterator (should be an array from localScope or context)
+          const iteratorValue = evaluateRule(iteratorRule, context, depth + 1, localScope);
+
+          if (!Array.isArray(iteratorValue)) {
+            log('debug', '[evaluateRule] generator_expression iterator is not an array', { iteratorValue, rule });
+            result = [];
+            break;
+          }
+
+          // Build result array by iterating and filtering
+          const generatedValues = [];
+          for (const item of iteratorValue) {
+            // Create new localScope with the target variable bound
+            const iterationScope = localScope ? { ...localScope } : {};
+            if (targetName) {
+              iterationScope[targetName] = item;
+            }
+
+            // Check all conditions
+            let conditionsPassed = true;
+            for (const condRule of conditions) {
+              const condResult = evaluateRule(condRule, context, depth + 1, iterationScope);
+              if (condResult !== true) {
+                conditionsPassed = false;
+                break;
+              }
+            }
+
+            // If conditions pass, evaluate and yield the element
+            if (conditionsPassed) {
+              const elementValue = evaluateRule(rule.element, context, depth + 1, iterationScope);
+              generatedValues.push(elementValue);
+            }
+          }
+
+          result = generatedValues;
+        } else {
+          // Fallback: just evaluate the element directly (legacy behavior)
+          result = evaluateRule(rule.element, context, depth + 1, localScope);
+        }
         break;
       }
 
@@ -2846,6 +3148,49 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'sum': {
+        // Sum the values in an iterable (block scope version)
+        // Rule structure: { type: 'sum', iterable: <rule>, start?: <rule> }
+        if (!rule.iterable) {
+          log('warn', '[evaluateRule] sum rule has no iterable', { rule });
+          result = 0;
+          break;
+        }
+        const sumIterableBlock = evaluateRule(rule.iterable, context, depth + 1, localScope);
+        const startValueBlock = rule.start !== undefined
+          ? evaluateRule(rule.start, context, depth + 1, localScope)
+          : 0;
+
+        if (sumIterableBlock === undefined) {
+          result = undefined;
+          break;
+        }
+        if (startValueBlock === undefined) {
+          result = undefined;
+          break;
+        }
+        if (Array.isArray(sumIterableBlock)) {
+          if (sumIterableBlock.some((v) => v === undefined)) {
+            result = undefined;
+            break;
+          }
+          result = sumIterableBlock.reduce((acc, val) => {
+            if (typeof val === 'number') {
+              return acc + val;
+            } else if (typeof val === 'boolean') {
+              return acc + (val ? 1 : 0);
+            }
+            return acc;
+          }, startValueBlock);
+        } else if (typeof sumIterableBlock === 'number') {
+          result = sumIterableBlock + startValueBlock;
+        } else {
+          log('warn', '[evaluateRule] sum iterable is not an array or number', { sumIterableBlock, rule });
+          result = undefined;
+        }
+        break;
+      }
+
       case 'negate': {
         // Unary minus operation: -value
         // Generated by Python exporter for non-constant negation
@@ -3218,8 +3563,35 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
               log('warn', `[evaluateRule] Unknown string method: ${rule.method}`);
               result = undefined;
           }
+        } else if (typeof obj === 'object' && obj !== null && !Array.isArray(obj)) {
+          // Handle dict/object methods
+          switch (rule.method) {
+            case 'items':
+              // dict.items() - returns array of [key, value] pairs
+              result = Object.entries(obj);
+              break;
+            case 'keys':
+              // dict.keys() - returns array of keys
+              result = Object.keys(obj);
+              break;
+            case 'values':
+              // dict.values() - returns array of values
+              result = Object.values(obj);
+              break;
+            case 'get':
+              // dict.get(key, default) - get value with optional default
+              result = obj.hasOwnProperty(args[0]) ? obj[args[0]] : (args[1] !== undefined ? args[1] : null);
+              break;
+            case '__contains__':
+              // key in dict
+              result = Object.prototype.hasOwnProperty.call(obj, args[0]);
+              break;
+            default:
+              log('warn', `[evaluateRule] Unknown dict method: ${rule.method}`);
+              result = undefined;
+          }
         } else {
-          log('warn', `[evaluateRule] method_call on non-array/string: ${typeof obj}`);
+          log('warn', `[evaluateRule] method_call on unsupported type: ${typeof obj}`);
           result = undefined;
         }
         break;

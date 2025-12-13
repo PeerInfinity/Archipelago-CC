@@ -1120,12 +1120,14 @@ export class EventProcessor {
           // deltaCount is the number of this item added in this sphere
           if (deltaCount > 0) {
             this.logCallback('info', `  [Player ${this.playerId}] Adding ${deltaCount}x virtual/event item: "${itemName}" (from resolved_items)`);
-            for (let i = 0; i < deltaCount; i++) {
-              await stateManager.addItemToInventory(itemName, 1);
-            }
+            // Use quantity parameter instead of looping - more efficient and avoids race conditions
+            await stateManager.addItemToInventory(itemName, deltaCount);
           }
         }
       }
+      // After adding resolved_items, sync with the worker to ensure all items are processed
+      // getFullSnapshot waits for a response, forcing synchronization
+      await stateManager.getFullSnapshot();
     } else {
       // New logic (default): Skip resolved_items processing
       // For most games, resolved_items contains progressive item resolutions (e.g., "Titans Mitts")

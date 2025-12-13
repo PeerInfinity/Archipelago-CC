@@ -891,6 +891,98 @@ class ASTVisitorMixin:
                 return result
             # *** END any() HANDLING ***
 
+            # *** Special handling for sum(GeneratorExp) or sum(ListComp) ***
+            if func_name == 'sum' and len(filtered_args) >= 1:
+                first_arg = filtered_args[0]
+                # Handle both generator expressions and list types (which may contain expanded comprehension results)
+                if first_arg.get('type') == 'generator_expression':
+                    logging.debug(f"Detected sum(GeneratorExp) pattern.")
+                    gen_exp = first_arg
+
+                    # Try to resolve the iterator if it's a name reference
+                    iterator_info = gen_exp['comprehension']
+                    iterator_type = iterator_info.get('iterator', {}).get('type')
+
+                    # Try to expand the comprehension if we can resolve the iterator
+                    if iterator_type == 'name':
+                        iterator_name = iterator_info['iterator']['name']
+                        logging.debug(f"sum(GeneratorExp): Attempting to resolve iterator '{iterator_name}'")
+
+                        resolved_value = self.expression_resolver.resolve_variable(iterator_name)
+
+                        # Convert frozensets/sets/tuples to lists for uniform handling
+                        if resolved_value is not None:
+                            if isinstance(resolved_value, (frozenset, set, tuple)):
+                                resolved_value = list(resolved_value)
+                                logging.debug(f"sum(GeneratorExp): Converted {type(resolved_value).__name__} to list")
+
+                        if resolved_value is not None and isinstance(resolved_value, list):
+                            logging.debug(f"sum(GeneratorExp): Resolved '{iterator_name}' to list with {len(resolved_value)} items")
+
+                            # Handle simple values - expand the comprehension
+                            target_name = iterator_info.get('target', {}).get('name')
+                            if target_name:
+                                element_rule = gen_exp['element']
+                                expanded_elements = []
+
+                                for value in resolved_value:
+                                    # Substitute the target variable with the current value in the element rule
+                                    substituted_rule = self._substitute_variable_in_rule(element_rule, target_name, value)
+                                    if substituted_rule:
+                                        expanded_elements.append(substituted_rule)
+                                    else:
+                                        logging.warning(f"sum(GeneratorExp): Failed to substitute {target_name}={value} in element rule")
+                                        expanded_elements = None
+                                        break
+
+                                if expanded_elements is not None:
+                                    logging.debug(f"sum(GeneratorExp): Successfully expanded to {len(expanded_elements)} elements")
+                                    if len(expanded_elements) == 0:
+                                        # Empty iterator - sum() of empty is 0
+                                        return {'type': 'constant', 'value': 0}
+                                    elif len(expanded_elements) == 1:
+                                        return expanded_elements[0]
+                                    else:
+                                        # Build a nested binary_op tree for addition
+                                        result = expanded_elements[0]
+                                        for elem in expanded_elements[1:]:
+                                            result = {
+                                                'type': 'binary_op',
+                                                'left': result,
+                                                'op': '+',
+                                                'right': elem
+                                            }
+                                        return result
+
+                    # If we couldn't expand, create a sum_of rule for runtime evaluation
+                    element_rule = gen_exp['element']
+                    result = {
+                        'type': 'sum_of',
+                        'element_rule': element_rule,
+                        'iterator_info': iterator_info
+                    }
+                    logging.debug(f"Created 'sum_of' result: {result}")
+                    return result
+
+                # Handle sum() with a list argument (e.g., sum([1 for x in items if condition]))
+                elif first_arg.get('type') == 'list':
+                    list_elements = first_arg.get('value', [])
+                    if list_elements:
+                        logging.debug(f"Detected sum(list) with {len(list_elements)} elements")
+                        # Build a nested binary_op tree for addition
+                        result = list_elements[0]
+                        for elem in list_elements[1:]:
+                            result = {
+                                'type': 'binary_op',
+                                'left': result,
+                                'op': '+',
+                                'right': elem
+                            }
+                        return result
+                    else:
+                        return {'type': 'constant', 'value': 0}
+            # *** END sum() HANDLING ***
+
             # *** Special handling for zip() function ***
             if func_name == 'zip':
                 logging.debug(f"Detected zip() function call with {len(filtered_args)} args")
@@ -927,6 +1019,21 @@ class ASTVisitorMixin:
                     'args': filtered_args
                 }
                 logging.debug(f"Created max result: {result}")
+                return result
+
+            # *** Special handling for sum() function ***
+            # sum() typically takes an iterable as its first argument
+            # sum([1, 2, 3]) or sum(generator_expr) or sum([...], start_value)
+            if func_name == 'sum' and len(filtered_args) >= 1:
+                logging.debug(f"Detected sum() function call with {len(filtered_args)} args")
+                result = {
+                    'type': 'sum',
+                    'iterable': filtered_args[0]
+                }
+                # Optional start value (second argument)
+                if len(filtered_args) >= 2:
+                    result['start'] = filtered_args[1]
+                logging.debug(f"Created sum result: {result}")
                 return result
 
             # Create helper result with filtered args (no state/player in JSON)
@@ -1475,8 +1582,12 @@ class ASTVisitorMixin:
         - state.multiworld.worlds[player].options.<setting>
         - state.multiworld.worlds[player].<attr>
         - state.multiworld.worlds[player].<attr1>.<attr2> (nested like difficulty_requirements.progressive_bottle_limit)
+        - self.world.options.<setting> (class-based helpers like KH2)
 
         Returns the setting path as a dot-separated string if matched, None otherwise.
+
+        IMPORTANT: Does NOT match patterns ending with .value (e.g., self.world.options.X.value)
+        Those should be resolved by closure_vars to get the actual integer value.
         """
         if not isinstance(node, ast.Attribute):
             return None
@@ -1485,28 +1596,47 @@ class ASTVisitorMixin:
         attrs = [node.attr]
         current = node.value
 
-        # Walk up the attribute chain until we hit the worlds[player] subscript
+        # Walk up the attribute chain until we hit the worlds[player] subscript or self.world
         while isinstance(current, ast.Attribute):
             attrs.append(current.attr)
             current = current.value
 
-        # Check if we've reached the world player subscript
-        if not self._is_world_player_subscript(current):
-            return None
-
         # Reverse to get top-down order
         attrs.reverse()
 
-        # Handle different patterns:
-        # - ['options', 'setting_name'] -> 'setting_name'
-        # - ['attr_name'] -> 'attr_name'
-        # - ['difficulty_requirements', 'progressive_bottle_limit'] -> 'difficulty_requirements.progressive_bottle_limit'
-        if attrs[0] == 'options' and len(attrs) >= 2:
-            # Remove 'options' prefix for .options.<setting> pattern
-            return '.'.join(attrs[1:])
-        else:
-            # Direct attribute or nested attribute
-            return '.'.join(attrs)
+        # Check if we've reached the world player subscript (state.multiworld.worlds[player])
+        if self._is_world_player_subscript(current):
+            # Handle different patterns:
+            # - ['options', 'setting_name'] -> 'setting_name'
+            # - ['attr_name'] -> 'attr_name'
+            # - ['difficulty_requirements', 'progressive_bottle_limit'] -> 'difficulty_requirements.progressive_bottle_limit'
+            if attrs[0] == 'options' and len(attrs) >= 2:
+                # Remove 'options' prefix for .options.<setting> pattern
+                return '.'.join(attrs[1:])
+            else:
+                # Direct attribute or nested attribute
+                return '.'.join(attrs)
+
+        # Check for self.world.options.<setting> pattern
+        # This handles class-based helpers like KH2's level_locking_unlock
+        # AST: self.world.options.Promise_Charm
+        # attrs would be: ['world', 'options', 'Promise_Charm']
+        # current would be: Name(id='self')
+        #
+        # IMPORTANT: Do NOT match if the pattern ends with '.value'
+        # e.g., self.world.options.LuckyEmblemsRequired.value should NOT match
+        # because the .value accessor should be resolved via closure_vars to get
+        # the actual integer value, not create a setting_value lookup.
+        if isinstance(current, ast.Name) and current.id == 'self':
+            # Check for self.world.options.<setting> pattern
+            if len(attrs) >= 3 and attrs[0] == 'world' and attrs[1] == 'options':
+                # Do NOT match if pattern ends with .value - let closure_vars resolve it
+                if attrs[-1] == 'value':
+                    return None
+                # Return the setting name (everything after 'options')
+                return '.'.join(attrs[2:])
+
+        return None
 
     def _is_world_attribute_subscript_pattern(self, node):
         """
@@ -1700,6 +1830,33 @@ class ASTVisitorMixin:
         try:
             attr_name = node.attr
             logging.debug(f"visit_Attribute: Trying to access .{attr_name} on object of type {type(node.value).__name__}")
+
+            # Special handling for self.world.options.<setting>.value pattern
+            # This resolves option values to constants at export time instead of runtime lookup
+            # e.g., self.world.options.LuckyEmblemsRequired.value → 35
+            if attr_name == 'value' and 'self' in self.closure_vars:
+                self_obj = self.closure_vars['self']
+                try:
+                    # Collect full attribute chain to see if it matches self.world.options.X.value
+                    chain = ['value']
+                    current = node.value
+                    while isinstance(current, ast.Attribute):
+                        chain.insert(0, current.attr)
+                        current = current.value
+                    if isinstance(current, ast.Name) and current.id == 'self':
+                        # We have self.X.Y.Z.value pattern
+                        # Try to resolve the full chain via closure_vars
+                        resolved = self_obj
+                        for attr in chain:
+                            resolved = getattr(resolved, attr, None)
+                            if resolved is None:
+                                break
+                        if resolved is not None and isinstance(resolved, (int, float, str, bool)):
+                            logging.debug(f"visit_Attribute: Resolved self.{'.' .join(chain)} to constant: {resolved}")
+                            return {'type': 'constant', 'value': resolved}
+                except (AttributeError, TypeError) as e:
+                    logging.debug(f"visit_Attribute: Failed to resolve self.*.value pattern: {e}")
+                    pass
 
             # Check for state.multiworld.worlds[player].options.<setting> pattern
             # Convert to setting_value rule type for frontend evaluation
@@ -2418,7 +2575,11 @@ class ASTVisitorMixin:
             return None
 
     def visit_Set(self, node: ast.Set):
-        """ Handle set literals. """
+        """ Handle set literals like {item1, item2} or {single_item}.
+
+        Returns a 'set_literal' type that the rule engine can handle for
+        mutation operations like .add() and eventual use in has_any().
+        """
         try:
             logging.debug(f"\n--- visit_Set ---")
             elements = []
@@ -2434,8 +2595,10 @@ class ASTVisitorMixin:
             if all(e.get('type') == 'constant' for e in elements):
                 elements.sort(key=lambda e: (str(type(e.get('value')).__name__), str(e.get('value'))))
 
-            # Represent as a list in the output JSON (consistent with tuple/list)
-            return {'type': 'list', 'value': elements}
+            # Represent as a set type in the output JSON
+            # This is used for set literals like {item1, item2} and helps track
+            # that this originated from a Python set (e.g., for has_any checks)
+            return {'type': 'set', 'elements': elements}
         except Exception as e:
             logging.error("Error in visit_Set", e)
             return None
@@ -2557,25 +2720,102 @@ class ASTVisitorMixin:
             logging.error(f"Error in visit_GeneratorExp: {e}")
             return None
 
+    def visit_ListComp(self, node: ast.ListComp):
+        """ Handle list comprehensions like [expr for x in items].
+
+        List comprehensions are treated similarly to generator expressions
+        for the purposes of analysis and can be used with sum(), all(), any(), etc.
+        """
+        try:
+            logging.debug(f"\n--- visit_ListComp --- (generators: {len(node.generators)})")
+
+            # Analyze the element expression
+            elt_result = self.visit(node.elt)
+            if elt_result is None:
+                logging.error(f"Failed to analyze element expression in ListComp: {ast.dump(node.elt)}")
+                return None
+
+            # Handle single generator (simple case)
+            if len(node.generators) == 1:
+                comprehension_result = self.visit(node.generators[0])
+                if comprehension_result is None:
+                    logging.error(f"Failed to analyze comprehension in ListComp")
+                    return None
+
+                # Return as generator_expression type - for sum()/all()/any() handling,
+                # list comprehensions and generator expressions are semantically equivalent
+                return {
+                    'type': 'generator_expression',
+                    'element': elt_result,
+                    'comprehension': comprehension_result
+                }
+
+            # Handle multiple generators (nested comprehensions)
+            logging.debug(f"Processing nested list comprehension with {len(node.generators)} generators")
+
+            # Analyze all comprehension generators first
+            comprehension_results = []
+            for i, gen in enumerate(node.generators):
+                comp_result = self.visit(gen)
+                if comp_result is None:
+                    logging.error(f"Failed to analyze comprehension {i} in nested ListComp")
+                    return None
+                comprehension_results.append(comp_result)
+                logging.debug(f"  Generator {i}: target={comp_result.get('target')}, iterator type={comp_result.get('iterator', {}).get('type')}")
+
+            # Build nested structure from inside out
+            current_element = elt_result
+
+            # Process generators in reverse order (innermost first)
+            for i in range(len(comprehension_results) - 1, -1, -1):
+                current_element = {
+                    'type': 'generator_expression',
+                    'element': current_element,
+                    'comprehension': comprehension_results[i]
+                }
+
+            logging.debug(f"Nested ListComp complete: {len(node.generators)} levels")
+            return current_element
+
+        except Exception as e:
+            logging.error(f"Error in visit_ListComp: {e}")
+            return None
+
     def visit_comprehension(self, node: ast.comprehension):
-        """ Handle the 'for target in iter' part of comprehensions/generators. """
+        """ Handle the 'for target in iter [if condition]' part of comprehensions/generators. """
         try:
             logging.debug(f"\n--- visit_comprehension ---")
             target_result = self.visit(node.target)
             iter_result = self.visit(node.iter)
-            # Note: Ignoring ifs for now (e.g., for x in y if z)
 
             if target_result is None or iter_result is None:
                  logging.error(f"Failed to analyze target or iterator in comprehension")
                  return None
 
+            # Handle if conditions (e.g., for x in y if z)
+            conditions = []
+            if node.ifs:
+                for if_node in node.ifs:
+                    condition_result = self.visit(if_node)
+                    if condition_result is None:
+                        logging.error(f"Failed to analyze if condition in comprehension: {ast.dump(if_node)}")
+                        return None
+                    conditions.append(condition_result)
+                logging.debug(f"visit_comprehension: Found {len(conditions)} if condition(s)")
+
             # Return details needed to understand the iteration
-            return {
+            result = {
                 'type': 'comprehension_details',
                 'target': target_result,
                 'iterator': iter_result
-                # 'conditions': [self.visit(if_node) for if_node in node.ifs] # Future enhancement
             }
+            if conditions:
+                # If there's a single condition, use it directly; otherwise combine with 'and'
+                if len(conditions) == 1:
+                    result['condition'] = conditions[0]
+                else:
+                    result['condition'] = {'type': 'and', 'conditions': conditions}
+            return result
         except Exception as e:
             logging.error("Error in visit_comprehension", e)
             return None

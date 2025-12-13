@@ -41,7 +41,7 @@ class SubnauticaGameExportHandler(GenericGameExportHandler):
                             'type': 'constant',
                             'value': {
                                 'can_slip_through': False,
-                                'name': 'Repair Aurora Drive',
+                                'name': 'Aurora Drive Room - Upgrade Console',
                                 'need_laser_cutter': False,
                                 'need_propulsion_cannon': True,
                                 'position': {

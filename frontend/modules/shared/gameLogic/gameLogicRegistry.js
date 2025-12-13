@@ -209,8 +209,8 @@
 
 // Import all game logic modules
 // alttpLogic removed - helpers now exported to rules.json
+// ahitLogic removed - helpers now exported to rules.json
 import * as genericLogic from './generic/genericLogic.js';
-import * as ahitLogic from './ahit/ahitLogic.js';
 import * as blasphemousLogic from './blasphemous/blasphemousLogic.js';
 import { blasphemousStateModule } from './blasphemous/blasphemousLogic.js';
 import { helperFunctions as bombRushCyberfunkHelperFunctions } from './bomb_rush_cyberfunk/bombRushCyberfunkLogic.js';
@@ -264,7 +264,7 @@ const GAME_REGISTRY = {
   },
   'A Hat in Time': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: ahitLogic.helperFunctions,
+    // Helper functions now exported to rules.json - no JavaScript needed
     worldClasses: ['HatInTimeWorld'],
     aliases: ['A Hat in Time', 'AHIT']
   },

@@ -76,6 +76,11 @@
             },
             {
               "type": "component",
+              "componentType": "editorCodeMirror6Panel",
+              "title": "Editor (CM6)"
+            },
+            {
+              "type": "component",
               "componentType": "settingsPanel",
               "title": "Settings"
             },
@@ -118,6 +123,11 @@
               "type": "component",
               "componentType": "windowManagerPanel",
               "title": "Window Manager"
+            },
+            {
+              "type": "component",
+              "componentType": "ruleConverterPanel",
+              "title": "Rule Converter"
             }
           ]
         },

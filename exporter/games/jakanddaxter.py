@@ -1,7 +1,7 @@
 """Jak and Daxter: The Precursor Legacy game-specific export handler."""
 
 from .generic import GenericGameExportHandler
-from typing import Dict, Any, Set
+from typing import Dict, Any
 import logging
 
 logger = logging.getLogger(__name__)
@@ -12,9 +12,8 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
 
-    # Preserve orb reachability helpers as helper calls - they require JavaScript
-    # implementation because they iterate regions and sum orb counts at runtime
-    HELPERS_TO_PRESERVE: Set[str] = {'can_reach_orbs_level', 'can_reach_orbs_global'}
+    # Note: can_reach_orbs_level and can_reach_orbs_global are converted to item_check rules
+    # for "Reachable Orbs" items, tracked via use_resolved_items from sphere log
 
 
     def __init__(self, world=None):
@@ -26,6 +25,24 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
         from worlds.jakanddaxter.items import item_table
         self.item_id_to_name = dict(item_table)
 
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """
+        Return settings data including use_resolved_items for Reachable Orbs tracking.
+        """
+        settings = super().get_settings_data(world, multiworld, player)
+
+        # Enable processing of resolved_items from sphere log
+        # This allows "Reachable Orbs" (computed by Python during generation)
+        # to be tracked in the frontend without needing JavaScript helpers
+        settings['use_resolved_items'] = True
+
+        # Add items from sphere log BEFORE comparing accessible locations
+        # This is required because "Reachable Orbs" needs to be in prog_items
+        # before evaluating rules (it's not obtained from checking locations)
+        settings['add_sphere_items_upfront'] = True
+
+        return settings
+
     def get_game_info(self, world) -> Dict[str, Any]:
         """
         Return game information including accumulator rules for Tradeable Orbs.
@@ -36,20 +53,28 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
         """
         game_info = super().get_game_info(world)
 
-        # Add accumulator rules to track Tradeable Orbs from precursor orb items
-        # Items like "25 Precursor Orbs" add 25 to the Tradeable Orbs counter
+        # Add accumulator rules to track Tradeable Orbs and Reachable Orbs
         game_info['accumulator_rules'] = [
+            # Items like "25 Precursor Orbs" add 25 to the Tradeable Orbs counter
             {
-                'pattern': r'^(\d+) Precursor Orbs?$',  # Match "X Precursor Orbs" or "X Precursor Orb"
-                'extract_value': True,                  # Extract numeric value from group 1
-                'target': 'Tradeable Orbs',             # Target accumulator name
-                'discriminator': None                   # No dynamic target selection
+                'pattern': r'^(\d+) Precursor Orbs?$',
+                'extract_value': True,
+                'target': 'Tradeable Orbs',
+                'discriminator': None
+            },
+            # "Reachable Orbs" from resolved_items - quantity is passed directly
+            {
+                'pattern': r'^Reachable Orbs$',
+                'extract_value': False,
+                'target': 'Reachable Orbs',
+                'discriminator': None
             }
         ]
 
-        # Initialize Tradeable Orbs accumulator to 0
+        # Initialize accumulators to 0
         game_info['prog_items_init'] = {
-            'Tradeable Orbs': 0
+            'Tradeable Orbs': 0,
+            'Reachable Orbs': 0
         }
 
         return game_info
@@ -149,10 +174,11 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
                 if len(args) >= 5:
                     level_name = self._unwrap_constant(args[3])
                     orb_amount = self._unwrap_constant(args[4])
+                    # Use per-level Reachable Orbs item (tracked via resolved_items)
                     return {
-                        'type': 'helper',
-                        'name': 'can_reach_orbs_level',
-                        'args': [level_name, orb_amount]
+                        'type': 'item_check',
+                        'item': f'{level_name} Reachable Orbs',
+                        'count': orb_amount if orb_amount is not None else 1
                     }
                 else:
                     logger.warning(f"can_reach_orbs_level call with insufficient args: {len(args)}")
@@ -166,10 +192,11 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
                 # We need args[3] (orb_amount)
                 if len(args) >= 4:
                     orb_amount = self._unwrap_constant(args[3])
+                    # Use global Reachable Orbs item (tracked via resolved_items)
                     return {
-                        'type': 'helper',
-                        'name': 'can_reach_orbs',  # Maps to JavaScript helper
-                        'args': [orb_amount]
+                        'type': 'item_check',
+                        'item': 'Reachable Orbs',
+                        'count': orb_amount if orb_amount is not None else 1
                     }
                 else:
                     logger.warning(f"can_reach_orbs_global call with insufficient args: {len(args)}")
@@ -209,11 +236,12 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
                         'count': required_orbs if required_orbs is not None else 1
                     }
                 else:
-                    # Reachable Orbs requires a helper function
+                    # Reachable Orbs is tracked via resolved_items from sphere log
+                    # (use_resolved_items=True enables this)
                     orb_check = {
-                        'type': 'helper',
-                        'name': 'can_reach_orbs',
-                        'args': [required_orbs if required_orbs is not None else 1]
+                        'type': 'item_check',
+                        'item': 'Reachable Orbs',
+                        'count': required_orbs if required_orbs is not None else 1
                     }
 
                 # If there's a required previous trade, combine with AND
@@ -339,12 +367,12 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
                     ]
                 }
             elif helper_name == 'can_reach_orbs_global':
-                # Transform to JavaScript helper name and unwrap args
+                # Use global Reachable Orbs item (tracked via resolved_items)
                 orb_amount = self._unwrap_constant(args[0]) if args else 1
                 return {
-                    'type': 'helper',
-                    'name': 'can_reach_orbs',  # Maps to JavaScript helper
-                    'args': [orb_amount]
+                    'type': 'item_check',
+                    'item': 'Reachable Orbs',
+                    'count': orb_amount if orb_amount is not None else 1
                 }
 
         # Handle nested rules recursively
