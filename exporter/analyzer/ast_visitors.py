@@ -1617,6 +1617,7 @@ class ASTVisitorMixin:
         - state.multiworld.worlds[player].<attr>
         - state.multiworld.worlds[player].<attr1>.<attr2> (nested like difficulty_requirements.progressive_bottle_limit)
         - self.world.options.<setting> (class-based helpers like KH2)
+        - world.options.<setting> (world as function parameter, like Paint helpers)
 
         Returns the setting path as a dot-separated string if matched, None otherwise.
 
@@ -1669,6 +1670,20 @@ class ASTVisitorMixin:
                     return None
                 # Return the setting name (everything after 'options')
                 return '.'.join(attrs[2:])
+
+        # Check for world.options.<setting> pattern (world as function parameter)
+        # This handles helpers like Paint's calculate_paint_percent_available
+        # which take 'world' as a parameter and access world.options.<setting>
+        # AST: world.options.canvas_size_increment
+        # attrs would be: ['options', 'canvas_size_increment']
+        # current would be: Name(id='world')
+        if isinstance(current, ast.Name) and current.id == 'world':
+            if len(attrs) >= 2 and attrs[0] == 'options':
+                # Do NOT match if pattern ends with .value - let closure_vars resolve it
+                if attrs[-1] == 'value':
+                    return None
+                # Return the setting name (everything after 'options')
+                return '.'.join(attrs[1:])
 
         return None
 
