@@ -456,6 +456,13 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
     return undefined;
   }
 
+  // Detect Rule Builder format: has 'rule' key but no 'type' key
+  // Rule Builder format: {"rule": "Has", "options": [], "args": {"item_name": "Sword"}}
+  // CC format: {"type": "item_check", "item": "Sword"}
+  if (rule.rule && !rule.type) {
+    return evaluateRuleBuilderRule(rule, context, depth, localScope);
+  }
+
   let result;
   let ruleType = rule?.type;
 
@@ -4229,6 +4236,227 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
   return result;
 };
+
+/**
+ * Evaluate a rule in Rule Builder format.
+ *
+ * Rule Builder format uses {"rule": "RuleName", "options": [], "args": {...}} or
+ * {"rule": "And/Or", "options": [], "children": [...]} for composite rules.
+ *
+ * This provides native support for Rule Builder rules without converting to CC format.
+ *
+ * @param {Object} rule - Rule in Rule Builder format
+ * @param {Object} context - The snapshot interface for evaluation
+ * @param {number} depth - Current recursion depth
+ * @param {Object|null} localScope - Local scope for parameter resolution
+ * @returns {*} The evaluation result (typically boolean)
+ */
+function evaluateRuleBuilderRule(rule, context, depth, localScope) {
+  const ruleName = rule.rule;
+  const args = rule.args || {};
+  const children = rule.children || [];
+  const child = rule.child;
+
+  // Log at debug level
+  if (depth < 3) {
+    log('debug', `[evaluateRuleBuilderRule] Evaluating ${ruleName}`, { args, childCount: children.length });
+  }
+
+  switch (ruleName) {
+    // Boolean literals
+    case 'True_':
+      return true;
+
+    case 'False_':
+      return false;
+
+    // Item check: Has(item_name, count)
+    case 'Has': {
+      const itemName = args.item_name;
+      const count = args.count ?? 1;
+      if (!itemName) {
+        log('warn', '[evaluateRuleBuilderRule] Has rule missing item_name');
+        return undefined;
+      }
+      // Delegate to CC format evaluation
+      return evaluateRule({ type: 'item_check', item: itemName, count }, context, depth + 1, localScope);
+    }
+
+    // HasAll: all items required (AND of Has checks)
+    case 'HasAll': {
+      const items = args.item_names || children.map(c => c.args?.item_name).filter(Boolean);
+      if (!items || items.length === 0) {
+        return true; // Empty AND is true
+      }
+      for (const item of items) {
+        const result = evaluateRule({ type: 'item_check', item, count: 1 }, context, depth + 1, localScope);
+        if (result === false) return false;
+        if (result === undefined) return undefined;
+      }
+      return true;
+    }
+
+    // HasAny: any item required (OR of Has checks)
+    case 'HasAny': {
+      const items = args.item_names || children.map(c => c.args?.item_name).filter(Boolean);
+      if (!items || items.length === 0) {
+        return false; // Empty OR is false
+      }
+      let hasUndefined = false;
+      for (const item of items) {
+        const result = evaluateRule({ type: 'item_check', item, count: 1 }, context, depth + 1, localScope);
+        if (result === true) return true;
+        if (result === undefined) hasUndefined = true;
+      }
+      return hasUndefined ? undefined : false;
+    }
+
+    // HasAllCounts: all items with specific counts
+    case 'HasAllCounts': {
+      const itemCounts = args.item_counts || {};
+      for (const [item, count] of Object.entries(itemCounts)) {
+        const result = evaluateRule({ type: 'item_check', item, count }, context, depth + 1, localScope);
+        if (result === false) return false;
+        if (result === undefined) return undefined;
+      }
+      return true;
+    }
+
+    // HasAnyCount: any item with specific count
+    case 'HasAnyCount': {
+      const itemCounts = args.item_counts || {};
+      let hasUndefined = false;
+      for (const [item, count] of Object.entries(itemCounts)) {
+        const result = evaluateRule({ type: 'item_check', item, count }, context, depth + 1, localScope);
+        if (result === true) return true;
+        if (result === undefined) hasUndefined = true;
+      }
+      return hasUndefined ? undefined : false;
+    }
+
+    // HasFromList: N items from a list
+    case 'HasFromList': {
+      const items = args.item_names || [];
+      const count = args.count ?? 1;
+      let found = 0;
+      let hasUndefined = false;
+      for (const item of items) {
+        const result = evaluateRule({ type: 'item_check', item, count: 1 }, context, depth + 1, localScope);
+        if (result === true) {
+          found++;
+          if (found >= count) return true;
+        } else if (result === undefined) {
+          hasUndefined = true;
+        }
+      }
+      // If we have undefined results, we can't be sure
+      if (hasUndefined && found < count) return undefined;
+      return found >= count;
+    }
+
+    // HasFromListUnique: N unique items from a list
+    case 'HasFromListUnique': {
+      const items = args.item_names || [];
+      const count = args.count ?? 1;
+      let found = 0;
+      let hasUndefined = false;
+      for (const item of items) {
+        const result = evaluateRule({ type: 'item_check', item, count: 1 }, context, depth + 1, localScope);
+        if (result === true) {
+          found++;
+          if (found >= count) return true;
+        } else if (result === undefined) {
+          hasUndefined = true;
+        }
+      }
+      if (hasUndefined && found < count) return undefined;
+      return found >= count;
+    }
+
+    // HasGroup: items from an item group
+    case 'HasGroup': {
+      const groupName = args.item_name_group;
+      const count = args.count ?? 1;
+      return evaluateRule({ type: 'group_check', group: groupName, count }, context, depth + 1, localScope);
+    }
+
+    // HasGroupUnique: unique items from an item group
+    case 'HasGroupUnique': {
+      const groupName = args.item_name_group;
+      const count = args.count ?? 1;
+      // For unique, we use the same group_check - the semantics are handled by the group logic
+      return evaluateRule({ type: 'group_check', group: groupName, count }, context, depth + 1, localScope);
+    }
+
+    // Composite rules: And
+    case 'And': {
+      if (children.length === 0) return true;
+      let hasUndefined = false;
+      for (const childRule of children) {
+        const result = evaluateRule(childRule, context, depth + 1, localScope);
+        if (result === false) return false;
+        if (result === undefined) hasUndefined = true;
+      }
+      return hasUndefined ? undefined : true;
+    }
+
+    // Composite rules: Or
+    case 'Or': {
+      if (children.length === 0) return false;
+      let hasUndefined = false;
+      for (const childRule of children) {
+        const result = evaluateRule(childRule, context, depth + 1, localScope);
+        if (result === true) return true;
+        if (result === undefined) hasUndefined = true;
+      }
+      return hasUndefined ? undefined : false;
+    }
+
+    // Wrapper rules: Not (inverts child)
+    case 'Not': {
+      if (!child) {
+        log('warn', '[evaluateRuleBuilderRule] Not rule missing child');
+        return undefined;
+      }
+      const result = evaluateRule(child, context, depth + 1, localScope);
+      if (result === undefined) return undefined;
+      return !result;
+    }
+
+    // Reachability rules
+    case 'CanReachRegion': {
+      const regionName = args.region_name;
+      return evaluateRule({ type: 'can_reach', region: regionName }, context, depth + 1, localScope);
+    }
+
+    case 'CanReachLocation': {
+      const locationName = args.location_name;
+      return evaluateRule({ type: 'location_check', location: locationName }, context, depth + 1, localScope);
+    }
+
+    case 'CanReachEntrance': {
+      const entranceName = args.entrance_name;
+      return evaluateRule({ type: 'can_reach_entrance', entrance: entranceName }, context, depth + 1, localScope);
+    }
+
+    // Wrapper rule with filter (option-based filtering)
+    case 'Filtered': {
+      // For now, just evaluate the child - option filtering is typically world-level
+      if (!child) {
+        log('warn', '[evaluateRuleBuilderRule] Filtered rule missing child');
+        return undefined;
+      }
+      return evaluateRule(child, context, depth + 1, localScope);
+    }
+
+    // Unknown rule type - try to find as a custom helper
+    default: {
+      log('debug', `[evaluateRuleBuilderRule] Unknown Rule Builder type '${ruleName}', checking helpers`);
+      // Try evaluating as a CC helper
+      return evaluateRule({ type: 'helper', name: ruleName, args: Object.values(args) }, context, depth + 1, localScope);
+    }
+  }
+}
 
 // Debugging helper function for visualizing rule structures in console
 export function debugRule(rule, indent = 0) {
