@@ -15,21 +15,36 @@ class KDL3GameExportHandler(BaseGameExportHandler):
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
 
+    # Module path for helper functions
+    HELPER_MODULES = ['worlds.kdl3.rules']
+
+    # Whitelist ability helpers that are called dynamically via ability_map
+    # These need to be exported even though they're not discovered via direct calls
+    HELPERS_TO_EXPORT_WHITELIST = {
+        'can_reach_burning',
+        'can_reach_stone',
+        'can_reach_ice',
+        'can_reach_needle',
+        'can_reach_clean',
+        'can_reach_parasol',
+        'can_reach_spark',
+        'can_reach_cutter',
+        'can_reach_rick',
+        'can_reach_kine',
+        'can_reach_coo',
+        'can_reach_nago',
+        'can_reach_chuchu',
+        'can_reach_pitch',
+    }
+
     # Blacklist helpers that have loops or complex logic (don't export as definitions)
     # These helpers use dynamic function dispatch (ability_map[copy_abilities[enemy]])
     # which requires runtime resolution of nested dict lookups - handled via JS fallback
-    HELPERS_TO_EXPORT_BLACKLIST = {
-        'can_reach_boss',       # Has can_reach location and f-string lookup
-        'can_assemble_rob',     # Has for/while loops and dynamic function dispatch
-        'can_fix_angel_wings',  # Has for loop and dynamic function dispatch
-    }
+    # Note: Empty set() is needed because {} with no items is a dict
+    HELPERS_TO_EXPORT_BLACKLIST = set()
 
     # Preserve these helpers as helper calls (don't inline them - use JavaScript instead)
-    HELPERS_TO_PRESERVE = {
-        'can_reach_boss',       # Has can_reach location and f-string lookup
-        'can_assemble_rob',     # Has for/while loops and dynamic function dispatch
-        'can_fix_angel_wings',  # Has for loop and dynamic function dispatch
-    }
+    HELPERS_TO_PRESERVE = set()
 
     def __init__(self):
         """Initialize the KDL3 export handler and load location_name module."""

@@ -3114,10 +3114,21 @@ class ASTVisitorMixin:
             logging.debug(f"Target: {ast.dump(node.target)}")
             logging.debug(f"Iter: {ast.dump(node.iter)}")
 
-            # Get the loop variable name
-            var_name = "_"
+            # Get the loop variable name(s) - handle tuple unpacking
             if isinstance(node.target, ast.Name):
-                var_name = node.target.id
+                var_info = node.target.id
+            elif isinstance(node.target, ast.Tuple):
+                # Tuple unpacking: for a, b in items
+                elements = []
+                for elt in node.target.elts:
+                    if isinstance(elt, ast.Name):
+                        elements.append({'type': 'name', 'name': elt.id})
+                    else:
+                        elements.append(self.visit(elt))
+                var_info = {'type': 'tuple', 'elements': elements}
+                logging.debug(f"visit_For: Tuple unpacking with {len(elements)} elements")
+            else:
+                var_info = "_"
 
             # Analyze the loop body
             body_results = []
@@ -3143,7 +3154,7 @@ class ASTVisitorMixin:
 
                 return {
                     'type': 'for_range',
-                    'var': var_name,
+                    'var': var_info,
                     'count': count_result,
                     'body': body_results
                 }
@@ -3157,7 +3168,7 @@ class ASTVisitorMixin:
                 logging.debug(f"visit_For: Creating for_iter with iterable: {iterable_result}")
                 return {
                     'type': 'for_iter',
-                    'var': var_name,
+                    'var': var_info,
                     'iterable': iterable_result,
                     'body': body_results
                 }
@@ -3282,6 +3293,8 @@ class ASTVisitorMixin:
                 return self.visit_AugAssign(node)
             elif isinstance(node, ast.For):
                 return self.visit_For(node)
+            elif isinstance(node, ast.While):
+                return self.visit_While(node)
             elif isinstance(node, ast.If):
                 # Check if this is an if/elif/else that assigns to a single variable
                 assign_result = self._try_convert_if_to_assign(node)

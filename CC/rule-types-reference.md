@@ -96,8 +96,10 @@ Both layers must support a rule type for it to work end-to-end.
 - `len(collection)` - Get length of collection
 - `sum(iterable)` - Sum of all elements
 - `sorted(iterable)` - Return sorted list
-- `iter(iterable)` - Create iterator from iterable (returns array)
-- `next(iterator, default)` - Get next item from iterator (returns first element or default)
+- `iter(iterable)` - Create stateful iterator from iterable (returns iterator object)
+- `next(iterator, default)` - Get next item from iterator and advance position (returns element or default)
+
+**Note on iter/next**: The frontend implements stateful iterators. `iter()` returns an iterator object `{__isIterator: true, items: [...], position: 0}`. Each call to `next()` returns the item at the current position and advances it, enabling patterns like `while target != None: ... target = next(iterator, None)`.
 
 **Method call support** (`method_call` type):
 - Arrays/Lists: `index(value)`, `count(value)`, `__contains__(value)`
@@ -148,7 +150,7 @@ These types support complex helper functions with multi-statement bodies:
 | `assign` | Variable assignment | `name`, `value`, `op` | `count = 0` or `count += 1` |
 | `return` | Early return from block | `value` | `return True` |
 | `for_range` | Loop N times | `count`, `var`, `body: []` | `for i in range(5):` |
-| `for_iter` | Loop over iterable | `iterable`, `var`, `body: []` | `for item in list:` |
+| `for_iter` | Loop over iterable | `iterable`, `var`, `body: []` | `for item in list:` or `for a, b in pairs:` (tuple unpacking) |
 | `while_loop` | Loop while condition is true | `condition`, `body: []`, `orelse: []` | `while cond: stmt` |
 | `if_statement` | Conditional execution (statement) | `test`, `body: []`, `orelse: []` | `if cond: stmt` |
 | `break` | Exit enclosing loop | (none) | `break` |
