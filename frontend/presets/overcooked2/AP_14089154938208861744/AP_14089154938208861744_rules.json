@@ -44,14 +44,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 2
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 2
+                  }
                 },
                 {
                   "type": "item_check",
@@ -67,14 +77,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 7
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 7
+                  }
                 },
                 {
                   "type": "item_check",
@@ -90,14 +110,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 16
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 16
+                  }
                 },
                 {
                   "type": "item_check",
@@ -113,14 +143,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 28
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 28
+                  }
                 },
                 {
                   "type": "item_check",
@@ -140,14 +180,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 44
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 44
+                  }
                 },
                 {
                   "type": "item_check",
@@ -175,14 +225,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 2
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 2
+                  }
                 },
                 {
                   "type": "or",
@@ -220,14 +280,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 9
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 9
+                  }
                 },
                 {
                   "type": "or",
@@ -265,14 +335,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 18
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 18
+                  }
                 },
                 {
                   "type": "item_check",
@@ -288,14 +368,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 31
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 31
+                  }
                 },
                 {
                   "type": "item_check",
@@ -311,14 +401,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 47
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 47
+                  }
                 },
                 {
                   "type": "item_check",
@@ -342,14 +442,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 3
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 },
                 {
                   "type": "item_check",
@@ -369,14 +479,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 10
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 10
+                  }
                 },
                 {
                   "type": "item_check",
@@ -396,14 +516,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 20
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 20
+                  }
                 },
                 {
                   "type": "item_check",
@@ -423,14 +553,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 33
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 33
+                  }
                 },
                 {
                   "type": "item_check",
@@ -450,14 +590,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 50
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 50
+                  }
                 },
                 {
                   "type": "item_check",
@@ -481,14 +631,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 4
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 4
+                  }
                 },
                 {
                   "type": "item_check",
@@ -504,14 +664,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 11
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 11
+                  }
                 },
                 {
                   "type": "item_check",
@@ -527,14 +697,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 22
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 22
+                  }
                 },
                 {
                   "type": "item_check",
@@ -550,14 +730,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 36
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 36
+                  }
                 },
                 {
                   "type": "item_check",
@@ -573,14 +763,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 53
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 53
+                  }
                 },
                 {
                   "type": "item_check",
@@ -593,14 +793,24 @@
             "name": "Overworld -> 5-1",
             "connected_region": "5-1",
             "access_rule": {
-              "type": "helper",
-              "name": "has_enough_stars",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 1
+              "type": "compare",
+              "left": {
+                "type": "binary_op",
+                "op": "+",
+                "left": {
+                  "type": "count_item",
+                  "item": "Star"
+                },
+                "right": {
+                  "type": "count_item",
+                  "item": "Bonus Star"
                 }
-              ]
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 1
+              }
             }
           },
           {
@@ -610,14 +820,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 5
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 5
+                  }
                 },
                 {
                   "type": "or",
@@ -655,14 +875,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 13
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 13
+                  }
                 },
                 {
                   "type": "item_check",
@@ -678,14 +908,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 24
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 24
+                  }
                 },
                 {
                   "type": "or",
@@ -719,14 +959,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 38
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 38
+                  }
                 },
                 {
                   "type": "or",
@@ -760,14 +1010,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 56
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 56
+                  }
                 },
                 {
                   "type": "or",
@@ -801,14 +1061,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 1
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 1
+                  }
                 },
                 {
                   "type": "item_check",
@@ -824,14 +1094,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 6
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 6
+                  }
                 },
                 {
                   "type": "or",
@@ -865,14 +1145,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 15
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 15
+                  }
                 },
                 {
                   "type": "or",
@@ -906,14 +1196,24 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 26
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 26
+                  }
                 },
                 {
                   "type": "or",
@@ -977,14 +1277,24 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 41
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 41
+                  }
                 },
                 {
                   "type": "item_check",
@@ -1026,14 +1336,24 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "has_enough_stars",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 60
+                  "type": "compare",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "count_item",
+                      "item": "Star"
+                    },
+                    "right": {
+                      "type": "count_item",
+                      "item": "Bonus Star"
                     }
-                  ]
+                  },
+                  "op": ">=",
+                  "right": {
+                    "type": "constant",
+                    "value": 60
+                  }
                 },
                 {
                   "type": "item_check",
