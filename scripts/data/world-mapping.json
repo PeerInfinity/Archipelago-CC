@@ -820,7 +820,7 @@
   },
   "Old School Runescape": {
     "exporter_path": "exporter/games/osrs.py",
-    "exporter_size": 3286,
+    "exporter_size": 6090,
     "game_logic_path": "frontend/modules/shared/gameLogic/osrs/osrsLogic.js",
     "game_logic_size": 1208,
     "has_custom_exporter": true,
