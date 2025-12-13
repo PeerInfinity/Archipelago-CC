@@ -10371,7 +10371,48 @@
       },
       "calamity": false,
       "grindy_achievements": false,
-      "getfixedboi": false
+      "getfixedboi": false,
+      "armor_minions": {
+        "Wulfrum Armor": 1,
+        "Flinx Fur Coat": 1,
+        "Victide Armor": 1,
+        "Obsidian Armor": 1,
+        "Bee Armor": 2,
+        "Aerospec Armor": 1,
+        "Statigel Armor": 1,
+        "Spider Armor": 3,
+        "Forbidden Armor": 2,
+        "Daedalus Armor": 2,
+        "Hallowed Armor": 3,
+        "Fathom Swarmer Armor": 2,
+        "Tiki Armor": 4,
+        "Hydrothermic Armor": 2,
+        "Plaguebringer Armor": 3,
+        "Spooky Armor": 4,
+        "Astral Armor": 3,
+        "Stardust Armor": 5,
+        "Tarragon Armor": 3,
+        "Bloodflare Armor": 3,
+        "Omega Blue Armor": 2,
+        "Fearmonger Armor": 2,
+        "Silva Armor": 5,
+        "Auric Tesla Armor": 6,
+        "Demonshade Armor": 10
+      },
+      "accessory_minions": {
+        "Summoning Potion": 1,
+        "Voltaic Jelly": 1,
+        "Pygmy Necklace": 1,
+        "Bewitching Table": 1,
+        "The First Shadowflame": 1,
+        "Nuclear Fuel Rod": 1,
+        "Starbuster Core": 1,
+        "Necromantic Scroll": 1,
+        "Papyrus Scarab": 1,
+        "Eldritch Soul Artifact": 1,
+        "Profaned Soul Artifact": 1,
+        "Angelic Alliance": 2
+      }
     }
   },
   "game_info": {
@@ -10410,5 +10451,189 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "has_n_from_list": {
+        "params": [
+          "items",
+          "required_count"
+        ],
+        "body": {
+          "type": "compare",
+          "op": ">=",
+          "left": {
+            "type": "sum_of",
+            "iterator_info": {
+              "target": {
+                "type": "name",
+                "name": "item"
+              },
+              "iterator": {
+                "type": "name",
+                "name": "items"
+              },
+              "condition": {
+                "type": "item_check",
+                "item": {
+                  "type": "name",
+                  "name": "item"
+                }
+              }
+            },
+            "element_rule": {
+              "type": "constant",
+              "value": 1
+            }
+          },
+          "right": {
+            "type": "name",
+            "name": "required_count"
+          }
+        }
+      },
+      "has_minions": {
+        "params": [
+          "required_count"
+        ],
+        "body": {
+          "type": "compare",
+          "op": ">=",
+          "left": {
+            "type": "binary_op",
+            "op": "+",
+            "left": {
+              "type": "binary_op",
+              "op": "+",
+              "left": {
+                "type": "constant",
+                "value": 1
+              },
+              "right": {
+                "type": "conditional",
+                "test": {
+                  "type": "any_of",
+                  "iterator_info": {
+                    "target": {
+                      "type": "name",
+                      "name": "armor"
+                    },
+                    "iterator": {
+                      "type": "method_call",
+                      "object": {
+                        "type": "setting_value",
+                        "setting": "armor_minions"
+                      },
+                      "method": "keys",
+                      "args": []
+                    }
+                  },
+                  "element_rule": {
+                    "type": "item_check",
+                    "item": {
+                      "type": "name",
+                      "name": "armor"
+                    }
+                  }
+                },
+                "if_true": {
+                  "type": "max",
+                  "iterable": {
+                    "type": "generator_expression",
+                    "element": {
+                      "type": "name",
+                      "name": "bonus"
+                    },
+                    "comprehension": {
+                      "target": {
+                        "type": "tuple",
+                        "elements": [
+                          {
+                            "type": "name",
+                            "name": "armor"
+                          },
+                          {
+                            "type": "name",
+                            "name": "bonus"
+                          }
+                        ]
+                      },
+                      "iterator": {
+                        "type": "method_call",
+                        "object": {
+                          "type": "setting_value",
+                          "setting": "armor_minions"
+                        },
+                        "method": "items",
+                        "args": []
+                      },
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": {
+                            "type": "name",
+                            "name": "armor"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                "if_false": {
+                  "type": "constant",
+                  "value": 0
+                }
+              }
+            },
+            "right": {
+              "type": "sum",
+              "iterable": {
+                "type": "generator_expression",
+                "element": {
+                  "type": "name",
+                  "name": "bonus"
+                },
+                "comprehension": {
+                  "target": {
+                    "type": "tuple",
+                    "elements": [
+                      {
+                        "type": "name",
+                        "name": "acc"
+                      },
+                      {
+                        "type": "name",
+                        "name": "bonus"
+                      }
+                    ]
+                  },
+                  "iterator": {
+                    "type": "method_call",
+                    "object": {
+                      "type": "setting_value",
+                      "setting": "accessory_minions"
+                    },
+                    "method": "items",
+                    "args": []
+                  },
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "name",
+                        "name": "acc"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "right": {
+            "type": "name",
+            "name": "required_count"
+          }
+        }
+      }
+    }
+  }
 }
