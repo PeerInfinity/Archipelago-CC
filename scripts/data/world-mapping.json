@@ -821,10 +821,10 @@
   "Old School Runescape": {
     "exporter_path": "exporter/games/osrs.py",
     "exporter_size": 6090,
-    "game_logic_path": "frontend/modules/shared/gameLogic/osrs/osrsLogic.js",
-    "game_logic_size": 1208,
+    "game_logic_path": null,
+    "game_logic_size": 0,
     "has_custom_exporter": true,
-    "has_custom_game_logic": true,
+    "has_custom_game_logic": false,
     "world_directory": "osrs"
   },
   "Old School Runescape WorldGen": {

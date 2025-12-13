@@ -250,7 +250,7 @@ import * as twwLogic from './tww/twwLogic.js';
 import * as wargrooveLogic from './wargroove/wargrooveLogic.js';
 // yoshisisland helpers have been exported to rules.json - no JavaScript needed
 import * as yugioh06Logic from './yugioh06/yugioh06Logic.js';
-import { helperFunctions as osrsHelperFunctions } from './osrs/osrsLogic.js';
+// osrs helpers have been exported to rules.json - no JavaScript needed
 
 /**
  * Registry of all supported games and their logic modules
@@ -360,7 +360,7 @@ const GAME_REGISTRY = {
   },
   'Old School Runescape': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: osrsHelperFunctions,
+    // Helper functions now exported to rules.json - no JavaScript needed
     worldClasses: ['OSRSWorld'],
     aliases: ['Old School Runescape', 'OSRS', 'osrs']
   },
