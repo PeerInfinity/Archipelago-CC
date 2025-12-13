@@ -1915,13 +1915,11 @@ class ASTVisitorMixin:
                             logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} to list: {list_value}")
                             return {'type': 'constant', 'value': list_value}
                         elif isinstance(resolved_attr, dict):
-                            # Handle dict values - convert keys to list for iteration purposes
-                            # When iterating over a dict in Python, we iterate over its keys
-                            # For nested comprehensions like "for sub_ingredient in custom_recipe.ingredients"
-                            # we need to return the keys as a list for the frontend to iterate
-                            keys_list = list(resolved_attr.keys())
-                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} (dict) to keys list: {keys_list}")
-                            return {'type': 'constant', 'value': keys_list}
+                            # Handle dict values - keep as dict for subscript access
+                            # The frontend's subscript handler can index into plain objects
+                            # For iteration (for_iter), the frontend will iterate over keys
+                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} (dict) keeping as dict with {len(resolved_attr)} entries")
+                            return {'type': 'constant', 'value': resolved_attr}
                         elif isinstance(resolved_attr, (set, frozenset)):
                             # Handle set/frozenset values - convert to list for JSON serialization
                             list_value = list(resolved_attr)

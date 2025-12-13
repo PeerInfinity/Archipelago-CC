@@ -2427,13 +2427,53 @@
                     },
                     {
                       "type": "constant",
-                      "value": [
-                        1,
-                        2,
-                        3,
-                        4,
-                        5
-                      ]
+                      "value": {
+                        "1": [
+                          7798784,
+                          7798785,
+                          7798786,
+                          7798787,
+                          7798788,
+                          7798789,
+                          7799296
+                        ],
+                        "2": [
+                          7798790,
+                          7798791,
+                          7798792,
+                          7798793,
+                          7798794,
+                          7798795,
+                          7799297
+                        ],
+                        "3": [
+                          7798796,
+                          7798797,
+                          7798798,
+                          7798799,
+                          7798800,
+                          7798801,
+                          7799298
+                        ],
+                        "4": [
+                          7798802,
+                          7798803,
+                          7798804,
+                          7798805,
+                          7798806,
+                          7798807,
+                          7799299
+                        ],
+                        "5": [
+                          7798808,
+                          7798809,
+                          7798810,
+                          7798811,
+                          7798812,
+                          7798813,
+                          7799300
+                        ]
+                      }
                     }
                   ]
                 },
@@ -2499,13 +2539,53 @@
                     },
                     {
                       "type": "constant",
-                      "value": [
-                        1,
-                        2,
-                        3,
-                        4,
-                        5
-                      ]
+                      "value": {
+                        "1": [
+                          7798784,
+                          7798785,
+                          7798786,
+                          7798787,
+                          7798788,
+                          7798789,
+                          7799296
+                        ],
+                        "2": [
+                          7798790,
+                          7798791,
+                          7798792,
+                          7798793,
+                          7798794,
+                          7798795,
+                          7799297
+                        ],
+                        "3": [
+                          7798796,
+                          7798797,
+                          7798798,
+                          7798799,
+                          7798800,
+                          7798801,
+                          7799298
+                        ],
+                        "4": [
+                          7798802,
+                          7798803,
+                          7798804,
+                          7798805,
+                          7798806,
+                          7798807,
+                          7799299
+                        ],
+                        "5": [
+                          7798808,
+                          7798809,
+                          7798810,
+                          7798811,
+                          7798812,
+                          7798813,
+                          7799300
+                        ]
+                      }
                     }
                   ]
                 },
@@ -5890,13 +5970,53 @@
                     },
                     {
                       "type": "constant",
-                      "value": [
-                        1,
-                        2,
-                        3,
-                        4,
-                        5
-                      ]
+                      "value": {
+                        "1": [
+                          7798784,
+                          7798785,
+                          7798786,
+                          7798787,
+                          7798788,
+                          7798789,
+                          7799296
+                        ],
+                        "2": [
+                          7798790,
+                          7798791,
+                          7798792,
+                          7798793,
+                          7798794,
+                          7798795,
+                          7799297
+                        ],
+                        "3": [
+                          7798796,
+                          7798797,
+                          7798798,
+                          7798799,
+                          7798800,
+                          7798801,
+                          7799298
+                        ],
+                        "4": [
+                          7798802,
+                          7798803,
+                          7798804,
+                          7798805,
+                          7798806,
+                          7798807,
+                          7799299
+                        ],
+                        "5": [
+                          7798808,
+                          7798809,
+                          7798810,
+                          7798811,
+                          7798812,
+                          7798813,
+                          7799300
+                        ]
+                      }
                     }
                   ]
                 },
@@ -5962,13 +6082,53 @@
                     },
                     {
                       "type": "constant",
-                      "value": [
-                        1,
-                        2,
-                        3,
-                        4,
-                        5
-                      ]
+                      "value": {
+                        "1": [
+                          7798784,
+                          7798785,
+                          7798786,
+                          7798787,
+                          7798788,
+                          7798789,
+                          7799296
+                        ],
+                        "2": [
+                          7798790,
+                          7798791,
+                          7798792,
+                          7798793,
+                          7798794,
+                          7798795,
+                          7799297
+                        ],
+                        "3": [
+                          7798796,
+                          7798797,
+                          7798798,
+                          7798799,
+                          7798800,
+                          7798801,
+                          7799298
+                        ],
+                        "4": [
+                          7798802,
+                          7798803,
+                          7798804,
+                          7798805,
+                          7798806,
+                          7798807,
+                          7799299
+                        ],
+                        "5": [
+                          7798808,
+                          7798809,
+                          7798810,
+                          7798811,
+                          7798812,
+                          7798813,
+                          7799300
+                        ]
+                      }
                     }
                   ]
                 },
@@ -11130,81 +11290,81 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": [
-                    "Waddle Dee",
-                    "Bronto Burt",
-                    "Rocky",
-                    "Bobo",
-                    "Chilly",
-                    "Poppy Bros Jr.",
-                    "Sparky",
-                    "Polof",
-                    "Broom Hatter",
-                    "Cappy",
-                    "Bouncy",
-                    "Nruff",
-                    "Glunk",
-                    "Togezo",
-                    "Kabu",
-                    "Mony",
-                    "Blipper",
-                    "Squishy",
-                    "Gabon",
-                    "Oro",
-                    "Galbo",
-                    "Sir Kibble",
-                    "Nidoo",
-                    "Kany",
-                    "Sasuke",
-                    "Yaban",
-                    "Boten",
-                    "Coconut",
-                    "Doka",
-                    "Icicle",
-                    "Pteran",
-                    "Loud",
-                    "Como",
-                    "Klinko",
-                    "Babut",
-                    "Wappa",
-                    "Mariel",
-                    "Tick",
-                    "Apolo",
-                    "Popon Ball",
-                    "KeKe",
-                    "Magoo",
-                    "Raft Waddle Dee",
-                    "Madoo",
-                    "Corori",
-                    "Kapar",
-                    "Batamon",
-                    "Peran",
-                    "Bobin",
-                    "Mopoo",
-                    "Gansan",
-                    "Bukiset (Burning)",
-                    "Bukiset (Stone)",
-                    "Bukiset (Ice)",
-                    "Bukiset (Needle)",
-                    "Bukiset (Clean)",
-                    "Bukiset (Parasol)",
-                    "Bukiset (Spark)",
-                    "Bukiset (Cutter)",
-                    "Waddle Dee Drawing",
-                    "Bronto Burt Drawing",
-                    "Bouncy Drawing",
-                    "Kabu (Dekabu)",
-                    "Wapod",
-                    "Propeller",
-                    "Dogon",
-                    "Joe",
-                    "Captain Stitch",
-                    "Yuki",
-                    "Blocky",
-                    "Jumper Shoot",
-                    "Boboo",
-                    "Haboki"
-                  ]
+                  "value": {
+                    "Waddle Dee": "No Ability",
+                    "Bronto Burt": "No Ability",
+                    "Rocky": "Stone Ability",
+                    "Bobo": "Burning Ability",
+                    "Chilly": "Ice Ability",
+                    "Poppy Bros Jr.": "No Ability",
+                    "Sparky": "Spark Ability",
+                    "Polof": "No Ability",
+                    "Broom Hatter": "Clean Ability",
+                    "Cappy": "No Ability",
+                    "Bouncy": "No Ability",
+                    "Nruff": "No Ability",
+                    "Glunk": "No Ability",
+                    "Togezo": "Needle Ability",
+                    "Kabu": "No Ability",
+                    "Mony": "No Ability",
+                    "Blipper": "No Ability",
+                    "Squishy": "No Ability",
+                    "Gabon": "No Ability",
+                    "Oro": "No Ability",
+                    "Galbo": "Burning Ability",
+                    "Sir Kibble": "Cutter Ability",
+                    "Nidoo": "No Ability",
+                    "Kany": "No Ability",
+                    "Sasuke": "Parasol Ability",
+                    "Yaban": "No Ability",
+                    "Boten": "Needle Ability",
+                    "Coconut": "No Ability",
+                    "Doka": "No Ability",
+                    "Icicle": "No Ability",
+                    "Pteran": "No Ability",
+                    "Loud": "No Ability",
+                    "Como": "No Ability",
+                    "Klinko": "Parasol Ability",
+                    "Babut": "No Ability",
+                    "Wappa": "Ice Ability",
+                    "Mariel": "No Ability",
+                    "Tick": "Needle Ability",
+                    "Apolo": "No Ability",
+                    "Popon Ball": "No Ability",
+                    "KeKe": "Clean Ability",
+                    "Magoo": "Burning Ability",
+                    "Raft Waddle Dee": "No Ability",
+                    "Madoo": "No Ability",
+                    "Corori": "No Ability",
+                    "Kapar": "Cutter Ability",
+                    "Batamon": "No Ability",
+                    "Peran": "No Ability",
+                    "Bobin": "Spark Ability",
+                    "Mopoo": "No Ability",
+                    "Gansan": "Stone Ability",
+                    "Bukiset (Burning)": "Burning Ability",
+                    "Bukiset (Stone)": "Stone Ability",
+                    "Bukiset (Ice)": "Ice Ability",
+                    "Bukiset (Needle)": "Needle Ability",
+                    "Bukiset (Clean)": "Clean Ability",
+                    "Bukiset (Parasol)": "Parasol Ability",
+                    "Bukiset (Spark)": "Spark Ability",
+                    "Bukiset (Cutter)": "Cutter Ability",
+                    "Waddle Dee Drawing": "No Ability",
+                    "Bronto Burt Drawing": "No Ability",
+                    "Bouncy Drawing": "No Ability",
+                    "Kabu (Dekabu)": "No Ability",
+                    "Wapod": "No Ability",
+                    "Propeller": "No Ability",
+                    "Dogon": "No Ability",
+                    "Joe": "No Ability",
+                    "Captain Stitch": "Needle Ability",
+                    "Yuki": "Ice Ability",
+                    "Blocky": "Stone Ability",
+                    "Jumper Shoot": "Parasol Ability",
+                    "Boboo": "Burning Ability",
+                    "Haboki": "Clean Ability"
+                  }
                 }
               ]
             },
@@ -11283,13 +11443,53 @@
                     },
                     {
                       "type": "constant",
-                      "value": [
-                        1,
-                        2,
-                        3,
-                        4,
-                        5
-                      ]
+                      "value": {
+                        "1": [
+                          7798784,
+                          7798785,
+                          7798786,
+                          7798787,
+                          7798788,
+                          7798789,
+                          7799296
+                        ],
+                        "2": [
+                          7798790,
+                          7798791,
+                          7798792,
+                          7798793,
+                          7798794,
+                          7798795,
+                          7799297
+                        ],
+                        "3": [
+                          7798796,
+                          7798797,
+                          7798798,
+                          7798799,
+                          7798800,
+                          7798801,
+                          7799298
+                        ],
+                        "4": [
+                          7798802,
+                          7798803,
+                          7798804,
+                          7798805,
+                          7798806,
+                          7798807,
+                          7799299
+                        ],
+                        "5": [
+                          7798808,
+                          7798809,
+                          7798810,
+                          7798811,
+                          7798812,
+                          7798813,
+                          7799300
+                        ]
+                      }
                     }
                   ]
                 },
@@ -11355,13 +11555,53 @@
                     },
                     {
                       "type": "constant",
-                      "value": [
-                        1,
-                        2,
-                        3,
-                        4,
-                        5
-                      ]
+                      "value": {
+                        "1": [
+                          7798784,
+                          7798785,
+                          7798786,
+                          7798787,
+                          7798788,
+                          7798789,
+                          7799296
+                        ],
+                        "2": [
+                          7798790,
+                          7798791,
+                          7798792,
+                          7798793,
+                          7798794,
+                          7798795,
+                          7799297
+                        ],
+                        "3": [
+                          7798796,
+                          7798797,
+                          7798798,
+                          7798799,
+                          7798800,
+                          7798801,
+                          7799298
+                        ],
+                        "4": [
+                          7798802,
+                          7798803,
+                          7798804,
+                          7798805,
+                          7798806,
+                          7798807,
+                          7799299
+                        ],
+                        "5": [
+                          7798808,
+                          7798809,
+                          7798810,
+                          7798811,
+                          7798812,
+                          7798813,
+                          7799300
+                        ]
+                      }
                     }
                   ]
                 },
@@ -14724,13 +14964,53 @@
                     },
                     {
                       "type": "constant",
-                      "value": [
-                        1,
-                        2,
-                        3,
-                        4,
-                        5
-                      ]
+                      "value": {
+                        "1": [
+                          7798784,
+                          7798785,
+                          7798786,
+                          7798787,
+                          7798788,
+                          7798789,
+                          7799296
+                        ],
+                        "2": [
+                          7798790,
+                          7798791,
+                          7798792,
+                          7798793,
+                          7798794,
+                          7798795,
+                          7799297
+                        ],
+                        "3": [
+                          7798796,
+                          7798797,
+                          7798798,
+                          7798799,
+                          7798800,
+                          7798801,
+                          7799298
+                        ],
+                        "4": [
+                          7798802,
+                          7798803,
+                          7798804,
+                          7798805,
+                          7798806,
+                          7798807,
+                          7799299
+                        ],
+                        "5": [
+                          7798808,
+                          7798809,
+                          7798810,
+                          7798811,
+                          7798812,
+                          7798813,
+                          7799300
+                        ]
+                      }
                     }
                   ]
                 },
@@ -14796,13 +15076,53 @@
                     },
                     {
                       "type": "constant",
-                      "value": [
-                        1,
-                        2,
-                        3,
-                        4,
-                        5
-                      ]
+                      "value": {
+                        "1": [
+                          7798784,
+                          7798785,
+                          7798786,
+                          7798787,
+                          7798788,
+                          7798789,
+                          7799296
+                        ],
+                        "2": [
+                          7798790,
+                          7798791,
+                          7798792,
+                          7798793,
+                          7798794,
+                          7798795,
+                          7799297
+                        ],
+                        "3": [
+                          7798796,
+                          7798797,
+                          7798798,
+                          7798799,
+                          7798800,
+                          7798801,
+                          7799298
+                        ],
+                        "4": [
+                          7798802,
+                          7798803,
+                          7798804,
+                          7798805,
+                          7798806,
+                          7798807,
+                          7799299
+                        ],
+                        "5": [
+                          7798808,
+                          7798809,
+                          7798810,
+                          7798811,
+                          7798812,
+                          7798813,
+                          7799300
+                        ]
+                      }
                     }
                   ]
                 },
@@ -19569,81 +19889,81 @@
               "args": [
                 {
                   "type": "constant",
-                  "value": [
-                    "Waddle Dee",
-                    "Bronto Burt",
-                    "Rocky",
-                    "Bobo",
-                    "Chilly",
-                    "Poppy Bros Jr.",
-                    "Sparky",
-                    "Polof",
-                    "Broom Hatter",
-                    "Cappy",
-                    "Bouncy",
-                    "Nruff",
-                    "Glunk",
-                    "Togezo",
-                    "Kabu",
-                    "Mony",
-                    "Blipper",
-                    "Squishy",
-                    "Gabon",
-                    "Oro",
-                    "Galbo",
-                    "Sir Kibble",
-                    "Nidoo",
-                    "Kany",
-                    "Sasuke",
-                    "Yaban",
-                    "Boten",
-                    "Coconut",
-                    "Doka",
-                    "Icicle",
-                    "Pteran",
-                    "Loud",
-                    "Como",
-                    "Klinko",
-                    "Babut",
-                    "Wappa",
-                    "Mariel",
-                    "Tick",
-                    "Apolo",
-                    "Popon Ball",
-                    "KeKe",
-                    "Magoo",
-                    "Raft Waddle Dee",
-                    "Madoo",
-                    "Corori",
-                    "Kapar",
-                    "Batamon",
-                    "Peran",
-                    "Bobin",
-                    "Mopoo",
-                    "Gansan",
-                    "Bukiset (Burning)",
-                    "Bukiset (Stone)",
-                    "Bukiset (Ice)",
-                    "Bukiset (Needle)",
-                    "Bukiset (Clean)",
-                    "Bukiset (Parasol)",
-                    "Bukiset (Spark)",
-                    "Bukiset (Cutter)",
-                    "Waddle Dee Drawing",
-                    "Bronto Burt Drawing",
-                    "Bouncy Drawing",
-                    "Kabu (Dekabu)",
-                    "Wapod",
-                    "Propeller",
-                    "Dogon",
-                    "Joe",
-                    "Captain Stitch",
-                    "Yuki",
-                    "Blocky",
-                    "Jumper Shoot",
-                    "Boboo",
-                    "Haboki"
-                  ]
+                  "value": {
+                    "Waddle Dee": "No Ability",
+                    "Bronto Burt": "No Ability",
+                    "Rocky": "Stone Ability",
+                    "Bobo": "Burning Ability",
+                    "Chilly": "Ice Ability",
+                    "Poppy Bros Jr.": "No Ability",
+                    "Sparky": "Spark Ability",
+                    "Polof": "No Ability",
+                    "Broom Hatter": "Clean Ability",
+                    "Cappy": "No Ability",
+                    "Bouncy": "No Ability",
+                    "Nruff": "No Ability",
+                    "Glunk": "No Ability",
+                    "Togezo": "Needle Ability",
+                    "Kabu": "No Ability",
+                    "Mony": "No Ability",
+                    "Blipper": "No Ability",
+                    "Squishy": "No Ability",
+                    "Gabon": "No Ability",
+                    "Oro": "No Ability",
+                    "Galbo": "Burning Ability",
+                    "Sir Kibble": "Cutter Ability",
+                    "Nidoo": "No Ability",
+                    "Kany": "No Ability",
+                    "Sasuke": "Parasol Ability",
+                    "Yaban": "No Ability",
+                    "Boten": "Needle Ability",
+                    "Coconut": "No Ability",
+                    "Doka": "No Ability",
+                    "Icicle": "No Ability",
+                    "Pteran": "No Ability",
+                    "Loud": "No Ability",
+                    "Como": "No Ability",
+                    "Klinko": "Parasol Ability",
+                    "Babut": "No Ability",
+                    "Wappa": "Ice Ability",
+                    "Mariel": "No Ability",
+                    "Tick": "Needle Ability",
+                    "Apolo": "No Ability",
+                    "Popon Ball": "No Ability",
+                    "KeKe": "Clean Ability",
+                    "Magoo": "Burning Ability",
+                    "Raft Waddle Dee": "No Ability",
+                    "Madoo": "No Ability",
+                    "Corori": "No Ability",
+                    "Kapar": "Cutter Ability",
+                    "Batamon": "No Ability",
+                    "Peran": "No Ability",
+                    "Bobin": "Spark Ability",
+                    "Mopoo": "No Ability",
+                    "Gansan": "Stone Ability",
+                    "Bukiset (Burning)": "Burning Ability",
+                    "Bukiset (Stone)": "Stone Ability",
+                    "Bukiset (Ice)": "Ice Ability",
+                    "Bukiset (Needle)": "Needle Ability",
+                    "Bukiset (Clean)": "Clean Ability",
+                    "Bukiset (Parasol)": "Parasol Ability",
+                    "Bukiset (Spark)": "Spark Ability",
+                    "Bukiset (Cutter)": "Cutter Ability",
+                    "Waddle Dee Drawing": "No Ability",
+                    "Bronto Burt Drawing": "No Ability",
+                    "Bouncy Drawing": "No Ability",
+                    "Kabu (Dekabu)": "No Ability",
+                    "Wapod": "No Ability",
+                    "Propeller": "No Ability",
+                    "Dogon": "No Ability",
+                    "Joe": "No Ability",
+                    "Captain Stitch": "Needle Ability",
+                    "Yuki": "Ice Ability",
+                    "Blocky": "Stone Ability",
+                    "Jumper Shoot": "Parasol Ability",
+                    "Boboo": "Burning Ability",
+                    "Haboki": "Clean Ability"
+                  }
                 }
               ]
             },
@@ -19722,13 +20042,53 @@
                     },
                     {
                       "type": "constant",
-                      "value": [
-                        1,
-                        2,
-                        3,
-                        4,
-                        5
-                      ]
+                      "value": {
+                        "1": [
+                          7798784,
+                          7798785,
+                          7798786,
+                          7798787,
+                          7798788,
+                          7798789,
+                          7799296
+                        ],
+                        "2": [
+                          7798790,
+                          7798791,
+                          7798792,
+                          7798793,
+                          7798794,
+                          7798795,
+                          7799297
+                        ],
+                        "3": [
+                          7798796,
+                          7798797,
+                          7798798,
+                          7798799,
+                          7798800,
+                          7798801,
+                          7799298
+                        ],
+                        "4": [
+                          7798802,
+                          7798803,
+                          7798804,
+                          7798805,
+                          7798806,
+                          7798807,
+                          7799299
+                        ],
+                        "5": [
+                          7798808,
+                          7798809,
+                          7798810,
+                          7798811,
+                          7798812,
+                          7798813,
+                          7799300
+                        ]
+                      }
                     }
                   ]
                 },
@@ -19794,13 +20154,53 @@
                     },
                     {
                       "type": "constant",
-                      "value": [
-                        1,
-                        2,
-                        3,
-                        4,
-                        5
-                      ]
+                      "value": {
+                        "1": [
+                          7798784,
+                          7798785,
+                          7798786,
+                          7798787,
+                          7798788,
+                          7798789,
+                          7799296
+                        ],
+                        "2": [
+                          7798790,
+                          7798791,
+                          7798792,
+                          7798793,
+                          7798794,
+                          7798795,
+                          7799297
+                        ],
+                        "3": [
+                          7798796,
+                          7798797,
+                          7798798,
+                          7798799,
+                          7798800,
+                          7798801,
+                          7799298
+                        ],
+                        "4": [
+                          7798802,
+                          7798803,
+                          7798804,
+                          7798805,
+                          7798806,
+                          7798807,
+                          7799299
+                        ],
+                        "5": [
+                          7798808,
+                          7798809,
+                          7798810,
+                          7798811,
+                          7798812,
+                          7798813,
+                          7799300
+                        ]
+                      }
                     }
                   ]
                 },
@@ -21073,6 +21473,17 @@
         "Jumper Shoot": "Parasol Ability",
         "Boboo": "Burning Ability",
         "Haboki": "Clean Ability"
+      },
+      "ability_map": {
+        "No Ability": "<lambda>",
+        "Burning Ability": "can_reach_burning",
+        "Stone Ability": "can_reach_stone",
+        "Ice Ability": "can_reach_ice",
+        "Needle Ability": "can_reach_needle",
+        "Clean Ability": "can_reach_clean",
+        "Parasol Ability": "can_reach_parasol",
+        "Spark Ability": "can_reach_spark",
+        "Cutter Ability": "can_reach_cutter"
       }
     }
   },

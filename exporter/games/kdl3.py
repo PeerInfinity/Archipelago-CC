@@ -16,17 +16,19 @@ class KDL3GameExportHandler(BaseGameExportHandler):
     AUTO_PRESERVE_LARGE_HELPERS = False
 
     # Blacklist helpers that have loops or complex logic (don't export as definitions)
+    # These helpers use dynamic function dispatch (ability_map[copy_abilities[enemy]])
+    # which requires runtime resolution of nested dict lookups - handled via JS fallback
     HELPERS_TO_EXPORT_BLACKLIST = {
         'can_reach_boss',       # Has can_reach location and f-string lookup
-        'can_assemble_rob',     # Has for/while loops
-        'can_fix_angel_wings',  # Has for loop
+        'can_assemble_rob',     # Has for/while loops and dynamic function dispatch
+        'can_fix_angel_wings',  # Has for loop and dynamic function dispatch
     }
 
     # Preserve these helpers as helper calls (don't inline them - use JavaScript instead)
     HELPERS_TO_PRESERVE = {
         'can_reach_boss',       # Has can_reach location and f-string lookup
-        'can_assemble_rob',     # Has for/while loops
-        'can_fix_angel_wings',  # Has for loop
+        'can_assemble_rob',     # Has for/while loops and dynamic function dispatch
+        'can_fix_angel_wings',  # Has for loop and dynamic function dispatch
     }
 
     def __init__(self):
@@ -51,6 +53,29 @@ class KDL3GameExportHandler(BaseGameExportHandler):
             logger.debug(f"Exported copy_abilities: {len(world.copy_abilities)} entries")
         else:
             logger.warning("World does not have copy_abilities attribute")
+
+        # Export ability_map as a dictionary mapping ability names to helper function names
+        # This is needed for the dynamic function dispatch pattern:
+        # ability_map[copy_abilities[enemy]](state, player)
+        try:
+            from worlds.kdl3 import rules as kdl3_rules
+            if hasattr(kdl3_rules, 'ability_map'):
+                # Convert function references to their names
+                ability_map = {}
+                for ability_name, func in kdl3_rules.ability_map.items():
+                    if callable(func):
+                        func_name = getattr(func, '__name__', None)
+                        if func_name:
+                            ability_map[ability_name] = func_name
+                        else:
+                            # Lambda functions - extract name from string representation
+                            ability_map[ability_name] = str(func)
+                    else:
+                        ability_map[ability_name] = str(func)
+                settings['ability_map'] = ability_map
+                logger.debug(f"Exported ability_map: {ability_map}")
+        except Exception as e:
+            logger.warning(f"Could not export ability_map: {e}")
 
         return settings
 
