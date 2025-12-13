@@ -1317,6 +1317,13 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
           return attrValue;
         } else {
+          // Special case: Python Option objects use .value to get the actual value
+          // In JSON rules, settings are already resolved to their raw values, so accessing .value
+          // on a primitive (number, string, boolean) should just return the primitive itself
+          // This handles patterns like: setting_value("some_option").value -> already resolved to 15
+          if (rule.attr === 'value' && baseObject !== undefined && baseObject !== null) {
+            return baseObject;
+          }
           return undefined;
         }
       }
