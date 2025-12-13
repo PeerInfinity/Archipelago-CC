@@ -717,6 +717,77 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
 
+        if (rule.name === 'iter') {
+          // Python's iter() function - create an iterator from an iterable
+          // We wrap the result in an iterator object that tracks position
+          if (!rule.args || rule.args.length === 0) {
+            result = { __isIterator: true, items: [], position: 0 };
+            break;
+          }
+
+          const iterArg = rule.args[0];
+          let items;
+          if (iterArg && iterArg.type === 'generator_expression') {
+            // Evaluate generator expression to get all values as an array
+            items = evaluateRule(iterArg, context, depth + 1, localScope);
+            // Generator expression should return an array
+            if (!Array.isArray(items)) {
+              items = items !== undefined ? [items] : [];
+            }
+          } else {
+            // Evaluate the argument - should be an iterable (array)
+            const value = evaluateRule(iterArg, context, depth + 1, localScope);
+            if (Array.isArray(value)) {
+              items = value;
+            } else if (value && typeof value === 'object') {
+              // Convert object keys to array (like Python's iter(dict) returns keys)
+              items = Object.keys(value);
+            } else if (typeof value === 'string') {
+              items = value.split('');
+            } else {
+              items = [];
+            }
+          }
+          // Return an iterator object that tracks position
+          result = { __isIterator: true, items: items, position: 0 };
+          break;
+        }
+
+        if (rule.name === 'next') {
+          // Python's next() function - get next item from iterator
+          // next(iterator) or next(iterator, default)
+          // Iterator is an object with { __isIterator, items, position }
+          if (!rule.args || rule.args.length === 0) {
+            result = undefined;
+            break;
+          }
+
+          const iteratorArg = evaluateRule(rule.args[0], context, depth + 1, localScope);
+          const defaultValue = rule.args.length > 1
+            ? evaluateRule(rule.args[1], context, depth + 1, localScope)
+            : undefined;
+
+          // Handle iterator object
+          if (iteratorArg && iteratorArg.__isIterator) {
+            if (iteratorArg.position < iteratorArg.items.length) {
+              result = iteratorArg.items[iteratorArg.position];
+              iteratorArg.position++; // Advance the iterator
+            } else {
+              result = defaultValue;
+            }
+          } else if (Array.isArray(iteratorArg)) {
+            // Legacy: treat plain array as iterator (returns first, doesn't advance)
+            if (iteratorArg.length > 0) {
+              result = iteratorArg[0];
+            } else {
+              result = defaultValue;
+            }
+          } else {
+            result = defaultValue;
+          }
+          break;
+        }
+
         // Regular helper function handling
         const args = rule.args
           ? rule.args.map((arg) => evaluateRule(arg, context, depth + 1))
@@ -1710,6 +1781,80 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
 
+        // Special case: Dynamic function dispatch
+        // If func is a string, it's a helper function name from a dictionary lookup
+        // This handles patterns like: ability_map[copy_abilities[enemy]](state, player)
+        // where the subscript evaluates to a helper function name like "can_reach_burning"
+        if (typeof func === 'string') {
+          const helperName = func;
+          const callArgs = (rule.args || []).map(
+            (arg) => evaluateRule(arg, context, depth + 1, localScope)
+          );
+
+          // If any argument evaluation results in undefined, return undefined
+          if (callArgs.some((arg) => arg === undefined)) {
+            result = undefined;
+            break;
+          }
+
+          // First, check for a JSON helper definition in rules.json
+          if (typeof context?.getStaticData === 'function') {
+            const staticData = context.getStaticData();
+            const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
+            const playerIdKey = String(playerId);
+            const helperDefinition = staticData?.helpers?.[playerIdKey]?.[helperName];
+
+            if (helperDefinition) {
+              // Found a helper definition - evaluate it recursively
+              const params = helperDefinition.params || [];
+              const defaults = helperDefinition.defaults || {};
+              const body = helperDefinition.body || helperDefinition;
+
+              // Create localScope with parameter bindings
+              let helperLocalScope = localScope ? { ...localScope } : {};
+
+              // Apply default values first
+              for (const paramName of params) {
+                if (paramName in defaults) {
+                  helperLocalScope[paramName] = defaults[paramName];
+                }
+              }
+
+              // Override with actual argument values
+              for (let i = 0; i < params.length && i < callArgs.length; i++) {
+                helperLocalScope[params[i]] = callArgs[i];
+              }
+
+              result = evaluateRule(body, context, depth + 1, helperLocalScope);
+
+              // Unwrap return marker if present
+              if (result && typeof result === 'object' && result.__isReturn) {
+                result = result.value;
+              }
+
+              if (result !== undefined) {
+                log('debug', `[evaluateRule] Dynamic helper (JSON) '${helperName}' returned: ${result}`);
+                break;
+              }
+            }
+          }
+
+          // Fallback: Call the helper function through context.executeHelper (JavaScript helpers)
+          if (context.executeHelper) {
+            try {
+              result = context.executeHelper(helperName, ...callArgs);
+              log('debug', `[evaluateRule] Dynamic helper (JS) '${helperName}' returned: ${result}`);
+            } catch (error) {
+              log('error', `[evaluateRule] Failed to execute dynamic helper '${helperName}':`, error);
+              result = undefined;
+            }
+          } else {
+            log('warn', `[evaluateRule] No executeHelper method in context for dynamic helper '${helperName}'`);
+            result = undefined;
+          }
+          break;
+        }
+
         const args = (rule.args || []).map(
           (arg) => evaluateRule(arg, context, depth + 1, localScope) // Evaluate args recursively
         );
@@ -1807,6 +1952,76 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             { rule, list }
           );
           result = undefined;
+        }
+        break;
+      }
+
+      case 'slice': {
+        // Python slice operation: list[start:stop:step]
+        // Returns a subset of the list/array
+        const sliceValue = evaluateRule(rule.value, context, depth + 1, localScope);
+
+        if (sliceValue === undefined) {
+          result = undefined;
+          break;
+        }
+
+        if (!Array.isArray(sliceValue) && typeof sliceValue !== 'string') {
+          log('warn', '[evaluateRule] Slice applied to non-array/non-string value', { rule, sliceValue });
+          result = undefined;
+          break;
+        }
+
+        // Evaluate slice bounds (any can be null/undefined for open-ended slices)
+        const lower = rule.lower !== null && rule.lower !== undefined
+          ? evaluateRule(rule.lower, context, depth + 1, localScope)
+          : undefined;
+        const upper = rule.upper !== null && rule.upper !== undefined
+          ? evaluateRule(rule.upper, context, depth + 1, localScope)
+          : undefined;
+        const step = rule.step !== null && rule.step !== undefined
+          ? evaluateRule(rule.step, context, depth + 1, localScope)
+          : undefined;
+
+        // Python-style slicing
+        const len = sliceValue.length;
+
+        // Handle negative indices (Python allows negative indices)
+        let start = lower !== undefined ? (lower < 0 ? Math.max(0, len + lower) : lower) : 0;
+        let stop = upper !== undefined ? (upper < 0 ? Math.max(0, len + upper) : upper) : len;
+        const stepVal = step !== undefined ? step : 1;
+
+        // Clamp values
+        start = Math.max(0, Math.min(len, start));
+        stop = Math.max(0, Math.min(len, stop));
+
+        if (stepVal === 0) {
+          log('warn', '[evaluateRule] Slice step cannot be 0');
+          result = undefined;
+          break;
+        }
+
+        // Perform the slice
+        if (stepVal === 1) {
+          // Simple slice with step 1
+          result = Array.isArray(sliceValue) ? sliceValue.slice(start, stop) : sliceValue.slice(start, stop);
+        } else if (stepVal > 0) {
+          // Forward slice with step > 1
+          result = [];
+          for (let i = start; i < stop; i += stepVal) {
+            result.push(sliceValue[i]);
+          }
+        } else {
+          // Negative step (reverse)
+          // For negative step, Python swaps start/stop semantics
+          const actualStart = lower !== undefined ? lower : len - 1;
+          const actualStop = upper !== undefined ? upper : -len - 1;
+          result = [];
+          for (let i = actualStart; i > actualStop; i += stepVal) {
+            if (i >= 0 && i < len) {
+              result.push(sliceValue[i]);
+            }
+          }
         }
         break;
       }
@@ -2423,7 +2638,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           const settingValue = staticData?.settings?.[playerId]?.[rule.name];
           if (settingValue !== undefined) {
             result = settingValue;
-            log('debug', `[evaluateRule] Resolved name '${rule.name}' from settings: ${result}`);
+            log('debug', `[evaluateRule] Resolved name '${rule.name}' from settings: ${typeof result === 'object' ? 'object' : result}`);
           }
         }
 
@@ -2533,6 +2748,41 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           case '%':
             // Python modulo operator
             result = right !== 0 ? left % right : undefined;
+            break;
+          case '&':
+            // Python bitwise AND operator (also used for boolean AND in some contexts)
+            // For booleans: True & False = False, True & True = True
+            // For integers: performs bitwise AND
+            if (typeof left === 'boolean' && typeof right === 'boolean') {
+              result = left && right;
+            } else if (typeof left === 'number' && typeof right === 'number') {
+              result = left & right;
+            } else {
+              // Mixed types: convert to boolean
+              result = Boolean(left) && Boolean(right);
+            }
+            break;
+          case '|':
+            // Python bitwise OR operator (also used for boolean OR in some contexts)
+            // For booleans: True | False = True, False | False = False
+            // For integers: performs bitwise OR
+            if (typeof left === 'boolean' && typeof right === 'boolean') {
+              result = left || right;
+            } else if (typeof left === 'number' && typeof right === 'number') {
+              result = left | right;
+            } else {
+              // Mixed types: convert to boolean
+              result = Boolean(left) || Boolean(right);
+            }
+            break;
+          case '^':
+            // Python bitwise XOR operator
+            if (typeof left === 'number' && typeof right === 'number') {
+              result = left ^ right;
+            } else {
+              // For booleans: XOR (exactly one true)
+              result = Boolean(left) !== Boolean(right);
+            }
             break;
           default:
             log('warn', `[evaluateRule] Unknown binary_op operator: ${op}`, {
@@ -2925,7 +3175,11 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           const comp = rule.comprehension;
           const targetName = comp.target?.name;
           const iteratorRule = comp.iterator;
-          const conditions = comp.conditions || [];
+          // Handle both singular 'condition' and plural 'conditions'
+          let conditions = comp.conditions || [];
+          if (!Array.isArray(conditions) && comp.condition) {
+            conditions = [comp.condition];
+          }
 
           // Evaluate the iterator (should be an array from localScope or context)
           const iteratorValue = evaluateRule(iteratorRule, context, depth + 1, localScope);
@@ -3691,6 +3945,79 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         // for loops don't return a value unless there was an early return
+        if (!(result && typeof result === 'object' && result.__isReturn)) {
+          result = undefined;
+        }
+        break;
+      }
+
+      case 'while_loop': {
+        // Execute a loop body while condition is true
+        // Similar to for_iter but with a condition check instead of iteration
+
+        // Ensure we have a scope
+        if (localScope === null) {
+          log('warn', '[evaluateRule] while_loop used without local scope');
+          result = undefined;
+          break;
+        }
+
+        // Limit iterations to prevent infinite loops
+        const maxWhileIterations = 1000;
+        let whileIterCount = 0;
+        let breakWhileLoop = false;
+
+        while (!breakWhileLoop && whileIterCount < maxWhileIterations) {
+          // Evaluate condition each iteration
+          const conditionResult = evaluateRule(rule.condition, context, depth + 1, localScope);
+
+          // If condition is false or undefined, exit loop
+          if (!conditionResult) {
+            break;
+          }
+
+          whileIterCount++;
+
+          // Execute body statements
+          if (Array.isArray(rule.body)) {
+            for (const stmt of rule.body) {
+              const stmtResult = evaluateRule(stmt, context, depth + 1, localScope);
+
+              // Check for early return
+              if (stmtResult && typeof stmtResult === 'object' && stmtResult.__isReturn) {
+                result = stmtResult;
+                breakWhileLoop = true;
+                break;
+              }
+              // Check for break
+              if (stmtResult && typeof stmtResult === 'object' && stmtResult.__isBreak) {
+                breakWhileLoop = true;
+                break;
+              }
+              // Check for continue
+              if (stmtResult && typeof stmtResult === 'object' && stmtResult.__isContinue) {
+                break; // break inner loop, continue outer while loop
+              }
+            }
+          }
+        }
+
+        if (whileIterCount >= maxWhileIterations) {
+          log('warn', `[evaluateRule] while_loop exceeded max iterations (${maxWhileIterations})`);
+        }
+
+        // Handle orelse clause (Python's else on while loop - runs if loop completes normally)
+        if (!breakWhileLoop && Array.isArray(rule.orelse)) {
+          for (const stmt of rule.orelse) {
+            const stmtResult = evaluateRule(stmt, context, depth + 1, localScope);
+            if (stmtResult && typeof stmtResult === 'object' && stmtResult.__isReturn) {
+              result = stmtResult;
+              break;
+            }
+          }
+        }
+
+        // while loops don't return a value unless there was an early return
         if (!(result && typeof result === 'object' && result.__isReturn)) {
           result = undefined;
         }

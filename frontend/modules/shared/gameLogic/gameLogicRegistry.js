@@ -219,7 +219,7 @@ import { hkStateModule } from './hk/hkLogic.js';
 import * as jakanddaxterLogic from './jakanddaxter/jakanddaxterLogic.js';
 import { kh1Logic } from './kh1/kh1Logic.js';
 import { helperFunctions as kh2HelperFunctions } from './kh2/kh2Logic.js';
-import * as kdl3Logic from './kdl3/kdl3Logic.js';
+// kdl3Logic removed - using generic helpers with JSON rule definitions
 // LADX now uses generic helpers - RUPEES is set in prog_items from sphere log
 import { helperFunctions as lingoHelperFunctions } from './lingo/lingoLogic.js';
 import * as marioland2Logic from './marioland2/marioland2Logic.js';
@@ -318,7 +318,7 @@ const GAME_REGISTRY = {
   },
   "Kirby's Dream Land 3": {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: kdl3Logic.helperFunctions,
+    helperFunctions: genericLogic.helperFunctions,  // All helpers now exported as JSON rules
     worldClasses: ['KDL3World'],
     aliases: ["Kirby's Dream Land 3", 'KDL3']
   },
