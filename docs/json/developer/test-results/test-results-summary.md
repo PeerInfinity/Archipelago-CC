@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-13 11:07:21
+**Generated:** 2025-12-13 11:40:32
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -18,8 +18,8 @@ Additional test results:
 
 ### Individual Test Results
 
-- **Minimal Test:** 70/75 passed (93.3%)
-- **Full Test:** 70/75 passed (93.3%)
+- **Minimal Test:** 66/73 passed (90.4%)
+- **Full Test:** 66/73 passed (90.4%)
 - **Multiclient Test:** 70/75 passed (93.3%)
 - **Multiworld Test:** 72/75 passed (96.0%)
 
@@ -32,19 +32,19 @@ Additional test results:
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 68/75 (90.7%)
-- **Templates passing 3 tests:** 1/75 (1.3%)
-- **Templates passing 2 tests:** 1/75 (1.3%)
-- **Templates passing 1 test:** 5/75 (6.7%)
-- **Templates passing 0 tests:** 0/75 (0.0%)
+- **Templates passing all 4 tests:** 64/75 (85.3%)
+- **Templates passing 3 tests:** 2/75 (2.7%)
+- **Templates passing 2 tests:** 4/75 (5.3%)
+- **Templates passing 1 test:** 4/75 (5.3%)
+- **Templates passing 0 tests:** 1/75 (1.3%)
 
 ### Generic Exporter/Logic Statistics
 
-Of the 68 templates passing all 4 tests:
+Of the 64 templates passing all 4 tests:
 
-- **Passing with Generic Exporter:** 29/68 (42.6%)
-- **Passing with Generic Logic:** 53/68 (77.9%)
-- **Passing with Both Generic:** 29/68 (42.6%)
+- **Passing with Generic Exporter:** 26/64 (40.6%)
+- **Passing with Generic Logic:** 52/64 (81.2%)
+- **Passing with Both Generic:** 26/64 (40.6%)
 
 **Combined Custom Code Size:**
 
@@ -76,14 +76,14 @@ Of the 68 templates passing all 4 tests:
 | DOOM 1993 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | DOOM II | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.7KB | ✅ |
-| Donkey Kong Country 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Donkey Kong Country 3 | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Factorio | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 11.4KB | ✅ |
 | Faxanadu | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.6KB | ✅ |
 | Heretic | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.0KB | ✅ |
 | Inscryption | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.1KB | ✅ |
-| Jak and Daxter: The Precursor Legacy | ✅ Passed | ✅ Passed | ❌ Failed | ❌ Failed | ✅ | ✅ | 22.1KB | 4.6KB |
+| Jak and Daxter: The Precursor Legacy | ❓ N/A | ❓ N/A | ❌ Failed | ❌ Failed | ❓ N/A | ❓ N/A | 22.1KB | 4.6KB |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 58.5KB | 5.4KB |
 | Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 33.1KB | 105.3KB |
 | Kirby's Dream Land 3 | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 11.4KB | ✅ |
@@ -91,7 +91,7 @@ Of the 68 templates passing all 4 tests:
 | Lingo | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 33.7KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 17.9KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
-| Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.6KB | ✅ |
+| Mario & Luigi Superstar Saga | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | 0.6KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Mega Man 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.3KB | ✅ |
 | MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 3.5KB | ✅ |
@@ -106,21 +106,21 @@ Of the 68 templates passing all 4 tests:
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Saving Princess | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.7KB | 6.9KB |
-| Shivers | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Shivers | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 19.8KB | 86.3KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 16.0KB | 10.7KB |
 | Subnautica | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.4KB | 14.7KB |
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.9KB | 4.9KB |
-| Super Mario World | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
+| Super Mario World | ❌ Failed | ❌ Failed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ |
 | Super Metroid | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 72.0KB | 114.6KB |
 | TOEM original | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ |
-| TUNIC | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ⚫ | ✅ | 2.5KB | ✅ |
+| TUNIC | ❓ N/A | ❓ N/A | ❌ Failed | ✅ Passed | ❓ N/A | ❓ N/A | 2.5KB | ✅ |
 | Terraria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.3KB | 4.3KB |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.0KB | ✅ |
-| The Messenger | ❌ Failed | ❌ Failed | ✅ Passed | ❌ Failed | ✅ | ✅ | 12.6KB | ✅ |
+| The Messenger | ✅ Passed | ✅ Passed | ✅ Passed | ❌ Failed | ✅ | ✅ | 12.6KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.8KB | 4.6KB |
 | The Witness | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 28.9KB | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.1KB | ✅ |
@@ -151,13 +151,15 @@ The following games are excluded from automated testing:
 | Final Fantasy | Requires manual configuration and is not compatible with automated testing. |
 | Hollow Knight | The spoiler test currently freezes. |
 | Ocarina of Time | The default yaml file fails to generate. |
-| Pokemon Emerald | Temporarily excluded.  It takes too long to process. |
-| Pokemon Red and Blue | Temporarily excluded.  It takes too long to process. |
-| SMZ3 | Temporarily excluded.  It takes too long to process.  Also, self-locking locations cause the multiclient test to fail. |
 | Sudoku | Cannot be used for generating worlds. |
 | Universal Tracker | Not a game. |
-| Yu-Gi-Oh! 2006 | Temporarily excluded.  It takes too long to process. |
 | Zillion | Uses the external zilliandomizer tool for its logic, which is not compatible with this system. |
+| Jak and Daxter The Precursor Legacy | Temporarily excluded.  It takes too long to process. |
+| Pokemon Emerald | Temporarily excluded.  It takes too long to process. |
+| Pokemon Red and Blue | Temporarily excluded.  It takes too long to process. |
+| SMZ3 | Temporarily excluded.  It takes too long to process. |
+| TUNIC | Temporarily excluded.  It takes too long to process. |
+| Yu-Gi-Oh! 2006 | Temporarily excluded.  It takes too long to process. |
 
 ## Notes
 

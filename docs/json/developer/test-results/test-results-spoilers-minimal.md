@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-13 11:07:21
+**Generated:** 2025-12-13 11:40:32
 
-**Source Data Created:** 2025-12-13T17:45:36.860041
+**Source Data Created:** 2025-12-13T19:21:57.115250
 
-**Source Data Last Updated:** 2025-12-13T17:45:36.860047
+**Source Data Last Updated:** 2025-12-13T19:21:57.115255
 
 ## Summary
 
-- **Total Games:** 75
-- **Passed:** 70 (93.3%)
-- **Failed:** 5 (6.7%)
+- **Total Games:** 73
+- **Passed:** 66 (90.4%)
+- **Failed:** 7 (9.6%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 29/70 (41.4% of passed)
-- **Passing with Generic Logic:** 54/70 (77.1% of passed)
-- **Passing with Both Generic:** 29/70 (41.4% of passed)
+- **Passing with Generic Exporter:** 26/66 (39.4% of passed)
+- **Passing with Generic Logic:** 54/66 (81.8% of passed)
+- **Passing with Both Generic:** 26/66 (39.4% of passed)
 
 ## Test Results
 
@@ -50,22 +50,21 @@
 | DOOM 1993 | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ✅ |
 | DOOM II | ✅ Passed | 0 | 21.2 | 21.2 | 🟢 Complete | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 4.7KB | ✅ |
-| Donkey Kong Country 3 | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
+| Donkey Kong Country 3 | ❌ Failed | 0 | 0.3 | 3.1 | 🟠 9.7% | ✅ | ✅ |
 | Factorio | ❌ Failed | 0 | 1.8 | 12.1 | 🟡 14.9% | 11.4KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 7.6KB | ✅ |
 | Heretic | ✅ Passed | 0 | 24.1 | 24.1 | 🟢 Complete | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | 1.0KB | ✅ |
 | Inscryption | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | 8.1KB | ✅ |
-| Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | 22.1KB | 4.6KB |
 | Kingdom Hearts | ✅ Passed | 0 | 10.3 | 10.3 | 🟢 Complete | 58.5KB | 5.4KB |
 | Kingdom Hearts 2 | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 33.1KB | 105.3KB |
-| Kirby's Dream Land 3 | ❌ Failed | 0 | 8.5 | 11.1 | 🟡 76.6% | 11.4KB | ✅ |
+| Kirby's Dream Land 3 | ❌ Failed | 0 | 0.21 | 11.1 | 🟠 1.9% | 11.4KB | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 16.4KB | ✅ |
 | Lingo | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 33.7KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 17.9KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.11 | 4.11 | 🟢 Complete | ✅ | ✅ |
-| Mario & Luigi Superstar Saga | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 0.6KB | ✅ |
+| Mario & Luigi Superstar Saga | ❌ Failed | 0 | 6.5 | 7.3 | 🟡 89.0% | 0.6KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ✅ |
 | Mega Man 2 | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 2.3KB | ✅ |
 | MegaMan Battle Network 3 | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 3.5KB | ✅ |
@@ -80,21 +79,20 @@
 | Risk of Rain 2 | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | ✅ | ✅ |
 | Saving Princess | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 13.7KB | 6.9KB |
-| Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
+| Shivers | ❌ Failed | 0 | 2.3 | 17.1 | 🟡 13.5% | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 19.8KB | 86.3KB |
 | Stardew Valley | ✅ Passed | 0 | 44.1 | 44.1 | 🟢 Complete | 16.0KB | 10.7KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.4KB | 14.7KB |
 | Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 13.9KB | 4.9KB |
-| Super Mario World | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
+| Super Mario World | ❌ Failed | 0 | 7.1 | 8.2 | 🟡 86.6% | ✅ | ✅ |
 | Super Metroid | ❌ Failed | 1 | 0 | 8.3 | 🔴 0.0% | 72.0KB | 114.6KB |
 | TOEM original | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
-| TUNIC | ❌ Failed | 16 | 5.1 | 5.1 | 🟡 100.0% | 2.5KB | ✅ |
 | Terraria | ✅ Passed | 0 | 9.5 | 9.5 | 🟢 Complete | 12.3KB | 4.3KB |
 | The Legend of Zelda | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 7.0KB | ✅ |
-| The Messenger | ❌ Failed | 0 | 4.3 | 6.3 | 🟡 68.3% | 12.6KB | ✅ |
+| The Messenger | ✅ Passed | 0 | 6.3 | 6.3 | 🟢 Complete | 12.6KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | 18.1 | 18.1 | 🟢 Complete | 4.8KB | 4.6KB |
 | The Witness | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 28.9KB | ✅ |
 | Timespinner | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 4.1KB | ✅ |

@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary (WorldGen)
 
-**Generated:** 2025-12-13 11:07:21
+**Generated:** 2025-12-13 11:40:32
 
 [View Original Template Results](./test-results-summary.md)
 
@@ -143,13 +143,15 @@ The following games are excluded from automated testing:
 | Final Fantasy | Requires manual configuration and is not compatible with automated testing. |
 | Hollow Knight | The spoiler test currently freezes. |
 | Ocarina of Time | The default yaml file fails to generate. |
-| Pokemon Emerald | Temporarily excluded.  It takes too long to process. |
-| Pokemon Red and Blue | Temporarily excluded.  It takes too long to process. |
-| SMZ3 | Temporarily excluded.  It takes too long to process.  Also, self-locking locations cause the multiclient test to fail. |
 | Sudoku | Cannot be used for generating worlds. |
 | Universal Tracker | Not a game. |
-| Yu-Gi-Oh! 2006 | Temporarily excluded.  It takes too long to process. |
 | Zillion | Uses the external zilliandomizer tool for its logic, which is not compatible with this system. |
+| Jak and Daxter The Precursor Legacy | Temporarily excluded.  It takes too long to process. |
+| Pokemon Emerald | Temporarily excluded.  It takes too long to process. |
+| Pokemon Red and Blue | Temporarily excluded.  It takes too long to process. |
+| SMZ3 | Temporarily excluded.  It takes too long to process. |
+| TUNIC | Temporarily excluded.  It takes too long to process. |
+| Yu-Gi-Oh! 2006 | Temporarily excluded.  It takes too long to process. |
 
 ## Notes
 
