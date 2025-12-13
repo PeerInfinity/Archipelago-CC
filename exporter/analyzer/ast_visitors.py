@@ -225,7 +225,7 @@ class ASTVisitorMixin:
             # Data lambdas (used in map(), filter(), etc.) should return the full lambda structure
             is_rule_lambda = (
                 not param_names or  # No params - simple rule
-                (param_names and param_names[0] in ('state', 'self'))  # First param is state/self
+                (param_names and param_names[0] in ('state', 'self', 'sm'))  # First param is state/self/sm (SM uses sm)
             )
 
             if is_rule_lambda:

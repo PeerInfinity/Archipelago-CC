@@ -17176,5 +17176,81 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "flatten": {
+        "params": [
+          "l"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "helper",
+              "name": "type",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "l"
+                }
+              ]
+            },
+            "op": "is",
+            "right": {
+              "type": "name",
+              "name": "list"
+            }
+          },
+          "if_true": {
+            "type": "generator_expression",
+            "element": {
+              "type": "generator_expression",
+              "element": {
+                "type": "name",
+                "name": "y"
+              },
+              "comprehension": {
+                "type": "comprehension_details",
+                "target": {
+                  "type": "name",
+                  "name": "y"
+                },
+                "iterator": {
+                  "type": "helper",
+                  "name": "flatten",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "x"
+                    }
+                  ]
+                }
+              }
+            },
+            "comprehension": {
+              "type": "comprehension_details",
+              "target": {
+                "type": "name",
+                "name": "x"
+              },
+              "iterator": {
+                "type": "name",
+                "name": "l"
+              }
+            }
+          },
+          "if_false": {
+            "type": "list",
+            "value": [
+              {
+                "type": "name",
+                "name": "l"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
 }
