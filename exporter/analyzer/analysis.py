@@ -19,6 +19,18 @@ from exporter.constants import MAX_ANALYZE_RULE_CALLS
 # Global counter for detecting infinite loops
 _analyze_rule_call_count = 0
 
+
+def reset_analyze_rule_counter():
+    """Reset the global analyze_rule call counter.
+
+    Call this before processing a new player to prevent counter accumulation
+    across multiple players in a multiworld, which could cause false positive
+    infinite loop detection.
+    """
+    global _analyze_rule_call_count
+    _analyze_rule_call_count = 0
+
+
 def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
                  closure_vars: Optional[Dict[str, Any]] = None,
                  seen_funcs: Optional[Dict[int, int]] = None,

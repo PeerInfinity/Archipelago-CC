@@ -12,7 +12,7 @@ from typing import Any, Dict, List, Set, Optional, Tuple
 from collections import defaultdict
 
 import Utils
-from .analyzer import analyze_rule
+from .analyzer import analyze_rule, reset_analyze_rule_counter
 from .analyzer.cache import clear_caches as clear_analyzer_caches
 from .games import get_game_export_handler, clear_handler_cache
 from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB
@@ -739,6 +739,10 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
 
     for player in multiworld.player_ids:
         player_str = str(player) # Use player_str consistently
+
+        # Reset the analyze_rule counter for each player to prevent accumulation
+        # across players in a multiworld which can cause false infinite loop detection
+        reset_analyze_rule_counter()
 
         # Get game name, world, and handler
         game_name = multiworld.game[player]
