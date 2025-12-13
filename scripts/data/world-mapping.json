@@ -2,10 +2,10 @@
   "A Hat in Time": {
     "exporter_path": "exporter/games/ahit.py",
     "exporter_size": 12470,
-    "game_logic_path": "frontend/modules/shared/gameLogic/ahit/ahitLogic.js",
-    "game_logic_size": 10533,
+    "game_logic_path": null,
+    "game_logic_size": 0,
     "has_custom_exporter": true,
-    "has_custom_game_logic": true,
+    "has_custom_game_logic": false,
     "world_directory": "ahit"
   },
   "A Hat in Time WorldGen": {
@@ -532,7 +532,7 @@
   },
   "Jak and Daxter: The Precursor Legacy": {
     "exporter_path": "exporter/games/jakanddaxter.py",
-    "exporter_size": 17249,
+    "exporter_size": 18414,
     "game_logic_path": "frontend/modules/shared/gameLogic/jakanddaxter/jakanddaxterLogic.js",
     "game_logic_size": 4743,
     "has_custom_exporter": true,
@@ -550,7 +550,7 @@
   },
   "Kingdom Hearts 2": {
     "exporter_path": "exporter/games/kh2.py",
-    "exporter_size": 15883,
+    "exporter_size": 33937,
     "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
     "game_logic_size": 107789,
     "has_custom_exporter": true,
@@ -705,7 +705,7 @@
     "exporter_path": "exporter/games/mm2.py",
     "exporter_size": 642,
     "game_logic_path": "frontend/modules/shared/gameLogic/mm2/mm2Logic.js",
-    "game_logic_size": 4018,
+    "game_logic_size": 4237,
     "has_custom_exporter": true,
     "has_custom_game_logic": true,
     "world_directory": "mm2"
@@ -1072,7 +1072,7 @@
   },
   "Subnautica": {
     "exporter_path": "exporter/games/subnautica.py",
-    "exporter_size": 2426,
+    "exporter_size": 2442,
     "game_logic_path": "frontend/modules/shared/gameLogic/subnautica/subnauticaLogic.js",
     "game_logic_size": 15085,
     "has_custom_exporter": true,
