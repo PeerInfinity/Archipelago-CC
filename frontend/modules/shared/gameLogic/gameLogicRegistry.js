@@ -236,7 +236,7 @@ import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
 import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
 import * as overcooked2Logic from './overcooked2/overcooked2Logic.js';
 import { overcooked2StateModule } from './overcooked2/overcooked2Logic.js';
-import * as paintLogic from './paint/paintLogic.js';
+// paintLogic removed - helpers now exported to rules.json
 import * as soeLogic from './soe/soeLogic.js';
 import * as smz3Logic from './smz3/smz3Logic.js';
 import * as sc2Logic from './sc2/sc2Logic.js';
@@ -366,7 +366,7 @@ const GAME_REGISTRY = {
   },
   'Paint': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: paintLogic.helperFunctions,
+    // Helper functions now exported to rules.json - no JavaScript needed
     worldClasses: ['PaintWorld'],
     aliases: ['Paint']
   },
