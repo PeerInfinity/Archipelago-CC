@@ -155,6 +155,63 @@ import { DEFAULT_PLAYER_ID } from './playerIdUtils.js';
 
 // frontend/modules/shared/ruleEngine.js
 
+/**
+ * Resolves helper function parameters from arguments, slot_data, or settings.
+ * This is the shared logic used by both stateInterface.js and ruleEvaluator.js
+ * when evaluating helper definitions exported from Python to rules.json.
+ *
+ * Parameter resolution order:
+ * 1. Use provided argument if available
+ * 2. Try exact parameter name match in slot_data
+ * 3. Try exact parameter name match in settings
+ * 4. Try mapped name from helperDefinition.param_mappings (exported from Python)
+ *
+ * @param {Object} helperDefinition - The helper definition from rules.json
+ * @param {Array} args - Arguments passed to the helper call
+ * @param {Object} staticData - Static game data containing settings and slot_data
+ * @param {string} playerIdStr - Player ID as string for lookup
+ * @returns {Object} The resolved helper scope with parameter values
+ */
+export function resolveHelperScope(helperDefinition, args, staticData, playerIdStr) {
+  const helperScope = {};
+
+  if (!helperDefinition.params || !Array.isArray(helperDefinition.params)) {
+    return helperScope;
+  }
+
+  const playerSettings = staticData?.settings?.[playerIdStr] || {};
+  const playerSlotData = staticData?.game_info?.[playerIdStr]?.slot_data || {};
+  const playerOptions = playerSettings.options || playerSettings;
+  // Get param_mappings from the helper definition (exported from Python game handler)
+  const paramMappings = helperDefinition.param_mappings || {};
+
+  helperDefinition.params.forEach((paramName, index) => {
+    if (index < args.length) {
+      // Use provided argument
+      helperScope[paramName] = args[index];
+    } else {
+      // Try to resolve from slot_data or settings
+      if (playerSlotData[paramName] !== undefined) {
+        helperScope[paramName] = playerSlotData[paramName];
+      } else if (playerOptions[paramName] !== undefined) {
+        helperScope[paramName] = playerOptions[paramName];
+      } else {
+        // Try mapped parameter name from helper definition
+        const mappedName = paramMappings[paramName];
+        if (mappedName) {
+          if (playerSlotData[mappedName] !== undefined) {
+            helperScope[paramName] = playerSlotData[mappedName];
+          } else if (playerOptions[mappedName] !== undefined) {
+            helperScope[paramName] = playerOptions[mappedName];
+          }
+        }
+      }
+    }
+  });
+
+  return helperScope;
+}
+
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -2534,6 +2591,67 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'map': {
+        // Apply a function (lambda) to each element of an iterable
+        // Rule structure: { type: 'map', function: <lambda>, iterable: <rule> }
+        if (!rule.function || !rule.iterable) {
+          log('warn', '[evaluateRule] map rule missing function or iterable', { rule });
+          result = undefined;
+          break;
+        }
+
+        const mapIterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
+
+        if (mapIterable === undefined) {
+          result = undefined;
+          break;
+        }
+
+        if (!Array.isArray(mapIterable)) {
+          log('warn', '[evaluateRule] map iterable is not an array', { mapIterable, rule });
+          result = undefined;
+          break;
+        }
+
+        // Apply the function to each element
+        const mapFunc = rule.function;
+        const mappedResults = [];
+
+        for (const item of mapIterable) {
+          // Create a new scope with the lambda parameter bound to the current item
+          const lambdaScope = localScope ? { ...localScope } : {};
+
+          if (mapFunc.type === 'lambda' && mapFunc.params && mapFunc.params.length > 0) {
+            // Bind the first parameter to the item
+            lambdaScope[mapFunc.params[0]] = item;
+            // Evaluate the lambda body with the bound parameter
+            const mappedValue = evaluateRule(mapFunc.body, context, depth + 1, lambdaScope);
+            mappedResults.push(mappedValue);
+          } else {
+            // If it's not a proper lambda, try to evaluate it directly
+            log('warn', '[evaluateRule] map function is not a lambda with params', { mapFunc });
+            mappedResults.push(undefined);
+          }
+        }
+
+        // If any mapped result is undefined, the whole map result is undefined
+        if (mappedResults.some((v) => v === undefined)) {
+          result = undefined;
+        } else {
+          result = mappedResults;
+        }
+        break;
+      }
+
+      case 'lambda': {
+        // Lambda expressions - these are typically evaluated in context (e.g., by map)
+        // If we encounter a lambda directly, it's likely being used as a value
+        // Return a representation that can be used by other constructs
+        log('debug', '[evaluateRule] Lambda encountered directly - returning function representation');
+        result = rule; // Return the rule itself as a function representation
+        break;
+      }
+
       case 'list': {
         if (!Array.isArray(rule.value)) {
           log(
@@ -3495,8 +3613,21 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         for (let i = 0; i < maxIterations && !breakIterLoop; i++) {
           const item = iterable[i];
 
-          // Set loop variable if specified (and not '_')
-          if (rule.var && rule.var !== '_') {
+          // Set loop variable(s) - support both single var and tuple unpacking (vars)
+          if (rule.vars && Array.isArray(rule.vars)) {
+            // Tuple unpacking: item should be an array [val1, val2, ...]
+            // This handles patterns like: for key, value in dict.items()
+            if (Array.isArray(item)) {
+              rule.vars.forEach((varName, idx) => {
+                if (varName !== '_') {
+                  localScope[varName] = item[idx];
+                }
+              });
+            } else {
+              // If item is not an array but we expected tuple unpacking, log warning
+              log('warn', `[evaluateRule] for_iter: expected array item for tuple unpacking, got ${typeof item}`);
+            }
+          } else if (rule.var && rule.var !== '_') {
             localScope[rule.var] = item;
           }
 

@@ -227,7 +227,7 @@ import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
 import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 import * as pokemon_emeraldLogic from './pokemon_emerald/pokemon_emeraldLogic.js';
 import { pokemon_emeraldStateModule } from './pokemon_emerald/pokemon_emeraldLogic.js';
-import { helperFunctions as mm2HelperFunctions } from './mm2/mm2Logic.js';
+// mm2Logic removed - helpers now exported to rules.json
 import * as ootLogic from './ocarina_of_time/ootLogic.js';
 import { ootStateModule } from './ocarina_of_time/ootLogic.js';
 import * as raftLogic from './raft/raftLogic.js';
@@ -348,7 +348,7 @@ const GAME_REGISTRY = {
   },
   'Mega Man 2': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: mm2HelperFunctions,
+    // Helper functions now exported to rules.json - no JavaScript needed
     worldClasses: ['MM2World'],
     aliases: ['Mega Man 2', 'MM2', 'Megaman 2']
   },
