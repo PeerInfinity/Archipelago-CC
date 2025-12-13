@@ -72,10 +72,18 @@ class FactorioGameExportHandler(BaseGameExportHandler):
             iterator = iterator_info.get('iterator', {})
 
             # Check if this is iterating over required_technologies[something]
-            if (iterator.get('type') == 'subscript' and
+            # Case 1: required_technologies is still a name reference
+            is_required_tech_name = (iterator.get('type') == 'subscript' and
                 iterator.get('value', {}).get('type') == 'name' and
-                iterator.get('value', {}).get('name') == 'required_technologies'):
+                iterator.get('value', {}).get('name') == 'required_technologies')
 
+            # Case 2: required_technologies has been inlined as a constant dictionary
+            # This happens when the analyzer resolves the variable at export time
+            is_required_tech_constant = (iterator.get('type') == 'subscript' and
+                iterator.get('value', {}).get('type') == 'constant' and
+                isinstance(iterator.get('value', {}).get('value'), dict))
+
+            if is_required_tech_name or is_required_tech_constant:
                 # The iterator is required_technologies[X], which yields Technology objects in Python
                 # but yields name strings in the exported JSON
                 # Simplify the element_rule to remove .name attribute access
