@@ -564,7 +564,12 @@ export function createStateSnapshotInterface(
           settingsToUse = settingsToUse[playerIdKey];
         }
       }
-      const rawValue = settingsToUse?.[settingName];
+      // First check directly in settingsToUse
+      let rawValue = settingsToUse?.[settingName];
+      // If not found, check in the 'options' sub-object (where game options are stored)
+      if (rawValue === undefined && settingsToUse?.options) {
+        rawValue = settingsToUse.options[settingName];
+      }
       // Normalize "off"/"none" type strings to falsy values
       // Choice options in Python use 0 for "off"/"none" which get exported as strings
       if (typeof rawValue === 'string') {

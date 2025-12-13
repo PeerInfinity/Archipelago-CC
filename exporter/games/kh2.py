@@ -310,30 +310,39 @@ class KH2GameExportHandler(BaseGameExportHandler):
                     'conditions': [{'type': 'item_check', 'item': form} for form in forms]
                 }
 
-            # Case 2: light_and_darkness - bonus if has Light&Darkness + any form, count 4 forms
-            # forms_available = (1 if has(L&D) and has_any(all_forms) else 0) + count(4 forms without Final)
-            ld_bonus = {
-                'type': 'conditional',
-                'test': {
-                    'type': 'and',
-                    'conditions': [
-                        {'type': 'item_check', 'item': 'Light & Darkness'},
-                        build_has_any_as_or(all_forms)
-                    ]
-                },
-                'if_true': {'type': 'constant', 'value': 1},
-                'if_false': {'type': 'constant', 'value': 0}
+            # Case 2: light_and_darkness
+            # If has L&D + any form: bonus=1, count 4 forms (without Final)
+            # If NOT (has L&D + any form): bonus=0, count ALL 5 forms (including Final!)
+            # Python removes Final from list only when L&D condition is met
+            ld_condition = {
+                'type': 'and',
+                'conditions': [
+                    {'type': 'item_check', 'item': 'Light & Darkness'},
+                    build_has_any_as_or(all_forms)
+                ]
             }
             ld_check = {
-                'type': 'comparison',
-                'op': '>=',  # ruleEngine uses 'op' not 'operator'
-                'left': {
-                    'type': 'binary_op',
-                    'op': '+',
-                    'left': ld_bonus,
-                    'right': build_form_count_sum(forms_without_final)
+                'type': 'conditional',
+                'test': ld_condition,
+                'if_true': {
+                    # Has L&D + any form: bonus=1, count 4 forms without Final
+                    'type': 'comparison',
+                    'op': '>=',
+                    'left': {
+                        'type': 'binary_op',
+                        'op': '+',
+                        'left': {'type': 'constant', 'value': 1},
+                        'right': build_form_count_sum(forms_without_final)
+                    },
+                    'right': amount_arg
                 },
-                'right': amount_arg
+                'if_false': {
+                    # No L&D condition: bonus=0, count ALL 5 forms including Final
+                    'type': 'comparison',
+                    'op': '>=',
+                    'left': build_form_count_sum(all_forms),
+                    'right': amount_arg
+                }
             }
 
             # Case 3: just a form - bonus if has any of 4 forms, count 4 forms
