@@ -41,6 +41,8 @@ grep -r "HELPERS_TO_EXPORT_BLACKLIST" exporter/games/
 | A Hat in Time | `get_relic_count` | Exported (uses `group_count`) |
 | Kingdom Hearts 2 | Class-based helpers | Exported (uses `player_id` for `self.player`) |
 | A Link to the Past | `can_extend_magic` | Exported (uses `block`, `for_range`, `assign`) |
+| Raft | `raft_paddleboard_mode_enabled` | Exported (uses `self.multiworld.worlds[player].options` pattern) |
+| Raft | `raft_big_islands_available` | Exported (uses `self.multiworld.worlds[player].options` pattern) |
 
 ### Method 2: Check Browser Console
 

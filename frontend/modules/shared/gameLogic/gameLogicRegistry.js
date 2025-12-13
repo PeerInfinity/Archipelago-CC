@@ -230,8 +230,7 @@ import { pokemon_emeraldStateModule } from './pokemon_emerald/pokemon_emeraldLog
 // mm2Logic removed - helpers now exported to rules.json
 import * as ootLogic from './ocarina_of_time/ootLogic.js';
 import { ootStateModule } from './ocarina_of_time/ootLogic.js';
-import * as raftLogic from './raft/raftLogic.js';
-import { raftStateModule } from './raft/raftLogic.js';
+// raftLogic removed - helpers now exported to rules.json (uses use_resolved_items=true)
 import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
 import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
 import * as overcooked2Logic from './overcooked2/overcooked2Logic.js';
@@ -371,8 +370,9 @@ const GAME_REGISTRY = {
     aliases: ['Paint']
   },
   'Raft': {
-    logicModule: raftLogic.raftStateModule,
-    helperFunctions: raftLogic.helperFunctions,
+    logicModule: genericLogic.genericStateModule,
+    // Helper functions now exported to rules.json - no JavaScript needed
+    // Uses use_resolved_items=true so inventory has resolved item names directly
     worldClasses: ['RaftWorld'],
     aliases: ['Raft']
   },
