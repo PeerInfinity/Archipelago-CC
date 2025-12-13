@@ -108,19 +108,49 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Key of Chaos",
-                        "Key of Courage",
-                        "Key of Hope",
-                        "Key of Love",
-                        "Key of Strength",
-                        "Key of Symbiosis"
-                      ]
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Key of Chaos"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Key of Courage"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Key of Hope"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Key of Love"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Key of Strength"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Key of Symbiosis"
+                      }
                     }
                   ]
                 },
@@ -1337,15 +1367,21 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
+                  "type": "or",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Meditation",
-                        "Path of Resilience"
-                      ]
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Meditation"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Path of Resilience"
+                      }
                     }
                   ]
                 },
@@ -1654,17 +1690,35 @@
             "name": "Forlorn Temple - Outside Shop -> Forlorn Temple - Entrance Shop",
             "connected_region": "Forlorn Temple - Entrance Shop",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Acro",
-                    "Claustro",
-                    "Necro",
-                    "Pyro"
-                  ]
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Acro"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Claustro"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Necro"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Pyro"
+                  }
                 }
               ]
             }
@@ -1679,17 +1733,35 @@
             "name": "Forlorn Temple - Entrance Shop -> Forlorn Temple - Outside Shop",
             "connected_region": "Forlorn Temple - Outside Shop",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Acro",
-                    "Claustro",
-                    "Necro",
-                    "Pyro"
-                  ]
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Acro"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Claustro"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Necro"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Pyro"
+                  }
                 }
               ]
             }
@@ -3012,25 +3084,8 @@
                   "function": {
                     "type": "attribute",
                     "object": {
-                      "type": "function_call",
-                      "function": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "state"
-                          },
-                          "attr": "multiworld"
-                        },
-                        "attr": "get_region"
-                      },
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Howling Grotto - Emerald Golem Shop"
-                        }
-                      ]
+                      "type": "region_reference",
+                      "region": "Howling Grotto - Emerald Golem Shop"
                     },
                     "attr": "can_reach"
                   },
@@ -3955,15 +4010,21 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
+                  "type": "or",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Meditation",
-                        "Path of Resilience"
-                      ]
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Meditation"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Path of Resilience"
+                      }
                     }
                   ]
                 },
@@ -5913,15 +5974,21 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
+                  "type": "or",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Meditation",
-                        "Path of Resilience"
-                      ]
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Meditation"
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": {
+                        "type": "constant",
+                        "value": "Path of Resilience"
+                      }
                     }
                   ]
                 },
@@ -6527,15 +6594,21 @@
             "name": "Sunken Shrine - Key of Love",
             "id": 11390976,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Moon Crest",
-                    "Sun Crest"
-                  ]
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Moon Crest"
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": {
+                    "type": "constant",
+                    "value": "Sun Crest"
+                  }
                 }
               ]
             },
