@@ -114,8 +114,13 @@ Both layers must support a rule type for it to work end-to-end.
 | `binary_op` / `binop` | Arithmetic/logical operations | `left`, `right`, `op` | `{"type": "binary_op", "left": {...}, "op": "+", "right": {...}}` |
 | `compare` / `comparison` | Comparison operations | `left`, `right`, `op` | `{"type": "compare", "left": {...}, "op": ">=", "right": {...}}` |
 | `negate` | Unary minus operation | `operand` | `{"type": "negate", "operand": {...}}` |
-| `min` | Return minimum of values | `args: []` | `{"type": "min", "args": [...]}` |
-| `max` | Return maximum of values | `args: []` | `{"type": "max", "args": [...]}` |
+| `min` | Return minimum of values | `args: []` or `iterable` | `{"type": "min", "args": [...]}` or `{"type": "min", "iterable": {...}}` |
+| `max` | Return maximum of values | `args: []` or `iterable` | `{"type": "max", "args": [...]}` or `{"type": "max", "iterable": {...}}` |
+
+**`min`/`max` forms:**
+- **Explicit args**: `min(a, b, c)` → `{"type": "min", "args": [...]}`
+- **Iterable**: `min(generator)` → `{"type": "min", "iterable": {...}}`
+- Returns `undefined` for empty iterables (matching Python's ValueError behavior)
 
 **Binary operators (`op` values):**
 - Arithmetic: `+`, `-`, `*`, `/`, `//` (floor div), `%` (modulo), `**` (power)
