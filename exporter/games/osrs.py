@@ -8,7 +8,7 @@ Note: Region object resolution is handled automatically by the analyzer
 (objects with .name attribute are converted to string constants).
 """
 
-from typing import Dict, Any
+from typing import Dict, Any, List
 from .generic import GenericGameExportHandler
 import logging
 
@@ -21,14 +21,78 @@ class OSRSGameExportHandler(GenericGameExportHandler):
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
 
-    # Helpers too complex for automatic export (has loops)
-    HELPERS_TO_EXPORT_BLACKLIST = {
-        'quest_points',  # Has loop through QP locations
-    }
-
+    # No blacklist - quest_points is handled via computed helper
+    HELPERS_TO_EXPORT_BLACKLIST = set()
 
     def __init__(self):
         super().__init__()
+
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Export OSRS-specific settings including QP location data."""
+        settings = super().get_settings_data(world, multiworld, player)
+
+        # Export quest point data as a mapping of item_name -> qp_value
+        # This allows the computed quest_points helper to sum QP values
+        qp_items = {}
+        if hasattr(world, 'available_QP_locations'):
+            for qp_event in world.available_QP_locations:
+                # Extract QP value from item name (e.g., "1 QP (Cook's Assistant)" -> 1)
+                try:
+                    qp_value = int(qp_event[0])
+                    qp_items[qp_event] = qp_value
+                except (ValueError, IndexError):
+                    logger.warning(f"Could not parse QP value from: {qp_event}")
+
+        settings['qp_items'] = qp_items
+        return settings
+
+    def get_helper_definitions(self, world) -> Dict[str, Any]:
+        """
+        Get helper definitions including computed quest_points helper.
+
+        The quest_points helper in Python iterates over available_QP_locations and
+        sums QP values for items the player has. We define a computed helper that
+        uses the exported qp_items data structure:
+
+        Python: sum(int(qp_event[0]) for qp_event in available_QP_locations if state.has(qp_event, player))
+        JSON:   sum_of(qp_value for [item, qp_value] in qp_items.items() if has(item))
+        """
+        helper_defs = super().get_helper_definitions(world)
+
+        # Define computed helper for quest_points
+        # Logic: iterate over qp_items, sum qp_value for each item the player has
+        helper_defs['quest_points'] = {
+            'params': [],
+            'body': {
+                'type': 'sum_of',
+                'iterator_info': {
+                    'target': {
+                        'type': 'tuple',
+                        'elements': [
+                            {'type': 'name', 'name': 'item_name'},
+                            {'type': 'name', 'name': 'qp_value'}
+                        ]
+                    },
+                    'iterator': {
+                        'type': 'method_call',
+                        'object': {'type': 'setting_value', 'setting': 'qp_items'},
+                        'method': 'items',
+                        'args': []
+                    }
+                },
+                'element_rule': {
+                    'type': 'conditional',
+                    'test': {
+                        'type': 'item_check',
+                        'item': {'type': 'name', 'name': 'item_name'}
+                    },
+                    'if_true': {'type': 'name', 'name': 'qp_value'},
+                    'if_false': {'type': 'constant', 'value': 0}
+                }
+            }
+        }
+
+        return helper_defs
 
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """
