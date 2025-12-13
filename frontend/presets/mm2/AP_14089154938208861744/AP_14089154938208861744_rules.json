@@ -1869,8 +1869,17 @@
                     },
                     "op": "in",
                     "right": {
-                      "type": "name",
-                      "name": "robot_masters"
+                      "type": "constant",
+                      "value": {
+                        "0": "Heat Man Defeated",
+                        "1": "Air Man Defeated",
+                        "2": "Wood Man Defeated",
+                        "3": "Bubble Man Defeated",
+                        "4": "Quick Man Defeated",
+                        "5": "Flash Man Defeated",
+                        "6": "Metal Man Defeated",
+                        "7": "Crash Man Defeated"
+                      }
                     }
                   },
                   "body": [
@@ -1890,8 +1899,17 @@
                               "body": {
                                 "type": "subscript",
                                 "value": {
-                                  "type": "name",
-                                  "name": "weapons_to_name"
+                                  "type": "constant",
+                                  "value": {
+                                    "1": "Atomic Fire",
+                                    "2": "Air Shooter",
+                                    "3": "Leaf Shield",
+                                    "4": "Bubble Lead",
+                                    "5": "Quick Boomerang",
+                                    "6": "Crash Bomber",
+                                    "7": "Metal Blade",
+                                    "8": "Time Stopper"
+                                  }
                                 },
                                 "index": {
                                   "type": "name",

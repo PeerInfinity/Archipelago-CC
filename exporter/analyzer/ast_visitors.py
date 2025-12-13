@@ -2023,6 +2023,13 @@ class ASTVisitorMixin:
                     list_value = list(value) if isinstance(value, tuple) else value
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to constant list: {list_value}")
                     return {'type': 'constant', 'value': list_value}
+                # Handle dict values - resolve to constant for subscript access and .items() iteration
+                elif isinstance(value, dict):
+                    # Convert dict to JSON-serializable format
+                    # Keys must be strings for JSON, so convert int keys to strings
+                    json_dict = {str(k) if isinstance(k, int) else k: v for k, v in value.items()}
+                    logging.debug(f"visit_Name: Resolved '{name}' from closure to constant dict: {json_dict}")
+                    return {'type': 'constant', 'value': json_dict}
                 # Handle enum values by extracting their .value attribute
                 elif hasattr(value, 'value') and isinstance(value.value, (int, float, str, bool)):
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to enum constant value: {value.value}")
@@ -2056,6 +2063,12 @@ class ASTVisitorMixin:
                         list_value = list(resolved_value) if isinstance(resolved_value, tuple) else resolved_value
                         logging.debug(f"visit_Name: Resolved '{name}' from globals to constant list: {list_value}")
                         return {'type': 'constant', 'value': list_value}
+                    # Handle dict values - resolve to constant for subscript access and .items() iteration
+                    elif isinstance(resolved_value, dict):
+                        # Convert dict to JSON-serializable format
+                        json_dict = {str(k) if isinstance(k, int) else k: v for k, v in resolved_value.items()}
+                        logging.debug(f"visit_Name: Resolved '{name}' from globals to constant dict: {json_dict}")
+                        return {'type': 'constant', 'value': json_dict}
                     # Handle enum values by extracting their .value attribute
                     elif hasattr(resolved_value, 'value') and isinstance(resolved_value.value, (int, float, str, bool)):
                         logging.debug(f"visit_Name: Resolved '{name}' from function defaults to enum constant value: {resolved_value.value}")

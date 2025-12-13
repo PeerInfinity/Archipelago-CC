@@ -74,6 +74,7 @@
 
 import { createUniversalLogger } from '../../../app/core/universalLogger.js';
 import { PlayerIdUtils } from '../../shared/playerIdUtils.js';
+import { evaluateRule } from '../../shared/ruleEngine.js';
 
 const moduleLogger = createUniversalLogger('ruleEvaluator');
 
@@ -93,16 +94,62 @@ export function executeHelper(manager, name, ...args) {
   const wasInHelperExecution = manager._inHelperExecution;
   manager._inHelperExecution = true;
 
-  // Debug logging for helper execution (can be enabled when needed)
-  manager._logDebug(
-    `[RuleEvaluator executeHelper] Helper: ${name}, game: ${manager.settings?.game}, hasHelper: ${!!(manager.helperFunctions && manager.helperFunctions[name])}`
-  );
-
   try {
-    // The `manager.helperFunctions` property is now set dynamically based on the game.
+    const staticData = manager.getStaticGameData();
+    const playerId = manager.playerId || '1';
+    const playerIdStr = String(playerId);
+
+    // Check rules.json helpers first (exported from Python world files)
+    const helperDefinition = staticData?.helpers?.[playerIdStr]?.[name];
+
+    if (helperDefinition && helperDefinition.body) {
+      // Build local scope from helper parameters
+      const helperScope = {};
+
+      if (helperDefinition.params && Array.isArray(helperDefinition.params)) {
+        const playerSettings = staticData?.settings?.[playerIdStr] || {};
+        const playerSlotData = staticData?.game_info?.[playerIdStr]?.slot_data || {};
+        const playerOptions = playerSettings.options || playerSettings;
+
+        helperDefinition.params.forEach((paramName, index) => {
+          if (index < args.length) {
+            // Use provided argument
+            helperScope[paramName] = args[index];
+          } else {
+            // Try to resolve from slot_data or settings
+            if (playerSlotData[paramName] !== undefined) {
+              helperScope[paramName] = playerSlotData[paramName];
+            } else if (playerOptions[paramName] !== undefined) {
+              helperScope[paramName] = playerOptions[paramName];
+            } else {
+              // Try alternative parameter name mappings for MM2
+              const helperParamMappings = {
+                'required': 'wily_5_requirement',
+                'boss_requirements': 'wily_5_weapons',
+              };
+              const mappedName = helperParamMappings[paramName];
+              if (mappedName) {
+                if (playerSlotData[mappedName] !== undefined) {
+                  helperScope[paramName] = playerSlotData[mappedName];
+                } else if (playerOptions[mappedName] !== undefined) {
+                  helperScope[paramName] = playerOptions[mappedName];
+                }
+              }
+            }
+          }
+        });
+      }
+
+      // Create snapshot interface for rule evaluation
+      const snapshotInterface = manager._createSelfSnapshotInterface();
+
+      // Evaluate the helper body using the rule engine
+      return evaluateRule(helperDefinition.body, snapshotInterface, 0, helperScope);
+    }
+
+    // Fall back to JavaScript helper functions from game logic registry
     if (manager.helperFunctions && manager.helperFunctions[name]) {
       const snapshot = manager.getSnapshot();
-      const staticData = manager.getStaticGameData();
 
       // Add evaluateRule method to snapshot for AHIT helpers
       snapshot.evaluateRule = function (rule) {

@@ -872,6 +872,67 @@ export function createStateSnapshotInterface(
     currentLocation: contextVariables.location,
     // Legacy helpers property removed - use executeHelper method instead
     executeHelper: (helperName, ...args) => {
+      // First, check if there's a helper definition in rules.json (staticData.helpers)
+      // This allows Python-exported helper definitions to be evaluated without JavaScript
+      const playerId = snapshot?.player?.id || snapshot?.player?.slot ||
+                       staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
+      const playerIdStr = String(playerId);
+
+      const helperDefinition = staticData?.helpers?.[playerIdStr]?.[helperName];
+
+      if (helperDefinition && helperDefinition.body) {
+        // Helper definition found - evaluate it using the rule engine
+        // Create local scope with parameter values
+        const helperScope = {};
+
+        // Resolve parameter values from args, settings, or slot_data
+        if (helperDefinition.params && Array.isArray(helperDefinition.params)) {
+          const playerSettings = staticData?.settings?.[playerIdStr] || {};
+          const playerSlotData = staticData?.game_info?.[playerIdStr]?.slot_data || {};
+          const playerOptions = playerSettings.options || playerSettings;
+
+          helperDefinition.params.forEach((paramName, index) => {
+            if (index < args.length) {
+              // Use provided argument
+              helperScope[paramName] = args[index];
+            } else {
+              // Try to resolve from settings or slot_data
+              // Common naming patterns:
+              // - "required" -> "wily_5_requirement"
+              // - "boss_requirements" -> "wily_5_weapons"
+              // First try exact match in slot_data, then settings
+              if (playerSlotData[paramName] !== undefined) {
+                helperScope[paramName] = playerSlotData[paramName];
+              } else if (playerOptions[paramName] !== undefined) {
+                helperScope[paramName] = playerOptions[paramName];
+              } else {
+                // Try with common prefixes/suffixes removed
+                // For example, map helper param names to slot_data/settings names
+                // This is game-specific but we try common patterns
+                const helperParamMappings = {
+                  // MM2 mappings
+                  'required': 'wily_5_requirement',
+                  'boss_requirements': 'wily_5_weapons',
+                };
+                const mappedName = helperParamMappings[paramName];
+                if (mappedName) {
+                  if (playerSlotData[mappedName] !== undefined) {
+                    helperScope[paramName] = playerSlotData[mappedName];
+                  } else if (playerOptions[mappedName] !== undefined) {
+                    helperScope[paramName] = playerOptions[mappedName];
+                  }
+                }
+              }
+            }
+          });
+        }
+
+        // Evaluate the helper body with the resolved parameters
+        // Note: evaluateRule signature is (rule, context, depth=0, localScope=null)
+        return evaluateRule(helperDefinition.body, finalSnapshotInterface, 0, helperScope);
+      }
+
+      // Fall back to game-specific JavaScript helpers
       const selectedHelpers = getHelperFunctions(gameName);
 
       if (selectedHelpers && selectedHelpers[helperName]) {
