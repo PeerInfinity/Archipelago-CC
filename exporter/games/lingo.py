@@ -20,6 +20,11 @@ class LingoGameExportHandler(GenericGameExportHandler):
     # Helper module paths - needed for auto-export to find helper functions
     HELPER_MODULES = ['worlds.lingo.rules']
 
+    # Whitelist helpers that can be auto-exported as rule definitions
+    HELPERS_TO_EXPORT_WHITELIST = {
+        '_lingo_can_open_door',  # dict lookups now work via settings conversion
+    }
+
     # Blacklist helpers with loops or complex logic that cannot be auto-exported
     # These helpers iterate over collections (rooms, doors, colors, items, etc.)
     # and require JavaScript implementations for runtime evaluation
@@ -28,8 +33,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
         'lingo_can_do_pilgrimage',        # uses all() with generator (loop)
         'lingo_can_use_mastery_location', # has for loop counting satisfied requirements
         'lingo_can_use_level_2_location', # has nested for loops over regions and panels
-        '_lingo_can_satisfy_requirements', # has multiple for loops over access collections
-        '_lingo_can_open_door',           # has complex conditionals with dictionary lookups
+        '_lingo_can_satisfy_requirements', # for loops with early returns, capitalize() calls
     }
 
     def should_preserve_as_helper(self, func_name: str) -> bool:
@@ -58,15 +62,22 @@ class LingoGameExportHandler(GenericGameExportHandler):
 
     def expand_rule(self, analyzed_rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """
-        Expand analyzed rule, with special handling for AccessRequirements string representations
-        and door variable resolution.
+        Expand analyzed rule, with special handling for AccessRequirements string representations,
+        door variable resolution, and world.player_logic to settings conversion.
 
         Lingo's AccessRequirements objects contain sets that have unpredictable string ordering.
         This method sorts the set contents when they appear in constant values.
 
-        Additionally, it resolves the 'door' variable in lingo_can_use_entrance calls to actual values.
+        Additionally, it:
+        - Resolves the 'door' variable in lingo_can_use_entrance calls to actual values
+        - Converts world.player_logic.X references to settings.X
+        - Converts bare PROGRESSIVE_ITEMS/PROGRESSIVE_DOORS_BY_ROOM to settings references
         """
         rule = super().expand_rule(analyzed_rule, _depth)
+
+        # Replace world.player_logic references with settings
+        # This is essential for helper definitions to work in the frontend
+        rule = self._replace_world_references(rule)
 
         # Resolve door variables in helper calls
         rule = self._resolve_door_variables(rule)
@@ -464,24 +475,25 @@ class LingoGameExportHandler(GenericGameExportHandler):
                     'attr': 'PROGRESSIVE_DOORS_BY_ROOM'
                 }
 
-        # Replace world.player_logic.X with settings.X
+        # Replace world.player_logic.X and world.options.X with settings.X
         if obj_type == 'attribute':
             inner_obj = obj.get('object', {})
             attr = obj.get('attr')
 
-            # Check if this is world.player_logic
-            if (isinstance(inner_obj, dict) and
-                inner_obj.get('type') == 'attribute' and
-                inner_obj.get('attr') == 'player_logic'):
-
+            # Check if this is world.player_logic.X or world.options.X
+            if isinstance(inner_obj, dict) and inner_obj.get('type') == 'attribute':
+                inner_attr = inner_obj.get('attr')
                 innermost = inner_obj.get('object', {})
+
                 if isinstance(innermost, dict) and innermost.get('type') == 'name' and innermost.get('name') == 'world':
-                    # This is world.player_logic.X, replace with settings.X
-                    return {
-                        'type': 'attribute',
-                        'object': {'type': 'name', 'name': 'settings'},
-                        'attr': attr
-                    }
+                    # Handle both world.player_logic.X and world.options.X
+                    if inner_attr in ('player_logic', 'options'):
+                        # Replace with settings.X
+                        return {
+                            'type': 'attribute',
+                            'object': {'type': 'name', 'name': 'settings'},
+                            'attr': attr
+                        }
 
         # Recursively process nested structures
         result = {}
