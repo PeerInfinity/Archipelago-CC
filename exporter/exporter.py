@@ -1969,14 +1969,16 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         'starting_items',
         'settings',
         'game_info',
-        'metamath_data'
+        'metamath_data',
+        'static_data',  # Game-specific static data (e.g., rating tables)
+        'helpers',  # Helper function definitions
     ]
 
     # Player-specific keys contain data nested under player IDs
     player_specific_keys = [
         'regions', 'dungeons', 'items', 'item_groups', 'progression_mapping',
         'settings', 'start_regions', 'itempool_counts', 'canonical_placements',
-        'game_info', 'starting_items', 'metamath_data'
+        'game_info', 'starting_items', 'metamath_data', 'static_data', 'helpers'
     ]
 
     # Prepare the combined export data for all players using the helper

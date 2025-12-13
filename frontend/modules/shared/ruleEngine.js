@@ -3123,10 +3123,18 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
 
+        // Handle both arrays and objects (dictionaries)
+        // In Python, iterating over a dict yields its keys
         if (!Array.isArray(iterable)) {
-          log('warn', '[evaluateRule] sum_of iterator is not an array', { rule, iterable });
-          result = 0;
-          break;
+          if (iterable && typeof iterable === 'object') {
+            // Convert object keys to array for iteration (like Python's dict iteration)
+            iterable = Object.keys(iterable);
+            log('debug', '[evaluateRule] sum_of: converted object to keys array', { keys: iterable });
+          } else {
+            log('warn', '[evaluateRule] sum_of iterator is not an array or object', { rule, iterable });
+            result = 0;
+            break;
+          }
         }
 
         // If the iterable is empty, sum_of should return 0

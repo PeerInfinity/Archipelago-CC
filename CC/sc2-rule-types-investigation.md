@@ -4,6 +4,24 @@
 
 The SC2 game currently works with spoiler testing passing. The blacklisted helpers have JavaScript fallback implementations in `frontend/modules/shared/gameLogic/sc2/helpers.js`.
 
+## Recent Improvements
+
+### Static Data Export for Rating Dictionaries
+
+We've implemented infrastructure to export rating dictionaries (like `tvx_defense_ratings`) as static data in rules.json. This enables helpers that use these dictionaries to be exported as JSON rules instead of requiring JavaScript fallback.
+
+**Changes Made:**
+1. **exporter/games/sc2.py**: Added `preprocess_world_data` to export rating dictionaries as `static_data.rating_tables`
+2. **exporter/exporter.py**: Added `static_data` and `helpers` to export key ordering
+3. **frontend/modules/shared/ruleEngine.js**: Updated `sum_of` rule to handle dictionary iteration (Python's `for item in dict` yields keys)
+
+**Helpers Now Exported:**
+- `terran_defense_rating` - no longer needs JavaScript fallback
+
+**Remaining Blacklisted:**
+- `protoss_defense_rating`, `zerg_defense_rating` - not used in current test seeds
+- `terran_power_rating`, etc. - still require `soa_power_rating` which has complex logic
+
 ## Current Status
 
 ### Exported to JSON (17 helpers)

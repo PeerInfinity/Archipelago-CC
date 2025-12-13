@@ -6,6 +6,20 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# Import SC2 rating dictionaries for export
+try:
+    from worlds.sc2.rules import (
+        tvx_defense_ratings, tvz_defense_ratings, tvx_air_defense_ratings,
+        zvx_defense_ratings, zvx_air_defense_ratings,
+        pvx_defense_ratings, pvz_defense_ratings,
+        terran_passive_ratings, zerg_passive_ratings, protoss_passive_ratings,
+        soa_energy_ratings, soa_passive_ratings, soa_ultimate_ratings
+    )
+    SC2_RATING_DICTS_AVAILABLE = True
+except ImportError:
+    SC2_RATING_DICTS_AVAILABLE = False
+    logger.debug("Could not import SC2 rating dictionaries - static data export disabled")
+
 class SC2GameExportHandler(GenericGameExportHandler):
     """Export handler for Starcraft 2 game-specific rules and items."""
     GAME_NAME = 'Starcraft 2'
@@ -17,9 +31,13 @@ class SC2GameExportHandler(GenericGameExportHandler):
     HELPER_MODULES = ['worlds.sc2.rules']
 
     # Helpers too complex for automatic export (loops, closures, complex calculations)
+    # NOTE: defense_rating helpers now work with static_data export for rating dictionaries
+    # power_rating helpers call soa_power_rating which has complex logic
     HELPERS_TO_EXPORT_BLACKLIST = {
         'terran_competent_comp', 'protoss_competent_comp', 'zerg_competent_comp',
-        'terran_defense_rating', 'protoss_defense_rating', 'zerg_defense_rating',
+        # defense_rating helpers - now exported with static_data support
+        # 'terran_defense_rating', 'protoss_defense_rating', 'zerg_defense_rating',
+        # power_rating helpers - still blacklisted due to soa_power_rating complexity
         'terran_power_rating', 'protoss_power_rating', 'zerg_power_rating',
         'terran_havens_fall_requirement', 'terran_great_train_robbery_train_stopper',
         'terran_welcome_to_the_jungle_requirement', 'zerg_welcome_to_the_jungle_requirement',
@@ -438,3 +456,45 @@ class SC2GameExportHandler(GenericGameExportHandler):
             logger.warning(f"Could not export SC2 logic properties: {e}")
 
         return settings_dict
+
+    def preprocess_world_data(self, world, export_data: Dict[str, Any], player: int) -> None:
+        """
+        Preprocess SC2-specific data including rating dictionaries.
+
+        Exports the defense/power rating dictionaries as static data so they can be
+        used by helpers at runtime in the frontend.
+        """
+        super().preprocess_world_data(world, export_data, player)
+
+        if not SC2_RATING_DICTS_AVAILABLE:
+            logger.debug("[SC2] Rating dictionaries not available, skipping static data export")
+            return
+
+        player_str = str(player)
+
+        # Initialize static_data structure if needed
+        if 'static_data' not in export_data:
+            export_data['static_data'] = {}
+        if player_str not in export_data['static_data']:
+            export_data['static_data'][player_str] = {}
+
+        # Export rating dictionaries - the keys are already string constants
+        # (item_names.ITEM_NAME resolves to the actual string)
+        rating_dicts = {
+            'tvx_defense_ratings': dict(tvx_defense_ratings),
+            'tvz_defense_ratings': dict(tvz_defense_ratings),
+            'tvx_air_defense_ratings': dict(tvx_air_defense_ratings),
+            'zvx_defense_ratings': dict(zvx_defense_ratings),
+            'zvx_air_defense_ratings': dict(zvx_air_defense_ratings),
+            'pvx_defense_ratings': dict(pvx_defense_ratings),
+            'pvz_defense_ratings': dict(pvz_defense_ratings),
+            'terran_passive_ratings': dict(terran_passive_ratings),
+            'zerg_passive_ratings': dict(zerg_passive_ratings),
+            'protoss_passive_ratings': dict(protoss_passive_ratings),
+            'soa_energy_ratings': dict(soa_energy_ratings),
+            'soa_passive_ratings': dict(soa_passive_ratings),
+            'soa_ultimate_ratings': dict(soa_ultimate_ratings),
+        }
+
+        export_data['static_data'][player_str]['rating_tables'] = rating_dicts
+        logger.debug(f"[SC2] Exported {len(rating_dicts)} rating dictionaries as static data")
