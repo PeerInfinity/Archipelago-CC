@@ -1,6 +1,6 @@
 """Stardew Valley game-specific export handler."""
 
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Set
 from .generic import GenericGameExportHandler
 import logging
 
@@ -11,12 +11,25 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
 
     Stardew Valley uses a custom StardewRule system instead of lambda functions.
     This handler detects and serializes those rule objects to JSON format.
+
+    To reduce rules.json file size, Has rules (which represent item acquisition
+    logic) are exported as helper references instead of being fully inlined.
+    The unique Has rules are then exported as helper definitions.
     """
 
     GAME_NAME = 'Stardew Valley'
 
+    # Threshold for preserving Has rules as helpers (in rule nodes)
+    # Has rules with more than this many nodes will be preserved as helper calls
+    # Set to 0 to disable (inline everything), or a positive number to enable
+    HAS_RULE_HELPER_THRESHOLD = 1
+
     def __init__(self):
         super().__init__()
+        # Cache for Has rule serializations: item_name -> serialized rule
+        self._has_rule_cache: Dict[str, Dict[str, Any]] = {}
+        # Set of Has rule item names that should be exported as helpers
+        self._has_rules_to_export: Set[str] = set()
         # Add Stardew Valley-specific helper recognition patterns
         self.known_helpers = {
             # Skill-related helpers
@@ -298,20 +311,55 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
             # Handle Has rule (wrapper that delegates to underlying item rule)
             elif rule_type == 'Has':
                 # Has is a lazy evaluation wrapper
-                # Try to recursively serialize the underlying rule
                 item_name = rule_obj.item
+
+                # Check if we've already cached this Has rule
+                if item_name in self._has_rule_cache:
+                    # If it's marked for export as helper, return a helper reference
+                    if item_name in self._has_rules_to_export:
+                        return {
+                            'type': 'helper',
+                            'name': f'has_{self._sanitize_helper_name(item_name)}'
+                        }
+                    # Otherwise return the cached serialized rule
+                    return self._has_rule_cache[item_name]
+
+                # Try to serialize the underlying rule
                 if hasattr(rule_obj, 'other_rules') and item_name in rule_obj.other_rules:
                     underlying_rule = rule_obj.other_rules[item_name]
                     logger.debug(f"Has rule for '{item_name}', recursing into underlying rule: {type(underlying_rule).__name__}")
-                    return self._serialize_stardew_rule(underlying_rule)
+                    serialized = self._serialize_stardew_rule(underlying_rule)
+
+                    if serialized:
+                        # Check if this rule is large enough to preserve as a helper
+                        from .base import BaseGameExportHandler
+                        node_count = BaseGameExportHandler.count_rule_nodes(serialized)
+
+                        if self.HAS_RULE_HELPER_THRESHOLD > 0 and node_count > self.HAS_RULE_HELPER_THRESHOLD:
+                            # Large rule - cache it and mark for export as helper
+                            self._has_rule_cache[item_name] = serialized
+                            self._has_rules_to_export.add(item_name)
+                            logger.debug(f"Has rule '{item_name}' has {node_count} nodes, preserving as helper")
+                            return {
+                                'type': 'helper',
+                                'name': f'has_{self._sanitize_helper_name(item_name)}'
+                            }
+                        else:
+                            # Small rule - cache and inline it
+                            self._has_rule_cache[item_name] = serialized
+                            return serialized
+
+                    return serialized
                 else:
                     # If we can't get the underlying rule, just return an item check
                     # This assumes Has checks for item receipt
                     logger.debug(f"Has rule for '{item_name}' without underlying rule, treating as item_check")
-                    return {
+                    result = {
                         'type': 'item_check',
                         'item': item_name
                     }
+                    self._has_rule_cache[item_name] = result
+                    return result
 
             # Handle Count rule (requires N of M conditions to be true)
             elif rule_type == 'Count':
@@ -393,3 +441,58 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
 
         # Use default generic expansion for other rule types
         return super().expand_rule(rule, _depth)
+
+    def _sanitize_helper_name(self, item_name: str) -> str:
+        """Convert an item name to a valid helper function name.
+
+        Args:
+            item_name: The item name (e.g., "Sandfish", "Gold Bar (Logic event)")
+
+        Returns:
+            A sanitized name suitable for use as a helper name
+        """
+        import re
+        # Replace spaces and special characters with underscores
+        name = re.sub(r'[^a-zA-Z0-9]', '_', item_name)
+        # Remove consecutive underscores
+        name = re.sub(r'_+', '_', name)
+        # Remove leading/trailing underscores
+        name = name.strip('_')
+        # Ensure it starts with a letter (prepend 'item_' if needed)
+        if name and not name[0].isalpha():
+            name = 'item_' + name
+        return name.lower()
+
+    def clear_discovered_helpers(self) -> None:
+        """Clear all caches between player exports."""
+        super().clear_discovered_helpers()
+        self._has_rule_cache = {}
+        self._has_rules_to_export = set()
+
+    def get_helper_definitions(self, world) -> Dict[str, Any]:
+        """Export Has rules as helper definitions along with any base helpers.
+
+        This exports large Has rules that were preserved as helper references
+        during rule serialization. Each helper is named 'has_<sanitized_item_name>'
+        and contains the serialized rule for acquiring that item.
+
+        Args:
+            world: The world object for this player
+
+        Returns:
+            A dictionary mapping helper names to their rule definitions
+        """
+        # Get any base helper definitions first
+        helpers = super().get_helper_definitions(world)
+
+        # Add Has rule helpers
+        for item_name in self._has_rules_to_export:
+            helper_name = f'has_{self._sanitize_helper_name(item_name)}'
+            if item_name in self._has_rule_cache:
+                helpers[helper_name] = self._has_rule_cache[item_name]
+                logger.debug(f"Exported Has rule helper '{helper_name}' for item '{item_name}'")
+
+        if self._has_rules_to_export:
+            logger.info(f"Exported {len(self._has_rules_to_export)} Has rule helpers for Stardew Valley")
+
+        return helpers

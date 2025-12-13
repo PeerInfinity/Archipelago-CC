@@ -1013,17 +1013,14 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
             # Check if this is a Rule Builder Resolved rule with native serialization
             # Rule Builder rules have a to_dict() method that provides native JSON serialization
+            # The frontend now supports Rule Builder format natively, so we output it directly
             if hasattr(rule_func, 'to_dict') and callable(rule_func.to_dict):
                 try:
                     rb_dict = rule_func.to_dict()
-                    # Convert Rule Builder format to Archipelago-CC format for frontend compatibility
-                    from exporter.converter import convert_rule_builder_to_cc
-                    cc_dict, warnings = convert_rule_builder_to_cc(rb_dict)
-                    for warning in warnings:
-                        logger.debug(f"Rule Builder conversion warning for {target_type} '{rule_target_name}': {warning}")
-                    # Cache and return the converted CC format
-                    _rule_analysis_cache[cache_key] = cc_dict
-                    return cc_dict
+                    # Cache and return Rule Builder format directly (frontend supports it natively)
+                    _rule_analysis_cache[cache_key] = rb_dict
+                    logger.debug(f"Exported Rule Builder format for {target_type} '{rule_target_name}': {rb_dict.get('rule', 'unknown')}")
+                    return rb_dict
                 except Exception as e:
                     logger.warning(f"Rule Builder to_dict() failed for {target_type} '{rule_target_name}': {e}")
                     # Fall through to AST analysis as fallback

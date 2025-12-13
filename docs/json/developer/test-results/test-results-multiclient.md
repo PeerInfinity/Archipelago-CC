@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-13 20:18:11
+**Generated:** 2025-12-13 13:23:41
 
 ## Summary
 
@@ -47,7 +47,7 @@
 | DOOM II | ✅ Passed | 0 | ✅ | 453/453 | 453/453 | 0/0 | ✅ | 453/453 | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | 0 | ✅ | 1194/1194 | 1190/1190 | 4/4 | ✅ | 1194/1194 | 4.7KB | ✅ |
 | Donkey Kong Country 3 | ❌ Failed | 0 | ❌ | 155/180 | 155/180 | 0/0 | ❌ | 155/180 | ✅ | ✅ |
-| Factorio | ❌ Failed | 0 | ❌ | 33/186 | 32/179 | 1/7 | ❌ | 30/186 | 11.4KB | ✅ |
+| Factorio | ❌ Failed | 0 | ❌ | 33/186 | 32/179 | 1/7 | ❌ | 30/186 | 12.0KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | ✅ | 114/114 | 110/110 | 4/4 | ✅ | 114/114 | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | 0 | ✅ | 299/299 | 251/251 | 48/48 | ✅ | 299/299 | 7.6KB | ✅ |
 | Heretic | ✅ Passed | 0 | ✅ | 502/502 | 502/502 | 0/0 | ✅ | 502/502 | ✅ | ✅ |
@@ -78,7 +78,7 @@
 | Shivers | ❌ Failed | 0 | ❌ | 82/114 | 58/76 | 24/38 | ❌ | 80/114 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | ✅ | 207/207 | 206/206 | 1/1 | ✅ | 207/207 | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | 0 | ✅ | 257/257 | 232/232 | 25/25 | ✅ | 257/257 | 19.8KB | 86.3KB |
-| Stardew Valley | ✅ Passed | 0 | ✅ | 500/500 | 491/491 | 9/9 | ✅ | 500/500 | 16.0KB | 10.7KB |
+| Stardew Valley | ✅ Passed | 0 | ✅ | 500/500 | 491/491 | 9/9 | ✅ | 500/500 | 20.7KB | 10.7KB |
 | Subnautica | ✅ Passed | 0 | ✅ | 135/135 | 131/131 | 4/4 | ✅ | 135/135 | 2.4KB | 14.7KB |
 | Super Mario 64 | ✅ Passed | 0 | ✅ | 149/149 | 149/149 | 0/0 | ✅ | 149/149 | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | ✅ | 60/60 | 59/59 | 7/7 | ✅ | 60/60 | 13.9KB | 4.9KB |

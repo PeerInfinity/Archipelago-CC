@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-13 20:18:11
+**Generated:** 2025-12-13 13:23:41
 
 ## Summary
 
@@ -51,7 +51,7 @@
 | DOOM II | ✅ Passed | ✅ Passed | 2 | 2 | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | ✅ Passed | 2 | 2 | 4.7KB | ✅ |
 | Donkey Kong Country 3 | ❌ Failed | — | 3 | 3 | ✅ | ✅ |
-| Factorio | ❌ Failed | — | 3 | 3 | 11.4KB | ✅ |
+| Factorio | ❌ Failed | — | 3 | 3 | 12.0KB | ✅ |
 | Faxanadu | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | ✅ Passed | 3 | 3 | 7.6KB | ✅ |
 | Heretic | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
@@ -82,7 +82,7 @@
 | Shivers | ❌ Failed | — | 4 | 4 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | ✅ Passed | 5 | 5 | 19.8KB | 86.3KB |
-| Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 16.0KB | 10.7KB |
+| Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 20.7KB | 10.7KB |
 | Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 2.4KB | 14.7KB |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 5 | 5 | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | 13.9KB | 4.9KB |

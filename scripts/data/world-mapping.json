@@ -397,7 +397,7 @@
   },
   "Factorio": {
     "exporter_path": "exporter/games/factorio.py",
-    "exporter_size": 11688,
+    "exporter_size": 12241,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1054,7 +1054,7 @@
   },
   "Stardew Valley": {
     "exporter_path": "exporter/games/stardew_valley.py",
-    "exporter_size": 16357,
+    "exporter_size": 21152,
     "game_logic_path": null,
     "game_logic_size": 10915,
     "has_custom_exporter": true,

@@ -1,14 +1,19 @@
-# Debugging Spoiler Tests for Basic Games
+# Debugging Spoiler Tests for Games Without JavaScript Helpers
 
-This guide explains how to debug failing spoiler tests for games that don't have a custom exporter or JavaScript helper functions. These games rely entirely on the generic export infrastructure.
+This guide explains how to debug failing spoiler tests for games that don't have JavaScript helper functions. This includes both "basic" games (no custom code at all) and games that have a custom exporter but no JavaScript helpers.
 
 ## When to Use This Guide
 
 Use this guide when:
-- A game uses only `GenericGameExportHandler` (no custom `exporter/games/<game>.py` file)
 - No JavaScript helpers exist in `frontend/modules/shared/gameLogic/<game>/`
 - The game isn't listed in `frontend/modules/shared/gameLogic/gameLogicRegistry.js`
-- Spoiler tests are failing despite the game having "simple" rules
+- Spoiler tests are failing
+
+This covers two scenarios:
+1. **Basic games** - No custom exporter (`exporter/games/<game>.py`) and no JavaScript helpers
+2. **Exporter-only games** - Has a custom exporter but no JavaScript helpers
+
+The debugging workflow is the same for both - the only difference is whether you need to create or modify the exporter file.
 
 ## Important Gotchas
 
@@ -81,7 +86,7 @@ The analysis shows which sphere failed and what locations were affected.
 
 1. **Check if it should have been exported** - If it's a simple helper, there may be a bug in the analyzer. Check for recent changes to `exporter/analyzer.py`.
 
-2. **Create a minimal custom exporter** - Add the helper to a whitelist:
+2. **Configure the game exporter** - Add the helper to a whitelist. If no exporter exists yet, create one:
    ```python
    # exporter/games/gamename.py
    from .generic import GenericGameExportHandler
@@ -91,6 +96,7 @@ The analysis shows which sphere failed and what locations were affected.
        AUTO_EXPORT_DISCOVERED_HELPERS = True
        HELPERS_TO_EXPORT_WHITELIST = {'can_do_something'}
    ```
+   If an exporter already exists, just add the `HELPERS_TO_EXPORT_WHITELIST` configuration to it.
 
 3. **Add JavaScript implementation** - If the helper is truly too complex:
    - Create `frontend/modules/shared/gameLogic/gamename/helpers.js`
@@ -230,7 +236,7 @@ Some issues require changes to core infrastructure:
 | Helper not discovered | `exporter/analyzer.py` |
 | Rule evaluates wrong | `frontend/modules/shared/ruleEngine.js` |
 | Item/location name mismatch | `exporter/games/generic.py` |
-| Missing settings | Game-specific exporter (create one) |
+| Missing settings | Game-specific exporter (create or modify) |
 
 ## Quick Reference
 
@@ -242,6 +248,7 @@ Some issues require changes to core infrastructure:
 | `frontend/presets/<game>/AP_<SEED_ID>/AP_<SEED_ID>_sphere_log.jsonl` | Expected progression |
 | `worlds/<game>/Rules.py` | Original Python rules |
 | `worlds/<game>/Options.py` | Game settings |
+| `exporter/games/<game>.py` | Game-specific exporter (if it exists) |
 | `exporter/analyzer.py` | Rule analysis/export |
 | `frontend/modules/shared/ruleEngine.js` | Rule evaluation |
 | `scripts/data/world-mapping.json` | World/game/yaml name mapping |

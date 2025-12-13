@@ -60,6 +60,9 @@ jobs:
           python-version: '3.12'
           check-latest: true
 
+      - name: Install pytest
+        run: pip install pytest
+
       - name: Run fixture tests
         run: python -m pytest tests/test_rule_fixtures.py -v
 
@@ -101,6 +104,11 @@ jobs:
         run: |
           source .venv/bin/activate
           python ModuleUpdate.py --yes
+
+      - name: Install pytest
+        run: |
+          source .venv/bin/activate
+          pip install pytest
 
       - name: Run analyzer tests
         run: |

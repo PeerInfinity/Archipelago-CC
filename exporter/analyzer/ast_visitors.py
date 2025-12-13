@@ -223,9 +223,10 @@ class ASTVisitorMixin:
             # Determine if this is a "rule lambda" (access rule) or a "data lambda" (for map, etc.)
             # Rule lambdas have 'state' as the first parameter and should return just the body
             # Data lambdas (used in map(), filter(), etc.) should return the full lambda structure
+            # Note: Super Metroid uses 'sm' (SMSolver) instead of 'state' for its rule lambdas
             is_rule_lambda = (
                 not param_names or  # No params - simple rule
-                (param_names and param_names[0] in ('state', 'self'))  # First param is state/self
+                (param_names and param_names[0] in ('state', 'self', 'sm'))
             )
 
             if is_rule_lambda:
