@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-13 07:30:29
+**Generated:** 2025-12-13 11:07:21
 
 ## Summary
 
@@ -57,26 +57,26 @@
 | Heretic | ✅ Passed | ✅ Passed | 3 | 3 | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | ✅ Passed | 3 | 3 | 1.0KB | ✅ |
 | Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 8.1KB | ✅ |
-| Jak and Daxter: The Precursor Legacy | ❌ Failed | — | 3 | 3 | 18.0KB | 4.6KB |
+| Jak and Daxter: The Precursor Legacy | ❌ Failed | — | 3 | 3 | 22.1KB | 4.6KB |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | 3 | 3 | 58.5KB | 5.4KB |
 | Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 3 | 3 | 33.1KB | 105.3KB |
-| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 4 | 4 | 9.7KB | 15.7KB |
+| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | 4 | 4 | 11.4KB | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | 4 | 4 | 16.4KB | ✅ |
-| Lingo | ✅ Passed | ✅ Passed | 4 | 4 | 33.0KB | 10.7KB |
-| Links Awakening DX | ✅ Passed | ❌ Failed | 4 | 4 | 16.9KB | 5.3KB |
+| Lingo | ✅ Passed | ✅ Passed | 4 | 4 | 33.7KB | 10.7KB |
+| Links Awakening DX | ✅ Passed | ❌ Failed | 4 | 4 | 17.9KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | ✅ Passed | 4 | 4 | 0.6KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
-| Mega Man 2 | ✅ Passed | ✅ Passed | 3 | 3 | 0.6KB | 4.1KB |
+| Mega Man 2 | ✅ Passed | ✅ Passed | 3 | 3 | 2.3KB | ✅ |
 | MegaMan Battle Network 3 | ✅ Passed | ✅ Passed | 4 | 4 | 3.5KB | ✅ |
 | Meritous | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Metamath | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Muse Dash | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Noita | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Old School Runescape | ✅ Passed | ❌ Failed | 5 | 5 | 3.2KB | 1.2KB |
+| Old School Runescape | ✅ Passed | ❌ Failed | 5 | 5 | 5.9KB | ✅ |
 | Overcooked! 2 | ✅ Passed | ✅ Passed | 5 | 5 | 26.1KB | 5.1KB |
-| Paint | ✅ Passed | ✅ Passed | 5 | 5 | 6.4KB | 4.4KB |
-| Raft | ✅ Passed | ✅ Passed | 5 | 5 | 11.8KB | 5.5KB |
+| Paint | ✅ Passed | ✅ Passed | 5 | 5 | 7.2KB | ✅ |
+| Raft | ✅ Passed | ✅ Passed | 5 | 5 | 12.6KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Saving Princess | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 13.7KB | 6.9KB |
@@ -94,7 +94,7 @@
 | TUNIC | ✅ Passed | ✅ Passed | 7 | 7 | 2.5KB | ✅ |
 | Terraria | ✅ Passed | ✅ Passed | 7 | 7 | 12.3KB | 4.3KB |
 | The Legend of Zelda | ✅ Passed | ❌ Failed | 7 | 7 | 7.0KB | ✅ |
-| The Messenger | ❌ Failed | — | 7 | 7 | 11.7KB | ✅ |
+| The Messenger | ❌ Failed | — | 7 | 7 | 12.6KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 4.8KB | 4.6KB |
 | The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 28.9KB | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | 6 | 6 | 4.1KB | ✅ |

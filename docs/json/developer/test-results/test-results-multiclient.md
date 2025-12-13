@@ -6,21 +6,21 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-13 07:30:29
+**Generated:** 2025-12-13 11:07:21
 
 ## Summary
 
 - **Total Games:** 75
-- **Passed:** 74 (98.7%)
-- **Failed:** 1 (1.3%)
+- **Passed:** 70 (93.3%)
+- **Failed:** 5 (6.7%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 29/74 (39.2% of passed)
-- **Passing with Generic Logic:** 55/74 (74.3% of passed)
-- **Passing with Both Generic:** 29/74 (39.2% of passed)
+- **Passing with Generic Exporter:** 29/70 (41.4% of passed)
+- **Passing with Generic Logic:** 55/70 (78.6% of passed)
+- **Passing with Both Generic:** 29/70 (41.4% of passed)
 
 ## Test Results
 
@@ -47,32 +47,32 @@
 | DOOM II | ✅ Passed | 0 | ✅ | 453/453 | 453/453 | 0/0 | ✅ | 453/453 | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | 0 | ✅ | 1194/1194 | 1190/1190 | 4/4 | ✅ | 1194/1194 | 4.7KB | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | ✅ | 180/180 | 180/180 | 0/0 | ✅ | 180/180 | ✅ | ✅ |
-| Factorio | ✅ Passed | 0 | ✅ | 186/186 | 179/179 | 7/7 | ✅ | 186/186 | 11.4KB | ✅ |
+| Factorio | ❌ Failed | 0 | ❌ | 33/186 | 32/179 | 1/7 | ❌ | 30/186 | 11.4KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | ✅ | 114/114 | 110/110 | 4/4 | ✅ | 114/114 | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | 0 | ✅ | 299/299 | 251/251 | 48/48 | ✅ | 299/299 | 7.6KB | ✅ |
 | Heretic | ✅ Passed | 0 | ✅ | 502/502 | 502/502 | 0/0 | ✅ | 502/502 | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | ✅ | 134/134 | 133/133 | 1/1 | ✅ | 134/134 | 1.0KB | ✅ |
 | Inscryption | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | 8.1KB | ✅ |
-| Jak and Daxter: The Precursor Legacy | ❌ Failed | 0 | ❌ | 214/239 | 214/239 | 0/0 | ❌ | 210/239 | 18.0KB | 4.6KB |
+| Jak and Daxter: The Precursor Legacy | ❌ Failed | 0 | ❌ | 214/239 | 214/239 | 0/0 | ❌ | 210/239 | 22.1KB | 4.6KB |
 | Kingdom Hearts | ✅ Passed | 0 | ✅ | 512/512 | 511/511 | 1/1 | ✅ | 512/512 | 58.5KB | 5.4KB |
 | Kingdom Hearts 2 | ✅ Passed | 0 | ✅ | 705/705 | 643/643 | 62/62 | ✅ | 705/705 | 33.1KB | 105.3KB |
-| Kirby's Dream Land 3 | ✅ Passed | 0 | ✅ | 567/567 | 65/65 | 502/502 | ✅ | 567/567 | 9.7KB | 15.7KB |
+| Kirby's Dream Land 3 | ❌ Failed | 0 | ❌ | 566/567 | 64/65 | 502/502 | ❌ | 565/567 | 11.4KB | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | ✅ | 298/298 | 291/291 | 7/7 | ✅ | 298/298 | 16.4KB | ✅ |
-| Lingo | ✅ Passed | 0 | ✅ | 156/156 | 155/155 | 1/1 | ✅ | 156/156 | 33.0KB | 10.7KB |
-| Links Awakening DX | ✅ Passed | 0 | ✅ | 226/226 | 220/220 | 6/6 | ✅ | 226/226 | 16.9KB | 5.3KB |
+| Lingo | ✅ Passed | 0 | ✅ | 156/156 | 155/155 | 1/1 | ✅ | 156/156 | 33.7KB | 10.7KB |
+| Links Awakening DX | ✅ Passed | 0 | ✅ | 226/226 | 220/220 | 6/6 | ✅ | 226/226 | 17.9KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | ✅ | 40/40 | 35/35 | 5/5 | ✅ | 40/40 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | ✅ | 557/557 | 556/556 | 1/1 | ✅ | 557/557 | 0.6KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | 0 | ✅ | 11/11 | 10/10 | 1/1 | ✅ | 11/11 | ✅ | ✅ |
-| Mega Man 2 | ✅ Passed | 0 | ✅ | 50/50 | 44/44 | 6/6 | ✅ | 50/50 | 0.6KB | 4.1KB |
+| Mega Man 2 | ✅ Passed | 0 | ✅ | 50/50 | 44/44 | 6/6 | ✅ | 50/50 | 2.3KB | ✅ |
 | MegaMan Battle Network 3 | ✅ Passed | 0 | ✅ | 264/264 | 263/263 | 1/1 | ✅ | 264/264 | 3.5KB | ✅ |
 | Meritous | ✅ Passed | 0 | ✅ | 109/109 | 104/104 | 5/5 | ✅ | 109/109 | ✅ | ✅ |
 | Metamath | ✅ Passed | 0 | ✅ | 9/9 | 9/9 | 0/0 | ✅ | 9/9 | ✅ | ✅ |
 | Muse Dash | ✅ Passed | 0 | ✅ | 90/90 | 90/90 | 0/0 | ✅ | 90/90 | ✅ | ✅ |
 | Noita | ✅ Passed | 0 | ✅ | 117/117 | 109/109 | 8/8 | ✅ | 117/117 | ✅ | ✅ |
-| Old School Runescape | ✅ Passed | 0 | ✅ | 76/76 | 76/76 | 22/22 | ✅ | 76/76 | 3.2KB | 1.2KB |
+| Old School Runescape | ✅ Passed | 0 | ✅ | 76/76 | 76/76 | 22/22 | ✅ | 76/76 | 5.9KB | ✅ |
 | Overcooked! 2 | ✅ Passed | 0 | ✅ | 215/215 | 43/43 | 172/172 | ✅ | 215/215 | 26.1KB | 5.1KB |
-| Paint | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | 6.4KB | 4.4KB |
-| Raft | ✅ Passed | 0 | ✅ | 155/155 | 154/154 | 1/1 | ✅ | 155/155 | 11.8KB | 5.5KB |
+| Paint | ✅ Passed | 0 | ✅ | 130/130 | 130/130 | 0/0 | ✅ | 130/130 | 7.2KB | ✅ |
+| Raft | ✅ Passed | 0 | ✅ | 155/155 | 154/154 | 1/1 | ✅ | 155/155 | 12.6KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | ✅ | 223/223 | 221/221 | 2/2 | ✅ | 223/223 | ✅ | ✅ |
 | Saving Princess | ✅ Passed | 0 | ✅ | 37/37 | 36/36 | 1/1 | ✅ | 37/37 | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | 0 | ✅ | 340/340 | 339/339 | 1/1 | ✅ | 340/340 | 13.7KB | 6.9KB |
@@ -84,13 +84,13 @@
 | Super Mario 64 | ✅ Passed | 0 | ✅ | 149/149 | 149/149 | 0/0 | ✅ | 149/149 | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | ✅ | 60/60 | 59/59 | 7/7 | ✅ | 60/60 | 13.9KB | 4.9KB |
 | Super Mario World | ✅ Passed | 0 | ✅ | 108/108 | 108/108 | 0/0 | ✅ | 108/108 | ✅ | ✅ |
-| Super Metroid | ✅ Passed | 0 | ✅ | 109/109 | 101/101 | 9/9 | ✅ | 109/109 | 72.0KB | 114.6KB |
+| Super Metroid | ❌ Failed | 1 | ✅ | 109/109 | 101/101 | 9/9 | ✅ | 109/109 | 72.0KB | 114.6KB |
 | TOEM original | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ✅ | ✅ |
-| TUNIC | ✅ Passed | 0 | ✅ | 317/317 | 302/302 | 15/15 | ✅ | 317/317 | 2.5KB | ✅ |
+| TUNIC | ❌ Failed | 7 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/268 | 2.5KB | ✅ |
 | Terraria | ✅ Passed | 0 | ✅ | 244/244 | 63/63 | 181/181 | ✅ | 244/244 | 12.3KB | 4.3KB |
 | The Legend of Zelda | ✅ Passed | 0 | ✅ | 165/165 | 155/155 | 10/10 | ✅ | 165/165 | 7.0KB | ✅ |
-| The Messenger | ✅ Passed | 0 | ✅ | 113/113 | 106/106 | 7/7 | ✅ | 113/113 | 11.7KB | ✅ |
+| The Messenger | ✅ Passed | 0 | ✅ | 113/113 | 106/106 | 7/7 | ✅ | 113/113 | 12.6KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | ✅ | 109/109 | 108/108 | 1/1 | ✅ | 109/109 | 4.8KB | 4.6KB |
 | The Witness | ✅ Passed | 0 | ✅ | 147/147 | 132/132 | 15/15 | ✅ | 147/147 | 28.9KB | ✅ |
 | Timespinner | ✅ Passed | 0 | ✅ | 185/185 | 180/180 | 5/5 | ✅ | 185/185 | 4.1KB | ✅ |
