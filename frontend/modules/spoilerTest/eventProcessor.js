@@ -249,8 +249,34 @@ export class EventProcessor {
 
         this.logCallback('info', `[Sphere ${event.sphere_index}] inventory_from_log: ${JSON.stringify(inventory_from_log)}`)
 
+        // Get accumulator targets from game_info (e.g., "RUPEES" for LADX)
+        // These are computed values in the sphere log's resolved_items that should NOT be added
+        // as inventory items. The actual source items (like "50 Rupees") will be added via
+        // location checks or addItemsUpfront, and the accumulator rules will update prog_items.
+        const gameInfo = staticData?.game_info?.[this.playerIdKey] || {};
+        const accumulatorTargets = new Set();
+        if (gameInfo.accumulator_rules) {
+          for (const rule of gameInfo.accumulator_rules) {
+            if (rule.target) {
+              accumulatorTargets.add(rule.target);
+            }
+          }
+        }
+
         // Find newly added items by comparing with previous inventory
-        newlyAddedItems = this.findNewlyAddedItems(this.previousInventory, inventory_from_log);
+        let rawNewlyAddedItems = this.findNewlyAddedItems(this.previousInventory, inventory_from_log);
+
+        // If using resolved_items, filter out accumulator targets from items to add
+        // The accumulator rules will automatically update prog_items when source items are added
+        if (useResolvedItems && accumulatorTargets.size > 0) {
+          newlyAddedItems = rawNewlyAddedItems.filter(itemName => !accumulatorTargets.has(itemName));
+          if (this.verboseMode && newlyAddedItems.length < rawNewlyAddedItems.length) {
+            const filtered = rawNewlyAddedItems.filter(itemName => accumulatorTargets.has(itemName));
+            this.logCallback('debug', `Filtered accumulator targets from newlyAddedItems: ${JSON.stringify(filtered)}`);
+          }
+        } else {
+          newlyAddedItems = rawNewlyAddedItems;
+        }
 
         this.logCallback('info', `[Sphere ${event.sphere_index}] newlyAddedItems: ${JSON.stringify(newlyAddedItems)}`);
 

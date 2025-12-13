@@ -2220,6 +2220,41 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'counts': {
+        // COUNTS: check if total count of any items in list >= required amount
+        // Used by LADX for instrument count requirements (e.g., need 3 of 8 instruments)
+        const countItems = rule.items || [];
+        const requiredCount = evaluateRule(rule.count, context, depth + 1, localScope);
+
+        if (requiredCount === undefined) {
+          result = undefined;
+          break;
+        }
+
+        let totalItemCount = 0;
+        let hasUndefined = false;
+
+        for (const item of countItems) {
+          // Items can be strings or rule structures
+          const itemName = typeof item === 'string' ? item : evaluateRule(item, context, depth + 1, localScope);
+          if (itemName === undefined) {
+            hasUndefined = true;
+            break;
+          }
+          const itemCount = typeof context.countItem === 'function'
+            ? (context.countItem(itemName) ?? 0)
+            : 0;
+          totalItemCount += itemCount;
+        }
+
+        if (hasUndefined) {
+          result = undefined;
+        } else {
+          result = totalItemCount >= requiredCount;
+        }
+        break;
+      }
+
       case 'prog_item_count': {
         // Return the count of a progression item from state.prog_items[player][key]
         // This handles DLCQuest and other games that use accumulator items

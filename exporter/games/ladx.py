@@ -169,6 +169,30 @@ class LADXGameExportHandler(GenericGameExportHandler):
                 }
             }
 
+        elif class_name == 'COUNTS':
+            # COUNTS checks if you have >= amount total of any items from a list
+            # Used for instrument count requirements (e.g., need 3 of 8 instruments)
+            # Access private attributes using name mangling
+            items = getattr(condition, '_COUNTS__items', [])
+            amount = getattr(condition, '_COUNTS__amount', 1)
+
+            if not items:
+                logger.warning(f"COUNTS condition missing items attribute")
+                return None
+
+            # Map LADXR item names to Archipelago item names
+            mapped_items = [self._map_ladxr_item_name(item) for item in items]
+
+            logger.debug(f"LADX COUNTS condition: {items} (mapped to {mapped_items}) >= {amount}")
+            return {
+                'type': 'counts',
+                'items': mapped_items,
+                'count': {
+                    'type': 'constant',
+                    'value': amount
+                }
+            }
+
         else:
             # Unknown condition type
             logger.warning(f"Unknown LADXR condition type: {class_name}")
