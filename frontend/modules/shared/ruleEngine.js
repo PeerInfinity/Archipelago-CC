@@ -2456,6 +2456,67 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'map': {
+        // Apply a function (lambda) to each element of an iterable
+        // Rule structure: { type: 'map', function: <lambda>, iterable: <rule> }
+        if (!rule.function || !rule.iterable) {
+          log('warn', '[evaluateRule] map rule missing function or iterable', { rule });
+          result = undefined;
+          break;
+        }
+
+        const mapIterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
+
+        if (mapIterable === undefined) {
+          result = undefined;
+          break;
+        }
+
+        if (!Array.isArray(mapIterable)) {
+          log('warn', '[evaluateRule] map iterable is not an array', { mapIterable, rule });
+          result = undefined;
+          break;
+        }
+
+        // Apply the function to each element
+        const mapFunc = rule.function;
+        const mappedResults = [];
+
+        for (const item of mapIterable) {
+          // Create a new scope with the lambda parameter bound to the current item
+          const lambdaScope = localScope ? { ...localScope } : {};
+
+          if (mapFunc.type === 'lambda' && mapFunc.params && mapFunc.params.length > 0) {
+            // Bind the first parameter to the item
+            lambdaScope[mapFunc.params[0]] = item;
+            // Evaluate the lambda body with the bound parameter
+            const mappedValue = evaluateRule(mapFunc.body, context, depth + 1, lambdaScope);
+            mappedResults.push(mappedValue);
+          } else {
+            // If it's not a proper lambda, try to evaluate it directly
+            log('warn', '[evaluateRule] map function is not a lambda with params', { mapFunc });
+            mappedResults.push(undefined);
+          }
+        }
+
+        // If any mapped result is undefined, the whole map result is undefined
+        if (mappedResults.some((v) => v === undefined)) {
+          result = undefined;
+        } else {
+          result = mappedResults;
+        }
+        break;
+      }
+
+      case 'lambda': {
+        // Lambda expressions - these are typically evaluated in context (e.g., by map)
+        // If we encounter a lambda directly, it's likely being used as a value
+        // Return a representation that can be used by other constructs
+        log('debug', '[evaluateRule] Lambda encountered directly - returning function representation');
+        result = rule; // Return the rule itself as a function representation
+        break;
+      }
+
       case 'list': {
         if (!Array.isArray(rule.value)) {
           log(
@@ -3191,6 +3252,63 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'map': {
+        // Apply a function (lambda) to each element of an iterable (block scope version)
+        // Rule structure: { type: 'map', function: <lambda>, iterable: <rule> }
+        if (!rule.function || !rule.iterable) {
+          log('warn', '[evaluateRule] map rule missing function or iterable', { rule });
+          result = undefined;
+          break;
+        }
+
+        const mapIterableBlock = evaluateRule(rule.iterable, context, depth + 1, localScope);
+
+        if (mapIterableBlock === undefined) {
+          result = undefined;
+          break;
+        }
+
+        if (!Array.isArray(mapIterableBlock)) {
+          log('warn', '[evaluateRule] map iterable is not an array', { mapIterableBlock, rule });
+          result = undefined;
+          break;
+        }
+
+        // Apply the function to each element
+        const mapFuncBlock = rule.function;
+        const mappedResultsBlock = [];
+
+        for (const item of mapIterableBlock) {
+          // Create a new scope with the lambda parameter bound to the current item
+          const lambdaScopeBlock = localScope ? { ...localScope } : {};
+
+          if (mapFuncBlock.type === 'lambda' && mapFuncBlock.params && mapFuncBlock.params.length > 0) {
+            // Bind the first parameter to the item
+            lambdaScopeBlock[mapFuncBlock.params[0]] = item;
+            // Evaluate the lambda body with the bound parameter
+            const mappedValue = evaluateRule(mapFuncBlock.body, context, depth + 1, lambdaScopeBlock);
+            mappedResultsBlock.push(mappedValue);
+          } else {
+            log('warn', '[evaluateRule] map function is not a lambda with params', { mapFuncBlock });
+            mappedResultsBlock.push(undefined);
+          }
+        }
+
+        if (mappedResultsBlock.some((v) => v === undefined)) {
+          result = undefined;
+        } else {
+          result = mappedResultsBlock;
+        }
+        break;
+      }
+
+      case 'lambda': {
+        // Lambda expressions in block scope - return as function representation
+        log('debug', '[evaluateRule] Lambda encountered directly in block scope');
+        result = rule;
+        break;
+      }
+
       case 'negate': {
         // Unary minus operation: -value
         // Generated by Python exporter for non-constant negation
@@ -3417,8 +3535,21 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         for (let i = 0; i < maxIterations && !breakIterLoop; i++) {
           const item = iterable[i];
 
-          // Set loop variable if specified (and not '_')
-          if (rule.var && rule.var !== '_') {
+          // Set loop variable(s) - support both single var and tuple unpacking (vars)
+          if (rule.vars && Array.isArray(rule.vars)) {
+            // Tuple unpacking: item should be an array [val1, val2, ...]
+            // This handles patterns like: for key, value in dict.items()
+            if (Array.isArray(item)) {
+              rule.vars.forEach((varName, idx) => {
+                if (varName !== '_') {
+                  localScope[varName] = item[idx];
+                }
+              });
+            } else {
+              // If item is not an array but we expected tuple unpacking, log warning
+              log('warn', `[evaluateRule] for_iter: expected array item for tuple unpacking, got ${typeof item}`);
+            }
+          } else if (rule.var && rule.var !== '_') {
             localScope[rule.var] = item;
           }
 

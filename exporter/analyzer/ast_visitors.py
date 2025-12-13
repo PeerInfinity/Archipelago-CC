@@ -213,11 +213,31 @@ class ASTVisitorMixin:
     def visit_Lambda(self, node):
         try:
             logging.debug("\n--- Analyzing Lambda ---")
-            logging.debug(f"Lambda args: {[arg.arg for arg in node.args.args]}")
+            param_names = [arg.arg for arg in node.args.args]
+            logging.debug(f"Lambda args: {param_names}")
             logging.debug(f"Lambda body type: {type(node.body).__name__}")
-            
-            # Visit the lambda body and return its result
-            return self.visit(node.body)
+
+            # Visit the lambda body
+            body_result = self.visit(node.body)
+
+            # Determine if this is a "rule lambda" (access rule) or a "data lambda" (for map, etc.)
+            # Rule lambdas have 'state' as the first parameter and should return just the body
+            # Data lambdas (used in map(), filter(), etc.) should return the full lambda structure
+            is_rule_lambda = (
+                not param_names or  # No params - simple rule
+                (param_names and param_names[0] in ('state', 'self'))  # First param is state/self
+            )
+
+            if is_rule_lambda:
+                # Rule lambda - return just the body (the actual rule)
+                return body_result
+            else:
+                # Data lambda (e.g., lambda x: transform(x)) - return full structure
+                return {
+                    'type': 'lambda',
+                    'params': param_names,
+                    'body': body_result
+                }
         except Exception as e:
             logging.error("Error in visit_Lambda", e)
             return None
@@ -1034,6 +1054,20 @@ class ASTVisitorMixin:
                 if len(filtered_args) >= 2:
                     result['start'] = filtered_args[1]
                 logging.debug(f"Created sum result: {result}")
+                return result
+
+            # *** Special handling for map() function ***
+            # map(func, iterable) applies func to each element of iterable
+            if func_name == 'map' and len(filtered_args) >= 2:
+                logging.debug(f"Detected map() function call with {len(filtered_args)} args")
+                func_arg = filtered_args[0]
+                iterable_arg = filtered_args[1]
+                result = {
+                    'type': 'map',
+                    'function': func_arg,
+                    'iterable': iterable_arg
+                }
+                logging.debug(f"Created map result: {result}")
                 return result
 
             # Create helper result with filtered args (no state/player in JSON)
@@ -3060,10 +3094,22 @@ class ASTVisitorMixin:
             logging.debug(f"Target: {ast.dump(node.target)}")
             logging.debug(f"Iter: {ast.dump(node.iter)}")
 
-            # Get the loop variable name
+            # Get the loop variable name(s)
+            # Support both simple names and tuple unpacking (e.g., for k, v in dict.items())
             var_name = "_"
+            var_names = None  # Will be set if tuple unpacking is used
             if isinstance(node.target, ast.Name):
                 var_name = node.target.id
+            elif isinstance(node.target, ast.Tuple):
+                # Tuple unpacking: extract all variable names
+                var_names = []
+                for elt in node.target.elts:
+                    if isinstance(elt, ast.Name):
+                        var_names.append(elt.id)
+                    else:
+                        # Nested tuple or other complex pattern - use placeholder
+                        var_names.append("_")
+                logging.debug(f"visit_For: Tuple unpacking with vars: {var_names}")
 
             # Analyze the loop body
             body_results = []
@@ -3087,12 +3133,17 @@ class ASTVisitorMixin:
                     logging.error(f"visit_For: Failed to analyze range count: {ast.dump(count_arg)}")
                     return None
 
-                return {
+                result = {
                     'type': 'for_range',
-                    'var': var_name,
                     'count': count_result,
                     'body': body_results
                 }
+                # Use 'vars' for tuple unpacking, 'var' for simple variable
+                if var_names is not None:
+                    result['vars'] = var_names
+                else:
+                    result['var'] = var_name
+                return result
             else:
                 # Handle iteration over arbitrary iterables (for_iter)
                 iterable_result = self.visit(node.iter)
@@ -3101,12 +3152,17 @@ class ASTVisitorMixin:
                     return None
 
                 logging.debug(f"visit_For: Creating for_iter with iterable: {iterable_result}")
-                return {
+                result = {
                     'type': 'for_iter',
-                    'var': var_name,
                     'iterable': iterable_result,
                     'body': body_results
                 }
+                # Use 'vars' for tuple unpacking, 'var' for simple variable
+                if var_names is not None:
+                    result['vars'] = var_names
+                else:
+                    result['var'] = var_name
+                return result
         except Exception as e:
             logging.error(f"Error in visit_For: {e}")
             return None

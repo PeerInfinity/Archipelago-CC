@@ -872,37 +872,10 @@ class BaseGameExportHandler:
                     }
                     continue
 
-                # Check if function has dynamic for loops - if so, skip analysis
-                # These functions iterate over runtime data and can't be statically analyzed
-                try:
-                    import ast as _ast
-                    source = inspect.getsource(helper_func)
-                    tree = _ast.parse(source)
-                    has_dynamic_loops = False
-                    for node in _ast.walk(tree):
-                        if isinstance(node, _ast.For):
-                            # Check if iterator is a method call like .keys(), .values(), .items()
-                            if isinstance(node.iter, _ast.Call):
-                                if isinstance(node.iter.func, _ast.Attribute):
-                                    method_name = node.iter.func.attr
-                                    if method_name in ('keys', 'values', 'items'):
-                                        has_dynamic_loops = True
-                                        break
-                            # Check if iterator is a name (variable) - likely dynamic
-                            elif isinstance(node.iter, _ast.Name):
-                                has_dynamic_loops = True
-                                break
-                    if has_dynamic_loops:
-                        logger.warning(f"Helper '{helper_name}' has dynamic for loops - cannot export definition (frontend must implement)")
-                        # Export as unsupported - frontend will need a native implementation
-                        helper_definitions[helper_name] = {
-                            'type': 'error',
-                            'message': f'Helper {helper_name} has dynamic for loops and cannot be statically analyzed',
-                            'requires_native_impl': True
-                        }
-                        continue
-                except Exception as e:
-                    logger.debug(f"Could not check for dynamic loops in helper '{helper_name}': {e}")
+                # Note: We previously checked for "dynamic for loops" here and blocked export.
+                # Now that for_iter with tuple unpacking, map(), and dict methods are supported,
+                # we allow the analysis to proceed. If the analyzer can't handle a specific case,
+                # it will return an error or unsupported result.
 
                 # Analyze the function to get its rule structure
                 # This may discover new helpers via register_helper_usage
