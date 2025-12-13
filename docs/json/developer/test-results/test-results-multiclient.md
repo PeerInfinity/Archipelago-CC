@@ -6,21 +6,21 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-13 07:30:29
+**Generated:** 2025-12-13 18:24:29
 
 ## Summary
 
 - **Total Games:** 75
-- **Passed:** 74 (98.7%)
-- **Failed:** 1 (1.3%)
+- **Passed:** 70 (93.3%)
+- **Failed:** 5 (6.7%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 29/74 (39.2% of passed)
-- **Passing with Generic Logic:** 55/74 (74.3% of passed)
-- **Passing with Both Generic:** 29/74 (39.2% of passed)
+- **Passing with Generic Exporter:** 29/70 (41.4% of passed)
+- **Passing with Generic Logic:** 55/70 (78.6% of passed)
+- **Passing with Both Generic:** 29/70 (41.4% of passed)
 
 ## Test Results
 
@@ -47,7 +47,7 @@
 | DOOM II | ✅ Passed | 0 | ✅ | 453/453 | 453/453 | 0/0 | ✅ | 453/453 | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | 0 | ✅ | 1194/1194 | 1190/1190 | 4/4 | ✅ | 1194/1194 | 4.7KB | ✅ |
 | Donkey Kong Country 3 | ✅ Passed | 0 | ✅ | 180/180 | 180/180 | 0/0 | ✅ | 180/180 | ✅ | ✅ |
-| Factorio | ✅ Passed | 0 | ✅ | 186/186 | 179/179 | 7/7 | ✅ | 186/186 | 11.4KB | ✅ |
+| Factorio | ❌ Failed | 0 | ❌ | 33/186 | 32/179 | 1/7 | ❌ | 30/186 | 11.4KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | ✅ | 114/114 | 110/110 | 4/4 | ✅ | 114/114 | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | 0 | ✅ | 299/299 | 251/251 | 48/48 | ✅ | 299/299 | 7.6KB | ✅ |
 | Heretic | ✅ Passed | 0 | ✅ | 502/502 | 502/502 | 0/0 | ✅ | 502/502 | ✅ | ✅ |
@@ -56,14 +56,14 @@
 | Jak and Daxter: The Precursor Legacy | ❌ Failed | 0 | ❌ | 214/239 | 214/239 | 0/0 | ❌ | 210/239 | 18.0KB | 4.6KB |
 | Kingdom Hearts | ✅ Passed | 0 | ✅ | 512/512 | 511/511 | 1/1 | ✅ | 512/512 | 58.5KB | 5.4KB |
 | Kingdom Hearts 2 | ✅ Passed | 0 | ✅ | 705/705 | 643/643 | 62/62 | ✅ | 705/705 | 33.1KB | 105.3KB |
-| Kirby's Dream Land 3 | ✅ Passed | 0 | ✅ | 567/567 | 65/65 | 502/502 | ✅ | 567/567 | 9.7KB | 15.7KB |
+| Kirby's Dream Land 3 | ❌ Failed | 0 | ❌ | 566/567 | 64/65 | 502/502 | ❌ | 565/567 | 11.4KB | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | ✅ | 298/298 | 291/291 | 7/7 | ✅ | 298/298 | 16.4KB | ✅ |
-| Lingo | ✅ Passed | 0 | ✅ | 156/156 | 155/155 | 1/1 | ✅ | 156/156 | 33.0KB | 10.7KB |
-| Links Awakening DX | ✅ Passed | 0 | ✅ | 226/226 | 220/220 | 6/6 | ✅ | 226/226 | 16.9KB | 5.3KB |
+| Lingo | ✅ Passed | 0 | ✅ | 156/156 | 155/155 | 1/1 | ✅ | 156/156 | 33.7KB | 10.7KB |
+| Links Awakening DX | ✅ Passed | 0 | ✅ | 226/226 | 220/220 | 6/6 | ✅ | 226/226 | 17.9KB | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | ✅ | 40/40 | 35/35 | 5/5 | ✅ | 40/40 | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | ✅ | 557/557 | 556/556 | 1/1 | ✅ | 557/557 | 0.6KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | 0 | ✅ | 11/11 | 10/10 | 1/1 | ✅ | 11/11 | ✅ | ✅ |
-| Mega Man 2 | ✅ Passed | 0 | ✅ | 50/50 | 44/44 | 6/6 | ✅ | 50/50 | 0.6KB | 4.1KB |
+| Mega Man 2 | ✅ Passed | 0 | ✅ | 50/50 | 44/44 | 6/6 | ✅ | 50/50 | 2.3KB | ✅ |
 | MegaMan Battle Network 3 | ✅ Passed | 0 | ✅ | 264/264 | 263/263 | 1/1 | ✅ | 264/264 | 3.5KB | ✅ |
 | Meritous | ✅ Passed | 0 | ✅ | 109/109 | 104/104 | 5/5 | ✅ | 109/109 | ✅ | ✅ |
 | Metamath | ✅ Passed | 0 | ✅ | 9/9 | 9/9 | 0/0 | ✅ | 9/9 | ✅ | ✅ |
@@ -84,10 +84,10 @@
 | Super Mario 64 | ✅ Passed | 0 | ✅ | 149/149 | 149/149 | 0/0 | ✅ | 149/149 | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | ✅ | 60/60 | 59/59 | 7/7 | ✅ | 60/60 | 13.9KB | 4.9KB |
 | Super Mario World | ✅ Passed | 0 | ✅ | 108/108 | 108/108 | 0/0 | ✅ | 108/108 | ✅ | ✅ |
-| Super Metroid | ✅ Passed | 0 | ✅ | 109/109 | 101/101 | 9/9 | ✅ | 109/109 | 72.0KB | 114.6KB |
+| Super Metroid | ❌ Failed | 1 | ✅ | 109/109 | 101/101 | 9/9 | ✅ | 109/109 | 72.0KB | 114.6KB |
 | TOEM original | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ✅ | ✅ |
-| TUNIC | ✅ Passed | 0 | ✅ | 317/317 | 302/302 | 15/15 | ✅ | 317/317 | 2.5KB | ✅ |
+| TUNIC | ❌ Failed | 7 | ❌ | 0/0 | 0/0 | 0/0 | ❌ | 0/268 | 2.5KB | ✅ |
 | Terraria | ✅ Passed | 0 | ✅ | 244/244 | 63/63 | 181/181 | ✅ | 244/244 | 12.3KB | 4.3KB |
 | The Legend of Zelda | ✅ Passed | 0 | ✅ | 165/165 | 155/155 | 10/10 | ✅ | 165/165 | 7.0KB | ✅ |
 | The Messenger | ✅ Passed | 0 | ✅ | 113/113 | 106/106 | 7/7 | ✅ | 113/113 | 11.7KB | ✅ |
