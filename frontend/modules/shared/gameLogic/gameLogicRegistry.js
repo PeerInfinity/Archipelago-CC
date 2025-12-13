@@ -371,8 +371,9 @@ const GAME_REGISTRY = {
   },
   'Raft': {
     logicModule: genericLogic.genericStateModule,
-    // Helper functions now exported to rules.json - no JavaScript needed
+    // Game-specific helpers now exported to rules.json - no JavaScript needed
     // Uses use_resolved_items=true so inventory has resolved item names directly
+    // Base helpers (has, count) come from generic fallback in getGameLogic()
     worldClasses: ['RaftWorld'],
     aliases: ['Raft']
   },
@@ -547,7 +548,8 @@ export function getGameLogic(gameName) {
 
   return {
     logicModule: config.logicModule,
-    helperFunctions: config.helperFunctions,
+    // Fallback to generic helpers if none specified - base helpers like has/count are always needed
+    helperFunctions: config.helperFunctions || GAME_REGISTRY['Generic'].helperFunctions,
     stateMethods: config.stateMethods,
     stateModule: config.logicModule, // Expose stateModule for hooks
     constants: config.constants,
