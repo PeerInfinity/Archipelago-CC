@@ -53,7 +53,14 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
         """
         game_info = super().get_game_info(world)
 
-        # Add accumulator rules to track Tradeable Orbs and Reachable Orbs
+        # Import level table to get all level names
+        from worlds.jakanddaxter.levels import level_table
+
+        # Add accumulator rules to track Tradeable Orbs
+        # Note: Reachable Orbs is NOT an accumulator - it's a computed value that comes
+        # directly from resolved_items in the sphere log. If we make it an accumulator
+        # target, the frontend will filter it out and wait for a source item that doesn't
+        # exist. Instead, we let it be added directly from resolved_items with its count.
         game_info['accumulator_rules'] = [
             # Items like "25 Precursor Orbs" add 25 to the Tradeable Orbs counter
             {
@@ -61,23 +68,63 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
                 'extract_value': True,
                 'target': 'Tradeable Orbs',
                 'discriminator': None
-            },
-            # "Reachable Orbs" from resolved_items - quantity is passed directly
-            {
-                'pattern': r'^Reachable Orbs$',
-                'extract_value': False,
-                'target': 'Reachable Orbs',
-                'discriminator': None
             }
         ]
 
-        # Initialize accumulators to 0
+        # Initialize accumulators to 0, including per-level Reachable Orbs
         game_info['prog_items_init'] = {
             'Tradeable Orbs': 0,
-            'Reachable Orbs': 0
+            'Reachable Orbs': 0,
+            'Reachable Orbs Fresh': False,  # Track if recalculation is needed
         }
 
+        # Add per-level Reachable Orbs initialization
+        for level_name in level_table.keys():
+            game_info['prog_items_init'][f'{level_name} Reachable Orbs'] = 0
+
         return game_info
+
+    def get_item_data(self, world) -> Dict[str, Any]:
+        """
+        Return item data including pseudo-items for Reachable Orbs tracking.
+
+        These items are not real game items - they're computed values tracked via
+        resolved_items in the sphere log. They need to be in the items list for
+        the frontend InventoryManager to recognize them.
+        """
+        # Get base items from parent class
+        item_data = super().get_item_data(world)
+
+        # Import level table to get all level names
+        from worlds.jakanddaxter.levels import level_table
+
+        # Add pseudo-items for orb tracking (these are resolved_items, not real items)
+        orb_tracking_items = [
+            'Tradeable Orbs',
+            'Reachable Orbs',
+            'Reachable Orbs Fresh',  # Boolean tracker
+        ]
+
+        # Add per-level Reachable Orbs items
+        for level_name in level_table.keys():
+            orb_tracking_items.append(f'{level_name} Reachable Orbs')
+
+        # Add these as pseudo-items (id 0 indicates computed/pseudo item)
+        for item_name in orb_tracking_items:
+            if item_name not in item_data:
+                item_data[item_name] = {
+                    'name': item_name,
+                    'id': 0,  # Pseudo-item, not a real Archipelago item
+                    'groups': ['Orb Tracking'],
+                    'advancement': False,
+                    'useful': False,
+                    'trap': False,
+                    'event': False,
+                    'type': 'computed',  # Mark as computed/tracking item
+                    'max_count': 9999  # These can have high counts
+                }
+
+        return item_data
 
     def recalculate_collection_state_if_needed(self, current_collection_state, player_id, world):
         """
@@ -102,6 +149,36 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
             return value.get('value')
         return value
 
+    def _extract_item_collection(self, arg: Any) -> list:
+        """Extract a list of items from various collection representations.
+
+        Handles:
+        - Direct lists
+        - Constants containing lists
+        - Set types: {'type': 'set', 'elements': [...]}
+        - Tuple types: {'type': 'tuple', 'elements': [...]}
+        """
+        # First unwrap any constant wrapper
+        unwrapped = self._unwrap_constant(arg)
+
+        # If it's already a list, return it
+        if isinstance(unwrapped, list):
+            return [self._unwrap_constant(item) for item in unwrapped]
+
+        # Handle set and tuple types
+        if isinstance(arg, dict):
+            if arg.get('type') in ('set', 'tuple'):
+                elements = arg.get('elements', [])
+                return [self._unwrap_constant(elem) for elem in elements]
+
+        # If unwrapped is a dict with set/tuple type
+        if isinstance(unwrapped, dict):
+            if unwrapped.get('type') in ('set', 'tuple'):
+                elements = unwrapped.get('elements', [])
+                return [self._unwrap_constant(elem) for elem in elements]
+
+        return None
+
     def _resolve_subscript(self, subscript_rule: Dict[str, Any]) -> Any:
         """Resolve a subscript operation, particularly for item_table lookups."""
         if not isinstance(subscript_rule, dict) or subscript_rule.get('type') != 'subscript':
@@ -110,7 +187,7 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
         value = subscript_rule.get('value', {})
         index = subscript_rule.get('index', {})
 
-        # Check if this is an item_table lookup
+        # Check if this is an item_table lookup by name reference
         if isinstance(value, dict) and value.get('type') == 'name' and value.get('name') == 'item_table':
             # Extract the item ID from the index
             item_id = self._unwrap_constant(index)
@@ -119,6 +196,23 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
                 return self.item_id_to_name[item_id]
             else:
                 logger.warning(f"Could not resolve item_table subscript for ID: {item_id}")
+                return f"Unknown Item {item_id}"
+
+        # Check if this is an inline item_table lookup (constant dict with item ID -> name mapping)
+        unwrapped_value = self._unwrap_constant(value)
+        if isinstance(unwrapped_value, dict):
+            # This is likely an inline item_table - a dict mapping item IDs to names
+            item_id = self._unwrap_constant(index)
+            # Convert item_id to string since JSON keys are strings
+            item_id_str = str(item_id) if item_id is not None else None
+            if item_id_str and item_id_str in unwrapped_value:
+                # Return the item name from the inline dict
+                return unwrapped_value[item_id_str]
+            elif isinstance(item_id, int) and item_id in self.item_id_to_name:
+                # Fallback to our pre-built item_id_to_name mapping
+                return self.item_id_to_name[item_id]
+            else:
+                logger.warning(f"Could not resolve inline subscript for ID: {item_id}")
                 return f"Unknown Item {item_id}"
 
         return subscript_rule
@@ -273,9 +367,8 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
             if method == 'has_any':
                 # has_any(items, player) -> check if player has any of the items
                 if len(args) >= 1:
-                    items_arg = args[0]
-                    items = self._unwrap_constant(items_arg)
-                    if isinstance(items, list):
+                    items = self._extract_item_collection(args[0])
+                    if items:
                         return {
                             'type': 'or',
                             'conditions': [
@@ -287,9 +380,8 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
             elif method == 'has_all':
                 # has_all(items, player) -> check if player has all of the items
                 if len(args) >= 1:
-                    items_arg = args[0]
-                    items = self._unwrap_constant(items_arg)
-                    if isinstance(items, list):
+                    items = self._extract_item_collection(args[0])
+                    if items:
                         return {
                             'type': 'and',
                             'conditions': [

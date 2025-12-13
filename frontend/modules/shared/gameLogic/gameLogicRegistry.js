@@ -230,13 +230,12 @@ import { pokemon_emeraldStateModule } from './pokemon_emerald/pokemon_emeraldLog
 // mm2Logic removed - helpers now exported to rules.json
 import * as ootLogic from './ocarina_of_time/ootLogic.js';
 import { ootStateModule } from './ocarina_of_time/ootLogic.js';
-import * as raftLogic from './raft/raftLogic.js';
-import { raftStateModule } from './raft/raftLogic.js';
+// raftLogic removed - helpers now exported to rules.json (uses use_resolved_items=true)
 import * as yachtdiceLogic from './yachtdice/yachtdiceLogic.js';
 import { yachtdiceStateModule } from './yachtdice/yachtdiceLogic.js';
 import * as overcooked2Logic from './overcooked2/overcooked2Logic.js';
 import { overcooked2StateModule } from './overcooked2/overcooked2Logic.js';
-import * as paintLogic from './paint/paintLogic.js';
+// paintLogic removed - helpers now exported to rules.json
 import * as soeLogic from './soe/soeLogic.js';
 import * as smz3Logic from './smz3/smz3Logic.js';
 import * as sc2Logic from './sc2/sc2Logic.js';
@@ -250,7 +249,7 @@ import * as twwLogic from './tww/twwLogic.js';
 import * as wargrooveLogic from './wargroove/wargrooveLogic.js';
 // yoshisisland helpers have been exported to rules.json - no JavaScript needed
 import * as yugioh06Logic from './yugioh06/yugioh06Logic.js';
-import { helperFunctions as osrsHelperFunctions } from './osrs/osrsLogic.js';
+// osrs helpers have been exported to rules.json - no JavaScript needed
 
 /**
  * Registry of all supported games and their logic modules
@@ -360,19 +359,20 @@ const GAME_REGISTRY = {
   },
   'Old School Runescape': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: osrsHelperFunctions,
+    // Helper functions now exported to rules.json - no JavaScript needed
     worldClasses: ['OSRSWorld'],
     aliases: ['Old School Runescape', 'OSRS', 'osrs']
   },
   'Paint': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: paintLogic.helperFunctions,
+    // Helper functions now exported to rules.json - no JavaScript needed
     worldClasses: ['PaintWorld'],
     aliases: ['Paint']
   },
   'Raft': {
-    logicModule: raftLogic.raftStateModule,
-    helperFunctions: raftLogic.helperFunctions,
+    logicModule: genericLogic.genericStateModule,
+    // Helper functions now exported to rules.json - no JavaScript needed
+    // Uses use_resolved_items=true so inventory has resolved item names directly
     worldClasses: ['RaftWorld'],
     aliases: ['Raft']
   },

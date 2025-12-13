@@ -22,6 +22,22 @@
       "reason": "The default yaml file fails to generate."
     },
     {
+      "name": "Sudoku.yaml",
+      "reason": "Cannot be used for generating worlds."
+    },
+    {
+      "name": "Universal Tracker.yaml",
+      "reason": "Not a game."
+    },
+    {
+      "name": "Zillion.yaml",
+      "reason": "Uses the external zilliandomizer tool for its logic, which is not compatible with this system."
+    },
+    {
+      "name": "Jak and Daxter The Precursor Legacy.yaml",
+      "reason": "Temporarily excluded.  It takes too long to process."
+    },
+    {
       "name": "Pokemon Emerald.yaml",
       "reason": "Temporarily excluded.  It takes too long to process."
     },
@@ -31,23 +47,15 @@
     },
     {
       "name": "SMZ3.yaml",
-      "reason": "Temporarily excluded.  It takes too long to process.  Also, self-locking locations cause the multiclient test to fail."
+      "reason": "Temporarily excluded.  It takes too long to process."
     },
     {
-      "name": "Sudoku.yaml",
-      "reason": "Cannot be used for generating worlds."
-    },
-    {
-      "name": "Universal Tracker.yaml",
-      "reason": "Not a game."
+      "name": "TUNIC.yaml",
+      "reason": "Temporarily excluded.  It takes too long to process."
     },
     {
       "name": "Yu-Gi-Oh! 2006.yaml",
       "reason": "Temporarily excluded.  It takes too long to process."
-    },
-    {
-      "name": "Zillion.yaml",
-      "reason": "Uses the external zilliandomizer tool for its logic, which is not compatible with this system."
     }
   ]
 }

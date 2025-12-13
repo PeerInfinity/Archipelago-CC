@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-13 18:24:29
+**Generated:** 2025-12-13 11:07:21
 
 **Source Data Created:** 2025-12-13T17:45:36.860041
 
@@ -57,7 +57,7 @@
 | Heretic | ✅ Passed | 0 | 24.1 | 24.1 | 🟢 Complete | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | 1.0KB | ✅ |
 | Inscryption | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | 8.1KB | ✅ |
-| Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | 18.0KB | 4.6KB |
+| Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | 22.1KB | 4.6KB |
 | Kingdom Hearts | ✅ Passed | 0 | 10.3 | 10.3 | 🟢 Complete | 58.5KB | 5.4KB |
 | Kingdom Hearts 2 | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 33.1KB | 105.3KB |
 | Kirby's Dream Land 3 | ❌ Failed | 0 | 8.5 | 11.1 | 🟡 76.6% | 11.4KB | ✅ |
@@ -73,10 +73,10 @@
 | Metamath | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Muse Dash | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | ✅ | ✅ |
 | Noita | ✅ Passed | 0 | 0.15 | 0.15 | 🟢 Complete | ✅ | ✅ |
-| Old School Runescape | ✅ Passed | 0 | 7.5 | 7.5 | 🟢 Complete | 3.2KB | 1.2KB |
+| Old School Runescape | ✅ Passed | 0 | 7.5 | 7.5 | 🟢 Complete | 5.9KB | ✅ |
 | Overcooked! 2 | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 26.1KB | 5.1KB |
-| Paint | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 6.4KB | 4.4KB |
-| Raft | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 11.8KB | 5.5KB |
+| Paint | ✅ Passed | 0 | 12.1 | 12.1 | 🟢 Complete | 7.2KB | ✅ |
+| Raft | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 12.6KB | ✅ |
 | Risk of Rain 2 | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | ✅ | ✅ |
 | Saving Princess | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
 | Secret of Evermore | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 13.7KB | 6.9KB |
@@ -94,7 +94,7 @@
 | TUNIC | ❌ Failed | 16 | 5.1 | 5.1 | 🟡 100.0% | 2.5KB | ✅ |
 | Terraria | ✅ Passed | 0 | 9.5 | 9.5 | 🟢 Complete | 12.3KB | 4.3KB |
 | The Legend of Zelda | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 7.0KB | ✅ |
-| The Messenger | ❌ Failed | 0 | 4.3 | 6.3 | 🟡 68.3% | 11.7KB | ✅ |
+| The Messenger | ❌ Failed | 0 | 4.3 | 6.3 | 🟡 68.3% | 12.6KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | 18.1 | 18.1 | 🟢 Complete | 4.8KB | 4.6KB |
 | The Witness | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 28.9KB | ✅ |
 | Timespinner | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 4.1KB | ✅ |

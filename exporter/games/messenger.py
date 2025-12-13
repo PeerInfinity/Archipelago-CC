@@ -16,6 +16,34 @@ class MessengerGameExportHandler(GenericGameExportHandler):
         super().__init__()
         self.world = world
 
+    def _extract_items_from_arg(self, items_arg: Dict[str, Any]) -> list:
+        """
+        Extract item names from a rule argument that could be either:
+        - {"type": "constant", "value": ["item1", "item2", ...]}
+        - {"type": "set", "elements": [{"type": "constant", "value": "item1"}, ...]}
+
+        Returns a list of item name strings, or empty list if unable to extract.
+        """
+        items = []
+        if not items_arg:
+            return items
+
+        arg_type = items_arg.get('type')
+
+        # Handle {"type": "constant", "value": [...]}
+        if arg_type == 'constant' and isinstance(items_arg.get('value'), list):
+            items = items_arg.get('value')
+
+        # Handle {"type": "set", "elements": [...]}
+        elif arg_type == 'set' and isinstance(items_arg.get('elements'), list):
+            for element in items_arg.get('elements', []):
+                if element.get('type') == 'constant':
+                    value = element.get('value')
+                    if isinstance(value, str):
+                        items.append(value)
+
+        return items
+
     def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """
         Expand rules with fixes for inferred item names and location dependency patterns.
@@ -147,9 +175,7 @@ class MessengerGameExportHandler(GenericGameExportHandler):
             if method == 'has_any' and args:
                 # has_any([item1, item2, ...]) -> or([item_check(item1), item_check(item2), ...])
                 items_arg = args[0]
-                items = []
-                if items_arg.get('type') == 'constant' and isinstance(items_arg.get('value'), list):
-                    items = items_arg.get('value')
+                items = self._extract_items_from_arg(items_arg)
 
                 if items:
                     return {
@@ -163,9 +189,7 @@ class MessengerGameExportHandler(GenericGameExportHandler):
             if method == 'has_all' and args:
                 # has_all([item1, item2, ...]) -> and([item_check(item1), item_check(item2), ...])
                 items_arg = args[0]
-                items = []
-                if items_arg.get('type') == 'constant' and isinstance(items_arg.get('value'), list):
-                    items = items_arg.get('value')
+                items = self._extract_items_from_arg(items_arg)
 
                 if items:
                     return {
