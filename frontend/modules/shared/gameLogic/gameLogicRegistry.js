@@ -219,15 +219,15 @@ import { hkStateModule } from './hk/hkLogic.js';
 import * as jakanddaxterLogic from './jakanddaxter/jakanddaxterLogic.js';
 import { kh1Logic } from './kh1/kh1Logic.js';
 import { helperFunctions as kh2HelperFunctions } from './kh2/kh2Logic.js';
-import * as kdl3Logic from './kdl3/kdl3Logic.js';
-import * as ladxLogic from './ladx/ladxLogic.js';
+// kdl3Logic removed - using generic helpers with JSON rule definitions
+// LADX now uses generic helpers - RUPEES is set in prog_items from sphere log
 import { helperFunctions as lingoHelperFunctions } from './lingo/lingoLogic.js';
 import * as marioland2Logic from './marioland2/marioland2Logic.js';
 import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
 import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 import * as pokemon_emeraldLogic from './pokemon_emerald/pokemon_emeraldLogic.js';
 import { pokemon_emeraldStateModule } from './pokemon_emerald/pokemon_emeraldLogic.js';
-import { helperFunctions as mm2HelperFunctions } from './mm2/mm2Logic.js';
+// mm2Logic removed - helpers now exported to rules.json
 import * as ootLogic from './ocarina_of_time/ootLogic.js';
 import { ootStateModule } from './ocarina_of_time/ootLogic.js';
 import * as raftLogic from './raft/raftLogic.js';
@@ -318,7 +318,7 @@ const GAME_REGISTRY = {
   },
   "Kirby's Dream Land 3": {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: kdl3Logic.helperFunctions,
+    helperFunctions: genericLogic.helperFunctions,  // All helpers now exported as JSON rules
     worldClasses: ['KDL3World'],
     aliases: ["Kirby's Dream Land 3", 'KDL3']
   },
@@ -342,13 +342,13 @@ const GAME_REGISTRY = {
   },
   'Links Awakening DX': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: ladxLogic.helperFunctions,
+    helperFunctions: genericLogic.helperFunctions,  // Use generic helpers - RUPEES is set in prog_items from sphere log
     worldClasses: ['LinksAwakeningWorld'],
     aliases: ['Links Awakening DX', 'LADX', 'links_awakening_dx']
   },
   'Mega Man 2': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: mm2HelperFunctions,
+    // Helper functions now exported to rules.json - no JavaScript needed
     worldClasses: ['MM2World'],
     aliases: ['Mega Man 2', 'MM2', 'Megaman 2']
   },

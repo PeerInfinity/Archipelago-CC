@@ -182,7 +182,7 @@
 
 // frontend/modules/shared/stateInterface.js
 
-import { evaluateRule } from './ruleEngine.js';
+import { evaluateRule, resolveHelperScope } from './ruleEngine.js';
 import { getGameLogic } from './gameLogic/gameLogicRegistry.js';
 import { helperFunctions as genericLogic } from './gameLogic/generic/genericLogic.js';
 import { DEFAULT_PLAYER_ID } from './playerIdUtils.js';
@@ -306,8 +306,12 @@ export function createStateSnapshotInterface(
           return null;
         case 'inventory':
           return snapshot?.inventory;
-        case 'settings':
-          return staticData?.settings;
+        case 'settings': {
+          // Return current player's settings, not all players' settings
+          // This allows helpers to reference settings.X directly for player-specific options
+          const settingsPlayerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
+          return staticData?.settings?.[settingsPlayerId] || staticData?.settings || {};
+        }
         case 'flags':
           return snapshot?.flags;
         case 'state':
@@ -872,6 +876,24 @@ export function createStateSnapshotInterface(
     currentLocation: contextVariables.location,
     // Legacy helpers property removed - use executeHelper method instead
     executeHelper: (helperName, ...args) => {
+      // First, check if there's a helper definition in rules.json (staticData.helpers)
+      // This allows Python-exported helper definitions to be evaluated without JavaScript
+      const playerId = snapshot?.player?.id || snapshot?.player?.slot ||
+                       staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
+      const playerIdStr = String(playerId);
+
+      const helperDefinition = staticData?.helpers?.[playerIdStr]?.[helperName];
+
+      if (helperDefinition && helperDefinition.body) {
+        // Helper definition found - evaluate it using the rule engine
+        // Use shared utility to resolve parameter values from args, slot_data, or settings
+        const helperScope = resolveHelperScope(helperDefinition, args, staticData, playerIdStr);
+
+        // Evaluate the helper body with the resolved parameters
+        return evaluateRule(helperDefinition.body, finalSnapshotInterface, 0, helperScope);
+      }
+
+      // Fall back to game-specific JavaScript helpers
       const selectedHelpers = getHelperFunctions(gameName);
 
       if (selectedHelpers && selectedHelpers[helperName]) {

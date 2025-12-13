@@ -361,6 +361,11 @@
           "type": "array",
           "items": { "type": "string" },
           "description": "Location names for 'placement_search'."
+        },
+        "items": {
+          "type": "array",
+          "items": { "oneOf": [{ "type": "string" }, { "$ref": "#/$defs/rule" }] },
+          "description": "Item names or rules for 'counts' type (check if total count of items >= required amount)."
         }
       },
       "required": ["type"]

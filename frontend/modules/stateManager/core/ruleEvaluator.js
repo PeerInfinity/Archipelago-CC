@@ -74,6 +74,7 @@
 
 import { createUniversalLogger } from '../../../app/core/universalLogger.js';
 import { PlayerIdUtils } from '../../shared/playerIdUtils.js';
+import { evaluateRule, resolveHelperScope } from '../../shared/ruleEngine.js';
 
 const moduleLogger = createUniversalLogger('ruleEvaluator');
 
@@ -93,16 +94,28 @@ export function executeHelper(manager, name, ...args) {
   const wasInHelperExecution = manager._inHelperExecution;
   manager._inHelperExecution = true;
 
-  // Debug logging for helper execution (can be enabled when needed)
-  manager._logDebug(
-    `[RuleEvaluator executeHelper] Helper: ${name}, game: ${manager.settings?.game}, hasHelper: ${!!(manager.helperFunctions && manager.helperFunctions[name])}`
-  );
-
   try {
-    // The `manager.helperFunctions` property is now set dynamically based on the game.
+    const staticData = manager.getStaticGameData();
+    const playerId = manager.playerId || '1';
+    const playerIdStr = String(playerId);
+
+    // Check rules.json helpers first (exported from Python world files)
+    const helperDefinition = staticData?.helpers?.[playerIdStr]?.[name];
+
+    if (helperDefinition && helperDefinition.body) {
+      // Use shared utility to resolve parameter values from args, slot_data, or settings
+      const helperScope = resolveHelperScope(helperDefinition, args, staticData, playerIdStr);
+
+      // Create snapshot interface for rule evaluation
+      const snapshotInterface = manager._createSelfSnapshotInterface();
+
+      // Evaluate the helper body using the rule engine
+      return evaluateRule(helperDefinition.body, snapshotInterface, 0, helperScope);
+    }
+
+    // Fall back to JavaScript helper functions from game logic registry
     if (manager.helperFunctions && manager.helperFunctions[name]) {
       const snapshot = manager.getSnapshot();
-      const staticData = manager.getStaticGameData();
 
       // Add evaluateRule method to snapshot for AHIT helpers
       snapshot.evaluateRule = function (rule) {

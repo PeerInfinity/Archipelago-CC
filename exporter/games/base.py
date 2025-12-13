@@ -51,6 +51,12 @@ class BaseGameExportHandler:
     # These helpers are too complex and need JavaScript implementations
     HELPERS_TO_EXPORT_BLACKLIST: Set[str] = set()
 
+    # Parameter name mappings for helpers whose parameter names don't match slot_data keys.
+    # Maps helper_name -> {param_name: slot_data_key}
+    # The frontend uses these mappings to resolve parameter values from slot_data/settings.
+    # Example: {'my_helper': {'param1': 'slot_data_key1', 'param2': 'setting_key2'}}
+    HELPER_PARAM_MAPPINGS: Dict[str, Dict[str, str]] = {}
+
     # Set of helper function names that should be preserved as helper calls
     # during rule analysis (not inlined/expanded by generic pattern matching)
     # This is used by should_preserve_as_helper() - games can set this instead
@@ -838,6 +844,9 @@ class BaseGameExportHandler:
                         }
                         if defaults:
                             helper_def['defaults'] = defaults
+                        # Add param_mappings if defined for this helper
+                        if helper_name in self.HELPER_PARAM_MAPPINGS:
+                            helper_def['param_mappings'] = self.HELPER_PARAM_MAPPINGS[helper_name]
                         helper_definitions[helper_name] = helper_def
                         logger.debug(f"Using cached definition for helper '{helper_name}' with params {params}, defaults {defaults}")
                     else:
@@ -872,37 +881,10 @@ class BaseGameExportHandler:
                     }
                     continue
 
-                # Check if function has dynamic for loops - if so, skip analysis
-                # These functions iterate over runtime data and can't be statically analyzed
-                try:
-                    import ast as _ast
-                    source = inspect.getsource(helper_func)
-                    tree = _ast.parse(source)
-                    has_dynamic_loops = False
-                    for node in _ast.walk(tree):
-                        if isinstance(node, _ast.For):
-                            # Check if iterator is a method call like .keys(), .values(), .items()
-                            if isinstance(node.iter, _ast.Call):
-                                if isinstance(node.iter.func, _ast.Attribute):
-                                    method_name = node.iter.func.attr
-                                    if method_name in ('keys', 'values', 'items'):
-                                        has_dynamic_loops = True
-                                        break
-                            # Check if iterator is a name (variable) - likely dynamic
-                            elif isinstance(node.iter, _ast.Name):
-                                has_dynamic_loops = True
-                                break
-                    if has_dynamic_loops:
-                        logger.warning(f"Helper '{helper_name}' has dynamic for loops - cannot export definition (frontend must implement)")
-                        # Export as unsupported - frontend will need a native implementation
-                        helper_definitions[helper_name] = {
-                            'type': 'error',
-                            'message': f'Helper {helper_name} has dynamic for loops and cannot be statically analyzed',
-                            'requires_native_impl': True
-                        }
-                        continue
-                except Exception as e:
-                    logger.debug(f"Could not check for dynamic loops in helper '{helper_name}': {e}")
+                # Note: We previously checked for "dynamic for loops" here and blocked export.
+                # Now that for_iter with tuple unpacking, map(), and dict methods are supported,
+                # we allow the analysis to proceed. If the analyzer can't handle a specific case,
+                # it will return an error or unsupported result.
 
                 # Analyze the function to get its rule structure
                 # This may discover new helpers via register_helper_usage
@@ -951,6 +933,9 @@ class BaseGameExportHandler:
                             }
                             if defaults:
                                 helper_def['defaults'] = defaults
+                            # Add param_mappings if defined for this helper
+                            if helper_name in self.HELPER_PARAM_MAPPINGS:
+                                helper_def['param_mappings'] = self.HELPER_PARAM_MAPPINGS[helper_name]
                             helper_definitions[helper_name] = helper_def
                             logger.debug(f"Exported helper '{helper_name}' with params {params}, defaults {defaults}: {rule}")
                         else:

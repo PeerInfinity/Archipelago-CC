@@ -213,11 +213,31 @@ class ASTVisitorMixin:
     def visit_Lambda(self, node):
         try:
             logging.debug("\n--- Analyzing Lambda ---")
-            logging.debug(f"Lambda args: {[arg.arg for arg in node.args.args]}")
+            param_names = [arg.arg for arg in node.args.args]
+            logging.debug(f"Lambda args: {param_names}")
             logging.debug(f"Lambda body type: {type(node.body).__name__}")
-            
-            # Visit the lambda body and return its result
-            return self.visit(node.body)
+
+            # Visit the lambda body
+            body_result = self.visit(node.body)
+
+            # Determine if this is a "rule lambda" (access rule) or a "data lambda" (for map, etc.)
+            # Rule lambdas have 'state' as the first parameter and should return just the body
+            # Data lambdas (used in map(), filter(), etc.) should return the full lambda structure
+            is_rule_lambda = (
+                not param_names or  # No params - simple rule
+                (param_names and param_names[0] in ('state', 'self'))  # First param is state/self
+            )
+
+            if is_rule_lambda:
+                # Rule lambda - return just the body (the actual rule)
+                return body_result
+            else:
+                # Data lambda (e.g., lambda x: transform(x)) - return full structure
+                return {
+                    'type': 'lambda',
+                    'params': param_names,
+                    'body': body_result
+                }
         except Exception as e:
             logging.error("Error in visit_Lambda", e)
             return None
@@ -1034,6 +1054,20 @@ class ASTVisitorMixin:
                 if len(filtered_args) >= 2:
                     result['start'] = filtered_args[1]
                 logging.debug(f"Created sum result: {result}")
+                return result
+
+            # *** Special handling for map() function ***
+            # map(func, iterable) applies func to each element of iterable
+            if func_name == 'map' and len(filtered_args) >= 2:
+                logging.debug(f"Detected map() function call with {len(filtered_args)} args")
+                func_arg = filtered_args[0]
+                iterable_arg = filtered_args[1]
+                result = {
+                    'type': 'map',
+                    'function': func_arg,
+                    'iterable': iterable_arg
+                }
+                logging.debug(f"Created map result: {result}")
                 return result
 
             # Create helper result with filtered args (no state/player in JSON)
@@ -1915,13 +1949,11 @@ class ASTVisitorMixin:
                             logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} to list: {list_value}")
                             return {'type': 'constant', 'value': list_value}
                         elif isinstance(resolved_attr, dict):
-                            # Handle dict values - convert keys to list for iteration purposes
-                            # When iterating over a dict in Python, we iterate over its keys
-                            # For nested comprehensions like "for sub_ingredient in custom_recipe.ingredients"
-                            # we need to return the keys as a list for the frontend to iterate
-                            keys_list = list(resolved_attr.keys())
-                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} (dict) to keys list: {keys_list}")
-                            return {'type': 'constant', 'value': keys_list}
+                            # Handle dict values - keep as dict for subscript access
+                            # The frontend's subscript handler can index into plain objects
+                            # For iteration (for_iter), the frontend will iterate over keys
+                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} (dict) keeping as dict with {len(resolved_attr)} entries")
+                            return {'type': 'constant', 'value': resolved_attr}
                         elif isinstance(resolved_attr, (set, frozenset)):
                             # Handle set/frozenset values - convert to list for JSON serialization
                             list_value = list(resolved_attr)
@@ -1989,6 +2021,13 @@ class ASTVisitorMixin:
                     list_value = list(value) if isinstance(value, tuple) else value
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to constant list: {list_value}")
                     return {'type': 'constant', 'value': list_value}
+                # Handle dict values - resolve to constant for subscript access and .items() iteration
+                elif isinstance(value, dict):
+                    # Convert dict to JSON-serializable format
+                    # Keys must be strings for JSON, so convert int keys to strings
+                    json_dict = {str(k) if isinstance(k, int) else k: v for k, v in value.items()}
+                    logging.debug(f"visit_Name: Resolved '{name}' from closure to constant dict: {json_dict}")
+                    return {'type': 'constant', 'value': json_dict}
                 # Handle enum values by extracting their .value attribute
                 elif hasattr(value, 'value') and isinstance(value.value, (int, float, str, bool)):
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to enum constant value: {value.value}")
@@ -2022,6 +2061,12 @@ class ASTVisitorMixin:
                         list_value = list(resolved_value) if isinstance(resolved_value, tuple) else resolved_value
                         logging.debug(f"visit_Name: Resolved '{name}' from globals to constant list: {list_value}")
                         return {'type': 'constant', 'value': list_value}
+                    # Handle dict values - resolve to constant for subscript access and .items() iteration
+                    elif isinstance(resolved_value, dict):
+                        # Convert dict to JSON-serializable format
+                        json_dict = {str(k) if isinstance(k, int) else k: v for k, v in resolved_value.items()}
+                        logging.debug(f"visit_Name: Resolved '{name}' from globals to constant dict: {json_dict}")
+                        return {'type': 'constant', 'value': json_dict}
                     # Handle enum values by extracting their .value attribute
                     elif hasattr(resolved_value, 'value') and isinstance(resolved_value.value, (int, float, str, bool)):
                         logging.debug(f"visit_Name: Resolved '{name}' from function defaults to enum constant value: {resolved_value.value}")
@@ -2211,6 +2256,62 @@ class ASTVisitorMixin:
                                 logging.debug(f"visit_Subscript: Direct resolution failed: {e}")
                 except Exception as e:
                     logging.debug(f"visit_Subscript: Error in direct resolution optimization: {e}")
+
+        # Check if this is a slice expression (e.g., list[1:5])
+        if isinstance(node.slice, ast.Slice):
+            logging.debug(f"visit_Subscript: Detected slice expression")
+            value_info = self.visit(node.value)
+            if value_info is None:
+                logging.error(f"Error visiting value in slice subscript: {ast.dump(node)}")
+                return None
+
+            # Process slice components (lower, upper, step)
+            lower_info = self.visit(node.slice.lower) if node.slice.lower else None
+            upper_info = self.visit(node.slice.upper) if node.slice.upper else None
+            step_info = self.visit(node.slice.step) if node.slice.step else None
+
+            # Try to resolve at export time if all components are constants
+            resolved_value = None
+            resolved_lower = None
+            resolved_upper = None
+            resolved_step = None
+
+            if value_info.get('type') == 'name':
+                resolved_value = self.expression_resolver.resolve_variable(value_info['name'])
+            elif value_info.get('type') == 'constant':
+                resolved_value = value_info['value']
+            elif value_info.get('type') == 'attribute':
+                resolved_value = self.expression_resolver.resolve_expression(value_info)
+
+            if lower_info and lower_info.get('type') == 'constant':
+                resolved_lower = lower_info['value']
+            if upper_info and upper_info.get('type') == 'constant':
+                resolved_upper = upper_info['value']
+            if step_info and step_info.get('type') == 'constant':
+                resolved_step = step_info['value']
+
+            # If we can resolve the value at export time, perform the slice
+            if resolved_value is not None and isinstance(resolved_value, (list, tuple, str)):
+                try:
+                    slice_obj = slice(resolved_lower, resolved_upper, resolved_step)
+                    sliced_result = resolved_value[slice_obj]
+                    logging.debug(f"visit_Subscript: Resolved slice to constant: {sliced_result}")
+                    # Return as constant list/tuple
+                    if isinstance(sliced_result, (list, tuple)):
+                        return {'type': 'constant', 'value': list(sliced_result)}
+                    else:
+                        return {'type': 'constant', 'value': sliced_result}
+                except Exception as e:
+                    logging.debug(f"visit_Subscript: Could not resolve slice at export time: {e}")
+
+            # Return unresolved slice for frontend evaluation
+            return {
+                'type': 'slice',
+                'value': value_info,
+                'lower': lower_info,
+                'upper': upper_info,
+                'step': step_info
+            }
 
         # First visit the value (the object being subscripted)
         value_info = self.visit(node.value) # Get returned result
@@ -3060,10 +3161,22 @@ class ASTVisitorMixin:
             logging.debug(f"Target: {ast.dump(node.target)}")
             logging.debug(f"Iter: {ast.dump(node.iter)}")
 
-            # Get the loop variable name
+            # Get the loop variable name(s)
+            # Support both simple names and tuple unpacking (e.g., for k, v in dict.items())
             var_name = "_"
+            var_names = None  # Will be set if tuple unpacking is used
             if isinstance(node.target, ast.Name):
                 var_name = node.target.id
+            elif isinstance(node.target, ast.Tuple):
+                # Tuple unpacking: extract all variable names
+                var_names = []
+                for elt in node.target.elts:
+                    if isinstance(elt, ast.Name):
+                        var_names.append(elt.id)
+                    else:
+                        # Nested tuple or other complex pattern - use placeholder
+                        var_names.append("_")
+                logging.debug(f"visit_For: Tuple unpacking with vars: {var_names}")
 
             # Analyze the loop body
             body_results = []
@@ -3087,12 +3200,17 @@ class ASTVisitorMixin:
                     logging.error(f"visit_For: Failed to analyze range count: {ast.dump(count_arg)}")
                     return None
 
-                return {
+                result = {
                     'type': 'for_range',
-                    'var': var_name,
                     'count': count_result,
                     'body': body_results
                 }
+                # Use 'vars' for tuple unpacking, 'var' for simple variable
+                if var_names is not None:
+                    result['vars'] = var_names
+                else:
+                    result['var'] = var_name
+                return result
             else:
                 # Handle iteration over arbitrary iterables (for_iter)
                 iterable_result = self.visit(node.iter)
@@ -3101,14 +3219,64 @@ class ASTVisitorMixin:
                     return None
 
                 logging.debug(f"visit_For: Creating for_iter with iterable: {iterable_result}")
-                return {
+                result = {
                     'type': 'for_iter',
-                    'var': var_name,
                     'iterable': iterable_result,
                     'body': body_results
                 }
+                # Use 'vars' for tuple unpacking, 'var' for simple variable
+                if var_names is not None:
+                    result['vars'] = var_names
+                else:
+                    result['var'] = var_name
+                return result
         except Exception as e:
             logging.error(f"Error in visit_For: {e}")
+            return None
+
+    def visit_While(self, node: ast.While):
+        """
+        Handle while loops.
+        Produces a while_loop rule type with condition and body.
+        """
+        try:
+            logging.debug(f"\n--- visit_While ---")
+            logging.debug(f"Test: {ast.dump(node.test)}")
+
+            # Analyze the condition
+            condition_result = self.visit(node.test)
+            if condition_result is None:
+                logging.error(f"visit_While: Failed to analyze condition: {ast.dump(node.test)}")
+                return None
+
+            # Analyze the loop body
+            body_results = []
+            for stmt in node.body:
+                stmt_result = self.visit_statement(stmt)
+                if stmt_result is not None:
+                    body_results.append(stmt_result)
+
+            # Handle else clause if present (rarely used)
+            orelse_results = []
+            if node.orelse:
+                for stmt in node.orelse:
+                    stmt_result = self.visit_statement(stmt)
+                    if stmt_result is not None:
+                        orelse_results.append(stmt_result)
+
+            result = {
+                'type': 'while_loop',
+                'condition': condition_result,
+                'body': body_results
+            }
+
+            if orelse_results:
+                result['orelse'] = orelse_results
+
+            logging.debug(f"visit_While: Created while_loop rule: {result}")
+            return result
+        except Exception as e:
+            logging.error(f"Error in visit_While: {e}")
             return None
 
     def visit_AugAssign(self, node: ast.AugAssign):
@@ -3183,6 +3351,8 @@ class ASTVisitorMixin:
                 return self.visit_AugAssign(node)
             elif isinstance(node, ast.For):
                 return self.visit_For(node)
+            elif isinstance(node, ast.While):
+                return self.visit_While(node)
             elif isinstance(node, ast.If):
                 # Check if this is an if/elif/else that assigns to a single variable
                 assign_result = self._try_convert_if_to_assign(node)
