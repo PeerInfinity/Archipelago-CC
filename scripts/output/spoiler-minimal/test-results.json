@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-13T05:58:18.668970",
-    "last_updated": "2025-12-13T05:58:18.668974",
+    "last_updated": "2025-12-13T17:36:54.413973",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2550,27 +2550,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "77dfb47e440eeb3ee006fc4e5e00b862a2e08a2d39c47020c7c50d6a8e40cbea",
-          "new_sphere_log_hash": "560332e2a8092888885beea975d14a385e148b2fe61b1bd37c805dd89f574669",
-          "original_rules_hash": "77dfb47e440eeb3ee006fc4e5e00b862a2e08a2d39c47020c7c50d6a8e40cbea",
-          "original_sphere_log_hash": "560332e2a8092888885beea975d14a385e148b2fe61b1bd37c805dd89f574669",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-13T05:56:10.679339"
-        }
-      },
       "game_name_from_filename": "osrs",
       "game_name_from_yaml": "Old School Runescape",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.97,
+        "processing_time_seconds": 8.96,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/osrs/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -2582,7 +2570,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 8.83,
+        "processing_time_seconds": 18.0,
         "return_code": 0,
         "sphere_reached": 7.5,
         "success": true,
@@ -2590,7 +2578,7 @@
         "warning_count": 0
       },
       "template_filename": "Old School Runescape.yaml",
-      "timestamp": "2025-12-13T05:54:06.080084",
+      "timestamp": "2025-12-13T17:36:27.023554",
       "world_info": {
         "exporter_path": "exporter/games/osrs.py",
         "exporter_size": 3286,

@@ -67,19 +67,8 @@
               },
               "op": ">",
               "right": {
-                "type": "attribute",
-                "object": {
-                  "type": "constant",
-                  "value": [
-                    "Total XP 125,000",
-                    "general",
-                    [],
-                    [],
-                    [],
-                    6
-                  ]
-                },
-                "attr": "qp"
+                "type": "constant",
+                "value": 6
               }
             },
             "item": {
@@ -102,19 +91,8 @@
               },
               "op": ">",
               "right": {
-                "type": "attribute",
-                "object": {
-                  "type": "constant",
-                  "value": [
-                    "Total Level 150",
-                    "general",
-                    [],
-                    [],
-                    [],
-                    2
-                  ]
-                },
-                "attr": "qp"
+                "type": "constant",
+                "value": 2
               }
             },
             "item": {
@@ -224,24 +202,8 @@
                   },
                   "op": ">",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": [
-                        "Activate the \"Protect Item\" Prayer",
-                        "prayer",
-                        [],
-                        [
-                          [
-                            "Prayer",
-                            25
-                          ]
-                        ],
-                        [],
-                        2
-                      ]
-                    },
-                    "attr": "qp"
+                    "type": "constant",
+                    "value": 2
                   }
                 },
                 {
@@ -4124,27 +4086,8 @@
                   },
                   "op": ">",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": [
-                        "Quest: Black Knights' Fortress",
-                        "quest",
-                        [
-                          "Dwarven Mines",
-                          "Falador",
-                          "Monastery",
-                          "Ice Mountain",
-                          "Falador Farms"
-                        ],
-                        [],
-                        [
-                          "Progressive Armor"
-                        ],
-                        12
-                      ]
-                    },
-                    "attr": "qp"
+                    "type": "constant",
+                    "value": 12
                   }
                 }
               ]
@@ -4325,27 +4268,8 @@
                   },
                   "op": ">",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": [
-                        "Quest: Below Ice Mountain",
-                        "quest",
-                        [
-                          "Dwarven Mines",
-                          "Dwarven Mountain Pass",
-                          "Ice Mountain",
-                          "Barbarian Village",
-                          "Falador",
-                          "Central Varrock",
-                          "Edgeville"
-                        ],
-                        [],
-                        [],
-                        16
-                      ]
-                    },
-                    "attr": "qp"
+                    "type": "constant",
+                    "value": 16
                   }
                 }
               ]
@@ -6101,29 +6025,8 @@
                   },
                   "op": ">",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": [
-                        "Quest: Dragon Slayer",
-                        "goal",
-                        [
-                          "Crandor",
-                          "South of Varrock",
-                          "Edgeville",
-                          "Lumbridge",
-                          "Rimmington",
-                          "Monastery",
-                          "Dwarven Mines",
-                          "Port Sarim",
-                          "Draynor Village"
-                        ],
-                        [],
-                        [],
-                        32
-                      ]
-                    },
-                    "attr": "qp"
+                    "type": "constant",
+                    "value": 32
                   }
                 }
               ]
@@ -8641,26 +8544,8 @@
                   },
                   "op": ">",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": [
-                        "Cut a Diamond",
-                        "crafting",
-                        [
-                          "Chisel"
-                        ],
-                        [
-                          [
-                            "Crafting",
-                            43
-                          ]
-                        ],
-                        [],
-                        8
-                      ]
-                    },
-                    "attr": "qp"
+                    "type": "constant",
+                    "value": 8
                   }
                 }
               ]
@@ -8947,26 +8832,8 @@
                   },
                   "op": ">",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": [
-                        "Cut a Ruby",
-                        "crafting",
-                        [
-                          "Chisel"
-                        ],
-                        [
-                          [
-                            "Crafting",
-                            34
-                          ]
-                        ],
-                        [],
-                        4
-                      ]
-                    },
-                    "attr": "qp"
+                    "type": "constant",
+                    "value": 4
                   }
                 }
               ]
@@ -9369,31 +9236,8 @@
                   },
                   "op": ">",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": [
-                        "Smelt a Gold Bar",
-                        "smithing",
-                        [
-                          "Gold Ore",
-                          "Furnace"
-                        ],
-                        [
-                          [
-                            "Smithing",
-                            40
-                          ],
-                          [
-                            "Mining",
-                            40
-                          ]
-                        ],
-                        [],
-                        6
-                      ]
-                    },
-                    "attr": "qp"
+                    "type": "constant",
+                    "value": 6
                   }
                 }
               ]
@@ -9567,26 +9411,8 @@
                   },
                   "op": ">",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": [
-                        "Catch a Lobster",
-                        "fishing",
-                        [
-                          "Lobster Spot"
-                        ],
-                        [
-                          [
-                            "Fishing",
-                            40
-                          ]
-                        ],
-                        [],
-                        6
-                      ]
-                    },
-                    "attr": "qp"
+                    "type": "constant",
+                    "value": 6
                   }
                 }
               ]
@@ -10023,30 +9849,8 @@
                   },
                   "op": ">",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": [
-                        "Bake a Cake",
-                        "cooking",
-                        [
-                          "Wheat",
-                          "Windmill",
-                          "Egg",
-                          "Milk",
-                          "Cake Tin"
-                        ],
-                        [
-                          [
-                            "Cooking",
-                            40
-                          ]
-                        ],
-                        [],
-                        6
-                      ]
-                    },
-                    "attr": "qp"
+                    "type": "constant",
+                    "value": 6
                   }
                 }
               ]
@@ -10405,26 +10209,8 @@
                   },
                   "op": ">",
                   "right": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "constant",
-                      "value": [
-                        "Kill a Hill Giant",
-                        "combat",
-                        [
-                          "Hill Giant"
-                        ],
-                        [
-                          [
-                            "Combat",
-                            28
-                          ]
-                        ],
-                        [],
-                        2
-                      ]
-                    },
-                    "attr": "qp"
+                    "type": "constant",
+                    "value": 2
                   }
                 }
               ]
