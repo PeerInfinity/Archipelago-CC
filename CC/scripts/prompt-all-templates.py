@@ -585,14 +585,36 @@ Either:
 """
 
 
-def generate_basic_spoiler_debug_prompt(template_file, game_name, seed=1, use_cloud_docs=False):
-    """Generate a debugging prompt for a basic game failing spoiler tests.
+def generate_basic_spoiler_debug_prompt(template_file, game_name, seed=1, use_cloud_docs=False, custom_code_info=None):
+    """Generate a debugging prompt for games without JavaScript helpers.
 
     This prompt refers to CC/basic-spoiler-debugging.md for games that don't have
-    custom exporters or JavaScript helpers.
+    JavaScript helpers. This includes both basic games (no custom code) and
+    exporter-only games (has custom exporter but no JS helpers).
     """
-    doc_path = "CC/basic-spoiler-debugging.md" if use_cloud_docs else "CC/basic-spoiler-debugging.md"
-    setup_doc = "CC/cloud-setup.md" if use_cloud_docs else "CC/cloud-setup.md"
+    doc_path = "CC/basic-spoiler-debugging.md"
+    setup_doc = "CC/cloud-setup.md"
+
+    # Determine if this game has a custom exporter
+    has_exporter = custom_code_info and custom_code_info.get('has_exporter', False)
+    exporter_path = custom_code_info.get('exporter_path') if custom_code_info else None
+
+    # Build the game description based on whether it has a custom exporter
+    if has_exporter:
+        game_description = f"""This game has a custom exporter (`{exporter_path}`) but no JavaScript helpers.
+
+If helper functions are missing or not being exported correctly, check the exporter configuration."""
+    else:
+        game_description = """This game uses only the generic export infrastructure - it has no custom exporter (`exporter/games/<game>.py`) and no JavaScript helpers (`frontend/modules/shared/gameLogic/<game>/`)."""
+
+    # Build the debugging focus message
+    if has_exporter:
+        debug_focus = f"""Focus on:
+- Whether the exporter (`{exporter_path}`) is correctly configured
+- Whether helpers need to be added to `HELPERS_TO_EXPORT_WHITELIST`
+- Whether the generic infrastructure is handling this game's rules correctly"""
+    else:
+        debug_focus = """Since this is a basic game, focus on whether the generic infrastructure is handling this game's rules correctly."""
 
     return f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
 
@@ -601,7 +623,7 @@ Then, please read
 
 The game we are debugging is **{game_name}** (template: `{template_file}`).
 
-This game uses only the generic export infrastructure - it has no custom exporter (`exporter/games/<game>.py`) and no JavaScript helpers (`frontend/modules/shared/gameLogic/<game>/`).
+{game_description}
 
 ## Test Command
 
@@ -628,7 +650,7 @@ npm test -- --mode=test-spoilers --game=<gamename> --seed={seed}
    - Rule evaluation (`frontend/modules/shared/ruleEngine.js`)
    - Missing helper that needs to be exported or implemented
 
-Since this is a basic game, focus on whether the generic infrastructure is handling this game's rules correctly.
+{debug_focus}
 """
 
 
@@ -836,7 +858,7 @@ def main():
     parser.add_argument('--multiworld', action='store_true',
                        help='Check multiworld test results and generate prompts for failing multiworld tests (uses bisection results)')
     parser.add_argument('--basic-spoiler-debug', action='store_true',
-                       help='Generate prompts for basic games (no custom exporter/helpers) failing minimal spoiler tests')
+                       help='Generate prompts for games without JavaScript helpers failing minimal spoiler tests')
     parser.add_argument('--helper-export', action='store_true',
                        help='Generate prompts for games with custom exporter/helpers to convert them to use helper export')
     parser.add_argument('--new-rule-types', action='store_true',
@@ -1253,10 +1275,11 @@ def main():
                 if not quiet_mode:
                     print(f"Game name: {game_name_from_yaml}")
 
-                # For --basic-spoiler-debug, skip games that have custom exporters or helpers
-                if args.basic_spoiler_debug and not is_basic_game(game_name_from_yaml, world_mapping):
+                # For --basic-spoiler-debug, skip games that have JavaScript helpers
+                # (games with custom exporters but no JS helpers ARE included)
+                if args.basic_spoiler_debug and has_javascript_helpers(game_name_from_yaml, world_mapping):
                     if not quiet_mode:
-                        print(f"Skipping {game_name_from_yaml} - has custom exporter or helpers")
+                        print(f"Skipping {game_name_from_yaml} - has JavaScript helpers")
                     # Move to next template without incrementing files_processed
                     current_index = (current_index + 1) % len(template_files)
                     processed_count += 1
@@ -1266,12 +1289,12 @@ def main():
                             break
                     continue
 
-                # For normal mode (not multiclient/multiworld/basic-spoiler-debug), skip basic games
-                # Basic games should use --basic-spoiler-debug mode instead
+                # For normal mode (not multiclient/multiworld/basic-spoiler-debug), skip games without JS helpers
+                # Games without JS helpers should use --basic-spoiler-debug mode instead
                 if not args.basic_spoiler_debug and not args.multiclient and not args.multiworld and world_mapping:
-                    if not has_custom_code(game_name_from_yaml, world_mapping):
+                    if not has_javascript_helpers(game_name_from_yaml, world_mapping):
                         if not quiet_mode:
-                            print(f"Skipping {game_name_from_yaml} - no custom exporter or helpers (use --basic-spoiler-debug for basic games)")
+                            print(f"Skipping {game_name_from_yaml} - no JavaScript helpers (use --basic-spoiler-debug)")
                         # Move to next template without incrementing files_processed
                         current_index = (current_index + 1) % len(template_files)
                         processed_count += 1
@@ -1288,12 +1311,15 @@ def main():
                 if failing_seed is not None and not quiet_mode:
                     print(f"Seed 1 passed, but seed {failing_seed} failed. Using seed {failing_seed} for prompt.")
 
+                # Get custom code info for games without JS helpers (used by basic-spoiler-debug)
+                custom_code_info = get_custom_code_info(game_name_from_yaml, world_mapping) if args.basic_spoiler_debug else None
+
                 # Handle --promptfile mode
                 if args.promptfile:
                     if args.basic_spoiler_debug:
                         # Generate basic spoiler debug prompt
                         basic_prompt = generate_basic_spoiler_debug_prompt(
-                            template_file, game_name_from_yaml, seed_to_use, args.CC
+                            template_file, game_name_from_yaml, seed_to_use, args.CC, custom_code_info
                         )
                         collected_prompts.append(basic_prompt)
                     elif args.multiworld:
@@ -1339,7 +1365,7 @@ python scripts/test/test-all-templates.py --include-list "{template_file}" --mul
                     if args.basic_spoiler_debug:
                         # For basic-spoiler-debug mode with -p or -t, generate and output the prompt directly
                         basic_prompt = generate_basic_spoiler_debug_prompt(
-                            template_file, game_name_from_yaml, seed_to_use, args.CC
+                            template_file, game_name_from_yaml, seed_to_use, args.CC, custom_code_info
                         )
                         print(basic_prompt)
 
