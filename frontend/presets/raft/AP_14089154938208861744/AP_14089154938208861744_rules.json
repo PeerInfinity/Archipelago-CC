@@ -7193,7 +7193,7 @@
     "1": {
       "game": "Raft",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false,
+      "use_resolved_items": true,
       "options": {
         "accessibility": 0,
         "big_island_early_crafting": 0,
@@ -7217,7 +7217,8 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
-      }
+      },
+      "add_sphere_items_upfront": true
     }
   },
   "game_info": {
