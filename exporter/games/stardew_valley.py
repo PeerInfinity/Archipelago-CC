@@ -22,7 +22,7 @@ class StardewValleyGameExportHandler(GenericGameExportHandler):
     # Threshold for preserving Has rules as helpers (in rule nodes)
     # Has rules with more than this many nodes will be preserved as helper calls
     # Set to 0 to disable (inline everything), or a positive number to enable
-    HAS_RULE_HELPER_THRESHOLD = 10
+    HAS_RULE_HELPER_THRESHOLD = 1
 
     def __init__(self):
         super().__init__()
