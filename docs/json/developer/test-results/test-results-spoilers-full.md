@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2025-12-13 11:40:32
+**Generated:** 2025-12-13 13:23:41
 
 **Source Data Created:** 2025-12-13T19:37:08.193101
 
@@ -51,7 +51,7 @@
 | DOOM II | ✅ Passed | 0 | 21.4 | 21.4 | 🟢 Complete | ✅ | ✅ |
 | Dark Souls III | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | 4.7KB | ✅ |
 | Donkey Kong Country 3 | ❌ Failed | 0 | 0.43 | 3.1 | 🟠 13.9% | ✅ | ✅ |
-| Factorio | ❌ Failed | 0 | 1.2 | 12.1 | 🟡 9.9% | 11.4KB | ✅ |
+| Factorio | ❌ Failed | 0 | 1.2 | 12.1 | 🟡 9.9% | 12.0KB | ✅ |
 | Faxanadu | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ Passed | 0 | 19.6 | 19.6 | 🟢 Complete | 7.6KB | ✅ |
 | Heretic | ✅ Passed | 0 | 24.4 | 24.4 | 🟢 Complete | ✅ | ✅ |
@@ -82,7 +82,7 @@
 | Shivers | ❌ Failed | 0 | 2.7 | 17.1 | 🟡 15.8% | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.18 | 7.18 | 🟢 Complete | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | 0 | 15.14 | 15.14 | 🟢 Complete | 19.8KB | 86.3KB |
-| Stardew Valley | ✅ Passed | 0 | 44.2 | 44.2 | 🟢 Complete | 16.0KB | 10.7KB |
+| Stardew Valley | ✅ Passed | 0 | 44.2 | 44.2 | 🟢 Complete | 20.7KB | 10.7KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.4KB | 14.7KB |
 | Super Mario 64 | ✅ Passed | 0 | 5.5 | 5.5 | 🟢 Complete | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 13.9KB | 4.9KB |
