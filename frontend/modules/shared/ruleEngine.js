@@ -489,6 +489,24 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
 
+        if (rule.name === 'set') {
+          // Python's set() converts an iterable to a set (deduplicates)
+          // For our purposes, just return the evaluated argument as an array with unique values
+          if (!rule.args || rule.args.length === 0) {
+            result = [];
+            break;
+          }
+          const setArg = evaluateRule(rule.args[0], context, depth + 1, localScope);
+          // If result is an array, deduplicate it (like Python set)
+          if (Array.isArray(setArg)) {
+            result = [...new Set(setArg)];
+          } else {
+            // If not an array, just return it as-is
+            result = setArg;
+          }
+          break;
+        }
+
         // Handle can_buy and can_buy_unlimited using shop_items data
         // TODO: This is ALttP-specific logic that should be moved to a game-specific module.
         // Find a more generic solution (e.g., game-specific helper registry or exported helper definitions).
