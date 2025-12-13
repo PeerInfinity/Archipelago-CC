@@ -197,8 +197,8 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
             # midring_start = not shuffle_midrings
             settings_dict['midring_start'] = not extract_option('shuffle_midrings')
 
-            # clouds_always_visible = hidden_object_visibility >= ObjectVis.option_clouds_only (1)
-            settings_dict['clouds_always_visible'] = extract_option('hidden_object_visibility') >= 1
+            # clouds_always_visible = hidden_object_visibility >= ObjectVis.option_clouds_only (2)
+            settings_dict['clouds_always_visible'] = extract_option('hidden_object_visibility') >= 2
 
             # consumable_logic = not item_logic
             settings_dict['consumable_logic'] = not extract_option('item_logic')
