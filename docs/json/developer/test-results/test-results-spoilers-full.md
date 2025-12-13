@@ -6,31 +6,31 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2025-12-12 19:43:40
+**Generated:** 2025-12-13 06:08:01
 
-**Source Data Created:** 2025-12-12T19:06:12.439162
+**Source Data Created:** 2025-12-13T06:08:01.089503
 
-**Source Data Last Updated:** 2025-12-12T19:06:12.439168
+**Source Data Last Updated:** 2025-12-13T06:08:01.089511
 
 ## Summary
 
 - **Total Games:** 75
-- **Passed:** 75 (100.0%)
-- **Failed:** 0 (0.0%)
+- **Passed:** 74 (98.7%)
+- **Failed:** 1 (1.3%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 29/75 (38.7% of passed)
-- **Passing with Generic Logic:** 54/75 (72.0% of passed)
-- **Passing with Both Generic:** 29/75 (38.7% of passed)
+- **Passing with Generic Exporter:** 29/74 (39.2% of passed)
+- **Passing with Generic Logic:** 54/74 (73.0% of passed)
+- **Passing with Both Generic:** 29/74 (39.2% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
-| A Hat in Time | ✅ Passed | 0 | 5.21 | 5.21 | 🟢 Complete | 12.2KB | 10.3KB |
+| A Hat in Time | ✅ Passed | 0 | 5.21 | 5.21 | 🟢 Complete | 12.2KB | ✅ |
 | A Link to the Past | ✅ Passed | 0 | 22.1 | 22.1 | 🟢 Complete | 43.0KB | ✅ |
 | A Short Hike | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
@@ -57,9 +57,9 @@
 | Heretic | ✅ Passed | 0 | 24.4 | 24.4 | 🟢 Complete | ✅ | ✅ |
 | Hylics 2 | ✅ Passed | 0 | 8.1 | 8.1 | 🟢 Complete | 1.0KB | ✅ |
 | Inscryption | ✅ Passed | 0 | 10.2 | 10.2 | 🟢 Complete | 8.1KB | ✅ |
-| Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | 14.1 | 14.1 | 🟢 Complete | 16.8KB | 4.6KB |
+| Jak and Daxter: The Precursor Legacy | ✅ Passed | 0 | 14.1 | 14.1 | 🟢 Complete | 18.0KB | 4.6KB |
 | Kingdom Hearts | ✅ Passed | 0 | 10.8 | 10.8 | 🟢 Complete | 58.5KB | 5.4KB |
-| Kingdom Hearts 2 | ✅ Passed | 0 | 15.2 | 15.2 | 🟢 Complete | 15.5KB | 105.3KB |
+| Kingdom Hearts 2 | ✅ Passed | 0 | 15.2 | 15.2 | 🟢 Complete | 33.1KB | 105.3KB |
 | Kirby's Dream Land 3 | ✅ Passed | 0 | 11.3 | 11.3 | 🟢 Complete | 9.7KB | 15.7KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 16.4KB | ✅ |
 | Lingo | ✅ Passed | 0 | 6.12 | 6.12 | 🟢 Complete | 33.0KB | 10.7KB |
@@ -67,7 +67,7 @@
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.16 | 4.16 | 🟢 Complete | ✅ | ✅ |
 | Mario & Luigi Superstar Saga | ✅ Passed | 0 | 8.8 | 8.8 | 🟢 Complete | 0.6KB | ✅ |
 | MathProof2p2e4 | ✅ Passed | 0 | 4.1 | 4.1 | 🟢 Complete | ✅ | ✅ |
-| Mega Man 2 | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 0.6KB | 3.9KB |
+| Mega Man 2 | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | 0.6KB | 4.1KB |
 | MegaMan Battle Network 3 | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 3.5KB | ✅ |
 | Meritous | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | ✅ | ✅ |
 | Metamath | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
@@ -94,7 +94,7 @@
 | TUNIC | ✅ Passed | 0 | 5.12 | 5.12 | 🟢 Complete | 2.5KB | ✅ |
 | Terraria | ✅ Passed | 0 | 9.6 | 9.6 | 🟢 Complete | 12.3KB | 4.3KB |
 | The Legend of Zelda | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 7.0KB | ✅ |
-| The Messenger | ✅ Passed | 0 | 7.1 | 7.1 | 🟢 Complete | 11.7KB | ✅ |
+| The Messenger | ❌ Failed | 0 | 4.4 | 7.1 | 🟡 62.0% | 11.7KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | 4.8KB | 4.6KB |
 | The Witness | ✅ Passed | 0 | 9.15 | 9.15 | 🟢 Complete | 28.9KB | ✅ |
 | Timespinner | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 4.1KB | ✅ |
