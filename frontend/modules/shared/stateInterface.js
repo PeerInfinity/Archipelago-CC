@@ -306,8 +306,12 @@ export function createStateSnapshotInterface(
           return null;
         case 'inventory':
           return snapshot?.inventory;
-        case 'settings':
-          return staticData?.settings;
+        case 'settings': {
+          // Return current player's settings, not all players' settings
+          // This allows helpers to reference settings.X directly for player-specific options
+          const settingsPlayerId = snapshot?.player?.id || snapshot?.player?.slot || staticData?.playerId || contextVariables?.playerId || DEFAULT_PLAYER_ID;
+          return staticData?.settings?.[settingsPlayerId] || staticData?.settings || {};
+        }
         case 'flags':
           return snapshot?.flags;
         case 'state':

@@ -23,6 +23,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
     # Whitelist helpers that can be auto-exported as rule definitions
     HELPERS_TO_EXPORT_WHITELIST = {
         '_lingo_can_open_door',  # dict lookups now work via settings conversion
+        '_lingo_can_satisfy_requirements',  # for loops with early returns, capitalize()
     }
 
     # Blacklist helpers with loops or complex logic that cannot be auto-exported
@@ -33,7 +34,6 @@ class LingoGameExportHandler(GenericGameExportHandler):
         'lingo_can_do_pilgrimage',        # uses all() with generator (loop)
         'lingo_can_use_mastery_location', # has for loop counting satisfied requirements
         'lingo_can_use_level_2_location', # has nested for loops over regions and panels
-        '_lingo_can_satisfy_requirements', # for loops with early returns, capitalize() calls
     }
 
     def should_preserve_as_helper(self, func_name: str) -> bool:

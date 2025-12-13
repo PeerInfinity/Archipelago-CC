@@ -1058,6 +1058,24 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           return undefined;
         }
 
+        // Special case: if baseObject is undefined and the object was "settings",
+        // return the setting value from the player's settings object
+        // This allows exported helpers to reference settings.door_reqs, settings.item_by_door, etc.
+        if (baseObject === undefined && rule.object && rule.object.type === 'name' && rule.object.name === 'settings') {
+          if (context.getStaticData) {
+            const staticData = context.getStaticData();
+            const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
+
+            if (staticData?.settings && staticData.settings[playerId]) {
+              const settingValue = staticData.settings[playerId][rule.attr];
+              if (settingValue !== undefined) {
+                return settingValue;
+              }
+            }
+          }
+          return undefined;
+        }
+
         if (baseObject && typeof baseObject === 'object') {
           // Special handling for region reference objects
           // When we access .can_reach on a region reference, return a special marker
@@ -1528,6 +1546,66 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
                 break;
             }
             break;
+          }
+        }
+
+        // Special handling for Python string methods (capitalize, upper, lower, strip, etc.)
+        // These are exported as function_call with attribute, e.g., color.capitalize()
+        if (
+          rule.function?.type === 'attribute' &&
+          rule.function.object
+        ) {
+          const strMethodName = rule.function.attr;
+          const pythonStringMethods = ['capitalize', 'upper', 'lower', 'strip', 'lstrip', 'rstrip',
+                                       'startswith', 'endswith', 'replace', 'split', 'join'];
+
+          if (pythonStringMethods.includes(strMethodName)) {
+            const obj = evaluateRule(rule.function.object, context, depth + 1, localScope);
+
+            if (typeof obj === 'string') {
+              const args = (rule.args || []).map(arg => evaluateRule(arg, context, depth + 1, localScope));
+
+              switch (strMethodName) {
+                case 'capitalize':
+                  // Python's capitalize: first char uppercase, rest lowercase
+                  result = obj.length > 0 ? obj.charAt(0).toUpperCase() + obj.slice(1).toLowerCase() : '';
+                  break;
+                case 'upper':
+                  result = obj.toUpperCase();
+                  break;
+                case 'lower':
+                  result = obj.toLowerCase();
+                  break;
+                case 'strip':
+                  result = obj.trim();
+                  break;
+                case 'lstrip':
+                  result = obj.trimStart();
+                  break;
+                case 'rstrip':
+                  result = obj.trimEnd();
+                  break;
+                case 'startswith':
+                  result = obj.startsWith(args[0]);
+                  break;
+                case 'endswith':
+                  result = obj.endsWith(args[0]);
+                  break;
+                case 'replace':
+                  result = obj.replace(args[0], args[1] || '');
+                  break;
+                case 'split':
+                  result = args[0] ? obj.split(args[0]) : obj.split('');
+                  break;
+                case 'join':
+                  // In Python, separator.join(iterable) - obj is the separator
+                  result = Array.isArray(args[0]) ? args[0].join(obj) : String(args[0]);
+                  break;
+                default:
+                  result = undefined;
+              }
+              break;
+            }
           }
         }
 
@@ -3558,6 +3636,25 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
               break;
             case '__contains__':
               result = obj.includes(args[0]);
+              break;
+            case 'capitalize':
+              // Python's capitalize: first char uppercase, rest lowercase
+              result = obj.length > 0 ? obj.charAt(0).toUpperCase() + obj.slice(1).toLowerCase() : '';
+              break;
+            case 'upper':
+              result = obj.toUpperCase();
+              break;
+            case 'lower':
+              result = obj.toLowerCase();
+              break;
+            case 'strip':
+              result = obj.trim();
+              break;
+            case 'startswith':
+              result = obj.startsWith(args[0]);
+              break;
+            case 'endswith':
+              result = obj.endsWith(args[0]);
               break;
             default:
               log('warn', `[evaluateRule] Unknown string method: ${rule.method}`);
