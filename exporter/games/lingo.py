@@ -17,6 +17,9 @@ class LingoGameExportHandler(GenericGameExportHandler):
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
 
+    # Helper module paths - needed for auto-export to find helper functions
+    HELPER_MODULES = ['worlds.lingo.rules']
+
     # Blacklist helpers with loops or complex logic that cannot be auto-exported
     # These helpers iterate over collections (rooms, doors, colors, items, etc.)
     # and require JavaScript implementations for runtime evaluation
