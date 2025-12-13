@@ -27570,5 +27570,189 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "_lingo_can_open_door": {
+        "params": [
+          "room",
+          "door"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "door"
+                },
+                "op": "not in",
+                "right": {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "settings"
+                      },
+                      "attr": "item_by_door"
+                    },
+                    "attr": "get"
+                  },
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "room"
+                    },
+                    {
+                      "type": "constant",
+                      "value": {}
+                    }
+                  ]
+                }
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "helper",
+                    "name": "_lingo_can_satisfy_requirements",
+                    "args": [
+                      {
+                        "type": "subscript",
+                        "value": {
+                          "type": "subscript",
+                          "value": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "settings"
+                            },
+                            "attr": "door_reqs"
+                          },
+                          "index": {
+                            "type": "name",
+                            "name": "room"
+                          }
+                        },
+                        "index": {
+                          "type": "name",
+                          "name": "door"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "assign",
+              "name": "item_name",
+              "value": {
+                "type": "subscript",
+                "value": {
+                  "type": "subscript",
+                  "value": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "settings"
+                    },
+                    "attr": "item_by_door"
+                  },
+                  "index": {
+                    "type": "name",
+                    "name": "room"
+                  }
+                },
+                "index": {
+                  "type": "name",
+                  "name": "door"
+                }
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "item_name"
+                },
+                "op": "in",
+                "right": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "settings"
+                  },
+                  "attr": "PROGRESSIVE_ITEMS"
+                }
+              },
+              "body": [
+                {
+                  "type": "assign",
+                  "name": "progression",
+                  "value": {
+                    "type": "subscript",
+                    "value": {
+                      "type": "subscript",
+                      "value": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "settings"
+                        },
+                        "attr": "PROGRESSIVE_DOORS_BY_ROOM"
+                      },
+                      "index": {
+                        "type": "name",
+                        "name": "room"
+                      }
+                    },
+                    "index": {
+                      "type": "name",
+                      "name": "door"
+                    }
+                  }
+                },
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "item_check",
+                    "item": {
+                      "type": "name",
+                      "name": "item_name"
+                    },
+                    "count": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "progression"
+                      },
+                      "attr": "index"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "item_check",
+                "item": {
+                  "type": "name",
+                  "name": "item_name"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
 }
