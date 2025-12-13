@@ -532,7 +532,7 @@
   },
   "Jak and Daxter: The Precursor Legacy": {
     "exporter_path": "exporter/games/jakanddaxter.py",
-    "exporter_size": 18414,
+    "exporter_size": 22625,
     "game_logic_path": "frontend/modules/shared/gameLogic/jakanddaxter/jakanddaxterLogic.js",
     "game_logic_size": 4743,
     "has_custom_exporter": true,
@@ -577,11 +577,11 @@
   },
   "Kirby's Dream Land 3": {
     "exporter_path": "exporter/games/kdl3.py",
-    "exporter_size": 9933,
-    "game_logic_path": "frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js",
-    "game_logic_size": 16055,
+    "exporter_size": 11694,
+    "game_logic_path": null,
+    "game_logic_size": 0,
     "has_custom_exporter": true,
-    "has_custom_game_logic": true,
+    "has_custom_game_logic": false,
     "world_directory": "kdl3"
   },
   "Kirby's Dream Land 3 WorldGen": {
@@ -631,11 +631,11 @@
   },
   "Links Awakening DX": {
     "exporter_path": "exporter/games/ladx.py",
-    "exporter_size": 17356,
-    "game_logic_path": "frontend/modules/shared/gameLogic/ladx/ladxLogic.js",
-    "game_logic_size": 5427,
+    "exporter_size": 18344,
+    "game_logic_path": null,
+    "game_logic_size": 0,
     "has_custom_exporter": true,
-    "has_custom_game_logic": true,
+    "has_custom_game_logic": false,
     "world_directory": "ladx"
   },
   "Links Awakening DX WorldGen": {
