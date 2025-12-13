@@ -1117,7 +1117,7 @@
   },
   "Super Mario Land 2": {
     "exporter_path": "exporter/games/marioland2.py",
-    "exporter_size": 14226,
+    "exporter_size": 14735,
     "game_logic_path": "frontend/modules/shared/gameLogic/marioland2/marioland2Logic.js",
     "game_logic_size": 5037,
     "has_custom_exporter": true,

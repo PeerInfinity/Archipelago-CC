@@ -1691,6 +1691,23 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           }
         }
 
+        // Special handling for Python array/list methods like .count()
+        // These are exported as function_call with attribute, e.g., arr.count(value)
+        if (
+          rule.function?.type === 'attribute' &&
+          rule.function.attr === 'count' &&
+          rule.function.object
+        ) {
+          const obj = evaluateRule(rule.function.object, context, depth + 1, localScope);
+          if (Array.isArray(obj)) {
+            const args = (rule.args || []).map(arg => evaluateRule(arg, context, depth + 1, localScope));
+            const searchValue = args[0];
+            // Python list.count(value) returns the number of occurrences
+            result = obj.filter(x => x === searchValue).length;
+            break;
+          }
+        }
+
         // Special handling for Python string methods (capitalize, upper, lower, strip, etc.)
         // These are exported as function_call with attribute, e.g., color.capitalize()
         if (

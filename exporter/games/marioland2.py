@@ -277,4 +277,13 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
                 settings_dict['shuffle_midway_bells'] = value
                 self._cached_options['shuffle_midway_bells'] = value
 
+        # Export runtime data needed by helpers (generated in generate_early)
+        # auto_scroll_levels: list of auto-scroll states per level (0=none, 1=on, 2=cancel item, 3=trap)
+        if hasattr(world, 'auto_scroll_levels'):
+            settings_dict['auto_scroll_levels'] = world.auto_scroll_levels
+
+        # sprite_data: dict of level -> sprite configurations (needed for not_blocked_by_sharks)
+        if hasattr(world, 'sprite_data'):
+            settings_dict['sprite_data'] = world.sprite_data
+
         return settings_dict
