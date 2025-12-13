@@ -36,8 +36,45 @@ Added export of kerrigan item groups as static data for helpers that iterate ove
 
 **Remaining Blacklisted:**
 - `kerrigan_levels` - calls external function `get_full_item_list()` which can't be resolved at export time
-- `two_kerrigan_actives` - has logic bug (loop variable unused, always checks same condition)
+- `two_kerrigan_actives` - has logic bug in Python (see below), JS fallback has correct implementation
 - `competent_comp` helpers - complex conditional logic with many dependencies
+
+### Known Bug: two_kerrigan_actives
+
+The Python implementation in `worlds/sc2/rules.py` has a bug where the loop variable is unused:
+
+```python
+# BUGGY Python code - loop variable 'i' is never used
+def two_kerrigan_actives(self, state, story_tech_available=True):
+    count = 0
+    for i in range(7):  # BUG: i is never used!
+        if state.has_any(kerrigan_logic_active_abilities, self.player):
+            count += 1
+    return count >= 2
+```
+
+The condition `state.has_any(kerrigan_logic_active_abilities, self.player)` is checked 7 times identically, which means it either passes immediately (count=7) or fails (count=0).
+
+**The JavaScript fallback has the CORRECT implementation** - it checks each kerrigan tier separately:
+
+```javascript
+// CORRECT JS implementation - counts per tier
+const kerriganActivesTiers = [
+    ['Kinetic Blast (Kerrigan Tier 1)', 'Leaping Strike (Kerrigan Tier 1)'],
+    ['Crushing Grip (Kerrigan Tier 2)', 'Psionic Shift (Kerrigan Tier 2)'],
+    [],  // Tier 3 has no actives
+    ['Wild Mutation (Kerrigan Tier 4)', 'Spawn Banelings (Kerrigan Tier 4)', 'Mend (Kerrigan Tier 4)'],
+    // ... etc
+];
+for (const tier of kerriganActivesTiers) {
+    if (tier.length > 0 && has_any(snapshot, tier)) {
+        count++;
+    }
+}
+return count >= 2;
+```
+
+**Resolution**: This helper MUST remain blacklisted so that the correct JavaScript implementation is used instead of the buggy Python export. This is an upstream Archipelago bug that should be reported.
 
 ## Current Status
 
@@ -52,37 +89,36 @@ These helpers are successfully converted to JSON rule definitions:
 - `terran_early_tech`, `terran_maw_requirement`, `terran_moderate_anti_air`
 - `weapon_armor_upgrade_count`
 
-### Blacklisted (36 helpers)
+### Blacklisted Helpers (reduced from 36)
 These helpers are NOT exported to JSON due to complexity. They fall back to JavaScript implementations.
+The blacklist has been reduced as more helpers now export correctly (see "Helpers Now Exported" section above).
 
 #### Competent Composition Helpers (3)
 - `terran_competent_comp`, `protoss_competent_comp`, `zerg_competent_comp`
 - **Why blacklisted**: Calls `weapon_armor_upgrade_count` with complex arithmetic comparisons
 
-#### Rating Helpers (6)
-- `terran_defense_rating`, `protoss_defense_rating`, `zerg_defense_rating`
-- `terran_power_rating`, `protoss_power_rating`, `zerg_power_rating`
-- **Why blacklisted**: Use generator expressions with dictionary iteration:
-  ```python
-  defense_score = sum((tvx_defense_ratings[item] for item in tvx_defense_ratings
-                       if state.has(item, self.player)))
-  ```
+#### Rating Helpers (4 remaining)
+- `protoss_defense_rating`, `zerg_defense_rating`
+- `protoss_power_rating`, `zerg_power_rating`
+- **Why blacklisted**: Use generator expressions with dictionary iteration (protoss/zerg variants not yet removed from blacklist)
+- **Note**: `terran_defense_rating` and `terran_power_rating` have been removed from blacklist and now export correctly
 
 #### Mission Requirement Helpers (10+)
 - `terran_havens_fall_requirement`, `terran_great_train_robbery_train_stopper`
 - `terran_welcome_to_the_jungle_requirement`, etc.
 - **Why blacklisted**: Call other blacklisted helpers like `terran_defense_rating`
 
-#### Kerrigan Helpers (3)
-- `basic_kerrigan`, `kerrigan_levels`, `two_kerrigan_actives`
+#### Kerrigan Helpers (2 remaining)
+- `kerrigan_levels`, `two_kerrigan_actives`
 - **Why blacklisted**:
-  - `kerrigan_levels`: Calls `get_full_item_list()` - external function
-  - `basic_kerrigan`: Loops over imported list `kerrigan_non_ulimates`
-  - `two_kerrigan_actives`: Logic bug (loop variable unused)
+  - `kerrigan_levels`: Calls `get_full_item_list()` - external function that can't be resolved at export time
+  - `two_kerrigan_actives`: Has logic bug in Python code - MUST use JS fallback which has correct implementation (see Known Bug section above)
+- **Note**: `basic_kerrigan` has been removed from blacklist and now exports correctly using kerrigan_non_ulimates from static_data
 
 #### Combat Capability Helpers (8+)
-- `terran_beats_protoss_deathball`, `terran_base_trasher`, `terran_can_rescue`, etc.
+- `terran_beats_protoss_deathball`, `terran_base_trasher`, etc.
 - **Why blacklisted**: Call other blacklisted helpers
+- **Note**: `terran_can_rescue`, `terran_cliffjumper`, `terran_able_to_snipe_defiler`, `terran_sustainable_mech_heal` have been removed from blacklist
 
 ## JavaScript Fallback Coverage
 
@@ -133,9 +169,11 @@ The current system works because JavaScript implementations provide fallback log
    - During export, resolve `get_full_item_list()[item].number` to actual values
    - Store as constants in the exported helper
 
-3. **Fix Logic Bugs**
-   - `two_kerrigan_actives` has a loop that doesn't use the loop variable
-   - Should iterate over abilities instead of `range(7)`
+3. **Report Upstream Bug**
+   - `two_kerrigan_actives` has a bug in upstream Archipelago `worlds/sc2/rules.py`
+   - The loop variable is unused - should iterate over kerrigan tiers, not `range(7)`
+   - The JavaScript fallback has the CORRECT implementation, so this helper must stay blacklisted
+   - Consider reporting this bug to upstream Archipelago repository
 
 ### Long-term Architecture
 
