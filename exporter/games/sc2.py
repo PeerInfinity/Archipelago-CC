@@ -32,25 +32,33 @@ class SC2GameExportHandler(GenericGameExportHandler):
 
     # Helpers too complex for automatic export (loops, closures, complex calculations)
     # NOTE: defense_rating helpers now work with static_data export for rating dictionaries
-    # power_rating helpers call soa_power_rating which has complex logic
+    # power_rating helpers call soa_power_rating which has complex iteration with break statements
     HELPERS_TO_EXPORT_BLACKLIST = {
+        # competent_comp helpers - complex conditional logic, but could work if dependencies are met
         'terran_competent_comp', 'protoss_competent_comp', 'zerg_competent_comp',
         # defense_rating helpers - now exported with static_data support
         # 'terran_defense_rating', 'protoss_defense_rating', 'zerg_defense_rating',
-        # power_rating helpers - still blacklisted due to soa_power_rating complexity
+        # power_rating helpers - require soa_power_rating which has loops with break
         'terran_power_rating', 'protoss_power_rating', 'zerg_power_rating',
+        # Mission requirements that call power_rating or other complex helpers
         'terran_havens_fall_requirement', 'terran_great_train_robbery_train_stopper',
         'terran_welcome_to_the_jungle_requirement', 'zerg_welcome_to_the_jungle_requirement',
         'protoss_welcome_to_the_jungle_requirement', 'terran_night_terrors_requirement',
         'terran_engine_of_destruction_requirement', 'engine_of_destruction_requirement',
         'terran_trouble_in_paradise_requirement', 'terran_media_blitz_requirement',
         'terran_gates_of_hell_requirement', 'terran_all_in_requirement',
+        # Kerrigan helpers - use external functions or imported lists
         'basic_kerrigan', 'kerrigan_levels', 'two_kerrigan_actives',
+        # Helpers that call other blacklisted helpers
         'terran_competent_ground_to_air', 'protoss_competent_ground_to_air',
         'zerg_competent_ground_to_air', 'terran_beats_protoss_deathball',
-        'terran_base_trasher', 'terran_can_rescue', 'terran_cliffjumper',
-        'terran_able_to_snipe_defiler', 'terran_respond_to_colony_infestations',
-        'terran_survives_rip_field', 'terran_sustainable_mech_heal',
+        'terran_base_trasher',  # calls terran_competent_comp
+        'terran_respond_to_colony_infestations',  # calls terran_havens_fall_requirement
+        # Simple helpers - now exported (just boolean logic):
+        # 'terran_can_rescue',  # just has_any + advanced_tactics
+        # 'terran_cliffjumper',  # just has/has_all
+        # 'terran_sustainable_mech_heal',  # just boolean logic
+        # 'terran_able_to_snipe_defiler',  # just has/has_any/has_all
     }
 
     def _extract_closure_vars(self, rule_func: Callable) -> Dict[str, Any]:

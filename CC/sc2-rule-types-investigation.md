@@ -16,11 +16,18 @@ We've implemented infrastructure to export rating dictionaries (like `tvx_defens
 3. **frontend/modules/shared/ruleEngine.js**: Updated `sum_of` rule to handle dictionary iteration (Python's `for item in dict` yields keys)
 
 **Helpers Now Exported:**
-- `terran_defense_rating` - no longer needs JavaScript fallback
+- `terran_defense_rating` - uses dictionary iteration with `sum_of`
+- `terran_sustainable_mech_heal` - simple boolean logic
+- `terran_can_rescue` - simple `has_any` + settings check
+- `terran_cliffjumper` - simple `has`/`has_all`
+- `terran_able_to_snipe_defiler` - simple `has`/`has_any`/`has_all`
 
 **Remaining Blacklisted:**
-- `protoss_defense_rating`, `zerg_defense_rating` - not used in current test seeds
-- `terran_power_rating`, etc. - still require `soa_power_rating` which has complex logic
+- `protoss_defense_rating`, `zerg_defense_rating` - not used in current test seeds (would work if used)
+- `terran_power_rating`, etc. - require `soa_power_rating` which has loops with `break` statements
+- `kerrigan_levels` - calls external function `get_full_item_list()`
+- `basic_kerrigan` - iterates over imported list
+- `two_kerrigan_actives` - has logic bug (loop variable unused)
 
 ## Current Status
 
