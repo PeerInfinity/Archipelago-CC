@@ -2410,72 +2410,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_boss",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": {
-                        "1": [
-                          7798784,
-                          7798785,
-                          7798786,
-                          7798787,
-                          7798788,
-                          7798789,
-                          7799296
-                        ],
-                        "2": [
-                          7798790,
-                          7798791,
-                          7798792,
-                          7798793,
-                          7798794,
-                          7798795,
-                          7799297
-                        ],
-                        "3": [
-                          7798796,
-                          7798797,
-                          7798798,
-                          7798799,
-                          7798800,
-                          7798801,
-                          7799298
-                        ],
-                        "4": [
-                          7798802,
-                          7798803,
-                          7798804,
-                          7798805,
-                          7798806,
-                          7798807,
-                          7799299
-                        ],
-                        "5": [
-                          7798808,
-                          7798809,
-                          7798810,
-                          7798811,
-                          7798812,
-                          7798813,
-                          7799300
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Grass Land - Stage Completion",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 },
                 {
                   "type": "item_check",
@@ -2522,72 +2462,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_boss",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": {
-                        "1": [
-                          7798784,
-                          7798785,
-                          7798786,
-                          7798787,
-                          7798788,
-                          7798789,
-                          7799296
-                        ],
-                        "2": [
-                          7798790,
-                          7798791,
-                          7798792,
-                          7798793,
-                          7798794,
-                          7798795,
-                          7799297
-                        ],
-                        "3": [
-                          7798796,
-                          7798797,
-                          7798798,
-                          7798799,
-                          7798800,
-                          7798801,
-                          7799298
-                        ],
-                        "4": [
-                          7798802,
-                          7798803,
-                          7798804,
-                          7798805,
-                          7798806,
-                          7798807,
-                          7799299
-                        ],
-                        "5": [
-                          7798808,
-                          7798809,
-                          7798810,
-                          7798811,
-                          7798812,
-                          7798813,
-                          7799300
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Grass Land - Stage Completion",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 },
                 {
                   "type": "item_check",
@@ -5953,72 +5833,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_boss",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 2
-                    },
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": {
-                        "1": [
-                          7798784,
-                          7798785,
-                          7798786,
-                          7798787,
-                          7798788,
-                          7798789,
-                          7799296
-                        ],
-                        "2": [
-                          7798790,
-                          7798791,
-                          7798792,
-                          7798793,
-                          7798794,
-                          7798795,
-                          7799297
-                        ],
-                        "3": [
-                          7798796,
-                          7798797,
-                          7798798,
-                          7798799,
-                          7798800,
-                          7798801,
-                          7799298
-                        ],
-                        "4": [
-                          7798802,
-                          7798803,
-                          7798804,
-                          7798805,
-                          7798806,
-                          7798807,
-                          7799299
-                        ],
-                        "5": [
-                          7798808,
-                          7798809,
-                          7798810,
-                          7798811,
-                          7798812,
-                          7798813,
-                          7799300
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Ripple Field - Stage Completion",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 },
                 {
                   "type": "item_check",
@@ -6065,72 +5885,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_boss",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 2
-                    },
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": {
-                        "1": [
-                          7798784,
-                          7798785,
-                          7798786,
-                          7798787,
-                          7798788,
-                          7798789,
-                          7799296
-                        ],
-                        "2": [
-                          7798790,
-                          7798791,
-                          7798792,
-                          7798793,
-                          7798794,
-                          7798795,
-                          7799297
-                        ],
-                        "3": [
-                          7798796,
-                          7798797,
-                          7798798,
-                          7798799,
-                          7798800,
-                          7798801,
-                          7799298
-                        ],
-                        "4": [
-                          7798802,
-                          7798803,
-                          7798804,
-                          7798805,
-                          7798806,
-                          7798807,
-                          7799299
-                        ],
-                        "5": [
-                          7798808,
-                          7798809,
-                          7798810,
-                          7798811,
-                          7798812,
-                          7798813,
-                          7799300
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Ripple Field - Stage Completion",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 },
                 {
                   "type": "item_check",
@@ -11426,72 +11186,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_boss",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": {
-                        "1": [
-                          7798784,
-                          7798785,
-                          7798786,
-                          7798787,
-                          7798788,
-                          7798789,
-                          7799296
-                        ],
-                        "2": [
-                          7798790,
-                          7798791,
-                          7798792,
-                          7798793,
-                          7798794,
-                          7798795,
-                          7799297
-                        ],
-                        "3": [
-                          7798796,
-                          7798797,
-                          7798798,
-                          7798799,
-                          7798800,
-                          7798801,
-                          7799298
-                        ],
-                        "4": [
-                          7798802,
-                          7798803,
-                          7798804,
-                          7798805,
-                          7798806,
-                          7798807,
-                          7799299
-                        ],
-                        "5": [
-                          7798808,
-                          7798809,
-                          7798810,
-                          7798811,
-                          7798812,
-                          7798813,
-                          7799300
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Sand Canyon - Stage Completion",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 },
                 {
                   "type": "item_check",
@@ -11538,72 +11238,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_boss",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": {
-                        "1": [
-                          7798784,
-                          7798785,
-                          7798786,
-                          7798787,
-                          7798788,
-                          7798789,
-                          7799296
-                        ],
-                        "2": [
-                          7798790,
-                          7798791,
-                          7798792,
-                          7798793,
-                          7798794,
-                          7798795,
-                          7799297
-                        ],
-                        "3": [
-                          7798796,
-                          7798797,
-                          7798798,
-                          7798799,
-                          7798800,
-                          7798801,
-                          7799298
-                        ],
-                        "4": [
-                          7798802,
-                          7798803,
-                          7798804,
-                          7798805,
-                          7798806,
-                          7798807,
-                          7799299
-                        ],
-                        "5": [
-                          7798808,
-                          7798809,
-                          7798810,
-                          7798811,
-                          7798812,
-                          7798813,
-                          7799300
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Sand Canyon - Stage Completion",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 },
                 {
                   "type": "item_check",
@@ -14947,72 +14587,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_boss",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 4
-                    },
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": {
-                        "1": [
-                          7798784,
-                          7798785,
-                          7798786,
-                          7798787,
-                          7798788,
-                          7798789,
-                          7799296
-                        ],
-                        "2": [
-                          7798790,
-                          7798791,
-                          7798792,
-                          7798793,
-                          7798794,
-                          7798795,
-                          7799297
-                        ],
-                        "3": [
-                          7798796,
-                          7798797,
-                          7798798,
-                          7798799,
-                          7798800,
-                          7798801,
-                          7799298
-                        ],
-                        "4": [
-                          7798802,
-                          7798803,
-                          7798804,
-                          7798805,
-                          7798806,
-                          7798807,
-                          7799299
-                        ],
-                        "5": [
-                          7798808,
-                          7798809,
-                          7798810,
-                          7798811,
-                          7798812,
-                          7798813,
-                          7799300
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Cloudy Park - Stage Completion",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 },
                 {
                   "type": "item_check",
@@ -15059,72 +14639,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_boss",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 4
-                    },
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": {
-                        "1": [
-                          7798784,
-                          7798785,
-                          7798786,
-                          7798787,
-                          7798788,
-                          7798789,
-                          7799296
-                        ],
-                        "2": [
-                          7798790,
-                          7798791,
-                          7798792,
-                          7798793,
-                          7798794,
-                          7798795,
-                          7799297
-                        ],
-                        "3": [
-                          7798796,
-                          7798797,
-                          7798798,
-                          7798799,
-                          7798800,
-                          7798801,
-                          7799298
-                        ],
-                        "4": [
-                          7798802,
-                          7798803,
-                          7798804,
-                          7798805,
-                          7798806,
-                          7798807,
-                          7799299
-                        ],
-                        "5": [
-                          7798808,
-                          7798809,
-                          7798810,
-                          7798811,
-                          7798812,
-                          7798813,
-                          7799300
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Cloudy Park - Stage Completion",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 },
                 {
                   "type": "item_check",
@@ -20025,72 +19545,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_boss",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 5
-                    },
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": {
-                        "1": [
-                          7798784,
-                          7798785,
-                          7798786,
-                          7798787,
-                          7798788,
-                          7798789,
-                          7799296
-                        ],
-                        "2": [
-                          7798790,
-                          7798791,
-                          7798792,
-                          7798793,
-                          7798794,
-                          7798795,
-                          7799297
-                        ],
-                        "3": [
-                          7798796,
-                          7798797,
-                          7798798,
-                          7798799,
-                          7798800,
-                          7798801,
-                          7799298
-                        ],
-                        "4": [
-                          7798802,
-                          7798803,
-                          7798804,
-                          7798805,
-                          7798806,
-                          7798807,
-                          7799299
-                        ],
-                        "5": [
-                          7798808,
-                          7798809,
-                          7798810,
-                          7798811,
-                          7798812,
-                          7798813,
-                          7799300
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Iceberg - Stage Completion",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 },
                 {
                   "type": "item_check",
@@ -20137,72 +19597,12 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_reach_boss",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 5
-                    },
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": 3
-                    },
-                    {
-                      "type": "constant",
-                      "value": {
-                        "1": [
-                          7798784,
-                          7798785,
-                          7798786,
-                          7798787,
-                          7798788,
-                          7798789,
-                          7799296
-                        ],
-                        "2": [
-                          7798790,
-                          7798791,
-                          7798792,
-                          7798793,
-                          7798794,
-                          7798795,
-                          7799297
-                        ],
-                        "3": [
-                          7798796,
-                          7798797,
-                          7798798,
-                          7798799,
-                          7798800,
-                          7798801,
-                          7799298
-                        ],
-                        "4": [
-                          7798802,
-                          7798803,
-                          7798804,
-                          7798805,
-                          7798806,
-                          7798807,
-                          7799299
-                        ],
-                        "5": [
-                          7798808,
-                          7798809,
-                          7798810,
-                          7798811,
-                          7798812,
-                          7798813,
-                          7799300
-                        ]
-                      }
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Iceberg - Stage Completion",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
                 },
                 {
                   "type": "item_check",
@@ -21473,6 +20873,17 @@
         "Jumper Shoot": "Parasol Ability",
         "Boboo": "Burning Ability",
         "Haboki": "Clean Ability"
+      },
+      "ability_map": {
+        "No Ability": "<lambda>",
+        "Burning Ability": "can_reach_burning",
+        "Stone Ability": "can_reach_stone",
+        "Ice Ability": "can_reach_ice",
+        "Needle Ability": "can_reach_needle",
+        "Clean Ability": "can_reach_clean",
+        "Parasol Ability": "can_reach_parasol",
+        "Spark Ability": "can_reach_spark",
+        "Cutter Ability": "can_reach_cutter"
       }
     }
   },
@@ -21547,5 +20958,190 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "can_reach_burning": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Burning"
+          },
+          {
+            "type": "item_check",
+            "item": "Burning Ability"
+          }
+        ]
+      },
+      "can_reach_chuchu": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "ChuChu"
+          },
+          {
+            "type": "item_check",
+            "item": "ChuChu Spawn"
+          }
+        ]
+      },
+      "can_reach_clean": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Clean"
+          },
+          {
+            "type": "item_check",
+            "item": "Clean Ability"
+          }
+        ]
+      },
+      "can_reach_coo": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Coo"
+          },
+          {
+            "type": "item_check",
+            "item": "Coo Spawn"
+          }
+        ]
+      },
+      "can_reach_cutter": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Cutter"
+          },
+          {
+            "type": "item_check",
+            "item": "Cutter Ability"
+          }
+        ]
+      },
+      "can_reach_ice": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Ice"
+          },
+          {
+            "type": "item_check",
+            "item": "Ice Ability"
+          }
+        ]
+      },
+      "can_reach_kine": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Kine"
+          },
+          {
+            "type": "item_check",
+            "item": "Kine Spawn"
+          }
+        ]
+      },
+      "can_reach_nago": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Nago"
+          },
+          {
+            "type": "item_check",
+            "item": "Nago Spawn"
+          }
+        ]
+      },
+      "can_reach_needle": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Needle"
+          },
+          {
+            "type": "item_check",
+            "item": "Needle Ability"
+          }
+        ]
+      },
+      "can_reach_parasol": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Parasol"
+          },
+          {
+            "type": "item_check",
+            "item": "Parasol Ability"
+          }
+        ]
+      },
+      "can_reach_pitch": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Pitch"
+          },
+          {
+            "type": "item_check",
+            "item": "Pitch Spawn"
+          }
+        ]
+      },
+      "can_reach_rick": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Rick"
+          },
+          {
+            "type": "item_check",
+            "item": "Rick Spawn"
+          }
+        ]
+      },
+      "can_reach_spark": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Spark"
+          },
+          {
+            "type": "item_check",
+            "item": "Spark Ability"
+          }
+        ]
+      },
+      "can_reach_stone": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Stone"
+          },
+          {
+            "type": "item_check",
+            "item": "Stone Ability"
+          }
+        ]
+      }
+    }
+  }
 }
