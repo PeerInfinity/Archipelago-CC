@@ -31,6 +31,7 @@ Both layers must support a rule type for it to work end-to-end.
 | `count_check` | Check if player has N of item | `item`, `count` | `{"type": "count_check", "item": "Key", "count": 3}` |
 | `group_check` | Check for N items from a group | `group`, `count` | `{"type": "group_check", "group": "swords", "count": 1}` |
 | `group_count` | Get count of items in group (returns number) | `group` | `{"type": "group_count", "group": "keys"}` |
+| `counts` | Check if total of multiple items >= count | `items: []`, `count` | `{"type": "counts", "items": ["Item1", "Item2"], "count": 3}` |
 | `count_item` | Get item count as number | `item` | `{"type": "count_item", "item": "Rupee"}` |
 | `total_items_count` | Check total items collected | `count` | `{"type": "total_items_count", "count": 50}` |
 | `locations_checked` | Check locations checked count | `count` | `{"type": "locations_checked", "count": 10}` |
