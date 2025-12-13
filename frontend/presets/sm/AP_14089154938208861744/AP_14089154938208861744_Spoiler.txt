@@ -532,10 +532,9 @@ Missile (green Brinstar below super missile)
    =>   Missile (green Brinstar below super missile)
 Missile (green Brinstar pipe)
         Menu -> StartAP
-   =>   Landing Site -> Landing Site->Lower Mushrooms Left
-   =>   Lower Mushrooms Left -> Lower Mushrooms Left->Green Brinstar Elevator
-   =>   Green Brinstar Elevator -> Green Brinstar Elevator->Big Pink
-   =>   Big Pink -> Big Pink->Green Hill Zone Top Right
+   =>   Landing Site -> Landing Site->Blue Brinstar Elevator Bottom
+   =>   Blue Brinstar Elevator Bottom -> Blue Brinstar Elevator Bottom->Morph Ball Room Left
+   =>   Morph Ball Room Left -> Morph Ball Room Left->Green Hill Zone Top Right
    =>   Green Hill Zone Top Right -> Green Hill Zone Top Right->Missile (green Brinstar pipe)
    =>   Missile (green Brinstar pipe)
 Missile (green Maridia tatori)
