@@ -65,6 +65,7 @@ Both layers must support a rule type for it to work end-to-end.
 | `name` | Variable/name reference | `name` | `{"type": "name", "name": "player"}` |
 | `attribute` | Property access (obj.attr) | `object`, `attr` | `{"type": "attribute", "object": {...}, "attr": "name"}` |
 | `subscript` / `index` | Array/dict indexing | `value`/`object`, `index` | `{"type": "subscript", "value": {...}, "index": {...}}` |
+| `slice` | Array/string slicing | `value`, `lower`, `upper`, `step` | `{"type": "slice", "value": {...}, "lower": {...}, "upper": {...}}` |
 | `list` | Array literal | `value: []` | `{"type": "list", "value": [...]}` |
 | `set` | Set literal (unique values) | `elements: []` | `{"type": "set", "elements": [...]}` |
 | `tuple` | Fixed array | `elements: []` | `{"type": "tuple", "elements": [...]}` |
@@ -95,6 +96,8 @@ Both layers must support a rule type for it to work end-to-end.
 - `len(collection)` - Get length of collection
 - `sum(iterable)` - Sum of all elements
 - `sorted(iterable)` - Return sorted list
+- `iter(iterable)` - Create iterator from iterable (returns array)
+- `next(iterator, default)` - Get next item from iterator (returns first element or default)
 
 **Method call support** (`method_call` type):
 - Arrays/Lists: `index(value)`, `count(value)`, `__contains__(value)`
@@ -114,6 +117,7 @@ Both layers must support a rule type for it to work end-to-end.
 **Binary operators (`op` values):**
 - Arithmetic: `+`, `-`, `*`, `/`, `//` (floor div), `%` (modulo), `**` (power)
 - Logical: `and`, `or`, `AND`, `OR`
+- Bitwise: `&` (AND), `|` (OR), `^` (XOR)
 
 **Comparison operators (`op` values):**
 - Equality: `==`, `!=`
@@ -145,6 +149,7 @@ These types support complex helper functions with multi-statement bodies:
 | `return` | Early return from block | `value` | `return True` |
 | `for_range` | Loop N times | `count`, `var`, `body: []` | `for i in range(5):` |
 | `for_iter` | Loop over iterable | `iterable`, `var`, `body: []` | `for item in list:` |
+| `while_loop` | Loop while condition is true | `condition`, `body: []`, `orelse: []` | `while cond: stmt` |
 | `if_statement` | Conditional execution (statement) | `test`, `body: []`, `orelse: []` | `if cond: stmt` |
 | `break` | Exit enclosing loop | (none) | `break` |
 | `continue` | Skip to next iteration | (none) | `continue` |

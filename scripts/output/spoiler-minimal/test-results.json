@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-12T18:56:07.521110",
-    "last_updated": "2025-12-13T06:42:09.549948",
+    "last_updated": "2025-12-13T07:03:45.314508",
     "script_version": "1.0.0"
   },
   "results": {
@@ -1788,7 +1788,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 8.4,
+        "processing_time_seconds": 7.9,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -1803,7 +1803,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 75.27,
+        "processing_time_seconds": 75.8,
         "return_code": 0,
         "sphere_reached": 11.1,
         "success": true,
@@ -1811,7 +1811,7 @@
         "warning_count": 0
       },
       "template_filename": "Kirby's Dream Land 3.yaml",
-      "timestamp": "2025-12-13T06:40:45.456234",
+      "timestamp": "2025-12-13T07:02:21.204907",
       "world_info": {
         "exporter_path": "exporter/games/kdl3.py",
         "exporter_size": 9933,

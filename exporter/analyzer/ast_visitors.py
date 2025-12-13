@@ -2212,6 +2212,62 @@ class ASTVisitorMixin:
                 except Exception as e:
                     logging.debug(f"visit_Subscript: Error in direct resolution optimization: {e}")
 
+        # Check if this is a slice expression (e.g., list[1:5])
+        if isinstance(node.slice, ast.Slice):
+            logging.debug(f"visit_Subscript: Detected slice expression")
+            value_info = self.visit(node.value)
+            if value_info is None:
+                logging.error(f"Error visiting value in slice subscript: {ast.dump(node)}")
+                return None
+
+            # Process slice components (lower, upper, step)
+            lower_info = self.visit(node.slice.lower) if node.slice.lower else None
+            upper_info = self.visit(node.slice.upper) if node.slice.upper else None
+            step_info = self.visit(node.slice.step) if node.slice.step else None
+
+            # Try to resolve at export time if all components are constants
+            resolved_value = None
+            resolved_lower = None
+            resolved_upper = None
+            resolved_step = None
+
+            if value_info.get('type') == 'name':
+                resolved_value = self.expression_resolver.resolve_variable(value_info['name'])
+            elif value_info.get('type') == 'constant':
+                resolved_value = value_info['value']
+            elif value_info.get('type') == 'attribute':
+                resolved_value = self.expression_resolver.resolve_expression(value_info)
+
+            if lower_info and lower_info.get('type') == 'constant':
+                resolved_lower = lower_info['value']
+            if upper_info and upper_info.get('type') == 'constant':
+                resolved_upper = upper_info['value']
+            if step_info and step_info.get('type') == 'constant':
+                resolved_step = step_info['value']
+
+            # If we can resolve the value at export time, perform the slice
+            if resolved_value is not None and isinstance(resolved_value, (list, tuple, str)):
+                try:
+                    slice_obj = slice(resolved_lower, resolved_upper, resolved_step)
+                    sliced_result = resolved_value[slice_obj]
+                    logging.debug(f"visit_Subscript: Resolved slice to constant: {sliced_result}")
+                    # Return as constant list/tuple
+                    if isinstance(sliced_result, (list, tuple)):
+                        return {'type': 'constant', 'value': list(sliced_result)}
+                    else:
+                        return {'type': 'constant', 'value': sliced_result}
+                except Exception as e:
+                    logging.debug(f"visit_Subscript: Could not resolve slice at export time: {e}")
+
+            # Return unresolved slice for frontend evaluation
+            return {
+                'type': 'slice',
+                'value': value_info,
+                'lower': lower_info,
+                'upper': upper_info,
+                'step': step_info
+            }
+
         # First visit the value (the object being subscripted)
         value_info = self.visit(node.value) # Get returned result
 
@@ -3109,6 +3165,51 @@ class ASTVisitorMixin:
                 }
         except Exception as e:
             logging.error(f"Error in visit_For: {e}")
+            return None
+
+    def visit_While(self, node: ast.While):
+        """
+        Handle while loops.
+        Produces a while_loop rule type with condition and body.
+        """
+        try:
+            logging.debug(f"\n--- visit_While ---")
+            logging.debug(f"Test: {ast.dump(node.test)}")
+
+            # Analyze the condition
+            condition_result = self.visit(node.test)
+            if condition_result is None:
+                logging.error(f"visit_While: Failed to analyze condition: {ast.dump(node.test)}")
+                return None
+
+            # Analyze the loop body
+            body_results = []
+            for stmt in node.body:
+                stmt_result = self.visit_statement(stmt)
+                if stmt_result is not None:
+                    body_results.append(stmt_result)
+
+            # Handle else clause if present (rarely used)
+            orelse_results = []
+            if node.orelse:
+                for stmt in node.orelse:
+                    stmt_result = self.visit_statement(stmt)
+                    if stmt_result is not None:
+                        orelse_results.append(stmt_result)
+
+            result = {
+                'type': 'while_loop',
+                'condition': condition_result,
+                'body': body_results
+            }
+
+            if orelse_results:
+                result['orelse'] = orelse_results
+
+            logging.debug(f"visit_While: Created while_loop rule: {result}")
+            return result
+        except Exception as e:
+            logging.error(f"Error in visit_While: {e}")
             return None
 
     def visit_AugAssign(self, node: ast.AugAssign):
