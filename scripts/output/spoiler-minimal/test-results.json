@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-13T21:50:02.896956",
-    "last_updated": "2025-12-13T21:50:02.896962",
+    "last_updated": "2025-12-13T23:01:59.506175",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2668,27 +2668,15 @@
         "success": true,
         "warning_count": 0
       },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "5d46a3a9000bff8f0b4f6c324a0b7978d1e87cad53e74ea9357f018a15252f51",
-          "new_sphere_log_hash": "c9e763eaa78c1056bbafc8b06b7ce977c4d5b668314ab6af0bef85405f1d1686",
-          "original_rules_hash": "5d46a3a9000bff8f0b4f6c324a0b7978d1e87cad53e74ea9357f018a15252f51",
-          "original_sphere_log_hash": "c9e763eaa78c1056bbafc8b06b7ce977c4d5b668314ab6af0bef85405f1d1686",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-13T21:47:26.017967"
-        }
-      },
       "game_name_from_filename": "raft",
       "game_name_from_yaml": "Raft",
       "generation": {
         "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 3.31,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 1
+        "note": "Skipped in test-only mode",
+        "processing_time_seconds": 0,
+        "return_code": null,
+        "success": false,
+        "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/raft/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -2700,7 +2688,7 @@
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 5.66,
+        "processing_time_seconds": 9.81,
         "return_code": 0,
         "sphere_reached": 11.1,
         "success": true,
@@ -2708,7 +2696,7 @@
         "warning_count": 0
       },
       "template_filename": "Raft.yaml",
-      "timestamp": "2025-12-13T21:46:27.269631",
+      "timestamp": "2025-12-13T23:01:49.279409",
       "world_info": {
         "exporter_path": "exporter/games/raft.py",
         "exporter_size": 12952,
