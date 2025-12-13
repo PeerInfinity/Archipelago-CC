@@ -1579,13 +1579,14 @@ class ASTVisitorMixin:
     def _is_world_player_subscript(self, node):
         """
         Check if node is the pattern: state.multiworld.worlds[player]
+        Also matches self.multiworld.worlds[player] for class-based helpers (e.g., RaftLogic).
         Returns True if matched, False otherwise.
 
         AST structure:
         Subscript
           value=Attribute(attr='worlds')
             value=Attribute(attr='multiworld')
-              value=Name(id='state' or 'world')
+              value=Name(id='state', 'world', or 'self')
           slice=Name(id='player')
         """
         if not isinstance(node, ast.Subscript):
@@ -1603,9 +1604,9 @@ class ASTVisitorMixin:
         if not isinstance(multiworld_attr, ast.Attribute) or multiworld_attr.attr != 'multiworld':
             return False
 
-        # Check state (or world)
+        # Check state (or world, or self for class-based helpers like RaftLogic)
         state_name = multiworld_attr.value
-        if not isinstance(state_name, ast.Name) or state_name.id not in ('state', 'world'):
+        if not isinstance(state_name, ast.Name) or state_name.id not in ('state', 'world', 'self'):
             return False
 
         return True
@@ -1617,6 +1618,7 @@ class ASTVisitorMixin:
         - state.multiworld.worlds[player].<attr>
         - state.multiworld.worlds[player].<attr1>.<attr2> (nested like difficulty_requirements.progressive_bottle_limit)
         - self.world.options.<setting> (class-based helpers like KH2)
+        - self.multiworld.worlds[player].options.<setting> (class-based helpers like RaftLogic)
 
         Returns the setting path as a dot-separated string if matched, None otherwise.
 

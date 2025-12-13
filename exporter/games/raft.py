@@ -17,11 +17,11 @@ class RaftGameExportHandler(GenericGameExportHandler):
     # Module paths for helper functions
     HELPER_MODULES = ['worlds.raft.Rules']
 
-    # Blacklist helpers that have complex option access patterns
-    HELPERS_TO_EXPORT_BLACKLIST = {
-        'raft_paddleboard_mode_enabled',  # Uses self.multiworld.worlds[player].options
-        'raft_big_islands_available',     # Uses self.multiworld.worlds[player].options
-    }
+    # Blacklist for helpers that cannot be exported
+    # Previously blacklisted, now supported:
+    # - raft_paddleboard_mode_enabled: Uses self.multiworld.worlds[player].options (now supported)
+    # - raft_big_islands_available: Uses self.multiworld.worlds[player].options (now supported)
+    HELPERS_TO_EXPORT_BLACKLIST = set()
 
     # Item check rules - maps item names to their access rule structures
     # Based on the itemChecks dictionary in worlds/raft/Rules.py
