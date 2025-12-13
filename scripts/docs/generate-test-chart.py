@@ -591,6 +591,30 @@ def format_file_size(size_bytes: int) -> str:
     return f"{kb:.1f}KB"
 
 
+def get_rules_json_size(project_root: str, world_directory: str) -> int:
+    """
+    Get the size of the rules.json file for seed 1 for a given game.
+
+    Args:
+        project_root: Path to the project root directory
+        world_directory: The preset directory name for the game (e.g., 'alttp', 'hk')
+
+    Returns:
+        File size in bytes, or 0 if file doesn't exist
+    """
+    # Seed 1 always produces this seed ID
+    seed_id = "14089154938208861744"
+    rules_path = os.path.join(
+        project_root,
+        'frontend', 'presets', world_directory,
+        f'AP_{seed_id}', f'AP_{seed_id}_rules.json'
+    )
+    try:
+        return os.path.getsize(rules_path)
+    except (OSError, FileNotFoundError):
+        return 0
+
+
 def extract_multiworld_chart_data(results: Dict[str, Any], world_mapping: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
     """
     Extract multiworld test chart data from results.
@@ -1433,7 +1457,7 @@ def generate_processing_times_markdown(processing_data: Dict[str, Any]) -> str:
     return md_content
 
 
-def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None, ut_comparison_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None, multiclient_metadata=None, multiworld_metadata=None, has_ut_random=False, has_ut_fixed=False, world_mapping=None, is_worldgen=False, other_version_link=None) -> str:
+def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld_data=None, multitemplate_minimal_data=None, multitemplate_full_data=None, ut_comparison_data=None, excluded_games=None, minimal_metadata=None, full_metadata=None, multiclient_metadata=None, multiworld_metadata=None, has_ut_random=False, has_ut_fixed=False, world_mapping=None, is_worldgen=False, other_version_link=None, project_root=None) -> str:
     """Generate a combined summary chart with all test results."""
     title_suffix = " (WorldGen)" if is_worldgen else ""
     md_content = f"# Archipelago Template Test Results Summary{title_suffix}\n\n"
@@ -1640,11 +1664,11 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
     # Add Test Results table
     md_content += "\n## Test Results\n\n"
     if multiworld_data is not None:
-        md_content += "| Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic |\n"
-        md_content += "|-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|\n"
+        md_content += "| Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | [Multiworld Test](./test-results-multiworld.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |\n"
+        md_content += "|-----------|--------------|-----------|------------------|-----------------|------------------|---------------------|----------|----------|------------|\n"
     else:
-        md_content += "| Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic |\n"
-        md_content += "|-----------|--------------|-----------|------------------|------------------|---------------------|----------|----------|\n"
+        md_content += "| Game Name | [Minimal Test](./test-results-spoilers-minimal.md) | [Full Test](./test-results-spoilers-full.md) | [Multiclient Test](./test-results-multiclient.md) | Consistent Rules | Consistent Spoilers | Exporter | GameLogic | Rules Size |\n"
+        md_content += "|-----------|--------------|-----------|------------------|------------------|---------------------|----------|----------|------------|\n"
 
     for game in all_games:
         minimal_result = games_minimal.get(game, "N/A")
@@ -1662,6 +1686,15 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
         else:
             exporter_indicator = "⚫" if has_exporter else "✅"
             logic_indicator = "⚫" if has_logic else "✅"
+
+        # Get rules.json size for seed 1
+        rules_size_indicator = "N/A"
+        if project_root and world_mapping and game in world_mapping:
+            world_dir = world_mapping[game].get('world_directory', '')
+            if world_dir:
+                rules_size = get_rules_json_size(project_root, world_dir)
+                if rules_size > 0:
+                    rules_size_indicator = f"{rules_size / 1024:.1f}KB"
 
         # Get consistency info
         rules_consistent, spoilers_consistent = games_consistency.get(game, (None, None))
@@ -1692,9 +1725,31 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
                 return "❌ Failed"
 
         if multiworld_data is not None:
-            md_content += f"| {game} | {format_result(minimal_result)} | {format_result(full_result)} | {format_result(multiclient_result)} | {format_result(multiworld_result)} | {rules_indicator} | {spoilers_indicator} | {exporter_indicator} | {logic_indicator} |\n"
+            md_content += f"| {game} | {format_result(minimal_result)} | {format_result(full_result)} | {format_result(multiclient_result)} | {format_result(multiworld_result)} | {rules_indicator} | {spoilers_indicator} | {exporter_indicator} | {logic_indicator} | {rules_size_indicator} |\n"
         else:
-            md_content += f"| {game} | {format_result(minimal_result)} | {format_result(full_result)} | {format_result(multiclient_result)} | {rules_indicator} | {spoilers_indicator} | {exporter_indicator} | {logic_indicator} |\n"
+            md_content += f"| {game} | {format_result(minimal_result)} | {format_result(full_result)} | {format_result(multiclient_result)} | {rules_indicator} | {spoilers_indicator} | {exporter_indicator} | {logic_indicator} | {rules_size_indicator} |\n"
+
+    # Add Largest Rules Files section
+    if project_root and world_mapping:
+        rules_sizes = []
+        for game in all_games:
+            if game in world_mapping:
+                world_dir = world_mapping[game].get('world_directory', '')
+                if world_dir:
+                    rules_size = get_rules_json_size(project_root, world_dir)
+                    if rules_size > 0:
+                        rules_sizes.append((game, rules_size))
+
+        if rules_sizes:
+            # Sort by size descending and take top 10
+            rules_sizes.sort(key=lambda x: x[1], reverse=True)
+            top_10 = rules_sizes[:10]
+
+            md_content += "\n### Largest Rules Files\n\n"
+            md_content += "| Rank | Game Name | Rules Size |\n"
+            md_content += "|------|-----------|------------|\n"
+            for rank, (game_name, size) in enumerate(top_10, 1):
+                md_content += f"| {rank} | {game_name} | {size / 1024:.1f}KB |\n"
 
     # Add Multi-Template Results section if data exists
     if multitemplate_minimal_data or multitemplate_full_data:
@@ -1768,6 +1823,7 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
     md_content += "- **Consistent Spoilers:** ✅ if spoiler files are identical across all tested seeds, ⚫ if they differ, ❓ if not tested\n"
     md_content += "- **Exporter:** ✅ Uses generic exporter, or shows file size of custom Python exporter script\n"
     md_content += "- **GameLogic:** ✅ Uses generic logic, or shows total size of custom JavaScript game logic files\n"
+    md_content += "- **Rules Size:** File size of rules.json for seed 1 (N/A if not generated)\n"
 
     return md_content
 
@@ -2135,7 +2191,7 @@ def main():
         # Generate original summary with cross-link to worldgen if available
         summary_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary.md')
         wg_summary_link = './test-results-summary-worldgen.md' if has_wg_summary else None
-        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data, ut_data, excluded_games, minimal_meta, full_meta, multiclient_metadata=mp_meta, multiworld_metadata=mw_meta, has_ut_random=has_random, has_ut_fixed=has_fixed, world_mapping=full_world_mapping, is_worldgen=False, other_version_link=wg_summary_link)
+        summary_md = generate_summary_chart(minimal_data, full_data, mp_data, mw_data, mtmin_data, mtfull_data, ut_data, excluded_games, minimal_meta, full_meta, multiclient_metadata=mp_meta, multiworld_metadata=mw_meta, has_ut_random=has_random, has_ut_fixed=has_fixed, world_mapping=full_world_mapping, is_worldgen=False, other_version_link=wg_summary_link, project_root=project_root)
         with open(summary_output, 'w') as f:
             f.write(summary_md)
 
@@ -2153,7 +2209,7 @@ def main():
 
         summary_wg_output = os.path.join(project_root, 'docs/json/developer/test-results/test-results-summary-worldgen.md')
         orig_summary_link = './test-results-summary.md'
-        summary_wg_md = generate_summary_chart(minimal_wg_data, full_wg_data, mp_wg_data, mw_wg_data, None, None, None, excluded_games, minimal_wg_meta, full_wg_meta, multiclient_metadata=mp_wg_meta, multiworld_metadata=mw_wg_meta, has_ut_random=False, has_ut_fixed=False, world_mapping=full_world_mapping, is_worldgen=True, other_version_link=orig_summary_link)
+        summary_wg_md = generate_summary_chart(minimal_wg_data, full_wg_data, mp_wg_data, mw_wg_data, None, None, None, excluded_games, minimal_wg_meta, full_wg_meta, multiclient_metadata=mp_wg_meta, multiworld_metadata=mw_wg_meta, has_ut_random=False, has_ut_fixed=False, world_mapping=full_world_mapping, is_worldgen=True, other_version_link=orig_summary_link, project_root=project_root)
         with open(summary_wg_output, 'w') as f:
             f.write(summary_wg_md)
 
