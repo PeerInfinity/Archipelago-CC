@@ -52,26 +52,10 @@ class KH2GameExportHandler(BaseGameExportHandler):
         # Form region access
         'final_form_region_access',   # Uses any() over location.can_reach
 
-        # Fight rule helpers - all reference self.fight_logic and local dicts
-        'get_ansem_riku_rules', 'get_armored_xemnas_one_rules', 'get_armored_xemnas_two_rules',
-        'get_barbosa_rules', 'get_blizzard_lord_rules', 'get_cerberus_cup_rules',
-        'get_cerberus_rules', 'get_cor_first_fight_movement_rules', 'get_cor_first_fight_rules',
-        'get_cor_second_fight_movement_rules', 'get_cor_skip_first_rules', 'get_dark_thorn_rules',
-        'get_data_axel_rules', 'get_data_demyx_rules', 'get_data_larxene_rules',
-        'get_data_lexaeus_rules', 'get_data_luxord_rules', 'get_data_marluxia_rules',
-        'get_data_roxas_rules', 'get_data_saix_rules', 'get_data_vexen_rules',
-        'get_data_xaldin_rules', 'get_data_xemnas_rules', 'get_data_xigbar_rules',
-        'get_data_zexion_rules', 'get_demyx_rules', 'get_experiment_rules',
-        'get_final_xemnas_rules', 'get_fire_lord_rules', 'get_future_pete_rules',
-        'get_genie_jafar_rules', 'get_goddess_of_fate_cup_rules', 'get_grim_reaper2_rules',
-        'get_groundshaker_rules', 'get_hades_cup_rules', 'get_hades_rules',
-        'get_hostile_program_rules', 'get_hydra_rules', 'get_luxord_rules',
-        'get_mcp_rules', 'get_olympus_pete_rules', 'get_pain_and_panic_cup_rules',
-        'get_prison_keeper_rules', 'get_roxas_rules', 'get_saix_rules',
-        'get_scar_rules', 'get_sephiroth_rules', 'get_shan_yu_rules',
-        'get_storm_rider_rules', 'get_terra_rules', 'get_thousand_heartless_rules',
-        'get_thresholder_rules', 'get_titan_cup_rules', 'get_transport_fight_rules',
-        'get_transport_movement_rules', 'get_xaldin_rules', 'get_xemnas_rules', 'get_xigbar_rules',
+        # Fight rule helpers - now auto-exported via dict subscript with setting key
+        # These use patterns like: fight_rules_dict[self.fight_logic]
+        # The frontend evaluates the setting to get "easy"/"normal"/"hard" key,
+        # then evaluates the rule at that key.
 
         # Static methods that return True - now handled via helper_map expansion
         # 'get_axel_one_rules', 'get_axel_two_rules', 'get_twilight_thorn_rules',
