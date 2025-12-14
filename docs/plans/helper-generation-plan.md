@@ -349,27 +349,21 @@ state.has_all(["Item1", "Item2"], player)
 | `world_generator/rule_codegen.py` | Add helper code generation, support new rule types |
 | `world_generator/templates.py` | Update `generate_rules_py()` to include helpers |
 
-## Questions for Review
+## Design Decisions (Approved)
 
-1. **Lambda vs direct function assignment**: Should we use:
-   - `entrance.access_rule = lambda state: helper(state, player)`
-   - Or call through Rule Builder's `set_rule()`?
+1. **Rule Builder vs Lambda approach**: Use Rule Builder where it makes sense (provides "explain" functionality), but lambdas are acceptable where Rule Builder doesn't work well for complex helpers.
 
-   The original worlds use direct lambda assignment. Rule Builder is used in the current worldgen for simpler rules.
+2. **Helper function location**: Place generated helpers in `Rules.py` at module level, like original worlds. This allows the exporter to detect and re-export them if the worldgen world is run through the exporter.
 
-2. **Handling `floating` parameter**: shapez passes `floating=False` from region setup code, but this is a setting-dependent value. Should we:
-   - Hard-code `False` for now?
-   - Extract from settings and pass through?
+3. **Setting-dependent parameters**: Hard-code values from rules.json. We can only use the data we have, and this ensures consistent results.
 
-3. **Helper naming convention**: Use `_{game}_{helper_name}` like original worlds?
+4. **Helper naming convention**: Use `_{game}_{helper_name}` pattern like original worlds.
 
-## Timeline Estimate
-
-Not applicable - work will be done incrementally.
+5. **Rule Builder compatibility**: Nice to have but not critical. Support where it makes sense.
 
 ## Next Steps
 
-1. Review and approve this plan
+1. ✅ Review and approve this plan
 2. Implement Phase 1 (extraction)
 3. Implement Phase 2 (code generation for simple helpers)
 4. Test with Undertale

@@ -428,3 +428,620 @@ def is_trivial_rule(rule: Optional[Dict[str, Any]]) -> bool:
     if rule.get('type') == 'constant' and rule.get('value') is True:
         return True
     return False
+
+
+class HelperCodeGenerator:
+    """
+    Generates Python helper functions from CC format rule definitions.
+
+    This class converts helper function bodies (which are rule definitions)
+    into actual Python code that can be executed at runtime.
+
+    Unlike RuleCodeGenerator (which generates Rule Builder expressions),
+    this generates raw Python code with lambda-compatible expressions.
+    """
+
+    def __init__(self, game_name: str) -> None:
+        """
+        Initialize the helper code generator.
+
+        Args:
+            game_name: The game name (used for generating function names)
+        """
+        self.game_name = game_name
+        # Sanitize game name for use in Python identifiers
+        import re
+        self.game_name_lower = re.sub(r'[^a-zA-Z0-9]', '', game_name).lower()
+        self.known_helpers: Set[str] = set()  # Track which helpers exist for validation
+
+    def set_known_helpers(self, helper_names: Set[str]) -> None:
+        """Set the list of known helper names for this game."""
+        self.known_helpers = helper_names
+
+    def get_function_name(self, helper_name: str) -> str:
+        """
+        Get the Python function name for a helper.
+
+        If the helper already has the game prefix (e.g., '_undertale_has_plot'),
+        we use it as-is. Otherwise, we add the prefix.
+        """
+        prefix = f"_{self.game_name_lower}_"
+        if helper_name.startswith(prefix):
+            return helper_name
+        if helper_name.startswith('_'):
+            # Already has some underscore prefix, use as-is
+            return helper_name
+        return f"{prefix}{helper_name}"
+
+    def generate_helper_function(
+        self,
+        helper_name: str,
+        params: List[str],
+        body: Dict[str, Any],
+        defaults: Optional[Dict[str, Any]] = None
+    ) -> str:
+        """
+        Generate a Python helper function from a rule body.
+
+        Args:
+            helper_name: Name of the helper function
+            params: List of parameter names (excluding state/player)
+            body: The rule body to convert
+            defaults: Default values for parameters
+
+        Returns:
+            Complete Python function definition as a string
+        """
+        defaults = defaults or {}
+
+        # Build function signature
+        func_name = self.get_function_name(helper_name)
+        sig_params = ['state: "CollectionState"', 'player: int']
+
+        for param in params:
+            if param in defaults:
+                default_val = defaults[param]
+                if isinstance(default_val, bool):
+                    sig_params.append(f'{param}: bool = {default_val}')
+                elif isinstance(default_val, (int, float)):
+                    sig_params.append(f'{param} = {default_val}')
+                elif isinstance(default_val, str):
+                    sig_params.append(f'{param}: str = {repr(default_val)}')
+                else:
+                    sig_params.append(f'{param} = {repr(default_val)}')
+            else:
+                sig_params.append(param)
+
+        signature = f"def {func_name}({', '.join(sig_params)}) -> bool:"
+
+        # Generate function body
+        body_code = self._generate_body(body)
+
+        # Combine signature and body
+        return f"{signature}\n{self._indent(body_code)}"
+
+    def get_helper_call(self, helper_name: str, args: List[Dict[str, Any]]) -> str:
+        """
+        Generate a call to a helper function.
+
+        Args:
+            helper_name: Name of the helper to call
+            args: List of argument rule definitions
+
+        Returns:
+            Python code for the function call
+        """
+        func_name = self.get_function_name(helper_name)
+
+        # Generate argument expressions
+        arg_exprs = ['state', 'player']
+        for arg in args:
+            arg_exprs.append(self._generate_expression(arg))
+
+        return f"{func_name}({', '.join(arg_exprs)})"
+
+    def _indent(self, code: str, level: int = 1) -> str:
+        """Indent code by the specified number of levels (4 spaces each)."""
+        indent = '    ' * level
+        lines = code.split('\n')
+        return '\n'.join(indent + line if line.strip() else line for line in lines)
+
+    def _generate_body(self, rule: Dict[str, Any]) -> str:
+        """
+        Generate Python code for a rule body (may be expression or block).
+
+        Returns code suitable for a function body (includes return if needed).
+        """
+        if not isinstance(rule, dict):
+            return f"return {repr(rule)}"
+
+        rule_type = rule.get('type', '')
+
+        # Handle block (multi-statement body)
+        if rule_type == 'block':
+            return self._generate_block(rule)
+
+        # For single expressions, wrap in return
+        expr = self._generate_expression(rule)
+        return f"return {expr}"
+
+    def _generate_block(self, rule: Dict[str, Any]) -> str:
+        """Generate Python code for a block of statements."""
+        statements = rule.get('statements', [])
+        if not statements:
+            return "pass"
+
+        lines = []
+        for stmt in statements:
+            stmt_code = self._generate_statement(stmt)
+            lines.append(stmt_code)
+
+        return '\n'.join(lines)
+
+    def _generate_statement(self, stmt: Dict[str, Any]) -> str:
+        """Generate Python code for a single statement."""
+        if not isinstance(stmt, dict):
+            return str(stmt)
+
+        stmt_type = stmt.get('type', '')
+
+        if stmt_type == 'assign':
+            return self._generate_assign(stmt)
+        elif stmt_type == 'return':
+            return self._generate_return(stmt)
+        elif stmt_type == 'for_range':
+            return self._generate_for_range(stmt)
+        elif stmt_type == 'for_iter':
+            return self._generate_for_iter(stmt)
+        elif stmt_type == 'if_statement':
+            return self._generate_if_statement(stmt)
+        elif stmt_type == 'while_loop':
+            return self._generate_while_loop(stmt)
+        elif stmt_type == 'break':
+            return 'break'
+        elif stmt_type == 'continue':
+            return 'continue'
+        else:
+            # Treat as expression statement
+            return self._generate_expression(stmt)
+
+    def _generate_assign(self, stmt: Dict[str, Any]) -> str:
+        """Generate Python assignment statement."""
+        name = stmt.get('name', '_')
+        value = self._generate_expression(stmt.get('value', {'type': 'constant', 'value': None}))
+        op = stmt.get('op', '=')
+
+        # Handle augmented assignment (+=, -=, *=, etc.)
+        if op != '=':
+            return f"{name} {op} {value}"
+        return f"{name} = {value}"
+
+    def _generate_return(self, stmt: Dict[str, Any]) -> str:
+        """Generate Python return statement."""
+        value = stmt.get('value')
+        if value is None:
+            return "return"
+        return f"return {self._generate_expression(value)}"
+
+    def _generate_for_range(self, stmt: Dict[str, Any]) -> str:
+        """Generate Python for loop over range."""
+        var = stmt.get('var', '_')
+        count = self._generate_expression(stmt.get('count', {'type': 'constant', 'value': 0}))
+        body = stmt.get('body', [])
+
+        body_lines = []
+        for s in body:
+            body_lines.append(self._generate_statement(s))
+
+        body_code = '\n'.join(body_lines) if body_lines else 'pass'
+
+        return f"for {var} in range({count}):\n{self._indent(body_code)}"
+
+    def _generate_for_iter(self, stmt: Dict[str, Any]) -> str:
+        """Generate Python for loop over iterable."""
+        var = stmt.get('var', '_')
+        iterable = self._generate_expression(stmt.get('iterable', {'type': 'constant', 'value': []}))
+        body = stmt.get('body', [])
+
+        # Handle tuple unpacking in var
+        if isinstance(var, dict) and var.get('type') == 'tuple':
+            elements = var.get('elements', [])
+            var_names = [self._generate_expression(e) for e in elements]
+            var = ', '.join(var_names)
+
+        body_lines = []
+        for s in body:
+            body_lines.append(self._generate_statement(s))
+
+        body_code = '\n'.join(body_lines) if body_lines else 'pass'
+
+        return f"for {var} in {iterable}:\n{self._indent(body_code)}"
+
+    def _generate_if_statement(self, stmt: Dict[str, Any]) -> str:
+        """Generate Python if statement."""
+        test = self._generate_expression(stmt.get('test', {'type': 'constant', 'value': True}))
+        body = stmt.get('body', [])
+        orelse = stmt.get('orelse', [])
+
+        body_lines = [self._generate_statement(s) for s in body]
+        body_code = '\n'.join(body_lines) if body_lines else 'pass'
+
+        result = f"if {test}:\n{self._indent(body_code)}"
+
+        if orelse:
+            orelse_lines = [self._generate_statement(s) for s in orelse]
+            orelse_code = '\n'.join(orelse_lines) if orelse_lines else 'pass'
+            result += f"\nelse:\n{self._indent(orelse_code)}"
+
+        return result
+
+    def _generate_while_loop(self, stmt: Dict[str, Any]) -> str:
+        """Generate Python while loop."""
+        condition = self._generate_expression(stmt.get('condition', {'type': 'constant', 'value': True}))
+        body = stmt.get('body', [])
+        orelse = stmt.get('orelse', [])
+
+        body_lines = [self._generate_statement(s) for s in body]
+        body_code = '\n'.join(body_lines) if body_lines else 'pass'
+
+        result = f"while {condition}:\n{self._indent(body_code)}"
+
+        if orelse:
+            orelse_lines = [self._generate_statement(s) for s in orelse]
+            orelse_code = '\n'.join(orelse_lines)
+            result += f"\nelse:\n{self._indent(orelse_code)}"
+
+        return result
+
+    def _generate_expression(self, expr: Any) -> str:
+        """Generate Python expression from a rule."""
+        # Handle None
+        if expr is None:
+            return 'None'
+
+        # Handle primitives
+        if not isinstance(expr, dict):
+            if isinstance(expr, bool):
+                return 'True' if expr else 'False'
+            elif isinstance(expr, str):
+                return repr(expr)
+            return str(expr)
+
+        expr_type = expr.get('type', '')
+
+        # Dispatch based on expression type
+        handlers = {
+            'constant': self._expr_constant,
+            'value': self._expr_constant,  # alias
+            'name': self._expr_name,
+            'item_check': self._expr_item_check,
+            'count_check': self._expr_count_check,
+            'group_check': self._expr_group_check,
+            'and': self._expr_and,
+            'or': self._expr_or,
+            'not': self._expr_not,
+            'compare': self._expr_compare,
+            'comparison': self._expr_compare,  # alias
+            'binary_op': self._expr_binary_op,
+            'binop': self._expr_binary_op,  # alias
+            'conditional': self._expr_conditional,
+            'helper': self._expr_helper,
+            'state_method': self._expr_state_method,
+            'subscript': self._expr_subscript,
+            'index': self._expr_subscript,  # alias
+            'attribute': self._expr_attribute,
+            'function_call': self._expr_function_call,
+            'method_call': self._expr_method_call,
+            'list': self._expr_list,
+            'tuple': self._expr_tuple,
+            'set': self._expr_set,
+            'negate': self._expr_negate,
+            'can_reach': self._expr_can_reach,
+            'can_reach_entrance': self._expr_can_reach_entrance,
+            'location_check': self._expr_location_check,
+            'count_item': self._expr_count_item,
+            'group_count': self._expr_group_count,
+        }
+
+        handler = handlers.get(expr_type)
+        if handler:
+            return handler(expr)
+
+        # Unknown type - return True as placeholder
+        return 'True'
+
+    def _expr_constant(self, expr: Dict[str, Any]) -> str:
+        """Generate constant expression."""
+        value = expr.get('value')
+        if value is None:
+            return 'None'
+        if isinstance(value, bool):
+            return 'True' if value else 'False'
+        if isinstance(value, str):
+            return repr(value)
+        if isinstance(value, list):
+            items = [self._generate_expression({'type': 'constant', 'value': v}) for v in value]
+            return f"[{', '.join(items)}]"
+        return str(value)
+
+    def _expr_name(self, expr: Dict[str, Any]) -> str:
+        """Generate variable name reference."""
+        return expr.get('name', '_')
+
+    def _expr_item_check(self, expr: Dict[str, Any]) -> str:
+        """Generate state.has() call."""
+        item_raw = expr.get('item', '')
+        item = self._extract_constant(item_raw, '')
+        count_raw = expr.get('count', 1)
+        count = self._extract_constant(count_raw, 1)
+
+        if count == 1:
+            return f'state.has({repr(item)}, player)'
+        return f'state.has({repr(item)}, player, {count})'
+
+    def _expr_count_check(self, expr: Dict[str, Any]) -> str:
+        """Generate state.has() with count check."""
+        item_raw = expr.get('item', '')
+        item = self._extract_constant(item_raw, '')
+        count_raw = expr.get('count', 1)
+        count = self._extract_constant(count_raw, 1)
+
+        return f'state.has({repr(item)}, player, {count})'
+
+    def _expr_group_check(self, expr: Dict[str, Any]) -> str:
+        """Generate state.has_group() call."""
+        group_raw = expr.get('group', '')
+        group = self._extract_constant(group_raw, '')
+        count_raw = expr.get('count', 1)
+        count = self._extract_constant(count_raw, 1)
+
+        if count == 1:
+            return f'state.has_group({repr(group)}, player)'
+        return f'state.has_group({repr(group)}, player, {count})'
+
+    def _expr_and(self, expr: Dict[str, Any]) -> str:
+        """Generate and expression."""
+        conditions = expr.get('conditions', [])
+        if not conditions:
+            return 'True'
+        if len(conditions) == 1:
+            return self._generate_expression(conditions[0])
+
+        parts = [f"({self._generate_expression(c)})" for c in conditions]
+        return ' and '.join(parts)
+
+    def _expr_or(self, expr: Dict[str, Any]) -> str:
+        """Generate or expression."""
+        conditions = expr.get('conditions', [])
+        if not conditions:
+            return 'False'
+        if len(conditions) == 1:
+            return self._generate_expression(conditions[0])
+
+        parts = [f"({self._generate_expression(c)})" for c in conditions]
+        return ' or '.join(parts)
+
+    def _expr_not(self, expr: Dict[str, Any]) -> str:
+        """Generate not expression."""
+        inner = expr.get('condition', expr.get('operand', expr.get('value', {})))
+        return f"not ({self._generate_expression(inner)})"
+
+    def _expr_compare(self, expr: Dict[str, Any]) -> str:
+        """Generate comparison expression."""
+        left = self._generate_expression(expr.get('left', {}))
+        op = expr.get('op', '==')
+        right = self._generate_expression(expr.get('right', {}))
+
+        # Handle 'in' and 'not in' operators
+        if op == 'in':
+            return f"({left} in {right})"
+        elif op == 'not in':
+            return f"({left} not in {right})"
+
+        return f"({left} {op} {right})"
+
+    def _expr_binary_op(self, expr: Dict[str, Any]) -> str:
+        """Generate binary operation expression."""
+        left = self._generate_expression(expr.get('left', {}))
+        op = expr.get('op', '+')
+        right = self._generate_expression(expr.get('right', {}))
+
+        # Map Python operators
+        op_map = {
+            'Add': '+', 'Sub': '-', 'Mult': '*', 'Div': '/',
+            'FloorDiv': '//', 'Mod': '%', 'Pow': '**',
+            'BitAnd': '&', 'BitOr': '|', 'BitXor': '^',
+            'And': 'and', 'Or': 'or',
+        }
+        op = op_map.get(op, op)
+
+        return f"({left} {op} {right})"
+
+    def _expr_conditional(self, expr: Dict[str, Any]) -> str:
+        """Generate conditional (ternary) expression."""
+        test = self._generate_expression(expr.get('test', {}))
+        if_true = self._generate_expression(expr.get('if_true', {}))
+        if_false = expr.get('if_false')
+
+        if if_false is None:
+            # No else branch - return None if condition false
+            return f"({if_true} if {test} else None)"
+
+        if_false_code = self._generate_expression(if_false)
+        return f"({if_true} if {test} else {if_false_code})"
+
+    def _expr_helper(self, expr: Dict[str, Any]) -> str:
+        """Generate helper function call."""
+        name = expr.get('name', '')
+        args = expr.get('args', [])
+
+        # Check if this helper exists
+        if name in self.known_helpers:
+            return self.get_helper_call(name, args)
+
+        # Built-in Python functions
+        if name in ('any', 'all', 'len', 'sum', 'min', 'max', 'sorted', 'list', 'iter', 'next'):
+            arg_exprs = [self._generate_expression(a) for a in args]
+            return f"{name}({', '.join(arg_exprs)})"
+
+        # Unknown helper - may be a built-in or external, use proper function name
+        func_name = self.get_function_name(name)
+        arg_exprs = ['state', 'player'] + [self._generate_expression(a) for a in args]
+        return f"{func_name}({', '.join(arg_exprs)})"
+
+    def _expr_state_method(self, expr: Dict[str, Any]) -> str:
+        """Generate state method call."""
+        method = expr.get('method', '')
+        args = expr.get('args', [])
+
+        # Map methods to their Python equivalents
+        if method == 'has':
+            if len(args) >= 1:
+                item = self._extract_constant(args[0], '')
+                count = self._extract_constant(args[1], 1) if len(args) > 1 else 1
+                if count == 1:
+                    return f'state.has({repr(item)}, player)'
+                return f'state.has({repr(item)}, player, {count})'
+
+        elif method == 'has_all':
+            if len(args) >= 1:
+                items = self._extract_constant(args[0], [])
+                items_repr = repr(tuple(items)) if items else '()'
+                return f'state.has_all({items_repr}, player)'
+
+        elif method == 'has_any':
+            if len(args) >= 1:
+                items = self._extract_constant(args[0], [])
+                items_repr = repr(tuple(items)) if items else '()'
+                return f'state.has_any({items_repr}, player)'
+
+        elif method == 'count':
+            if len(args) >= 1:
+                item = self._extract_constant(args[0], '')
+                return f'state.count({repr(item)}, player)'
+
+        elif method == 'count_group':
+            if len(args) >= 1:
+                group = self._extract_constant(args[0], '')
+                return f'state.count_group({repr(group)}, player)'
+
+        elif method == 'has_group':
+            if len(args) >= 1:
+                group = self._extract_constant(args[0], '')
+                count = self._extract_constant(args[1], 1) if len(args) > 1 else 1
+                if count == 1:
+                    return f'state.has_group({repr(group)}, player)'
+                return f'state.has_group({repr(group)}, player, {count})'
+
+        elif method == 'can_reach':
+            if len(args) >= 1:
+                region = self._extract_constant(args[0], '')
+                return f'state.can_reach({repr(region)}, "Region", player)'
+
+        elif method == 'can_reach_location':
+            if len(args) >= 1:
+                location = self._extract_constant(args[0], '')
+                return f'state.can_reach_location({repr(location)}, player)'
+
+        # Generic fallback
+        arg_exprs = [self._generate_expression(a) for a in args]
+        return f'state.{method}({", ".join(arg_exprs)}, player)'
+
+    def _expr_subscript(self, expr: Dict[str, Any]) -> str:
+        """Generate subscript/index expression."""
+        value = self._generate_expression(expr.get('value', expr.get('object', {})))
+        index = self._generate_expression(expr.get('index', {}))
+        return f"{value}[{index}]"
+
+    def _expr_attribute(self, expr: Dict[str, Any]) -> str:
+        """Generate attribute access expression."""
+        obj = self._generate_expression(expr.get('object', {}))
+        attr = expr.get('attr', '')
+        return f"{obj}.{attr}"
+
+    def _expr_function_call(self, expr: Dict[str, Any]) -> str:
+        """Generate function call expression."""
+        func = expr.get('function', {})
+        args = expr.get('args', [])
+
+        func_code = self._generate_expression(func)
+        arg_exprs = [self._generate_expression(a) for a in args]
+
+        return f"{func_code}({', '.join(arg_exprs)})"
+
+    def _expr_method_call(self, expr: Dict[str, Any]) -> str:
+        """Generate method call expression."""
+        obj = self._generate_expression(expr.get('object', {}))
+        method = expr.get('method', '')
+        args = expr.get('args', [])
+
+        arg_exprs = [self._generate_expression(a) for a in args]
+
+        return f"{obj}.{method}({', '.join(arg_exprs)})"
+
+    def _expr_list(self, expr: Dict[str, Any]) -> str:
+        """Generate list literal."""
+        values = expr.get('value', expr.get('elements', []))
+        items = [self._generate_expression(v) for v in values]
+        return f"[{', '.join(items)}]"
+
+    def _expr_tuple(self, expr: Dict[str, Any]) -> str:
+        """Generate tuple literal."""
+        elements = expr.get('elements', [])
+        items = [self._generate_expression(e) for e in elements]
+        if len(items) == 1:
+            return f"({items[0]},)"
+        return f"({', '.join(items)})"
+
+    def _expr_set(self, expr: Dict[str, Any]) -> str:
+        """Generate set literal."""
+        elements = expr.get('elements', [])
+        items = [self._generate_expression(e) for e in elements]
+        if not items:
+            return 'set()'
+        return f"{{{', '.join(items)}}}"
+
+    def _expr_negate(self, expr: Dict[str, Any]) -> str:
+        """Generate unary negation."""
+        operand = self._generate_expression(expr.get('operand', {}))
+        return f"-({operand})"
+
+    def _expr_can_reach(self, expr: Dict[str, Any]) -> str:
+        """Generate state.can_reach() for region."""
+        region_raw = expr.get('region', '')
+        region = self._extract_constant(region_raw, '')
+        return f'state.can_reach({repr(region)}, "Region", player)'
+
+    def _expr_can_reach_entrance(self, expr: Dict[str, Any]) -> str:
+        """Generate state.can_reach() for entrance."""
+        entrance_raw = expr.get('entrance', '')
+        entrance = self._extract_constant(entrance_raw, '')
+        return f'state.can_reach({repr(entrance)}, "Entrance", player)'
+
+    def _expr_location_check(self, expr: Dict[str, Any]) -> str:
+        """Generate location accessibility check."""
+        location_raw = expr.get('location', '')
+        location = self._extract_constant(location_raw, '')
+        return f'state.can_reach_location({repr(location)}, player)'
+
+    def _expr_count_item(self, expr: Dict[str, Any]) -> str:
+        """Generate state.count() for item."""
+        item_raw = expr.get('item', '')
+        item = self._extract_constant(item_raw, '')
+        return f'state.count({repr(item)}, player)'
+
+    def _expr_group_count(self, expr: Dict[str, Any]) -> str:
+        """Generate state.count_group() for group."""
+        group_raw = expr.get('group', '')
+        group = self._extract_constant(group_raw, '')
+        return f'state.count_group({repr(group)}, player)'
+
+    def _extract_constant(self, value: Any, default: Any = None) -> Any:
+        """Extract constant value from a potential constant wrapper."""
+        if isinstance(value, dict):
+            if value.get('type') == 'constant':
+                return value.get('value', default)
+            if value.get('type') == 'value':
+                return value.get('value', default)
+            return default
+        return value if value is not None else default
