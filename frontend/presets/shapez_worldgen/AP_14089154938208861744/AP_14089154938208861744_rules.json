@@ -1,14 +1,14 @@
 {
   "schema_version": 3,
-  "game_name": "shapez",
-  "game_directory": "shapez",
+  "game_name": "shapez WorldGen",
+  "game_directory": "shapez_worldgen",
   "archipelago_version": "0.6.5",
   "generation_seed": 1,
   "player_names": {
     "1": "Player1"
   },
   "world_classes": {
-    "1": "ShapezWorld"
+    "1": "shapezWorldGenWorld"
   },
   "regions": {
     "1": {
@@ -19,73 +19,75 @@
             "name": "Placing belts",
             "connected_region": "Shape transportation",
             "access_rule": {
-              "type": "item_check",
-              "item": "Belt"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Belt",
+                "count": 1
+              }
             }
           },
           {
             "name": "Extracting shapes from patches",
             "connected_region": "Shape extraction",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Chaining Extractor",
-                    "Extractor"
-                  ]
-                }
-              ]
+              "rule": "HasAny",
+              "options": [],
+              "args": {
+                "items": [
+                  "Chaining Extractor",
+                  "Extractor"
+                ]
+              }
             }
           },
           {
             "name": "Using the wires layer",
             "connected_region": "Achievements with wires",
             "access_rule": {
-              "type": "item_check",
-              "item": "Wires"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wires",
+                "count": 1
+              }
             }
           },
           {
             "name": "Placing any building",
             "connected_region": "Achievements with any placeable building",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Balancer",
-                    "Belt",
-                    "Belt Reader",
-                    "Chaining Extractor",
-                    "Color Mixer",
-                    "Compact Merger",
-                    "Compact Splitter",
-                    "Cutter",
-                    "Display",
-                    "Double Painter",
-                    "Extractor",
-                    "Item Filter",
-                    "Painter",
-                    "Quad Cutter",
-                    "Quad Painter",
-                    "Rotator",
-                    "Rotator (180\u00b0)",
-                    "Rotator (CCW)",
-                    "Stacker",
-                    "Storage",
-                    "Switch",
-                    "Trash",
-                    "Tunnel",
-                    "Tunnel Tier II",
-                    "Wires"
-                  ]
-                }
-              ]
+              "rule": "HasAny",
+              "options": [],
+              "args": {
+                "items": [
+                  "Balancer",
+                  "Belt",
+                  "Belt Reader",
+                  "Chaining Extractor",
+                  "Color Mixer",
+                  "Compact Merger",
+                  "Compact Splitter",
+                  "Cutter",
+                  "Display",
+                  "Double Painter",
+                  "Extractor",
+                  "Item Filter",
+                  "Painter",
+                  "Quad Cutter",
+                  "Quad Painter",
+                  "Rotator",
+                  "Rotator (180\u00b0)",
+                  "Rotator (CCW)",
+                  "Stacker",
+                  "Storage",
+                  "Switch",
+                  "Trash",
+                  "Tunnel",
+                  "Tunnel Tier II",
+                  "Wires"
+                ]
+              }
             }
           }
         ],
@@ -98,9 +100,9 @@
               "value": true
             },
             "item": {
-              "name": "Switch",
+              "name": "Small Miner Upgrade",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -113,7 +115,7 @@
               "value": true
             },
             "item": {
-              "name": "Quad Painter",
+              "name": "Compact Splitter",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -128,7 +130,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Processors Upgrade",
+              "name": "Level Shapes Bundle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -165,18 +167,15 @@
             "name": "Transporting shapes over the canvas",
             "connected_region": "Main",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Belt",
-                    "Compact Merger",
-                    "Compact Splitter"
-                  ]
-                }
-              ]
+              "rule": "HasAny",
+              "options": [],
+              "args": {
+                "items": [
+                  "Belt",
+                  "Compact Merger",
+                  "Compact Splitter"
+                ]
+              }
             }
           },
           {
@@ -184,7 +183,7 @@
             "connected_region": "Achievements with half cutter",
             "access_rule": {
               "type": "helper",
-              "name": "can_cut_half",
+              "name": "_shapezworldgen_can_cut_half",
               "args": []
             }
           },
@@ -192,8 +191,12 @@
             "name": "Rotating clockwise",
             "connected_region": "Achievements with clockwise rotator",
             "access_rule": {
-              "type": "item_check",
-              "item": "Rotator"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Rotator",
+                "count": 1
+              }
             }
           },
           {
@@ -201,7 +204,7 @@
             "connected_region": "Achievements with stacker",
             "access_rule": {
               "type": "helper",
-              "name": "can_stack",
+              "name": "_shapezworldgen_can_stack",
               "args": []
             }
           },
@@ -209,16 +212,24 @@
             "name": "Storing shapes",
             "connected_region": "Achievements with storage",
             "access_rule": {
-              "type": "item_check",
-              "item": "Storage"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Storage",
+                "count": 1
+              }
             }
           },
           {
             "name": "Trashing shapes",
             "connected_region": "Achievements with trash",
             "access_rule": {
-              "type": "item_check",
-              "item": "Trash"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Trash",
+                "count": 1
+              }
             }
           }
         ],
@@ -231,17 +242,14 @@
             "name": "Painting with (double) painter",
             "connected_region": "Achievements with (double) painter",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Double Painter",
-                    "Painter"
-                  ]
-                }
-              ]
+              "rule": "HasAny",
+              "options": [],
+              "args": {
+                "items": [
+                  "Double Painter",
+                  "Painter"
+                ]
+              }
             }
           },
           {
@@ -252,7 +260,7 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "can_make_stitched_shape",
+                  "name": "_shapezworldgen_can_make_stitched_shape",
                   "args": [
                     {
                       "type": "constant",
@@ -262,12 +270,12 @@
                 },
                 {
                   "type": "helper",
-                  "name": "can_mix_colors",
+                  "name": "_shapezworldgen_can_mix_colors",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "can_paint",
+                  "name": "_shapezworldgen_can_paint",
                   "args": []
                 },
                 {
@@ -282,7 +290,7 @@
             "connected_region": "Achievements needing a MAM",
             "access_rule": {
               "type": "helper",
-              "name": "can_build_mam",
+              "name": "_shapezworldgen_can_build_mam",
               "args": [
                 {
                   "type": "constant",
@@ -299,7 +307,7 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "can_make_stitched_shape",
+                  "name": "_shapezworldgen_can_make_stitched_shape",
                   "args": [
                     {
                       "type": "constant",
@@ -309,12 +317,12 @@
                 },
                 {
                   "type": "helper",
-                  "name": "can_mix_colors",
+                  "name": "_shapezworldgen_can_mix_colors",
                   "args": []
                 },
                 {
                   "type": "helper",
-                  "name": "can_paint",
+                  "name": "_shapezworldgen_can_paint",
                   "args": []
                 }
               ]
@@ -325,16 +333,31 @@
             "connected_region": "Levels with 1 building",
             "access_rule": {
               "type": "helper",
-              "name": "has_logic_list_building",
+              "name": "_shapezworldgen_has_logic_list_building",
               "args": [
                 {
-                  "type": "constant",
+                  "type": "list",
                   "value": [
-                    "Cutter",
-                    "Rotator",
-                    "Painter",
-                    "Color Mixer",
-                    "Stacker"
+                    {
+                      "type": "constant",
+                      "value": "Cutter"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Rotator"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Painter"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Color Mixer"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Stacker"
+                    }
                   ]
                 },
                 {
@@ -357,16 +380,31 @@
             "connected_region": "Upgrades with 1 building",
             "access_rule": {
               "type": "helper",
-              "name": "has_logic_list_building",
+              "name": "_shapezworldgen_has_logic_list_building",
               "args": [
                 {
-                  "type": "constant",
+                  "type": "list",
                   "value": [
-                    "Stacker",
-                    "Cutter",
-                    "Rotator",
-                    "Painter",
-                    "Color Mixer"
+                    {
+                      "type": "constant",
+                      "value": "Stacker"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Cutter"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Rotator"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Painter"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Color Mixer"
+                    }
                   ]
                 },
                 {
@@ -397,7 +435,7 @@
             "connected_region": "Shapesanity Half Uncolored",
             "access_rule": {
               "type": "helper",
-              "name": "can_make_half_shape",
+              "name": "_shapezworldgen_can_make_half_shape",
               "args": []
             }
           },
@@ -412,12 +450,12 @@
                   "conditions": [
                     {
                       "type": "helper",
-                      "name": "can_cut_half",
+                      "name": "_shapezworldgen_can_cut_half",
                       "args": []
                     },
                     {
                       "type": "helper",
-                      "name": "can_rotate_90",
+                      "name": "_shapezworldgen_can_rotate_90",
                       "args": []
                     }
                   ]
@@ -434,7 +472,7 @@
             "connected_region": "Shapesanity Half-Half Uncolored",
             "access_rule": {
               "type": "helper",
-              "name": "can_make_half_half_shape",
+              "name": "_shapezworldgen_can_make_half_half_shape",
               "args": []
             }
           },
@@ -443,7 +481,7 @@
             "connected_region": "Shapesanity Stitched Uncolored",
             "access_rule": {
               "type": "helper",
-              "name": "can_make_stitched_shape",
+              "name": "_shapezworldgen_can_make_stitched_shape",
               "args": [
                 {
                   "type": "constant",
@@ -457,7 +495,7 @@
             "connected_region": "Shapesanity East Windmill Uncolored",
             "access_rule": {
               "type": "helper",
-              "name": "can_make_east_windmill",
+              "name": "_shapezworldgen_can_make_east_windmill",
               "args": []
             }
           },
@@ -469,7 +507,7 @@
               "conditions": [
                 {
                   "type": "helper",
-                  "name": "can_make_stitched_shape",
+                  "name": "_shapezworldgen_can_make_stitched_shape",
                   "args": [
                     {
                       "type": "constant",
@@ -479,7 +517,7 @@
                 },
                 {
                   "type": "helper",
-                  "name": "can_use_quad_painter",
+                  "name": "_shapezworldgen_can_use_quad_painter",
                   "args": []
                 }
               ]
@@ -496,19 +534,19 @@
                   "conditions": [
                     {
                       "type": "helper",
-                      "name": "can_make_east_windmill",
+                      "name": "_shapezworldgen_can_make_east_windmill",
                       "args": []
                     },
                     {
                       "type": "helper",
-                      "name": "can_use_quad_painter",
+                      "name": "_shapezworldgen_can_use_quad_painter",
                       "args": []
                     }
                   ]
                 },
                 {
                   "type": "helper",
-                  "name": "can_make_stitched_shape",
+                  "name": "_shapezworldgen_can_make_stitched_shape",
                   "args": [
                     {
                       "type": "constant",
@@ -530,19 +568,19 @@
                   "conditions": [
                     {
                       "type": "helper",
-                      "name": "can_make_half_half_shape",
+                      "name": "_shapezworldgen_can_make_half_half_shape",
                       "args": []
                     },
                     {
                       "type": "helper",
-                      "name": "can_use_quad_painter",
+                      "name": "_shapezworldgen_can_use_quad_painter",
                       "args": []
                     }
                   ]
                 },
                 {
                   "type": "helper",
-                  "name": "can_make_stitched_shape",
+                  "name": "_shapezworldgen_can_make_stitched_shape",
                   "args": [
                     {
                       "type": "constant",
@@ -564,19 +602,19 @@
                   "conditions": [
                     {
                       "type": "helper",
-                      "name": "can_make_half_shape",
+                      "name": "_shapezworldgen_can_make_half_shape",
                       "args": []
                     },
                     {
                       "type": "helper",
-                      "name": "can_use_quad_painter",
+                      "name": "_shapezworldgen_can_use_quad_painter",
                       "args": []
                     }
                   ]
                 },
                 {
                   "type": "helper",
-                  "name": "can_make_stitched_shape",
+                  "name": "_shapezworldgen_can_make_stitched_shape",
                   "args": [
                     {
                       "type": "constant",
@@ -629,7 +667,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Painting Upgrade",
+              "name": "Upgrade Shapes Bundle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -644,9 +682,9 @@
               "value": true
             },
             "item": {
-              "name": "Big Belt Upgrade",
+              "name": "Chaining Extractor",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -674,7 +712,7 @@
               "value": true
             },
             "item": {
-              "name": "Blueprint Shapes Bundle",
+              "name": "Virtual Processing",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -689,9 +727,9 @@
               "value": true
             },
             "item": {
-              "name": "Wires",
+              "name": "Small Painting Upgrade",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -704,7 +742,7 @@
               "value": true
             },
             "item": {
-              "name": "Level Shapes Bundle",
+              "name": "Big Painting Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -719,9 +757,9 @@
               "value": true
             },
             "item": {
-              "name": "Virtual Processing",
+              "name": "Extractor",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -734,7 +772,7 @@
               "value": true
             },
             "item": {
-              "name": "Item Filter",
+              "name": "Big Painting Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -751,16 +789,31 @@
             "connected_region": "Levels with 2 buildings",
             "access_rule": {
               "type": "helper",
-              "name": "has_logic_list_building",
+              "name": "_shapezworldgen_has_logic_list_building",
               "args": [
                 {
-                  "type": "constant",
+                  "type": "list",
                   "value": [
-                    "Cutter",
-                    "Rotator",
-                    "Painter",
-                    "Color Mixer",
-                    "Stacker"
+                    {
+                      "type": "constant",
+                      "value": "Cutter"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Rotator"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Painter"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Color Mixer"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Stacker"
+                    }
                   ]
                 },
                 {
@@ -788,7 +841,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Miner Upgrade",
+              "name": "Level Shapes Bundle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -803,9 +856,9 @@
               "value": true
             },
             "item": {
-              "name": "Big Processors Upgrade",
+              "name": "Painter",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -818,9 +871,9 @@
               "value": true
             },
             "item": {
-              "name": "Small Belt Upgrade",
+              "name": "Rotator",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -850,16 +903,31 @@
             "connected_region": "Levels with 3 buildings",
             "access_rule": {
               "type": "helper",
-              "name": "has_logic_list_building",
+              "name": "_shapezworldgen_has_logic_list_building",
               "args": [
                 {
-                  "type": "constant",
+                  "type": "list",
                   "value": [
-                    "Cutter",
-                    "Rotator",
-                    "Painter",
-                    "Color Mixer",
-                    "Stacker"
+                    {
+                      "type": "constant",
+                      "value": "Cutter"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Rotator"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Painter"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Color Mixer"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Stacker"
+                    }
                   ]
                 },
                 {
@@ -887,7 +955,7 @@
               "value": true
             },
             "item": {
-              "name": "Upgrade Shapes Bundle",
+              "name": "Blueprint Shapes Bundle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -902,7 +970,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Miner Upgrade",
+              "name": "Small Miner Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -917,9 +985,9 @@
               "value": true
             },
             "item": {
-              "name": "Stacker",
+              "name": "Blueprint Shapes Bundle",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -932,7 +1000,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Painting Upgrade",
+              "name": "Big Processors Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -949,16 +1017,31 @@
             "connected_region": "Levels with 4 buildings",
             "access_rule": {
               "type": "helper",
-              "name": "has_logic_list_building",
+              "name": "_shapezworldgen_has_logic_list_building",
               "args": [
                 {
-                  "type": "constant",
+                  "type": "list",
                   "value": [
-                    "Cutter",
-                    "Rotator",
-                    "Painter",
-                    "Color Mixer",
-                    "Stacker"
+                    {
+                      "type": "constant",
+                      "value": "Cutter"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Rotator"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Painter"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Color Mixer"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Stacker"
+                    }
                   ]
                 },
                 {
@@ -986,9 +1069,9 @@
               "value": true
             },
             "item": {
-              "name": "Level Shapes Bundle",
+              "name": "Switch",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1001,7 +1084,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Belt Upgrade",
+              "name": "Small Processors Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1016,7 +1099,7 @@
               "value": true
             },
             "item": {
-              "name": "Level Shapes Bundle",
+              "name": "Small Miner Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1031,7 +1114,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Painting Upgrade",
+              "name": "Blueprint Shapes Bundle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1048,16 +1131,31 @@
             "connected_region": "Levels with 5 buildings",
             "access_rule": {
               "type": "helper",
-              "name": "has_logic_list_building",
+              "name": "_shapezworldgen_has_logic_list_building",
               "args": [
                 {
-                  "type": "constant",
+                  "type": "list",
                   "value": [
-                    "Cutter",
-                    "Rotator",
-                    "Painter",
-                    "Color Mixer",
-                    "Stacker"
+                    {
+                      "type": "constant",
+                      "value": "Cutter"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Rotator"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Painter"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Color Mixer"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Stacker"
+                    }
                   ]
                 },
                 {
@@ -1085,7 +1183,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Processors Upgrade",
+              "name": "Small Belt Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1100,7 +1198,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Painting Upgrade",
+              "name": "Big Miner Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1115,7 +1213,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Belt Upgrade",
+              "name": "Item Filter",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1130,7 +1228,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Miner Upgrade",
+              "name": "Big Painting Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1151,7 +1249,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Belt Upgrade",
+              "name": "Small Miner Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1166,7 +1264,7 @@
               "value": true
             },
             "item": {
-              "name": "Tunnel Tier II",
+              "name": "Small Belt Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1181,7 +1279,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Processors Upgrade",
+              "name": "Big Miner Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1196,7 +1294,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Processors Upgrade",
+              "name": "Small Belt Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1211,7 +1309,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Belt Upgrade",
+              "name": "Rotator (180\u00b0)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1226,7 +1324,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Painting Upgrade",
+              "name": "Blueprint Shapes Bundle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1241,9 +1339,9 @@
               "value": true
             },
             "item": {
-              "name": "Big Miner Upgrade",
+              "name": "Blueprints",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1256,7 +1354,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Belt Upgrade",
+              "name": "Blueprint Shapes Bundle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1303,16 +1401,31 @@
             "connected_region": "Upgrades with 2 buildings",
             "access_rule": {
               "type": "helper",
-              "name": "has_logic_list_building",
+              "name": "_shapezworldgen_has_logic_list_building",
               "args": [
                 {
-                  "type": "constant",
+                  "type": "list",
                   "value": [
-                    "Stacker",
-                    "Cutter",
-                    "Rotator",
-                    "Painter",
-                    "Color Mixer"
+                    {
+                      "type": "constant",
+                      "value": "Stacker"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Cutter"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Rotator"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Painter"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Color Mixer"
+                    }
                   ]
                 },
                 {
@@ -1340,7 +1453,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Belt Upgrade",
+              "name": "Small Processors Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1355,9 +1468,9 @@
               "value": true
             },
             "item": {
-              "name": "Small Miner Upgrade",
+              "name": "Big Belt Upgrade",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1385,7 +1498,7 @@
               "value": true
             },
             "item": {
-              "name": "Blueprint Shapes Bundle",
+              "name": "Small Miner Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1402,16 +1515,31 @@
             "connected_region": "Upgrades with 3 buildings",
             "access_rule": {
               "type": "helper",
-              "name": "has_logic_list_building",
+              "name": "_shapezworldgen_has_logic_list_building",
               "args": [
                 {
-                  "type": "constant",
+                  "type": "list",
                   "value": [
-                    "Stacker",
-                    "Cutter",
-                    "Rotator",
-                    "Painter",
-                    "Color Mixer"
+                    {
+                      "type": "constant",
+                      "value": "Stacker"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Cutter"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Rotator"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Painter"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Color Mixer"
+                    }
                   ]
                 },
                 {
@@ -1439,7 +1567,7 @@
               "value": true
             },
             "item": {
-              "name": "Blueprint Shapes Bundle",
+              "name": "Small Belt Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1454,7 +1582,7 @@
               "value": true
             },
             "item": {
-              "name": "Upgrade Shapes Bundle",
+              "name": "Blueprint Shapes Bundle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1469,7 +1597,7 @@
               "value": true
             },
             "item": {
-              "name": "Level Shapes Bundle",
+              "name": "Big Painting Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1484,7 +1612,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Processors Upgrade",
+              "name": "Small Processors Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1501,16 +1629,31 @@
             "connected_region": "Upgrades with 4 buildings",
             "access_rule": {
               "type": "helper",
-              "name": "has_logic_list_building",
+              "name": "_shapezworldgen_has_logic_list_building",
               "args": [
                 {
-                  "type": "constant",
+                  "type": "list",
                   "value": [
-                    "Stacker",
-                    "Cutter",
-                    "Rotator",
-                    "Painter",
-                    "Color Mixer"
+                    {
+                      "type": "constant",
+                      "value": "Stacker"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Cutter"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Rotator"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Painter"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Color Mixer"
+                    }
                   ]
                 },
                 {
@@ -1538,7 +1681,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Processors Upgrade",
+              "name": "Upgrade Shapes Bundle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1553,7 +1696,7 @@
               "value": true
             },
             "item": {
-              "name": "Blueprint Shapes Bundle",
+              "name": "Small Miner Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1568,9 +1711,9 @@
               "value": true
             },
             "item": {
-              "name": "Compact Merger",
+              "name": "Big Miner Upgrade",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1583,7 +1726,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Processors Upgrade",
+              "name": "Small Painting Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1598,7 +1741,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Miner Upgrade",
+              "name": "Level Shapes Bundle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1615,16 +1758,31 @@
             "connected_region": "Upgrades with 5 buildings",
             "access_rule": {
               "type": "helper",
-              "name": "has_logic_list_building",
+              "name": "_shapezworldgen_has_logic_list_building",
               "args": [
                 {
-                  "type": "constant",
+                  "type": "list",
                   "value": [
-                    "Stacker",
-                    "Cutter",
-                    "Rotator",
-                    "Painter",
-                    "Color Mixer"
+                    {
+                      "type": "constant",
+                      "value": "Stacker"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Cutter"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Rotator"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Painter"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Color Mixer"
+                    }
                   ]
                 },
                 {
@@ -1652,7 +1810,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Miner Upgrade",
+              "name": "Big Painting Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1667,7 +1825,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Belt Upgrade",
+              "name": "Small Painting Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1682,7 +1840,7 @@
               "value": true
             },
             "item": {
-              "name": "Upgrade Shapes Bundle",
+              "name": "Level Shapes Bundle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1697,7 +1855,7 @@
               "value": true
             },
             "item": {
-              "name": "Painter",
+              "name": "Rotator (CCW)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -1718,7 +1876,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Processors Upgrade",
+              "name": "Big Miner Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1733,7 +1891,7 @@
               "value": true
             },
             "item": {
-              "name": "Level Shapes Bundle",
+              "name": "Small Belt Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1748,7 +1906,7 @@
               "value": true
             },
             "item": {
-              "name": "Chaining Extractor",
+              "name": "Small Belt Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1763,7 +1921,7 @@
               "value": true
             },
             "item": {
-              "name": "Blueprint Shapes Bundle",
+              "name": "Small Processors Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1778,7 +1936,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Painting Upgrade",
+              "name": "Big Miner Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1793,9 +1951,9 @@
               "value": true
             },
             "item": {
-              "name": "Rotator (180\u00b0)",
+              "name": "Level Shapes Bundle",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1808,9 +1966,9 @@
               "value": true
             },
             "item": {
-              "name": "Blueprints",
+              "name": "Small Belt Upgrade",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1823,9 +1981,9 @@
               "value": true
             },
             "item": {
-              "name": "Small Processors Upgrade",
+              "name": "Belt",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1859,7 +2017,7 @@
               "value": true
             },
             "item": {
-              "name": "Blueprint Shapes Bundle",
+              "name": "Big Miner Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -1880,9 +2038,9 @@
               "value": true
             },
             "item": {
-              "name": "Big Belt Upgrade",
+              "name": "Big Painting Upgrade",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1901,9 +2059,9 @@
               "value": true
             },
             "item": {
-              "name": "Small Painting Upgrade",
+              "name": "Color Mixer",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1922,7 +2080,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Miner Upgrade",
+              "name": "Big Processors Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2000,7 +2158,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Miner Upgrade",
+              "name": "Big Processors Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2015,7 +2173,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Painting Upgrade",
+              "name": "Big Processors Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2036,7 +2194,7 @@
               "value": true
             },
             "item": {
-              "name": "Color Mixer",
+              "name": "Big Belt Upgrade",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2051,7 +2209,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Miner Upgrade",
+              "name": "Small Belt Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2089,7 +2247,7 @@
             "connected_region": "Achievements with x1.6 belt speed",
             "access_rule": {
               "type": "helper",
-              "name": "has_x_belt_multiplier",
+              "name": "_shapezworldgen_has_x_belt_multiplier",
               "args": [
                 {
                   "type": "constant",
@@ -2108,9 +2266,9 @@
               "value": true
             },
             "item": {
-              "name": "Small Miner Upgrade",
+              "name": "Compact Merger",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2123,7 +2281,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Processors Upgrade",
+              "name": "Big Miner Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2183,9 +2341,9 @@
               "value": true
             },
             "item": {
-              "name": "Tunnel",
+              "name": "Big Miner Upgrade",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2198,9 +2356,9 @@
               "value": true
             },
             "item": {
-              "name": "Big Belt Upgrade",
+              "name": "Upgrade Shapes Bundle",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2213,7 +2371,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Processors Upgrade",
+              "name": "Small Miner Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2228,7 +2386,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Painting Upgrade",
+              "name": "Small Processors Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2243,9 +2401,9 @@
               "value": true
             },
             "item": {
-              "name": "Blueprint Shapes Bundle",
+              "name": "Wires",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2264,7 +2422,7 @@
               "value": true
             },
             "item": {
-              "name": "Upgrade Shapes Bundle",
+              "name": "Small Miner Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2279,7 +2437,7 @@
               "value": true
             },
             "item": {
-              "name": "Compact Splitter",
+              "name": "Quad Cutter",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -2296,7 +2454,7 @@
             "connected_region": "Shapesanity Full Painted",
             "access_rule": {
               "type": "helper",
-              "name": "can_paint",
+              "name": "_shapezworldgen_can_paint",
               "args": []
             }
           }
@@ -2310,9 +2468,9 @@
               "value": true
             },
             "item": {
-              "name": "Big Miner Upgrade",
+              "name": "Cutter",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2325,7 +2483,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Belt Upgrade",
+              "name": "Big Processors Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2340,7 +2498,7 @@
               "value": true
             },
             "item": {
-              "name": "Blueprint Shapes Bundle",
+              "name": "Big Painting Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2357,7 +2515,7 @@
             "connected_region": "Shapesanity Full Mixed",
             "access_rule": {
               "type": "helper",
-              "name": "can_mix_colors",
+              "name": "_shapezworldgen_can_mix_colors",
               "args": []
             }
           }
@@ -2371,9 +2529,9 @@
               "value": true
             },
             "item": {
-              "name": "Cutter",
+              "name": "Upgrade Shapes Bundle",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2392,9 +2550,9 @@
               "value": true
             },
             "item": {
-              "name": "Small Belt Upgrade",
+              "name": "Stacker",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2409,7 +2567,7 @@
             "connected_region": "Shapesanity Half Painted",
             "access_rule": {
               "type": "helper",
-              "name": "can_paint",
+              "name": "_shapezworldgen_can_paint",
               "args": []
             }
           }
@@ -2424,7 +2582,7 @@
             "connected_region": "Shapesanity Half Mixed",
             "access_rule": {
               "type": "helper",
-              "name": "can_mix_colors",
+              "name": "_shapezworldgen_can_mix_colors",
               "args": []
             }
           }
@@ -2438,7 +2596,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Belt Upgrade",
+              "name": "Big Processors Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2453,7 +2611,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Painting Upgrade",
+              "name": "Small Processors Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2474,7 +2632,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Painting Upgrade",
+              "name": "Level Shapes Bundle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2489,7 +2647,7 @@
               "value": true
             },
             "item": {
-              "name": "Logic Gates",
+              "name": "Small Processors Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2506,7 +2664,7 @@
             "connected_region": "Shapesanity Piece Painted",
             "access_rule": {
               "type": "helper",
-              "name": "can_paint",
+              "name": "_shapezworldgen_can_paint",
               "args": []
             }
           }
@@ -2521,7 +2679,7 @@
             "connected_region": "Shapesanity Piece Mixed",
             "access_rule": {
               "type": "helper",
-              "name": "can_mix_colors",
+              "name": "_shapezworldgen_can_mix_colors",
               "args": []
             }
           }
@@ -2535,9 +2693,9 @@
               "value": true
             },
             "item": {
-              "name": "Quad Cutter",
+              "name": "Small Painting Upgrade",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2550,7 +2708,7 @@
               "value": true
             },
             "item": {
-              "name": "Upgrade Shapes Bundle",
+              "name": "Big Miner Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2565,7 +2723,7 @@
               "value": true
             },
             "item": {
-              "name": "Upgrade Shapes Bundle",
+              "name": "Small Processors Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2586,7 +2744,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Miner Upgrade",
+              "name": "Blueprint Shapes Bundle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2601,7 +2759,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Belt Upgrade",
+              "name": "Small Miner Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2633,7 +2791,7 @@
             "connected_region": "Shapesanity Stitched Painted",
             "access_rule": {
               "type": "helper",
-              "name": "can_paint",
+              "name": "_shapezworldgen_can_paint",
               "args": []
             }
           }
@@ -2647,7 +2805,7 @@
               "value": true
             },
             "item": {
-              "name": "Blueprint Shapes Bundle",
+              "name": "Small Miner Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2664,7 +2822,7 @@
             "connected_region": "Shapesanity Stitched Mixed",
             "access_rule": {
               "type": "helper",
-              "name": "can_mix_colors",
+              "name": "_shapezworldgen_can_mix_colors",
               "args": []
             }
           }
@@ -2678,9 +2836,9 @@
               "value": true
             },
             "item": {
-              "name": "Small Miner Upgrade",
+              "name": "Big Belt Upgrade",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2693,9 +2851,9 @@
               "value": true
             },
             "item": {
-              "name": "Display",
+              "name": "Big Belt Upgrade",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2708,7 +2866,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Miner Upgrade",
+              "name": "Small Belt Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2723,7 +2881,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Miner Upgrade",
+              "name": "Small Processors Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2738,7 +2896,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Belt Upgrade",
+              "name": "Big Processors Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2753,7 +2911,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Miner Upgrade",
+              "name": "Logic Gates",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2768,7 +2926,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Processors Upgrade",
+              "name": "Tunnel Tier II",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2783,9 +2941,9 @@
               "value": true
             },
             "item": {
-              "name": "Big Processors Upgrade",
+              "name": "Quad Painter",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2804,7 +2962,7 @@
               "value": true
             },
             "item": {
-              "name": "Upgrade Shapes Bundle",
+              "name": "Blueprint Shapes Bundle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2819,7 +2977,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Miner Upgrade",
+              "name": "Small Painting Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2834,7 +2992,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Processors Upgrade",
+              "name": "Small Belt Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2849,7 +3007,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Miner Upgrade",
+              "name": "Small Painting Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2864,7 +3022,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Painting Upgrade",
+              "name": "Display",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2879,7 +3037,7 @@
               "value": true
             },
             "item": {
-              "name": "Belt Reader",
+              "name": "Small Belt Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2894,9 +3052,9 @@
               "value": true
             },
             "item": {
-              "name": "Rotator",
+              "name": "Small Painting Upgrade",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2909,9 +3067,9 @@
               "value": true
             },
             "item": {
-              "name": "Level Shapes Bundle",
+              "name": "Big Belt Upgrade",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2924,7 +3082,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Belt Upgrade",
+              "name": "Big Miner Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2939,7 +3097,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Miner Upgrade",
+              "name": "Level Shapes Bundle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2954,9 +3112,9 @@
               "value": true
             },
             "item": {
-              "name": "Big Belt Upgrade",
+              "name": "Upgrade Shapes Bundle",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2969,9 +3127,9 @@
               "value": true
             },
             "item": {
-              "name": "Small Processors Upgrade",
+              "name": "Big Belt Upgrade",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2999,7 +3157,7 @@
               "value": true
             },
             "item": {
-              "name": "Level Shapes Bundle",
+              "name": "Belt Reader",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3014,7 +3172,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Miner Upgrade",
+              "name": "Big Processors Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3029,7 +3187,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Painting Upgrade",
+              "name": "Blueprint Shapes Bundle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3044,7 +3202,7 @@
               "value": true
             },
             "item": {
-              "name": "Big Painting Upgrade",
+              "name": "Big Miner Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3061,7 +3219,7 @@
             "connected_region": "Shapesanity East Windmill Painted",
             "access_rule": {
               "type": "helper",
-              "name": "can_paint",
+              "name": "_shapezworldgen_can_paint",
               "args": []
             }
           }
@@ -3075,9 +3233,9 @@
               "value": true
             },
             "item": {
-              "name": "Big Belt Upgrade",
+              "name": "Upgrade Shapes Bundle",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3092,7 +3250,7 @@
             "connected_region": "Shapesanity East Windmill Mixed",
             "access_rule": {
               "type": "helper",
-              "name": "can_mix_colors",
+              "name": "_shapezworldgen_can_mix_colors",
               "args": []
             }
           }
@@ -3106,7 +3264,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Processors Upgrade",
+              "name": "Upgrade Shapes Bundle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3127,7 +3285,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Processors Upgrade",
+              "name": "Big Painting Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3144,7 +3302,7 @@
             "connected_region": "Shapesanity Half-Half Painted",
             "access_rule": {
               "type": "helper",
-              "name": "can_paint",
+              "name": "_shapezworldgen_can_paint",
               "args": []
             }
           }
@@ -3159,7 +3317,7 @@
             "connected_region": "Shapesanity Half-Half Mixed",
             "access_rule": {
               "type": "helper",
-              "name": "can_mix_colors",
+              "name": "_shapezworldgen_can_mix_colors",
               "args": []
             }
           }
@@ -3178,9 +3336,9 @@
               "value": true
             },
             "item": {
-              "name": "Upgrade Shapes Bundle",
+              "name": "Big Belt Upgrade",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3195,7 +3353,7 @@
             "connected_region": "Shapesanity Colorful East Windmill Painted",
             "access_rule": {
               "type": "helper",
-              "name": "can_paint",
+              "name": "_shapezworldgen_can_paint",
               "args": []
             }
           }
@@ -3210,7 +3368,7 @@
             "connected_region": "Shapesanity Colorful East Windmill Mixed",
             "access_rule": {
               "type": "helper",
-              "name": "can_mix_colors",
+              "name": "_shapezworldgen_can_mix_colors",
               "args": []
             }
           }
@@ -3225,7 +3383,7 @@
             "connected_region": "Shapesanity Colorful Half-Half Painted",
             "access_rule": {
               "type": "helper",
-              "name": "can_paint",
+              "name": "_shapezworldgen_can_paint",
               "args": []
             }
           }
@@ -3240,7 +3398,7 @@
             "connected_region": "Shapesanity Colorful Half-Half Mixed",
             "access_rule": {
               "type": "helper",
-              "name": "can_mix_colors",
+              "name": "_shapezworldgen_can_mix_colors",
               "args": []
             }
           }
@@ -3259,9 +3417,9 @@
               "value": true
             },
             "item": {
-              "name": "Small Miner Upgrade",
+              "name": "Tunnel",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3274,7 +3432,7 @@
               "value": true
             },
             "item": {
-              "name": "Small Painting Upgrade",
+              "name": "Upgrade Shapes Bundle",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3291,7 +3449,7 @@
             "connected_region": "Shapesanity Colorful Full Painted",
             "access_rule": {
               "type": "helper",
-              "name": "can_paint",
+              "name": "_shapezworldgen_can_paint",
               "args": []
             }
           }
@@ -3306,7 +3464,7 @@
             "connected_region": "Shapesanity Colorful Full Mixed",
             "access_rule": {
               "type": "helper",
-              "name": "can_mix_colors",
+              "name": "_shapezworldgen_can_mix_colors",
               "args": []
             }
           }
@@ -3325,7 +3483,7 @@
               "value": true
             },
             "item": {
-              "name": "Blueprint Shapes Bundle",
+              "name": "Small Belt Upgrade",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -3340,9 +3498,9 @@
               "value": true
             },
             "item": {
-              "name": "Big Belt Upgrade",
+              "name": "Small Belt Upgrade",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3355,9 +3513,9 @@
               "value": true
             },
             "item": {
-              "name": "Rotator (CCW)",
+              "name": "Big Miner Upgrade",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3372,7 +3530,7 @@
             "connected_region": "Shapesanity Colorful Half Painted",
             "access_rule": {
               "type": "helper",
-              "name": "can_paint",
+              "name": "_shapezworldgen_can_paint",
               "args": []
             }
           }
@@ -3387,11 +3545,26 @@
             "connected_region": "Shapesanity Colorful Half Mixed",
             "access_rule": {
               "type": "helper",
-              "name": "can_mix_colors",
+              "name": "_shapezworldgen_can_mix_colors",
               "args": []
             }
           }
         ],
+        "locations": []
+      },
+      "Achievements needing a MAM": {
+        "name": "Achievements needing a MAM",
+        "exits": [],
+        "locations": []
+      },
+      "Shapesanity Colorful East Windmill Mixed": {
+        "name": "Shapesanity Colorful East Windmill Mixed",
+        "exits": [],
+        "locations": []
+      },
+      "Shapesanity Colorful Half Mixed": {
+        "name": "Shapesanity Colorful Half Mixed",
+        "exits": [],
         "locations": []
       }
     }
@@ -3836,7 +4009,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 10,
+        "max_count": 9,
         "classification": "filler"
       },
       "Small Painting Upgrade": {
@@ -4101,7 +4274,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 10,
+        "max_count": 9,
         "classification": "filler"
       },
       "Level Shapes Bundle": {
@@ -4245,7 +4418,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
+        "max_count": 2,
         "classification": "progression"
       },
       "Extractor": {
@@ -4257,7 +4430,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
+        "max_count": 2,
         "classification": "progression"
       },
       "Goal": {
@@ -4277,6 +4450,7 @@
     "1": [
       "Belt Upgrades",
       "Bundles",
+      "Event",
       "Everything",
       "Gameplay Mechanics",
       "Goal Buildings",
@@ -4296,13 +4470,13 @@
   "itempool_counts": {
     "1": {
       "Balancer": 1,
-      "Belt": 1,
+      "Belt": 2,
       "Belt Reader": 1,
       "Big Belt Upgrade": 9,
       "Big Miner Upgrade": 12,
       "Big Painting Upgrade": 10,
       "Big Processors Upgrade": 12,
-      "Blueprint Shapes Bundle": 10,
+      "Blueprint Shapes Bundle": 9,
       "Blueprints": 1,
       "Chaining Extractor": 1,
       "Color Mixer": 1,
@@ -4312,7 +4486,7 @@
       "Cutter": 1,
       "Display": 1,
       "Double Painter": 1,
-      "Extractor": 1,
+      "Extractor": 2,
       "Goal": 1,
       "Item Filter": 1,
       "Level Shapes Bundle": 8,
@@ -4326,7 +4500,7 @@
       "Small Belt Upgrade": 13,
       "Small Miner Upgrade": 13,
       "Small Painting Upgrade": 7,
-      "Small Processors Upgrade": 10,
+      "Small Processors Upgrade": 9,
       "Stacker": 1,
       "Storage": 1,
       "Switch": 1,
@@ -4352,48 +4526,28 @@
   },
   "settings": {
     "1": {
-      "game": "shapez",
+      "game": "shapez WorldGen",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
       "options": {
         "accessibility": 0,
-        "allow_floating_layers": 0,
-        "early_balancer_tunnel_and_trash": 2,
         "exclude_locations": [],
-        "exclude_long_playtime_achievements": 1,
-        "exclude_progression_unreasonable": 1,
-        "exclude_softlock_achievements": 1,
-        "goal": 0,
-        "goal_amount": 27,
-        "include_achievements": 1,
-        "include_whacky_upgrades": 0,
         "item_links": [],
         "local_items": [],
-        "lock_belt_and_extractor": 0,
         "non_local_items": [],
         "plando_items": [],
         "priority_locations": [],
         "progression_balancing": 50,
-        "randomize_level_logic": 2,
-        "randomize_level_requirements": 1,
-        "randomize_upgrade_logic": 1,
-        "randomize_upgrade_requirements": 1,
-        "required_shapes_multiplier": 10,
-        "same_late_upgrade_requirements": 1,
-        "shapesanity_amount": 50,
-        "split_inventory_draining_trap": 0,
+        "randomize_items": 1,
         "start_hints": [],
         "start_inventory": {},
-        "start_location_hints": [],
-        "throughput_levels_ratio": 0,
-        "toolbar_shuffling": 1,
-        "traps_percentage": 0
+        "start_location_hints": []
       }
     }
   },
   "game_info": {
     "1": {
-      "name": "shapez",
+      "name": "shapez WorldGen",
       "rule_format": {
         "version": "1.0"
       },
@@ -4533,7 +4687,7 @@
   },
   "helpers": {
     "1": {
-      "can_build_mam": {
+      "_shapezworldgen_can_build_mam": {
         "params": [
           "floating"
         ],
@@ -4542,7 +4696,7 @@
           "conditions": [
             {
               "type": "helper",
-              "name": "can_make_stitched_shape",
+              "name": "_shapezworldgen_can_make_stitched_shape",
               "args": [
                 {
                   "type": "name",
@@ -4552,22 +4706,22 @@
             },
             {
               "type": "helper",
-              "name": "can_paint",
+              "name": "_shapezworldgen_can_paint",
               "args": []
             },
             {
               "type": "helper",
-              "name": "can_mix_colors",
+              "name": "_shapezworldgen_can_mix_colors",
               "args": []
             },
             {
               "type": "helper",
-              "name": "has_balancer",
+              "name": "_shapezworldgen_has_balancer",
               "args": []
             },
             {
               "type": "helper",
-              "name": "has_tunnel",
+              "name": "_shapezworldgen_has_tunnel",
               "args": []
             },
             {
@@ -4602,16 +4756,16 @@
           ]
         }
       },
-      "can_cut_half": {
+      "_shapezworldgen_can_cut_half": {
         "type": "item_check",
         "item": "Cutter"
       },
-      "can_make_east_windmill": {
+      "_shapezworldgen_can_make_east_windmill": {
         "type": "and",
         "conditions": [
           {
             "type": "helper",
-            "name": "can_stack",
+            "name": "_shapezworldgen_can_stack",
             "args": []
           },
           {
@@ -4626,12 +4780,12 @@
                 "conditions": [
                   {
                     "type": "helper",
-                    "name": "can_cut_half",
+                    "name": "_shapezworldgen_can_cut_half",
                     "args": []
                   },
                   {
                     "type": "helper",
-                    "name": "can_rotate_180",
+                    "name": "_shapezworldgen_can_rotate_180",
                     "args": []
                   }
                 ]
@@ -4640,12 +4794,12 @@
           }
         ]
       },
-      "can_make_half_half_shape": {
+      "_shapezworldgen_can_make_half_half_shape": {
         "type": "and",
         "conditions": [
           {
             "type": "helper",
-            "name": "can_stack",
+            "name": "_shapezworldgen_can_stack",
             "args": []
           },
           {
@@ -4663,12 +4817,12 @@
           }
         ]
       },
-      "can_make_half_shape": {
+      "_shapezworldgen_can_make_half_shape": {
         "type": "or",
         "conditions": [
           {
             "type": "helper",
-            "name": "can_cut_half",
+            "name": "_shapezworldgen_can_cut_half",
             "args": []
           },
           {
@@ -4686,7 +4840,7 @@
           }
         ]
       },
-      "can_make_stitched_shape": {
+      "_shapezworldgen_can_make_stitched_shape": {
         "params": [
           "floating"
         ],
@@ -4695,7 +4849,7 @@
           "conditions": [
             {
               "type": "helper",
-              "name": "can_stack",
+              "name": "_shapezworldgen_can_stack",
               "args": []
             },
             {
@@ -4722,12 +4876,12 @@
                   "conditions": [
                     {
                       "type": "helper",
-                      "name": "can_cut_half",
+                      "name": "_shapezworldgen_can_cut_half",
                       "args": []
                     },
                     {
                       "type": "helper",
-                      "name": "can_rotate_90",
+                      "name": "_shapezworldgen_can_rotate_90",
                       "args": []
                     }
                   ]
@@ -4737,11 +4891,11 @@
           ]
         }
       },
-      "can_mix_colors": {
+      "_shapezworldgen_can_mix_colors": {
         "type": "item_check",
         "item": "Color Mixer"
       },
-      "can_paint": {
+      "_shapezworldgen_can_paint": {
         "type": "or",
         "conditions": [
           {
@@ -4759,12 +4913,12 @@
           },
           {
             "type": "helper",
-            "name": "can_use_quad_painter",
+            "name": "_shapezworldgen_can_use_quad_painter",
             "args": []
           }
         ]
       },
-      "can_rotate_180": {
+      "_shapezworldgen_can_rotate_180": {
         "type": "state_method",
         "method": "has_any",
         "args": [
@@ -4778,7 +4932,7 @@
           }
         ]
       },
-      "can_rotate_90": {
+      "_shapezworldgen_can_rotate_90": {
         "type": "state_method",
         "method": "has_any",
         "args": [
@@ -4791,11 +4945,11 @@
           }
         ]
       },
-      "can_stack": {
+      "_shapezworldgen_can_stack": {
         "type": "item_check",
         "item": "Stacker"
       },
-      "can_use_quad_painter": {
+      "_shapezworldgen_can_use_quad_painter": {
         "type": "and",
         "conditions": [
           {
@@ -4826,7 +4980,7 @@
           }
         ]
       },
-      "has_balancer": {
+      "_shapezworldgen_has_balancer": {
         "type": "or",
         "conditions": [
           {
@@ -4848,7 +5002,7 @@
           }
         ]
       },
-      "has_logic_list_building": {
+      "_shapezworldgen_has_logic_list_building": {
         "params": [
           "buildings",
           "index",
@@ -4875,12 +5029,12 @@
                     },
                     {
                       "type": "helper",
-                      "name": "has_balancer",
+                      "name": "_shapezworldgen_has_balancer",
                       "args": []
                     },
                     {
                       "type": "helper",
-                      "name": "has_tunnel",
+                      "name": "_shapezworldgen_has_tunnel",
                       "args": []
                     }
                   ]
@@ -4967,7 +5121,7 @@
               },
               "if_false": {
                 "type": "helper",
-                "name": "can_cut_half",
+                "name": "_shapezworldgen_can_cut_half",
                 "args": []
               }
             },
@@ -4994,7 +5148,7 @@
               },
               "if_true": {
                 "type": "helper",
-                "name": "can_rotate_90",
+                "name": "_shapezworldgen_can_rotate_90",
                 "args": []
               },
               "if_false": {
@@ -5020,7 +5174,7 @@
                 },
                 "if_true": {
                   "type": "helper",
-                  "name": "can_stack",
+                  "name": "_shapezworldgen_can_stack",
                   "args": []
                 },
                 "if_false": {
@@ -5046,7 +5200,7 @@
                   },
                   "if_true": {
                     "type": "helper",
-                    "name": "can_paint",
+                    "name": "_shapezworldgen_can_paint",
                     "args": []
                   },
                   "if_false": {
@@ -5072,10 +5226,13 @@
                     },
                     "if_true": {
                       "type": "helper",
-                      "name": "can_mix_colors",
+                      "name": "_shapezworldgen_can_mix_colors",
                       "args": []
                     },
-                    "if_false": null
+                    "if_false": {
+                      "type": "constant",
+                      "value": null
+                    }
                   }
                 }
               }
@@ -5083,7 +5240,7 @@
           }
         }
       },
-      "has_tunnel": {
+      "_shapezworldgen_has_tunnel": {
         "type": "state_method",
         "method": "has_any",
         "args": [
@@ -5096,7 +5253,7 @@
           }
         ]
       },
-      "has_x_belt_multiplier": {
+      "_shapezworldgen_has_x_belt_multiplier": {
         "params": [
           "needed"
         ],

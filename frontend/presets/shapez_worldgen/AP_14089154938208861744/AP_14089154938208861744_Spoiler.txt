@@ -1,0 +1,219 @@
+﻿Archipelago Version 0.6.5  -  Seed: 1
+
+Filling Algorithm:               balanced
+Players:                         1
+Plando Options:                  connections, texts, bosses
+Game:                            shapez WorldGen
+Location Count:                  139
+Progression Balancing:           50
+Accessibility:                   Full
+Local Items:                     
+Non-local Items:                 
+Start Inventory:                 
+Start Hints:                     
+Start Location Hints:            
+Excluded Locations:              
+Priority Locations:              
+Item Links:                      
+Plando Items:                    
+Randomize Items:                 Yes
+
+
+Starting Items:
+
+Belt
+Extractor
+
+Locations:
+
+My eyes no longer hurt: Small Miner Upgrade
+Getting into it: Compact Splitter
+GPS: Level Shapes Bundle
+I need trains: Big Processors Upgrade
+Level 1: Balancer
+Level 1 Additional: Storage
+Level 2: Upgrade Shapes Bundle
+Level 3: Chaining Extractor
+Belt Upgrade Tier II: Small Miner Upgrade
+Miner Upgrade Tier II: Virtual Processing
+Processors Upgrade Tier II: Small Painting Upgrade
+Painting Upgrade Tier II: Big Painting Upgrade
+It's a mess: Extractor
+Oops: Big Painting Upgrade
+Level 4: Level Shapes Bundle
+Level 5: Painter
+Level 6: Rotator
+Level 7: Big Processors Upgrade
+Level 8: Blueprint Shapes Bundle
+Level 9: Small Miner Upgrade
+Level 10: Blueprint Shapes Bundle
+Level 11: Big Processors Upgrade
+Level 12: Switch
+Level 13: Small Processors Upgrade
+Level 14: Small Miner Upgrade
+Level 15: Blueprint Shapes Bundle
+Level 16: Small Belt Upgrade
+Level 17: Big Miner Upgrade
+Level 18: Item Filter
+Level 19: Big Painting Upgrade
+Level 20 Additional: Small Miner Upgrade
+Level 20 Additional 2: Small Belt Upgrade
+Level 20: Big Miner Upgrade
+Level 21: Small Belt Upgrade
+Level 22: Rotator (180°)
+Level 23: Blueprint Shapes Bundle
+Level 24: Blueprints
+Level 25: Blueprint Shapes Bundle
+Wires: Big Belt Upgrade
+Goal: Goal
+Belt Upgrade Tier III: Small Processors Upgrade
+Miner Upgrade Tier III: Big Belt Upgrade
+Processors Upgrade Tier III: Big Processors Upgrade
+Painting Upgrade Tier III: Small Miner Upgrade
+Belt Upgrade Tier IV: Small Belt Upgrade
+Miner Upgrade Tier IV: Blueprint Shapes Bundle
+Processors Upgrade Tier IV: Big Painting Upgrade
+Painting Upgrade Tier IV: Small Processors Upgrade
+Belt Upgrade Tier V: Upgrade Shapes Bundle
+Miner Upgrade Tier V: Small Miner Upgrade
+Processors Upgrade Tier V: Big Miner Upgrade
+Painting Upgrade Tier V: Small Painting Upgrade
+Faster: Level Shapes Bundle
+Belt Upgrade Tier VI: Big Painting Upgrade
+Miner Upgrade Tier VI: Small Painting Upgrade
+Processors Upgrade Tier VI: Level Shapes Bundle
+Painting Upgrade Tier VI: Rotator (CCW)
+Belt Upgrade Tier VII: Big Miner Upgrade
+Miner Upgrade Tier VII: Small Belt Upgrade
+Processors Upgrade Tier VII: Small Belt Upgrade
+Painting Upgrade Tier VII: Small Processors Upgrade
+Belt Upgrade Tier VIII: Big Miner Upgrade
+Miner Upgrade Tier VIII: Level Shapes Bundle
+Processors Upgrade Tier VIII: Small Belt Upgrade
+Painting Upgrade Tier VIII: Belt
+Even faster: Big Processors Upgrade
+Painter: Big Miner Upgrade
+Cutter: Big Painting Upgrade
+Rotater: Color Mixer
+Wait, they stack?: Big Processors Upgrade
+Stack overflow: Level Shapes Bundle
+Storage: Big Belt Upgrade
+Get rid of them: Big Painting Upgrade
+Now it's easy: Big Processors Upgrade
+Copy-Pasta: Big Processors Upgrade
+Computer Guy: Big Belt Upgrade
+The next dimension: Small Belt Upgrade
+Perfectionist: Small Miner Upgrade
+The logo!: Compact Merger
+To the moon: Big Miner Upgrade
+It's piling up: Small Miner Upgrade
+I'll use it later: Constant Signal
+I've seen that before ...: Double Painter
+Memories from the past: Big Miner Upgrade
+Preparing to launch: Upgrade Shapes Bundle
+SpaceY: Small Miner Upgrade
+Efficiency 1: Small Processors Upgrade
+Branding specialist 1: Wires
+Efficiency 2: Small Miner Upgrade
+Branding specialist 2: Quad Cutter
+Shapesanity 1: Cutter
+Shapesanity 2: Big Processors Upgrade
+Shapesanity 3: Big Painting Upgrade
+Shapesanity 22: Upgrade Shapes Bundle
+Shapesanity 25: Stacker
+Shapesanity 10: Big Processors Upgrade
+Shapesanity 17: Small Processors Upgrade
+Shapesanity 7: Level Shapes Bundle
+Shapesanity 20: Small Processors Upgrade
+Shapesanity 13: Small Painting Upgrade
+Shapesanity 14: Big Miner Upgrade
+Shapesanity 24: Small Processors Upgrade
+Shapesanity 8: Blueprint Shapes Bundle
+Shapesanity 9: Small Miner Upgrade
+Shapesanity 18: Big Painting Upgrade
+Shapesanity 36: Small Miner Upgrade
+Shapesanity 11: Big Belt Upgrade
+Shapesanity 12: Big Belt Upgrade
+Shapesanity 19: Small Belt Upgrade
+Shapesanity 21: Small Processors Upgrade
+Shapesanity 23: Big Processors Upgrade
+Shapesanity 29: Logic Gates
+Shapesanity 31: Tunnel Tier II
+Shapesanity 32: Quad Painter
+Shapesanity 6: Blueprint Shapes Bundle
+Shapesanity 15: Small Painting Upgrade
+Shapesanity 27: Small Belt Upgrade
+Shapesanity 30: Small Painting Upgrade
+Shapesanity 33: Display
+Shapesanity 34: Small Belt Upgrade
+Shapesanity 35: Small Painting Upgrade
+Shapesanity 38: Big Belt Upgrade
+Shapesanity 40: Big Miner Upgrade
+Shapesanity 41: Level Shapes Bundle
+Shapesanity 42: Upgrade Shapes Bundle
+Shapesanity 43: Big Belt Upgrade
+Shapesanity 44: Trash
+Shapesanity 45: Belt Reader
+Shapesanity 46: Big Processors Upgrade
+Shapesanity 47: Blueprint Shapes Bundle
+Shapesanity 48: Big Miner Upgrade
+Shapesanity 4: Upgrade Shapes Bundle
+Shapesanity 16: Upgrade Shapes Bundle
+Shapesanity 5: Big Painting Upgrade
+Shapesanity 37: Big Belt Upgrade
+Shapesanity 49: Tunnel
+Shapesanity 50: Upgrade Shapes Bundle
+Shapesanity 26: Small Belt Upgrade
+Shapesanity 28: Small Belt Upgrade
+Shapesanity 39: Big Miner Upgrade
+
+Playthrough:
+
+0: {
+  Belt
+  Extractor
+}
+1: {
+  Getting into it: Compact Splitter
+  It's a mess: Extractor
+  Level 1: Balancer
+  Level 1 Additional: Storage
+  Shapesanity 1: Cutter
+}
+2: {
+  Level 5: Painter
+  Level 6: Rotator
+  Storage: Big Belt Upgrade
+}
+3: {
+  Rotater: Color Mixer
+}
+4: {
+  Shapesanity 25: Stacker
+}
+5: {
+  Branding specialist 1: Wires
+  Branding specialist 2: Quad Cutter
+  I'll use it later: Constant Signal
+  I've seen that before ...: Double Painter
+  Miner Upgrade Tier III: Big Belt Upgrade
+  Shapesanity 11: Big Belt Upgrade
+  Shapesanity 12: Big Belt Upgrade
+  Shapesanity 32: Quad Painter
+  Shapesanity 37: Big Belt Upgrade
+  Shapesanity 38: Big Belt Upgrade
+  Shapesanity 43: Big Belt Upgrade
+  Shapesanity 44: Trash
+  Shapesanity 49: Tunnel
+  The logo!: Compact Merger
+}
+6: {
+  Computer Guy: Big Belt Upgrade
+  Goal: Goal
+  Level 12: Switch
+  Level 22: Rotator (180°)
+  Level 24: Blueprints
+  Painting Upgrade Tier VI: Rotator (CCW)
+  Painting Upgrade Tier VIII: Belt
+  Wires: Big Belt Upgrade
+}

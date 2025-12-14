@@ -16,7 +16,7 @@ Excluded Locations:
 Priority Locations:              
 Item Links:                      
 Plando Items:                    
-Randomize Items:                 No
+Randomize Items:                 Yes
 
 
 Starting Items:
@@ -29,57 +29,57 @@ Ruins Key
 
 Locations:
 
-Candy 1: Spider Cider
-Candy 2: Old Tutu
-Candy 3: temy armor
-Candy 4: Snowdin Key
-Donut Sale: Stained Apron
+Candy 1: Starfait
+Candy 2: Stained Apron
+Candy 3: 500G
+Candy 4: Waterfall Key
+Donut Sale: 500G
 Cider Sale: Punch Card
 Ribbon Cracks: Torn Notebook
-Toy Knife Edge: Burnt Pan
-B.Scotch Pie Given: Instant Noodles
-Snowman: Nice Cream
-Nicecream Snowdin: Legendary Hero
-Bunny 1: Cloudy Glasses
-Bunny 2: Waterfall Key
-Bunny 3: Toy Knife
-Bunny 4: Punch Card
+Toy Knife Edge: Manly Bandanna
+B.Scotch Pie Given: ITEM
+Snowman: Worn Dagger
+Nicecream Snowdin: Cinnamon Bun
+Bunny 1: FIGHT
+Bunny 2: Hotland Key
+Bunny 3: temy armor
+Bunny 4: 1000G
 Papyrus Date: Papyrus Date
-Nicecream Waterfall: Snowman Piece
-Nicecream Punch Card: Starfait
-Quiche Bench: Tough Glove
-Tutu Hidden: Hotland Key
-Card Reward: Heart Locket
-Grass Shoes: Starfait
-Astro 1: Spider Donut
-Astro 2: Mettaton Plush
-Gerson 1: Butterscotch Pie
-Gerson 2: Crab Apple
-Gerson 3: Empty Gun
-Gerson 4: Ballet Shoes
-TemmieShop 1: Astronaut Food
-TemmieShop 2: 500G
-TemmieShop 3: Astronaut Food
-TemmieShop 4: Glamburger
+Nicecream Waterfall: Core Key
+Nicecream Punch Card: Spider Cider
+Quiche Bench: Cowboy Hat
+Tutu Hidden: Mettaton Plush
+Card Reward: Cloudy Glasses
+Grass Shoes: ACT
+Astro 1: MERCY
+Astro 2: Left Home Key
+Gerson 1: Toy Knife
+Gerson 2: Glamburger
+Gerson 3: Ballet Shoes
+Gerson 4: Snowman Piece
+TemmieShop 1: Legendary Hero
+TemmieShop 2: Tough Glove
+TemmieShop 3: Burnt Pan
+TemmieShop 4: Astronaut Food
 Undyne Date: Undyne Date
-Noodles Fridge: 500G
-Pan Hidden: Faded Ribbon
-Apron Hidden: Cinnamon Bun
-Bratty Catty 1: Abandoned Quiche
-Bratty Catty 2: Core Key
-Bratty Catty 3: Sea Tea
-Bratty Catty 4: Bisicle
-Burgerpants 1: Worn Dagger
-Burgerpants 2: Spider Donut
-Burgerpants 3: Punch Card
-Burgerpants 4: Right Home Key
+Noodles Fridge: Heart Locket
+Pan Hidden: Butterscotch Pie
+Apron Hidden: Faded Ribbon
+Bratty Catty 1: Nice Cream
+Bratty Catty 2: Right Home Key
+Bratty Catty 3: Starfait
+Bratty Catty 4: Face Steak
+Burgerpants 1: Instant Noodles
+Burgerpants 2: Astronaut Food
+Burgerpants 3: Ruins Key
+Burgerpants 4: Punch Card
 Alphys Date: Alphys Date
 Trash Burger: 1000G
-Mettaton Plot: 1000G
-Present Knife: Cowboy Hat
-Present Locket: Left Home Key
-Left New Home Key: Face Steak
-Right New Home Key: Manly Bandanna
+Mettaton Plot: Snowdin Key
+Present Knife: Empty Gun
+Present Locket: Punch Card
+Left New Home Key: Spider Donut
+Right New Home Key: Old Tutu
 
 Playthrough:
 
@@ -87,27 +87,28 @@ Playthrough:
   Ruins Key
 }
 1: {
-  Candy 4: Snowdin Key
+  Candy 4: Waterfall Key
   Cider Sale: Punch Card
 }
 2: {
-  Bunny 2: Waterfall Key
-  Bunny 4: Punch Card
-  Papyrus Date: Papyrus Date
-}
-3: {
-  Astro 2: Mettaton Plush
-  Tutu Hidden: Hotland Key
+  Astro 2: Left Home Key
+  Nicecream Waterfall: Core Key
+  Tutu Hidden: Mettaton Plush
   Undyne Date: Undyne Date
 }
+3: {
+  Mettaton Plot: Snowdin Key
+  Present Locket: Punch Card
+  Trash Burger: 1000G
+}
 4: {
-  Alphys Date: Alphys Date
-  Bratty Catty 2: Core Key
-  Burgerpants 3: Punch Card
-  Burgerpants 4: Right Home Key
+  Bunny 2: Hotland Key
+  Bunny 4: 1000G
+  Papyrus Date: Papyrus Date
 }
 5: {
-  Mettaton Plot: 1000G
-  Present Locket: Left Home Key
-  Trash Burger: 1000G
+  Alphys Date: Alphys Date
+  Bratty Catty 2: Right Home Key
+  Burgerpants 3: Ruins Key
+  Burgerpants 4: Punch Card
 }

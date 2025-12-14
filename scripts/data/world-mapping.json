@@ -577,11 +577,11 @@
   },
   "Kirby's Dream Land 3": {
     "exporter_path": "exporter/games/kdl3.py",
-    "exporter_size": 11694,
-    "game_logic_path": null,
-    "game_logic_size": 0,
+    "exporter_size": 13923,
+    "game_logic_path": "frontend/modules/shared/gameLogic/kdl3/kdl3Logic.js",
+    "game_logic_size": 9231,
     "has_custom_exporter": true,
-    "has_custom_game_logic": false,
+    "has_custom_game_logic": true,
     "world_directory": "kdl3"
   },
   "Kirby's Dream Land 3 WorldGen": {
@@ -1036,7 +1036,7 @@
   },
   "Starcraft 2": {
     "exporter_path": "exporter/games/sc2.py",
-    "exporter_size": 20251,
+    "exporter_size": 24477,
     "game_logic_path": "frontend/modules/shared/gameLogic/sc2/sc2Logic.js",
     "game_logic_size": 88384,
     "has_custom_exporter": true,
@@ -1072,11 +1072,11 @@
   },
   "Subnautica": {
     "exporter_path": "exporter/games/subnautica.py",
-    "exporter_size": 2442,
-    "game_logic_path": "frontend/modules/shared/gameLogic/subnautica/subnauticaLogic.js",
-    "game_logic_size": 15085,
+    "exporter_size": 6178,
+    "game_logic_path": null,
+    "game_logic_size": 0,
     "has_custom_exporter": true,
-    "has_custom_game_logic": true,
+    "has_custom_game_logic": false,
     "world_directory": "subnautica"
   },
   "Subnautica WorldGen": {
@@ -1117,11 +1117,11 @@
   },
   "Super Mario Land 2": {
     "exporter_path": "exporter/games/marioland2.py",
-    "exporter_size": 14226,
-    "game_logic_path": "frontend/modules/shared/gameLogic/marioland2/marioland2Logic.js",
-    "game_logic_size": 5037,
+    "exporter_size": 14360,
+    "game_logic_path": null,
+    "game_logic_size": 0,
     "has_custom_exporter": true,
-    "has_custom_game_logic": true,
+    "has_custom_game_logic": false,
     "world_directory": "marioland2"
   },
   "Super Mario Land 2 WorldGen": {
@@ -1225,11 +1225,11 @@
   },
   "Terraria": {
     "exporter_path": "exporter/games/terraria.py",
-    "exporter_size": 12584,
-    "game_logic_path": "frontend/modules/shared/gameLogic/terraria/terrariaLogic.js",
-    "game_logic_size": 4389,
+    "exporter_size": 19687,
+    "game_logic_path": null,
+    "game_logic_size": 0,
     "has_custom_exporter": true,
-    "has_custom_game_logic": true,
+    "has_custom_game_logic": false,
     "world_directory": "terraria"
   },
   "Terraria WorldGen": {
@@ -1279,11 +1279,11 @@
   },
   "The Wind Waker": {
     "exporter_path": "exporter/games/tww.py",
-    "exporter_size": 4901,
-    "game_logic_path": "frontend/modules/shared/gameLogic/tww/twwLogic.js",
-    "game_logic_size": 4711,
+    "exporter_size": 9481,
+    "game_logic_path": null,
+    "game_logic_size": 0,
     "has_custom_exporter": true,
-    "has_custom_game_logic": true,
+    "has_custom_game_logic": false,
     "world_directory": "tww"
   },
   "The Wind Waker WorldGen": {
@@ -1378,11 +1378,11 @@
   },
   "Wargroove": {
     "exporter_path": "exporter/games/wargroove.py",
-    "exporter_size": 5839,
-    "game_logic_path": "frontend/modules/shared/gameLogic/wargroove/wargrooveLogic.js",
-    "game_logic_size": 2707,
+    "exporter_size": 9839,
+    "game_logic_path": null,
+    "game_logic_size": 0,
     "has_custom_exporter": true,
-    "has_custom_game_logic": true,
+    "has_custom_game_logic": false,
     "world_directory": "wargroove"
   },
   "Wargroove WorldGen": {

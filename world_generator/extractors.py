@@ -325,6 +325,18 @@ def extract_regions(json_data: Dict[str, Any]) -> Tuple[Dict[str, RegionData], D
                 access_rule=exit_info.get('access_rule'),
             )
 
+    # Create missing regions that are referenced by exits but not defined
+    # This handles cases where exits connect to regions that aren't top-level
+    for exit_data in exits.values():
+        target = exit_data.target_region
+        if target and target not in regions:
+            regions[target] = RegionData(
+                name=target,
+                locations=[],
+                exits=[],
+                hint_text=None,
+            )
+
     return regions, exits
 
 

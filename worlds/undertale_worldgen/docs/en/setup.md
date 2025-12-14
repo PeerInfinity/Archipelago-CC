@@ -1,4 +1,4 @@
-# Undertale Setup Guide
+# Undertale WorldGen Setup Guide
 
 ## Required Software
 
@@ -8,7 +8,7 @@
 
 1. Download the game's .apworld file
 2. Place it in your Archipelago/lib/worlds folder
-3. Generate a multiworld with Undertale
+3. Generate a multiworld with Undertale WorldGen
 
 ## Joining a Game
 
