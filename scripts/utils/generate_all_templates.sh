@@ -79,7 +79,7 @@ python Generate.py --weights_file_path "Templates/Final Fantasy Mystic Quest.yam
 python Generate.py --weights_file_path "Templates/Heretic.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Hylics 2.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Inscryption.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/Jak and Daxter The Precursor Legacy.yaml" --multi 1 --seed 1
+# python Generate.py --weights_file_path "Templates/Jak and Daxter The Precursor Legacy.yaml" --multi 1 --seed 1  # Excluded: Takes too long to process
 python Generate.py --weights_file_path "Templates/Kingdom Hearts.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Kingdom Hearts 2.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Kirby's Dream Land 3.yaml" --multi 1 --seed 1
@@ -96,15 +96,15 @@ python Generate.py --weights_file_path "Templates/Noita.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Old School Runescape.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Overcooked! 2.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Paint.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/Pokemon Emerald.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/Pokemon Red and Blue.yaml" --multi 1 --seed 1
+# python Generate.py --weights_file_path "Templates/Pokemon Emerald.yaml" --multi 1 --seed 1  # Excluded: Takes too long to process
+# python Generate.py --weights_file_path "Templates/Pokemon Red and Blue.yaml" --multi 1 --seed 1  # Excluded: Takes too long to process
 python Generate.py --weights_file_path "Templates/Raft.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Risk of Rain 2.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Saving Princess.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Secret of Evermore.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/shapez.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Shivers.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/SMZ3.yaml" --multi 1 --seed 1
+# python Generate.py --weights_file_path "Templates/SMZ3.yaml" --multi 1 --seed 1  # Excluded: Takes too long to process
 python Generate.py --weights_file_path "Templates/Sonic Adventure 2 Battle.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Starcraft 2.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Stardew Valley.yaml" --multi 1 --seed 1
@@ -119,13 +119,13 @@ python Generate.py --weights_file_path "Templates/The Messenger.yaml" --multi 1 
 python Generate.py --weights_file_path "Templates/The Wind Waker.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/The Witness.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Timespinner.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/TUNIC.yaml" --multi 1 --seed 1
+# python Generate.py --weights_file_path "Templates/TUNIC.yaml" --multi 1 --seed 1  # Excluded: Takes too long to process
 python Generate.py --weights_file_path "Templates/Undertale.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/VVVVVV.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Wargroove.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Yacht Dice.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Yoshi's Island.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/Yu-Gi-Oh! 2006.yaml" --multi 1 --seed 1
+# python Generate.py --weights_file_path "Templates/Yu-Gi-Oh! 2006.yaml" --multi 1 --seed 1  # Excluded: Takes too long to process
 
 python Generate.py --weights_file_path "Templates/MathProof2p2e4.yaml" --multi 1 --seed 1
 if [ "$GENERATE_EXTRA_SEEDS" = "true" ]; then
@@ -201,7 +201,7 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python scripts/test/test-world-generator.py --include-list "Heretic.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Hylics 2.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Inscryption.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
-  python scripts/test/test-world-generator.py --include-list "Jak and Daxter The Precursor Legacy.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
+  # python scripts/test/test-world-generator.py --include-list "Jak and Daxter The Precursor Legacy.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG  # Excluded: Takes too long to process
   python scripts/test/test-world-generator.py --include-list "Kingdom Hearts 2.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Kingdom Hearts.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Kirby's Dream Land 3.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
@@ -218,15 +218,15 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python scripts/test/test-world-generator.py --include-list "Old School Runescape.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Overcooked! 2.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Paint.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
-  python scripts/test/test-world-generator.py --include-list "Pokemon Emerald.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
-  python scripts/test/test-world-generator.py --include-list "Pokemon Red and Blue.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
+  # python scripts/test/test-world-generator.py --include-list "Pokemon Emerald.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG  # Excluded: Takes too long to process
+  # python scripts/test/test-world-generator.py --include-list "Pokemon Red and Blue.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG  # Excluded: Takes too long to process
   python scripts/test/test-world-generator.py --include-list "Raft.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Risk of Rain 2.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Saving Princess.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Secret of Evermore.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "shapez.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Shivers.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
-  python scripts/test/test-world-generator.py --include-list "SMZ3.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
+  # python scripts/test/test-world-generator.py --include-list "SMZ3.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG  # Excluded: Takes too long to process
   python scripts/test/test-world-generator.py --include-list "Sonic Adventure 2 Battle.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Starcraft 2.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Stardew Valley.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
@@ -241,13 +241,13 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python scripts/test/test-world-generator.py --include-list "The Wind Waker.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "The Witness.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Timespinner.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
-  python scripts/test/test-world-generator.py --include-list "TUNIC.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
+  # python scripts/test/test-world-generator.py --include-list "TUNIC.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG  # Excluded: Takes too long to process
   python scripts/test/test-world-generator.py --include-list "Undertale.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "VVVVVV.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Wargroove.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Yacht Dice.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Yoshi's Island.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
-  python scripts/test/test-world-generator.py --include-list "Yu-Gi-Oh! 2006.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
+  # python scripts/test/test-world-generator.py --include-list "Yu-Gi-Oh! 2006.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG  # Excluded: Takes too long to process
 
   # Custom templates
   python scripts/test/test-world-generator.py --include-list "TOEM original.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
@@ -294,7 +294,7 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python Generate.py --weights_file_path "Templates/Heretic WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Hylics 2 WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Inscryption WorldGen.yaml" --multi 1 --seed 1
-  python Generate.py --weights_file_path "Templates/Jak and Daxter The Precursor Legacy WorldGen.yaml" --multi 1 --seed 1
+  # python Generate.py --weights_file_path "Templates/Jak and Daxter The Precursor Legacy WorldGen.yaml" --multi 1 --seed 1  # Excluded: Takes too long to process
   python Generate.py --weights_file_path "Templates/Kingdom Hearts 2 WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Kingdom Hearts WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Kirby's Dream Land 3 WorldGen.yaml" --multi 1 --seed 1
@@ -311,15 +311,15 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python Generate.py --weights_file_path "Templates/Old School Runescape WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Overcooked! 2 WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Paint WorldGen.yaml" --multi 1 --seed 1
-  python Generate.py --weights_file_path "Templates/Pokemon Emerald WorldGen.yaml" --multi 1 --seed 1
-  python Generate.py --weights_file_path "Templates/Pokemon Red and Blue WorldGen.yaml" --multi 1 --seed 1
+  # python Generate.py --weights_file_path "Templates/Pokemon Emerald WorldGen.yaml" --multi 1 --seed 1  # Excluded: Takes too long to process
+  # python Generate.py --weights_file_path "Templates/Pokemon Red and Blue WorldGen.yaml" --multi 1 --seed 1  # Excluded: Takes too long to process
   python Generate.py --weights_file_path "Templates/Raft WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Risk of Rain 2 WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Saving Princess WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Secret of Evermore WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/shapez WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Shivers WorldGen.yaml" --multi 1 --seed 1
-  python Generate.py --weights_file_path "Templates/SMZ3 WorldGen.yaml" --multi 1 --seed 1
+  # python Generate.py --weights_file_path "Templates/SMZ3 WorldGen.yaml" --multi 1 --seed 1  # Excluded: Takes too long to process
   python Generate.py --weights_file_path "Templates/Sonic Adventure 2 Battle WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Starcraft 2 WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Stardew Valley WorldGen.yaml" --multi 1 --seed 1
@@ -334,13 +334,13 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python Generate.py --weights_file_path "Templates/The Wind Waker WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/The Witness WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Timespinner WorldGen.yaml" --multi 1 --seed 1
-  python Generate.py --weights_file_path "Templates/TUNIC WorldGen.yaml" --multi 1 --seed 1
+  # python Generate.py --weights_file_path "Templates/TUNIC WorldGen.yaml" --multi 1 --seed 1  # Excluded: Takes too long to process
   python Generate.py --weights_file_path "Templates/Undertale WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/VVVVVV WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Wargroove WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Yacht Dice WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Yoshi's Island WorldGen.yaml" --multi 1 --seed 1
-  python Generate.py --weights_file_path "Templates/Yu-Gi-Oh! 2006 WorldGen.yaml" --multi 1 --seed 1
+  # python Generate.py --weights_file_path "Templates/Yu-Gi-Oh! 2006 WorldGen.yaml" --multi 1 --seed 1  # Excluded: Takes too long to process
 
   # Custom templates
   python Generate.py --weights_file_path "Templates/TOEM original WorldGen.yaml" --multi 1 --seed 1
