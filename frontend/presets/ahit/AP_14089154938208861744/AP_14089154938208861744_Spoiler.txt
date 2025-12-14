@@ -542,9 +542,9 @@ Act Completion (The Subcon Well)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
-   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
-   =>   Alpine Free Roam -> Battle of the Birds - Finale A: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 5: Connection 1
+   =>   Heating Up Mafia Town -> Battle of the Birds - Finale A: Connection 2
    =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
    =>   The Subcon Well
 Act Completion (The Twilight Bell)
@@ -594,9 +594,7 @@ Act Completion (Time Rift - The Twilight Bell)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
-   =>   She Came from Outer Space -> Mafia Town - Act 4: Connection 1
-   =>   The Golden Vault -> Time Rift - Bazaar Portal - Entrance 7
+   =>   Barrel Battle -> Time Rift - Bazaar Portal - Entrance 2
    =>   Time Rift - The Twilight Bell
 Act Completion (Time Rift - Village)
         Menu -> Save File -> Spaceship
@@ -1016,17 +1014,17 @@ Mafia Town - Yellow Sphere Building Chest
    =>   Mafia Town Area (HUMT)
 Mafia of Cooks - Page: Below Dock
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 2
-   =>   Dead Bird Studio Basement -> Subcon Forest - Finale: Connection 2
-   =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Time Rift - Mafia of Cooks Portal - Entrance 3
    =>   Time Rift - Mafia of Cooks
 Mafia of Cooks - Page: Top of Boat
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Subcon Forest
-   =>   Subcon Forest -> Subcon Forest - Act 2
-   =>   Dead Bird Studio Basement -> Subcon Forest - Finale: Connection 2
-   =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Barrel Battle -> Mafia Town - Act 2: Connection 1
+   =>   She Came from Outer Space -> Time Rift - Mafia of Cooks Portal - Entrance 3
    =>   Time Rift - Mafia of Cooks
 Murder on the Owl Express - Cafeteria
         Menu -> Save File -> Spaceship
@@ -1253,9 +1251,9 @@ Subcon Well - Mushroom
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Battle of the Birds
    =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   Toilet of Doom -> Battle of the Birds - Act 3: Connection 1
-   =>   Mail Delivery Service -> Battle of the Birds - Act 4: Connection 2
-   =>   Alpine Free Roam -> Battle of the Birds - Finale A: Connection 1
+   =>   Toilet of Doom -> Battle of the Birds - Act 2: Connection 1
+   =>   Train Rush -> Battle of the Birds - Act 5: Connection 1
+   =>   Heating Up Mafia Town -> Battle of the Birds - Finale A: Connection 2
    =>   Award Ceremony -> Battle of the Birds - Finale B: Connection 1
    =>   The Subcon Well
 TIHS Access

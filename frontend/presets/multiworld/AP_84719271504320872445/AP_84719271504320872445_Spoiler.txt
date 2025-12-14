@@ -1365,8 +1365,8 @@ Act Completion (Dead Bird Studio Basement) (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
-   =>   The Subcon Well -> Mafia Town - Act 4: Connection 2
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
+   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
    =>   Dead Bird Studio Basement
 Act Completion (Dead Bird Studio) (Player1)
         Menu -> Save File -> Spaceship
@@ -1389,8 +1389,8 @@ Act Completion (Mail Delivery Service) (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
-   =>   The Subcon Well -> Mafia Town - Act 4: Connection 2
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
+   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
    =>   Dead Bird Studio Basement -> Mafia Town - Act 6: Connection 1
    =>   Mail Delivery Service
 Act Completion (Picture Perfect) (Player1)
@@ -1502,8 +1502,8 @@ Alpine Skyline (Rift) - Page: Lonely Birdhouse Top (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
-   =>   The Subcon Well -> Mafia Town - Act 4: Connection 2
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
+   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
    =>   Dead Bird Studio Basement -> Mafia Town - Act 7: Connection 1
    =>   The Golden Vault -> Time Rift - Mafia of Cooks Portal - Entrance 6
    =>   Time Rift - Alpine Skyline
@@ -1691,8 +1691,8 @@ Dead Bird Studio - Behind Water Tower (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
-   =>   The Subcon Well -> Mafia Town - Act 4: Connection 2
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
+   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
    =>   Dead Bird Studio Basement -> DBS Basement -> Elevator Area
    =>   Dead Bird Studio - Elevator Area
 Dead Bird Studio - Conductor Chest (Player1)
@@ -1706,8 +1706,8 @@ Dead Bird Studio - Side of House (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
-   =>   The Subcon Well -> Mafia Town - Act 4: Connection 2
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
+   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
    =>   Dead Bird Studio Basement -> DBS Basement -> Elevator Area
    =>   Dead Bird Studio - Elevator Area
 Dead Bird Studio - Tightrope Chest (Player1)
@@ -1721,15 +1721,15 @@ Dead Bird Studio Basement - Disco Room (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
-   =>   The Subcon Well -> Mafia Town - Act 4: Connection 2
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
+   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
    =>   Dead Bird Studio Basement
 Dead Bird Studio Basement - Tightrope (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
-   =>   The Subcon Well -> Mafia Town - Act 4: Connection 2
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
+   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
    =>   Dead Bird Studio Basement
 Desert Ledge (Player2)
         Links House -> Links House Exit
@@ -2200,8 +2200,8 @@ Mafia Town - Blue Vault (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
-   =>   The Subcon Well -> Mafia Town - Act 4: Connection 2
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
+   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
    =>   Dead Bird Studio Basement -> Mafia Town - Act 7: Connection 1
    =>   The Golden Vault -> Mafia Town Entrance TGV
    =>   Mafia Town Area
@@ -2237,8 +2237,8 @@ Mafia Town - Docks Chest (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
-   =>   The Subcon Well -> Mafia Town - Act 4: Connection 2
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
+   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
    =>   Dead Bird Studio Basement -> Mafia Town - Act 7: Connection 1
    =>   The Golden Vault -> Mafia Town Entrance TGV
    =>   Mafia Town Area
@@ -2260,8 +2260,8 @@ Mafia Town - Old Man (Seaside Spaghetti) (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
-   =>   The Subcon Well -> Mafia Town - Act 4: Connection 2
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
+   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
    =>   Dead Bird Studio Basement -> Mafia Town - Act 7: Connection 1
    =>   The Golden Vault -> Mafia Town Entrance TGV
    =>   Mafia Town Area
@@ -2269,8 +2269,8 @@ Mafia Town - Old Man (Steel Beams) (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
-   =>   The Subcon Well -> Mafia Town - Act 4: Connection 2
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
+   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
    =>   Dead Bird Studio Basement -> Mafia Town - Act 7: Connection 1
    =>   The Golden Vault -> Mafia Town Entrance TGV
    =>   Mafia Town Area
@@ -2285,8 +2285,8 @@ Mafia Town - Small Boat (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
-   =>   The Subcon Well -> Mafia Town - Act 4: Connection 2
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
+   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
    =>   Dead Bird Studio Basement -> Mafia Town - Act 7: Connection 1
    =>   The Golden Vault -> Mafia Town Entrance TGV
    =>   Mafia Town Area
@@ -2294,8 +2294,8 @@ Mafia Town - Staircase Pon Cluster (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
-   =>   The Subcon Well -> Mafia Town - Act 4: Connection 2
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
+   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
    =>   Dead Bird Studio Basement -> Mafia Town - Act 7: Connection 1
    =>   The Golden Vault -> Mafia Town Entrance TGV
    =>   Mafia Town Area
@@ -2322,27 +2322,24 @@ Mafia Town - Yellow Sphere Building Chest (Player1)
    =>   Mafia Town Area (HUMT)
 Mafia of Cooks - Page: Below Dock (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
-   =>   The Subcon Well -> Mafia Town - Act 4: Connection 2
-   =>   Dead Bird Studio Basement -> Time Rift - Dead Bird Studio Portal - Entrance 2
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   The Illness has Spread -> Battle of the Birds - Act 2: Connection 1
+   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Mafia of Cooks - Page: Beside Red Building (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
-   =>   The Subcon Well -> Mafia Town - Act 4: Connection 2
-   =>   Dead Bird Studio Basement -> Time Rift - Dead Bird Studio Portal - Entrance 2
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   The Illness has Spread -> Battle of the Birds - Act 2: Connection 1
+   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Mafia of Cooks - Page: Top of Boat (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
-   =>   The Subcon Well -> Mafia Town - Act 4: Connection 2
-   =>   Dead Bird Studio Basement -> Time Rift - Dead Bird Studio Portal - Entrance 2
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   The Illness has Spread -> Battle of the Birds - Act 2: Connection 1
+   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
    =>   Time Rift - Mafia of Cooks
 Magic Bat (Player2)
         Links House -> Links House Exit
@@ -2701,10 +2698,10 @@ Subcon Forest - Boss Arena Chest (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Queen Vanessa's Manor -> Mafia Town - Act 3: Connection 1
-   =>   The Subcon Well -> Mafia Town - Act 4: Connection 2
-   =>   Dead Bird Studio Basement -> Mafia Town - Act 6: Connection 1
-   =>   Mail Delivery Service -> Mafia Town - Act 5: Connection 1
+   =>   Queen Vanessa's Manor -> Mafia Town - Act 2: Connection 1
+   =>   Heating Up Mafia Town -> Mafia Town - Act 4: Connection 1
+   =>   Dead Bird Studio Basement -> Mafia Town - Act 7: Connection 1
+   =>   The Golden Vault -> Mafia Town - Act 5: Connection 2
    =>   Your Contract has Expired -> Subcon Forest Entrance YCHE
    =>   Subcon Forest Boss Arena
 Subcon Forest - Burning Forest Treehouse (Player1)
