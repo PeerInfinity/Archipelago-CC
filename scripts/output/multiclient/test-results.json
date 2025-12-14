@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-13T22:14:07.986828",
-    "last_updated": "2025-12-13T23:45:27.034773",
+    "last_updated": "2025-12-14T00:30:26.126082",
     "script_version": "1.0.0"
   },
   "results": {
@@ -2353,7 +2353,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 6.77,
+        "processing_time_seconds": 6.11,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -2371,7 +2371,7 @@
         "client2_total_locations": 0,
         "error_count": 1,
         "locations_checked": 155,
-        "processing_time_seconds": 40.41,
+        "processing_time_seconds": 42.61,
         "return_code": 0,
         "single_client_mode": true,
         "success": true,
@@ -2386,7 +2386,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "Raft.yaml",
-      "timestamp": "2025-12-13T23:44:39.835196",
+      "timestamp": "2025-12-14T00:29:37.391594",
       "world_info": {
         "exporter_path": "exporter/games/raft.py",
         "exporter_size": 12952,
