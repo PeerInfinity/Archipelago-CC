@@ -243,7 +243,7 @@ import * as sc2Logic from './sc2/sc2Logic.js';
 import { helperFunctions as smHelperFunctions, smStateModule } from './sm/smLogic.js';
 import * as stardewValleyLogic from './stardew_valley/stardewValleyLogic.js';
 import { stardewValleyStateModule } from './stardew_valley/stardewValleyLogic.js';
-import * as terrariaLogic from './terraria/terrariaLogic.js';
+// terrariaLogic removed - helpers now exported to rules.json
 // timespinnerLogic removed - helpers now exported to rules.json
 import * as twwLogic from './tww/twwLogic.js';
 import * as wargrooveLogic from './wargroove/wargrooveLogic.js';
@@ -435,7 +435,7 @@ const GAME_REGISTRY = {
   },
   'Terraria': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: terrariaLogic.helperFunctions,
+    // Helper functions now exported to rules.json - no JavaScript needed
     worldClasses: ['TerrariaWorld'],
     aliases: ['Terraria']
   },
