@@ -1983,15 +1983,24 @@ class ASTVisitorMixin:
                             return {'type': 'constant', 'value': None}
                         elif isinstance(resolved_attr, (list, tuple)):
                             # Handle list/tuple values - convert to list for JSON serialization
+                            # IMPORTANT: Only return as constant if all values are JSON-serializable
                             list_value = list(resolved_attr) if isinstance(resolved_attr, tuple) else resolved_attr
-                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} to list: {list_value}")
-                            return {'type': 'constant', 'value': list_value}
+                            if is_simple_value(list_value):
+                                logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} to list: {list_value}")
+                                return {'type': 'constant', 'value': list_value}
+                            else:
+                                logging.debug(f"visit_Attribute: {var_name}.{attr_name} list contains non-serializable values, skipping constant conversion")
                         elif isinstance(resolved_attr, dict):
                             # Handle dict values - keep as dict for subscript access
                             # The frontend's subscript handler can index into plain objects
                             # For iteration (for_iter), the frontend will iterate over keys
-                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} (dict) keeping as dict with {len(resolved_attr)} entries")
-                            return {'type': 'constant', 'value': resolved_attr}
+                            # IMPORTANT: Only return as constant if all values are JSON-serializable
+                            # Dicts like multiworld.worlds contain World objects that aren't serializable
+                            if is_simple_value(resolved_attr):
+                                logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} (dict) keeping as dict with {len(resolved_attr)} entries")
+                                return {'type': 'constant', 'value': resolved_attr}
+                            else:
+                                logging.debug(f"visit_Attribute: {var_name}.{attr_name} dict contains non-serializable values, skipping constant conversion")
                         elif isinstance(resolved_attr, (set, frozenset)):
                             # Handle set/frozenset values - convert to list for JSON serialization
                             list_value = list(resolved_attr)

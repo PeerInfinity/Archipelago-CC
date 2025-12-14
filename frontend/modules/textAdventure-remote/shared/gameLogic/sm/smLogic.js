@@ -1341,8 +1341,8 @@ export function getDmgReduction(snapshot, staticData, envDmg = true) {
   const hasVaria = haveItem(snapshot, staticData, 'Varia').bool;
   const hasGravity = haveItem(snapshot, staticData, 'Gravity').bool;
 
-  // Get player settings - try both snapshot.playerId and default to '1'
-  const playerId = snapshot?.playerId || DEFAULT_PLAYER_ID;
+  // Get player settings - use standard getPlayerId pattern for multiworld support
+  const playerId = getPlayerId(snapshot, staticData);
   const playerSettings = staticData?.settings?.[playerId] || {};
   const romPatches = playerSettings.romPatches || {};
 
@@ -1406,8 +1406,8 @@ export function divideByDmgReduction(snapshot, staticData, value) {
  * @returns {Object} SMBool result
  */
 export function energyReserveCountOkHardRoom(snapshot, staticData, roomName, mult = 1.0) {
-  // Get player settings - try both snapshot.playerId and default to '1'
-  const playerId = snapshot?.playerId || DEFAULT_PLAYER_ID;
+  // Get player settings - use standard getPlayerId pattern for multiworld support
+  const playerId = getPlayerId(snapshot, staticData);
   const playerSettings = staticData?.settings?.[playerId] || {};
   const hardRooms = playerSettings.hardRooms || {};
   const difficulties = hardRooms[roomName];
@@ -1733,13 +1733,23 @@ export function canExitScrewAttackArea(snapshot, staticData) {
 }
 
 export function getPiratesPseudoScrewCoeff(snapshot, staticData) {
-  // Pirates coefficient - conservative: return 1.0 (default)
-  return { bool: true, difficulty: 0 };
+  // Pirates coefficient - returns a multiplier for damage calculations
+  // In VARIA this varies based on items, but default is 1.0
+  return 1.0;
 }
 
 export function int(snapshot, staticData, value) {
-  // Integer conversion helper - just return the value
-  return { bool: true, difficulty: 0 };
+  // Integer conversion helper - convert value to integer
+  // If value is an SMBool-like object, extract the difficulty for the number
+  if (value && typeof value === 'object' && 'difficulty' in value) {
+    return Math.floor(value.difficulty);
+  }
+  // For plain numbers, just floor them
+  if (typeof value === 'number') {
+    return Math.floor(value);
+  }
+  // Default fallback
+  return 0;
 }
 
 // Additional knowledge techniques

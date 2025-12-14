@@ -22,26 +22,31 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
     # NOTE: Use set() for empty blacklist - {} creates an empty dict!
     # All helpers now exported via computed definitions or other mechanisms
     HELPERS_TO_EXPORT_BLACKLIST = set()
-    # Blacklist history (all now exported or handled via other mechanisms):
-    # - 'GanonDefeatRule': Now exported - uses supported patterns (settings, item checks, helpers)
-    # - 'can_extend_magic': Now works with shop region reachability
-    # - 'can_buy': Now exported as computed helper using shop_items data
-    # - 'can_buy_unlimited': Now exported as computed helper using shop_items data
-    # - 'can_get_good_bee': Now works with region_reference and region_attribute support
-    # - 'can_kill_most_things': Now works with default parameter values support
-    # - 'can_shoot_arrows': Now works with can_buy and can_hold_arrows
-    # - 'can_use_bombs': Now works with min/max and setting_value support
-    # - 'has_crystals': Now works with group_count support
-    # - 'has_misery_mire_medallion': Now works with setting_value index support
-    # - 'has_turtle_rock_medallion': Now works with setting_value index support
-    # - 'item_name_in_location_names': Now converted to placement_search rule type
-    # - 'tr_big_key_chest_keys_needed': Now inlined with placement_lookup logic
-    # - 'location_item_name': Now converted to placement_lookup rule type
-    # - 'can_defeat_boss': Now exported - postprocess_rule converts GT multi-boss to helper call
-    # - 'can_reach_region': Now uses native can_reach rule type
-    # - 'can_take_damage': Now uses setting_value instead of helper
 
-    """No longer expands helpers - just validates they're known ALTTP helpers"""
+    # Helpers that should be preserved as helper calls (not inlined by generic pattern matching)
+    # These are either:
+    # - Complex helpers that are exported as definitions via get_helper_definitions()
+    # - Computed helpers defined directly in get_helper_definitions()
+    # All discovered helpers are automatically exported as definitions when
+    # AUTO_EXPORT_DISCOVERED_HELPERS = True, so this set just controls which
+    # helpers are preserved as calls vs potentially inlined by pattern matching.
+    HELPERS_TO_PRESERVE = {
+        'GanonDefeatRule',
+        'can_buy',  # Computed helper using shop_items data
+        'can_buy_unlimited',  # Computed helper using shop_items data
+        'can_extend_magic',
+        'can_get_good_bee',  # Uses region_reference and is_not_bunny
+        'is_not_bunny',  # Takes region parameter, uses region_attribute
+        'can_kill_most_things',
+        'can_shoot_arrows',
+        'can_use_bombs',
+        'has_crystals',  # Exported with group_count support
+        'has_hearts',  # Exported with logical_heart settings
+        'has_misery_mire_medallion',  # Exported with setting_value index support
+        'has_turtle_rock_medallion',  # Exported with setting_value index support
+        'can_defeat_boss',  # Computed helper for GT multi-boss locations
+        'orig_rule',  # Internal helper that doesn't appear in final export
+    }
     
     # Items that are always events, regardless of their static item_code in item_table
     # These items are placed as events during runtime even if they have item codes defined
@@ -71,81 +76,9 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         'Triforce'
     }
     
-    def __init__(self):
-        # Define ALTTP-specific helpers that should NOT be expanded
-        self.known_helpers = {
-            'GanonDefeatRule',
-            # 'basement_key_rule',  # Removed - can be inlined, JS impl is incorrect
-            # 'can_activate_crystal_switch',  # Removed - item checks + helper calls
-            # 'can_bomb_or_bonk',  # Removed - item check + can_use_bombs, may need to preserve can_use_bombs
-            'can_buy',  # Implemented in frontend using shop_items data
-            'can_buy_unlimited',  # Implemented in frontend using shop_items data
-            'can_extend_magic',
-            'can_get_good_bee',  # Uses region_reference and is_not_bunny
-            'is_not_bunny',  # Takes region parameter, uses region_attribute
-            'can_kill_most_things',
-            # 'can_lift_heavy_rocks',  # Removed - simple item check, can be inlined
-            # 'can_lift_rocks',  # Removed - simple item checks, can be inlined
-            # 'can_melt_things',  # Removed - item checks + settings check
-            # 'can_retrieve_tablet',  # Removed - item checks + settings check
-            'can_shoot_arrows',
-            'can_use_bombs',
-            # 'has_beam_sword',  # Removed - multiple item checks, can be inlined
-            'has_crystals',  # Exported with group_count support
-            # 'has_crystals_for_ganon',  # Removed - has_crystals now handles dynamic arguments
-            # 'has_fire_source',  # Removed - simple item checks, can be inlined
-            'has_hearts',  # Exported with logical_heart settings
-            # 'has_melee_weapon',  # Removed - calls has_sword + item check, can be inlined
-            'has_misery_mire_medallion',  # Exported with setting_value index support
-            # 'has_sword',  # Removed - multiple item checks, can be inlined
-            'has_turtle_rock_medallion',  # Exported with setting_value index support
-            # 'item_name_in_location_names',  # Now converted to placement_search rule type
-            # 'tr_big_key_chest_keys_needed',  # Now inlined with placement_lookup logic
-            # 'location_item_name',  # Now converted to placement_lookup rule type
-            # Added in postprocess_rule
-            'can_defeat_boss',
-            # 'can_reach_region',  # Now uses native can_reach rule type
-            # 'can_take_damage',  # Now uses setting_value instead of helper
-            # This function doesn't appear in the final export, but we get warning messages if we remove it from this list
-            'orig_rule',
-        }
-
-    def should_preserve_as_helper(self, func_name: str) -> bool:
-        """Check if a function should be preserved as a helper call."""
-        return func_name in self.known_helpers
-
-    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
-        """Override to validate helper names instead of expanding them."""
-        if not rule or not isinstance(rule, dict):
-            return rule
-
-        rule_type = rule.get('type')
-
-        if rule_type == 'helper':
-            helper_name = rule.get('name')
-            if helper_name not in self.known_helpers:
-                logger.warning(f"Unknown ALTTP helper found: {helper_name}. Preserving.")
-            # Always return the helper node as-is for ALTTP
-            return rule
-
-        # Recursively process conditions in boolean operations
-        if rule_type in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
-
-        # Recursively process nested conditions
-        if rule_type == 'not':
-             rule['condition'] = self.expand_rule(rule.get('condition'), _depth + 1)
-        if rule_type == 'conditional':
-             rule['test'] = self.expand_rule(rule.get('test'), _depth + 1)
-             rule['if_true'] = self.expand_rule(rule.get('if_true'), _depth + 1)
-             rule['if_false'] = self.expand_rule(rule.get('if_false'), _depth + 1)
-
-        # Handle other potential nested rules here
-        if rule_type == 'all_of':
-             rule['element_rule'] = self.expand_rule(rule.get('element_rule'), _depth + 1)
-             # Comprehension details usually don't contain rules to expand
-
-        return rule
+    # Note: No __init__ override needed - base class handles initialization
+    # Note: No should_preserve_as_helper override needed - base class checks HELPERS_TO_PRESERVE
+    # Note: No expand_rule override needed - base class handles rule expansion
 
     def replace_name(self, name: str) -> str:
         """Replace ALTTP-specific name references with standard equivalents."""

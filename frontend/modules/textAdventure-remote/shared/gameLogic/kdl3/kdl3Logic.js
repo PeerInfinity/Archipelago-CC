@@ -1,418 +1,271 @@
 /**
- * Thread-agnostic Kirby's Dream Land 3 game logic functions
- * These pure functions operate on a canonical state object and return results
- * without modifying the state
+ * Kirby's Dream Land 3 helper functions for rule evaluation.
  *
- * Corresponds to helper functions in worlds/kdl3/rules.py
+ * This module provides JavaScript implementations of complex helper functions
+ * that cannot be automatically exported from Python due to their use of
+ * loops, iterators, and dynamic function dispatch.
  */
+
+import { helperFunctions as genericHelpers } from '../generic/genericLogic.js';
 
 /**
- * Check if player has an item
- * @param {Object} snapshot - Canonical state snapshot
- * @param {string} itemName - Name of the item to check
- * @param {Object} staticData - Static game data
- * @returns {boolean} True if player has the item
+ * The restrictive enemy/ability pairs for Sand Canyon 6 (R.O.B. assembly).
+ * This matches enemy_abilities.enemy_restrictive[1:5] from Python.
+ * Each entry is [allowedAbilities, bukisetEnemies].
  */
-export function has(snapshot, staticData, itemName) {
-  // First check if it's in flags (events, checked locations, etc.)
-  if (snapshot.flags && snapshot.flags.includes(itemName)) {
-    return true;
-  }
+const ENEMY_RESTRICTIVE_ROB = [
+  [["Parasol Ability", "Cutter Ability"], ["Bukiset (Parasol)", "Bukiset (Cutter)"]],
+  [["Spark Ability", "Clean Ability"], ["Bukiset (Spark)", "Bukiset (Clean)"]],
+  [["Ice Ability", "Needle Ability"], ["Bukiset (Ice)", "Bukiset (Needle)"]],
+  [["Stone Ability", "Burning Ability"], ["Bukiset (Stone)", "Bukiset (Burning)"]],
+];
 
-  // Also check state.events
-  if (snapshot.events && snapshot.events.includes(itemName)) {
-    return true;
-  }
+/**
+ * Enemies required for fixing angel wings (Iceberg 6 - Angel location).
+ */
+const ANGEL_WINGS_ENEMIES = [
+  "Sparky", "Blocky", "Jumper Shoot", "Yuki",
+  "Sir Kibble", "Haboki", "Boboo", "Captain Stitch"
+];
 
+/**
+ * Map from ability names to their item requirements.
+ * Each ability requires both the base item and the ability item.
+ */
+const ABILITY_REQUIREMENTS = {
+  "No Ability": null,  // Always reachable
+  "Burning Ability": ["Burning", "Burning Ability"],
+  "Stone Ability": ["Stone", "Stone Ability"],
+  "Ice Ability": ["Ice", "Ice Ability"],
+  "Needle Ability": ["Needle", "Needle Ability"],
+  "Clean Ability": ["Clean", "Clean Ability"],
+  "Parasol Ability": ["Parasol", "Parasol Ability"],
+  "Spark Ability": ["Spark", "Spark Ability"],
+  "Cutter Ability": ["Cutter", "Cutter Ability"],
+};
+
+/**
+ * Animal friend requirements - each needs both the animal and spawn items.
+ */
+const ANIMAL_REQUIREMENTS = {
+  "Rick": ["Rick", "Rick Spawn"],
+  "Kine": ["Kine", "Kine Spawn"],
+  "Coo": ["Coo", "Coo Spawn"],
+  "Nago": ["Nago", "Nago Spawn"],
+  "ChuChu": ["ChuChu", "ChuChu Spawn"],
+  "Pitch": ["Pitch", "Pitch Spawn"],
+};
+
+/**
+ * Helper to check if player has an item.
+ */
+function hasItem(snapshot, itemName) {
   // Check inventory
-  if (!snapshot.inventory) return false;
-
-  // Direct item check
-  if ((snapshot.inventory[itemName] || 0) > 0) {
+  if (snapshot?.inventory?.[itemName] > 0) {
     return true;
   }
-
+  // Check flags
+  if (snapshot?.flags?.includes(itemName)) {
+    return true;
+  }
+  // Check events
+  if (snapshot?.events?.includes(itemName)) {
+    return true;
+  }
   return false;
 }
 
 /**
- * Count how many of an item the player has
- * @param {Object} snapshot - Canonical state snapshot
- * @param {string} itemName - Name of the item to count
- * @param {Object} staticData - Static game data
- * @returns {number} Number of items
+ * Check if player can reach a specific ability.
+ * Requires both the base ability item and the ability itself.
+ * @param {Object} snapshot - Game state snapshot
+ * @param {string} abilityName - Name of the ability (e.g., "Burning Ability")
+ * @returns {boolean} True if ability is reachable
  */
-export function count(snapshot, staticData, itemName) {
-  if (!snapshot.inventory) return 0;
-  return snapshot.inventory[itemName] || 0;
-}
-
-/**
- * Check if player can reach Rick (has Rick and Rick Spawn)
- * Corresponds to can_reach_rick in worlds/kdl3/rules.py:20
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data
- * @param {any} itemName - Not used for this helper
- * @returns {boolean} True if player can reach Rick
- */
-export function can_reach_rick(snapshot, staticData, itemName) {
-  return has(snapshot, staticData, 'Rick') && has(snapshot, staticData, 'Rick Spawn');
-}
-
-/**
- * Check if player can reach Kine (has Kine and Kine Spawn)
- * Corresponds to can_reach_kine in worlds/kdl3/rules.py:24
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data
- * @param {any} itemName - Not used for this helper
- * @returns {boolean} True if player can reach Kine
- */
-export function can_reach_kine(snapshot, staticData, itemName) {
-  return has(snapshot, staticData, 'Kine') && has(snapshot, staticData, 'Kine Spawn');
-}
-
-/**
- * Check if player can reach Coo (has Coo and Coo Spawn)
- * Corresponds to can_reach_coo in worlds/kdl3/rules.py:28
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data
- * @param {any} itemName - Not used for this helper
- * @returns {boolean} True if player can reach Coo
- */
-export function can_reach_coo(snapshot, staticData, itemName) {
-  return has(snapshot, staticData, 'Coo') && has(snapshot, staticData, 'Coo Spawn');
-}
-
-/**
- * Check if player can reach Nago (has Nago and Nago Spawn)
- * Corresponds to can_reach_nago in worlds/kdl3/rules.py:32
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data
- * @param {any} itemName - Not used for this helper
- * @returns {boolean} True if player can reach Nago
- */
-export function can_reach_nago(snapshot, staticData, itemName) {
-  return has(snapshot, staticData, 'Nago') && has(snapshot, staticData, 'Nago Spawn');
-}
-
-/**
- * Check if player can reach ChuChu (has ChuChu and ChuChu Spawn)
- * Corresponds to can_reach_chuchu in worlds/kdl3/rules.py:36
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data
- * @param {any} itemName - Not used for this helper
- * @returns {boolean} True if player can reach ChuChu
- */
-export function can_reach_chuchu(snapshot, staticData, itemName) {
-  return has(snapshot, staticData, 'ChuChu') && has(snapshot, staticData, 'ChuChu Spawn');
-}
-
-/**
- * Check if player can reach Pitch (has Pitch and Pitch Spawn)
- * Corresponds to can_reach_pitch in worlds/kdl3/rules.py:40
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data
- * @param {any} itemName - Not used for this helper
- * @returns {boolean} True if player can reach Pitch
- */
-export function can_reach_pitch(snapshot, staticData, itemName) {
-  return has(snapshot, staticData, 'Pitch') && has(snapshot, staticData, 'Pitch Spawn');
-}
-
-/**
- * Check if player can reach Burning ability (has Burning and Burning Ability)
- * Corresponds to can_reach_burning in worlds/kdl3/rules.py:44
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data
- * @param {any} itemName - Not used for this helper
- * @returns {boolean} True if player can reach Burning ability
- */
-export function can_reach_burning(snapshot, staticData, itemName) {
-  return has(snapshot, staticData, 'Burning') && has(snapshot, staticData, 'Burning Ability');
-}
-
-/**
- * Check if player can reach Stone ability (has Stone and Stone Ability)
- * Corresponds to can_reach_stone in worlds/kdl3/rules.py:48
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data
- * @param {any} itemName - Not used for this helper
- * @returns {boolean} True if player can reach Stone ability
- */
-export function can_reach_stone(snapshot, staticData, itemName) {
-  return has(snapshot, staticData, 'Stone') && has(snapshot, staticData, 'Stone Ability');
-}
-
-/**
- * Check if player can reach Ice ability (has Ice and Ice Ability)
- * Corresponds to can_reach_ice in worlds/kdl3/rules.py:52
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data
- * @param {any} itemName - Not used for this helper
- * @returns {boolean} True if player can reach Ice ability
- */
-export function can_reach_ice(snapshot, staticData, itemName) {
-  return has(snapshot, staticData, 'Ice') && has(snapshot, staticData, 'Ice Ability');
-}
-
-/**
- * Check if player can reach Needle ability (has Needle and Needle Ability)
- * Corresponds to can_reach_needle in worlds/kdl3/rules.py:56
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data
- * @param {any} itemName - Not used for this helper
- * @returns {boolean} True if player can reach Needle ability
- */
-export function can_reach_needle(snapshot, staticData, itemName) {
-  return has(snapshot, staticData, 'Needle') && has(snapshot, staticData, 'Needle Ability');
-}
-
-/**
- * Check if player can reach Clean ability (has Clean and Clean Ability)
- * Corresponds to can_reach_clean in worlds/kdl3/rules.py:60
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data
- * @param {any} itemName - Not used for this helper
- * @returns {boolean} True if player can reach Clean ability
- */
-export function can_reach_clean(snapshot, staticData, itemName) {
-  return has(snapshot, staticData, 'Clean') && has(snapshot, staticData, 'Clean Ability');
-}
-
-/**
- * Check if player can reach Parasol ability (has Parasol and Parasol Ability)
- * Corresponds to can_reach_parasol in worlds/kdl3/rules.py:64
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data
- * @param {any} itemName - Not used for this helper
- * @returns {boolean} True if player can reach Parasol ability
- */
-export function can_reach_parasol(snapshot, staticData, itemName) {
-  return has(snapshot, staticData, 'Parasol') && has(snapshot, staticData, 'Parasol Ability');
-}
-
-/**
- * Check if player can reach Spark ability (has Spark and Spark Ability)
- * Corresponds to can_reach_spark in worlds/kdl3/rules.py:68
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data
- * @param {any} itemName - Not used for this helper
- * @returns {boolean} True if player can reach Spark ability
- */
-export function can_reach_spark(snapshot, staticData, itemName) {
-  return has(snapshot, staticData, 'Spark') && has(snapshot, staticData, 'Spark Ability');
-}
-
-/**
- * Check if player can reach Cutter ability (has Cutter and Cutter Ability)
- * Corresponds to can_reach_cutter in worlds/kdl3/rules.py:72
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data
- * @param {any} itemName - Not used for this helper
- * @returns {boolean} True if player can reach Cutter ability
- */
-export function can_reach_cutter(snapshot, staticData, itemName) {
-  return has(snapshot, staticData, 'Cutter') && has(snapshot, staticData, 'Cutter Ability');
-}
-
-/**
- * Check if player can reach a boss location
- * Corresponds to can_reach_boss in worlds/kdl3/rules.py:12
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data
- * @param {number} level - The level number (1-5)
- * @param {number} open_world - Whether open world mode is enabled (0 or 1)
- * @param {number} ow_boss_req - Number of stage completions required in open world mode
- * @param {Object} player_levels - Dictionary mapping level numbers to location IDs
- * @returns {boolean} True if player can reach the boss
- */
-export function can_reach_boss(snapshot, staticData, level, open_world, ow_boss_req, player_levels) {
-  // Map of level number to level name
-  const level_names = {
-    1: 'Grass Land',
-    2: 'Ripple Field',
-    3: 'Sand Canyon',
-    4: 'Cloudy Park',
-    5: 'Iceberg'
-  };
-
-  if (open_world) {
-    // In open world mode, check if player has enough stage completions for this level
-    const level_name = level_names[level];
-    if (!level_name) return false;
-
-    const stage_completion_item = `${level_name} - Stage Completion`;
-    return count(snapshot, staticData, stage_completion_item) >= ow_boss_req;
-  } else {
-    // In non-open world mode, check if player can reach the boss location
-    // The boss location is the last location in the level (index 6)
-    const level_locations = player_levels[level];
-    if (!level_locations || level_locations.length < 7) return false;
-
-    const boss_location_id = level_locations[6]; // Index 6 is the boss location
-
-    // Check if the boss location is accessible
-    if (!snapshot.accessible_locations) return false;
-    return snapshot.accessible_locations.includes(boss_location_id);
+function canReachAbility(snapshot, abilityName) {
+  // "No Ability" is always reachable
+  if (abilityName === "No Ability") {
+    return true;
   }
-}
 
-/**
- * Check if player can assemble R.O.B (specific enemy/ability combination check)
- * Corresponds to can_assemble_rob in worlds/kdl3/rules.py:89
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data
- * @param {Object} copy_abilities - Dictionary mapping enemy names to their abilities
- * @returns {boolean} True if player can assemble R.O.B
- */
-export function can_assemble_rob(snapshot, staticData, copy_abilities) {
-  // Check animal requirements: must have both Coo and Kine
-  if (!can_reach_coo(snapshot, staticData) || !can_reach_kine(snapshot, staticData)) {
+  const requirements = ABILITY_REQUIREMENTS[abilityName];
+  if (!requirements) {
+    // Unknown ability - assume not reachable
     return false;
   }
 
-  // Enemy restrictive requirements from worlds/kdl3/names/enemy_abilities.py:810-822
-  // This is indices 1-4 of the enemy_restrictive array (Python's [1:5])
-  const enemy_restrictive = [
-    // Index 1: Parasol OR Cutter from Bukisets
-    {
-      abilities: ['Parasol Ability', 'Cutter Ability'],
-      bukisets: ['Bukiset (Parasol)', 'Bukiset (Cutter)']
-    },
-    // Index 2: Spark OR Clean from Bukisets
-    {
-      abilities: ['Spark Ability', 'Clean Ability'],
-      bukisets: ['Bukiset (Spark)', 'Bukiset (Clean)']
-    },
-    // Index 3: Ice OR Needle from Bukisets
-    {
-      abilities: ['Ice Ability', 'Needle Ability'],
-      bukisets: ['Bukiset (Ice)', 'Bukiset (Needle)']
-    },
-    // Index 4: Stone OR Burning from Bukisets
-    {
-      abilities: ['Stone Ability', 'Burning Ability'],
-      bukisets: ['Bukiset (Stone)', 'Bukiset (Burning)']
-    }
-  ];
+  // Check both items required for this ability
+  const [baseItem, abilityItem] = requirements;
+  return hasItem(snapshot, baseItem) && hasItem(snapshot, abilityItem);
+}
 
-  // Ability map: maps ability names to their check functions
-  const ability_map = {
-    'No Ability': () => true,
-    'Burning Ability': can_reach_burning,
-    'Stone Ability': can_reach_stone,
-    'Ice Ability': can_reach_ice,
-    'Needle Ability': can_reach_needle,
-    'Clean Ability': can_reach_clean,
-    'Parasol Ability': can_reach_parasol,
-    'Spark Ability': can_reach_spark,
-    'Cutter Ability': can_reach_cutter
-  };
+/**
+ * Check if player can reach a specific animal friend.
+ * Requires both the animal item and its spawn item.
+ * @param {Object} snapshot - Game state snapshot
+ * @param {string} animalName - Name of the animal (e.g., "Rick")
+ * @returns {boolean} True if animal is reachable
+ */
+function canReachAnimal(snapshot, animalName) {
+  const requirements = ANIMAL_REQUIREMENTS[animalName];
+  if (!requirements) {
+    return false;
+  }
+  const [animalItem, spawnItem] = requirements;
+  return hasItem(snapshot, animalItem) && hasItem(snapshot, spawnItem);
+}
 
-  // Check each restrictive requirement
-  for (const {abilities, bukisets} of enemy_restrictive) {
-    // Find bukisets where the copy ability is in the required abilities list
-    const matching_bukisets = bukisets.filter(bukiset =>
-      copy_abilities[bukiset] && abilities.includes(copy_abilities[bukiset])
-    );
+/**
+ * Get copy_abilities mapping from settings or argument.
+ * @param {Object} staticData - Static game data
+ * @param {string|number} playerId - Player ID
+ * @param {Object} [copyAbilitiesArg] - Optional copy_abilities passed as argument
+ * @returns {Object} Map from enemy name to ability name
+ */
+function getCopyAbilities(staticData, playerId, copyAbilitiesArg) {
+  // If passed as argument, use that
+  if (copyAbilitiesArg && typeof copyAbilitiesArg === 'object') {
+    return copyAbilitiesArg;
+  }
+  // Otherwise get from settings
+  const playerIdKey = String(playerId || '1');
+  return staticData?.settings?.[playerIdKey]?.copy_abilities || {};
+}
 
-    // Check if we can reach any of the matching abilities
-    let can_reach_any = false;
-    for (const bukiset of matching_bukisets) {
-      const ability = copy_abilities[bukiset];
-      const ability_checker = ability_map[ability];
-      if (ability_checker && ability_checker(snapshot, staticData)) {
-        can_reach_any = true;
-        break;
+/**
+ * Check if player can assemble R.O.B. in Sand Canyon 6.
+ *
+ * Requirements:
+ * 1. Must have Coo and Kine animal friends
+ * 2. For each of 4 Bukiset pairs, at least one Bukiset must:
+ *    - Have an ability in the allowed abilities list (via copy_abilities mapping)
+ *    - And that ability must be reachable
+ * 3. Must have Parasol and Stone abilities
+ *
+ * @param {Object} snapshot - Game state snapshot
+ * @param {Object} staticData - Static game data (contains settings with copy_abilities)
+ * @param {Object} [copyAbilitiesArg] - copy_abilities passed from rule args
+ * @returns {boolean} True if R.O.B. can be assembled
+ */
+function can_assemble_rob(snapshot, staticData, copyAbilitiesArg) {
+  // Check animal requirements: need both Coo and Kine
+  if (!canReachAnimal(snapshot, "Coo") || !canReachAnimal(snapshot, "Kine")) {
+    return false;
+  }
+
+  // Get copy_abilities from argument or settings
+  const playerId = snapshot?.player?.id || snapshot?.player?.slot || '1';
+  const copyAbilities = getCopyAbilities(staticData, playerId, copyAbilitiesArg);
+
+  // Check each restrictive pair
+  for (const [allowedAbilities, bukisets] of ENEMY_RESTRICTIVE_ROB) {
+    // Find bukisets that have an ability in the allowed list
+    // and check if we can reach at least one of those abilities
+    let canReachAny = false;
+
+    for (const bukiset of bukisets) {
+      const enemyAbility = copyAbilities[bukiset];
+      // Check if this bukiset's ability is in the allowed list
+      if (allowedAbilities.includes(enemyAbility)) {
+        // Check if we can reach this ability
+        if (canReachAbility(snapshot, enemyAbility)) {
+          canReachAny = true;
+          break;  // Found one that works
+        }
       }
     }
 
-    // If we can't reach any of the required abilities for this group, fail
-    if (!can_reach_any) {
+    // If none of the bukisets in this pair have a reachable allowed ability, fail
+    if (!canReachAny) {
       return false;
     }
   }
 
-  // Finally, must have both Parasol and Stone abilities
-  return can_reach_parasol(snapshot, staticData) && can_reach_stone(snapshot, staticData);
+  // Finally, check the known needed abilities: Parasol and Stone
+  return canReachAbility(snapshot, "Parasol Ability") &&
+         canReachAbility(snapshot, "Stone Ability");
 }
 
 /**
- * Check if player can fix Angel Wings (specific enemy/ability combination check)
- * Corresponds to can_fix_angel_wings in worlds/kdl3/rules.py:106
- * @param {Object} snapshot - Canonical state snapshot
- * @param {Object} staticData - Static game data
- * @param {Object} copy_abilities - Dictionary mapping enemy names to their abilities
- * @returns {boolean} True if player can fix Angel Wings
+ * Check if player can fix the angel wings in Iceberg 6.
+ *
+ * Requires the ability to reach ALL abilities from specific enemies:
+ * Sparky, Blocky, Jumper Shoot, Yuki, Sir Kibble, Haboki, Boboo, Captain Stitch
+ *
+ * @param {Object} snapshot - Game state snapshot
+ * @param {Object} staticData - Static game data (contains settings with copy_abilities)
+ * @param {Object} [copyAbilitiesArg] - copy_abilities passed from rule args
+ * @returns {boolean} True if angel wings can be fixed
  */
-export function can_fix_angel_wings(snapshot, staticData, copy_abilities) {
-  // Must be able to reach the abilities of these specific enemies
-  const required_enemies = [
-    'Sparky', 'Blocky', 'Jumper Shoot', 'Yuki',
-    'Sir Kibble', 'Haboki', 'Boboo', 'Captain Stitch'
-  ];
+function can_fix_angel_wings(snapshot, staticData, copyAbilitiesArg) {
+  // Get copy_abilities from argument or settings
+  const playerId = snapshot?.player?.id || snapshot?.player?.slot || '1';
+  const copyAbilities = getCopyAbilities(staticData, playerId, copyAbilitiesArg);
 
-  // Ability map: maps ability names to their check functions
-  const ability_map = {
-    'No Ability': () => true,
-    'Burning Ability': can_reach_burning,
-    'Stone Ability': can_reach_stone,
-    'Ice Ability': can_reach_ice,
-    'Needle Ability': can_reach_needle,
-    'Clean Ability': can_reach_clean,
-    'Parasol Ability': can_reach_parasol,
-    'Spark Ability': can_reach_spark,
-    'Cutter Ability': can_reach_cutter
-  };
-
-  // Check if we can reach all required abilities
-  for (const enemy of required_enemies) {
-    const ability = copy_abilities[enemy];
-    if (!ability) {
-      return false; // Enemy not found in mapping
-    }
-
-    const ability_checker = ability_map[ability];
-    if (!ability_checker) {
-      return false; // Unknown ability
-    }
-
-    if (!ability_checker(snapshot, staticData)) {
-      return false; // Can't reach this ability
+  // Must be able to reach ALL abilities from the required enemies
+  for (const enemy of ANGEL_WINGS_ENEMIES) {
+    const enemyAbility = copyAbilities[enemy];
+    if (!canReachAbility(snapshot, enemyAbility)) {
+      return false;
     }
   }
 
   return true;
 }
 
-// Helper function registry
+/**
+ * Exported helper functions for KDL3.
+ * Extends generic helpers with KDL3-specific complex helpers.
+ */
 export const helperFunctions = {
-  // Core inventory functions
-  has,
-  count,
+  // Include all generic helpers (has, count, etc.)
+  ...genericHelpers,
 
-  // Animal friend helpers
-  can_reach_rick,
-  can_reach_kine,
-  can_reach_coo,
-  can_reach_nago,
-  can_reach_chuchu,
-  can_reach_pitch,
-
-  // Copy ability helpers
-  can_reach_burning,
-  can_reach_stone,
-  can_reach_ice,
-  can_reach_needle,
-  can_reach_clean,
-  can_reach_parasol,
-  can_reach_spark,
-  can_reach_cutter,
-
-  // Boss access helper
-  can_reach_boss,
-
-  // Complex enemy/ability helpers
+  // KDL3-specific complex helpers
   can_assemble_rob,
   can_fix_angel_wings,
+
+  // Expose ability/animal reach functions in case they're needed directly
+  can_reach_burning(snapshot, staticData) {
+    return canReachAbility(snapshot, "Burning Ability");
+  },
+  can_reach_stone(snapshot, staticData) {
+    return canReachAbility(snapshot, "Stone Ability");
+  },
+  can_reach_ice(snapshot, staticData) {
+    return canReachAbility(snapshot, "Ice Ability");
+  },
+  can_reach_needle(snapshot, staticData) {
+    return canReachAbility(snapshot, "Needle Ability");
+  },
+  can_reach_clean(snapshot, staticData) {
+    return canReachAbility(snapshot, "Clean Ability");
+  },
+  can_reach_parasol(snapshot, staticData) {
+    return canReachAbility(snapshot, "Parasol Ability");
+  },
+  can_reach_spark(snapshot, staticData) {
+    return canReachAbility(snapshot, "Spark Ability");
+  },
+  can_reach_cutter(snapshot, staticData) {
+    return canReachAbility(snapshot, "Cutter Ability");
+  },
+  can_reach_rick(snapshot, staticData) {
+    return canReachAnimal(snapshot, "Rick");
+  },
+  can_reach_kine(snapshot, staticData) {
+    return canReachAnimal(snapshot, "Kine");
+  },
+  can_reach_coo(snapshot, staticData) {
+    return canReachAnimal(snapshot, "Coo");
+  },
+  can_reach_nago(snapshot, staticData) {
+    return canReachAnimal(snapshot, "Nago");
+  },
+  can_reach_chuchu(snapshot, staticData) {
+    return canReachAnimal(snapshot, "ChuChu");
+  },
+  can_reach_pitch(snapshot, staticData) {
+    return canReachAnimal(snapshot, "Pitch");
+  },
 };
