@@ -645,7 +645,7 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         'dark_room_logic': {0: 'lamp', 1: 'torches', 2: 'none'},
         'enemy_health': {0: 'easy', 1: 'default', 2: 'hard', 3: 'expert'},
         'enemy_damage': {0: 'default', 1: 'shuffled', 2: 'chaos'},
-        'glitches_required': {0: 'none', 1: 'overworld_glitches', 2: 'major_glitches', 3: 'no_logic'},
+        'glitches_required': {0: 'no_glitches', 1: 'minor_glitches', 2: 'overworld_glitches', 3: 'hybrid_major_glitches', 4: 'no_logic'},
         'accessibility': {0: 'items', 1: 'locations', 2: 'none'},
         'dungeon_counters': {0: 'default', 1: 'on', 2: 'off'},
         'pot_shuffle': {0: 'off', 1: 'on'},
