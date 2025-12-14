@@ -762,42 +762,122 @@ class HelperCodeGenerator:
         if isinstance(value, list):
             items = [self._generate_expression({'type': 'constant', 'value': v}) for v in value]
             return f"[{', '.join(items)}]"
+        if isinstance(value, dict):
+            # Handle dict constants - convert string keys that look like integers
+            items = []
+            for k, v in value.items():
+                # Try to convert string keys that look like integers
+                try:
+                    key_repr = str(int(k))
+                except (ValueError, TypeError):
+                    key_repr = repr(k)
+                val_repr = self._generate_expression({'type': 'constant', 'value': v})
+                items.append(f"{key_repr}: {val_repr}")
+            return "{" + ", ".join(items) + "}"
         return str(value)
 
     def _expr_name(self, expr: Dict[str, Any]) -> str:
         """Generate variable name reference."""
-        return expr.get('name', '_')
+        name = expr.get('name', '_')
+        # In helper functions, 'world' isn't available directly - access via state
+        if name == 'world':
+            return 'state.multiworld.worlds[player]'
+        return name
 
     def _expr_item_check(self, expr: Dict[str, Any]) -> str:
         """Generate state.has() call."""
         item_raw = expr.get('item', '')
-        item = self._extract_constant(item_raw, '')
         count_raw = expr.get('count', 1)
-        count = self._extract_constant(count_raw, 1)
 
-        if count == 1:
-            return f'state.has({repr(item)}, player)'
-        return f'state.has({repr(item)}, player, {count})'
+        # Handle item - could be a constant string or a variable/expression
+        if isinstance(item_raw, dict):
+            if item_raw.get('type') == 'constant':
+                item_expr = repr(item_raw.get('value', ''))
+            else:
+                # Variable reference or complex expression (e.g., dict[hat])
+                item_expr = self._generate_expression(item_raw)
+        elif isinstance(item_raw, str):
+            item_expr = repr(item_raw)
+        else:
+            item_expr = repr(str(item_raw))
+
+        # Handle count - could be a constant or a complex expression
+        if isinstance(count_raw, dict):
+            if count_raw.get('type') == 'constant':
+                count_expr = str(count_raw.get('value', 1))
+            else:
+                # Complex expression (e.g., get_hat_cost(hat))
+                count_expr = self._generate_expression(count_raw)
+        elif isinstance(count_raw, (int, float)):
+            count_expr = str(int(count_raw))
+        else:
+            count_expr = '1'
+
+        if count_expr == '1':
+            return f'state.has({item_expr}, player)'
+        return f'state.has({item_expr}, player, {count_expr})'
 
     def _expr_count_check(self, expr: Dict[str, Any]) -> str:
         """Generate state.has() with count check."""
         item_raw = expr.get('item', '')
-        item = self._extract_constant(item_raw, '')
         count_raw = expr.get('count', 1)
-        count = self._extract_constant(count_raw, 1)
 
-        return f'state.has({repr(item)}, player, {count})'
+        # Handle item - could be a constant string or a variable/expression
+        if isinstance(item_raw, dict):
+            if item_raw.get('type') == 'constant':
+                item_expr = repr(item_raw.get('value', ''))
+            else:
+                item_expr = self._generate_expression(item_raw)
+        elif isinstance(item_raw, str):
+            item_expr = repr(item_raw)
+        else:
+            item_expr = repr(str(item_raw))
+
+        # Handle count - could be a constant or a complex expression
+        if isinstance(count_raw, dict):
+            if count_raw.get('type') == 'constant':
+                count_expr = str(count_raw.get('value', 1))
+            else:
+                count_expr = self._generate_expression(count_raw)
+        elif isinstance(count_raw, (int, float)):
+            count_expr = str(int(count_raw))
+        else:
+            count_expr = '1'
+
+        return f'state.has({item_expr}, player, {count_expr})'
 
     def _expr_group_check(self, expr: Dict[str, Any]) -> str:
         """Generate state.has_group() call."""
         group_raw = expr.get('group', '')
-        group = self._extract_constant(group_raw, '')
         count_raw = expr.get('count', 1)
-        count = self._extract_constant(count_raw, 1)
 
-        if count == 1:
-            return f'state.has_group({repr(group)}, player)'
-        return f'state.has_group({repr(group)}, player, {count})'
+        # Handle group - could be a constant string or a variable reference
+        if isinstance(group_raw, dict):
+            if group_raw.get('type') == 'constant':
+                group_expr = repr(group_raw.get('value', ''))
+            else:
+                # Variable reference or other expression - generate the expression
+                group_expr = self._generate_expression(group_raw)
+        elif isinstance(group_raw, str):
+            group_expr = repr(group_raw)
+        else:
+            group_expr = repr(str(group_raw))
+
+        # Handle count - could be a constant or a complex expression
+        if isinstance(count_raw, dict):
+            if count_raw.get('type') == 'constant':
+                count_expr = str(count_raw.get('value', 1))
+            else:
+                # Complex expression (e.g., len(world.item_name_groups[relic]))
+                count_expr = self._generate_expression(count_raw)
+        elif isinstance(count_raw, (int, float)):
+            count_expr = str(int(count_raw))
+        else:
+            count_expr = '1'
+
+        if count_expr == '1':
+            return f'state.has_group({group_expr}, player)'
+        return f'state.has_group({group_expr}, player, {count_expr})'
 
     def _expr_and(self, expr: Dict[str, Any]) -> str:
         """Generate and expression."""
@@ -880,7 +960,7 @@ class HelperCodeGenerator:
             return self.get_helper_call(name, args)
 
         # Built-in Python functions
-        if name in ('any', 'all', 'len', 'sum', 'min', 'max', 'sorted', 'list', 'iter', 'next'):
+        if name in ('any', 'all', 'len', 'sum', 'min', 'max', 'sorted', 'list', 'iter', 'next', 'bool', 'int', 'str', 'float'):
             arg_exprs = [self._generate_expression(a) for a in args]
             return f"{name}({', '.join(arg_exprs)})"
 
@@ -1009,20 +1089,47 @@ class HelperCodeGenerator:
     def _expr_can_reach(self, expr: Dict[str, Any]) -> str:
         """Generate state.can_reach() for region."""
         region_raw = expr.get('region', '')
-        region = self._extract_constant(region_raw, '')
-        return f'state.can_reach({repr(region)}, "Region", player)'
+        # Handle region - could be a constant string or a variable/expression
+        if isinstance(region_raw, dict):
+            if region_raw.get('type') == 'constant':
+                region_expr = repr(region_raw.get('value', ''))
+            else:
+                region_expr = self._generate_expression(region_raw)
+        elif isinstance(region_raw, str):
+            region_expr = repr(region_raw)
+        else:
+            region_expr = repr(str(region_raw))
+        return f'state.can_reach({region_expr}, "Region", player)'
 
     def _expr_can_reach_entrance(self, expr: Dict[str, Any]) -> str:
         """Generate state.can_reach() for entrance."""
         entrance_raw = expr.get('entrance', '')
-        entrance = self._extract_constant(entrance_raw, '')
-        return f'state.can_reach({repr(entrance)}, "Entrance", player)'
+        # Handle entrance - could be a constant string or a variable/expression
+        if isinstance(entrance_raw, dict):
+            if entrance_raw.get('type') == 'constant':
+                entrance_expr = repr(entrance_raw.get('value', ''))
+            else:
+                entrance_expr = self._generate_expression(entrance_raw)
+        elif isinstance(entrance_raw, str):
+            entrance_expr = repr(entrance_raw)
+        else:
+            entrance_expr = repr(str(entrance_raw))
+        return f'state.can_reach({entrance_expr}, "Entrance", player)'
 
     def _expr_location_check(self, expr: Dict[str, Any]) -> str:
         """Generate location accessibility check."""
         location_raw = expr.get('location', '')
-        location = self._extract_constant(location_raw, '')
-        return f'state.can_reach_location({repr(location)}, player)'
+        # Handle location - could be a constant string or a variable/expression
+        if isinstance(location_raw, dict):
+            if location_raw.get('type') == 'constant':
+                location_expr = repr(location_raw.get('value', ''))
+            else:
+                location_expr = self._generate_expression(location_raw)
+        elif isinstance(location_raw, str):
+            location_expr = repr(location_raw)
+        else:
+            location_expr = repr(str(location_raw))
+        return f'state.can_reach_location({location_expr}, player)'
 
     def _expr_count_item(self, expr: Dict[str, Any]) -> str:
         """Generate state.count() for item."""
