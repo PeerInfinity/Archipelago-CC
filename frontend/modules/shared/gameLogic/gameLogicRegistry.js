@@ -369,13 +369,7 @@ const GAME_REGISTRY = {
     worldClasses: ['PaintWorld'],
     aliases: ['Paint']
   },
-  'Raft': {
-    logicModule: genericLogic.genericStateModule,
-    // Helper functions now exported to rules.json - no JavaScript needed
-    // Uses use_resolved_items=true so inventory has resolved item names directly
-    worldClasses: ['RaftWorld'],
-    aliases: ['Raft']
-  },
+  // Raft removed - uses generic infrastructure with helpers exported to rules.json
   'Starcraft 2': {
     logicModule: genericLogic.genericStateModule,
     helperFunctions: sc2Logic.helperFunctions,
@@ -546,7 +540,8 @@ export function getGameLogic(gameName) {
 
   return {
     logicModule: config.logicModule,
-    helperFunctions: config.helperFunctions,
+    // Fallback to generic helpers if none specified - base helpers like has/count are always needed
+    helperFunctions: config.helperFunctions || GAME_REGISTRY['Generic'].helperFunctions,
     stateMethods: config.stateMethods,
     stateModule: config.logicModule, // Expose stateModule for hooks
     constants: config.constants,
