@@ -245,7 +245,7 @@ import * as stardewValleyLogic from './stardew_valley/stardewValleyLogic.js';
 import { stardewValleyStateModule } from './stardew_valley/stardewValleyLogic.js';
 // terrariaLogic removed - helpers now exported to rules.json
 // timespinnerLogic removed - helpers now exported to rules.json
-import * as twwLogic from './tww/twwLogic.js';
+// twwLogic removed - state methods now converted to setting_value lookups in exporter
 import * as wargrooveLogic from './wargroove/wargrooveLogic.js';
 // yoshisisland helpers have been exported to rules.json - no JavaScript needed
 import * as yugioh06Logic from './yugioh06/yugioh06Logic.js';
@@ -439,9 +439,8 @@ const GAME_REGISTRY = {
     aliases: ['Timespinner']
   },
   'The Wind Waker': {
-    logicModule: genericLogic.genericStateModule, // Using generic state module for now
-    helperFunctions: twwLogic.default,
-    stateMethods: twwLogic.stateMethods,
+    logicModule: genericLogic.genericStateModule,
+    // Helper functions and state methods now exported to rules.json - no JavaScript needed
     worldClasses: ['TWWWorld'],
     aliases: ['The Wind Waker', 'TWW', 'Wind Waker']
   },
