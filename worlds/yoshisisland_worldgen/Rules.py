@@ -119,17 +119,17 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Make Eggs, Throw Eggs: Red Coins", player),
-        HasAll('Beanstalk', 'Dashed Stairs')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Make Eggs, Throw Eggs: Flowers", player),
-        HasAll('Beanstalk', 'Dashed Stairs')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Make Eggs, Throw Eggs: Stars", player),
-        HasAll('Beanstalk', 'Dashed Stairs', 'Tulip')
+        HasAll()
     )
 
     world.set_rule(
@@ -139,12 +139,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Watch Out Below!: Red Coins", player),
-        HasAll('Helicopter Morph', 'Large Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Watch Out Below!: Flowers", player),
-        HasAll('Helicopter Morph', 'Large Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
@@ -174,7 +174,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Burt The Bashful's Fort: Flowers", player),
-        ((True_()) | (Has("Egg Capacity Upgrade", 3))) & (HasAll('Key', 'Spring Ball'))
+        ((True_()) | (Has("Egg Capacity Upgrade", 3))) & (HasAll())
     )
 
     world.set_rule(
@@ -199,7 +199,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Shy-Guys On Stilts: Red Coins", player),
-        HasAll('! Switch', 'Flashing Eggs', 'Large Spring Ball', 'Mole Tank Morph')
+        HasAll()
     )
 
     world.set_rule(
@@ -214,17 +214,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Shy-Guys On Stilts: Level Clear", player),
-        HasAll('Beanstalk', 'Large Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Touch Fuzzy Get Dizzy: Red Coins", player),
-        HasAll('Beanstalk', 'Chomp Rock', 'Flashing Eggs', 'Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Touch Fuzzy Get Dizzy: Stars", player),
-        ((True_()) & (HasAll('Beanstalk', 'Chomp Rock', 'Spring Ball'))) | (True_())
+        ((True_()) & (HasAll())) | (True_())
     )
 
     world.set_rule(
@@ -244,7 +244,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Salvo The Slime's Castle: Stars", player),
-        (True_()) & ((HasAll('Arrow Wheel', 'Key')) | (Has("Platform Ghost")))
+        (True_()) & ((HasAll()) | (Has("Platform Ghost")))
     )
 
     world.set_rule(
@@ -259,12 +259,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Visit Koopa And Para-Koopa: Red Coins", player),
-        HasAll('Large Spring Ball', 'Poochy', 'Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Visit Koopa And Para-Koopa: Flowers", player),
-        HasAll('Large Spring Ball', 'Super Star')
+        HasAll()
     )
 
     world.set_rule(
@@ -279,22 +279,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Baseball Boys: Red Coins", player),
-        HasAll('Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Mole Tank Morph', 'Super Star')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("The Baseball Boys: Flowers", player),
-        HasAll('Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Spring Ball', 'Super Star')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("The Baseball Boys: Stars", player),
-        ((True_()) & (Has("Tulip"))) & (HasAll('Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Super Star'))
+        ((True_()) & (Has("Tulip"))) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("The Baseball Boys: Level Clear", player),
-        HasAll('Beanstalk', 'Egg Launcher', 'Large Spring Ball', 'Super Star')
+        HasAll()
     )
 
     world.set_rule(
@@ -304,27 +304,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("What's Gusty Taste Like?: Flowers", player),
-        HasAny('Large Spring Ball', 'Super Star')
+        HasAny()
     )
 
     world.set_rule(
         multiworld.get_location("What's Gusty Taste Like?: Level Clear", player),
-        HasAny('Large Spring Ball', 'Super Star')
+        HasAny()
     )
 
     world.set_rule(
         multiworld.get_location("Bigger Boo's Fort: Red Coins", player),
-        HasAll('! Switch', 'Dashed Stairs', 'Key')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Bigger Boo's Fort: Flowers", player),
-        HasAll('! Switch', 'Dashed Stairs', 'Key')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Bigger Boo's Fort: Stars", player),
-        (True_()) & (HasAll('! Switch', 'Dashed Stairs', 'Key'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
@@ -344,7 +344,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Watch Out For Lakitu: Flowers", player),
-        HasAll('Chomp Rock', 'Key', 'Train Morph')
+        HasAll()
     )
 
     world.set_rule(
@@ -359,7 +359,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Mystery Maze: Flowers", player),
-        HasAll('Egg Launcher', 'Large Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
@@ -379,12 +379,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Lakitu's Wall: Red Coins", player),
-        ((True_()) | (HasAny('Dashed Platform', 'Giant Eggs'))) & (Has("Large Spring Ball"))
+        ((True_()) | (HasAny())) & (Has("Large Spring Ball"))
     )
 
     world.set_rule(
         multiworld.get_location("Lakitu's Wall: Flowers", player),
-        ((True_()) | (Has("Giant Eggs"))) & (HasAll('! Switch', 'Large Spring Ball'))
+        ((True_()) | (Has("Giant Eggs"))) & (HasAll())
     )
 
     world.set_rule(
@@ -394,7 +394,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Lakitu's Wall: Level Clear", player),
-        HasAll('Car Morph', 'Large Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
@@ -404,17 +404,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Potted Ghost's Castle: Red Coins", player),
-        (HasAll('Arrow Wheel', 'Key')) & (Has("Egg Capacity Upgrade"))
+        (HasAll()) & (Has("Egg Capacity Upgrade"))
     )
 
     world.set_rule(
         multiworld.get_location("The Potted Ghost's Castle: Flowers", player),
-        (HasAll('Arrow Wheel', 'Key', 'Train Morph')) & (Has("Egg Capacity Upgrade"))
+        (HasAll()) & (Has("Egg Capacity Upgrade"))
     )
 
     world.set_rule(
         multiworld.get_location("The Potted Ghost's Castle: Stars", player),
-        (True_()) & (HasAll('Arrow Wheel', 'Key')) & (Has("Egg Capacity Upgrade"))
+        (True_()) & (HasAll()) & (Has("Egg Capacity Upgrade"))
     )
 
     world.set_rule(
@@ -434,12 +434,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Jungle Rhythm...: Red Coins", player),
-        HasAll('Dashed Stairs', 'Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Jungle Rhythm...: Flowers", player),
-        HasAll('Dashed Stairs', 'Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
@@ -449,27 +449,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Jungle Rhythm...: Level Clear", player),
-        HasAll('Dashed Stairs', 'Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Nep-Enuts' Domain: Red Coins", player),
-        HasAll('Helicopter Morph', 'Submarine Morph')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Nep-Enuts' Domain: Flowers", player),
-        HasAll('Helicopter Morph', 'Submarine Morph')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Nep-Enuts' Domain: Stars", player),
-        (True_()) | (HasAll('Helicopter Morph', 'Submarine Morph'))
+        (True_()) | (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Nep-Enuts' Domain: Level Clear", player),
-        HasAll('Helicopter Morph', 'Submarine Morph')
+        HasAll()
     )
 
     world.set_rule(
@@ -509,32 +509,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Cave Of Harry Hedgehog: Red Coins", player),
-        HasAll('Beanstalk', 'Chomp Rock', 'Large Spring Ball', 'Mole Tank Morph')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of Harry Hedgehog: Flowers", player),
-        HasAll('! Switch', 'Beanstalk', 'Chomp Rock', 'Large Spring Ball', 'Mole Tank Morph')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of Harry Hedgehog: Stars", player),
-        (True_()) & (HasAll('Beanstalk', 'Chomp Rock', 'Dashed Stairs', 'Large Spring Ball', 'Mole Tank Morph', 'Tulip'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of Harry Hedgehog: Level Clear", player),
-        HasAll('Chomp Rock', 'Key', 'Large Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Monkeys' Favorite Lake: Red Coins", player),
-        HasAll('! Switch', 'Beanstalk', 'Large Spring Ball', 'Submarine Morph')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Monkeys' Favorite Lake: Flowers", player),
-        HasAll('Beanstalk', 'Large Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
@@ -594,17 +594,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Lakitus: Red Coins", player),
-        HasAll('! Switch', 'Egg Launcher', 'Large Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Lakitus: Flowers", player),
-        HasAll('Egg Launcher', 'Large Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("The Cave Of The Lakitus: Stars", player),
-        HasAll('Large Spring Ball', 'Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
@@ -614,12 +614,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Don't Look Back!: Red Coins", player),
-        HasAll('! Switch', 'Helicopter Morph', 'Large Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Don't Look Back!: Flowers", player),
-        HasAll('! Switch', 'Large Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
@@ -634,12 +634,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Marching Milde's Fort: Red Coins", player),
-        ((True_()) | (Has("Egg Capacity Upgrade"))) & (HasAll('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Key', 'Vanishing Arrow Wheel'))
+        ((True_()) | (Has("Egg Capacity Upgrade"))) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Marching Milde's Fort: Flowers", player),
-        ((True_()) | (Has("Egg Capacity Upgrade"))) & (HasAll('Arrow Wheel', 'Bucket', 'Dashed Stairs', 'Vanishing Arrow Wheel'))
+        ((True_()) | (Has("Egg Capacity Upgrade"))) & (HasAll())
     )
 
     world.set_rule(
@@ -659,27 +659,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Chomp Rock Zone: Red Coins", player),
-        HasAll('Chomp Rock', 'Large Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Chomp Rock Zone: Flowers", player),
-        HasAll('! Switch', 'Chomp Rock', 'Dashed Platform', 'Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Chomp Rock Zone: Stars", player),
-        HasAll('! Switch', 'Chomp Rock', 'Dashed Platform', 'Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Lake Shore Paradise: Red Coins", player),
-        ((True_()) | (Has("Egg Plant"))) & (HasAny('Large Spring Ball', 'Spring Ball'))
+        ((True_()) | (Has("Egg Plant"))) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Lake Shore Paradise: Flowers", player),
-        ((True_()) | (Has("Egg Plant"))) & (HasAny('Large Spring Ball', 'Spring Ball'))
+        ((True_()) | (Has("Egg Plant"))) & (HasAny())
     )
 
     world.set_rule(
@@ -719,17 +719,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hookbill The Koopa's Castle: Red Coins", player),
-        HasAll('Dashed Stairs', 'Key', 'Vanishing Arrow Wheel')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Hookbill The Koopa's Castle: Flowers", player),
-        HasAll('Dashed Stairs', 'Key', 'Vanishing Arrow Wheel')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Hookbill The Koopa's Castle: Stars", player),
-        (True_()) & (HasAny('Dashed Stairs', 'Vanishing Arrow Wheel'))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -744,7 +744,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("BLIZZARD!!!: Red Coins", player),
-        HasAll('Dashed Stairs', 'Helicopter Morph')
+        HasAll()
     )
 
     world.set_rule(
@@ -759,12 +759,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Danger - Icy Conditions Ahead: Red Coins", player),
-        ((True_()) | (Has("Fire Melon"))) & (HasAll('Bucket', 'Dashed Platform', 'Skis', 'Spring Ball', 'Super Star'))
+        ((True_()) | (Has("Fire Melon"))) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Danger - Icy Conditions Ahead: Flowers", player),
-        ((True_()) | (Has("Fire Melon"))) & (HasAll('Dashed Platform', 'Skis', 'Spring Ball'))
+        ((True_()) | (Has("Fire Melon"))) & (HasAll())
     )
 
     world.set_rule(
@@ -774,22 +774,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Danger - Icy Conditions Ahead: Level Clear", player),
-        HasAll('Dashed Platform', 'Skis', 'Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Sluggy The Unshaven's Fort: Red Coins", player),
-        HasAll('Dashed Platform', 'Dashed Stairs', 'Platform Ghost')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Sluggy The Unshaven's Fort: Flowers", player),
-        HasAll('Dashed Platform', 'Dashed Stairs', 'Platform Ghost')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Sluggy The Unshaven's Fort: Stars", player),
-        ((True_()) & (Has("Dashed Platform")) & (Has("Dashed Stairs"))) | ((True_()) & (HasAll('Dashed Stairs', 'Platform Ghost')))
+        ((True_()) & (Has("Dashed Platform")) & (Has("Dashed Stairs"))) | ((True_()) & (HasAll()))
     )
 
     world.set_rule(
@@ -804,12 +804,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Goonie Rides!: Red Coins", player),
-        HasAll('! Switch', 'Helicopter Morph')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Goonie Rides!: Flowers", player),
-        HasAll('! Switch', 'Helicopter Morph')
+        HasAll()
     )
 
     world.set_rule(
@@ -819,7 +819,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Goonie Rides!: Level Clear", player),
-        HasAll('! Switch', 'Helicopter Morph')
+        HasAll()
     )
 
     world.set_rule(
@@ -844,12 +844,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Raphael The Raven's Castle: Red Coins", player),
-        HasAll('Arrow Wheel', 'Train Morph')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Raphael The Raven's Castle: Flowers", player),
-        HasAll('Arrow Wheel', 'Train Morph')
+        HasAll()
     )
 
     world.set_rule(
@@ -869,12 +869,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Scary Skeleton Goonies!: Red Coins", player),
-        HasAll('Dashed Platform', 'Large Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Scary Skeleton Goonies!: Flowers", player),
-        HasAll('Dashed Platform', 'Large Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
@@ -884,7 +884,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Scary Skeleton Goonies!: Level Clear", player),
-        HasAll('Dashed Platform', 'Large Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
@@ -909,17 +909,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tap-Tap The Red Nose's Fort: Red Coins", player),
-        ((True_()) | (Has("Egg Capacity Upgrade", 3))) & (HasAll('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'))
+        ((True_()) | (Has("Egg Capacity Upgrade", 3))) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Tap-Tap The Red Nose's Fort: Flowers", player),
-        ((True_()) | (Has("Egg Capacity Upgrade", 3))) & (HasAll('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'))
+        ((True_()) | (Has("Egg Capacity Upgrade", 3))) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Tap-Tap The Red Nose's Fort: Stars", player),
-        (True_()) & (HasAll('Egg Plant', 'Key', 'Large Spring Ball', 'Spring Ball'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
@@ -949,22 +949,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Deep, Underground Maze: Red Coins", player),
-        HasAll('Chomp Rock', 'Key', 'Large Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("The Deep, Underground Maze: Flowers", player),
-        HasAll('Chomp Rock', 'Key', 'Large Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("The Deep, Underground Maze: Stars", player),
-        ((True_()) & (HasAll('Chomp Rock', 'Key', 'Large Spring Ball'))) | (HasAll('Chomp Rock', 'Key', 'Tulip'))
+        ((True_()) & (HasAll())) | (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("The Deep, Underground Maze: Level Clear", player),
-        HasAll('Chomp Rock', 'Dashed Platform', 'Key', 'Large Spring Ball')
+        HasAll()
     )
 
     world.set_rule(
@@ -984,17 +984,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("King Bowser's Castle: Red Coins", player),
-        (True_()) & (HasAll('Egg Plant', 'Helicopter Morph'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("King Bowser's Castle: Flowers", player),
-        (True_()) & (HasAll('Egg Plant', 'Helicopter Morph'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("King Bowser's Castle: Stars", player),
-        (True_()) & (HasAll('Egg Plant', 'Helicopter Morph'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(

@@ -44,7 +44,7 @@ item_table: Dict[str, ItemData] = {
     "Tilte": ItemData(400019, ItemClassification.useful),
     "Ring of Elf": ItemData(400020, ItemClassification.useful),
     "Magical Rod": ItemData(400021, ItemClassification.useful),
-    "Pendant": ItemData(400022, ItemClassification.filler),
+    "Pendant": ItemData(400022, ItemClassification.useful),
     "Hourglass": ItemData(400023, ItemClassification.filler),
     "Red Potion": ItemData(400024, ItemClassification.progression),
     "Elixir": ItemData(400025, ItemClassification.filler),

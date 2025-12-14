@@ -65,34 +65,29 @@
             "name": "ToStaticWebsite",
             "connected_region": "StaticWebsiteHub",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "CSS",
-                        "HTML"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Git",
+                      "JavaScript Basics",
+                      "Server Basics"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_any",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Git",
-                        "JavaScript Basics",
-                        "Server Basics"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "CSS",
+                      "HTML"
+                    ]
+                  }
                 }
               ]
             }
@@ -123,8 +118,12 @@
             "name": "Learn CSS",
             "id": 400000002,
             "access_rule": {
-              "type": "item_check",
-              "item": "HTML"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "HTML",
+                "count": 1
+              }
             },
             "item": {
               "name": "CSS",
@@ -138,8 +137,12 @@
             "name": "Learn Design Systems",
             "id": 400000003,
             "access_rule": {
-              "type": "item_check",
-              "item": "CSS"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "CSS",
+                "count": 1
+              }
             },
             "item": {
               "name": "Design Systems",
@@ -174,8 +177,12 @@
             "name": "Learn DOM Manipulation",
             "id": 400000005,
             "access_rule": {
-              "type": "item_check",
-              "item": "JavaScript Basics"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "JavaScript Basics",
+                "count": 1
+              }
             },
             "item": {
               "name": "DOM Manipulation",
@@ -189,8 +196,12 @@
             "name": "Learn Algorithms",
             "id": 400000006,
             "access_rule": {
-              "type": "item_check",
-              "item": "JavaScript Basics"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "JavaScript Basics",
+                "count": 1
+              }
             },
             "item": {
               "name": "Algorithms",
@@ -225,8 +236,12 @@
             "name": "Learn File I/O",
             "id": 400000008,
             "access_rule": {
-              "type": "item_check",
-              "item": "Server Basics"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Server Basics",
+                "count": 1
+              }
             },
             "item": {
               "name": "File I/O",
@@ -240,8 +255,12 @@
             "name": "Learn HTTP Basics",
             "id": 400000009,
             "access_rule": {
-              "type": "item_check",
-              "item": "Server Basics"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Server Basics",
+                "count": 1
+              }
             },
             "item": {
               "name": "HTTP Basics",
@@ -291,8 +310,12 @@
             "name": "Learn Package Managers",
             "id": 400000012,
             "access_rule": {
-              "type": "item_check",
-              "item": "Command Line"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Command Line",
+                "count": 1
+              }
             },
             "item": {
               "name": "Package Managers",
@@ -343,33 +366,28 @@
             "name": "ToInteractiveApp",
             "connected_region": "InteractiveAppHub",
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Database Basics",
-                        "State Management"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Database Basics",
+                      "State Management"
+                    ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Frontend Framework",
-                        "REST APIs"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Frontend Framework",
+                      "REST APIs"
+                    ]
+                  }
                 }
               ]
             }
@@ -400,8 +418,12 @@
             "name": "ToReactRoute",
             "connected_region": "ReactRoute",
             "access_rule": {
-              "type": "item_check",
-              "item": "DOM Manipulation"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "DOM Manipulation",
+                "count": 1
+              }
             }
           },
           {
@@ -416,8 +438,12 @@
             "name": "ToVanillaRoute",
             "connected_region": "VanillaRoute",
             "access_rule": {
-              "type": "item_check",
-              "item": "Algorithms"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Algorithms",
+                "count": 1
+              }
             }
           }
         ],
@@ -446,8 +472,12 @@
             "name": "React Components",
             "id": 400000015,
             "access_rule": {
-              "type": "item_check",
-              "item": "React"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "React",
+                "count": 1
+              }
             },
             "item": {
               "name": "Frontend Framework",
@@ -461,8 +491,12 @@
             "name": "Redux",
             "id": 400000016,
             "access_rule": {
-              "type": "item_check",
-              "item": "Frontend Framework"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Frontend Framework",
+                "count": 1
+              }
             },
             "item": {
               "name": "State Management",
@@ -497,8 +531,12 @@
             "name": "Vue Components",
             "id": 400000018,
             "access_rule": {
-              "type": "item_check",
-              "item": "Vue"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Vue",
+                "count": 1
+              }
             },
             "item": {
               "name": "Frontend Framework",
@@ -512,8 +550,12 @@
             "name": "Vuex",
             "id": 400000019,
             "access_rule": {
-              "type": "item_check",
-              "item": "Frontend Framework"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Frontend Framework",
+                "count": 1
+              }
             },
             "item": {
               "name": "State Management",
@@ -548,8 +590,12 @@
             "name": "Custom State System",
             "id": 400000021,
             "access_rule": {
-              "type": "item_check",
-              "item": "Frontend Framework"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Frontend Framework",
+                "count": 1
+              }
             },
             "item": {
               "name": "State Management",
@@ -568,24 +614,36 @@
             "name": "ToExpressRoute",
             "connected_region": "ExpressRoute",
             "access_rule": {
-              "type": "item_check",
-              "item": "JavaScript Basics"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "JavaScript Basics",
+                "count": 1
+              }
             }
           },
           {
             "name": "ToDjangoRoute",
             "connected_region": "DjangoRoute",
             "access_rule": {
-              "type": "item_check",
-              "item": "Server Basics"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Server Basics",
+                "count": 1
+              }
             }
           },
           {
             "name": "ToFlaskRoute",
             "connected_region": "FlaskRoute",
             "access_rule": {
-              "type": "item_check",
-              "item": "Server Basics"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Server Basics",
+                "count": 1
+              }
             }
           }
         ],
@@ -614,8 +672,12 @@
             "name": "Build REST APIs",
             "id": 400000023,
             "access_rule": {
-              "type": "item_check",
-              "item": "Express"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Express",
+                "count": 1
+              }
             },
             "item": {
               "name": "REST APIs",
@@ -629,8 +691,12 @@
             "name": "MongoDB Integration",
             "id": 400000024,
             "access_rule": {
-              "type": "item_check",
-              "item": "REST APIs"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "REST APIs",
+                "count": 1
+              }
             },
             "item": {
               "name": "Database Integration",
@@ -665,8 +731,12 @@
             "name": "Django REST Framework",
             "id": 400000026,
             "access_rule": {
-              "type": "item_check",
-              "item": "Django"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Django",
+                "count": 1
+              }
             },
             "item": {
               "name": "REST APIs",
@@ -680,8 +750,12 @@
             "name": "Django ORM",
             "id": 400000027,
             "access_rule": {
-              "type": "item_check",
-              "item": "REST APIs"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "REST APIs",
+                "count": 1
+              }
             },
             "item": {
               "name": "Database Integration",
@@ -716,8 +790,12 @@
             "name": "Flask-RESTful",
             "id": 400000029,
             "access_rule": {
-              "type": "item_check",
-              "item": "Flask"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Flask",
+                "count": 1
+              }
             },
             "item": {
               "name": "REST APIs",
@@ -731,8 +809,12 @@
             "name": "SQLAlchemy",
             "id": 400000030,
             "access_rule": {
-              "type": "item_check",
-              "item": "REST APIs"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "REST APIs",
+                "count": 1
+              }
             },
             "item": {
               "name": "Database Integration",
@@ -752,8 +834,12 @@
             "name": "UI/UX Principles",
             "id": 400000031,
             "access_rule": {
-              "type": "item_check",
-              "item": "Design Systems"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Design Systems",
+                "count": 1
+              }
             },
             "item": {
               "name": "UI/UX",
@@ -767,8 +853,12 @@
             "name": "Responsive Design",
             "id": 400000032,
             "access_rule": {
-              "type": "item_check",
-              "item": "UI/UX"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "UI/UX",
+                "count": 1
+              }
             },
             "item": {
               "name": "Responsive Design",
@@ -782,8 +872,12 @@
             "name": "Accessibility",
             "id": 400000033,
             "access_rule": {
-              "type": "item_check",
-              "item": "Responsive Design"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Responsive Design",
+                "count": 1
+              }
             },
             "item": {
               "name": "Accessibility",
@@ -840,8 +934,12 @@
             "name": "PostgreSQL",
             "id": 400000035,
             "access_rule": {
-              "type": "item_check",
-              "item": "SQL"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "SQL",
+                "count": 1
+              }
             },
             "item": {
               "name": "Database Basics",
@@ -855,8 +953,12 @@
             "name": "Query Optimization",
             "id": 400000036,
             "access_rule": {
-              "type": "item_check",
-              "item": "Database Basics"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Database Basics",
+                "count": 1
+              }
             },
             "item": {
               "name": "Query Optimization",
@@ -891,8 +993,12 @@
             "name": "MongoDB",
             "id": 400000038,
             "access_rule": {
-              "type": "item_check",
-              "item": "NoSQL"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "NoSQL",
+                "count": 1
+              }
             },
             "item": {
               "name": "Database Basics",
@@ -906,8 +1012,12 @@
             "name": "Indexing Strategies",
             "id": 400000039,
             "access_rule": {
-              "type": "item_check",
-              "item": "Database Basics"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Database Basics",
+                "count": 1
+              }
             },
             "item": {
               "name": "Query Optimization",
@@ -958,55 +1068,52 @@
             "name": "ToFullStackHub",
             "connected_region": "FullStackHub",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "DevOps",
-                            "Performance"
-                          ]
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "options": [],
+                      "args": {
+                        "items": [
+                          "DevOps",
+                          "Performance"
+                        ]
+                      }
                     },
                     {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "DevOps",
-                            "Testing"
-                          ]
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "options": [],
+                      "args": {
+                        "items": [
+                          "DevOps",
+                          "Testing"
+                        ]
+                      }
                     },
                     {
-                      "type": "state_method",
-                      "method": "has_all",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": [
-                            "Performance",
-                            "Testing"
-                          ]
-                        }
-                      ]
+                      "rule": "HasAll",
+                      "options": [],
+                      "args": {
+                        "items": [
+                          "Performance",
+                          "Testing"
+                        ]
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Authentication"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Authentication",
+                    "count": 1
+                  }
                 }
               ]
             }
@@ -1038,8 +1145,12 @@
             "name": "Sessions",
             "id": 400000041,
             "access_rule": {
-              "type": "item_check",
-              "item": "HTTP Basics"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "HTTP Basics",
+                "count": 1
+              }
             },
             "item": {
               "name": "Sessions",
@@ -1053,8 +1164,12 @@
             "name": "JWT",
             "id": 400000042,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sessions"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sessions",
+                "count": 1
+              }
             },
             "item": {
               "name": "JWT",
@@ -1068,8 +1183,12 @@
             "name": "OAuth",
             "id": 400000043,
             "access_rule": {
-              "type": "item_check",
-              "item": "JWT"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "JWT",
+                "count": 1
+              }
             },
             "item": {
               "name": "Authentication",
@@ -1089,17 +1208,14 @@
             "name": "Caching",
             "id": 400000044,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Database Basics",
-                    "REST APIs"
-                  ]
-                }
-              ]
+              "rule": "HasAny",
+              "options": [],
+              "args": {
+                "items": [
+                  "Database Basics",
+                  "REST APIs"
+                ]
+              }
             },
             "item": {
               "name": "Caching",
@@ -1113,8 +1229,12 @@
             "name": "CDN",
             "id": 400000045,
             "access_rule": {
-              "type": "item_check",
-              "item": "Caching"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Caching",
+                "count": 1
+              }
             },
             "item": {
               "name": "CDN",
@@ -1128,8 +1248,12 @@
             "name": "Load Balancing",
             "id": 400000046,
             "access_rule": {
-              "type": "item_check",
-              "item": "CDN"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "CDN",
+                "count": 1
+              }
             },
             "item": {
               "name": "Performance",
@@ -1164,8 +1288,12 @@
             "name": "Integration Tests",
             "id": 400000048,
             "access_rule": {
-              "type": "item_check",
-              "item": "Unit Tests"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Unit Tests",
+                "count": 1
+              }
             },
             "item": {
               "name": "Integration Tests",
@@ -1179,8 +1307,12 @@
             "name": "E2E Tests",
             "id": 400000049,
             "access_rule": {
-              "type": "item_check",
-              "item": "Integration Tests"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Integration Tests",
+                "count": 1
+              }
             },
             "item": {
               "name": "Testing",
@@ -1200,8 +1332,12 @@
             "name": "Docker",
             "id": 400000050,
             "access_rule": {
-              "type": "item_check",
-              "item": "Command Line"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Command Line",
+                "count": 1
+              }
             },
             "item": {
               "name": "Docker",
@@ -1215,17 +1351,14 @@
             "name": "CI/CD",
             "id": 400000051,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Docker",
-                    "Git"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Docker",
+                  "Git"
+                ]
+              }
             },
             "item": {
               "name": "CI/CD",
@@ -1239,8 +1372,12 @@
             "name": "Monitoring",
             "id": 400000052,
             "access_rule": {
-              "type": "item_check",
-              "item": "CI/CD"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "CI/CD",
+                "count": 1
+              }
             },
             "item": {
               "name": "DevOps",
@@ -1283,18 +1420,15 @@
             "name": "ToProduction",
             "connected_region": "ProductionHub",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Deployment Complete",
-                    "Scaling Complete",
-                    "Security Complete"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Deployment Complete",
+                  "Scaling Complete",
+                  "Security Complete"
+                ]
+              }
             }
           }
         ],
@@ -1339,8 +1473,12 @@
             "name": "CORS",
             "id": 400000055,
             "access_rule": {
-              "type": "item_check",
-              "item": "HTTPS"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "HTTPS",
+                "count": 1
+              }
             },
             "item": {
               "name": "CORS",
@@ -1354,8 +1492,12 @@
             "name": "Input Validation",
             "id": 400000056,
             "access_rule": {
-              "type": "item_check",
-              "item": "CORS"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "CORS",
+                "count": 1
+              }
             },
             "item": {
               "name": "Security Complete",
@@ -1375,8 +1517,12 @@
             "name": "Horizontal Scaling",
             "id": 400000057,
             "access_rule": {
-              "type": "item_check",
-              "item": "Performance"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Performance",
+                "count": 1
+              }
             },
             "item": {
               "name": "Horizontal Scaling",
@@ -1390,8 +1536,12 @@
             "name": "Microservices",
             "id": 400000058,
             "access_rule": {
-              "type": "item_check",
-              "item": "Horizontal Scaling"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Horizontal Scaling",
+                "count": 1
+              }
             },
             "item": {
               "name": "Scaling Complete",
@@ -1411,8 +1561,12 @@
             "name": "Cloud Provider",
             "id": 400000059,
             "access_rule": {
-              "type": "item_check",
-              "item": "DevOps"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "DevOps",
+                "count": 1
+              }
             },
             "item": {
               "name": "Cloud Provider",
@@ -1426,8 +1580,12 @@
             "name": "Domain Setup",
             "id": 400000060,
             "access_rule": {
-              "type": "item_check",
-              "item": "Cloud Provider"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Cloud Provider",
+                "count": 1
+              }
             },
             "item": {
               "name": "Domain",
@@ -1441,17 +1599,14 @@
             "name": "SSL Certificate",
             "id": 400000061,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Domain",
-                    "HTTPS"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Domain",
+                  "HTTPS"
+                ]
+              }
             },
             "item": {
               "name": "Deployment Complete",

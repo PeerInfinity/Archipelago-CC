@@ -29,22 +29,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Flippers", player),
-        (True_()) & (True_()) & (True_()) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Birds nest", player),
-        (True_()) & (True_()) & (True_())
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Battery", player),
-        (True_()) & (True_()) & (True_())
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Circuit board", player),
-        (True_()) & (True_()) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
@@ -59,12 +54,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Shear", player),
-        (True_()) & (True_()) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Net launcher", player),
-        (True_()) & (True_()) & (True_()) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
@@ -73,218 +68,158 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_location("Clay bowl", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_location("Net canister", player),
-        (True_()) & (True_()) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Binoculars", player),
-        (True_()) & (True_()) & (True_()) & (True_())
+        (True_()) & (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Metal fishing rod", player),
-        (True_()) & (True_()) & (True_())
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Oxygen bottle", player),
-        (True_()) & (True_()) & (True_()) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Sprinkler", player),
-        (True_()) & (True_()) & (True_()) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Empty bottle", player),
-        (True_()) & (True_())
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Cookingpot", player),
-        (True_()) & (True_()) & (True_()) & (True_()) & (True_())
+        (True_()) & (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Juicer", player),
-        (True_()) & (True_()) & (True_()) & (True_()) & (True_())
+        (True_()) & (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Stationary anchor", player),
-        (True_()) & (True_()) & (True_()) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Advanced grill", player),
-        (True_()) & (True_()) & (True_()) & (True_())
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Metal Spear", player),
-        (True_()) & (True_()) & (True_()) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Storage", player),
-        (True_()) & (True_()) & (True_()) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Smelter", player),
-        (True_()) & (True_()) & (True_()) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Paint mill", player),
-        (True_()) & (True_()) & (True_()) & (True_())
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hammock", player),
-        (True_()) & (True_()) & (True_()) & (True_())
+        (True_()) | (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Metal axe", player),
-        (True_()) & (True_()) & (True_()) & (True_())
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Scrap hook", player),
-        (True_()) & (True_()) & (True_()) & (True_())
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Large crop plot", player),
-        (True_()) & (True_()) & (True_()) & (True_())
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Sweep net", player),
-        (True_()) & (True_()) & (True_()) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Basic bow", player),
-        (True_()) & (True_()) & (True_()) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Scarecrow", player),
-        (True_()) & (True_()) & (True_()) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Metal arrow", player),
-        (True_()) & (True_()) & (True_())
+        (True_()) & ((True_()) | (True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Shovel", player),
-        (True_()) & (True_()) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Advanced collection net", player),
-        (True_()) & (True_()) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Bucket", player),
-        (True_()) & (True_()) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Collection net", player),
-        (True_()) & (True_()) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Paint brush", player),
-        (True_()) & (True_()) & (True_())
+        (True_()) | (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Advanced purifier", player),
-        (True_()) & (True_()) & (True_())
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Grass plot", player),
-        (True_()) & (True_()) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Stone arrow", player),
-        (True_()) & (True_()) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Medium crop plot", player),
-        (True_()) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Lantern", player),
-        (True_()) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Small trophy board", player),
-        (True_()) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Medium trophy board", player),
-        (True_()) & (True_())
-    )
-
-    world.set_rule(
-        multiworld.get_location("Large trophy board", player),
-        (True_()) & (True_())
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Backpack", player),
-        (True_()) & (True_()) & (True_())
+        ((True_()) & (True_())) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Leather helmet", player),
-        (True_()) & (True_())
+        ((True_()) & (True_())) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Leather body armor", player),
-        (True_()) & (True_())
+        ((True_()) & (True_())) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Leather greaves", player),
-        (True_()) & (True_())
+        ((True_()) & (True_())) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beehive", player),
-        (True_()) & (True_()) & (True_()) & (True_()) & (True_())
+        ((True_()) & (True_())) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Good healing salve", player),
-        (True_()) & (True_()) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Healing salve", player),
-        (True_()) & (True_())
+        True_()
     )
 
     world.set_rule(
@@ -539,7 +474,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Zipline quest", player),
-        (True_()) & (True_())
+        ((True_()) & (True_())) & (True_())
     )
 
     world.set_rule(

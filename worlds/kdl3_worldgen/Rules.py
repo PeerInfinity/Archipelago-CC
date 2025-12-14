@@ -2514,17 +2514,17 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Grass Land 2 - Muchimuchi", player),
-        True_()
+        (Has("ChuChu")) & (Has("ChuChu Spawn"))
     )
 
     world.set_rule(
         multiworld.get_location("Grass Land 4 - Chao & Goku", player),
-        True_()
+        (Has("Stone")) & (Has("Stone Ability"))
     )
 
     world.set_rule(
         multiworld.get_location("Grass Land 5 - Mine", player),
-        True_()
+        (Has("Kine")) & (Has("Kine Spawn"))
     )
 
     world.set_rule(
@@ -2534,7 +2534,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Level 1 Boss - Defeated", player),
-        Has("Grass Land - Stage Completion", 3)
+        Has("Grass Land - Stage Completion")
     )
 
     world.set_rule(
@@ -2544,72 +2544,72 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ripple Field 1 - Kamuribana", player),
-        (True_()) & (True_())
+        ((Has("Clean")) & (Has("Clean Ability"))) & ((Has("Pitch")) & (Has("Pitch Spawn")))
     )
 
     world.set_rule(
         multiworld.get_location("Ripple Field 2 - Enemy 3 (Blipper)", player),
-        (True_()) | (True_())
+        ((Has("ChuChu")) & (Has("ChuChu Spawn"))) | ((Has("Kine")) & (Has("Kine Spawn")))
     )
 
     world.set_rule(
         multiworld.get_location("Ripple Field 2 - Bakasa", player),
-        (True_()) & (True_())
+        ((Has("Kine")) & (Has("Kine Spawn"))) & ((Has("Parasol")) & (Has("Parasol Ability")))
     )
 
     world.set_rule(
         multiworld.get_location("Ripple Field 3 - Enemy 6 (Joe)", player),
-        (True_()) | (True_())
+        ((Has("ChuChu")) & (Has("ChuChu Spawn"))) | ((Has("Kine")) & (Has("Kine Spawn")))
     )
 
     world.set_rule(
         multiworld.get_location("Ripple Field 4 - Enemy 5 (Mony)", player),
-        (True_()) | (True_())
+        ((Has("ChuChu")) & (Has("ChuChu Spawn"))) | ((Has("Kine")) & (Has("Kine Spawn")))
     )
 
     world.set_rule(
         multiworld.get_location("Ripple Field 4 - Toad & Little Toad", player),
-        True_()
+        (Has("Needle")) & (Has("Needle Ability"))
     )
 
     world.set_rule(
         multiworld.get_location("Ripple Field 4 - Enemy 7 (Bobin)", player),
-        (True_()) | (True_())
+        ((Has("ChuChu")) & (Has("ChuChu Spawn"))) | ((Has("Kine")) & (Has("Kine Spawn")))
     )
 
     world.set_rule(
         multiworld.get_location("Ripple Field 4 - Enemy 8 (Blipper)", player),
-        (True_()) | (True_())
+        ((Has("ChuChu")) & (Has("ChuChu Spawn"))) | ((Has("Kine")) & (Has("Kine Spawn")))
     )
 
     world.set_rule(
         multiworld.get_location("Ripple Field 5 - Enemy 1 (Glunk)", player),
-        (True_()) | (True_())
+        ((Has("ChuChu")) & (Has("ChuChu Spawn"))) | ((Has("Kine")) & (Has("Kine Spawn")))
     )
 
     world.set_rule(
         multiworld.get_location("Ripple Field 5 - Enemy 2 (Joe)", player),
-        (True_()) | (True_())
+        ((Has("ChuChu")) & (Has("ChuChu Spawn"))) | ((Has("Kine")) & (Has("Kine Spawn")))
     )
 
     world.set_rule(
         multiworld.get_location("Ripple Field 5 - Enemy 3 (Bobin)", player),
-        (True_()) | (True_())
+        ((Has("ChuChu")) & (Has("ChuChu Spawn"))) | ((Has("Kine")) & (Has("Kine Spawn")))
     )
 
     world.set_rule(
         multiworld.get_location("Ripple Field 5 - Enemy 4 (Mony)", player),
-        (True_()) | (True_())
+        ((Has("ChuChu")) & (Has("ChuChu Spawn"))) | ((Has("Kine")) & (Has("Kine Spawn")))
     )
 
     world.set_rule(
         multiworld.get_location("Ripple Field 5 - Mama Pitch", player),
-        (True_()) & (True_()) & (True_()) & (True_())
+        ((Has("Burning")) & (Has("Burning Ability"))) & ((Has("Kine")) & (Has("Kine Spawn"))) & ((Has("Pitch")) & (Has("Pitch Spawn"))) & ((Has("Stone")) & (Has("Stone Ability")))
     )
 
     world.set_rule(
         multiworld.get_location("Ripple Field 5 - Complete", player),
-        True_()
+        (Has("Kine")) & (Has("Kine Spawn"))
     )
 
     world.set_rule(
@@ -2619,7 +2619,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Level 2 Boss - Defeated", player),
-        Has("Ripple Field - Stage Completion", 3)
+        Has("Ripple Field - Stage Completion")
     )
 
     world.set_rule(
@@ -2629,37 +2629,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Sand Canyon 2 - Auntie", player),
-        True_()
+        (Has("Clean")) & (Has("Clean Ability"))
     )
 
     world.set_rule(
         multiworld.get_location("Sand Canyon 4 - Enemy 7 (Bobin)", player),
-        (True_()) | (True_())
+        ((Has("ChuChu")) & (Has("ChuChu Spawn"))) | ((Has("Kine")) & (Has("Kine Spawn")))
     )
 
     world.set_rule(
         multiworld.get_location("Sand Canyon 4 - Enemy 8 (Joe)", player),
-        (True_()) | (True_())
+        ((Has("ChuChu")) & (Has("ChuChu Spawn"))) | ((Has("Kine")) & (Has("Kine Spawn")))
     )
 
     world.set_rule(
         multiworld.get_location("Sand Canyon 4 - Enemy 9 (Mony)", player),
-        (True_()) | (True_())
+        ((Has("ChuChu")) & (Has("ChuChu Spawn"))) | ((Has("Kine")) & (Has("Kine Spawn")))
     )
 
     world.set_rule(
         multiworld.get_location("Sand Canyon 4 - Enemy 10 (Blipper)", player),
-        (True_()) | (True_())
+        ((Has("ChuChu")) & (Has("ChuChu Spawn"))) | ((Has("Kine")) & (Has("Kine Spawn")))
     )
 
     world.set_rule(
         multiworld.get_location("Sand Canyon 5 - Nyupun", player),
-        (True_()) & (True_())
+        ((Has("ChuChu")) & (Has("ChuChu Spawn"))) & ((Has("Cutter")) & (Has("Cutter Ability")))
     )
 
     world.set_rule(
         multiworld.get_location("Sand Canyon 5 - Complete", player),
-        True_()
+        (Has("Cutter")) & (Has("Cutter Ability"))
     )
 
     world.set_rule(
@@ -2674,7 +2674,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Level 3 Boss - Defeated", player),
-        Has("Sand Canyon - Stage Completion", 3)
+        Has("Sand Canyon - Stage Completion")
     )
 
     world.set_rule(
@@ -2684,22 +2684,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Cloudy Park 1 - Hibanamodoki", player),
-        (True_()) & (True_())
+        ((Has("Clean")) & (Has("Clean Ability"))) & ((Has("Coo")) & (Has("Coo Spawn")))
     )
 
     world.set_rule(
         multiworld.get_location("Cloudy Park 2 - Piyo & Keko", player),
-        True_()
+        (Has("Needle")) & (Has("Needle Ability"))
     )
 
     world.set_rule(
         multiworld.get_location("Cloudy Park 4 - Mikarin & Kagami Mocchi", player),
-        True_()
+        (Has("Coo")) & (Has("Coo Spawn"))
     )
 
     world.set_rule(
         multiworld.get_location("Cloudy Park 5 - Pick", player),
-        True_()
+        (Has("Rick")) & (Has("Rick Spawn"))
     )
 
     world.set_rule(
@@ -2709,7 +2709,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Level 4 Boss - Defeated", player),
-        Has("Cloudy Park - Stage Completion", 3)
+        Has("Cloudy Park - Stage Completion")
     )
 
     world.set_rule(
@@ -2719,37 +2719,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Iceberg 1 - Kogoesou", player),
-        True_()
+        (Has("Burning")) & (Has("Burning Ability"))
     )
 
     world.set_rule(
         multiworld.get_location("Iceberg 2 - Samus", player),
-        True_()
+        (Has("Ice")) & (Has("Ice Ability"))
     )
 
     world.set_rule(
         multiworld.get_location("Iceberg 4 - Animal 2", player),
-        (True_()) & (True_())
+        ((Has("Burning")) & (Has("Burning Ability"))) & ((Has("Coo")) & (Has("Coo Spawn")))
     )
 
     world.set_rule(
         multiworld.get_location("Iceberg 4 - Animal 3", player),
-        (True_()) & (True_()) & (True_())
+        ((Has("Burning")) & (Has("Burning Ability"))) & ((Has("ChuChu")) & (Has("ChuChu Spawn"))) & ((Has("Coo")) & (Has("Coo Spawn")))
     )
 
     world.set_rule(
         multiworld.get_location("Iceberg 4 - Name", player),
-        (True_()) & (True_()) & (True_())
+        ((Has("Burning")) & (Has("Burning Ability"))) & ((Has("ChuChu")) & (Has("ChuChu Spawn"))) & ((Has("Coo")) & (Has("Coo Spawn")))
     )
 
     world.set_rule(
         multiworld.get_location("Iceberg 4 - Complete", player),
-        True_()
+        (Has("Burning")) & (Has("Burning Ability"))
     )
 
     world.set_rule(
         multiworld.get_location("Iceberg 5 - Shiro", player),
-        True_()
+        (Has("Nago")) & (Has("Nago Spawn"))
     )
 
     world.set_rule(
@@ -2764,7 +2764,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Level 5 Boss - Defeated", player),
-        Has("Iceberg - Stage Completion", 3)
+        Has("Iceberg - Stage Completion")
     )
 
     world.set_rule(

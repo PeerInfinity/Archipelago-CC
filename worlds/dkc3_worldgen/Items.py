@@ -23,6 +23,7 @@ class ItemData:
 
 
 item_table: Dict[str, ItemData] = {
+    "Donkey Kong": ItemData(14430208, ItemClassification.progression),
     "1-Up Balloon": ItemData(14430209, ItemClassification.filler, "1 Up Balloon"),
     "Bear Coin": ItemData(14430210, ItemClassification.filler),
     "Bonus Coin": ItemData(14430211, ItemClassification.progression),
@@ -30,5 +31,4 @@ item_table: Dict[str, ItemData] = {
     "Banana Bird": ItemData(14430213, ItemClassification.filler),
     "Krematoa Cog": ItemData(14430214, ItemClassification.progression),
     "Progressive Boat Upgrade": ItemData(14430215, ItemClassification.progression),
-    "Donkey Kong": ItemData(14430208, ItemClassification.progression),
 }

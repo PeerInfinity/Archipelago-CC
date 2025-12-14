@@ -59,7 +59,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Audience to Waterway", player),
-        (True_()) | (Has("Maiden Detonator"))
+        (False_()) | (Has("Maiden Detonator"))
     )
 
     world.set_rule(
@@ -74,7 +74,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Corridor to Gallery", player),
-        (True_()) | (Has("Maiden Detonator"))
+        (False_()) | (Has("Maiden Detonator"))
     )
 
     world.set_rule(
@@ -259,7 +259,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Chapel Tower: Behind Adramelech iron maiden", player),
-        (True_()) | (Has("Maiden Detonator"))
+        (False_()) | (Has("Maiden Detonator"))
     )
 
     world.set_rule(

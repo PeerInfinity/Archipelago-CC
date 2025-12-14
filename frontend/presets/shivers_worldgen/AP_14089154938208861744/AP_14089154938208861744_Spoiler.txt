@@ -135,9 +135,14 @@ Playthrough:
   Puzzle Solved Stone Henge: Key for Bedroom
 }
 2: {
+  Ixupi Captured Ash: Crystal Pot Bottom
+  Ixupi Captured Crystal: Wood Pot Bottom
+  Ixupi Captured Metal: Lightning Pot Bottom
+  Ixupi Captured Water: Metal Pot Top
   Mystery Solved: Mt. Pleasant Tribune: 45 year Old Mystery Solved!
   Puzzle Hint Found: Atlantis Map: Crawling
   Puzzle Hint Found: Tape Recorder Heard: Key for Janitor Closet
+  Puzzle Solved Bedroom Elevator: Water Pot Bottom
   Storage: Desk Drawer: Crystal Pot Bottom DUPE
   Storage: Transforming Mask: Water Pot Top DUPE
   Windlenot's Body: Viewed Egyptian Hieroglyphics Explained
@@ -147,14 +152,26 @@ Playthrough:
   Flashback Memory Obtained Beth's Ghost: Ash Pot Bottom
   Flashback Memory Obtained Black Book: Key for Ocean Room
   Flashback Memory Obtained In Search of the Unexplained: Key for Egypt Room
+  Ixupi Captured Oil: Lightning Pot Top
+  Ixupi Captured Sand: Oil Pot Bottom
+  Ixupi Captured Wax: Key for Library
   Jukebox: Set Song
+  Puzzle Solved Atlantis: Key for Generator Room
   Puzzle Solved Library Statue: Key for Three Floor Elevator
+  Puzzle Solved Organ: Oil Pot Top
   Puzzle Solved Theater Door: Key for Torture Room
+  Set Skull Dial: Tar River: Set Skull Dial: Tar River
   Storage: Library Cabinet: Oil Pot Top DUPE
   Storage: Library Statue: Sand Pot Bottom DUPE
+  Storage: Ocean: Lightning Pot Top DUPE
+  Storage: Tar River: Wax Pot Bottom DUPE
 }
 4: {
+  Beth's Body: Viewed Page 17
+  Final Riddle: Beth's Body Page 17: Key for Projector Room
   Flashback Memory Obtained Merrick's Ghost: Sand Pot Top
+  Ixupi Captured Cloth: Water Pot Top
+  Ixupi Captured Wood: Key for Greenhouse
   Puzzle Hint Found: Elevator Writing: Key for UFO Room
   Puzzle Solved Alchemy: Key for Prehistoric Room
   Puzzle Solved Anansi Music Box: Wax Pot Top
@@ -165,12 +182,15 @@ Playthrough:
   Set Skull Dial: Burial: Set Skull Dial: Burial
   Set Skull Dial: Egypt: Set Skull Dial: Egypt
   Set Skull Dial: Gods Room: Set Skull Dial: Gods Room
+  Set Skull Dial: Prehistoric: Set Skull Dial: Prehistoric
   Set Skull Dial: Werewolf: Set Skull Dial: Werewolf
   Storage: Alchemy: Oil Pot Bottom DUPE
   Storage: Chinese Solitaire: Sand Pot Top DUPE
   Storage: Clock Tower: Water Pot Bottom DUPE
+  Storage: Eagles Nest: Wax Pot Top DUPE
   Storage: Egypt: Cloth Pot Bottom DUPE
   Storage: Gallows: Crystal Pot Top DUPE
+  Storage: Janitor Closet: Lightning Pot Bottom DUPE
   Storage: Lyre: Metal Pot Top DUPE
   Storage: Skeleton: Wood Pot Top DUPE
   Storage: UFO: Wood Pot Bottom DUPE
@@ -178,61 +198,21 @@ Playthrough:
 }
 5: {
   Final Riddle: Planets Aligned: Ash Pot Top
-  Ixupi Captured Sand: Oil Pot Bottom
+  Guillotine: Lost Your Head
   Orrery: Aligned Planets
   Puzzle Hint Found: Basilisk Bone Fragments: Cloth Pot Top
-  Puzzle Solved Atlantis: Key for Generator Room
-  Puzzle Solved Bedroom Elevator: Water Pot Bottom
-  Puzzle Solved Organ: Oil Pot Top
-  Set Skull Dial: Prehistoric: Set Skull Dial: Prehistoric
-  Set Skull Dial: Tar River: Set Skull Dial: Tar River
-  Storage: Eagles Nest: Wax Pot Top DUPE
-  Storage: Ocean: Lightning Pot Top DUPE
+  Storage: Greenhouse: Cloth Pot Top DUPE
   Storage: Workshop Drawers: Metal Pot Bottom DUPE
-}
-6: {
-  Ixupi Captured Oil: Lightning Pot Top
-  Norse Stone: Viewed Norse Stone
-  Storage: Tar River: Wax Pot Bottom DUPE
-}
-7: {
-  Beth's Body: Viewed Page 17
-  Final Riddle: Beth's Body Page 17: Key for Projector Room
-}
-8: {
-  Guillotine: Lost Your Head
   Viewed Theater Movie: Viewed Theater Movie
 }
-9: {
+6: {
+  Norse Stone: Viewed Norse Stone
   Puzzle Solved Maze Door: Key for Puzzle Room
   Storage: Slide: Ash Pot Bottom DUPE
 }
-10: {
+7: {
   Puzzle Hint Found: Mastermind Information Plaque: Crystal Pot Top
   Puzzle Solved Mastermind: Wood Pot Top
   Puzzle Solved Skull Dial Door: Wax Pot Bottom
   Storage: Skull Bridge: Ash Pot Top DUPE
-}
-11: {
-  Ixupi Captured Ash: Crystal Pot Bottom
-  Ixupi Captured Wax: Key for Library
-}
-12: {
-  Ixupi Captured Crystal: Wood Pot Bottom
-}
-13: {
-  Ixupi Captured Wood: Key for Greenhouse
-}
-14: {
-  Storage: Greenhouse: Cloth Pot Top DUPE
-}
-15: {
-  Ixupi Captured Cloth: Water Pot Top
-  Storage: Janitor Closet: Lightning Pot Bottom DUPE
-}
-16: {
-  Ixupi Captured Water: Metal Pot Top
-}
-17: {
-  Ixupi Captured Metal: Lightning Pot Bottom
 }

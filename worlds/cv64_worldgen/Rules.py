@@ -104,7 +104,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Upper cracked wall", player),
-        HasAll('Magical Nitro', 'Mandragora')
+        HasAll()
     )
 
     world.set_rule(

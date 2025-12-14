@@ -255,42 +255,17 @@ Playthrough:
 
 }
 1: {
-  AFR Access: AFR Access
   Act Completion (Contractual Obligations): Time Piece
-  Act Completion (Murder on the Owl Express): Time Piece
   Act Completion (Picture Perfect): Yarn
   Act Completion (She Came from Outer Space): Relic (Tin-foil Hat Cow)
-  Act Completion (The Birdhouse): Umbrella
-  Act Completion (The Finale): Yarn
-  Act Completion (The Illness has Spread): Time Piece
-  Act Completion (The Lava Cake): Yarn
-  Act Completion (The Subcon Well): Time Piece
-  Act Completion (The Twilight Bell): Yarn
-  Act Completion (Time Rift - Bazaar): Yarn
-  Act Completion (Time Rift - Pipe): Yarn
   Act Completion (Time Rift - The Moon): Time Piece
   Act Completion (Time Rift - The Twilight Bell): Relic (Blue Crayon)
-  Act Completion (Time Rift - Village): Yarn
-  Act Completion (Toilet of Doom): Relic (UFO)
-  Act Completion (Train Rush): Yarn
-  Act Completion (Your Contract has Expired): Yarn
   Alpine Skyline (Rift) - Page: Below Aqueduct: Yarn
   Alpine Skyline (Rift) - Page: Lonely Birdhouse Top: Yarn
   Alpine Skyline (Rift) - Page: Waterfall Wooden Pillar: Relic (Burger Patty)
-  Alpine Skyline - Ember Summit: Yarn
   Alpine Skyline - Goat Village: Below Hookpoint: Relic (Mountain Set)
   Alpine Skyline - Goat Village: Hidden Branch: Time Piece
-  Alpine Skyline - Mystifying Time Mesa: Zipline: Time Piece
-  Alpine Skyline - The Birdhouse: Brewing Crate House: Time Piece
-  Alpine Skyline - The Birdhouse: Outer Edge: Yarn
-  Alpine Skyline - The Lava Cake: Dweller Pillars: Snatcher's Contract - Toilet of Doom
-  Alpine Skyline - The Lava Cake: Outer Island Chest: Yarn
-  Alpine Skyline - The Purrloined Village: Chest Reward: Time Piece
-  Alpine Skyline - The Twilight Bell: Wide Purple Platform: Time Piece
-  Alpine Skyline - The Twilight Path: Yarn
-  Alpine Skyline - The Windmill: Inside Pon Cluster: Yarn
   Badge Seller - Item 3: Time Piece
-  Birdhouse Cleared: Birdhouse Cleared
   Dead Bird Studio (Rift) - Page: Above Horse Picture: Yarn
   Dead Bird Studio (Rift) - Page: Above TV Room: Yarn
   Dead Bird Studio (Rift) - Page: In The Corner: Time Piece
@@ -301,8 +276,6 @@ Playthrough:
   Dead Bird Studio - Red Building Top: Snatcher's Contract - The Subcon Well
   Dead Bird Studio - Side of House: Yarn
   Dead Bird Studio - Tepee Chest: Snatcher's Contract - Mail Delivery Service
-  HUMT Access: HUMT Access
-  Lava Cake Cleared: Lava Cake Cleared
   Mafia Town - Beach Alcove: Time Piece
   Mafia Town - Behind Faucet: Time Piece
   Mafia Town - Blue Vault: Time Piece
@@ -320,9 +293,6 @@ Playthrough:
   Mafia Town - Yellow Sphere Building Chest: Yarn
   Mafia of Cooks - Page: Below Dock: Time Piece
   Mafia of Cooks - Page: Top of Boat: Yarn
-  Murder on the Owl Express - Cafeteria: Hookshot Badge
-  Murder on the Owl Express - Luggage Room Bottom: Yarn
-  Murder on the Owl Express - Raven Suite Top: Time Piece
   Picture Perfect - Behind Badge Seller: Time Piece
   Sleepy Subcon - Page: Behind 3rd Rift Gate: Time Piece
   Sleepy Subcon - Page: Behind Entrance Area: Yarn
@@ -332,7 +302,6 @@ Playthrough:
   Sleepy Subcon - Page: Wrecked Treehouse: Yarn
   Snatcher's Contract - Queen Vanessa's Manor: Yarn
   Snatcher's Contract - The Subcon Well: Time Piece
-  Subcon Forest - Boss Arena Chest: Time Piece
   Subcon Forest - Burning Stump Chest: Snatcher's Contract - Queen Vanessa's Manor
   Subcon Forest - Dweller Floating Rocks: Yarn
   Subcon Forest - Dweller Platforming Tree A: Yarn
@@ -348,30 +317,65 @@ Playthrough:
   Subcon Forest - Swamp Ice Wall: Time Piece
   Subcon Forest - Swamp Tree Chest: Time Piece
   Subcon Forest - Swamp Treehouse: Yarn
-  Subcon Forest - Tall Tree Hookshot Swing: Yarn
   Subcon Village - Snatcher Statue Chest: Relic (Cow)
   Subcon Village - Stump Platform Chest: Time Piece
-  Subcon Well - Mushroom: Time Piece
   TIHS Access: TIHS Access
-  TOD Access: TOD Access
-  The Finale - Frozen Item: Time Piece
-  Time Piece Cluster: Time Piece Cluster
-  Twilight Bell Cleared: Twilight Bell Cleared
-  Windmill Cleared: Windmill Cleared
 }
 2: {
-  Act Completion (Dead Bird Studio Basement): Relic (Burger Cushion)
+  Act Completion (Murder on the Owl Express): Time Piece
   Act Completion (The Big Parade): Yarn
-  Act Completion (Time Rift - The Lab): Time Piece
+  Act Completion (Time Rift - Bazaar): Yarn
   Act Completion (Time Rift - The Owl Express): Yarn
-  Act Completion (Welcome to Mafia Town): Time Piece
-  Dead Bird Studio Basement - Cameras: Yarn
+  Act Completion (Your Contract has Expired): Yarn
   Dead Bird Studio Basement - Small Room: Yarn
-  Dead Bird Studio Basement - Tightrope: Time Piece
-  Dead Bird Studio Basement - Window Platform: Yarn
   Mafia Boss Shop Item: Relic (Cool Cow)
   Mafia HQ - Freezer Chest: Yarn
   Mafia HQ - Secret Room: Relic (Red Crayon)
+  Murder on the Owl Express - Cafeteria: Hookshot Badge
+  Murder on the Owl Express - Luggage Room Bottom: Yarn
+  Murder on the Owl Express - Raven Suite Top: Time Piece
+  Subcon Forest - Boss Arena Chest: Time Piece
+  TOD Access: TOD Access
+}
+3: {
+  AFR Access: AFR Access
+  Act Completion (Dead Bird Studio Basement): Relic (Burger Cushion)
+  Act Completion (The Birdhouse): Umbrella
+  Act Completion (The Illness has Spread): Time Piece
+  Act Completion (The Lava Cake): Yarn
+  Act Completion (The Subcon Well): Time Piece
+  Act Completion (The Twilight Bell): Yarn
+  Act Completion (Time Rift - Pipe): Yarn
+  Act Completion (Time Rift - Village): Yarn
+  Act Completion (Toilet of Doom): Relic (UFO)
+  Act Completion (Train Rush): Yarn
+  Alpine Skyline - Ember Summit: Yarn
+  Alpine Skyline - Mystifying Time Mesa: Zipline: Time Piece
+  Alpine Skyline - The Birdhouse: Brewing Crate House: Time Piece
+  Alpine Skyline - The Birdhouse: Outer Edge: Yarn
+  Alpine Skyline - The Lava Cake: Dweller Pillars: Snatcher's Contract - Toilet of Doom
+  Alpine Skyline - The Lava Cake: Outer Island Chest: Yarn
+  Alpine Skyline - The Purrloined Village: Chest Reward: Time Piece
+  Alpine Skyline - The Twilight Bell: Wide Purple Platform: Time Piece
+  Alpine Skyline - The Twilight Path: Yarn
+  Alpine Skyline - The Windmill: Inside Pon Cluster: Yarn
+  Birdhouse Cleared: Birdhouse Cleared
+  Dead Bird Studio Basement - Cameras: Yarn
+  Dead Bird Studio Basement - Tightrope: Time Piece
+  Dead Bird Studio Basement - Window Platform: Yarn
+  HUMT Access: HUMT Access
+  Lava Cake Cleared: Lava Cake Cleared
+  Subcon Forest - Tall Tree Hookshot Swing: Yarn
+  Subcon Well - Mushroom: Time Piece
+  Twilight Bell Cleared: Twilight Bell Cleared
+  Windmill Cleared: Windmill Cleared
+}
+4: {
+  Act Completion (The Finale): Yarn
+  Act Completion (Time Rift - The Lab): Time Piece
+  Act Completion (Welcome to Mafia Town): Time Piece
   Queen Vanessa's Manor - Bedroom Chest: Yarn
   Queen Vanessa's Manor - Cellar: Yarn
+  The Finale - Frozen Item: Time Piece
+  Time Piece Cluster: Time Piece Cluster
 }

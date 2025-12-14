@@ -7,7 +7,7 @@ The world class must inherit from RuleWorldMixin to use these rules.
 
 from typing import TYPE_CHECKING
 
-from rule_builder import True_, False_, Has, HasAll, True_
+from rule_builder import True_, False_, Has, HasAll
 
 if TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -59,12 +59,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Bedroom Elevator From Office", player),
-        HasAll('Crawling', 'Key for Bedroom Elevator')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_entrance("To Office From Bedroom Elevator", player),
-        HasAll('Crawling', 'Key for Bedroom Elevator')
+        HasAll()
     )
 
     world.set_rule(
@@ -99,7 +99,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Tar River From Lobby", player),
-        ((HasAll('Oil Pot Bottom', 'Oil Pot Bottom DUPE', 'Oil Pot Top', 'Oil Pot Top DUPE')) | (HasAll('Oil Pot Complete', 'Oil Pot Complete DUPE'))) & (True_()) & (Has("Crawling"))
+        (True_()) & (True_()) & (Has("Crawling"))
     )
 
     world.set_rule(
@@ -129,7 +129,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Beth's Body From Generator", player),
-        ((True_()) & (Has("Viewed Norse Stone"))) & ((((HasAll('Ash Pot Bottom', 'Ash Pot Bottom DUPE', 'Ash Pot Top', 'Ash Pot Top DUPE')) | (HasAll('Ash Pot Complete', 'Ash Pot Complete DUPE'))) & ((HasAll('Cloth Pot Bottom', 'Cloth Pot Bottom DUPE', 'Cloth Pot Top', 'Cloth Pot Top DUPE')) | (HasAll('Cloth Pot Complete', 'Cloth Pot Complete DUPE'))) & ((HasAll('Crystal Pot Bottom', 'Crystal Pot Bottom DUPE', 'Crystal Pot Top', 'Crystal Pot Top DUPE')) | (HasAll('Crystal Pot Complete', 'Crystal Pot Complete DUPE'))) & ((HasAll('Metal Pot Bottom', 'Metal Pot Bottom DUPE', 'Metal Pot Top', 'Metal Pot Top DUPE')) | (HasAll('Metal Pot Complete', 'Metal Pot Complete DUPE'))) & ((HasAll('Oil Pot Bottom', 'Oil Pot Bottom DUPE', 'Oil Pot Top', 'Oil Pot Top DUPE')) | (HasAll('Oil Pot Complete', 'Oil Pot Complete DUPE'))) & ((HasAll('Sand Pot Bottom', 'Sand Pot Bottom DUPE', 'Sand Pot Top', 'Sand Pot Top DUPE')) | (HasAll('Sand Pot Complete', 'Sand Pot Complete DUPE'))) & ((HasAll('Water Pot Bottom', 'Water Pot Bottom DUPE', 'Water Pot Top', 'Water Pot Top DUPE')) | (HasAll('Water Pot Complete', 'Water Pot Complete DUPE'))) & ((HasAll('Wax Pot Bottom', 'Wax Pot Bottom DUPE', 'Wax Pot Top', 'Wax Pot Top DUPE')) | (HasAll('Wax Pot Complete', 'Wax Pot Complete DUPE'))) & ((HasAll('Wood Pot Bottom', 'Wood Pot Bottom DUPE', 'Wood Pot Top', 'Wood Pot Top DUPE')) | (HasAll('Wood Pot Complete', 'Wood Pot Complete DUPE')))) | (True_()))
+        (True_()) & (True_())
     )
 
     world.set_rule(
@@ -179,7 +179,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Lobby From Tar River", player),
-        ((HasAll('Oil Pot Bottom', 'Oil Pot Bottom DUPE', 'Oil Pot Top', 'Oil Pot Top DUPE')) | (HasAll('Oil Pot Complete', 'Oil Pot Complete DUPE'))) & (Has("Crawling"))
+        (True_()) & (Has("Crawling"))
     )
 
     world.set_rule(
@@ -234,7 +234,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Water Capture From Janitor Closet", player),
-        (HasAll('Cloth Pot Bottom', 'Cloth Pot Bottom DUPE', 'Cloth Pot Top', 'Cloth Pot Top DUPE')) | (HasAll('Cloth Pot Complete', 'Cloth Pot Complete DUPE'))
+        True_()
     )
 
     world.set_rule(
@@ -284,7 +284,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Guillotine From Torture", player),
-        (Has("Viewed Egyptian Hieroglyphics Explained")) & (Has("Viewed Page 17"))
+        (True_()) & (Has("Viewed Page 17"))
     )
 
     world.set_rule(
@@ -294,7 +294,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("To Slide Room", player),
-        HasAll('Set Skull Dial: Burial', 'Set Skull Dial: Egypt', 'Set Skull Dial: Gods Room', 'Set Skull Dial: Prehistoric', 'Set Skull Dial: Tar River', 'Set Skull Dial: Werewolf')
+        True_()
     )
 
     world.set_rule(
@@ -314,7 +314,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Bedroom Elevator", player),
-        HasAll('Crawling', 'Key for Bedroom Elevator')
+        HasAll()
     )
 
     world.set_rule(
@@ -359,7 +359,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Storage: Tar River", player),
-        (HasAll('Oil Pot Bottom', 'Oil Pot Bottom DUPE', 'Oil Pot Top', 'Oil Pot Top DUPE')) | (HasAll('Oil Pot Complete', 'Oil Pot Complete DUPE'))
+        True_()
     )
 
     world.set_rule(
@@ -389,7 +389,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Storage: Janitor Closet", player),
-        (HasAll('Cloth Pot Bottom', 'Cloth Pot Bottom DUPE', 'Cloth Pot Top', 'Cloth Pot Top DUPE')) | (HasAll('Cloth Pot Complete', 'Cloth Pot Complete DUPE'))
+        True_()
     )
 
     world.set_rule(
@@ -404,50 +404,50 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Puzzle Solved Skull Dial Door", player),
-        HasAll('Set Skull Dial: Burial', 'Set Skull Dial: Egypt', 'Set Skull Dial: Gods Room', 'Set Skull Dial: Prehistoric', 'Set Skull Dial: Tar River', 'Set Skull Dial: Werewolf')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Water", player),
-        (HasAll('Water Pot Bottom', 'Water Pot Bottom DUPE', 'Water Pot Top', 'Water Pot Top DUPE')) | (HasAll('Water Pot Complete', 'Water Pot Complete DUPE'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Wax", player),
-        (HasAll('Wax Pot Bottom', 'Wax Pot Bottom DUPE', 'Wax Pot Top', 'Wax Pot Top DUPE')) | (HasAll('Wax Pot Complete', 'Wax Pot Complete DUPE'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Ash", player),
-        (HasAll('Ash Pot Bottom', 'Ash Pot Bottom DUPE', 'Ash Pot Top', 'Ash Pot Top DUPE')) | (HasAll('Ash Pot Complete', 'Ash Pot Complete DUPE'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Oil", player),
-        (HasAll('Oil Pot Bottom', 'Oil Pot Bottom DUPE', 'Oil Pot Top', 'Oil Pot Top DUPE')) | (HasAll('Oil Pot Complete', 'Oil Pot Complete DUPE'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Cloth", player),
-        (HasAll('Cloth Pot Bottom', 'Cloth Pot Bottom DUPE', 'Cloth Pot Top', 'Cloth Pot Top DUPE')) | (HasAll('Cloth Pot Complete', 'Cloth Pot Complete DUPE'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Wood", player),
-        (HasAll('Wood Pot Bottom', 'Wood Pot Bottom DUPE', 'Wood Pot Top', 'Wood Pot Top DUPE')) | (HasAll('Wood Pot Complete', 'Wood Pot Complete DUPE'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Crystal", player),
-        (HasAll('Crystal Pot Bottom', 'Crystal Pot Bottom DUPE', 'Crystal Pot Top', 'Crystal Pot Top DUPE')) | (HasAll('Crystal Pot Complete', 'Crystal Pot Complete DUPE'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Sand", player),
-        (HasAll('Sand Pot Bottom', 'Sand Pot Bottom DUPE', 'Sand Pot Top', 'Sand Pot Top DUPE')) | (HasAll('Sand Pot Complete', 'Sand Pot Complete DUPE'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Ixupi Captured Metal", player),
-        (HasAll('Metal Pot Bottom', 'Metal Pot Bottom DUPE', 'Metal Pot Top', 'Metal Pot Top DUPE')) | (HasAll('Metal Pot Complete', 'Metal Pot Complete DUPE'))
+        True_()
     )

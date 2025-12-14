@@ -271,6 +271,8 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
         )
 
         # Apply location properties from location_data
+        if location_data.event:
+            location.event = True
         if location_data.progress_type is not None:
             location.progress_type = location_data.progress_type
         if not location_data.show_in_spoiler:

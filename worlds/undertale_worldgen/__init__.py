@@ -128,9 +128,67 @@ class UndertaleWorldGenWorld(RuleWorldMixin, World):
         "Event": frozenset(["Papyrus Date", "Undyne Date", "Alphys Date"]),
     }
 
+    # Canonical item placements - where items belong in the "vanilla" game
+    # Used by exporter to distinguish canonical placements from always-locked items
+    canonical_placements: ClassVar[Dict[str, str]] = {
+        "Candy 1": "Spider Cider",
+        "Candy 2": "Old Tutu",
+        "Candy 3": "temy armor",
+        "Candy 4": "Snowdin Key",
+        "Donut Sale": "Stained Apron",
+        "Cider Sale": "Punch Card",
+        "Ribbon Cracks": "Torn Notebook",
+        "Toy Knife Edge": "Burnt Pan",
+        "B.Scotch Pie Given": "Instant Noodles",
+        "Snowman": "Nice Cream",
+        "Nicecream Snowdin": "Legendary Hero",
+        "Bunny 1": "Cloudy Glasses",
+        "Bunny 2": "Waterfall Key",
+        "Bunny 3": "Toy Knife",
+        "Bunny 4": "Punch Card",
+        "Papyrus Date": "Papyrus Date",
+        "Nicecream Waterfall": "Snowman Piece",
+        "Nicecream Punch Card": "Starfait",
+        "Quiche Bench": "Tough Glove",
+        "Tutu Hidden": "Hotland Key",
+        "Card Reward": "Heart Locket",
+        "Grass Shoes": "Starfait",
+        "Astro 1": "Spider Donut",
+        "Astro 2": "Mettaton Plush",
+        "Gerson 1": "Butterscotch Pie",
+        "Gerson 2": "Crab Apple",
+        "Gerson 3": "Empty Gun",
+        "Gerson 4": "Ballet Shoes",
+        "TemmieShop 1": "Astronaut Food",
+        "TemmieShop 2": "500G",
+        "TemmieShop 3": "Astronaut Food",
+        "TemmieShop 4": "Glamburger",
+        "Undyne Date": "Undyne Date",
+        "Noodles Fridge": "500G",
+        "Pan Hidden": "Faded Ribbon",
+        "Apron Hidden": "Cinnamon Bun",
+        "Bratty Catty 1": "Abandoned Quiche",
+        "Bratty Catty 2": "Core Key",
+        "Bratty Catty 3": "Sea Tea",
+        "Bratty Catty 4": "Bisicle",
+        "Burgerpants 1": "Worn Dagger",
+        "Burgerpants 2": "Spider Donut",
+        "Burgerpants 3": "Punch Card",
+        "Burgerpants 4": "Right Home Key",
+        "Alphys Date": "Alphys Date",
+        "Trash Burger": "1000G",
+        "Mettaton Plot": "1000G",
+        "Present Knife": "Cowboy Hat",
+        "Present Locket": "Left Home Key",
+        "Left New Home Key": "Face Steak",
+        "Right New Home Key": "Manly Bandanna",
+    }
+
     def generate_early(self) -> None:
-        """Push starting items as precollected."""
+        """Push starting items and disable randomization for seed 1."""
         self._push_starting_items()
+        if self.multiworld.seed == 1:
+            self.options.randomize_items.value = False
 
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
@@ -186,6 +244,29 @@ class UndertaleWorldGenWorld(RuleWorldMixin, World):
                 for _ in range(count):
                     item = self.create_item(item_name)
                     self.multiworld.push_precollected(item)
+
+    def pre_fill(self) -> None:
+        """Pre-fill items if not randomizing."""
+        if not self.options.randomize_items.value:
+            self._place_original_items()
+
+    def _place_original_items(self) -> None:
+        """Place items in their canonical locations when not randomized."""
+        for location_name, item_name in self.canonical_placements.items():
+            location = self.multiworld.get_location(location_name, self.player)
+
+            # Skip if already filled (e.g., by _place_locked_items or generate_basic)
+            if location.item is not None:
+                continue
+
+            item = self.create_item(item_name)
+            location.place_locked_item(item)
+
+            # Remove the item from the pool if it exists
+            for pool_item in self.multiworld.itempool[:]:
+                if pool_item.name == item_name and pool_item.player == self.player:
+                    self.multiworld.itempool.remove(pool_item)
+                    break
 
     def create_item(self, name: str) -> Item:
         """Create an item by name."""

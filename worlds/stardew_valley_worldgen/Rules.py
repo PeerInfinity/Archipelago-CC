@@ -324,7 +324,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Witch's Swamp to Witch's Hut", player),
-        ((((True_()) & (True_()) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & (True_())) | (True_()) | (Has("Progressive Pan", 4))) & (Has("Copper Bar (Logic event)")) & (Has("Farming Level", 2))) & ((((True_()) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | ((True_()) & (Has("Shipping Bin"))))) | (Has("Progressive Fishing Rod"))) & (True_())
+        True_()
     )
 
     world.set_rule(
@@ -709,52 +709,52 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Level 1 Farming", player),
-        (((True_()) & (True_()) & (True_()) & (True_()) & (Has("Summer Squash Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Amaranth Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Artichoke Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Bean Starter")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Blueberry Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Bok Choy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Cauliflower Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Eggplant Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fairy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Grape Starter"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Pumpkin Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Yam Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Garlic Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Hops Starter")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Jazz Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Kale Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Melon Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Parsnip Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Pepper Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Poppy Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Potato Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Radish Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Red Cabbage Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Rice Shoot")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Spangle Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Tulip Bulb"))) & (True_())) | (((True_()) & (True_()) & (Has("Summer")) & (Has("Tomato Seeds"))) & (True_())) | (((True_()) & (True_()) & ((((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (True_())) & (True_()) & (Has("Taro Tuber"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Broccoli Seeds"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Corn Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Sunflower Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Wheat Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (True_()) & (Has("Pineapple Seeds"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Cactus Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (Has("Carrot Seeds")) & (Has("Foraging Level"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Foraging Level")) & (Has("Powdermelon Seeds"))) & (True_())) | (((True_()) & (((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Cranberry Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Strawberry Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Beet Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Rhubarb Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & ((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_()) & (Has("Coffee Bean")) & (Has("Received Progression Percent", 16))) & ((True_()) | (True_()))) | (((Has("Ancient Seeds Recipe")) & (Has("Received Progression Percent", 20))) & ((True_()) | (True_()) | (True_()))) | (((((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & ((Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Rare Seed"))) & (True_())) | (((((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (True_()) & (Has("Starfruit Seeds")) & (Has("Summer"))) & (True_()))
+        ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Level 2 Farming", player),
-        ((((True_()) & (True_()) & (True_()) & (True_()) & (Has("Summer Squash Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Amaranth Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Artichoke Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Bean Starter")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Blueberry Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Bok Choy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Cauliflower Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Eggplant Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fairy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Grape Starter"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Pumpkin Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Yam Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Garlic Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Hops Starter")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Jazz Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Kale Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Melon Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Parsnip Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Pepper Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Poppy Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Potato Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Radish Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Red Cabbage Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Rice Shoot")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Spangle Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Tulip Bulb"))) & (True_())) | (((True_()) & (True_()) & (Has("Summer")) & (Has("Tomato Seeds"))) & (True_())) | (((True_()) & (True_()) & ((((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (True_())) & (True_()) & (Has("Taro Tuber"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Broccoli Seeds"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Corn Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Sunflower Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Wheat Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (True_()) & (Has("Pineapple Seeds"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Cactus Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (Has("Carrot Seeds")) & (Has("Foraging Level"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Foraging Level")) & (Has("Powdermelon Seeds"))) & (True_())) | (((True_()) & (((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Cranberry Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Strawberry Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Beet Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Rhubarb Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & ((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_()) & (Has("Coffee Bean")) & (Has("Received Progression Percent", 16))) & ((True_()) | (True_()))) | (((Has("Ancient Seeds Recipe")) & (Has("Received Progression Percent", 20))) & ((True_()) | (True_()) | (True_()))) | (((((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & ((Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Rare Seed"))) & (True_())) | (((((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (True_()) & (Has("Starfruit Seeds")) & (Has("Summer"))) & (True_()))) & (Has("Farming Level"))
+        (((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_()))) & (Has("Farming Level"))
     )
 
     world.set_rule(
         multiworld.get_location("Level 3 Farming", player),
-        ((((True_()) & (True_()) & (True_()) & (True_()) & (Has("Summer Squash Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Amaranth Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Artichoke Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Bean Starter")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Blueberry Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Bok Choy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Cauliflower Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Eggplant Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fairy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Grape Starter"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Pumpkin Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Yam Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Garlic Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Hops Starter")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Jazz Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Kale Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Melon Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Parsnip Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Pepper Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Poppy Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Potato Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Radish Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Red Cabbage Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Rice Shoot")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Spangle Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Tulip Bulb"))) & (True_())) | (((True_()) & (True_()) & (Has("Summer")) & (Has("Tomato Seeds"))) & (True_())) | (((True_()) & (True_()) & ((((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (True_())) & (True_()) & (Has("Taro Tuber"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Broccoli Seeds"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Corn Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Sunflower Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Wheat Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (True_()) & (Has("Pineapple Seeds"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Cactus Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (Has("Carrot Seeds")) & (Has("Foraging Level"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Foraging Level")) & (Has("Powdermelon Seeds"))) & (True_())) | (((True_()) & (((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Cranberry Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Strawberry Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Beet Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Rhubarb Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & ((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_()) & (Has("Coffee Bean")) & (Has("Received Progression Percent", 16))) & ((True_()) | (True_()))) | (((Has("Ancient Seeds Recipe")) & (Has("Received Progression Percent", 20))) & ((True_()) | (True_()) | (True_()))) | (((((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & ((Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Rare Seed"))) & (True_())) | (((((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (True_()) & (Has("Starfruit Seeds")) & (Has("Summer"))) & (True_()))) & (Has("Farming Level", 2)) & (Has("Progressive Hoe")) & (Has("Progressive Watering Can"))
+        (((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_()))) & (Has("Farming Level", 2)) & (Has("Progressive Hoe")) & (Has("Progressive Watering Can"))
     )
 
     world.set_rule(
         multiworld.get_location("Level 4 Farming", player),
-        ((((True_()) & (True_()) & (True_()) & (True_()) & (Has("Summer Squash Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Amaranth Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Artichoke Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Bean Starter")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Blueberry Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Bok Choy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Cauliflower Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Eggplant Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fairy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Grape Starter"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Pumpkin Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Yam Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Garlic Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Hops Starter")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Jazz Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Kale Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Melon Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Parsnip Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Pepper Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Poppy Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Potato Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Radish Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Red Cabbage Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Rice Shoot")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Spangle Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Tulip Bulb"))) & (True_())) | (((True_()) & (True_()) & (Has("Summer")) & (Has("Tomato Seeds"))) & (True_())) | (((True_()) & (True_()) & ((((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (True_())) & (True_()) & (Has("Taro Tuber"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Broccoli Seeds"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Corn Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Sunflower Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Wheat Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (True_()) & (Has("Pineapple Seeds"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Cactus Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (Has("Carrot Seeds")) & (Has("Foraging Level"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Foraging Level")) & (Has("Powdermelon Seeds"))) & (True_())) | (((True_()) & (((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Cranberry Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Strawberry Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Beet Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Rhubarb Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & ((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_()) & (Has("Coffee Bean")) & (Has("Received Progression Percent", 16))) & ((True_()) | (True_()))) | (((Has("Ancient Seeds Recipe")) & (Has("Received Progression Percent", 20))) & ((True_()) | (True_()) | (True_()))) | (((((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & ((Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Rare Seed"))) & (True_())) | (((((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (True_()) & (Has("Starfruit Seeds")) & (Has("Summer"))) & (True_()))) & (Has("Farming Level", 3)) & (Has("Progressive Hoe")) & (Has("Progressive Watering Can"))
+        (((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_()))) & (Has("Farming Level", 3)) & (Has("Progressive Hoe")) & (Has("Progressive Watering Can"))
     )
 
     world.set_rule(
         multiworld.get_location("Level 5 Farming", player),
-        ((((True_()) & (True_()) & (True_()) & (True_()) & (Has("Summer Squash Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Amaranth Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Artichoke Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Bean Starter")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Blueberry Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Bok Choy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Cauliflower Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Eggplant Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fairy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Grape Starter"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Pumpkin Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Yam Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Garlic Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Hops Starter")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Jazz Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Kale Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Melon Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Parsnip Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Pepper Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Poppy Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Potato Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Radish Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Red Cabbage Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Rice Shoot")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Spangle Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Tulip Bulb"))) & (True_())) | (((True_()) & (True_()) & (Has("Summer")) & (Has("Tomato Seeds"))) & (True_())) | (((True_()) & (True_()) & ((((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (True_())) & (True_()) & (Has("Taro Tuber"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Broccoli Seeds"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Corn Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Sunflower Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Wheat Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (True_()) & (Has("Pineapple Seeds"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Cactus Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (Has("Carrot Seeds")) & (Has("Foraging Level"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Foraging Level")) & (Has("Powdermelon Seeds"))) & (True_())) | (((True_()) & (((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Cranberry Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Strawberry Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Beet Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Rhubarb Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & ((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_()) & (Has("Coffee Bean")) & (Has("Received Progression Percent", 16))) & ((True_()) | (True_()))) | (((Has("Ancient Seeds Recipe")) & (Has("Received Progression Percent", 20))) & ((True_()) | (True_()) | (True_()))) | (((((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & ((Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Rare Seed"))) & (True_())) | (((((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (True_()) & (Has("Starfruit Seeds")) & (Has("Summer"))) & (True_()))) & (Has("Farming Level", 4)) & (Has("Progressive Hoe", 2)) & (Has("Progressive Watering Can", 2))
+        (((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_()))) & (Has("Farming Level", 4)) & (Has("Progressive Hoe", 2)) & (Has("Progressive Watering Can", 2))
     )
 
     world.set_rule(
         multiworld.get_location("Level 6 Farming", player),
-        ((((True_()) & (True_()) & (True_()) & (True_()) & (Has("Summer Squash Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Amaranth Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Artichoke Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Bean Starter")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Blueberry Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Bok Choy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Cauliflower Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Eggplant Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fairy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Grape Starter"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Pumpkin Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Yam Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Garlic Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Hops Starter")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Jazz Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Kale Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Melon Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Parsnip Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Pepper Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Poppy Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Potato Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Radish Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Red Cabbage Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Rice Shoot")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Spangle Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Tulip Bulb"))) & (True_())) | (((True_()) & (True_()) & (Has("Summer")) & (Has("Tomato Seeds"))) & (True_())) | (((True_()) & (True_()) & ((((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (True_())) & (True_()) & (Has("Taro Tuber"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Broccoli Seeds"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Corn Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Sunflower Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Wheat Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (True_()) & (Has("Pineapple Seeds"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Cactus Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (Has("Carrot Seeds")) & (Has("Foraging Level"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Foraging Level")) & (Has("Powdermelon Seeds"))) & (True_())) | (((True_()) & (((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Cranberry Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Strawberry Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Beet Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Rhubarb Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & ((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_()) & (Has("Coffee Bean")) & (Has("Received Progression Percent", 16))) & ((True_()) | (True_()))) | (((Has("Ancient Seeds Recipe")) & (Has("Received Progression Percent", 20))) & ((True_()) | (True_()) | (True_()))) | (((((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & ((Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Rare Seed"))) & (True_())) | (((((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (True_()) & (Has("Starfruit Seeds")) & (Has("Summer"))) & (True_()))) & (Has("Farming Level", 5)) & (Has("Progressive Hoe", 2)) & (Has("Progressive Watering Can", 2))
+        (((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_()))) & (Has("Farming Level", 5)) & (Has("Progressive Hoe", 2)) & (Has("Progressive Watering Can", 2))
     )
 
     world.set_rule(
         multiworld.get_location("Level 7 Farming", player),
-        ((((True_()) & (True_()) & (True_()) & (True_()) & (Has("Summer Squash Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Amaranth Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Artichoke Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Bean Starter")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Blueberry Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Bok Choy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Cauliflower Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Eggplant Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fairy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Grape Starter"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Pumpkin Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Yam Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Garlic Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Hops Starter")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Jazz Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Kale Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Melon Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Parsnip Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Pepper Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Poppy Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Potato Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Radish Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Red Cabbage Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Rice Shoot")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Spangle Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Tulip Bulb"))) & (True_())) | (((True_()) & (True_()) & (Has("Summer")) & (Has("Tomato Seeds"))) & (True_())) | (((True_()) & (True_()) & ((((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (True_())) & (True_()) & (Has("Taro Tuber"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Broccoli Seeds"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Corn Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Sunflower Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Wheat Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (True_()) & (Has("Pineapple Seeds"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Cactus Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (Has("Carrot Seeds")) & (Has("Foraging Level"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Foraging Level")) & (Has("Powdermelon Seeds"))) & (True_())) | (((True_()) & (((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Cranberry Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Strawberry Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Beet Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Rhubarb Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & ((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_()) & (Has("Coffee Bean")) & (Has("Received Progression Percent", 16))) & ((True_()) | (True_()))) | (((Has("Ancient Seeds Recipe")) & (Has("Received Progression Percent", 20))) & ((True_()) | (True_()) | (True_()))) | (((((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & ((Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Rare Seed"))) & (True_())) | (((((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (True_()) & (Has("Starfruit Seeds")) & (Has("Summer"))) & (True_()))) & (Has("Farming Level", 6)) & (Has("Progressive Hoe", 3)) & (Has("Progressive Watering Can", 3))
+        (((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_()))) & (Has("Farming Level", 6)) & (Has("Progressive Hoe", 3)) & (Has("Progressive Watering Can", 3))
     )
 
     world.set_rule(
         multiworld.get_location("Level 8 Farming", player),
-        ((((True_()) & (True_()) & (True_()) & (True_()) & (Has("Summer Squash Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Amaranth Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Artichoke Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Bean Starter")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Blueberry Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Bok Choy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Cauliflower Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Eggplant Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fairy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Grape Starter"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Pumpkin Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Yam Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Garlic Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Hops Starter")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Jazz Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Kale Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Melon Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Parsnip Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Pepper Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Poppy Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Potato Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Radish Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Red Cabbage Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Rice Shoot")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Spangle Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Tulip Bulb"))) & (True_())) | (((True_()) & (True_()) & (Has("Summer")) & (Has("Tomato Seeds"))) & (True_())) | (((True_()) & (True_()) & ((((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (True_())) & (True_()) & (Has("Taro Tuber"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Broccoli Seeds"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Corn Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Sunflower Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Wheat Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (True_()) & (Has("Pineapple Seeds"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Cactus Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (Has("Carrot Seeds")) & (Has("Foraging Level"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Foraging Level")) & (Has("Powdermelon Seeds"))) & (True_())) | (((True_()) & (((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Cranberry Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Strawberry Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Beet Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Rhubarb Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & ((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_()) & (Has("Coffee Bean")) & (Has("Received Progression Percent", 16))) & ((True_()) | (True_()))) | (((Has("Ancient Seeds Recipe")) & (Has("Received Progression Percent", 20))) & ((True_()) | (True_()) | (True_()))) | (((((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & ((Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Rare Seed"))) & (True_())) | (((((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (True_()) & (Has("Starfruit Seeds")) & (Has("Summer"))) & (True_()))) & (Has("Farming Level", 7)) & (Has("Progressive Hoe", 3)) & (Has("Progressive Watering Can", 3))
+        (((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_()))) & (Has("Farming Level", 7)) & (Has("Progressive Hoe", 3)) & (Has("Progressive Watering Can", 3))
     )
 
     world.set_rule(
         multiworld.get_location("Level 9 Farming", player),
-        ((((True_()) & (True_()) & (True_()) & (True_()) & (Has("Summer Squash Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Amaranth Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Artichoke Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Bean Starter")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Blueberry Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Bok Choy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Cauliflower Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Eggplant Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fairy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Grape Starter"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Pumpkin Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Yam Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Garlic Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Hops Starter")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Jazz Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Kale Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Melon Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Parsnip Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Pepper Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Poppy Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Potato Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Radish Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Red Cabbage Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Rice Shoot")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Spangle Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Tulip Bulb"))) & (True_())) | (((True_()) & (True_()) & (Has("Summer")) & (Has("Tomato Seeds"))) & (True_())) | (((True_()) & (True_()) & ((((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (True_())) & (True_()) & (Has("Taro Tuber"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Broccoli Seeds"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Corn Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Sunflower Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Wheat Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (True_()) & (Has("Pineapple Seeds"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Cactus Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (Has("Carrot Seeds")) & (Has("Foraging Level"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Foraging Level")) & (Has("Powdermelon Seeds"))) & (True_())) | (((True_()) & (((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Cranberry Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Strawberry Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Beet Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Rhubarb Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & ((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_()) & (Has("Coffee Bean")) & (Has("Received Progression Percent", 16))) & ((True_()) | (True_()))) | (((Has("Ancient Seeds Recipe")) & (Has("Received Progression Percent", 20))) & ((True_()) | (True_()) | (True_()))) | (((((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & ((Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Rare Seed"))) & (True_())) | (((((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (True_()) & (Has("Starfruit Seeds")) & (Has("Summer"))) & (True_()))) & (Has("Farming Level", 8)) & (Has("Progressive Hoe", 4)) & (Has("Progressive Watering Can", 4))
+        (((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_()))) & (Has("Farming Level", 8)) & (Has("Progressive Hoe", 4)) & (Has("Progressive Watering Can", 4))
     )
 
     world.set_rule(
         multiworld.get_location("Level 10 Farming", player),
-        ((((True_()) & (True_()) & (True_()) & (True_()) & (Has("Summer Squash Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Amaranth Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Artichoke Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Bean Starter")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Blueberry Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Bok Choy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Cauliflower Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Eggplant Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fairy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Grape Starter"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Pumpkin Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Yam Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Garlic Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Hops Starter")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Jazz Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Kale Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Melon Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Parsnip Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Pepper Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Poppy Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Potato Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Radish Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Red Cabbage Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Rice Shoot")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Spangle Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Tulip Bulb"))) & (True_())) | (((True_()) & (True_()) & (Has("Summer")) & (Has("Tomato Seeds"))) & (True_())) | (((True_()) & (True_()) & ((((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (True_())) & (True_()) & (Has("Taro Tuber"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Broccoli Seeds"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Corn Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Sunflower Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Wheat Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (True_()) & (Has("Pineapple Seeds"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Cactus Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (Has("Carrot Seeds")) & (Has("Foraging Level"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Foraging Level")) & (Has("Powdermelon Seeds"))) & (True_())) | (((True_()) & (((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Cranberry Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Strawberry Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Beet Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Rhubarb Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & ((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_()) & (Has("Coffee Bean")) & (Has("Received Progression Percent", 16))) & ((True_()) | (True_()))) | (((Has("Ancient Seeds Recipe")) & (Has("Received Progression Percent", 20))) & ((True_()) | (True_()) | (True_()))) | (((((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & ((Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Rare Seed"))) & (True_())) | (((((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (True_()) & (Has("Starfruit Seeds")) & (Has("Summer"))) & (True_()))) & (Has("Farming Level", 9)) & (Has("Progressive Hoe", 4)) & (Has("Progressive Watering Can", 4))
+        (((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_()))) & (Has("Farming Level", 9)) & (Has("Progressive Hoe", 4)) & (Has("Progressive Watering Can", 4))
     )
 
     world.set_rule(
@@ -769,57 +769,57 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Getting Started", player),
-        ((True_()) & (True_()) & (Has("Parsnip Seeds")) & (Has("Spring"))) & (True_())
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Raising Animals", player),
-        (((True_()) & (True_()) & (Has("Parsnip Seeds")) & (Has("Spring"))) & (True_())) & (Has("Progressive Coop"))
+        (True_()) & (Has("Progressive Coop"))
     )
 
     world.set_rule(
         multiworld.get_location("Advancement", player),
-        (((True_()) & (True_()) & (Has("Parsnip Seeds")) & (Has("Spring"))) & (True_())) & ((True_()) & (True_()) & ((True_()) | (Has("Progressive Pan"))) & (Has("Farming Level")))
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Read Jack Be Nimble, Jack Be Thick", player),
-        ((True_()) & (Has("Received Progression Percent", 4))) | ((True_()) & (True_()) & (Has("Received Progression Percent", 5)) & (Has("Shipping Bin")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read Woody's Secret", player),
-        ((True_()) & (True_()) & (Has("Received Progression Percent", 5)) & (Has("Shipping Bin"))) | ((Has("Foraging Level", 5)) & (Has("Progressive Axe", 2)))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read Animal Catalogue", player),
-        (True_()) & (True_()) & (Has("Received Progression Percent", 16)) & (Has("Shipping Bin"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read Book of Mysteries", player),
-        (True_()) & (Has("Mr Qi's Plane Ride")) & (Has("Power: Book of Mysteries")) & (Has("Received Progression Percent", 8))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read Dwarvish Safety Manual", player),
-        ((True_()) & (True_()) & (Has("Received Progression Percent", 5)) & (Has("Shipping Bin"))) | ((True_()) & (True_()) & (Has("Shipping Bin")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read Friendship 101", player),
-        ((True_()) & (Has("Received Progression Percent", 16)) & (Has("Received Progression Percent", 8))) | ((True_()) & (True_()) & (Has("Received Progression Percent", 5)) & (Has("Shipping Bin")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read Horse: The Book", player),
-        (True_()) & (True_()) & (Has("Received Progression Percent", 6)) & (Has("Shipping Bin"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read Jewels Of The Sea", player),
-        (((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & (Has("Received Progression Percent", 20))) | ((True_()) & (True_()) & (Has("Received Progression Percent", 5)) & (Has("Shipping Bin")))
+        True_()
     )
 
     world.set_rule(
@@ -829,107 +829,107 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Read Monster Compendium", player),
-        ((True_()) & (True_()) & (Has("Received Progression Percent", 5)) & (Has("Shipping Bin"))) | (((((Has("Progressive Club", 2)) | (Has("Progressive Dagger", 2)) | (Has("Progressive Sword", 2)) | (Has("Progressive Weapon", 2))) & (True_())) | (((Has("Progressive Club", 2)) | (Has("Progressive Dagger", 2)) | (Has("Progressive Sword", 2)) | (Has("Progressive Weapon", 2))) & (True_())) | (((Has("Progressive Club", 2)) | (Has("Progressive Dagger", 2)) | (Has("Progressive Sword", 2)) | (Has("Progressive Weapon", 2))) & (True_())) | (((Has("Progressive Club", 2)) | (Has("Progressive Dagger", 2)) | (Has("Progressive Sword", 2)) | (Has("Progressive Weapon", 2))) & (True_())) | (((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (True_())) | (((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (True_())) | (((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (True_())) | (((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (True_())) | (((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (True_())) | (((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (True_())) | (((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (True_())) | (((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (True_())) | (((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_())) | (((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_())) | (((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_())) | (((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_())) | (((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_())) | (((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_())) | (((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_())) | (((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_())) | (((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_())) | (((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_())) | (((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_())) | (((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_())) | (((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_())) | (((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_())) | (((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_())) | (((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_())) | (((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_())) | (((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_())) | (((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_())) | (((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_())) | (((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_())) | (((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_())) | (((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_())) | (((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_())) | (((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_())) | (((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_())) | (((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_())) | (((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_()))) & (Has("Received Progression Percent", 16)))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read Ol' Slitherlegs", player),
-        (True_()) & (True_()) & (Has("Received Progression Percent", 6)) & (Has("Shipping Bin"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read Price Catalogue", player),
-        (True_()) & (True_()) & (Has("Shipping Bin"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read The Alleyway Buffet", player),
-        ((True_()) & (True_()) & (Has("Received Progression Percent", 5)) & (Has("Shipping Bin"))) | ((Has("Progressive Axe", 2)) & (Has("Progressive Pickaxe", 2)))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read The Art O' Crabbing", player),
-        ((True_()) & (True_()) & (Has("Received Progression Percent", 5)) & (Has("Shipping Bin"))) | (Has("Book: The Art O' Crabbing"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read Treasure Appraisal Guide", player),
-        ((((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & (True_())) & (True_()) & (Has("Received Progression Percent", 48))) | ((True_()) & (True_()) & (Has("Received Progression Percent", 5)) & (Has("Shipping Bin")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read Raccoon Journal", player),
-        ((True_()) & (True_()) & (True_()) & (True_()) & (Has("Received Progression Percent", 2))) | ((True_()) & (True_()) & (Has("Received Progression Percent", 5)) & (Has("Shipping Bin")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read Way Of The Wind pt. 1", player),
-        (True_()) & (True_()) & (Has("Received Progression Percent", 3)) & (Has("Shipping Bin"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read Way Of The Wind pt. 2", player),
-        (True_()) & (True_()) & (Has("Power: Way Of The Wind pt. 1")) & (Has("Received Progression Percent", 8)) & (Has("Shipping Bin"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read Book Of Stars", player),
-        (True_()) & (True_()) & (Has("Shipping Bin"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read Bait And Bobber", player),
-        (True_()) & (True_()) & (Has("Shipping Bin"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read Combat Quarterly", player),
-        (True_()) & (True_()) & (Has("Shipping Bin"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read Mining Monthly", player),
-        (True_()) & (True_()) & (Has("Shipping Bin"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read Stardew Valley Almanac", player),
-        (True_()) & (True_()) & (Has("Shipping Bin"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read Woodcutter's Weekly", player),
-        (True_()) & (True_()) & (Has("Shipping Bin"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read The Diamond Hunter", player),
-        ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & (True_()) & (True_()) & (True_())
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Read Queen Of Sauce Cookbook", player),
-        (((True_()) & (True_()) & (True_()) & (True_()) & (Has("Banana Sapling"))) & (True_()) & (Has("Received Progression Percent", 4))) & ((True_()) & (True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Fall"))) & ((True_()) & (True_()) & (Has("Garlic Seeds")) & (Has("Spring"))) & ((True_()) & (True_()) & (Has("Melon Seeds")) & (Has("Summer"))) & ((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Wheat Seeds"))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((True_()) & (Has("Progressive Fishing Rod"))) & ((True_()) & (Has("Progressive Pan"))) & ((True_()) & (Has("Open Professor Snail Cave"))) & (True_()) & ((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Combat Level", 8)) & (Has("Fishing Level", 10)) & (Has("Mining Level", 8)) & (Has("Open Professor Snail Cave")) & (Has("Progressive Fishing Rod", 4)) & (Has("Progressive Pickaxe", 4)) & (Has("Progressive Slingshot")) & (Has("Received Progression Percent", 12)) & (Has("Shipping Bin"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Copper Bar (Logic event)", player),
-        ((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (Has("Copper Ore (Logic event)"))
+        (True_()) & (Has("Copper Ore (Logic event)"))
     )
 
     world.set_rule(
         multiworld.get_location("Iron Bar (Logic event)", player),
-        ((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (Has("Iron Ore (Logic event)"))
+        (True_()) & (Has("Iron Ore (Logic event)"))
     )
 
     world.set_rule(
         multiworld.get_location("Gold Bar (Logic event)", player),
-        ((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (Has("Gold Ore (Logic event)"))
+        (True_()) & (Has("Gold Ore (Logic event)"))
     )
 
     world.set_rule(
         multiworld.get_location("Iridium Bar (Logic event)", player),
-        ((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (Has("Iridium Ore (Logic event)"))
+        (True_()) & (Has("Iridium Ore (Logic event)"))
     )
 
     world.set_rule(
@@ -984,12 +984,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Cow's Delight", player),
-        (((True_()) & (True_()) & (Has("Amaranth Seeds")) & (Has("Fall"))) & (True_())) & (Has("Fall"))
+        (True_()) & (Has("Fall"))
     )
 
     world.set_rule(
         multiworld.get_location("The Giant Stump", player),
-        ((True_()) | (True_())) & (Has("Progressive Axe"))
+        True_()
     )
 
     world.set_rule(
@@ -1009,32 +1009,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Crop Research", player),
-        (((True_()) & (True_()) & (Has("Melon Seeds")) & (Has("Summer"))) & (True_())) & (Has("Summer"))
+        (True_()) & (Has("Summer"))
     )
 
     world.set_rule(
         multiworld.get_location("Robin's Request", player),
-        (((True_()) | (True_())) & (Has("Progressive Axe"))) & (Has("Winter"))
+        (True_()) & (Has("Winter"))
     )
 
     world.set_rule(
         multiworld.get_location("Aquatic Research", player),
-        ((Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Summer"))
+        (True_()) & (Has("Summer"))
     )
 
     world.set_rule(
         multiworld.get_location("Island Ingredients", player),
-        (((True_()) & (True_()) & ((((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (True_())) & (True_()) & (Has("Taro Tuber"))) & (True_())) & (((True_()) & (True_()) & (True_()) & (True_()) & (Has("Pineapple Seeds"))) & (True_())) & ((Has("Boat Repair")) | (Has("Island Obelisk"))) & (True_()) & (Has("Farming Level", 10)) & (Has("Progressive Hoe", 4)) & (Has("Progressive Watering Can", 4)) & (Has("Received Progression Percent", 16)) & (Has("Shipping Bin")) & (Has("Special Order Board"))
+        (True_()) & (True_()) & ((Has("Boat Repair")) | (Has("Island Obelisk"))) & (True_()) & (Has("Farming Level", 10)) & (Has("Progressive Hoe", 4)) & (Has("Progressive Watering Can", 4)) & (Has("Received Progression Percent", 16)) & (Has("Shipping Bin")) & (Has("Special Order Board"))
     )
 
     world.set_rule(
         multiworld.get_location("Tropical Fish", player),
-        (((True_()) | (True_())) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) & ((True_()) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) & ((True_()) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) & ((Has("Boat Repair")) | (Has("Island Obelisk"))) & (Has("Island Resort")) & (Has("Received Progression Percent", 16)) & (Has("Special Order Board"))
+        (True_()) & (True_()) & (True_()) & ((Has("Boat Repair")) | (Has("Island Obelisk"))) & (Has("Island Resort")) & (Has("Received Progression Percent", 16)) & (Has("Special Order Board"))
     )
 
     world.set_rule(
         multiworld.get_location("Jodi's Request", player),
-        (((True_()) & (True_()) & (Has("Cauliflower Seeds")) & (Has("Spring"))) & (True_())) & (Has("Spring"))
+        (True_()) & (Has("Spring"))
     )
 
     world.set_rule(
@@ -1044,12 +1044,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pam Is Thirsty", player),
-        ((((True_()) & (True_()) & (Has("Hops Starter")) & (Has("Summer"))) & (True_())) & (((True_()) & (Has("Copper Bar (Logic event)")) & (Has("Foraging Level", 4))) & (True_()) & (Has("Copper Bar (Logic event)")) & (Has("Farming Level", 8)) & (Has("Iron Bar (Logic event)")))) & (Has("Summer"))
+        (True_()) & (Has("Summer"))
     )
 
     world.set_rule(
         multiworld.get_location("Carving Pumpkins", player),
-        (((True_()) & (True_()) & (Has("Fall")) & (Has("Pumpkin Seeds"))) & (True_())) & (Has("Fall"))
+        (True_()) & (Has("Fall"))
     )
 
     world.set_rule(
@@ -1059,22 +1059,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Fresh Fruit", player),
-        (((True_()) & (True_()) & (Has("Apricot Sapling")) & (Has("Shipping Bin"))) & (True_()) & (Has("Received Progression Percent", 4))) & (Has("Spring"))
+        (True_()) & (Has("Spring"))
     )
 
     world.set_rule(
         multiworld.get_location("A Soldier's Star", player),
-        (((((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (True_()) & (Has("Starfruit Seeds")) & (Has("Summer"))) & (True_())) & (True_()) & (Has("Received Progression Percent", 16)) & (Has("Summer"))
+        (True_()) & (True_()) & (Has("Received Progression Percent", 16)) & (Has("Summer"))
     )
 
     world.set_rule(
         multiworld.get_location("Mayor's Need", player),
-        (((((True_()) | (True_())) & (Has("Progressive Axe"))) & (True_()) & (Has("Farming Level", 8)) & (Has("Gold Bar (Logic event)"))) & ((True_()) & (True_()) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (Has("Progressive Barn", 3)) & (Has("Received Progression Percent", 4)) & (Has("Shipping Bin")))) & (Has("Summer"))
+        (True_()) & (Has("Summer"))
     )
 
     world.set_rule(
         multiworld.get_location("Pam Needs Juice", player),
-        (((((((True_()) & (True_()) & (Has("Fishing Level", 4)) & (Has("Iron Bar (Logic event)"))) & ((((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_()))) | (True_()) | (Has("Progressive Pan", 4)))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (True_()))) & ((((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (True_()) & (Has("Combat Level", 6)) & (Has("Mining Level", 6)) & (Has("Progressive Pickaxe", 3))) | (True_())) & (Has("Foraging Level", 6)) & (Has("Iron Bar (Logic event)"))) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer")))) | (((((True_()) & (True_()) & (Has("Fishing Level", 4)) & (Has("Iron Bar (Logic event)"))) & ((((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_()))) | (True_()) | (Has("Progressive Pan", 4)))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (True_()))) & (Has("Gold Bar (Logic event)")) & (Has("Iron Bar (Logic event)")) & (Has("Solar Panel Recipe")))) & (Has("Fall"))
+        (True_()) & (Has("Fall"))
     )
 
     world.set_rule(
@@ -1094,12 +1094,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Catch A Squid", player),
-        ((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))) & (Has("Winter"))
+        (True_()) & (Has("Winter"))
     )
 
     world.set_rule(
         multiworld.get_location("Community Cleanup", player),
-        ((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin")))) & (Has("Received Progression Percent", 16)) & (Has("Special Order Board"))
+        (True_()) & (True_()) & (Has("Received Progression Percent", 16)) & (Has("Special Order Board"))
     )
 
     world.set_rule(
@@ -1109,7 +1109,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Farming Mastery", player),
-        ((((True_()) & (True_()) & (True_()) & (True_()) & (Has("Summer Squash Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Amaranth Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Artichoke Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Bean Starter")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Blueberry Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Bok Choy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Cauliflower Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Eggplant Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fairy Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Grape Starter"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Pumpkin Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Fall")) & (Has("Yam Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Garlic Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Hops Starter")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Jazz Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Kale Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Melon Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Parsnip Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Pepper Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Poppy Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Potato Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Radish Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Red Cabbage Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Rice Shoot")) & (Has("Spring"))) & (True_())) | (((True_()) & (True_()) & (Has("Spangle Seeds")) & (Has("Summer"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Tulip Bulb"))) & (True_())) | (((True_()) & (True_()) & (Has("Summer")) & (Has("Tomato Seeds"))) & (True_())) | (((True_()) & (True_()) & ((((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (True_())) & (True_()) & (Has("Taro Tuber"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Broccoli Seeds"))) & (True_())) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Corn Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Sunflower Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Wheat Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (True_()) & (Has("Pineapple Seeds"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Cactus Seeds"))) & ((True_()) | (True_()))) | (((True_()) & (True_()) & (True_()) & (Has("Carrot Seeds")) & (Has("Foraging Level"))) & (True_())) | (((True_()) & (True_()) & (True_()) & (Has("Foraging Level")) & (Has("Powdermelon Seeds"))) & (True_())) | (((True_()) & (((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Cranberry Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Spring")) & (Has("Strawberry Seeds"))) & (True_())) | (((True_()) & (True_()) & (Has("Beet Seeds")) & (Has("Fall"))) & (True_())) | (((True_()) & (True_()) & (Has("Rhubarb Seeds")) & (Has("Spring"))) & (True_())) | (((True_()) & ((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_()) & (Has("Coffee Bean")) & (Has("Received Progression Percent", 16))) & ((True_()) | (True_()))) | (((Has("Ancient Seeds Recipe")) & (Has("Received Progression Percent", 20))) & ((True_()) | (True_()) | (True_()))) | (((((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & ((Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Rare Seed"))) & (True_())) | (((((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (True_()) & (Has("Starfruit Seeds")) & (Has("Summer"))) & (True_()))) & (True_()) & (Has("Farming Level", 10)) & (Has("Progressive Hoe", 4)) & (Has("Progressive Watering Can", 4))
+        (((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & ((True_()) | (True_()))) | ((True_()) & (True_()))) & (True_()) & (Has("Farming Level", 10)) & (Has("Progressive Hoe", 4)) & (Has("Progressive Watering Can", 4))
     )
 
     world.set_rule(
@@ -1144,12 +1144,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Meet The Wizard", player),
-        (True_()) & (True_())
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("A Dark Reagent", player),
-        ((((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (True_()) & (Has("Combat Level", 6)) & (Has("Mining Level", 6)) & (Has("Progressive Pickaxe", 3))) | (True_())) & (Has("Winter"))
+        (True_()) & (Has("Winter"))
     )
 
     world.set_rule(
@@ -1189,12 +1189,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Fish Pond Blueprint", player),
-        ((True_()) & (Has("Progressive Fishing Rod"))) & (True_()) & (True_()) & (True_()) & (Has("Progressive Fishing Rod")) & (Has("Shipping Bin"))
+        (True_()) & (True_()) & (True_()) & (True_()) & (Has("Progressive Fishing Rod")) & (Has("Shipping Bin"))
     )
 
     world.set_rule(
         multiworld.get_location("Mill Blueprint", player),
-        (True_()) & (True_()) & (True_()) & (True_()) & (((((True_()) & (Has("Copper Bar (Logic event)")) & (Has("Foraging Level", 4))) & (True_()) & (True_()) & (Has("Farming Level", 7))) & (((True_()) & (True_()) & (Has("Progressive Barn", 3)) & (Has("Shipping Bin"))) | ((True_()) & (True_()) & (Has("Progressive Coop", 3)) & (Has("Shipping Bin"))))) | (((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & (True_()))) & (Has("Shipping Bin"))
+        (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Shipping Bin"))
     )
 
     world.set_rule(
@@ -1214,12 +1214,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Slime Hutch Blueprint", player),
-        (True_()) & (True_()) & (True_()) & ((((True_()) & (True_()) & (Has("Fishing Level", 4)) & (Has("Iron Bar (Logic event)"))) & ((((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_()))) | (True_()) | (Has("Progressive Pan", 4)))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (True_()))) & (Has("Iridium Bar (Logic event)")) & (Has("Received Progression Percent", 2)) & (Has("Shipping Bin"))
+        (True_()) & (True_()) & (True_()) & (True_()) & (Has("Iridium Bar (Logic event)")) & (Has("Received Progression Percent", 2)) & (Has("Shipping Bin"))
     )
 
     world.set_rule(
         multiworld.get_location("Stable Blueprint", player),
-        (((True_()) | (True_())) & (Has("Progressive Axe"))) & (True_()) & (True_()) & (Has("Iron Bar (Logic event)")) & (Has("Received Progression Percent", 2)) & (Has("Shipping Bin"))
+        (True_()) & (True_()) & (True_()) & (Has("Iron Bar (Logic event)")) & (Has("Received Progression Percent", 2)) & (Has("Shipping Bin"))
     )
 
     world.set_rule(
@@ -1239,7 +1239,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Kids Room Blueprint", player),
-        (((True_()) | (True_())) & (Has("Progressive Axe"))) & (True_()) & (True_()) & (Has("Progressive House")) & (Has("Received Progression Percent", 16)) & (Has("Shipping Bin"))
+        (True_()) & (True_()) & (True_()) & (Has("Progressive House")) & (Has("Received Progression Percent", 16)) & (Has("Shipping Bin"))
     )
 
     world.set_rule(
@@ -1249,12 +1249,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Robin's Project", player),
-        (((True_()) | (True_())) & (Has("Progressive Axe"))) & (Has("Foraging Level", 10)) & (Has("Progressive Axe", 4)) & (Has("Received Progression Percent", 16)) & (Has("Special Order Board"))
+        (True_()) & (Has("Foraging Level", 10)) & (Has("Progressive Axe", 4)) & (Has("Received Progression Percent", 16)) & (Has("Special Order Board"))
     )
 
     world.set_rule(
         multiworld.get_location("Robin's Resource Rush", player),
-        (((True_()) & (True_()) & (Has("Foraging Level", 7))) | ((True_()) & (True_()) & (Has("Foraging Level", 7)))) & ((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_()) & (Has("Combat Level", 8)) & (Has("Foraging Level", 10)) & (Has("Mining Level", 8)) & (Has("Progressive Axe", 4)) & (Has("Progressive Pickaxe", 4)) & (Has("Received Progression Percent", 16)) & (Has("Special Order Board"))
+        (True_()) & ((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_()) & (Has("Combat Level", 8)) & (Has("Foraging Level", 10)) & (Has("Mining Level", 8)) & (Has("Progressive Axe", 4)) & (Has("Progressive Pickaxe", 4)) & (Has("Received Progression Percent", 16)) & (Has("Special Order Board"))
     )
 
     world.set_rule(
@@ -1324,7 +1324,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Complete Crafts Room", player),
-        (True_()) & (True_()) & (True_()) & ((((True_()) & (True_()) & (True_()) & (Has("Cactus Seeds"))) & ((True_()) | (True_()))) | (True_())) & (((True_()) & (Has("Fall"))) | (Has("Mushroom Boxes"))) & (((True_()) & (Has("Spring"))) | (Has("Fall")) | (Has("Mushroom Boxes"))) & ((Has("Fall")) | (Has("Fruit Bats"))) & (True_()) & (Has("Fall")) & (Has("Foraging Level", 9)) & (Has("Received Progression Percent", 40)) & (Has("Winter")) & (Has("Winter")) & (Has("Winter")) & (Has("Winter"))
+        (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Fall")) & (Has("Foraging Level", 9)) & (Has("Received Progression Percent", 40)) & (Has("Winter")) & (Has("Winter")) & (Has("Winter")) & (Has("Winter"))
     )
 
     world.set_rule(
@@ -1339,7 +1339,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Desert Foraging Bundle", player),
-        ((((True_()) & (True_()) & (True_()) & (Has("Cactus Seeds"))) & ((True_()) | (True_()))) | (True_())) & (True_()) & (Has("Foraging Level", 9))
+        (True_()) & (True_()) & (Has("Foraging Level", 9))
     )
 
     world.set_rule(
@@ -1349,7 +1349,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Fall Foraging Bundle", player),
-        (((True_()) & (Has("Fall"))) | (Has("Mushroom Boxes"))) & (((True_()) & (Has("Spring"))) | (Has("Fall")) | (Has("Mushroom Boxes"))) & ((Has("Fall")) | (Has("Fruit Bats"))) & (Has("Fall"))
+        (True_()) & (True_()) & (True_()) & (Has("Fall"))
     )
 
     world.set_rule(
@@ -1359,7 +1359,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Complete Pantry", player),
-        (((True_()) & (True_()) & (Has("Amaranth Seeds")) & (Has("Fall"))) & (True_())) & (((True_()) & (True_()) & (Has("Bok Choy Seeds")) & (Has("Fall"))) & (True_())) & (((True_()) & (True_()) & (Has("Fall")) & (Has("Pumpkin Seeds"))) & (True_())) & (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Sunflower Seeds"))) & ((True_()) | (True_()))) & (((True_()) & ((True_()) | (Has("Progressive Pan"))) & (Has("Farming Level", 9)) & (Has("Gold Bar (Logic event)"))) & ((Has("Ancient Seeds")) | (Has("Ancient Seeds Recipe"))) & (True_())) & (((((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & ((Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Rare Seed"))) & (True_())) & (True_()) & (True_()) & (True_()) & (True_()) & ((((True_()) & (Has("Deluxe Fertilizer Recipe")) & (Has("Iridium Bar (Logic event)"))) & (Has("Farming Level", 2))) | ((True_()) & (Has("Farming Level", 5))) | ((((True_()) & ((((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | ((Has("Fall")) & (Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4))) | ((Has("Fall")) & (Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod"))) | ((Has("Fall")) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | ((Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4)) & (Has("Spring"))) | ((Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4)) & (Has("Winter"))) | ((Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod")) & (Has("Summer"))) | ((Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod"))) | ((Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))) | ((Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | ((Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))) | ((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2)) & (Has("Summer"))) | ((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))) | ((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))) | ((Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) | ((Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4)) & (Has("Winter"))) | ((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) | ((Has("Progressive Fishing Rod")) & (Has("Winter"))) | (((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Spring")) | (Has("Winter"))) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Spring"))) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Spring"))) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Spring"))) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Spring"))) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Summer"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Summer"))) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) | (((Has("Fall")) | (Has("Summer"))) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Winter"))) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Winter"))) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Winter"))) & (Has("Progressive Fishing Rod"))) | (((Has("Spring")) | (Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Spring")) | (Has("Summer"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Spring")) | (Has("Summer"))) & (Has("Progressive Fishing Rod"))) | (((Has("Spring")) | (Has("Winter"))) & (Has("Progressive Fishing Rod"))) | (((Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2))) | (((True_()) | (True_())) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((True_()) | (True_())) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) | ((True_()) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (Has("Progressive Fishing Rod"))) & (Has("Farming Level", 9))) | (Has("Received Progression Percent", 16))) & (Has("Farming Level", 3))) | (Has("Farming Level", 10))) & (Has("Received Progression Percent", 4))
+        (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (((True_()) & (Has("Farming Level", 5))) | ((True_()) & (Has("Farming Level", 2))) | ((True_()) & (Has("Farming Level", 3))) | (Has("Farming Level", 10))) & (Has("Received Progression Percent", 4))
     )
 
     world.set_rule(
@@ -1369,17 +1369,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Quality Crops Bundle", player),
-        (True_()) & ((((True_()) & (Has("Deluxe Fertilizer Recipe")) & (Has("Iridium Bar (Logic event)"))) & (Has("Farming Level", 2))) | ((True_()) & (Has("Farming Level", 5))) | ((((True_()) & ((((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | ((Has("Fall")) & (Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4))) | ((Has("Fall")) & (Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod"))) | ((Has("Fall")) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | ((Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4)) & (Has("Spring"))) | ((Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4)) & (Has("Winter"))) | ((Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod")) & (Has("Summer"))) | ((Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod"))) | ((Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))) | ((Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | ((Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))) | ((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2)) & (Has("Summer"))) | ((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))) | ((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))) | ((Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) | ((Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4)) & (Has("Winter"))) | ((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) | ((Has("Progressive Fishing Rod")) & (Has("Winter"))) | (((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Spring")) | (Has("Winter"))) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Spring"))) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Spring"))) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Spring"))) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Spring"))) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Summer"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Summer"))) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) | (((Has("Fall")) | (Has("Summer"))) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Winter"))) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Winter"))) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Winter"))) & (Has("Progressive Fishing Rod"))) | (((Has("Spring")) | (Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Spring")) | (Has("Summer"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Spring")) | (Has("Summer"))) & (Has("Progressive Fishing Rod"))) | (((Has("Spring")) | (Has("Winter"))) & (Has("Progressive Fishing Rod"))) | (((Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2))) | (((True_()) | (True_())) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((True_()) | (True_())) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) | ((True_()) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (Has("Progressive Fishing Rod"))) & (Has("Farming Level", 9))) | (Has("Received Progression Percent", 16))) & (Has("Farming Level", 3))) | (Has("Farming Level", 10)))
+        (True_()) & (((True_()) & (Has("Farming Level", 5))) | ((True_()) & (Has("Farming Level", 2))) | ((True_()) & (Has("Farming Level", 3))) | (Has("Farming Level", 10)))
     )
 
     world.set_rule(
         multiworld.get_location("Fall Crops Bundle", player),
-        (((True_()) & (True_()) & (Has("Amaranth Seeds")) & (Has("Fall"))) & (True_())) & (((True_()) & (True_()) & (Has("Bok Choy Seeds")) & (Has("Fall"))) & (True_())) & (((True_()) & (True_()) & (Has("Fall")) & (Has("Pumpkin Seeds"))) & (True_())) & (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Sunflower Seeds"))) & ((True_()) | (True_())))
+        (True_()) & (True_()) & (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Rare Crops Bundle", player),
-        (((True_()) & ((True_()) | (Has("Progressive Pan"))) & (Has("Farming Level", 9)) & (Has("Gold Bar (Logic event)"))) & ((Has("Ancient Seeds")) | (Has("Ancient Seeds Recipe"))) & (True_())) & (((((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & ((Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Rare Seed"))) & (True_()))
+        (True_()) & (True_())
     )
 
     world.set_rule(
@@ -1394,77 +1394,77 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Complete Fish Tank", player),
-        ((True_()) & ((((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (True_()) & (Has("Combat Level", 6)) & (Has("Mining Level", 6)) & (Has("Progressive Pickaxe", 3))) | (True_())) & (Has("Copper Bar (Logic event)")) & (Has("Quality Bobber Recipe"))) & ((Has("Fall")) & (Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod"))) & ((Has("Fall")) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) & ((Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4)) & (Has("Spring"))) & ((Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod")) & (Has("Summer"))) & ((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2)) & (Has("Summer"))) & (((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod"))) & (((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod"))) & (((Has("Fall")) | (Has("Spring")) | (Has("Winter"))) & (Has("Progressive Fishing Rod"))) & (((Has("Fall")) | (Has("Spring"))) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2))) & (((Has("Fall")) | (Has("Spring"))) & (Has("Progressive Fishing Rod"))) & (((Has("Fall")) | (Has("Spring"))) & (Has("Progressive Fishing Rod"))) & (((Has("Fall")) | (Has("Spring"))) & (Has("Progressive Fishing Rod"))) & (((Has("Fall")) | (Has("Summer"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) & (((Has("Fall")) | (Has("Summer"))) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) & (((Has("Fall")) | (Has("Summer"))) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) & (((Has("Spring")) | (Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) & (((Has("Spring")) | (Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) & ((True_()) & (Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (True_()) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 4)) & (Has("Progressive Fishing Rod"))
+        (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 4)) & (Has("Progressive Fishing Rod"))
     )
 
     world.set_rule(
         multiworld.get_location("Spring Fishing Bundle", player),
-        ((Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4)) & (Has("Spring"))) & (((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod"))) & (((Has("Fall")) | (Has("Spring")) | (Has("Winter"))) & (Has("Progressive Fishing Rod"))) & (((Has("Spring")) | (Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2)))
+        (True_()) & (True_()) & (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("River Fish Bundle", player),
-        ((Has("Fall")) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) & ((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2)) & (Has("Summer"))) & (((Has("Fall")) | (Has("Spring"))) & (Has("Progressive Fishing Rod"))) & (Has("Progressive Fishing Rod"))
+        (True_()) & (True_()) & (True_()) & (Has("Progressive Fishing Rod"))
     )
 
     world.set_rule(
         multiworld.get_location("Summer Fishing Bundle", player),
-        ((Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod")) & (Has("Summer"))) & (((Has("Fall")) | (Has("Summer"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) & (((Has("Spring")) | (Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) & ((True_()) & (Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer")))
+        (True_()) & (True_()) & (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Fall Fishing Bundle", player),
-        (((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod"))) & (((Has("Fall")) | (Has("Spring"))) & (Has("Progressive Fishing Rod"))) & (((Has("Fall")) | (Has("Spring"))) & (Has("Progressive Fishing Rod"))) & (((Has("Fall")) | (Has("Summer"))) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4)))
+        (True_()) & (True_()) & (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Quality Fish Bundle", player),
-        ((True_()) & ((((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (True_()) & (Has("Combat Level", 6)) & (Has("Mining Level", 6)) & (Has("Progressive Pickaxe", 3))) | (True_())) & (Has("Copper Bar (Logic event)")) & (Has("Quality Bobber Recipe"))) & (True_()) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 4))
+        (True_()) & (True_()) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 4))
     )
 
     world.set_rule(
         multiworld.get_location("Night Fishing Bundle", player),
-        ((Has("Fall")) & (Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod"))) & (((Has("Fall")) | (Has("Spring"))) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2))) & (((Has("Fall")) | (Has("Summer"))) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4)))
+        (True_()) & (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Complete Boiler Room", player),
-        ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & (((True_()) | (Has("Progressive Pan"))) & (Has("Combat Level", 8)) & (Has("Iron Bar (Logic event)"))) & (((True_()) | (Has("Progressive Pan"))) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (((True_()) | (Has("Progressive Pan"))) & (Has("Iron Ore (Logic event)")) & (Has("Mining Level", 6))) & (True_()) & (True_()) & (((((True_()) & (Has("Copper Bar (Logic event)")) & (Has("Foraging Level", 4))) & (True_()) & (True_()) & (Has("Farming Level", 7))) & (((True_()) & (True_()) & (Has("Progressive Barn", 3)) & (Has("Shipping Bin"))) | ((True_()) & (True_()) & (Has("Progressive Coop", 3)) & (Has("Shipping Bin"))))) | (((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & (True_()))) & ((((True_()) & (True_()) & (Has("Fishing Level", 4)) & (Has("Iron Bar (Logic event)"))) & ((((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_()))) | (True_()) | (Has("Progressive Pan", 4)))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (True_()))) & ((((True_()) & (True_()) & (Has("Fishing Level", 4)) & (Has("Iron Bar (Logic event)"))) & ((((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_()))) | (True_()) | (Has("Progressive Pan", 4)))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (True_()))) & (((((((True_()) & (True_()) & (Has("Fishing Level", 4)) & (Has("Iron Bar (Logic event)"))) & ((((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_()))) | (True_()) | (Has("Progressive Pan", 4)))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (True_()))) & ((((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (True_()) & (Has("Combat Level", 6)) & (Has("Mining Level", 6)) & (Has("Progressive Pickaxe", 3))) | (True_())) & (Has("Foraging Level", 6)) & (Has("Iron Bar (Logic event)"))) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer")))) | (((((True_()) & (True_()) & (Has("Fishing Level", 4)) & (Has("Iron Bar (Logic event)"))) & ((((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_()))) | (True_()) | (Has("Progressive Pan", 4)))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (True_()))) & (Has("Gold Bar (Logic event)")) & (Has("Iron Bar (Logic event)")) & (Has("Solar Panel Recipe")))) & (Has("Received Progression Percent", 4))
+        (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Received Progression Percent", 4))
     )
 
     world.set_rule(
         multiworld.get_location("Demolition Bundle", player),
-        (((True_()) | (Has("Progressive Pan"))) & (Has("Combat Level", 8)) & (Has("Iron Bar (Logic event)"))) & (((True_()) | (Has("Progressive Pan"))) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (((True_()) | (Has("Progressive Pan"))) & (Has("Iron Ore (Logic event)")) & (Has("Mining Level", 6)))
+        (True_()) & (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Recycling Bundle", player),
-        (True_()) & (True_()) & (((((True_()) & (Has("Copper Bar (Logic event)")) & (Has("Foraging Level", 4))) & (True_()) & (True_()) & (Has("Farming Level", 7))) & (((True_()) & (True_()) & (Has("Progressive Barn", 3)) & (Has("Shipping Bin"))) | ((True_()) & (True_()) & (Has("Progressive Coop", 3)) & (Has("Shipping Bin"))))) | (((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & (True_()))) & ((((True_()) & (True_()) & (Has("Fishing Level", 4)) & (Has("Iron Bar (Logic event)"))) & ((((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_()))) | (True_()) | (Has("Progressive Pan", 4)))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (True_()))) & (Has("Received Progression Percent", 4))
+        (True_()) & (True_()) & (True_()) & (True_()) & (Has("Received Progression Percent", 4))
     )
 
     world.set_rule(
         multiworld.get_location("Engineer's Bundle", player),
-        ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((True_()) & (True_()) & (Has("Fishing Level", 4)) & (Has("Iron Bar (Logic event)"))) & ((((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_()))) | (True_()) | (Has("Progressive Pan", 4)))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (True_()))) & (((((((True_()) & (True_()) & (Has("Fishing Level", 4)) & (Has("Iron Bar (Logic event)"))) & ((((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_()))) | (True_()) | (Has("Progressive Pan", 4)))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (True_()))) & ((((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (True_()) & (Has("Combat Level", 6)) & (Has("Mining Level", 6)) & (Has("Progressive Pickaxe", 3))) | (True_())) & (Has("Foraging Level", 6)) & (Has("Iron Bar (Logic event)"))) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer")))) | (((((True_()) & (True_()) & (Has("Fishing Level", 4)) & (Has("Iron Bar (Logic event)"))) & ((((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_()))) | (True_()) | (Has("Progressive Pan", 4)))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (True_()))) & (Has("Gold Bar (Logic event)")) & (Has("Iron Bar (Logic event)")) & (Has("Solar Panel Recipe"))))
+        (True_()) & (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Complete Bulletin Board", player),
-        ((((True_()) & (True_()) & (Has("Apple Sapling")) & (Has("Shipping Bin"))) & (True_()) & (Has("Received Progression Percent", 4))) & (((True_()) & (((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Cranberry Seeds")) & (Has("Fall"))) & (True_())) & (True_()) & (True_()) & (Has("The Queen of Sauce")) & (Has("Winter"))) & ((((True_()) & (True_()) & (Has("Hops Starter")) & (Has("Summer"))) & (True_())) & (((True_()) & (Has("Copper Bar (Logic event)")) & (Has("Foraging Level", 4))) & (True_()) & (Has("Copper Bar (Logic event)")) & (Has("Farming Level", 8)) & (Has("Iron Bar (Logic event)")))) & ((((True_()) & (True_()) & (Has("Rhubarb Seeds")) & (Has("Spring"))) & (True_())) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Fall"))) & (((True_()) & (True_()) & (Has("Pomegranate Sapling")) & (Has("Shipping Bin"))) & (True_()) & (Has("Received Progression Percent", 4))) & (((True_()) & (True_()) & (Has("Red Cabbage Seeds")) & (Has("Summer"))) & (True_())) & (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Sunflower Seeds"))) & ((True_()) | (True_()))) & (((True_()) & (((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Cranberry Seeds")) & (Has("Fall"))) & (True_())) & ((True_()) & (True_()) & (Has("Progressive Coop", 2)) & (Has("Shipping Bin")) & (Has("Silo"))) & ((True_()) & (((True_()) & (True_()) & (((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Progressive Coop")) & (Has("Silo"))) | ((True_()) & (True_()) & (((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Progressive Coop")) & (Has("Silo"))) | ((True_()) & (True_()) & (((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Progressive Coop"))) | ((True_()) & (True_()) & (((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Progressive Coop")))) & (True_()) & (Has("Summer")) & (Has("The Queen of Sauce"))) & ((((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & (True_())) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & (True_()) & (True_()) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_()))) | (True_()) | (Has("Progressive Pan", 4))) & ((((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (True_()) & (Has("Combat Level", 6)) & (Has("Mining Level", 6)) & (Has("Progressive Pickaxe", 3))) | (True_())) & ((True_()) | (True_()) | (Has("Mushroom Boxes"))) & (Has("Received Progression Percent", 8)) & (Has("Winter"))
+        (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Received Progression Percent", 8)) & (Has("Winter"))
     )
 
     world.set_rule(
         multiworld.get_location("Dye Bundle", player),
-        (((True_()) & (True_()) & (Has("Red Cabbage Seeds")) & (Has("Summer"))) & (True_())) & (((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Sunflower Seeds"))) & ((True_()) | (True_()))) & (((True_()) & (((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Cranberry Seeds")) & (Has("Fall"))) & (True_())) & ((True_()) & (True_()) & (Has("Progressive Coop", 2)) & (Has("Shipping Bin")) & (Has("Silo"))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & (Has("Winter"))
+        (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Winter"))
     )
 
     world.set_rule(
         multiworld.get_location("Bartender's Bundle", player),
-        ((((True_()) & (True_()) & (Has("Apple Sapling")) & (Has("Shipping Bin"))) & (True_()) & (Has("Received Progression Percent", 4))) & (((True_()) & (((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Cranberry Seeds")) & (Has("Fall"))) & (True_())) & (True_()) & (True_()) & (Has("The Queen of Sauce")) & (Has("Winter"))) & ((((True_()) & (True_()) & (Has("Hops Starter")) & (Has("Summer"))) & (True_())) & (((True_()) & (Has("Copper Bar (Logic event)")) & (Has("Foraging Level", 4))) & (True_()) & (Has("Copper Bar (Logic event)")) & (Has("Farming Level", 8)) & (Has("Iron Bar (Logic event)")))) & ((((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & (True_()))
+        (True_()) & (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Home Cook's Bundle", player),
-        ((((True_()) & (True_()) & (Has("Rhubarb Seeds")) & (Has("Spring"))) & (True_())) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Fall"))) & ((True_()) & (((True_()) & (True_()) & (((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Progressive Coop")) & (Has("Silo"))) | ((True_()) & (True_()) & (((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Progressive Coop")) & (Has("Silo"))) | ((True_()) & (True_()) & (((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Progressive Coop"))) | ((True_()) & (True_()) & (((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Progressive Coop")))) & (True_()) & (Has("Summer")) & (Has("The Queen of Sauce"))) & (True_()) & (Has("Received Progression Percent", 8))
+        (True_()) & (True_()) & (True_()) & (Has("Received Progression Percent", 8))
     )
 
     world.set_rule(
@@ -1474,7 +1474,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Enchanter's Bundle", player),
-        (((True_()) & (True_()) & (Has("Pomegranate Sapling")) & (Has("Shipping Bin"))) & (True_()) & (Has("Received Progression Percent", 4))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_()))) | (True_()) | (Has("Progressive Pan", 4))) & ((((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (True_()) & (Has("Combat Level", 6)) & (Has("Mining Level", 6)) & (Has("Progressive Pickaxe", 3))) | (True_())) & ((True_()) | (True_()) | (Has("Mushroom Boxes")))
+        (True_()) & (True_()) & (True_()) & (True_())
     )
 
     world.set_rule(
@@ -1519,22 +1519,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pierre's Notice", player),
-        ((True_()) & ((((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | ((Has("Fall")) & (Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4))) | ((Has("Fall")) & (Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod"))) | ((Has("Fall")) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | ((Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4)) & (Has("Spring"))) | ((Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4)) & (Has("Winter"))) | ((Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod")) & (Has("Summer"))) | ((Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod"))) | ((Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))) | ((Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | ((Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))) | ((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2)) & (Has("Summer"))) | ((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))) | ((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))) | ((Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) | ((Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4)) & (Has("Winter"))) | ((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) | ((Has("Progressive Fishing Rod")) & (Has("Winter"))) | (((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Spring")) | (Has("Winter"))) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Spring"))) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Spring"))) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Spring"))) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Spring"))) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Summer"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Summer"))) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) | (((Has("Fall")) | (Has("Summer"))) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Winter"))) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Winter"))) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Winter"))) & (Has("Progressive Fishing Rod"))) | (((Has("Spring")) | (Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Spring")) | (Has("Summer"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Spring")) | (Has("Summer"))) & (Has("Progressive Fishing Rod"))) | (((Has("Spring")) | (Has("Winter"))) & (Has("Progressive Fishing Rod"))) | (((Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2))) | (((True_()) | (True_())) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((True_()) | (True_())) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) | ((True_()) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (Has("Progressive Fishing Rod"))) & (True_()) & (Has("Winter"))) & (Has("Spring"))
+        (True_()) & (Has("Spring"))
     )
 
     world.set_rule(
         multiworld.get_location("Gus' Famous Omelet", player),
-        (((True_()) & (True_()) & (Has("Progressive Coop", 2)) & (Has("Shipping Bin"))) | (((True_()) & (True_()) & (((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Progressive Coop")) & (Has("Silo"))) | ((True_()) & (True_()) & (((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Progressive Coop")) & (Has("Silo"))) | ((True_()) & (True_()) & (((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Progressive Coop"))) | ((True_()) & (True_()) & (((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Progressive Coop"))))) & (Has("Received Progression Percent", 16)) & (Has("Special Order Board"))
+        (True_()) & (Has("Received Progression Percent", 16)) & (Has("Special Order Board"))
     )
 
     world.set_rule(
         multiworld.get_location("Wanted: Lobster", player),
-        (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) & (Has("Fall"))
+        (True_()) & (Has("Fall"))
     )
 
     world.set_rule(
         multiworld.get_location("Fish Stew", player),
-        (((Has("Fall")) | (Has("Winter"))) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) & (Has("Winter"))
+        (True_()) & (Has("Winter"))
     )
 
     world.set_rule(
@@ -1549,27 +1549,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Knee Therapy", player),
-        (((True_()) & (True_()) & (Has("Pepper Seeds")) & (Has("Summer"))) & (True_())) & (Has("Summer"))
+        (True_()) & (Has("Summer"))
     )
 
     world.set_rule(
         multiworld.get_location("The Strong Stuff", player),
-        ((((True_()) & (True_()) & (Has("Potato Seeds")) & (Has("Spring"))) & (True_())) & (((True_()) & (Has("Copper Bar (Logic event)")) & (Has("Foraging Level", 4))) & (True_()) & (Has("Copper Bar (Logic event)")) & (Has("Farming Level", 8)) & (Has("Iron Bar (Logic event)")))) & (Has("Received Progression Percent", 16)) & (Has("Special Order Board"))
+        (True_()) & (Has("Received Progression Percent", 16)) & (Has("Special Order Board"))
     )
 
     world.set_rule(
         multiworld.get_location("Fish Casserole", player),
-        ((Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) & (True_()) & (Has("Fall"))
+        (True_()) & (True_()) & (Has("Fall"))
     )
 
     world.set_rule(
         multiworld.get_location("Rock Rejuvenation", player),
-        ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & (True_()) & (((((True_()) & (Has("Copper Bar (Logic event)")) & (Has("Foraging Level", 4))) & (True_()) & (True_()) & (Has("Farming Level", 7))) & (((True_()) & (True_()) & (Has("Progressive Barn", 3)) & (Has("Shipping Bin"))) | ((True_()) & (True_()) & (Has("Progressive Coop", 3)) & (Has("Shipping Bin"))))) | (((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & (True_()))) & (Has("Received Progression Percent", 16)) & (Has("Special Order Board")) & (Has("Spring"))
+        (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Received Progression Percent", 16)) & (Has("Special Order Board")) & (Has("Spring"))
     )
 
     world.set_rule(
         multiworld.get_location("Clint's Attempt", player),
-        ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & (Has("Winter"))
+        (True_()) & (Has("Winter"))
     )
 
     world.set_rule(
@@ -1639,7 +1639,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Museumsanity: 95 Donations", player),
-        ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_()))) | (True_()) | (Has("Progressive Pan", 4))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & (True_())) | (True_()) | (Has("Progressive Pan", 4))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & (True_())) | (True_()) | (Has("Progressive Pan", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & (((((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & (True_())) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_()))) | (True_())) & (((((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & (True_())) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & (True_())) | (True_())) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_())) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_())) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_())) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_())) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_())) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_())) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_())) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_())) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_())) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_())) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_())) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_())) & (((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_()) | (True_())) & (((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & ((((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & (True_())) | (True_())) & ((((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & (True_())) | (True_())) & ((True_()) | (Has("Magnifying Glass"))) & ((True_()) | (True_())) & ((True_()) | (True_())) & ((True_()) | (True_())) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Received Progression Percent", 40)) & (Has("Traveling Merchant Metal Detector", 2))
+        (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (((True_()) & (True_()) & (True_())) | (True_())) & (((True_()) & (True_()) & (True_())) | (True_())) & (((True_()) & (True_()) & (True_())) | (True_()) | (Has("Progressive Pan", 4))) & (((True_()) & (True_()) & (True_())) | (True_()) | (Has("Progressive Pan", 4))) & (((True_()) & (True_()) & (True_())) | (True_()) | (Has("Progressive Pan", 4))) & ((True_()) | (True_())) & ((True_()) | (True_())) & ((True_()) | (True_()) | (True_())) & ((True_()) | (True_())) & ((True_()) | (True_())) & ((True_()) | (True_())) & ((True_()) | (True_())) & ((True_()) | (True_())) & ((True_()) | (True_())) & ((True_()) | (True_())) & ((True_()) | (Has("Magnifying Glass"))) & ((True_()) | (True_())) & ((True_()) | (True_())) & ((True_()) | (True_())) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Received Progression Percent", 40)) & (Has("Traveling Merchant Metal Detector", 2))
     )
 
     world.set_rule(
@@ -1714,7 +1714,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Museumsanity: Skeleton Back", player),
-        (((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_()) | (True_())) & ((True_()) | (True_())) & (Has("Received Progression Percent", 28)) & (Has("Traveling Merchant Metal Detector", 2))
+        ((True_()) | (True_()) | (True_())) & ((True_()) | (True_())) & (Has("Received Progression Percent", 28)) & (Has("Traveling Merchant Metal Detector", 2))
     )
 
     world.set_rule(
@@ -1729,7 +1729,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Missing Bundle", player),
-        ((True_()) & ((((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (True_()) & (Has("Combat Level", 6)) & (Has("Mining Level", 6)) & (Has("Progressive Pickaxe", 3))) | (True_())) & (Has("Copper Bar (Logic event)")) & (Has("Quality Bobber Recipe"))) & (True_()) & ((((True_()) & (Has("Deluxe Fertilizer Recipe")) & (Has("Iridium Bar (Logic event)"))) & (Has("Farming Level", 2))) | ((True_()) & (Has("Farming Level", 5))) | ((((True_()) & ((((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | ((Has("Fall")) & (Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4))) | ((Has("Fall")) & (Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod"))) | ((Has("Fall")) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | ((Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4)) & (Has("Spring"))) | ((Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4)) & (Has("Winter"))) | ((Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod")) & (Has("Summer"))) | ((Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod"))) | ((Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))) | ((Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | ((Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))) | ((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2)) & (Has("Summer"))) | ((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))) | ((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))) | ((Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) | ((Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4)) & (Has("Winter"))) | ((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) | ((Has("Progressive Fishing Rod")) & (Has("Winter"))) | (((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (Has("Fishing Level", 3)) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Spring")) | (Has("Winter"))) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Spring"))) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Spring"))) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Spring"))) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Spring"))) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Summer"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Summer"))) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) | (((Has("Fall")) | (Has("Summer"))) & (Has("Progressive Fishing Rod"))) | (((Has("Fall")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Winter"))) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Winter"))) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Fall")) | (Has("Winter"))) & (Has("Progressive Fishing Rod"))) | (((Has("Spring")) | (Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Spring")) | (Has("Summer"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Spring")) | (Has("Summer"))) & (Has("Progressive Fishing Rod"))) | (((Has("Spring")) | (Has("Winter"))) & (Has("Progressive Fishing Rod"))) | (((Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2))) | (((Has("Summer")) | (Has("Winter"))) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2))) | (((True_()) | (True_())) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (((True_()) | (True_())) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 5)) & (Has("Progressive Fishing Rod", 2))) | ((True_()) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) | ((True_()) & (Has("Fishing Level", 10)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) | ((True_()) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 2))) | (Has("Progressive Fishing Rod"))) & (Has("Farming Level", 9))) | (Has("Received Progression Percent", 16))) & (Has("Farming Level", 3))) | (Has("Farming Level", 10))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 4))
+        (True_()) & (True_()) & (((True_()) & (Has("Farming Level", 5))) | ((True_()) & (Has("Farming Level", 2))) | ((True_()) & (Has("Farming Level", 3))) | (Has("Farming Level", 10))) & (Has("Fishing Level", 4)) & (Has("Progressive Fishing Rod", 4))
     )
 
     world.set_rule(
@@ -1744,7 +1744,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Goblin Problem", player),
-        ((((True_()) & (True_()) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & (True_())) | (True_()) | (Has("Progressive Pan", 4))) & (Has("Copper Bar (Logic event)")) & (Has("Farming Level", 2))) & ((((True_()) & (Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | ((True_()) & (Has("Shipping Bin"))))) | (Has("Progressive Fishing Rod"))) & (True_())
+        ((True_()) | (Has("Progressive Fishing Rod"))) & (True_())
     )
 
     world.set_rule(
@@ -1754,7 +1754,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Old Master Cannoli", player),
-        ((((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & ((Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Rare Seed"))) & (True_())
+        True_()
     )
 
     world.set_rule(
@@ -1784,17 +1784,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Strange Note", player),
-        ((True_()) & (Has("Copper Bar (Logic event)")) & (Has("Foraging Level", 4))) & (Has("Magnifying Glass"))
+        (True_()) & (Has("Magnifying Glass"))
     )
 
     world.set_rule(
         multiworld.get_location("Galaxy Sword Shrine", player),
-        (True_()) & (Has("Received Progression Percent", 40))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Mysterious Qi", player),
-        (((True_()) & (True_()) & (Has("Beet Seeds")) & (Has("Fall"))) & (True_())) & (True_()) & (True_()) & (((((((True_()) & (True_()) & (Has("Fishing Level", 4)) & (Has("Iron Bar (Logic event)"))) & ((((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_()))) | (True_()) | (Has("Progressive Pan", 4)))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (True_()))) & ((((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (True_()) & (Has("Combat Level", 6)) & (Has("Mining Level", 6)) & (Has("Progressive Pickaxe", 3))) | (True_())) & (Has("Foraging Level", 6)) & (Has("Iron Bar (Logic event)"))) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer")))) | (((((True_()) & (True_()) & (Has("Fishing Level", 4)) & (Has("Iron Bar (Logic event)"))) & ((((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_()))) | (True_()) | (Has("Progressive Pan", 4)))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (True_()))) & (Has("Gold Bar (Logic event)")) & (Has("Iron Bar (Logic event)")) & (Has("Solar Panel Recipe")))) & ((((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (True_()) & (Has("Combat Level", 6)) & (Has("Mining Level", 6)) & (Has("Progressive Pickaxe", 3))) | (True_())) & (True_()) & (Has("Summer"))
+        (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Summer"))
     )
 
     world.set_rule(
@@ -1814,7 +1814,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Forging Ahead", player),
-        ((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (Has("Copper Ore (Logic event)"))
+        (True_()) & (Has("Copper Ore (Logic event)"))
     )
 
     world.set_rule(
@@ -2094,267 +2094,267 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Catch a Lingcod", player),
-        ((Has("Fishing Level", 7)) & (Has("Progressive Fishing Rod", 4)) & (Has("Winter"))) & (Has("Winter"))
+        (True_()) & (Has("Winter"))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Apricot", player),
-        ((True_()) & (True_()) & (Has("Apricot Sapling")) & (Has("Shipping Bin"))) & (True_()) & (Has("Received Progression Percent", 4))
+        (True_()) & (True_()) & (Has("Received Progression Percent", 4))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Cherry", player),
-        ((True_()) & (True_()) & (Has("Cherry Sapling")) & (Has("Shipping Bin"))) & (True_()) & (Has("Received Progression Percent", 4))
+        (True_()) & (True_()) & (Has("Received Progression Percent", 4))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Parsnip", player),
-        ((True_()) & (True_()) & (Has("Parsnip Seeds")) & (Has("Spring"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Green Bean", player),
-        ((True_()) & (True_()) & (Has("Bean Starter")) & (Has("Spring"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Cauliflower", player),
-        ((True_()) & (True_()) & (Has("Cauliflower Seeds")) & (Has("Spring"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Potato", player),
-        ((True_()) & (True_()) & (Has("Potato Seeds")) & (Has("Spring"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Tulip", player),
-        ((True_()) & (True_()) & (Has("Spring")) & (Has("Tulip Bulb"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Kale", player),
-        ((True_()) & (True_()) & (Has("Kale Seeds")) & (Has("Spring"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Blue Jazz", player),
-        ((True_()) & (True_()) & (Has("Jazz Seeds")) & (Has("Spring"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Garlic", player),
-        ((True_()) & (True_()) & (Has("Garlic Seeds")) & (Has("Spring"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Unmilled Rice", player),
-        ((True_()) & (True_()) & (Has("Rice Shoot")) & (Has("Spring"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Carrot", player),
-        ((True_()) & (True_()) & (True_()) & (Has("Carrot Seeds")) & (Has("Foraging Level"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Strawberry", player),
-        ((True_()) & (True_()) & (Has("Spring")) & (Has("Strawberry Seeds"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Rhubarb", player),
-        ((True_()) & (True_()) & (Has("Rhubarb Seeds")) & (Has("Spring"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Orange", player),
-        ((True_()) & (True_()) & (Has("Orange Sapling")) & (Has("Shipping Bin"))) & (True_()) & (Has("Received Progression Percent", 4))
+        (True_()) & (True_()) & (Has("Received Progression Percent", 4))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Peach", player),
-        ((True_()) & (True_()) & (Has("Peach Sapling")) & (Has("Shipping Bin"))) & (True_()) & (Has("Received Progression Percent", 4))
+        (True_()) & (True_()) & (Has("Received Progression Percent", 4))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Melon", player),
-        ((True_()) & (True_()) & (Has("Melon Seeds")) & (Has("Summer"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Tomato", player),
-        ((True_()) & (True_()) & (Has("Summer")) & (Has("Tomato Seeds"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Blueberry", player),
-        ((True_()) & (True_()) & (Has("Blueberry Seeds")) & (Has("Summer"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Hot Pepper", player),
-        ((True_()) & (True_()) & (Has("Pepper Seeds")) & (Has("Summer"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Radish", player),
-        ((True_()) & (True_()) & (Has("Radish Seeds")) & (Has("Summer"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Poppy", player),
-        ((True_()) & (True_()) & (Has("Poppy Seeds")) & (Has("Summer"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Summer Spangle", player),
-        ((True_()) & (True_()) & (Has("Spangle Seeds")) & (Has("Summer"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Hops", player),
-        ((True_()) & (True_()) & (Has("Hops Starter")) & (Has("Summer"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Red Cabbage", player),
-        ((True_()) & (True_()) & (Has("Red Cabbage Seeds")) & (Has("Summer"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Powdermelon", player),
-        ((True_()) & (True_()) & (True_()) & (Has("Foraging Level")) & (Has("Powdermelon Seeds"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Summer Squash", player),
-        ((True_()) & (True_()) & (True_()) & (True_()) & (Has("Summer Squash Seeds"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Banana", player),
-        ((True_()) & (True_()) & (True_()) & (True_()) & (Has("Banana Sapling"))) & (True_()) & (Has("Received Progression Percent", 4))
+        (True_()) & (True_()) & (Has("Received Progression Percent", 4))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Mango", player),
-        ((True_()) & (True_()) & (True_()) & (True_()) & (Has("Mango Sapling")) & (Has("Received Progression Percent"))) & (True_()) & (Has("Received Progression Percent", 4))
+        (True_()) & (True_()) & (Has("Received Progression Percent", 4))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Pineapple", player),
-        ((True_()) & (True_()) & (True_()) & (True_()) & (Has("Pineapple Seeds"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Starfruit", player),
-        ((((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (True_()) & (Has("Starfruit Seeds")) & (Has("Summer"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Taro Root", player),
-        ((True_()) & (True_()) & ((((Has("Progressive Club", 3)) | (Has("Progressive Dagger", 3)) | (Has("Progressive Sword", 3)) | (Has("Progressive Weapon", 3))) & (True_())) | (True_())) & (True_()) & (Has("Taro Tuber"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Apple", player),
-        ((True_()) & (True_()) & (Has("Apple Sapling")) & (Has("Shipping Bin"))) & (True_()) & (Has("Received Progression Percent", 4))
+        (True_()) & (True_()) & (Has("Received Progression Percent", 4))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Pomegranate", player),
-        ((True_()) & (True_()) & (Has("Pomegranate Sapling")) & (Has("Shipping Bin"))) & (True_()) & (Has("Received Progression Percent", 4))
+        (True_()) & (True_()) & (Has("Received Progression Percent", 4))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Eggplant", player),
-        ((True_()) & (True_()) & (Has("Eggplant Seeds")) & (Has("Fall"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Pumpkin", player),
-        ((True_()) & (True_()) & (Has("Fall")) & (Has("Pumpkin Seeds"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Bok Choy", player),
-        ((True_()) & (True_()) & (Has("Bok Choy Seeds")) & (Has("Fall"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Yam", player),
-        ((True_()) & (True_()) & (Has("Fall")) & (Has("Yam Seeds"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Cranberries", player),
-        ((True_()) & (((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | ((True_()) & (True_())) | (Has("Shipping Bin"))) & (Has("Cranberry Seeds")) & (Has("Fall"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Fairy Rose", player),
-        ((True_()) & (True_()) & (Has("Fairy Seeds")) & (Has("Fall"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Amaranth", player),
-        ((True_()) & (True_()) & (Has("Amaranth Seeds")) & (Has("Fall"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Grape", player),
-        ((True_()) & (True_()) & (Has("Fall")) & (Has("Grape Starter"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Artichoke", player),
-        ((True_()) & (True_()) & (Has("Artichoke Seeds")) & (Has("Fall"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Broccoli", player),
-        ((True_()) & (True_()) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Broccoli Seeds"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Sweet Gem Berry", player),
-        ((((True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_())) | (Has("Shipping Bin"))) & ((Has("Spring")) | (Has("Summer"))) & (True_()) & (Has("Rare Seed"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Beet", player),
-        ((True_()) & (True_()) & (Has("Beet Seeds")) & (Has("Fall"))) & (True_())
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Wheat", player),
-        ((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Wheat Seeds"))) & ((True_()) | (True_()))
+        (True_()) & ((True_()) | (True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Corn", player),
-        ((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Corn Seeds"))) & ((True_()) | (True_()))
+        (True_()) & ((True_()) | (True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Sunflower", player),
-        ((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Sunflower Seeds"))) & ((True_()) | (True_()))
+        (True_()) & ((True_()) | (True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Ancient Fruit", player),
-        ((Has("Ancient Seeds Recipe")) & (Has("Received Progression Percent", 20))) & ((True_()) | (True_()) | (True_()))
+        (True_()) & ((True_()) | (True_()) | (True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Coffee Bean", player),
-        ((True_()) & ((Has("Progressive Club")) | (Has("Progressive Dagger")) | (Has("Progressive Sword")) | (Has("Progressive Weapon"))) & (True_()) & (Has("Coffee Bean")) & (Has("Received Progression Percent", 16))) & ((True_()) | (True_()))
+        (True_()) & ((True_()) | (True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Harvest Cactus Fruit", player),
-        ((True_()) & (True_()) & (True_()) & (Has("Cactus Seeds"))) & ((True_()) | (True_()))
+        (True_()) & ((True_()) | (True_()))
     )
 
     world.set_rule(
@@ -2509,7 +2509,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Secret Santa", player),
-        ((True_()) & (True_()) & (Has("Progressive Coop", 3)) & (Has("Shipping Bin")) & (Has("Silo"))) | ((True_()) & (Has("Received Progression Percent", 40))) | ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))) & (Has("Fish Pond"))) | (((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & (True_()))) | ((((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & (True_())) | (Has("Fall")))
+        (True_()) | (True_()) | (True_()) | (True_())
     )
 
     world.set_rule(
@@ -2519,7 +2519,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("SquidFest Day 1 Iron", player),
-        ((True_()) & (Has("Fishing Level", 2))) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))
+        (True_()) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))
     )
 
     world.set_rule(
@@ -2529,17 +2529,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("SquidFest Day 2 Iron", player),
-        ((True_()) & (Has("Fishing Level", 2))) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))
+        (True_()) & (Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 2)) & (Has("Winter"))
     )
 
     world.set_rule(
         multiworld.get_location("Repair Ticket Machine", player),
-        ((((((True_()) & (True_()) & (Has("Fishing Level", 4)) & (Has("Iron Bar (Logic event)"))) & ((((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_()))) | (True_()) | (Has("Progressive Pan", 4)))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (True_()))) & ((((Has("Progressive Club", 4)) | (Has("Progressive Dagger", 4)) | (Has("Progressive Sword", 4)) | (Has("Progressive Weapon", 4))) & (True_()) & (Has("Combat Level", 6)) & (Has("Mining Level", 6)) & (Has("Progressive Pickaxe", 3))) | (True_())) & (Has("Foraging Level", 6)) & (Has("Iron Bar (Logic event)"))) & ((Has("Fall")) | (Has("Spring")) | (Has("Summer")))) | (((((True_()) & (True_()) & (Has("Fishing Level", 4)) & (Has("Iron Bar (Logic event)"))) & ((((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))) | (((True_()) & (Has("Fishing Level", 2))) & (((True_()) & (Has("Fishing Level", 3)) & (Has("Iron Bar (Logic event)"))) | ((Has("Fishing Level", 3)) & (Has("Shipping Bin"))))))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) & ((((Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4)) & (Has("Summer"))) & (Has("Fish Pond"))) | (True_()) | (True_()) | (True_()) | (Has("Progressive Pan", 2)) | (Has("Rusty Key"))) & ((((True_()) & (Has("Fishing Level", 8)) & (Has("Progressive Fishing Rod", 4))) & (Has("Fish Pond"))) | (True_()))) | (True_()) | (Has("Progressive Pan", 4)))) | (((True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))) & (True_()))) & (Has("Gold Bar (Logic event)")) & (Has("Iron Bar (Logic event)")) & (Has("Solar Panel Recipe")))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Repair Boat Hull", player),
-        ((True_()) | (True_())) & (Has("Progressive Axe"))
+        True_()
     )
 
     world.set_rule(
@@ -2554,12 +2554,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Island Resort", player),
-        (((True_()) & (True_()) & (True_()) & (True_()) & (Has("Banana Sapling"))) & (True_()) & (Has("Received Progression Percent", 4))) & ((True_()) & (True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Fall"))) & ((True_()) & (True_()) & (Has("Garlic Seeds")) & (Has("Spring"))) & ((True_()) & (True_()) & (Has("Melon Seeds")) & (Has("Summer"))) & ((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Wheat Seeds"))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((True_()) & (Has("Progressive Fishing Rod"))) & ((True_()) & (Has("Progressive Pan"))) & ((True_()) & (Has("Open Professor Snail Cave"))) & ((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Combat Level", 8)) & (Has("Fishing Level", 10)) & (Has("Island Farmhouse")) & (Has("Mining Level", 8)) & (Has("Open Professor Snail Cave")) & (Has("Progressive Fishing Rod", 4)) & (Has("Progressive Pickaxe", 4)) & (Has("Progressive Slingshot"))
+        (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & ((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Combat Level", 8)) & (Has("Fishing Level", 10)) & (Has("Island Farmhouse")) & (Has("Mining Level", 8)) & (Has("Open Professor Snail Cave")) & (Has("Progressive Fishing Rod", 4)) & (Has("Progressive Pickaxe", 4)) & (Has("Progressive Slingshot"))
     )
 
     world.set_rule(
         multiworld.get_location("Island Farmhouse", player),
-        (((True_()) & (True_()) & (True_()) & (True_()) & (Has("Banana Sapling"))) & (True_()) & (Has("Received Progression Percent", 4))) & ((True_()) & (True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Fall"))) & ((True_()) & (True_()) & (Has("Garlic Seeds")) & (Has("Spring"))) & ((True_()) & (True_()) & (Has("Melon Seeds")) & (Has("Summer"))) & ((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Wheat Seeds"))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((True_()) & (Has("Progressive Fishing Rod"))) & ((True_()) & (Has("Progressive Pan"))) & ((True_()) & (Has("Open Professor Snail Cave"))) & ((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Combat Level", 8)) & (Has("Fishing Level", 10)) & (Has("Mining Level", 8)) & (Has("Open Professor Snail Cave")) & (Has("Progressive Fishing Rod", 4)) & (Has("Progressive Pickaxe", 4)) & (Has("Progressive Slingshot"))
+        (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & ((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Combat Level", 8)) & (Has("Fishing Level", 10)) & (Has("Mining Level", 8)) & (Has("Open Professor Snail Cave")) & (Has("Progressive Fishing Rod", 4)) & (Has("Progressive Pickaxe", 4)) & (Has("Progressive Slingshot"))
     )
 
     world.set_rule(
@@ -2569,7 +2569,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Farm Obelisk", player),
-        (((True_()) & (True_()) & (True_()) & (True_()) & (Has("Banana Sapling"))) & (True_()) & (Has("Received Progression Percent", 4))) & ((True_()) & (True_()) & (True_()) & (Has("Copper Ore (Logic event)")) & (Has("Fall"))) & ((True_()) & (True_()) & (Has("Garlic Seeds")) & (Has("Spring"))) & ((True_()) & (True_()) & (Has("Melon Seeds")) & (Has("Summer"))) & ((True_()) & (True_()) & ((Has("Fall")) | (Has("Summer"))) & (Has("Wheat Seeds"))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((((Has("Fishing Level", 6)) & (Has("Progressive Fishing Rod", 4))) | (True_())) & (Has("Received Progression Percent", 28))) & ((True_()) & (Has("Progressive Fishing Rod"))) & ((True_()) & (Has("Progressive Pan"))) & ((True_()) & (Has("Open Professor Snail Cave"))) & ((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Combat Level", 8)) & (Has("Fishing Level", 10)) & (Has("Island Mailbox")) & (Has("Mining Level", 8)) & (Has("Open Professor Snail Cave")) & (Has("Progressive Fishing Rod", 4)) & (Has("Progressive Pickaxe", 4)) & (Has("Progressive Slingshot"))
+        (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & ((Has("Progressive Club", 5)) | (Has("Progressive Dagger", 5)) | (Has("Progressive Sword", 5)) | (Has("Progressive Weapon", 5))) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Combat Level", 8)) & (Has("Fishing Level", 10)) & (Has("Island Mailbox")) & (Has("Mining Level", 8)) & (Has("Open Professor Snail Cave")) & (Has("Progressive Fishing Rod", 4)) & (Has("Progressive Pickaxe", 4)) & (Has("Progressive Slingshot"))
     )
 
     world.set_rule(
@@ -2609,10 +2609,10 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Complete Island Field Office", player),
-        ((True_()) & (Has("Progressive Fishing Rod"))) & ((True_()) & (Has("Progressive Pan"))) & ((True_()) & (Has("Open Professor Snail Cave"))) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Open Professor Snail Cave"))
+        (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Open Professor Snail Cave"))
     )
 
     world.set_rule(
         multiworld.get_location("Open Professor Snail Cave", player),
-        ((True_()) | (Has("Progressive Pan"))) & (Has("Copper Ore (Logic event)")) & (Has("Mining Level"))
+        True_()
     )

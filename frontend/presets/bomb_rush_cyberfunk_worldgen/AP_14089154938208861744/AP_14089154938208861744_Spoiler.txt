@@ -275,6 +275,7 @@ Playthrough:
 
 }
 1: {
+  Brink Terminal: Behind glass Polo: Graffiti (M - Pora)
   Brink Terminal: Complete Chapter 2: Chapter Completed
   Brink Terminal: Control room skates: 8 REP
   Brink Terminal: Dock Robo Post outfit: 16 REP
@@ -299,8 +300,11 @@ Playthrough:
   Hideout: Half pipe CD: Graffiti (XL - headphones on Helmet on)
   Hideout: Rooftop CD: Graffiti (M - colorBOMB)
   Hideout: Secret area graffiti: Graffiti (XL - Bombing by FireMan)
+  Hideout: Solace joins the crew: 16 REP
   Hideout: Under staircase graffiti: Futurism
+  Hideout: Unlock phone app: Inline Skates (Glaciers)
   Hideout: Upper platform skateboard: 16 REP
+  Hideout: Vinyl joins the crew: Inline Skates (Red Industry)
   Mataan: Across bull horns graffiti: Graffiti (M - Teddy 4)
   Mataan: Coil joins the crew: 8 REP
   Mataan: Crane CD: BMX (Dedication)
@@ -319,6 +323,7 @@ Playthrough:
   Mataan: Secret ledge BMX: 8 REP
   Mataan: Statue hand outfit: 16 REP
   Mataan: Trash CD: Graffiti (L - Lauder)
+  Mataan: Trash Polo: 8 REP
   Mataan: Trash graffiti: 24 REP
   Mataan: Vending machine CD: Graffiti (L - VoodooBoy)
   Millennium Mall: Atrium BMX gate BMX: Tryce
@@ -326,11 +331,13 @@ Playthrough:
   Millennium Mall: Atrium top floor floating CD: Graffiti (L - Boom)
   Millennium Mall: Atrium vending machine graffiti: BMX (Mr. Taupe)
   Millennium Mall: Complete Chapter 3: Chapter Completed
+  Millennium Mall: DOT.EXE joins the crew: Graffiti (L - Jd Vila Formosa)
   Millennium Mall: Fish challenge reward: 8 REP
   Millennium Mall: Glass cylinder CD: Vinyl
   Millennium Mall: Maintenance shaft CD: Inline Skates (Sweet Royale)
   Millennium Mall: Race track Robo Post CD: 8 REP
   Millennium Mall: Score challenge reward: Inline Skates (Sharpshooters)
+  Millennium Mall: Shine joins the crew: Oldhead
   Millennium Mall: Slide challenge reward: 24 REP
   Millennium Mall: Theater garage graffiti: Eclipse
   Millennium Mall: Theater hanging billboards graffiti: Graffiti (M - Street classic)
@@ -355,16 +362,22 @@ Playthrough:
   Millennium Square: Vending machine skates: Graffiti (XL - Deep Dive)
   Pyramid Island: Above entrance graffiti: 16 REP
   Pyramid Island: Above gate rail outfit: 16 REP
+  Pyramid Island: Big maze Polo: 8 REP
   Pyramid Island: Complete Chapter 4: Chapter Completed
   Pyramid Island: Helipad BMX: DJ Cyber
+  Pyramid Island: Maze desk Polo: 16 REP
+  Pyramid Island: Maze glass Polo: Graffiti (XL - Gold Rush)
   Pyramid Island: Maze outfit: Graffiti (XL - Web Spitter)
   Pyramid Island: Pipe outfit: 24 REP
   Pyramid Island: Polo graffiti: Inline Skates (Ice Cold Killers)
+  Pyramid Island: Polo pile 1: Graffiti (M - 0m33)
+  Pyramid Island: Polo pile 3: Devil Theory
   Pyramid Island: Pyramid top CD: 8 REP
   Pyramid Island: Pyramid top Robo Post CD: 16 REP
   Pyramid Island: Quarter pipe challenge reward: 8 REP
   Pyramid Island: Quarter pipe rooftop graffiti: 24 REP
   Pyramid Island: Rail loop outfit: Graffiti (XL - MOTORCYCLE GANG)
+  Pyramid Island: Rise joins the crew: 16 REP
   Pyramid Island: Score challenge 2 reward: 16 REP
   Pyramid Island: Score challenge reward: 8 REP
   Pyramid Island: Smoke hole BMX: 32 REP
@@ -430,10 +443,12 @@ Playthrough:
   Versum Hill: BMX gate outfit: 24 REP
   Versum Hill: Basketball court Robo Post CD: 8 REP
   Versum Hill: Basketball court alley skateboard: Graffiti (L - wild rush)
+  Versum Hill: Basketball court shortcut CD: Graffiti (M - Stacked Symbols)
   Versum Hill: Behind glass graffiti: Graffiti (M - OVERWHELMME)
   Versum Hill: Billboard platform outfit: 16 REP
   Versum Hill: Complete Chapter 1: Chapter Completed
   Versum Hill: Corner challenge reward: 8 REP
+  Versum Hill: Frank joins the crew: 24 REP
   Versum Hill: Glass floor skates: 8 REP
   Versum Hill: Hilltop Robo Post CD: Rietveld
   Versum Hill: Main street Robo Post graffiti: Graffiti (M - Zona Leste)
@@ -442,24 +457,7 @@ Playthrough:
   Versum Hill: Rooftop CD: Inline Skates (Orange Blasters)
   Versum Hill: Side street alley outfit: Graffiti (L - NOISY NINJA)
   Versum Hill: Train station CD: 8 REP
+  Versum Hill: Trash Polo: Bel
   Versum Hill: Under bridge graffiti: 16 REP
   Versum Hill: Wallrunning challenge reward: Solace
-}
-2: {
-  Brink Terminal: Behind glass Polo: Graffiti (M - Pora)
-  Hideout: Solace joins the crew: 16 REP
-  Hideout: Unlock phone app: Inline Skates (Glaciers)
-  Hideout: Vinyl joins the crew: Inline Skates (Red Industry)
-  Mataan: Trash Polo: 8 REP
-  Millennium Mall: DOT.EXE joins the crew: Graffiti (L - Jd Vila Formosa)
-  Millennium Mall: Shine joins the crew: Oldhead
-  Pyramid Island: Big maze Polo: 8 REP
-  Pyramid Island: Maze desk Polo: 16 REP
-  Pyramid Island: Maze glass Polo: Graffiti (XL - Gold Rush)
-  Pyramid Island: Polo pile 1: Graffiti (M - 0m33)
-  Pyramid Island: Polo pile 3: Devil Theory
-  Pyramid Island: Rise joins the crew: 16 REP
-  Versum Hill: Basketball court shortcut CD: Graffiti (M - Stacked Symbols)
-  Versum Hill: Frank joins the crew: 24 REP
-  Versum Hill: Trash Polo: Bel
 }

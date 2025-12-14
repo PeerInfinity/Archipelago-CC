@@ -369,7 +369,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Job: Legendary Tomes", player),
-        (True_()) & (True_()) & (True_()) & (HasAll('Magnum1 A', 'Press'))
+        (True_()) & (True_()) & (True_()) & (HasAll())
     )
 
     world.set_rule(

@@ -7,7 +7,7 @@ The world class must inherit from RuleWorldMixin to use these rules.
 
 from typing import TYPE_CHECKING
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, Has
 
 if TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -24,22 +24,22 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Menu -> Laboratory", player),
-        True_()
+        (Has("Trinket 01")) & (Has("Trinket 02")) & (Has("Trinket 03"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Menu -> The Tower", player),
-        True_()
+        (Has("Trinket 04")) & (Has("Trinket 05")) & (Has("Trinket 06"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Menu -> Space Station 2", player),
-        True_()
+        (Has("Trinket 07")) & (Has("Trinket 08")) & (Has("Trinket 09"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Menu -> Warp Zone", player),
-        True_()
+        (Has("Trinket 10")) & (Has("Trinket 11")) & (Has("Trinket 12"))
     )
     # Location rules
     world.set_rule(

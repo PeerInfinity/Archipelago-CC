@@ -49,88 +49,99 @@
             "name": "Starting Room to Hidden Room (through Starting Room - Back Right Door)",
             "connected_region": "Hidden Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Starting Room to Second Room (through Starting Room - Main Door)",
             "connected_region": "Second Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Starting Room to Outside The Agreeable (through Outside The Agreeable - Painting Shortcut)",
             "connected_region": "Outside The Agreeable",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Starting Room to The Perceptive (through Hedge Maze - Painting Shortcut)",
             "connected_region": "The Perceptive",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Starting Room to Courtyard (through Courtyard - Painting Shortcut)",
             "connected_region": "Courtyard",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Starting Room to Welcome Back Area (through Welcome Back Area - Shortcut to Starting Room)",
             "connected_region": "Welcome Back Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Starting Room to Outside The Bold (through Outside The Bold - Painting Shortcut)",
             "connected_region": "Outside The Bold",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Starting Room to Outside The Undeterred (through Outside The Undeterred - Painting Shortcut)",
             "connected_region": "Outside The Undeterred",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Starting Room to The Wondrous (Doorknob) (through The Wondrous (Doorknob) - Painting Shortcut)",
             "connected_region": "The Wondrous (Doorknob)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Starting Room to Rhyme Room (Looped Square) (through Starting Room - Rhyme Room Entrance)",
             "connected_region": "Rhyme Room (Looped Square)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Sun Painting",
             "connected_region": "Pilgrim Antechamber",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -139,8 +150,9 @@
             "name": "Starting Room - HI",
             "id": 444400,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Slowness Trap",
@@ -154,8 +166,9 @@
             "name": "Starting Room - HIDDEN",
             "id": 444401,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -174,24 +187,27 @@
             "name": "Hidden Room to Starting Room (through Starting Room - Back Right Door)",
             "connected_region": "Starting Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Hidden Room to The Seeker (through Hidden Room - Seeker Entrance)",
             "connected_region": "The Seeker",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Hidden Room to Dead End Area (through Hidden Room - Dead End Door)",
             "connected_region": "Dead End Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -206,16 +222,18 @@
             "name": "Hidden Room to Knight Night (Outer Ring) (through Hidden Room - Knight Night Entrance)",
             "connected_region": "Knight Night (Outer Ring)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Hidden Room to Rhyme Room (Circle) (through Hidden Room - Rhyme Room Entrance)",
             "connected_region": "Rhyme Room (Circle)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -224,8 +242,9 @@
             "name": "Hidden Room - DEAD END",
             "id": 444406,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -239,8 +258,9 @@
             "name": "Hidden Room - OPEN",
             "id": 444407,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -259,16 +279,18 @@
             "name": "The Seeker to Hidden Room (through Hidden Room - Seeker Entrance)",
             "connected_region": "Hidden Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Seeker to Pilgrim Room (through Pilgrim Room - Shortcut to The Seeker)",
             "connected_region": "Pilgrim Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -277,8 +299,9 @@
             "name": "The Seeker - Achievement",
             "id": 444409,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -297,16 +320,18 @@
             "name": "Second Room to Starting Room (through Starting Room - Main Door)",
             "connected_region": "Starting Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Second Room to Hub Room (through Second Room - Exit Door)",
             "connected_region": "Hub Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -315,8 +340,9 @@
             "name": "Second Room - LEVEL 2",
             "id": 444431,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -330,8 +356,9 @@
             "name": "Second Room - Good Luck",
             "id": 445203,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -350,16 +377,18 @@
             "name": "Hub Room to Second Room (through Second Room - Exit Door)",
             "connected_region": "Second Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Hub Room to Dead End Area (through Hub Room - Near RAT Door)",
             "connected_region": "Dead End Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -374,24 +403,27 @@
             "name": "Hub Room to Crossroads (through Hub Room - Crossroads Entrance)",
             "connected_region": "Crossroads",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Hub Room to The Tenacious (through Hub Room - Tenacious Entrance)",
             "connected_region": "The Tenacious",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Hub Room to The Tenacious (through The Tenacious - Shortcut to Hub Room)",
             "connected_region": "The Tenacious",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -406,16 +438,18 @@
             "name": "Hub Room to Hedge Maze (through Hub Room - Shortcut to Hedge Maze)",
             "connected_region": "Hedge Maze",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Hub Room to Orange Tower First Floor (through Orange Tower First Floor - Shortcut to Hub Room)",
             "connected_region": "Orange Tower First Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -430,16 +464,18 @@
             "name": "Hub Room to Outside The Initiated (through Outside The Initiated - Shortcut to Hub Room)",
             "connected_region": "Outside The Initiated",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Hub Room to The Traveled (through Hub Room - Traveled Entrance)",
             "connected_region": "The Traveled",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -448,8 +484,9 @@
             "name": "Hub Room - ORDER",
             "id": 444432,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Empty White Hallways",
@@ -463,8 +500,9 @@
             "name": "Hub Room - SLAUGHTER",
             "id": 444433,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -478,8 +516,9 @@
             "name": "Hub Room - TRACE",
             "id": 444436,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Atbash Trap",
@@ -493,8 +532,9 @@
             "name": "Hub Room - RAT",
             "id": 444437,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Empty White Hallways",
@@ -508,8 +548,9 @@
             "name": "Hub Room - OPEN",
             "id": 444438,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -523,8 +564,9 @@
             "name": "Hub Room - LOST",
             "id": 444440,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -543,16 +585,18 @@
             "name": "Dead End Area to Hidden Room (through Hidden Room - Dead End Door)",
             "connected_region": "Hidden Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Dead End Area to Hub Room (through Hub Room - Near RAT Door)",
             "connected_region": "Hub Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -578,8 +622,9 @@
             "name": "Pilgrim Antechamber to Pilgrim Room (through Pilgrim Antechamber - Exit)",
             "connected_region": "Pilgrim Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -588,8 +633,9 @@
             "name": "Pilgrim Antechamber - PILGRIM",
             "id": 444447,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -603,8 +649,9 @@
             "name": "Pilgrim Room - HOT CRUST",
             "id": 445205,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -623,8 +670,9 @@
             "name": "Pilgrim Room to The Seeker (through Pilgrim Room - Shortcut to The Seeker)",
             "connected_region": "The Seeker",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -633,8 +681,9 @@
             "name": "Pilgrim Room - THIS",
             "id": 444449,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -653,32 +702,36 @@
             "name": "Crossroads to Hub Room (through Hub Room - Crossroads Entrance)",
             "connected_region": "Hub Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Crossroads to Lost Area (through Crossroads - Words Sword Door)",
             "connected_region": "Lost Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Crossroads to Amen Name Area (through Lost Area - Exit)",
             "connected_region": "Amen Name Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Crossroads to The Tenacious (through Crossroads - Tenacious Entrance)",
             "connected_region": "The Tenacious",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -693,24 +746,27 @@
             "name": "Crossroads to Orange Tower Fourth Floor (through Crossroads - Tower Entrance)",
             "connected_region": "Orange Tower Fourth Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Crossroads to Orange Tower Fourth Floor (through Crossroads - Tower Back Entrance)",
             "connected_region": "Orange Tower Fourth Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Crossroads to Roof (through Crossroads - Roof Access)",
             "connected_region": "Roof",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -733,24 +789,27 @@
             "name": "Crossroads to The Discerning (through Crossroads - Discerning Entrance)",
             "connected_region": "The Discerning",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Crossroads to The Eyes They See (through Crossroads - Eye Wall)",
             "connected_region": "The Eyes They See",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Crossroads to Far Window (through Crossroads - Eye Wall)",
             "connected_region": "Far Window",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -759,8 +818,9 @@
             "name": "Crossroads - DECAY",
             "id": 444462,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Atbash Trap",
@@ -774,8 +834,9 @@
             "name": "Crossroads - NOPE",
             "id": 444463,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Atbash Trap",
@@ -789,8 +850,9 @@
             "name": "Crossroads - WE ROT",
             "id": 444465,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Atbash Trap",
@@ -804,8 +866,9 @@
             "name": "Crossroads - BEND HI",
             "id": 444469,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -819,8 +882,9 @@
             "name": "Crossroads - THE EYES",
             "id": 444470,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Atbash Trap",
@@ -834,8 +898,9 @@
             "name": "Crossroads - TURN/RUNT",
             "id": 445206,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -849,8 +914,9 @@
             "name": "Crossroads - WORDS, SWORD",
             "id": 445207,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Empty White Hallways",
@@ -869,8 +935,9 @@
             "name": "Lost Area to Outside The Agreeable (through Lost Area - Exit)",
             "connected_region": "Outside The Agreeable",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -879,8 +946,9 @@
             "name": "Crossroads - LOST Pair",
             "id": 445208,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Iceland Trap",
@@ -899,16 +967,18 @@
             "name": "Amen Name Area to Crossroads (through Lost Area - Exit)",
             "connected_region": "Crossroads",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Amen Name Area to Suits Area (through Amen Name Area - Exit)",
             "connected_region": "Suits Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -917,8 +987,9 @@
             "name": "Amen Name Area - AMEN, NAME",
             "id": 445209,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -937,8 +1008,9 @@
             "name": "Suits Area to Amen Name Area (through Amen Name Area - Exit)",
             "connected_region": "Amen Name Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -951,40 +1023,45 @@
             "name": "The Tenacious to Hub Room (through Hub Room - Tenacious Entrance)",
             "connected_region": "Hub Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Tenacious to Hub Room (through The Tenacious - Shortcut to Hub Room)",
             "connected_region": "Hub Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Tenacious to Crossroads (through Crossroads - Tenacious Entrance)",
             "connected_region": "Crossroads",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Tenacious to Outside The Agreeable (through Outside The Agreeable - Tenacious Entrance)",
             "connected_region": "Outside The Agreeable",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Tenacious to Dread Hallway (through Dread Hallway - Tenacious Entrance)",
             "connected_region": "Dread Hallway",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -993,8 +1070,9 @@
             "name": "The Tenacious - Achievement",
             "id": 444491,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -1008,8 +1086,9 @@
             "name": "The Tenacious - Palindromes",
             "id": 445210,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -1023,8 +1102,9 @@
             "name": "The Tenacious - White Palindromes",
             "id": 445211,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Slowness Trap",
@@ -1051,8 +1131,9 @@
             "name": "Near Far Area to Warts Straw Area (through Near Far Area - Door)",
             "connected_region": "Warts Straw Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1061,8 +1142,9 @@
             "name": "Symmetry Room - NEAR, FAR",
             "id": 445204,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -1081,16 +1163,18 @@
             "name": "Warts Straw Area to Near Far Area (through Near Far Area - Door)",
             "connected_region": "Near Far Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Warts Straw Area to Leaf Feel Area (through Warts Straw Area - Door)",
             "connected_region": "Leaf Feel Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1099,8 +1183,9 @@
             "name": "Symmetry Room - WARTS, STRAW",
             "id": 445212,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -1119,16 +1204,18 @@
             "name": "Leaf Feel Area to Warts Straw Area (through Warts Straw Area - Door)",
             "connected_region": "Warts Straw Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Leaf Feel Area to Outside The Agreeable (through Leaf Feel Area - Door)",
             "connected_region": "Outside The Agreeable",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1137,8 +1224,9 @@
             "name": "Symmetry Room - LEAF, FEEL",
             "id": 445213,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -1157,24 +1245,27 @@
             "name": "Outside The Agreeable to Lost Area (through Lost Area - Exit)",
             "connected_region": "Lost Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Outside The Agreeable to The Tenacious (through Outside The Agreeable - Tenacious Entrance)",
             "connected_region": "The Tenacious",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Outside The Agreeable to Leaf Feel Area (through Leaf Feel Area - Door)",
             "connected_region": "Leaf Feel Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -1189,16 +1280,18 @@
             "name": "Outside The Agreeable to Dread Hallway (through Outside The Agreeable - Black Door)",
             "connected_region": "Dread Hallway",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Outside The Agreeable to The Agreeable (through Outside The Agreeable - Agreeable Entrance)",
             "connected_region": "The Agreeable",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -1231,8 +1324,9 @@
             "name": "Outside The Agreeable - MASSACRED",
             "id": 444496,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -1246,8 +1340,9 @@
             "name": "Outside The Agreeable - BLACK",
             "id": 444497,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -1261,8 +1356,9 @@
             "name": "Outside The Agreeable - CLOSE",
             "id": 444498,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -1276,8 +1372,9 @@
             "name": "Outside The Agreeable - RIGHT",
             "id": 444501,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -1312,8 +1409,9 @@
             "name": "Compass Room to Cellar (through Compass Room - Lookout Entrance)",
             "connected_region": "Cellar",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1322,8 +1420,9 @@
             "name": "Outside The Agreeable - Lookout Panels",
             "id": 445271,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -1342,16 +1441,18 @@
             "name": "Dread Hallway to The Tenacious (through Dread Hallway - Tenacious Entrance)",
             "connected_region": "The Tenacious",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Dread Hallway to Outside The Agreeable (through Outside The Agreeable - Black Door)",
             "connected_region": "Outside The Agreeable",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1360,8 +1461,9 @@
             "name": "Dread Hallway - DREAD",
             "id": 444516,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Empty White Hallways",
@@ -1380,16 +1482,18 @@
             "name": "The Agreeable to Outside The Agreeable (through Outside The Agreeable - Agreeable Entrance)",
             "connected_region": "Outside The Agreeable",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Agreeable to Hedge Maze (through The Agreeable - Shortcut to Hedge Maze)",
             "connected_region": "Hedge Maze",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1398,8 +1502,9 @@
             "name": "The Agreeable - Achievement",
             "id": 444517,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red",
@@ -1413,8 +1518,9 @@
             "name": "The Agreeable - BYE",
             "id": 444518,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Slowness Trap",
@@ -1433,8 +1539,9 @@
             "name": "Hedge Maze to Hub Room (through Hub Room - Shortcut to Hedge Maze)",
             "connected_region": "Hub Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -1449,40 +1556,45 @@
             "name": "Hedge Maze to The Agreeable (through The Agreeable - Shortcut to Hedge Maze)",
             "connected_region": "The Agreeable",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Hedge Maze to The Perceptive (through Hedge Maze - Perceptive Entrance)",
             "connected_region": "The Perceptive",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Hedge Maze to The Observant (through Hedge Maze - Observant Entrance)",
             "connected_region": "The Observant",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Hedge Maze to The Incomparable (through Hedge Maze - Observant Entrance)",
             "connected_region": "The Incomparable",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Hedge Maze to Owl Hallway (through Owl Hallway - Shortcut to Hedge Maze)",
             "connected_region": "Owl Hallway",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -1499,8 +1611,9 @@
             "name": "Hedge Maze - DOWN",
             "id": 444530,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Empty White Hallways",
@@ -1514,8 +1627,9 @@
             "name": "Hedge Maze - Hide and Seek",
             "id": 445215,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -1552,8 +1666,9 @@
             "name": "The Perceptive - Achievement",
             "id": 444546,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -1567,8 +1682,9 @@
             "name": "The Perceptive - GAZE",
             "id": 444547,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Iceland Trap",
@@ -1587,16 +1703,18 @@
             "name": "The Fearless (First Floor) to The Fearless (Second Floor) (through The Fearless (First Floor) - Second Floor)",
             "connected_region": "The Fearless (Second Floor)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Fearless (First Floor) to The Fearless (through The Fearless (Second Floor) - Third Floor)",
             "connected_region": "The Fearless",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1605,8 +1723,9 @@
             "name": "The Fearless - First Floor Puzzles",
             "id": 445216,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -1626,8 +1745,9 @@
             "name": "The Fearless - Second Floor Puzzles",
             "id": 445217,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -1647,8 +1767,9 @@
             "name": "The Fearless - Achievement",
             "id": 444560,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -1667,8 +1788,9 @@
             "name": "The Observant to Hedge Maze (through Hedge Maze - Observant Entrance)",
             "connected_region": "Hedge Maze",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -1691,8 +1813,9 @@
             "name": "The Observant to Color Hallways (through The Observant - Backside Door)",
             "connected_region": "Color Hallways",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1701,8 +1824,9 @@
             "name": "The Observant - Achievement",
             "id": 444565,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Iceland Trap",
@@ -1716,8 +1840,9 @@
             "name": "The Observant - SIX",
             "id": 444569,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Empty White Hallways",
@@ -1731,8 +1856,9 @@
             "name": "The Observant - FOUR (1), FOUR (2)",
             "id": 445218,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -1751,8 +1877,9 @@
             "name": "The Incomparable to Hedge Maze (through Hedge Maze - Observant Entrance)",
             "connected_region": "Hedge Maze",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -1767,8 +1894,9 @@
             "name": "The Incomparable to Eight Alcove (through The Incomparable - Eight Door)",
             "connected_region": "Eight Alcove",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1777,8 +1905,9 @@
             "name": "The Incomparable - Achievement",
             "id": 444585,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -1792,8 +1921,9 @@
             "name": "Giant Sevens",
             "id": 445219,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -1812,8 +1942,9 @@
             "name": "Eight Alcove to The Incomparable (through The Incomparable - Eight Door)",
             "connected_region": "The Incomparable",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -1828,8 +1959,9 @@
             "name": "Eight Alcove to Outside The Initiated (through The Incomparable - Eight Door (Outside The Initiated))",
             "connected_region": "Outside The Initiated",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1861,16 +1993,18 @@
             "name": "Orange Tower First Floor to Hub Room (through Orange Tower First Floor - Shortcut to Hub Room)",
             "connected_region": "Hub Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Orange Tower First Floor to Orange Tower Second Floor (through Orange Tower - Second Floor)",
             "connected_region": "Orange Tower Second Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -1885,16 +2019,18 @@
             "name": "Orange Tower First Floor to Directional Gallery (through Orange Tower First Floor - Salt Pepper Door)",
             "connected_region": "Directional Gallery",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Orange Tower First Floor to Outside The Wanderer (through Outside The Wanderer - Tower Entrance)",
             "connected_region": "Outside The Wanderer",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -1903,8 +2039,9 @@
             "name": "Orange Tower First Floor - SECRET",
             "id": 444602,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Empty White Hallways",
@@ -1918,8 +2055,9 @@
             "name": "Orange Tower First Floor - DADS + ALE",
             "id": 444603,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Slowness Trap",
@@ -1933,8 +2071,9 @@
             "name": "Orange Tower First Floor - Salt Pepper Door",
             "id": 445220,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -1953,16 +2092,18 @@
             "name": "Orange Tower Second Floor to Orange Tower First Floor (through Orange Tower - Second Floor)",
             "connected_region": "Orange Tower First Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Orange Tower Second Floor to Orange Tower Third Floor (through Orange Tower - Third Floor)",
             "connected_region": "Orange Tower Third Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -1991,16 +2132,18 @@
             "name": "Orange Tower Third Floor to Orange Tower Second Floor (through Orange Tower - Third Floor)",
             "connected_region": "Orange Tower Second Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Orange Tower Third Floor to Orange Tower Fourth Floor (through Orange Tower - Fourth Floor)",
             "connected_region": "Orange Tower Fourth Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -2015,16 +2158,18 @@
             "name": "Orange Tower Third Floor to Bearer Side Area (through Bearer Side Area - Shortcut to Tower)",
             "connected_region": "Bearer Side Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Orange Tower Third Floor to Knight Night Exit (through Knight Night (Final) - Exit)",
             "connected_region": "Knight Night Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -2039,8 +2184,9 @@
             "name": "Orange Tower Third Floor to Rhyme Room (Smiley) (through Orange Tower Third Floor - Rhyme Room Entrance)",
             "connected_region": "Rhyme Room (Smiley)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2049,8 +2195,9 @@
             "name": "Orange Tower Third Floor - DEER + WREN",
             "id": 444606,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -2064,8 +2211,9 @@
             "name": "Color Barriers - RED and YELLOW",
             "id": 445221,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -2092,32 +2240,36 @@
             "name": "Orange Tower Fourth Floor to Crossroads (through Crossroads - Tower Entrance)",
             "connected_region": "Crossroads",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Orange Tower Fourth Floor to Orange Tower Third Floor (through Orange Tower - Fourth Floor)",
             "connected_region": "Orange Tower Third Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Orange Tower Fourth Floor to Hot Crusts Area (through Orange Tower Fourth Floor - Hot Crusts Door)",
             "connected_region": "Hot Crusts Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Orange Tower Fourth Floor to Orange Tower Fifth Floor (through Orange Tower - Fifth Floor)",
             "connected_region": "Orange Tower Fifth Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -2132,8 +2284,9 @@
             "name": "Orange Tower Fourth Floor to Courtyard (through Crossroads - Tower Entrance)",
             "connected_region": "Courtyard",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -2158,8 +2311,9 @@
             "name": "Orange Tower Fourth Floor - LEARNS + UNSEW",
             "id": 444609,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Slowness Trap",
@@ -2173,8 +2327,9 @@
             "name": "Orange Tower Fourth Floor - HOT CRUSTS",
             "id": 444610,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -2188,8 +2343,9 @@
             "name": "Orange Tower Fourth Floor - IRK HORN",
             "id": 444611,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -2216,8 +2372,9 @@
             "name": "Hot Crusts Area to Orange Tower Fourth Floor (through Orange Tower Fourth Floor - Hot Crusts Door)",
             "connected_region": "Orange Tower Fourth Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -2238,40 +2395,45 @@
             "name": "Orange Tower Fifth Floor to Orange Tower Fourth Floor (through Orange Tower - Fifth Floor)",
             "connected_region": "Orange Tower Fourth Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Orange Tower Fifth Floor to Orange Tower Sixth Floor (through Orange Tower - Sixth Floor)",
             "connected_region": "Orange Tower Sixth Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Orange Tower Fifth Floor to Welcome Back Area (through Orange Tower Fifth Floor - Welcome Back)",
             "connected_region": "Welcome Back Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Orange Tower Fifth Floor to Outside The Initiated (through Art Gallery - Exit)",
             "connected_region": "Outside The Initiated",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Orange Tower Fifth Floor to Cellar (through Room Room - Cellar Exit)",
             "connected_region": "Cellar",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2280,8 +2442,9 @@
             "name": "Orange Tower Fifth Floor - DRAWL + RUNS",
             "id": 444615,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Empty White Hallways",
@@ -2295,8 +2458,9 @@
             "name": "Orange Tower Fifth Floor - SIZE (Small), SIZE (Big)",
             "id": 445222,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -2331,24 +2495,27 @@
             "name": "Orange Tower Sixth Floor to Orange Tower Fifth Floor (through Orange Tower - Sixth Floor)",
             "connected_region": "Orange Tower Fifth Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Orange Tower Sixth Floor to Ending Area (through Orange Tower - Seventh Floor)",
             "connected_region": "Ending Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Orange Tower Sixth Floor to Orange Tower Basement (through Orange Tower Seventh Floor - Mastery)",
             "connected_region": "Orange Tower Basement",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -2393,8 +2560,9 @@
             "name": "Ending Area to Orange Tower Seventh Floor (through Ending Area - End)",
             "connected_region": "Orange Tower Seventh Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2403,8 +2571,9 @@
             "name": "The End (Solved)",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Victory",
@@ -2767,16 +2936,18 @@
             "name": "Courtyard to Orange Tower Fourth Floor (through Crossroads - Tower Entrance)",
             "connected_region": "Orange Tower Fourth Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Courtyard to Yellow Backside Area (through First Second Third Fourth - Backside Door)",
             "connected_region": "Yellow Backside Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -2805,8 +2976,9 @@
             "name": "Yellow Backside Area to Courtyard (through First Second Third Fourth - Backside Door)",
             "connected_region": "Courtyard",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -2844,8 +3016,9 @@
             "name": "Courtyard - FIRST, SECOND, THIRD, FOURTH",
             "id": 445224,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -2872,8 +3045,9 @@
             "name": "The Colorful (White) to The Colorful (Black) (through The Colorful (White) - Progress Door)",
             "connected_region": "The Colorful (Black)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2882,8 +3056,9 @@
             "name": "The Colorful - White",
             "id": 445225,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Slowness Trap",
@@ -2902,16 +3077,18 @@
             "name": "The Colorful (Black) to The Colorful (White) (through The Colorful (White) - Progress Door)",
             "connected_region": "The Colorful (White)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Colorful (Black) to The Colorful (Red) (through The Colorful (Black) - Progress Door)",
             "connected_region": "The Colorful (Red)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2920,8 +3097,9 @@
             "name": "The Colorful - Black",
             "id": 445226,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -2940,16 +3118,18 @@
             "name": "The Colorful (Red) to The Colorful (Black) (through The Colorful (Black) - Progress Door)",
             "connected_region": "The Colorful (Black)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Colorful (Red) to The Colorful (Yellow) (through The Colorful (Red) - Progress Door)",
             "connected_region": "The Colorful (Yellow)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2958,8 +3138,9 @@
             "name": "The Colorful - Red",
             "id": 445227,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -2978,16 +3159,18 @@
             "name": "The Colorful (Yellow) to The Colorful (Red) (through The Colorful (Red) - Progress Door)",
             "connected_region": "The Colorful (Red)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Colorful (Yellow) to The Colorful (Blue) (through The Colorful (Yellow) - Progress Door)",
             "connected_region": "The Colorful (Blue)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2996,8 +3179,9 @@
             "name": "The Colorful - Yellow",
             "id": 445228,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -3016,16 +3200,18 @@
             "name": "The Colorful (Blue) to The Colorful (Yellow) (through The Colorful (Yellow) - Progress Door)",
             "connected_region": "The Colorful (Yellow)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Colorful (Blue) to The Colorful (Purple) (through The Colorful (Blue) - Progress Door)",
             "connected_region": "The Colorful (Purple)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3034,8 +3220,9 @@
             "name": "The Colorful - Blue",
             "id": 445229,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Brown",
@@ -3054,16 +3241,18 @@
             "name": "The Colorful (Purple) to The Colorful (Blue) (through The Colorful (Blue) - Progress Door)",
             "connected_region": "The Colorful (Blue)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Colorful (Purple) to The Colorful (Orange) (through The Colorful (Purple) - Progress Door)",
             "connected_region": "The Colorful (Orange)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3072,8 +3261,9 @@
             "name": "The Colorful - Purple",
             "id": 445230,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -3092,16 +3282,18 @@
             "name": "The Colorful (Orange) to The Colorful (Purple) (through The Colorful (Purple) - Progress Door)",
             "connected_region": "The Colorful (Purple)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Colorful (Orange) to The Colorful (Green) (through The Colorful (Orange) - Progress Door)",
             "connected_region": "The Colorful (Green)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3110,8 +3302,9 @@
             "name": "The Colorful - Orange",
             "id": 445231,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Empty White Hallways",
@@ -3130,16 +3323,18 @@
             "name": "The Colorful (Green) to The Colorful (Orange) (through The Colorful (Orange) - Progress Door)",
             "connected_region": "The Colorful (Orange)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Colorful (Green) to The Colorful (Brown) (through The Colorful (Green) - Progress Door)",
             "connected_region": "The Colorful (Brown)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3148,8 +3343,9 @@
             "name": "The Colorful - Green",
             "id": 445232,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Slowness Trap",
@@ -3168,16 +3364,18 @@
             "name": "The Colorful (Brown) to The Colorful (Green) (through The Colorful (Green) - Progress Door)",
             "connected_region": "The Colorful (Green)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Colorful (Brown) to The Colorful (Gray) (through The Colorful (Brown) - Progress Door)",
             "connected_region": "The Colorful (Gray)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3186,8 +3384,9 @@
             "name": "The Colorful - Brown",
             "id": 445233,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -3206,16 +3405,18 @@
             "name": "The Colorful (Gray) to The Colorful (Brown) (through The Colorful (Brown) - Progress Door)",
             "connected_region": "The Colorful (Brown)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Colorful (Gray) to The Colorful (through The Colorful (Gray) - Progress Door)",
             "connected_region": "The Colorful",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3224,8 +3425,9 @@
             "name": "The Colorful - Gray",
             "id": 445234,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -3252,8 +3454,9 @@
             "name": "The Colorful to The Colorful (Gray) (through The Colorful (Gray) - Progress Door)",
             "connected_region": "The Colorful (Gray)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3262,8 +3465,9 @@
             "name": "The Colorful - Achievement",
             "id": 444652,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -3282,24 +3486,27 @@
             "name": "Welcome Back Area to Starting Room (through Welcome Back Area - Shortcut to Starting Room)",
             "connected_region": "Starting Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Welcome Back Area to Orange Tower Fifth Floor (through Orange Tower Fifth Floor - Welcome Back)",
             "connected_region": "Orange Tower Fifth Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Welcome Back Area to Challenge Room (through Challenge Room - Welcome Door)",
             "connected_region": "Challenge Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3308,8 +3515,9 @@
             "name": "Welcome Back Area - WELCOME BACK",
             "id": 444653,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -3323,8 +3531,9 @@
             "name": "Welcome Back Area - CLOCKWISE",
             "id": 444655,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Empty White Hallways",
@@ -3359,8 +3568,9 @@
             "name": "Owl Hallway to Hedge Maze (through Owl Hallway - Shortcut to Hedge Maze)",
             "connected_region": "Hedge Maze",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3369,8 +3579,9 @@
             "name": "Owl Hallway - STRAYS",
             "id": 444656,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Iceland Trap",
@@ -3384,8 +3595,9 @@
             "name": "Owl Hallway - READS + RUST",
             "id": 444657,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -3404,32 +3616,36 @@
             "name": "Outside The Initiated to Hub Room (through Outside The Initiated - Shortcut to Hub Room)",
             "connected_region": "Hub Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Outside The Initiated to Eight Alcove (through The Incomparable - Eight Door (Outside The Initiated))",
             "connected_region": "Eight Alcove",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Outside The Initiated to Orange Tower Fifth Floor (through Art Gallery - Exit)",
             "connected_region": "Orange Tower Fifth Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Outside The Initiated to The Initiated (through Outside The Initiated - Initiated Entrance)",
             "connected_region": "The Initiated",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -3444,16 +3660,18 @@
             "name": "Outside The Initiated to The Bearer (through Art Gallery - Exit)",
             "connected_region": "The Bearer",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Outside The Initiated to Knight Night Exit (through Knight Night (Final) - Exit)",
             "connected_region": "Knight Night Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -3468,8 +3686,9 @@
             "name": "Outside The Initiated to Art Gallery (through Art Gallery - Exit)",
             "connected_region": "Art Gallery",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -3486,8 +3705,9 @@
             "name": "Outside The Initiated - UNCOVER",
             "id": 444664,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Orange",
@@ -3501,8 +3721,9 @@
             "name": "Outside The Initiated - OXEN",
             "id": 444665,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Pilgrim Room - Sun Painting",
@@ -3516,8 +3737,9 @@
             "name": "Color Barriers - BLUE and YELLOW",
             "id": 445235,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -3531,8 +3753,9 @@
             "name": "Color Barriers - RED and BLUE",
             "id": 445236,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -3546,8 +3769,9 @@
             "name": "Color Barriers - GREEN, ORANGE and PURPLE",
             "id": 445237,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -3567,8 +3791,9 @@
             "name": "The Initiated - Achievement",
             "id": 444676,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Gray",
@@ -3605,8 +3830,9 @@
             "name": "The Optimistic - Achievement",
             "id": 444667,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -3625,16 +3851,18 @@
             "name": "The Traveled to Hub Room (through Hub Room - Traveled Entrance)",
             "connected_region": "Hub Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Traveled to Color Hallways (through The Traveled - Color Hallways Entrance)",
             "connected_region": "Color Hallways",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3643,8 +3871,9 @@
             "name": "The Traveled - Achievement",
             "id": 444693,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -3658,8 +3887,9 @@
             "name": "The Traveled - HELLO",
             "id": 444698,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Iceland Trap",
@@ -3694,8 +3924,9 @@
             "name": "Color Hallways to The Traveled (through The Traveled - Color Hallways Entrance)",
             "connected_region": "The Traveled",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -3732,48 +3963,54 @@
             "name": "Outside The Bold to The Bold (through Outside The Bold - Bold Entrance)",
             "connected_region": "The Bold",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Outside The Bold to Color Hunt (through Color Hunt - Shortcut to The Steady)",
             "connected_region": "Color Hunt",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Outside The Bold to The Bearer (through The Bearer - Entrance)",
             "connected_region": "The Bearer",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Outside The Bold to The Steady (Rose) (through Outside The Bold - Steady Entrance)",
             "connected_region": "The Steady (Rose)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Outside The Bold to The Steady (Carnation) (through The Steady - Reveal)",
             "connected_region": "The Steady (Carnation)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Outside The Bold to The Steady (Lilac) (through Outside The Bold - Lilac Entrance)",
             "connected_region": "The Steady (Lilac)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3782,8 +4019,9 @@
             "name": "Outside The Bold - UNOPEN",
             "id": 444711,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -3797,8 +4035,9 @@
             "name": "Outside The Bold - BEGIN",
             "id": 444712,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -3818,8 +4057,9 @@
             "name": "The Bold - Achievement",
             "id": 444725,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -3838,8 +4078,9 @@
             "name": "Outside The Undeterred to Hub Room (through Outside The Undeterred - Green Painting)",
             "connected_region": "Hub Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -3870,24 +4111,27 @@
             "name": "Outside The Undeterred to The Undeterred (through Outside The Undeterred - Undeterred Entrance)",
             "connected_region": "The Undeterred",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Outside The Undeterred to Number Hunt (through Outside The Undeterred - Number Hunt)",
             "connected_region": "Number Hunt",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Outside The Undeterred to Directional Gallery (through Directional Gallery - Shortcut to The Undeterred)",
             "connected_region": "Directional Gallery",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3896,8 +4140,9 @@
             "name": "Outside The Undeterred - ART + ART",
             "id": 444743,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Empty White Hallways",
@@ -3911,8 +4156,9 @@
             "name": "Outside The Undeterred - PEN",
             "id": 444744,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Green",
@@ -3926,8 +4172,9 @@
             "name": "Outside The Undeterred - RAINY",
             "id": 444750,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -3941,8 +4188,9 @@
             "name": "Outside The Undeterred - ZERO",
             "id": 444751,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -3956,8 +4204,9 @@
             "name": "Outside The Undeterred - ONE",
             "id": 444752,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -3971,8 +4220,9 @@
             "name": "Twos",
             "id": 445238,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -3986,8 +4236,9 @@
             "name": "Threes",
             "id": 445239,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Empty White Hallways",
@@ -4001,8 +4252,9 @@
             "name": "Fours",
             "id": 445240,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -4022,8 +4274,9 @@
             "name": "The Undeterred - Achievement",
             "id": 444759,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -4042,32 +4295,36 @@
             "name": "Number Hunt to Outside The Undeterred (through Outside The Undeterred - Number Hunt)",
             "connected_region": "Outside The Undeterred",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Number Hunt to Directional Gallery (through Number Hunt - Door to Directional Gallery)",
             "connected_region": "Directional Gallery",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Number Hunt to The Artistic (Smiley) (through Number Hunt - Eights)",
             "connected_region": "The Artistic (Smiley)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Number Hunt to Challenge Room (through Outside The Undeterred - Challenge Entrance)",
             "connected_region": "Challenge Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4076,8 +4333,9 @@
             "name": "Fives",
             "id": 445241,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -4091,8 +4349,9 @@
             "name": "Sixes",
             "id": 445242,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -4106,8 +4365,9 @@
             "name": "Sevens",
             "id": 445243,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Empty White Hallways",
@@ -4121,8 +4381,9 @@
             "name": "Eights",
             "id": 445244,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Atbash Trap",
@@ -4136,8 +4397,9 @@
             "name": "Nines",
             "id": 445245,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -4156,8 +4418,9 @@
             "name": "Directional Gallery to Orange Tower First Floor (through Orange Tower First Floor - Salt Pepper Door)",
             "connected_region": "Orange Tower First Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -4172,24 +4435,27 @@
             "name": "Directional Gallery to Outside The Bold (through Number Hunt - Sixes)",
             "connected_region": "Outside The Bold",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Directional Gallery to Outside The Undeterred (through Directional Gallery - Shortcut to The Undeterred)",
             "connected_region": "Outside The Undeterred",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Directional Gallery to Number Hunt (through Number Hunt - Door to Directional Gallery)",
             "connected_region": "Number Hunt",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -4238,8 +4504,9 @@
             "name": "Directional Gallery - 834283054",
             "id": 444792,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Iceland Trap",
@@ -4253,8 +4520,9 @@
             "name": "Directional Gallery - PARANOID",
             "id": 444793,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -4268,8 +4536,9 @@
             "name": "Directional Gallery - WADED + WEE",
             "id": 444795,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Empty White Hallways",
@@ -4283,8 +4552,9 @@
             "name": "Directional Gallery - TURN, LEARN",
             "id": 445246,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -4311,16 +4581,18 @@
             "name": "Color Hunt to Outside The Bold (through Color Hunt - Shortcut to The Steady)",
             "connected_region": "Outside The Bold",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Color Hunt to Champion's Rest (through Outside The Initiated - Entrance)",
             "connected_region": "Champion's Rest",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4329,8 +4601,9 @@
             "name": "Color Hunt - EXIT",
             "id": 444806,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -4344,8 +4617,9 @@
             "name": "Color Hunt - RED",
             "id": 444808,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -4359,8 +4633,9 @@
             "name": "Color Hunt - BLUE",
             "id": 444809,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -4374,8 +4649,9 @@
             "name": "Color Hunt - YELLOW",
             "id": 444810,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -4389,8 +4665,9 @@
             "name": "Color Hunt - GREEN",
             "id": 444811,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Slowness Trap",
@@ -4404,8 +4681,9 @@
             "name": "Color Hunt - PURPLE",
             "id": 444812,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Atbash Trap",
@@ -4419,8 +4697,9 @@
             "name": "Color Hunt - ORANGE",
             "id": 444813,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -4439,8 +4718,9 @@
             "name": "Champion's Rest to Color Hunt (through Outside The Initiated - Entrance)",
             "connected_region": "Color Hunt",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4449,8 +4729,9 @@
             "name": "Champion's Rest - YOU",
             "id": 444814,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Empty White Hallways",
@@ -4469,40 +4750,45 @@
             "name": "The Bearer to Outside The Initiated (through Art Gallery - Exit)",
             "connected_region": "Outside The Initiated",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Bearer to Color Hallways (through The Bearer - Backside Door)",
             "connected_region": "Color Hallways",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Bearer to Outside The Bold (through The Bearer - Entrance)",
             "connected_region": "Outside The Bold",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Bearer to The Bearer (West) (through The Bearer (West) - Side Area Shortcut)",
             "connected_region": "The Bearer (West)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Bearer to Cross Tower (East) (through The Bearer - East Entrance)",
             "connected_region": "Cross Tower (East)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4511,8 +4797,9 @@
             "name": "The Bearer - Achievement",
             "id": 444819,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -4526,8 +4813,9 @@
             "name": "The Bearer - MIDDLE",
             "id": 444820,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -4541,8 +4829,9 @@
             "name": "The Bearer - FARTHER",
             "id": 444821,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -4569,16 +4858,18 @@
             "name": "The Bearer (East) to Bearer Side Area (through The Bearer (East) - Side Area Access)",
             "connected_region": "Bearer Side Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Bearer (East) to Cross Tower (North) (through The Bearer (East) - North Entrance)",
             "connected_region": "Cross Tower (North)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4599,8 +4890,9 @@
             "name": "The Bearer (North) to Cross Tower (South) (through The Bearer (North) - South Entrance)",
             "connected_region": "Cross Tower (South)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4621,8 +4913,9 @@
             "name": "The Bearer (South) to Bearer Side Area (through The Bearer (South) - Side Area Shortcut)",
             "connected_region": "Bearer Side Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4643,16 +4936,18 @@
             "name": "The Bearer (West) to The Bearer (through The Bearer (West) - Side Area Shortcut)",
             "connected_region": "The Bearer",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Bearer (West) to Bearer Side Area (through The Bearer (West) - Side Area Shortcut)",
             "connected_region": "Bearer Side Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4665,40 +4960,45 @@
             "name": "Bearer Side Area to Orange Tower Third Floor (through Bearer Side Area - Shortcut to Tower)",
             "connected_region": "Orange Tower Third Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Bearer Side Area to The Bearer (East) (through The Bearer (East) - Side Area Access)",
             "connected_region": "The Bearer (East)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Bearer Side Area to The Bearer (South) (through The Bearer (South) - Side Area Shortcut)",
             "connected_region": "The Bearer (South)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Bearer Side Area to The Bearer (West) (through The Bearer (West) - Side Area Shortcut)",
             "connected_region": "The Bearer (West)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Bearer Side Area to Cross Tower (West) (through Bearer Side Area - West Entrance)",
             "connected_region": "Cross Tower (West)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4707,8 +5007,9 @@
             "name": "The Bearer - SHORTCUT",
             "id": 445247,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -4783,24 +5084,27 @@
             "name": "The Steady (Rose) to The Steady (Ruby) (through The Steady (Rose) - Forward Exit)",
             "connected_region": "The Steady (Ruby)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Rose) to The Steady (Carnation) (through The Steady (Rose) - Right Exit)",
             "connected_region": "The Steady (Carnation)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Rose) to The Steady (Lilac) (through The Steady - Reveal)",
             "connected_region": "The Steady (Lilac)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4813,32 +5117,36 @@
             "name": "The Steady (Ruby) to The Steady (Rose) (through The Steady (Rose) - Forward Exit)",
             "connected_region": "The Steady (Rose)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Ruby) to The Steady (Amber) (through The Steady (Ruby) - Right Exit)",
             "connected_region": "The Steady (Amber)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Ruby) to The Steady (Amethyst) (through The Steady - Reveal)",
             "connected_region": "The Steady (Amethyst)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Ruby) to The Steady (Cherry) (through The Steady (Ruby) - Forward Exit)",
             "connected_region": "The Steady (Cherry)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4851,24 +5159,27 @@
             "name": "The Steady (Carnation) to The Steady (Rose) (through The Steady (Rose) - Right Exit)",
             "connected_region": "The Steady (Rose)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Carnation) to The Steady (Sunflower) (through The Steady (Carnation) - Right Exit)",
             "connected_region": "The Steady (Sunflower)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Carnation) to The Steady (Amber) (through The Steady - Reveal)",
             "connected_region": "The Steady (Amber)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4881,8 +5192,9 @@
             "name": "The Steady (Sunflower) to The Steady (Carnation) (through The Steady (Carnation) - Right Exit)",
             "connected_region": "The Steady (Carnation)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -4897,16 +5209,18 @@
             "name": "The Steady (Sunflower) to The Steady (Topaz) (through The Steady (Topaz) - Back Exit)",
             "connected_region": "The Steady (Topaz)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Sunflower) to The Steady (through The Steady (Sunflower) - Back Exit)",
             "connected_region": "The Steady",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4919,24 +5233,27 @@
             "name": "The Steady (Plum) to The Steady (Blueberry) (through The Steady - Reveal)",
             "connected_region": "The Steady (Blueberry)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Plum) to The Steady (Amethyst) (through The Steady - Reveal)",
             "connected_region": "The Steady (Amethyst)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Plum) to The Steady (Cherry) (through The Steady (Cherry) - Left Exit)",
             "connected_region": "The Steady (Cherry)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4949,16 +5266,18 @@
             "name": "The Steady (Lime) to The Steady (Blueberry) (through The Steady (Lime) - Right Exit)",
             "connected_region": "The Steady (Blueberry)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Lime) to The Steady (Emerald) (through The Steady - Reveal)",
             "connected_region": "The Steady (Emerald)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4971,16 +5290,18 @@
             "name": "The Steady (Lemon) to The Steady (Topaz) (through The Steady (Lemon) - Back Exit)",
             "connected_region": "The Steady (Topaz)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Lemon) to The Steady (Orange) (through The Steady - Reveal)",
             "connected_region": "The Steady (Orange)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4993,24 +5314,27 @@
             "name": "The Steady (Topaz) to The Steady (Sunflower) (through The Steady (Topaz) - Back Exit)",
             "connected_region": "The Steady (Sunflower)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Topaz) to The Steady (Lemon) (through The Steady (Lemon) - Back Exit)",
             "connected_region": "The Steady (Lemon)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Topaz) to The Steady (Amber) (through The Steady - Reveal)",
             "connected_region": "The Steady (Amber)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5023,24 +5347,27 @@
             "name": "The Steady (Orange) to The Steady (Lemon) (through The Steady - Reveal)",
             "connected_region": "The Steady (Lemon)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Orange) to The Steady (Amber) (through The Steady (Amber) - Forward Exit)",
             "connected_region": "The Steady (Amber)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Orange) to The Steady (Cherry) (through The Steady - Reveal)",
             "connected_region": "The Steady (Cherry)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5053,24 +5380,27 @@
             "name": "The Steady (Sapphire) to The Steady (Blueberry) (through The Steady - Reveal)",
             "connected_region": "The Steady (Blueberry)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Sapphire) to The Steady (Emerald) (through The Steady (Sapphire) - Left Exit)",
             "connected_region": "The Steady (Emerald)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Sapphire) to The Steady (Amethyst) (through The Steady (Amethyst) - Left Exit)",
             "connected_region": "The Steady (Amethyst)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5083,24 +5413,27 @@
             "name": "The Steady (Blueberry) to The Steady (Plum) (through The Steady - Reveal)",
             "connected_region": "The Steady (Plum)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Blueberry) to The Steady (Lime) (through The Steady (Lime) - Right Exit)",
             "connected_region": "The Steady (Lime)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Blueberry) to The Steady (Sapphire) (through The Steady - Reveal)",
             "connected_region": "The Steady (Sapphire)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5113,32 +5446,36 @@
             "name": "The Steady (Amber) to The Steady (Ruby) (through The Steady (Ruby) - Right Exit)",
             "connected_region": "The Steady (Ruby)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Amber) to The Steady (Carnation) (through The Steady - Reveal)",
             "connected_region": "The Steady (Carnation)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Amber) to The Steady (Topaz) (through The Steady - Reveal)",
             "connected_region": "The Steady (Topaz)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Amber) to The Steady (Orange) (through The Steady (Amber) - Forward Exit)",
             "connected_region": "The Steady (Orange)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5151,8 +5488,9 @@
             "name": "The Steady (Emerald) to The Steady (Lime) (through The Steady - Reveal)",
             "connected_region": "The Steady (Lime)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -5167,8 +5505,9 @@
             "name": "The Steady (Emerald) to The Steady (Sapphire) (through The Steady (Sapphire) - Left Exit)",
             "connected_region": "The Steady (Sapphire)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5181,32 +5520,36 @@
             "name": "The Steady (Amethyst) to The Steady (Ruby) (through The Steady - Reveal)",
             "connected_region": "The Steady (Ruby)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Amethyst) to The Steady (Plum) (through The Steady - Reveal)",
             "connected_region": "The Steady (Plum)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Amethyst) to The Steady (Sapphire) (through The Steady (Amethyst) - Left Exit)",
             "connected_region": "The Steady (Sapphire)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Amethyst) to The Steady (Lilac) (through The Steady (Lilac) - Forward Exit)",
             "connected_region": "The Steady (Lilac)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5219,16 +5562,18 @@
             "name": "The Steady (Lilac) to The Steady (Rose) (through The Steady - Reveal)",
             "connected_region": "The Steady (Rose)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Lilac) to The Steady (Amethyst) (through The Steady (Lilac) - Forward Exit)",
             "connected_region": "The Steady (Amethyst)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5241,24 +5586,27 @@
             "name": "The Steady (Cherry) to The Steady (Ruby) (through The Steady (Ruby) - Forward Exit)",
             "connected_region": "The Steady (Ruby)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Cherry) to The Steady (Plum) (through The Steady (Cherry) - Left Exit)",
             "connected_region": "The Steady (Plum)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Steady (Cherry) to The Steady (Orange) (through The Steady - Reveal)",
             "connected_region": "The Steady (Orange)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5272,8 +5620,9 @@
             "name": "The Steady - Achievement",
             "id": 444859,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -5292,40 +5641,45 @@
             "name": "Knight Night (Outer Ring) to Hidden Room (through Hidden Room - Knight Night Entrance)",
             "connected_region": "Hidden Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Knight Night (Outer Ring) to Knight Night (Right Upper Segment) (through Knight Night (Outer Ring) - Fore Door)",
             "connected_region": "Knight Night (Right Upper Segment)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Knight Night (Outer Ring) to Knight Night (Right Lower Segment) (through Knight Night (Outer Ring) - New Door)",
             "connected_region": "Knight Night (Right Lower Segment)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Knight Night (Outer Ring) to Knight Night (Final) (through Knight Night (Outer Ring) - To End)",
             "connected_region": "Knight Night (Final)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Knight Night (Outer Ring) to Knight Night Exit (through Knight Night (Final) - Exit)",
             "connected_region": "Knight Night Exit",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5338,16 +5692,18 @@
             "name": "Knight Night (Right Upper Segment) to Knight Night (Right Lower Segment) (through Knight Night (Right Upper Segment) - Segment Door)",
             "connected_region": "Knight Night (Right Lower Segment)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Knight Night (Right Upper Segment) to Knight Night (Final) (through Knight Night (Outer Ring) - To End)",
             "connected_region": "Knight Night (Final)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5360,8 +5716,9 @@
             "name": "Knight Night (Right Lower Segment) to Knight Night (Right Upper Segment) (through Knight Night (Right Upper Segment) - Segment Door)",
             "connected_region": "Knight Night (Right Upper Segment)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5375,8 +5732,9 @@
             "name": "Knight Night Room - TRUSTED",
             "id": 445248,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -5395,16 +5753,18 @@
             "name": "Knight Night Exit to Orange Tower Third Floor (through Knight Night (Final) - Exit)",
             "connected_region": "Orange Tower Third Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Knight Night Exit to Outside The Initiated (through Knight Night (Final) - Exit)",
             "connected_region": "Outside The Initiated",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -5457,24 +5817,27 @@
             "name": "The Artistic (Smiley) to The Artistic (Panda) (through The Artistic (Smiley) - Door to Panda)",
             "connected_region": "The Artistic (Panda)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Artistic (Smiley) to The Artistic (Apple) (through The Artistic (Apple) - Door to Smiley)",
             "connected_region": "The Artistic (Apple)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Artistic (Smiley) to Elements Area (through Hallway Room (4) - Exit)",
             "connected_region": "Elements Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5483,8 +5846,9 @@
             "name": "The Artistic - Achievement",
             "id": 444885,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -5498,8 +5862,9 @@
             "name": "The Artistic - Smiley and Panda",
             "id": 445249,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -5526,16 +5891,18 @@
             "name": "The Artistic (Panda) to The Artistic (Smiley) (through The Artistic (Smiley) - Door to Panda)",
             "connected_region": "The Artistic (Smiley)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Artistic (Panda) to The Artistic (Lattice) (through The Artistic (Panda) - Door to Lattice)",
             "connected_region": "The Artistic (Lattice)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5544,8 +5911,9 @@
             "name": "The Artistic - Panda and Lattice",
             "id": 445250,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -5572,24 +5940,27 @@
             "name": "The Artistic (Lattice) to The Artistic (Panda) (through The Artistic (Panda) - Door to Lattice)",
             "connected_region": "The Artistic (Panda)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Artistic (Lattice) to The Artistic (Apple) (through The Artistic (Lattice) - Door to Apple)",
             "connected_region": "The Artistic (Apple)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Artistic (Lattice) to The Artistic (Hint Room) (through The Artistic (Lattice) - Door to Apple)",
             "connected_region": "The Artistic (Hint Room)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5598,8 +5969,9 @@
             "name": "The Artistic - Lattice and Apple",
             "id": 445251,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Empty White Hallways",
@@ -5626,16 +5998,18 @@
             "name": "The Artistic (Apple) to The Artistic (Smiley) (through The Artistic (Apple) - Door to Smiley)",
             "connected_region": "The Artistic (Smiley)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "The Artistic (Apple) to The Artistic (Lattice) (through The Artistic (Lattice) - Door to Apple)",
             "connected_region": "The Artistic (Lattice)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5644,8 +6018,9 @@
             "name": "The Artistic - Apple and Smiley",
             "id": 445252,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -5670,8 +6045,9 @@
             "name": "The Discerning - Achievement",
             "id": 444920,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Iceland Trap",
@@ -5706,8 +6082,9 @@
             "name": "The Eyes They See to Wondrous Lobby (through The Eyes They See - Exit)",
             "connected_region": "Wondrous Lobby",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5716,8 +6093,9 @@
             "name": "The Eyes They See - NEAR",
             "id": 444937,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Blue",
@@ -5749,8 +6127,9 @@
             "name": "Wondrous Lobby to The Eyes They See (through The Eyes They See - Exit)",
             "connected_region": "The Eyes They See",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -5779,8 +6158,9 @@
             "name": "Outside The Wondrous to The Wondrous (Doorknob) (through Outside The Wondrous - Wondrous Entrance)",
             "connected_region": "The Wondrous (Doorknob)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5789,8 +6169,9 @@
             "name": "Outside The Wondrous - SHRINK",
             "id": 444940,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -5809,8 +6190,9 @@
             "name": "The Wondrous (Doorknob) to Outside The Wondrous (through Outside The Wondrous - Wondrous Entrance)",
             "connected_region": "Outside The Wondrous",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -5911,8 +6293,9 @@
             "name": "The Wondrous to Starting Room (through The Wondrous - Exit)",
             "connected_region": "Starting Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -5927,8 +6310,9 @@
             "name": "The Wondrous to Arrow Garden (through The Wondrous - Exit)",
             "connected_region": "Arrow Garden",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5937,8 +6321,9 @@
             "name": "The Wondrous - Achievement",
             "id": 444947,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -5965,8 +6350,9 @@
             "name": "Arrow Garden to The Wondrous (through The Wondrous - Exit)",
             "connected_region": "The Wondrous",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5995,8 +6381,9 @@
             "name": "Hallway Room (1) to Hallway Room (2) (through Hallway Room (1) - Exit)",
             "connected_region": "Hallway Room (2)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6005,8 +6392,9 @@
             "name": "Hallway Room (1) - OUT",
             "id": 444505,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Iceland Trap",
@@ -6020,8 +6408,9 @@
             "name": "Hallway Room - First Room",
             "id": 445214,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Purple",
@@ -6048,8 +6437,9 @@
             "name": "Hallway Room (2) to Hallway Room (3) (through Hallway Room (2) - Exit)",
             "connected_region": "Hallway Room (3)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6058,8 +6448,9 @@
             "name": "Hallway Room - Second Room",
             "id": 445253,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -6086,8 +6477,9 @@
             "name": "Hallway Room (3) to Hallway Room (4) (through Hallway Room (3) - Exit)",
             "connected_region": "Hallway Room (4)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6096,8 +6488,9 @@
             "name": "Hallway Room - Third Room",
             "id": 445254,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -6124,8 +6517,9 @@
             "name": "Hallway Room (4) to Elements Area (through Hallway Room (4) - Exit)",
             "connected_region": "Elements Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6134,8 +6528,9 @@
             "name": "Hallway Room - Fourth Room",
             "id": 445255,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Black",
@@ -6154,8 +6549,9 @@
             "name": "Elements Area to The Artistic (Smiley) (through Hallway Room (4) - Exit)",
             "connected_region": "The Artistic (Smiley)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -6180,8 +6576,9 @@
             "name": "Elements Area - UNDISTRACTED",
             "id": 444961,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Slowness Trap",
@@ -6200,8 +6597,9 @@
             "name": "Outside The Wanderer to Orange Tower First Floor (through Outside The Wanderer - Tower Entrance)",
             "connected_region": "Orange Tower First Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -6216,8 +6614,9 @@
             "name": "Outside The Wanderer to The Wanderer (through Outside The Wanderer - Wanderer Entrance)",
             "connected_region": "The Wanderer",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6226,8 +6625,9 @@
             "name": "Outside The Wanderer - WANDERLUST",
             "id": 444966,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Yellow",
@@ -6247,8 +6647,9 @@
             "name": "The Wanderer - Achievement",
             "id": 444967,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -6283,8 +6684,9 @@
             "name": "Art Gallery to Outside The Initiated (through Art Gallery - Exit)",
             "connected_region": "Outside The Initiated",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -6307,24 +6709,27 @@
             "name": "Art Gallery to Art Gallery (Second Floor) (through Art Gallery - Second Floor)",
             "connected_region": "Art Gallery (Second Floor)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Art Gallery to Art Gallery (Third Floor) (through Art Gallery - Third Floor)",
             "connected_region": "Art Gallery (Third Floor)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Art Gallery to Art Gallery (Fourth Floor) (through Art Gallery - Fourth Floor)",
             "connected_region": "Art Gallery (Fourth Floor)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6333,8 +6738,9 @@
             "name": "Art Gallery - ORDER",
             "id": 444981,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -6363,8 +6769,9 @@
             "name": "Art Gallery - First Floor Puzzles",
             "id": 445256,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -6393,8 +6800,9 @@
             "name": "Art Gallery - Second Floor Puzzles",
             "id": 445257,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -6423,8 +6831,9 @@
             "name": "Art Gallery - Third Floor Puzzles",
             "id": 445258,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -6453,8 +6862,9 @@
             "name": "Art Gallery - Fourth Floor Puzzles",
             "id": 445259,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Atbash Trap",
@@ -6473,24 +6883,27 @@
             "name": "Rhyme Room (Smiley) to Orange Tower Third Floor (through Orange Tower Third Floor - Rhyme Room Entrance)",
             "connected_region": "Orange Tower Third Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Rhyme Room (Smiley) to Rhyme Room (Circle) (through Rhyme Room (Circle) - Door to Smiley)",
             "connected_region": "Rhyme Room (Circle)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Rhyme Room (Smiley) to Rhyme Room (Target) (through Rhyme Room (Smiley) - Door to Target)",
             "connected_region": "Rhyme Room (Target)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6499,8 +6912,9 @@
             "name": "Rhyme Room (Smiley) - Puzzles Toward Target",
             "id": 445260,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -6519,8 +6933,9 @@
             "name": "Rhyme Room (Cross) to Outside The Wanderer (through Rhyme Room (Cross) - Exit)",
             "connected_region": "Outside The Wanderer",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -6535,8 +6950,9 @@
             "name": "Rhyme Room (Cross) to Rhyme Room (Looped Square) (through Rhyme Room (Looped Square) - Door to Cross)",
             "connected_region": "Rhyme Room (Looped Square)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6545,8 +6961,9 @@
             "name": "Rhyme Room (Cross) - Exit Puzzles",
             "id": 445261,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -6573,16 +6990,18 @@
             "name": "Rhyme Room (Circle) to Rhyme Room (Smiley) (through Rhyme Room (Circle) - Door to Smiley)",
             "connected_region": "Rhyme Room (Smiley)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Rhyme Room (Circle) to Rhyme Room (Looped Square) (through Rhyme Room (Looped Square) - Door to Circle)",
             "connected_region": "Rhyme Room (Looped Square)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6591,8 +7010,9 @@
             "name": "Rhyme Room - Circle/Smiley Wall",
             "id": 445262,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -6611,32 +7031,36 @@
             "name": "Rhyme Room (Looped Square) to Starting Room (through Starting Room - Rhyme Room Entrance)",
             "connected_region": "Starting Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Rhyme Room (Looped Square) to Rhyme Room (Cross) (through Rhyme Room (Looped Square) - Door to Cross)",
             "connected_region": "Rhyme Room (Cross)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Rhyme Room (Looped Square) to Rhyme Room (Circle) (through Rhyme Room (Looped Square) - Door to Circle)",
             "connected_region": "Rhyme Room (Circle)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Rhyme Room (Looped Square) to Rhyme Room (Target) (through Rhyme Room (Looped Square) - Door to Target)",
             "connected_region": "Rhyme Room (Target)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6645,8 +7069,9 @@
             "name": "Rhyme Room - Circle/Looped Square Wall",
             "id": 445263,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Puzzle Skip",
@@ -6660,8 +7085,9 @@
             "name": "Rhyme Room - Cross/Looped Square Wall",
             "id": 445264,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": ":)",
@@ -6675,8 +7101,9 @@
             "name": "Rhyme Room - Target/Looped Square Wall",
             "id": 445265,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "The Feeling of Being Lost",
@@ -6703,16 +7130,18 @@
             "name": "Rhyme Room (Target) to Rhyme Room (Cross) (through Rhyme Room (Target) - Door to Cross)",
             "connected_region": "Rhyme Room (Cross)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Rhyme Room (Target) to Rhyme Room (Looped Square) (through Rhyme Room (Looped Square) - Door to Target)",
             "connected_region": "Rhyme Room (Looped Square)",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6721,8 +7150,9 @@
             "name": "Rhyme Room (Target) - Puzzles Toward Cross",
             "id": 445266,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Slowness Trap",
@@ -6749,8 +7179,9 @@
             "name": "Room Room to Cellar (through Room Room - Excavation)",
             "connected_region": "Cellar",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6759,8 +7190,9 @@
             "name": "Room Room - BASE",
             "id": 445076,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -6779,16 +7211,18 @@
             "name": "Cellar to Compass Room (through Compass Room - Lookout Entrance)",
             "connected_region": "Compass Room",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Cellar to Orange Tower Fifth Floor (through Room Room - Cellar Exit)",
             "connected_region": "Orange Tower Fifth Floor",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -6817,8 +7251,9 @@
             "name": "Outside The Wise to The Wise (through Outside The Wise - Wise Entrance)",
             "connected_region": "The Wise",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6827,8 +7262,9 @@
             "name": "Outside The Wise - KITTEN, CAT",
             "id": 445267,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Atbash Trap",
@@ -6848,8 +7284,9 @@
             "name": "The Wise - Achievement",
             "id": 445086,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Iceland Trap",
@@ -6878,8 +7315,9 @@
             "name": "Outside The Scientific to The Scientific (through Outside The Scientific - Scientific Entrance)",
             "connected_region": "The Scientific",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6908,8 +7346,9 @@
             "name": "The Scientific to Outside The Scientific (through Outside The Scientific - Scientific Entrance)",
             "connected_region": "Outside The Scientific",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6922,16 +7361,18 @@
             "name": "Challenge Room to Welcome Back Area (through Challenge Room - Welcome Door)",
             "connected_region": "Welcome Back Area",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Challenge Room to Number Hunt (through Outside The Undeterred - Challenge Entrance)",
             "connected_region": "Number Hunt",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6940,8 +7381,9 @@
             "name": "Challenge Room - WELCOME",
             "id": 445176,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Iceland Trap",
@@ -6955,8 +7397,9 @@
             "name": "Challenge Room - Achievement",
             "id": 445178,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wanderlust",
@@ -10376,6 +10819,166 @@
       "Yellow": 1
     }
   },
+  "canonical_placements": {
+    "1": {
+      "Starting Room - HI": "Slowness Trap",
+      "Starting Room - HIDDEN": "The Feeling of Being Lost",
+      "Hidden Room - DEAD END": ":)",
+      "Hidden Room - OPEN": ":)",
+      "The Seeker - Achievement": "The Feeling of Being Lost",
+      "Second Room - LEVEL 2": "Wanderlust",
+      "Second Room - Good Luck": "Wanderlust",
+      "Hub Room - ORDER": "Empty White Hallways",
+      "Hub Room - SLAUGHTER": "Puzzle Skip",
+      "Hub Room - TRACE": "Atbash Trap",
+      "Hub Room - RAT": "Empty White Hallways",
+      "Hub Room - OPEN": ":)",
+      "Hub Room - LOST": "Puzzle Skip",
+      "Pilgrim Antechamber - PILGRIM": "Puzzle Skip",
+      "Pilgrim Room - HOT CRUST": ":)",
+      "Pilgrim Room - THIS": ":)",
+      "Crossroads - DECAY": "Atbash Trap",
+      "Crossroads - NOPE": "Atbash Trap",
+      "Crossroads - WE ROT": "Atbash Trap",
+      "Crossroads - BEND HI": ":)",
+      "Crossroads - THE EYES": "Atbash Trap",
+      "Crossroads - TURN/RUNT": "The Feeling of Being Lost",
+      "Crossroads - WORDS, SWORD": "Empty White Hallways",
+      "Crossroads - LOST Pair": "Iceland Trap",
+      "Amen Name Area - AMEN, NAME": ":)",
+      "The Tenacious - Achievement": ":)",
+      "The Tenacious - Palindromes": "The Feeling of Being Lost",
+      "The Tenacious - White Palindromes": "Slowness Trap",
+      "Symmetry Room - NEAR, FAR": ":)",
+      "Symmetry Room - WARTS, STRAW": "Puzzle Skip",
+      "Symmetry Room - LEAF, FEEL": "The Feeling of Being Lost",
+      "Outside The Agreeable - MASSACRED": ":)",
+      "Outside The Agreeable - BLACK": "Wanderlust",
+      "Outside The Agreeable - CLOSE": "The Feeling of Being Lost",
+      "Outside The Agreeable - RIGHT": "Puzzle Skip",
+      "Outside The Agreeable - Lookout Panels": "The Feeling of Being Lost",
+      "Dread Hallway - DREAD": "Empty White Hallways",
+      "The Agreeable - Achievement": "Red",
+      "The Agreeable - BYE": "Slowness Trap",
+      "Hedge Maze - DOWN": "Empty White Hallways",
+      "Hedge Maze - Hide and Seek": "Puzzle Skip",
+      "The Perceptive - Achievement": "Wanderlust",
+      "The Perceptive - GAZE": "Iceland Trap",
+      "The Fearless - First Floor Puzzles": "Wanderlust",
+      "The Fearless - Second Floor Puzzles": "Wanderlust",
+      "The Fearless - Achievement": "The Feeling of Being Lost",
+      "The Observant - Achievement": "Iceland Trap",
+      "The Observant - SIX": "Empty White Hallways",
+      "The Observant - FOUR (1), FOUR (2)": "Wanderlust",
+      "The Incomparable - Achievement": "The Feeling of Being Lost",
+      "Giant Sevens": "The Feeling of Being Lost",
+      "Orange Tower First Floor - SECRET": "Empty White Hallways",
+      "Orange Tower First Floor - DADS + ALE": "Slowness Trap",
+      "Orange Tower First Floor - Salt Pepper Door": "Wanderlust",
+      "Orange Tower Third Floor - DEER + WREN": ":)",
+      "Color Barriers - RED and YELLOW": "Wanderlust",
+      "Orange Tower Fourth Floor - LEARNS + UNSEW": "Slowness Trap",
+      "Orange Tower Fourth Floor - HOT CRUSTS": "Wanderlust",
+      "Orange Tower Fourth Floor - IRK HORN": "Wanderlust",
+      "Orange Tower Fifth Floor - DRAWL + RUNS": "Empty White Hallways",
+      "Orange Tower Fifth Floor - SIZE (Small), SIZE (Big)": "Puzzle Skip",
+      "The End (Solved)": "Victory",
+      "Courtyard - FIRST, SECOND, THIRD, FOURTH": "The Feeling of Being Lost",
+      "The Colorful - White": "Slowness Trap",
+      "The Colorful - Black": "Puzzle Skip",
+      "The Colorful - Red": ":)",
+      "The Colorful - Yellow": ":)",
+      "The Colorful - Blue": "Brown",
+      "The Colorful - Purple": ":)",
+      "The Colorful - Orange": "Empty White Hallways",
+      "The Colorful - Green": "Slowness Trap",
+      "The Colorful - Brown": ":)",
+      "The Colorful - Gray": "Wanderlust",
+      "The Colorful - Achievement": "Wanderlust",
+      "Welcome Back Area - WELCOME BACK": "Puzzle Skip",
+      "Welcome Back Area - CLOCKWISE": "Empty White Hallways",
+      "Owl Hallway - STRAYS": "Iceland Trap",
+      "Owl Hallway - READS + RUST": ":)",
+      "Outside The Initiated - UNCOVER": "Orange",
+      "Outside The Initiated - OXEN": "Pilgrim Room - Sun Painting",
+      "Color Barriers - BLUE and YELLOW": "Puzzle Skip",
+      "Color Barriers - RED and BLUE": "The Feeling of Being Lost",
+      "Color Barriers - GREEN, ORANGE and PURPLE": ":)",
+      "The Initiated - Achievement": "Gray",
+      "The Optimistic - Achievement": "Puzzle Skip",
+      "The Traveled - Achievement": ":)",
+      "The Traveled - HELLO": "Iceland Trap",
+      "Outside The Bold - UNOPEN": "The Feeling of Being Lost",
+      "Outside The Bold - BEGIN": ":)",
+      "The Bold - Achievement": "Wanderlust",
+      "Outside The Undeterred - ART + ART": "Empty White Hallways",
+      "Outside The Undeterred - PEN": "Green",
+      "Outside The Undeterred - RAINY": "Puzzle Skip",
+      "Outside The Undeterred - ZERO": "Wanderlust",
+      "Outside The Undeterred - ONE": "Wanderlust",
+      "Twos": ":)",
+      "Threes": "Empty White Hallways",
+      "Fours": "Wanderlust",
+      "The Undeterred - Achievement": "Wanderlust",
+      "Fives": "The Feeling of Being Lost",
+      "Sixes": "The Feeling of Being Lost",
+      "Sevens": "Empty White Hallways",
+      "Eights": "Atbash Trap",
+      "Nines": "Wanderlust",
+      "Directional Gallery - 834283054": "Iceland Trap",
+      "Directional Gallery - PARANOID": ":)",
+      "Directional Gallery - WADED + WEE": "Empty White Hallways",
+      "Directional Gallery - TURN, LEARN": ":)",
+      "Color Hunt - EXIT": "The Feeling of Being Lost",
+      "Color Hunt - RED": "Puzzle Skip",
+      "Color Hunt - BLUE": "The Feeling of Being Lost",
+      "Color Hunt - YELLOW": "Puzzle Skip",
+      "Color Hunt - GREEN": "Slowness Trap",
+      "Color Hunt - PURPLE": "Atbash Trap",
+      "Color Hunt - ORANGE": "Wanderlust",
+      "Champion's Rest - YOU": "Empty White Hallways",
+      "The Bearer - Achievement": "Puzzle Skip",
+      "The Bearer - MIDDLE": "Puzzle Skip",
+      "The Bearer - FARTHER": "Wanderlust",
+      "The Bearer - SHORTCUT": "The Feeling of Being Lost",
+      "The Steady - Achievement": "Wanderlust",
+      "Knight Night Room - TRUSTED": "Wanderlust",
+      "The Artistic - Achievement": "Puzzle Skip",
+      "The Artistic - Smiley and Panda": "The Feeling of Being Lost",
+      "The Artistic - Panda and Lattice": "Puzzle Skip",
+      "The Artistic - Lattice and Apple": "Empty White Hallways",
+      "The Artistic - Apple and Smiley": "Wanderlust",
+      "The Discerning - Achievement": "Iceland Trap",
+      "The Eyes They See - NEAR": "Blue",
+      "Outside The Wondrous - SHRINK": "Wanderlust",
+      "The Wondrous - Achievement": "Puzzle Skip",
+      "Hallway Room (1) - OUT": "Iceland Trap",
+      "Hallway Room - First Room": "Purple",
+      "Hallway Room - Second Room": "Wanderlust",
+      "Hallway Room - Third Room": "Puzzle Skip",
+      "Hallway Room - Fourth Room": "Black",
+      "Elements Area - UNDISTRACTED": "Slowness Trap",
+      "Outside The Wanderer - WANDERLUST": "Yellow",
+      "The Wanderer - Achievement": ":)",
+      "Art Gallery - ORDER": "Wanderlust",
+      "Art Gallery - First Floor Puzzles": "Puzzle Skip",
+      "Art Gallery - Second Floor Puzzles": "The Feeling of Being Lost",
+      "Art Gallery - Third Floor Puzzles": ":)",
+      "Art Gallery - Fourth Floor Puzzles": "Atbash Trap",
+      "Rhyme Room (Smiley) - Puzzles Toward Target": "The Feeling of Being Lost",
+      "Rhyme Room (Cross) - Exit Puzzles": "Puzzle Skip",
+      "Rhyme Room - Circle/Smiley Wall": ":)",
+      "Rhyme Room - Circle/Looped Square Wall": "Puzzle Skip",
+      "Rhyme Room - Cross/Looped Square Wall": ":)",
+      "Rhyme Room - Target/Looped Square Wall": "The Feeling of Being Lost",
+      "Rhyme Room (Target) - Puzzles Toward Cross": "Slowness Trap",
+      "Room Room - BASE": "Wanderlust",
+      "Outside The Wise - KITTEN, CAT": "Atbash Trap",
+      "The Wise - Achievement": "Iceland Trap",
+      "Challenge Room - WELCOME": "Iceland Trap",
+      "Challenge Room - Achievement": "Wanderlust"
+    }
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -10386,7 +10989,21 @@
     "1": {
       "game": "Lingo WorldGen",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": false,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      }
     }
   },
   "game_info": {
@@ -10394,6 +11011,42 @@
       "name": "Lingo WorldGen",
       "rule_format": {
         "version": "1.0"
+      },
+      "base_id": 444400,
+      "web_theme": "grass",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to playing Lingo with Archipelago.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "hatkirby"
+          ]
+        }
+      ],
+      "world_description": "Lingo is a first person indie puzzle game in the vein of The Witness. You find yourself in a mazelike, non-Euclidean\nworld filled with 800 word puzzles that use a variety of different mechanics.",
+      "slot_data": {
+        "seed": 143971,
+        "death_link": 0,
+        "victory_condition": 0,
+        "shuffle_colors": 1,
+        "shuffle_doors": 0,
+        "shuffle_paintings": 0,
+        "shuffle_panels": 0,
+        "enable_pilgrimage": 0,
+        "sunwarp_access": 0,
+        "mastery_achievements": 21,
+        "level_2_requirement": 223,
+        "location_checks": 0,
+        "early_color_hallways": 0,
+        "pilgrimage_allows_roof_access": 1,
+        "pilgrimage_allows_paintings": 1,
+        "shuffle_sunwarps": 0,
+        "group_doors": 0,
+        "speed_boost_mode": 0,
+        "shuffle_postgame": 0
       }
     }
   },

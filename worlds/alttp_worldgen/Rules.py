@@ -319,7 +319,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Pyramid Fairy", player),
-        ((True_()) & (True_()) & (Has("Crystal 5")) & (Has("Crystal 6"))) & (((Has("Beat Agahnim 1")) & (Has("Magic Mirror"))) | ((Has("Hammer")) & (Has("Moon Pearl"))))
+        ((True_()) & (True_()) & (Has("Crystal 5")) & (Has("Crystal 6"))) & (((Has("Beat Agahnim 1")) & (Has("Magic Mirror"))) | (True_()))
     )
 
     world.set_rule(

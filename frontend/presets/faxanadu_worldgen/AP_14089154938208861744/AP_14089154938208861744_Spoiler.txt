@@ -142,20 +142,18 @@ Playthrough:
 
 }
 1: {
-  Eolis Guru: Progressive Sword
-}
-2: {
   Eolis Elixir: Black Onyx
+  Eolis Guru: Progressive Sword
   Eolis Hand Dagger: Key King
   Eolis Red Potion: Key Jack
 }
-3: {
+2: {
   Apolune Deluge: Red Potion
   Apolune Hand Dagger: Red Potion
   Path to Apolune Magic Shield: Unlock Wingboots
   Tower of Trunk Boss Mattock: Mattock
 }
-4: {
+3: {
   Forepaw Key Jack: Red Potion
   Forepaw Key Queen: Red Potion
   Forepaw Long Sword: Ring of Ruby
@@ -171,17 +169,18 @@ Playthrough:
   Trunk Hidden Red Potion: Red Potion
   Trunk Red Potion: Red Potion
 }
-5: {
+4: {
   Joker Spring: Joker Spring Flow
   Tower of Fortress Guru: Progressive Sword
   Tower of Fortress Spring: Tower of Fortress Spring Flow
 }
-6: {
+5: {
   Mascon Key Jack: Key Ace
   Mascon Large Shield: Red Potion
   Mascon Mattock: Red Potion
   Mist Hidden Poison 1: Red Potion
   Mist Hidden Poison 2: Red Potion
+  Misty Doctor Office: Red Potion
   Tower of Mist Black Onyx: Red Potion
   Tower of Mist Elixir: Red Potion
   Tower of Mist Hidden Ointment: Red Potion
@@ -194,7 +193,7 @@ Playthrough:
   Victim Red Potion: Red Potion
   Victim Tavern: Red Potion
 }
-7: {
+6: {
   Branches Hidden Hourglass: Deluge
   Branches Hidden Ointment: Red Potion
   Branches Poison: Red Potion
@@ -205,18 +204,17 @@ Playthrough:
   Daybreak Key Queen: Demons Ring
   Daybreak Red Potion: Red Potion
   Fraternal Castle Poison 1: Red Potion
+  Fraternal Castle Shop Hidden Ointment: Red Potion
   Path to Daybreak Hidden Wingboots 1: Red Potion
 }
-8: {
+7: {
   Evil Fortress Poison 2: Red Potion
   Evil Fortress Poison 3: Progressive Armor
   Evil One: Killed Evil One
-  Fraternal Castle Shop Hidden Ointment: Red Potion
-  Misty Doctor Office: Red Potion
 }
-9: {
+8: {
   Conflate Guru: Progressive Sword
 }
-10: {
+9: {
   Fraternal Castle Guru: Red Potion
 }

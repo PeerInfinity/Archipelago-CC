@@ -3746,12 +3746,10 @@
                           "object": {
                             "type": "subscript",
                             "value": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "name",
-                                "name": "world"
-                              },
-                              "attr": "worlds"
+                              "type": "constant",
+                              "value": {
+                                "1": "<worlds.alttp.ALTTPWorld object at 0x7f4a83da50d0>"
+                              }
                             },
                             "index": {
                               "type": "constant",
@@ -3932,8 +3930,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "constant",
-                        "value": 1
+                        "type": "setting_value",
+                        "setting": "mode"
                       },
                       "op": "==",
                       "right": {
@@ -3944,8 +3942,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "constant",
-                        "value": 0
+                        "type": "setting_value",
+                        "setting": "small_key_shuffle"
                       },
                       "op": "==",
                       "right": {
@@ -6006,12 +6004,10 @@
                         "object": {
                           "type": "subscript",
                           "value": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "world"
-                            },
-                            "attr": "worlds"
+                            "type": "constant",
+                            "value": {
+                              "1": "<worlds.alttp.ALTTPWorld object at 0x7f4a83da50d0>"
+                            }
                           },
                           "index": {
                             "type": "constant",
@@ -12095,8 +12091,8 @@
                   },
                   "args": [
                     {
-                      "type": "list",
-                      "value": [
+                      "type": "set",
+                      "elements": [
                         {
                           "type": "list",
                           "value": [
@@ -17769,7 +17765,7 @@
       "Triforce": {
         "name": "Triforce",
         "hint_text": "the Triforce",
-        "id": 106,
+        "id": null,
         "groups": [
           "Event",
           "Everything",
@@ -19285,7 +19281,7 @@
       "Activated Flute": {
         "name": "Activated Flute",
         "hint_text": "the Flute",
-        "id": 74,
+        "id": null,
         "groups": [
           "Event",
           "Everything",
@@ -19788,35 +19784,39 @@
         "type": "block",
         "statements": [
           {
-            "type": "conditional",
+            "type": "if_statement",
             "test": {
               "type": "setting_value",
               "setting": "swordless"
             },
-            "if_true": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Hammer"
-                },
-                {
-                  "type": "helper",
-                  "name": "has_fire_source",
-                  "args": []
-                },
-                {
-                  "type": "item_check",
-                  "item": "Silver Bow"
-                },
-                {
-                  "type": "helper",
-                  "name": "can_shoot_arrows",
-                  "args": []
+            "body": [
+              {
+                "type": "return",
+                "value": {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Hammer"
+                    },
+                    {
+                      "type": "helper",
+                      "name": "has_fire_source",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Silver Bow"
+                    },
+                    {
+                      "type": "helper",
+                      "name": "can_shoot_arrows",
+                      "args": []
+                    }
+                  ]
                 }
-              ]
-            },
-            "if_false": null
+              }
+            ]
           },
           {
             "type": "assign",
@@ -19846,7 +19846,7 @@
             }
           },
           {
-            "type": "conditional",
+            "type": "if_statement",
             "test": {
               "type": "compare",
               "left": {
@@ -19859,74 +19859,84 @@
                 "value": "no_glitches"
               }
             },
-            "if_true": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "name",
-                  "name": "common"
-                },
-                {
-                  "type": "or",
+            "body": [
+              {
+                "type": "return",
+                "value": {
+                  "type": "and",
                   "conditions": [
                     {
-                      "type": "item_check",
-                      "item": "Tempered Sword"
+                      "type": "name",
+                      "name": "common"
                     },
                     {
-                      "type": "item_check",
-                      "item": "Golden Sword"
-                    },
-                    {
-                      "type": "and",
+                      "type": "or",
                       "conditions": [
                         {
                           "type": "item_check",
-                          "item": "Silver Bow"
+                          "item": "Tempered Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Golden Sword"
+                        },
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": "Silver Bow"
+                            },
+                            {
+                              "type": "helper",
+                              "name": "can_shoot_arrows",
+                              "args": []
+                            }
+                          ]
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Lamp"
                         },
                         {
                           "type": "helper",
-                          "name": "can_shoot_arrows",
-                          "args": []
-                        }
-                      ]
-                    },
-                    {
-                      "type": "item_check",
-                      "item": "Lamp"
-                    },
-                    {
-                      "type": "helper",
-                      "name": "can_extend_magic",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": 12
+                          "name": "can_extend_magic",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": 12
+                            }
+                          ]
                         }
                       ]
                     }
                   ]
                 }
-              ]
-            },
-            "if_false": {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "name",
-                  "name": "common"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Silver Bow"
-                },
-                {
-                  "type": "helper",
-                  "name": "can_shoot_arrows",
-                  "args": []
+              }
+            ],
+            "orelse": [
+              {
+                "type": "return",
+                "value": {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "name",
+                      "name": "common"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Silver Bow"
+                    },
+                    {
+                      "type": "helper",
+                      "name": "can_shoot_arrows",
+                      "args": []
+                    }
+                  ]
                 }
-              ]
-            }
+              }
+            ]
           }
         ]
       },
@@ -20444,52 +20454,201 @@
           "quantity"
         ],
         "body": {
-          "type": "conditional",
-          "test": {
-            "type": "setting_value",
-            "setting": "shuffle_capacity_upgrades"
-          },
-          "if_true": {
-            "type": "conditional",
-            "test": {
-              "type": "compare",
-              "left": {
-                "type": "name",
-                "name": "quantity"
+          "type": "block",
+          "statements": [
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "setting_value",
+                "setting": "shuffle_capacity_upgrades"
               },
-              "op": "==",
-              "right": {
-                "type": "constant",
-                "value": 0
-              }
-            },
-            "if_true": {
-              "type": "constant",
-              "value": true
-            },
-            "if_false": null
-          },
-          "if_false": {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "compare",
-                "left": {
-                  "type": "name",
-                  "name": "quantity"
+              "body": [
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "name",
+                      "name": "quantity"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "return",
+                      "value": {
+                        "type": "constant",
+                        "value": true
+                      }
+                    }
+                  ]
                 },
-                "op": "<=",
-                "right": {
-                  "type": "constant",
-                  "value": 30
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "item_check",
+                    "item": "Arrow Upgrade (70)"
+                  },
+                  "body": [
+                    {
+                      "type": "assign",
+                      "name": "arrows",
+                      "value": {
+                        "type": "constant",
+                        "value": 70
+                      }
+                    }
+                  ],
+                  "orelse": [
+                    {
+                      "type": "assign",
+                      "name": "arrows",
+                      "value": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "binary_op",
+                          "left": {
+                            "type": "constant",
+                            "value": 30
+                          },
+                          "op": "+",
+                          "right": {
+                            "type": "binary_op",
+                            "left": {
+                              "type": "state_method",
+                              "method": "count",
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": "Arrow Upgrade (+5)"
+                                }
+                              ]
+                            },
+                            "op": "*",
+                            "right": {
+                              "type": "constant",
+                              "value": 5
+                            }
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "type": "binary_op",
+                          "left": {
+                            "type": "state_method",
+                            "method": "count",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": "Arrow Upgrade (+10)"
+                              }
+                            ]
+                          },
+                          "op": "*",
+                          "right": {
+                            "type": "constant",
+                            "value": 10
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "assign",
+                      "name": "arrows",
+                      "op": "+=",
+                      "value": {
+                        "type": "max",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": 0
+                          },
+                          {
+                            "type": "binary_op",
+                            "left": {
+                              "type": "binary_op",
+                              "left": {
+                                "type": "state_method",
+                                "method": "count",
+                                "args": [
+                                  {
+                                    "type": "constant",
+                                    "value": "Arrow Upgrade (+5)"
+                                  }
+                                ]
+                              },
+                              "op": "-",
+                              "right": {
+                                "type": "constant",
+                                "value": 6
+                              }
+                            },
+                            "op": "*",
+                            "right": {
+                              "type": "constant",
+                              "value": 10
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "compare",
+                    "left": {
+                      "type": "min",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 70
+                        },
+                        {
+                          "type": "name",
+                          "name": "arrows"
+                        }
+                      ]
+                    },
+                    "op": ">=",
+                    "right": {
+                      "type": "name",
+                      "name": "quantity"
+                    }
+                  }
                 }
-              },
-              {
-                "type": "item_check",
-                "item": "Capacity Upgrade Shop"
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "compare",
+                    "left": {
+                      "type": "name",
+                      "name": "quantity"
+                    },
+                    "op": "<=",
+                    "right": {
+                      "type": "constant",
+                      "value": 30
+                    }
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Capacity Upgrade Shop"
+                  }
+                ]
               }
-            ]
-          }
+            }
+          ]
         }
       },
       "can_kill_most_things": {
@@ -20941,7 +21100,7 @@
               }
             },
             {
-              "type": "conditional",
+              "type": "if_statement",
               "test": {
                 "type": "and",
                 "conditions": [
@@ -20958,16 +21117,17 @@
                   }
                 ]
               },
-              "if_true": {
-                "type": "assign",
-                "name": "bombs",
-                "op": "+=",
-                "value": {
-                  "type": "constant",
-                  "value": 40
+              "body": [
+                {
+                  "type": "assign",
+                  "name": "bombs",
+                  "op": "+=",
+                  "value": {
+                    "type": "constant",
+                    "value": 40
+                  }
                 }
-              },
-              "if_false": null
+              ]
             },
             {
               "type": "return",

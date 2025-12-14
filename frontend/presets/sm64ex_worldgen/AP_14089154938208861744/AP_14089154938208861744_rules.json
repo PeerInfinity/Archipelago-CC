@@ -28,94 +28,122 @@
             "name": "Menu -> Whomp's Fortress",
             "connected_region": "Whomp's Fortress",
             "access_rule": {
-              "type": "item_check",
-              "item": "Power Star"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Power Star",
+                "count": 1
+              }
             }
           },
           {
             "name": "Menu -> Jolly Roger Bay",
             "connected_region": "Jolly Roger Bay",
             "access_rule": {
-              "type": "item_check",
-              "item": "Power Star",
-              "count": 3
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Power Star",
+                "count": 3
+              }
             }
           },
           {
             "name": "Menu -> Cool, Cool Mountain",
             "connected_region": "Cool, Cool Mountain",
             "access_rule": {
-              "type": "item_check",
-              "item": "Power Star",
-              "count": 3
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Power Star",
+                "count": 3
+              }
             }
           },
           {
             "name": "Menu -> Big Boo's Haunt",
             "connected_region": "Big Boo's Haunt",
             "access_rule": {
-              "type": "item_check",
-              "item": "Power Star",
-              "count": 12
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Power Star",
+                "count": 12
+              }
             }
           },
           {
             "name": "Menu -> The Princess's Secret Slide",
             "connected_region": "The Princess's Secret Slide",
             "access_rule": {
-              "type": "item_check",
-              "item": "Power Star"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Power Star",
+                "count": 1
+              }
             }
           },
           {
             "name": "Menu -> Tower of the Wing Cap",
             "connected_region": "Tower of the Wing Cap",
             "access_rule": {
-              "type": "item_check",
-              "item": "Power Star",
-              "count": 10
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Power Star",
+                "count": 10
+              }
             }
           },
           {
             "name": "Menu -> Bowser in the Dark World",
             "connected_region": "Bowser in the Dark World",
             "access_rule": {
-              "type": "item_check",
-              "item": "Power Star",
-              "count": 7
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Power Star",
+                "count": 7
+              }
             }
           },
           {
             "name": "Menu -> Basement",
             "connected_region": "Basement",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Basement Key",
-                    "Progressive Key"
-                  ]
-                }
-              ]
+              "rule": "HasAny",
+              "options": [],
+              "args": {
+                "items": [
+                  "Basement Key",
+                  "Progressive Key"
+                ]
+              }
             }
           },
           {
             "name": "Menu -> Second Floor",
             "connected_region": "Second Floor",
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Progressive Key",
-                  "count": 2
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Progressive Key",
+                    "count": 2
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Second Floor Key"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Second Floor Key",
+                    "count": 1
+                  }
                 }
               ]
             }
@@ -126,9 +154,12 @@
             "name": "Toad (Basement)",
             "id": 3626168,
             "access_rule": {
-              "type": "item_check",
-              "item": "Power Star",
-              "count": 12
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Power Star",
+                "count": 12
+              }
             },
             "item": {
               "name": "Metal Cap",
@@ -142,9 +173,12 @@
             "name": "Toad (Second Floor)",
             "id": 3626169,
             "access_rule": {
-              "type": "item_check",
-              "item": "Power Star",
-              "count": 25
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Power Star",
+                "count": 25
+              }
             },
             "item": {
               "name": "Power Star",
@@ -158,9 +192,12 @@
             "name": "Toad (Third Floor)",
             "id": 3626170,
             "access_rule": {
-              "type": "item_check",
-              "item": "Power Star",
-              "count": 35
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Power Star",
+                "count": 35
+              }
             },
             "item": {
               "name": "Power Star",
@@ -174,9 +211,12 @@
             "name": "MIPS 1",
             "id": 3626171,
             "access_rule": {
-              "type": "item_check",
-              "item": "Power Star",
-              "count": 13
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Power Star",
+                "count": 13
+              }
             },
             "item": {
               "name": "Power Star",
@@ -190,9 +230,12 @@
             "name": "MIPS 2",
             "id": 3626172,
             "access_rule": {
-              "type": "item_check",
-              "item": "Power Star",
-              "count": 44
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Power Star",
+                "count": 44
+              }
             },
             "item": {
               "name": "Power Star",
@@ -211,8 +254,12 @@
             "name": "BoB: Island",
             "connected_region": "BoB: Island",
             "access_rule": {
-              "type": "item_check",
-              "item": "Cannon Unlock BoB"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Cannon Unlock BoB",
+                "count": 1
+              }
             }
           }
         ],
@@ -251,17 +298,14 @@
             "name": "BoB: Mario Wings to the Sky",
             "id": 3626004,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Cannon Unlock BoB",
-                    "Wing Cap"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Cannon Unlock BoB",
+                  "Wing Cap"
+                ]
+              }
             },
             "item": {
               "name": "Power Star",
@@ -401,8 +445,9 @@
             "name": "WF: Fall onto the Caged Island",
             "id": 3626011,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Power Star",
@@ -416,8 +461,12 @@
             "name": "WF: Blast Away the Wall",
             "id": 3626012,
             "access_rule": {
-              "type": "item_check",
-              "item": "Cannon Unlock WF"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Cannon Unlock WF",
+                "count": 1
+              }
             },
             "item": {
               "name": "Power Star",
@@ -535,8 +584,12 @@
             "name": "JRB: Blast to the Stone Pillar",
             "id": 3626018,
             "access_rule": {
-              "type": "item_check",
-              "item": "Cannon Unlock JRB"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Cannon Unlock JRB",
+                "count": 1
+              }
             },
             "item": {
               "name": "Power Star",
@@ -550,8 +603,12 @@
             "name": "JRB: Through the Jet Stream",
             "id": 3626019,
             "access_rule": {
-              "type": "item_check",
-              "item": "Metal Cap"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Metal Cap",
+                "count": 1
+              }
             },
             "item": {
               "name": "Power Star",
@@ -682,8 +739,12 @@
             "name": "CCM: Wall Kicks Will Work",
             "id": 3626026,
             "access_rule": {
-              "type": "item_check",
-              "item": "Cannon Unlock CCM"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Cannon Unlock CCM",
+                "count": 1
+              }
             },
             "item": {
               "name": "Power Star",
@@ -847,8 +908,12 @@
             "name": "BBH: Eye to Eye in the Secret Room",
             "id": 3626033,
             "access_rule": {
-              "type": "item_check",
-              "item": "Vanish Cap"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Vanish Cap",
+                "count": 1
+              }
             },
             "item": {
               "name": "Power Star",
@@ -1086,9 +1151,12 @@
             "name": "Basement -> Dire, Dire Docks",
             "connected_region": "Dire, Dire Docks",
             "access_rule": {
-              "type": "item_check",
-              "item": "Power Star",
-              "count": 26
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Power Star",
+                "count": 26
+              }
             }
           },
           {
@@ -1103,9 +1171,12 @@
             "name": "Basement -> Bowser in the Fire Sea",
             "connected_region": "Bowser in the Fire Sea",
             "access_rule": {
-              "type": "item_check",
-              "item": "Power Star",
-              "count": 26
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Power Star",
+                "count": 26
+              }
             }
           }
         ],
@@ -1159,8 +1230,12 @@
             "name": "HMC: Metal-Head Mario Can Move!",
             "id": 3626037,
             "access_rule": {
-              "type": "item_check",
-              "item": "Metal Cap"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Metal Cap",
+                "count": 1
+              }
             },
             "item": {
               "name": "Power Star",
@@ -1432,8 +1507,28 @@
             "name": "SSL: Free Flying for 8 Red Coins",
             "id": 3626053,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "Or",
+              "options": [],
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Cannon Unlock SSL",
+                      "Wing Cap"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Wing Cap",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Power Star",
@@ -1528,8 +1623,28 @@
             "name": "SSL: Stand Tall on the Four Pillars",
             "id": 3626052,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "Or",
+              "options": [],
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Cannon Unlock SSL",
+                      "Wing Cap"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Wing Cap",
+                    "count": 1
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Power Star",
@@ -1594,8 +1709,12 @@
             "name": "DDD: Through the Jet Stream",
             "id": 3626059,
             "access_rule": {
-              "type": "item_check",
-              "item": "Metal Cap"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Metal Cap",
+                "count": 1
+              }
             },
             "item": {
               "name": "Power Star",
@@ -1624,8 +1743,14 @@
             "name": "DDD: Collect the Caps...",
             "id": 3626061,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Metal Cap",
+                  "Vanish Cap"
+                ]
+              }
             },
             "item": {
               "name": "Power Star",
@@ -1639,8 +1764,9 @@
             "name": "DDD: Pole-Jumping for Red Coins",
             "id": 3626058,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Power Star",
@@ -1675,8 +1801,12 @@
             "name": "Cavern of the Metal Cap Red Coins",
             "id": 3626133,
             "access_rule": {
-              "type": "item_check",
-              "item": "Metal Cap"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Metal Cap",
+                "count": 1
+              }
             },
             "item": {
               "name": "Power Star",
@@ -1726,8 +1856,12 @@
             "name": "Vanish Cap Under the Moat Red Coins",
             "id": 3626147,
             "access_rule": {
-              "type": "item_check",
-              "item": "Vanish Cap"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Vanish Cap",
+                "count": 1
+              }
             },
             "item": {
               "name": "Power Star",
@@ -1881,9 +2015,12 @@
             "name": "Second Floor -> Third Floor",
             "connected_region": "Third Floor",
             "access_rule": {
-              "type": "item_check",
-              "item": "Power Star",
-              "count": 44
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Power Star",
+                "count": 44
+              }
             }
           }
         ],
@@ -1972,8 +2109,12 @@
             "name": "SL: Into the Igloo",
             "id": 3626068,
             "access_rule": {
-              "type": "item_check",
-              "item": "Vanish Cap"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Vanish Cap",
+                "count": 1
+              }
             },
             "item": {
               "name": "Power Star",
@@ -2157,8 +2298,12 @@
             "name": "WDW: Quick Race Through Downtown!",
             "id": 3626075,
             "access_rule": {
-              "type": "item_check",
-              "item": "Vanish Cap"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Vanish Cap",
+                "count": 1
+              }
             },
             "item": {
               "name": "Wing Cap",
@@ -2231,8 +2376,12 @@
             "name": "TTM: Blast to the Lonely Mushroom",
             "id": 3626082,
             "access_rule": {
-              "type": "item_check",
-              "item": "Cannon Unlock TTM"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Cannon Unlock TTM",
+                "count": 1
+              }
             },
             "item": {
               "name": "Power Star",
@@ -2585,9 +2734,12 @@
             "name": "Third Floor -> Bowser in the Sky",
             "connected_region": "Bowser in the Sky",
             "access_rule": {
-              "type": "item_check",
-              "item": "Power Star",
-              "count": 61
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Power Star",
+                "count": 61
+              }
             }
           }
         ],
@@ -2914,8 +3066,12 @@
             "name": "RR: Somewhere Over the Rainbow",
             "id": 3626103,
             "access_rule": {
-              "type": "item_check",
-              "item": "Cannon Unlock RR"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Cannon Unlock RR",
+                "count": 1
+              }
             },
             "item": {
               "name": "Power Star",
@@ -2971,8 +3127,12 @@
             "name": "Wing Mario Over the Rainbow Red Coins",
             "id": 3626154,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wing Cap"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wing Cap",
+                "count": 1
+              }
             },
             "item": {
               "name": "Power Star",
@@ -2986,8 +3146,12 @@
             "name": "Wing Mario Over the Rainbow 1Up Block",
             "id": 3626243,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wing Cap"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wing Cap",
+                "count": 1
+              }
             },
             "item": {
               "name": "1Up Mushroom",
@@ -3408,6 +3572,159 @@
       "Wing Cap": 1
     }
   },
+  "canonical_placements": {
+    "1": {
+      "Toad (Basement)": "Metal Cap",
+      "Toad (Second Floor)": "Power Star",
+      "Toad (Third Floor)": "Power Star",
+      "MIPS 1": "Power Star",
+      "MIPS 2": "Power Star",
+      "BoB: Big Bob-Omb on the Summit": "Power Star",
+      "BoB: Footrace with Koopa The Quick": "Power Star",
+      "BoB: Mario Wings to the Sky": "Power Star",
+      "BoB: Behind Chain Chomp's Gate": "Power Star",
+      "BoB: Bob-omb Buddy": "Cannon Unlock BoB",
+      "BoB: Shoot to the Island in the Sky": "Power Star",
+      "BoB: Find the 8 Red Coins": "Power Star",
+      "WF: Chip Off Whomp's Block": "Progressive Key",
+      "WF: Shoot into the Wild Blue": "Power Star",
+      "WF: Red Coins on the Floating Isle": "Power Star",
+      "WF: Fall onto the Caged Island": "Power Star",
+      "WF: Blast Away the Wall": "Power Star",
+      "WF: To the Top of the Fortress": "Power Star",
+      "WF: Bob-omb Buddy": "Cannon Unlock WF",
+      "JRB: Plunder in the Sunken Ship": "Power Star",
+      "JRB: Can the Eel Come Out to Play?": "Power Star",
+      "JRB: Treasure of the Ocean Cave": "Power Star",
+      "JRB: Blast to the Stone Pillar": "Power Star",
+      "JRB: Through the Jet Stream": "Power Star",
+      "JRB: Bob-omb Buddy": "Cannon Unlock JRB",
+      "JRB: Red Coins on the Ship Afloat": "Power Star",
+      "CCM: Slip Slidin' Away": "Power Star",
+      "CCM: Li'l Penguin Lost": "Power Star",
+      "CCM: Big Penguin Race": "Power Star",
+      "CCM: Frosty Slide for 8 Red Coins": "Progressive Key",
+      "CCM: Snowman's Lost His Head": "Power Star",
+      "CCM: Wall Kicks Will Work": "Power Star",
+      "CCM: Bob-omb Buddy": "Cannon Unlock CCM",
+      "CCM: 1Up Block Near Snowman": "1Up Mushroom",
+      "CCM: 1Up Block Ice Pillar": "1Up Mushroom",
+      "CCM: 1Up Block Secret Slide": "1Up Mushroom",
+      "BBH: Go on a Ghost Hunt": "Power Star",
+      "BBH: Ride Big Boo's Merry-Go-Round": "Power Star",
+      "BBH: Secret of the Haunted Books": "Power Star",
+      "BBH: Seek the 8 Red Coins": "Power Star",
+      "BBH: Eye to Eye in the Secret Room": "Power Star",
+      "BBH: Big Boo's Balcony": "Power Star",
+      "BBH: 1Up Block Top of Mansion": "1Up Mushroom",
+      "The Princess's Secret Slide Block": "Power Star",
+      "The Princess's Secret Slide Fast": "Power Star",
+      "The Secret Aquarium": "Power Star",
+      "Tower of the Wing Cap Switch": "Power Star",
+      "Tower of the Wing Cap Red Coins": "Power Star",
+      "Bowser in the Dark World Red Coins": "Power Star",
+      "Bowser in the Dark World Key": "Power Star",
+      "Bowser in the Dark World 1Up Block on Tower": "1Up Mushroom",
+      "Bowser in the Dark World 1Up Block near Goombas": "1Up Mushroom",
+      "HMC: Swimming Beast in the Cavern": "Power Star",
+      "HMC: Metal-Head Mario Can Move!": "Power Star",
+      "HMC: Watch for Rolling Rocks": "Power Star",
+      "HMC: Navigating the Toxic Maze": "Power Star",
+      "HMC: 1Up Block Past Rolling Rocks": "1Up Mushroom",
+      "HMC: Elevate for 8 Red Coins": "Power Star",
+      "HMC: A-Maze-Ing Emergency Exit": "Power Star",
+      "HMC: 1Up Block above Pit": "1Up Mushroom",
+      "LLL: Boil the Big Bully": "Power Star",
+      "LLL: Bully the Bullies": "Power Star",
+      "LLL: 8-Coin Puzzle with 15 Pieces": "Power Star",
+      "LLL: Red-Hot Log Rolling": "Power Star",
+      "LLL: Hot-Foot-It into the Volcano": "Power Star",
+      "LLL: Elevator Tour in the Volcano": "Power Star",
+      "SSL: In the Talons of the Big Bird": "Power Star",
+      "SSL: Shining Atop the Pyramid": "Power Star",
+      "SSL: Free Flying for 8 Red Coins": "Power Star",
+      "SSL: Bob-omb Buddy": "Cannon Unlock SSL",
+      "SSL: 1Up Block Outside Pyramid": "1Up Mushroom",
+      "SSL: 1Up Block Pyramid Left Path": "1Up Mushroom",
+      "SSL: 1Up Block Pyramid Back": "1Up Mushroom",
+      "SSL: Inside the Ancient Pyramid": "Power Star",
+      "SSL: Stand Tall on the Four Pillars": "Power Star",
+      "SSL: Pyramid Puzzle": "Power Star",
+      "DDD: Board Bowser's Sub": "Power Star",
+      "DDD: Chests in the Current": "Power Star",
+      "DDD: Through the Jet Stream": "Power Star",
+      "DDD: The Manta Ray's Reward": "Power Star",
+      "DDD: Collect the Caps...": "Power Star",
+      "DDD: Pole-Jumping for Red Coins": "Power Star",
+      "Cavern of the Metal Cap Switch": "Power Star",
+      "Cavern of the Metal Cap Red Coins": "Power Star",
+      "Cavern of the Metal Cap 1Up Block": "1Up Mushroom",
+      "Vanish Cap Under the Moat Switch": "Power Star",
+      "Vanish Cap Under the Moat Red Coins": "Power Star",
+      "Vanish Cap Under the Moat 1Up Block": "1Up Mushroom",
+      "Bowser in the Fire Sea Red Coins": "Power Star",
+      "Bowser in the Fire Sea Key": "Power Star",
+      "Bowser in the Fire Sea 1Up Block Swaying Stairs": "1Up Mushroom",
+      "Bowser in the Fire Sea 1Up Block Near Poles": "1Up Mushroom",
+      "SL: Snowman's Big Head": "Power Star",
+      "SL: Chill with the Bully": "Power Star",
+      "SL: In the Deep Freeze": "Power Star",
+      "SL: Whirl from the Freezing Pond": "Power Star",
+      "SL: Shell Shreddin' for Red Coins": "Power Star",
+      "SL: Into the Igloo": "Power Star",
+      "SL: Bob-omb Buddy": "Cannon Unlock SL",
+      "SL: 1Up Block Near Moneybags": "1Up Mushroom",
+      "SL: 1Up Block inside Igloo": "1Up Mushroom",
+      "WDW: Express Elevator--Hurry Up!": "Power Star",
+      "WDW: Shocking Arrow Lifts!": "Power Star",
+      "WDW: Top o' the Town": "Power Star",
+      "WDW: Secrets in the Shallows & Sky": "Power Star",
+      "WDW: Bob-omb Buddy": "Cannon Unlock WDW",
+      "WDW: Go to Town for Red Coins": "Power Star",
+      "WDW: Quick Race Through Downtown!": "Wing Cap",
+      "WDW: 1Up Block in Downtown": "1Up Mushroom",
+      "TTM: Scary 'Shrooms, Red Coins": "Power Star",
+      "TTM: Blast to the Lonely Mushroom": "Power Star",
+      "TTM: Bob-omb Buddy": "Cannon Unlock TTM",
+      "TTM: 1Up Block on Red Mushroom": "1Up Mushroom",
+      "TTM: Scale the Mountain": "Power Star",
+      "TTM: Mystery of the Monkey Cage": "Power Star",
+      "TTM: Mysterious Mountainside": "Power Star",
+      "TTM: Breathtaking View from Bridge": "Power Star",
+      "THI: 1Up Block THI Small near Start": "1Up Mushroom",
+      "THI: The Tip Top of the Huge Island": "Power Star",
+      "THI: Pluck the Piranha Flower": "Power Star",
+      "THI: Rematch with Koopa the Quick": "Power Star",
+      "THI: Five Itty Bitty Secrets": "Power Star",
+      "THI: Wiggler's Red Coins": "Power Star",
+      "THI: Bob-omb Buddy": "Cannon Unlock THI",
+      "THI: 1Up Block THI Large near Start": "1Up Mushroom",
+      "THI: 1Up Block Windy Area": "1Up Mushroom",
+      "THI: Make Wiggler Squirm": "Power Star",
+      "TTC: Stop Time for Red Coins": "Power Star",
+      "TTC: Roll into the Cage": "Power Star",
+      "TTC: Get a Hand": "Power Star",
+      "TTC: Timed Jumps on Moving Bars": "Power Star",
+      "TTC: The Pit and the Pendulums": "Power Star",
+      "TTC: 1Up Block Midway Up": "1Up Mushroom",
+      "TTC: Stomp on the Thwomp": "Power Star",
+      "TTC: 1Up Block at the Top": "1Up Mushroom",
+      "RR: Swingin' in the Breeze": "Power Star",
+      "RR: Tricky Triangles!": "Power Star",
+      "RR: 1Up Block Top of Red Coin Maze": "1Up Mushroom",
+      "RR: 1Up Block Under Fly Guy": "1Up Mushroom",
+      "RR: Bob-omb Buddy": "Cannon Unlock RR",
+      "RR: Coins Amassed in a Maze": "Power Star",
+      "RR: Cruiser Crossing the Rainbow": "Vanish Cap",
+      "RR: Somewhere Over the Rainbow": "Power Star",
+      "RR: The Big House in the Sky": "Power Star",
+      "RR: 1Up Block On House in the Sky": "1Up Mushroom",
+      "Wing Mario Over the Rainbow Red Coins": "Power Star",
+      "Wing Mario Over the Rainbow 1Up Block": "1Up Mushroom",
+      "Bowser in the Sky 1Up Block": "1Up Mushroom",
+      "Bowser in the Sky Red Coins": "Power Star"
+    }
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -3418,7 +3735,21 @@
     "1": {
       "game": "Super Mario 64 WorldGen",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": false,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      }
     }
   },
   "game_info": {
@@ -3426,6 +3757,57 @@
       "name": "Super Mario 64 WorldGen",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "grass",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up SM64EX for MultiWorld.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "N00byKing"
+          ]
+        }
+      ],
+      "world_description": "The first Super Mario game to feature 3D gameplay, it features freedom of movement within a large open world based on polygons,\ncombined with traditional Mario gameplay, visual style, and characters.",
+      "slot_data": {
+        "AreaRando": {
+          "91": 91,
+          "241": 241,
+          "121": 121,
+          "51": 51,
+          "41": 41,
+          "71": 71,
+          "221": 221,
+          "81": 81,
+          "231": 231,
+          "101": 101,
+          "111": 111,
+          "361": 361,
+          "132": 132,
+          "131": 131,
+          "141": 141,
+          "151": 151,
+          "271": 271,
+          "201": 201,
+          "171": 171,
+          "291": 291,
+          "281": 281,
+          "181": 181,
+          "191": 191,
+          "311": 311
+        },
+        "MoveRandoVec": 0,
+        "DeathLink": 0,
+        "CompletionType": 0,
+        "FirstBowserDoorCost": 7,
+        "BasementDoorCost": 26,
+        "SecondFloorDoorCost": 44,
+        "MIPS1Cost": 13,
+        "MIPS2Cost": 44,
+        "StarsToFinish": 61
       }
     }
   },

@@ -7,7 +7,7 @@ The world class must inherit from RuleWorldMixin to use these rules.
 
 from typing import TYPE_CHECKING
 
-from rule_builder import True_, False_, Has
+from rule_builder import True_, False_
 
 if TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -724,17 +724,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hideout: Unlock phone app", player),
-        Has("Chapter Completed")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hideout: Vinyl joins the crew", player),
-        Has("Chapter Completed", 3)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Hideout: Solace joins the crew", player),
-        Has("Chapter Completed", 4)
+        True_()
     )
 
     world.set_rule(
@@ -744,12 +744,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Big Polo", player),
-        Has("Camera App")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Trash Polo", player),
-        Has("Camera App")
+        True_()
     )
 
     world.set_rule(
@@ -774,7 +774,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Frank joins the crew", player),
-        Has("Chapter Completed")
+        True_()
     )
 
     world.set_rule(
@@ -784,12 +784,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Fruit stand Polo", player),
-        Has("Camera App")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Versum Hill: Basketball court shortcut CD", player),
-        Has("Chapter Completed")
+        True_()
     )
 
     world.set_rule(
@@ -804,7 +804,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Millennium Square: Half pipe Polo", player),
-        Has("Camera App")
+        True_()
     )
 
     world.set_rule(
@@ -829,12 +829,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Eclipse joins the crew", player),
-        Has("Chapter Completed", 2)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Brink Terminal: Behind glass Polo", player),
-        Has("Camera App")
+        True_()
     )
 
     world.set_rule(
@@ -889,12 +889,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: DOT.EXE joins the crew", player),
-        Has("Chapter Completed", 3)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Millennium Mall: Shine joins the crew", player),
-        Has("Chapter Completed", 3)
+        True_()
     )
 
     world.set_rule(
@@ -909,22 +909,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Polo pile 1", player),
-        Has("Camera App")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Polo pile 2", player),
-        Has("Camera App")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Polo pile 3", player),
-        Has("Camera App")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Polo pile 4", player),
-        Has("Camera App")
+        True_()
     )
 
     world.set_rule(
@@ -949,32 +949,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Maze glass Polo", player),
-        Has("Camera App")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Maze classroom Polo", player),
-        Has("Camera App")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Maze vent Polo", player),
-        Has("Camera App")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Big maze Polo", player),
-        Has("Camera App")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Maze desk Polo", player),
-        Has("Camera App")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Maze forklift Polo", player),
-        Has("Camera App")
+        True_()
     )
 
     world.set_rule(
@@ -984,7 +984,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Devil Theory joins the crew", player),
-        Has("Chapter Completed", 4)
+        True_()
     )
 
     world.set_rule(
@@ -994,12 +994,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pyramid Island: Rise joins the crew", player),
-        Has("Camera App")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mataan: Trash Polo", player),
-        Has("Camera App")
+        True_()
     )
 
     world.set_rule(
@@ -1024,7 +1024,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mataan: Shopping Polo", player),
-        Has("Camera App")
+        True_()
     )
 
     world.set_rule(

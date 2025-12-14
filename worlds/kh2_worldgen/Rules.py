@@ -7,7 +7,7 @@ The world class must inherit from RuleWorldMixin to use these rules.
 
 from typing import TYPE_CHECKING
 
-from rule_builder import True_, False_, Has
+from rule_builder import True_, False_, CanReachLocation, Has
 
 if TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -89,7 +89,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Garden Of Assemblage -> Final Form", player),
-        True_()
+        (CanReachLocation("(BC2) Xaldin Bonus: Sora Slot 1")) | (CanReachLocation("(LoD2) Storm Rider Bonus: Sora Slot 1")) | (CanReachLocation("(PR2) Grim Reaper 2 Bonus: Sora Slot 1")) | (CanReachLocation("(TT3) Underground Concourse Mythril Gem")) | (CanReachLocation("Roxas Event Location"))
     )
 
     world.set_rule(
@@ -143,11 +143,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Timeless River -> Old Pete", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Old Pete -> Future Pete", player),
         True_()
     )
@@ -194,11 +189,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Barbosa -> Port Royal 2", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Port Royal 2 -> Grim Reaper 1", player),
         True_()
     )
 
@@ -273,11 +263,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("Thresholder -> Beast", player),
-        True_()
-    )
-
-    world.set_rule(
         multiworld.get_entrance("Beast -> Dark Thorn", player),
         True_()
     )
@@ -319,11 +304,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Holloween Town -> Prison Keeper", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Prison Keeper -> Oogie Boogie", player),
         True_()
     )
 
@@ -404,21 +384,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Groundshaker -> Data Saix", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Simulated Twilight Town -> Twilight Thorn", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Twilight Thorn -> Axel 1", player),
-        True_()
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("Axel 1 -> Axel 2", player),
         True_()
     )
 
@@ -564,152 +529,152 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Valor level 2", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Valor level 3", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Valor level 4", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Valor level 5", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Valor level 6", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Valor level 7", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Wisdom level 2", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Wisdom level 3", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Wisdom level 4", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Wisdom level 5", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Wisdom level 6", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Wisdom level 7", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Limit level 2", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Limit level 3", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Limit level 4", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Limit level 5", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Limit level 6", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Limit level 7", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Master level 2", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Master level 3", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Master level 4", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Master level 5", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Master level 6", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Master level 7", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Final level 2", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Final level 3", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Final level 4", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Final level 5", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Final level 6", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Final level 7", player),
-        True_()
+        (True_()) & (True_())
     )
 
     world.set_rule(

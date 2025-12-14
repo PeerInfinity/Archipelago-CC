@@ -274,7 +274,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mana Flower", player),
-        ((True_()) & (Has("Ethereal Talisman"))) | ((Has("Nature's Gift")) & (Has("Tinkerer's Workshop")))
+        ((Has("Nature's Gift")) & (Has("Tinkerer's Workshop"))) | ((True_()) & (Has("Ethereal Talisman")))
     )
 
     world.set_rule(
@@ -609,7 +609,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Soul of Night", player),
-        ((True_()) & (((True_()) & (((True_()) & (True_()) & (Has("Titan Heart"))) | ((Has("Bug Net")) & (Has("Hardmode"))))) | (Has("Altar")))) | (Has("Hardmode"))
+        ((True_()) & (((True_()) & (((Has("Bug Net")) & (Has("Hardmode"))) | ((True_()) & (True_()) & (Has("Titan Heart"))))) | (Has("Altar")))) | (Has("Hardmode"))
     )
 
     world.set_rule(
@@ -624,7 +624,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Holy Water", player),
-        ((True_()) & (Has("Statis' Blessing"))) | ((Has("Hallowed Seeds")) & (Has("Pixie Dust")))
+        ((Has("Hallowed Seeds")) & (Has("Pixie Dust"))) | ((True_()) & (Has("Statis' Blessing")))
     )
 
     world.set_rule(
@@ -639,7 +639,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Soul of Light", player),
-        ((True_()) & (((True_()) & (((True_()) & (True_()) & (Has("Titan Heart"))) | ((Has("Bug Net")) & (Has("Hardmode"))))) | ((((Has("Auric Bar")) & (Has("Brimstone Slag")) & (Has("Core of Calamity")) & (Has("Cosmic Anvil")) & (Has("Fabsol's Vodka"))) & (True_()) & (True_())) | (Has("Hallow"))))) | (Has("Hallow")) | (Has("Light Disc")) | (Has("Meteor Staff"))
+        ((True_()) & (((True_()) & (((Has("Bug Net")) & (Has("Hardmode"))) | ((True_()) & (True_()) & (Has("Titan Heart"))))) | ((((Has("Auric Bar")) & (Has("Brimstone Slag")) & (Has("Core of Calamity")) & (Has("Cosmic Anvil")) & (Has("Fabsol's Vodka"))) & (True_()) & (True_())) | (Has("Hallow"))))) | (Has("Hallow")) | (Has("Light Disc")) | (Has("Meteor Staff"))
     )
 
     world.set_rule(
@@ -664,7 +664,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Head in the Clouds", player),
-        ((Has("Ancient Manipulator")) & (Has("Fragment")) & (Has("Luminite Bar"))) | ((Has("Hardmode")) & (Has("Post-Golem")) & (Has("Tavernkeep"))) | ((Has("Hardmode")) & (Has("Post-Plantera")) & (Has("Witch Doctor"))) | ((Has("Post-Plantera")) & (Has("Solar Eclipse"))) | ((((Has("Autohammer")) & (Has("Shroomite Bar"))) | (((True_()) | (((True_()) & (Has("Essence of Sunlight")) & (Has("Hardmode Anvil")) & (Has("Lihzahrd Temple"))) | ((Has("Hardmode")) & (Has("Lihzahrd Temple")) & (Has("Post-Plantera")))) | (Has("Hardmode")) | (Has("Pixie Dust")) | (Has("Post-Plantera")) | (Has("Solar Eclipse")) | (Has("Soul of Light")) | (Has("Soul of Night")) | (Has("Spectre Bar"))) & (Has("Hardmode Anvil"))) | (Has("Pumpkin Moon")) | (Has("Pumpkin Moon"))) & (Has("Soul of Flight"))) | (True_()) | ((((Has("Auric Bar")) & (Has("Brimstone Slag")) & (Has("Core of Calamity")) & (Has("Cosmic Anvil")) & (Has("Fabsol's Vodka"))) & (True_()) & (True_())) | (((True_()) | (Has("Post-Plantera"))) & (Has("Hallow")) & (Has("Hardmode")))) | (((True_()) & (True_()) & (Has("Titan Heart"))) | ((Has("Bug Net")) & (Has("Hardmode")))) | (Has("Frost Moon")) | (Has("Steampunker"))
+        ((Has("Ancient Manipulator")) & (Has("Fragment")) & (Has("Luminite Bar"))) | ((Has("Hardmode")) & (Has("Post-Golem")) & (Has("Tavernkeep"))) | ((Has("Hardmode")) & (Has("Post-Plantera")) & (Has("Witch Doctor"))) | ((Has("Post-Plantera")) & (Has("Solar Eclipse"))) | ((((Has("Autohammer")) & (Has("Shroomite Bar"))) | (((True_()) | (((Has("Hardmode")) & (Has("Lihzahrd Temple")) & (Has("Post-Plantera"))) | ((True_()) & (Has("Essence of Sunlight")) & (Has("Hardmode Anvil")) & (Has("Lihzahrd Temple")))) | (Has("Hardmode")) | (Has("Pixie Dust")) | (Has("Post-Plantera")) | (Has("Solar Eclipse")) | (Has("Soul of Light")) | (Has("Soul of Night")) | (Has("Spectre Bar"))) & (Has("Hardmode Anvil"))) | (Has("Pumpkin Moon")) | (Has("Pumpkin Moon"))) & (Has("Soul of Flight"))) | (True_()) | ((((Has("Auric Bar")) & (Has("Brimstone Slag")) & (Has("Core of Calamity")) & (Has("Cosmic Anvil")) & (Has("Fabsol's Vodka"))) & (True_()) & (True_())) | (((True_()) | (Has("Post-Plantera"))) & (Has("Hallow")) & (Has("Hardmode")))) | (((Has("Bug Net")) & (Has("Hardmode"))) | ((True_()) & (True_()) & (Has("Titan Heart")))) | (Has("Frost Moon")) | (Has("Steampunker"))
     )
 
     world.set_rule(

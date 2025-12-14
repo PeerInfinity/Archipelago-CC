@@ -64,7 +64,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Quarry Elevator to Outside Quarry", player),
-        True_()
+        ((CanReachRegion("Main Island")) & (CanReachRegion("Quarry"))) | (CanReachRegion("Quarry Stoneworks Upper Floor"))
     )
 
     world.set_rule(
@@ -259,12 +259,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Bunker Elevator Section to Bunker Under Elevator", player),
-        True_()
+        (CanReachRegion("Bunker Cyan Room")) | (CanReachRegion("Bunker Elevator")) | (CanReachRegion("Bunker Green Room")) | (CanReachRegion("Bunker Laser Platform"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Bunker Under Elevator to Bunker Elevator Section", player),
-        True_()
+        (CanReachRegion("Bunker Cyan Room")) | (CanReachRegion("Bunker Elevator")) | (CanReachRegion("Bunker Green Room")) | (CanReachRegion("Bunker Laser Platform"))
     )
 
     world.set_rule(
@@ -494,7 +494,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mountain Floor 2 to Mountain Floor 2 Beyond Bridge", player),
-        True_()
+        (CanReachRegion("Mountain Floor 2 Light Bridge Room Far")) | (CanReachRegion("Mountain Floor 2 Light Bridge Room Near"))
     )
 
     world.set_rule(
@@ -514,7 +514,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mountain Floor 2 Beyond Bridge to Mountain Floor 2", player),
-        True_()
+        (CanReachRegion("Mountain Floor 2 Light Bridge Room Far")) | (CanReachRegion("Mountain Floor 2 Light Bridge Room Near"))
     )
 
     world.set_rule(
@@ -549,57 +549,57 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Symmetry Island Laser Activated", player),
-        (True_()) & (Has("Progressive Symmetry", 2))
+        (CanReachRegion("Symmetry Island Upper")) & (Has("Progressive Symmetry", 2))
     )
 
     world.set_rule(
         multiworld.get_location("Desert Laser Activated", player),
-        True_()
+        CanReachRegion("Desert Outside")
     )
 
     world.set_rule(
         multiworld.get_location("Quarry Laser Activated", player),
-        (True_()) & (HasAllCounts({'Colored Squares': 1, 'Eraser': 1, 'Progressive Dots': 1, 'Progressive Stars': 2, 'Shapers': 1}))
+        (CanReachRegion("Outside Quarry")) & (HasAllCounts({'Colored Squares': 1, 'Eraser': 1, 'Progressive Dots': 1, 'Progressive Stars': 2, 'Shapers': 1}))
     )
 
     world.set_rule(
         multiworld.get_location("Shadows Laser Activated", player),
-        True_()
+        CanReachRegion("Shadows Laser Room")
     )
 
     world.set_rule(
         multiworld.get_location("Keep Laser Activated", player),
-        (True_()) & (True_())
+        (CanReachRegion("Keep Tower")) & (((CanReachRegion("Keep 2nd Maze")) & (CanReachRegion("Keep 3rd Maze")) & (CanReachRegion("Keep 4th Maze")) & (CanReachRegion("Keep Tower")) & (CanReachRegion("Keep"))) | ((CanReachRegion("Keep 2nd Pressure Plate")) & (CanReachRegion("Keep 3rd Pressure Plate")) & (CanReachRegion("Keep 4th Pressure Plate")) & (CanReachRegion("Keep Tower")) & (CanReachRegion("Keep"))))
     )
 
     world.set_rule(
         multiworld.get_location("Monastery Laser Activated", player),
-        (True_()) & (Has("Progressive Dots"))
+        (CanReachRegion("Outside Monastery")) & (Has("Progressive Dots"))
     )
 
     world.set_rule(
         multiworld.get_location("Town Laser Activated", player),
-        True_()
+        CanReachRegion("Town Tower Top")
     )
 
     world.set_rule(
         multiworld.get_location("Jungle Laser Activated", player),
-        (True_()) & (Has("Sound Dots"))
+        (CanReachRegion("Jungle")) & (Has("Sound Dots"))
     )
 
     world.set_rule(
         multiworld.get_location("Bunker Laser Activated", player),
-        True_()
+        CanReachRegion("Bunker Laser Platform")
     )
 
     world.set_rule(
         multiworld.get_location("Swamp Laser Activated", player),
-        True_()
+        CanReachRegion("Swamp Laser Area")
     )
 
     world.set_rule(
         multiworld.get_location("Treehouse Laser Activated", player),
-        True_()
+        CanReachRegion("Treehouse Laser Room")
     )
 
     world.set_rule(

@@ -7,7 +7,7 @@ The world class must inherit from RuleWorldMixin to use these rules.
 
 from typing import TYPE_CHECKING
 
-from rule_builder import True_, False_, Has, HasAll, HasAny
+from rule_builder import True_, False_, Has
 
 if TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -39,12 +39,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Electrical entrance", player),
-        ((HasAny('Flamethrower', 'Ice Spreadshot', 'Volt Laser')) & (Has("Clip Extension", 2)) & (Has("Faster Reload", 4)) & (Has("Life Extension", 2)) & (Has("Powered Blaster"))) & (HasAll('Arctic Key', 'Cave Key', 'Swamp Key', 'Volcanic Key'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Electrical (Power On) entrance", player),
-        Has("System Power")
+        True_()
     )
     # Location rules
     world.set_rule(
@@ -59,17 +59,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Volcanic: Hot coals", player),
-        ((HasAny('Flamethrower', 'Ice Spreadshot', 'Volt Laser')) & (Has("Faster Reload", 4))) | (Has("Ice Spreadshot"))
+        (True_()) | (Has("Ice Spreadshot"))
     )
 
     world.set_rule(
         multiworld.get_location("Volcanic: Flamethrower chest", player),
-        (Has("Clip Extension")) & (Has("Faster Reload", 2)) & (Has("Life Extension"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Volcanic: Cliff (Boss)", player),
-        (Has("Clip Extension")) & (Has("Faster Reload", 2)) & (Has("Life Extension"))
+        True_()
     )
 
     world.set_rule(
@@ -79,7 +79,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Arctic: Ice Spreadshot chest", player),
-        (Has("Clip Extension")) & (Has("Faster Reload", 2)) & (Has("Life Extension"))
+        True_()
     )
 
     world.set_rule(
@@ -89,7 +89,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Arctic: Ace (Boss)", player),
-        (Has("Clip Extension")) & (Has("Faster Reload", 2)) & (Has("Life Extension"))
+        True_()
     )
 
     world.set_rule(
@@ -104,17 +104,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Swamp: Bramble room", player),
-        (HasAny('Flamethrower', 'Ice Spreadshot', 'Volt Laser')) & (Has("Faster Reload", 4))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp: Special Extension chest", player),
-        (Has("Clip Extension")) & (Has("Faster Reload", 2)) & (Has("Life Extension"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Swamp: Snake (Boss)", player),
-        (Has("Clip Extension")) & (Has("Faster Reload", 2)) & (Has("Life Extension"))
+        True_()
     )
 
     world.set_rule(
@@ -124,10 +124,10 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Electrical: BRAINOS (Boss)", player),
-        HasAll('Flamethrower', 'Ice Spreadshot', 'Volt Laser')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Mission objective", player),
-        HasAll('Flamethrower', 'Ice Spreadshot', 'Volt Laser')
+        True_()
     )

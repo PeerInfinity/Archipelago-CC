@@ -7,7 +7,7 @@ The world class must inherit from RuleWorldMixin to use these rules.
 
 from typing import TYPE_CHECKING
 
-from rule_builder import True_, False_, False_, Has, True_
+from rule_builder import True_, False_, False_, Has, HasAny, True_
 
 if TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -214,7 +214,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Bone Dungeon B1 - Waterway - Exit Waterway", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -259,7 +259,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Bonne Dungeon B2 - Two Skulls Room - To Boss Room", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -289,32 +289,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Wintry Cave 1F - To 3F Top", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Wintry Cave 1F - East Ledge to Wintry Cave 1F - Central Space", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Wintry Cave 1F - Central Space to Wintry Cave 1F - East Ledge", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Wintry Cave 1F - Central Space to Wintry Cave 1F - West Ledge", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Wintry Cave 1F - To 2F", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Wintry Cave 1F - West Ledge to Wintry Cave 1F - Central Space", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -354,17 +354,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Ice Pyramid 5F Leap of Faith Room to Ice Pyramid B1 Taunt Room", player),
-        ((((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb"))) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))) & ((Has("Excalibur")) | (Has("Knight Sword")) | (Has("Progressive Sword")) | (Has("Steel Sword")))) & (True_())
+        (((HasAny()) & (HasAny())) & (HasAny())) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Pyramid Climbing Wall Room Lower Space to Ice Pyramid Climbing Wall Room Upper Space", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Ice Pyramid Climbing Wall Room Upper Space to Ice Pyramid Climbing Wall Room Lower Space", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -379,17 +379,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Spencer Cave Caved In Main Loop to Spencer Cave Caved In Waters", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Spencer Cave Caved In Main Loop to Spencer Cave Caved In Libra Nook", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Spencer Cave Caved In Waters to Spencer Cave Caved In Main Loop", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -414,7 +414,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Spencer Cave Caved In Mobius Chest to Spencer Cave Caved In Libra Corridor", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -424,12 +424,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Fireburg Upper Plaza to Fireburg Lower Plaza", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Fireburg Lower Plaza to Fireburg Upper Plaza", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -454,42 +454,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mine Exterior - To Parallel Room", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Mine Exterior North West Platforms to Mine Exterior Central Ledge", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Mine Exterior North West Platforms to Mine Exterior North Ledge", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Mine Exterior North West Platforms to Mine Exterior South East Platforms", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Mine Exterior - To Climbing Room", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Mine Exterior Central Ledge to Mine Exterior North West Platforms", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Mine Exterior - To Crescent Room", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Mine Exterior North Ledge to Mine Exterior Central Ledge", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -499,7 +499,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Mine Exterior South East Platforms to Mine Exterior Central Ledge", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -509,22 +509,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Lava Dome Inner Ring Center Ledge to Lava Dome Inner Ring Main Loop", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Lava Dome Inner Ring Upper Ledge West to Lava Dome Inner Ring Upper Ledge East", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Lava Dome Inner Ring Upper Ledge West to Lava Dome Inner Ring Main Loop", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Lava Dome Inner Ring Upper Ledge East to Lava Dome Inner Ring Upper Ledge West", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -534,12 +534,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Lava Dome Life Chest Room Lower Ledge to Lava Dome Life Chest Room Upper Ledge", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Lava Dome Life Chest Room Upper Ledge to Lava Dome Life Chest Room Lower Ledge", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -549,7 +549,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Lava Dome Big Jump Room MegaGrenade Area to Lava Dome Big Jump Room Main Area", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -559,27 +559,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Alive Forest - West Entrance 1", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Alive Forest - Libra Teleporter Script", player),
-        (Has("Libra Crest")) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (Has("Libra Crest")) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Alive Forest - Gemini Teleporter Script", player),
-        (Has("Gemini Crest")) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (Has("Gemini Crest")) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Alive Forest - Mobius Teleporter Script", player),
-        (Has("Mobius Crest")) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (Has("Mobius Crest")) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Alive Forest - Giant Tree Entrance", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -609,7 +609,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 2F West Ledge - To 3F Northwest Ledge", player),
-        (True_()) & ((Has("Excalibur")) | (Has("Knight Sword")) | (Has("Progressive Sword")) | (Has("Steel Sword")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -619,27 +619,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 2F Lower Area to Giant Tree 2F Central Island", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 2F Lower Area to Giant Tree 2F East Ledge", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 2F Central Island to Giant Tree 2F Lower Area", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 2F Main Lobby - Central Entrance to 3F", player),
-        (True_()) & ((Has("Excalibur")) | (Has("Knight Sword")) | (Has("Progressive Sword")) | (Has("Steel Sword")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 2F East Ledge to Giant Tree 2F Lower Area", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -649,17 +649,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 2F Mushroom Room - Entrance", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 2F Mushroom Room - North Face to Meteor", player),
-        (Has("Gidrah")) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (Has("Gidrah")) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 3F Central Island to Giant Tree 3F Central Area", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -669,7 +669,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 3F Central Area to Giant Tree 3F Central Island", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -679,57 +679,57 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 3F Central Room - East Entrance to Worm Room", player),
-        (True_()) & ((Has("Excalibur")) | (Has("Knight Sword")) | (Has("Progressive Sword")) | (Has("Steel Sword")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 3F Middle Up Island to Giant Tree 3F Central Area", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 3F West Platform to Giant Tree 3F Middle Up Island", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 3F West Platform to Giant Tree 3F North Ledge", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 3F West Platform - Top Entrance", player),
-        (True_()) & ((Has("Excalibur")) | (Has("Knight Sword")) | (Has("Progressive Sword")) | (Has("Steel Sword")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 3F North Ledge to Giant Tree 3F Middle Up Island", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 3F North Ledge to Giant Tree 3F Central Area", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree Worm Room - East Entrance", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree Worm Room Upper Ledge to Giant Tree Worm Room Lower Ledge", player),
-        (((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw"))) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))) & (True_())
+        ((HasAny()) & (HasAny())) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 4F Lower Floor - Lower East Mouth", player),
-        (True_()) & ((Has("Excalibur")) | (Has("Knight Sword")) | (Has("Progressive Sword")) | (Has("Steel Sword")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 4F Middle Floor to Giant Tree 4F Upper Floor", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -739,12 +739,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 4F Upper Floor - Upper Central Mouth", player),
-        (True_()) & ((Has("Excalibur")) | (Has("Knight Sword")) | (Has("Progressive Sword")) | (Has("Steel Sword")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 4F Upper Floor to Giant Tree 4F Middle Floor", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -754,37 +754,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 4F Slime Room - Central Entrance", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 4F Slime Room - West Entrance", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 4F Slime Room West Area to Giant Tree 4F Slime Room Platform", player),
-        (((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw"))) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))) & (True_())
+        ((HasAny()) & (HasAny())) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 4F Slime Room Platform to Giant Tree 4F Slime Room West Area", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 5F Lower Area to Giant Tree 5F Gidrah Platform", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Giant Tree 5F Gidrah Platform to Giant Tree 5F Lower Area", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_entrance("Kaidge Temple Lower Ledge to Kaidge Temple Upper Ledge", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -794,7 +794,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Kaidge Temple Upper Ledge to Kaidge Temple Lower Ledge", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -874,7 +874,7 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Doom Castle B2 - Southeast Chest", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -884,27 +884,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Focus Tower 2F - Venus Chest", player),
-        (Has("Venus Key")) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (Has("Venus Key")) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Level Forest - Northwest Box", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Level Forest - Northeast Box", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Level Forest - Southwest Box", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Level Forest - Southeast Box", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -919,7 +919,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Foresta - Outside Box", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -934,7 +934,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Bone Dungeon B1 - Skull Chest", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -949,27 +949,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Bone Dungeon B1 - Checker Room Box", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Long Spine", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Short Spine", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Skull 1", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Skull 2", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -979,7 +979,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Wintry Cave 1F - Slippery Cliff Box", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -989,7 +989,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Wintry Cave 1F - Scenic Overlook Box", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -1004,32 +1004,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ice Pyramid 1F Statue", player),
-        (True_()) & ((Has("Excalibur")) | (Has("Knight Sword")) | (Has("Progressive Sword")) | (Has("Steel Sword")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Ice Pyramid 2F - South Side Glass Door Box", player),
-        (True_()) & ((Has("Excalibur")) | (Has("Knight Sword")) | (Has("Progressive Sword")) | (Has("Steel Sword")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Ice Pyramid 2F - North Room Glass Door Box", player),
-        (True_()) & ((Has("Excalibur")) | (Has("Knight Sword")) | (Has("Progressive Sword")) | (Has("Steel Sword")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Ice Pyramid 2F - North Corridor Glass Door Box", player),
-        (True_()) & ((Has("Excalibur")) | (Has("Knight Sword")) | (Has("Progressive Sword")) | (Has("Steel Sword")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Ice Pyramid 3F Statue", player),
-        (True_()) & ((Has("Excalibur")) | (Has("Knight Sword")) | (Has("Progressive Sword")) | (Has("Steel Sword")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Ice Pyramid 4F Statue", player),
-        (True_()) & ((Has("Excalibur")) | (Has("Knight Sword")) | (Has("Progressive Sword")) | (Has("Steel Sword")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -1044,7 +1044,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ice Pyramid 5F Statue", player),
-        (True_()) & ((Has("Excalibur")) | (Has("Knight Sword")) | (Has("Progressive Sword")) | (Has("Steel Sword")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -1054,7 +1054,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Spencer's Cave - Box", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -1069,7 +1069,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Bomb Libra Block", player),
-        (Has("Mega Grenade")) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (Has("Mega Grenade")) & (HasAny())
     )
 
     world.set_rule(
@@ -1084,17 +1084,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mine - Parallel Room West Box", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Mine - Parallel Room East Box", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Mine - Glitchy Collision Cave Box", player),
-        (True_()) & ((Has("Cat Claw")) | (Has("Charm Claw")) | (Has("Dragon Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -1124,47 +1124,47 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Alive Forest - Tree Stump Chest", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Alive Forest - Near Entrance Box", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Alive Forest - After Bridge Box", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Alive Forest - Gemini Stump Box", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Giant Tree 2F - Mushroom Tunnel West Box", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Giant Tree 2F - Mushroom Tunnel East Box", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Giant Tree 3F - Worm Room North Box", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Giant Tree 3F - Worm Room South Box", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Giant Tree 4F - East Slime Room Box", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -1204,57 +1204,57 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pazuzu's Tower 1F - Descent Bomb Wall West Box", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Pazuzu's Tower 1F - Descent Bomb Wall Center Box", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Pazuzu's Tower 1F - Descent Bomb Wall East Box", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Pazuzu 2F Lock", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Pazuzu 2F", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Pazuzu's Tower 4F - Elevator West Box", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Pazuzu's Tower 4F - Elevator East Box", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Pazuzu 4F Lock", player),
-        (True_()) & ((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Pazuzu 4F", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Pazuzu 6F Lock", player),
-        (((Has("Axe")) | (Has("Battle Axe")) | (Has("Giant's Axe")) | (Has("Progressive Axe")) | (Has("Progressive Claw"))) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))) & (True_())
+        ((HasAny()) & (HasAny())) & (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Pazuzu 6F", player),
-        (True_()) & ((Has("Bomb")) | (Has("Jumbo Bomb")) | (Has("Mega Grenade")) | (Has("Progressive Bomb")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
@@ -1279,27 +1279,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Doom Castle 4F - Northwest Room Box", player),
-        (Has("Dragon Claw")) & ((Has("Excalibur")) | (Has("Knight Sword")) | (Has("Progressive Sword")) | (Has("Steel Sword")))
+        (Has("Dragon Claw")) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Doom Castle 4F - Southwest Room Box", player),
-        (Has("Dragon Claw")) & ((Has("Excalibur")) | (Has("Knight Sword")) | (Has("Progressive Sword")) | (Has("Steel Sword")))
+        (Has("Dragon Claw")) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Doom Castle 4F - Northeast Room Box", player),
-        (True_()) & ((Has("Excalibur")) | (Has("Knight Sword")) | (Has("Progressive Sword")) | (Has("Steel Sword")))
+        (True_()) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Doom Castle 4F - Southeast Room Box", player),
-        (Has("Dragon Claw")) & ((Has("Excalibur")) | (Has("Knight Sword")) | (Has("Progressive Sword")) | (Has("Steel Sword")))
+        (Has("Dragon Claw")) & (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Stone Golem", player),
-        (Has("Dragon Claw")) & ((Has("Excalibur")) | (Has("Knight Sword")) | (Has("Progressive Sword")) | (Has("Steel Sword")))
+        (Has("Dragon Claw")) & (HasAny())
     )
 
     world.set_rule(

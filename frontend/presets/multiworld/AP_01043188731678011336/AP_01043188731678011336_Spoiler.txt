@@ -1382,16 +1382,16 @@ Act Completion (Queen Vanessa's Manor) (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Welcome to Mafia Town -> Mafia Town - Act 3: Connection 1
-   =>   Contractual Obligations -> Mafia Town - Act 4: Connection 2
+   =>   Welcome to Mafia Town -> Mafia Town - Act 2: Connection 1
+   =>   Dead Bird Studio Basement -> Mafia Town - Act 4: Connection 1
    =>   The Big Parade -> Mafia Town - Act 7: Connection 1
    =>   Queen Vanessa's Manor
 Act Completion (The Golden Vault) (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Welcome to Mafia Town -> Mafia Town - Act 3: Connection 1
-   =>   Contractual Obligations -> Mafia Town - Act 4: Connection 2
+   =>   Welcome to Mafia Town -> Mafia Town - Act 2: Connection 1
+   =>   Dead Bird Studio Basement -> Mafia Town - Act 4: Connection 1
    =>   The Big Parade -> Mafia Town - Act 6: Connection 1
    =>   The Subcon Well -> Mafia Town - Act 5: Connection 1
    =>   The Golden Vault
@@ -1411,11 +1411,10 @@ Act Completion (The Windmill) (Player1)
    =>   The Windmill
 Act Completion (Time Rift - Alpine Skyline) (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Battle of the Birds
-   =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   She Came from Outer Space -> Battle of the Birds - Act 2: Connection 1
-   =>   Down with the Mafia! -> Battle of the Birds - Act 4: Connection 1
-   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Welcome to Mafia Town -> Mafia Town - Act 2: Connection 1
+   =>   Dead Bird Studio Basement -> Time Rift - Dead Bird Studio Portal - Entrance 2
    =>   Time Rift - Alpine Skyline
 Act Completion (Time Rift - Gallery) (Player1)
         Menu -> Save File -> Spaceship
@@ -1474,27 +1473,24 @@ Agahnim 2 (Player2)
    =>   Agahnim 2
 Alpine Skyline (Rift) - Page: Entrance Area Hidden Ledge (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Battle of the Birds
-   =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   She Came from Outer Space -> Battle of the Birds - Act 2: Connection 1
-   =>   Down with the Mafia! -> Battle of the Birds - Act 4: Connection 1
-   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Welcome to Mafia Town -> Mafia Town - Act 2: Connection 1
+   =>   Dead Bird Studio Basement -> Time Rift - Dead Bird Studio Portal - Entrance 2
    =>   Time Rift - Alpine Skyline
 Alpine Skyline (Rift) - Page: Waterfall Wooden Pillar (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Battle of the Birds
-   =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   She Came from Outer Space -> Battle of the Birds - Act 2: Connection 1
-   =>   Down with the Mafia! -> Battle of the Birds - Act 4: Connection 1
-   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Welcome to Mafia Town -> Mafia Town - Act 2: Connection 1
+   =>   Dead Bird Studio Basement -> Time Rift - Dead Bird Studio Portal - Entrance 2
    =>   Time Rift - Alpine Skyline
 Alpine Skyline (Rift) - Page: Windmill Island Ledge (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Battle of the Birds
-   =>   Battle of the Birds -> Battle of the Birds - Act 1
-   =>   She Came from Outer Space -> Battle of the Birds - Act 2: Connection 1
-   =>   Down with the Mafia! -> Battle of the Birds - Act 4: Connection 1
-   =>   Dead Bird Studio -> Time Rift - Dead Bird Studio Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Mafia Town
+   =>   Mafia Town -> Mafia Town - Act 1
+   =>   Welcome to Mafia Town -> Mafia Town - Act 2: Connection 1
+   =>   Dead Bird Studio Basement -> Time Rift - Dead Bird Studio Portal - Entrance 2
    =>   Time Rift - Alpine Skyline
 Alpine Skyline - Bird Pass Fork (Player1)
         Menu -> Save File -> Spaceship
@@ -2308,9 +2304,10 @@ Mafia Town - Yellow Sphere Building Chest (Player1)
    =>   Mafia Town Area (HUMT)
 Mafia of Cooks - Page: Fish Pile (Player1)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Welcome to Mafia Town -> Time Rift - Mafia of Cooks Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   She Came from Outer Space -> Battle of the Birds - Act 2: Connection 1
+   =>   Down with the Mafia! -> Time Rift - Mafia of Cooks Portal - Entrance 4
    =>   Time Rift - Mafia of Cooks
 Mimic Cave (Player2)
         Links House -> Links House Exit
@@ -2522,24 +2519,24 @@ Queen Vanessa's Manor - Cellar (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Welcome to Mafia Town -> Mafia Town - Act 3: Connection 1
-   =>   Contractual Obligations -> Mafia Town - Act 4: Connection 2
+   =>   Welcome to Mafia Town -> Mafia Town - Act 2: Connection 1
+   =>   Dead Bird Studio Basement -> Mafia Town - Act 4: Connection 1
    =>   The Big Parade -> Mafia Town - Act 7: Connection 1
    =>   Queen Vanessa's Manor
 Queen Vanessa's Manor - Chandelier (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Welcome to Mafia Town -> Mafia Town - Act 3: Connection 1
-   =>   Contractual Obligations -> Mafia Town - Act 4: Connection 2
+   =>   Welcome to Mafia Town -> Mafia Town - Act 2: Connection 1
+   =>   Dead Bird Studio Basement -> Mafia Town - Act 4: Connection 1
    =>   The Big Parade -> Mafia Town - Act 7: Connection 1
    =>   Queen Vanessa's Manor
 Queen Vanessa's Manor - Hall Chest (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Welcome to Mafia Town -> Mafia Town - Act 3: Connection 1
-   =>   Contractual Obligations -> Mafia Town - Act 4: Connection 2
+   =>   Welcome to Mafia Town -> Mafia Town - Act 2: Connection 1
+   =>   Dead Bird Studio Basement -> Mafia Town - Act 4: Connection 1
    =>   The Big Parade -> Mafia Town - Act 7: Connection 1
    =>   Queen Vanessa's Manor
 Sahasrahla (Player2)
@@ -2800,32 +2797,32 @@ Subcon Well - Above Chest (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Welcome to Mafia Town -> Mafia Town - Act 3: Connection 1
-   =>   Contractual Obligations -> Mafia Town - Act 4: Connection 2
+   =>   Welcome to Mafia Town -> Mafia Town - Act 2: Connection 1
+   =>   Dead Bird Studio Basement -> Mafia Town - Act 4: Connection 1
    =>   The Big Parade -> Mafia Town - Act 6: Connection 1
    =>   The Subcon Well
 Subcon Well - Hookshot Badge Chest (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Welcome to Mafia Town -> Mafia Town - Act 3: Connection 1
-   =>   Contractual Obligations -> Mafia Town - Act 4: Connection 2
+   =>   Welcome to Mafia Town -> Mafia Town - Act 2: Connection 1
+   =>   Dead Bird Studio Basement -> Mafia Town - Act 4: Connection 1
    =>   The Big Parade -> Mafia Town - Act 6: Connection 1
    =>   The Subcon Well
 Subcon Well - Mushroom (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Welcome to Mafia Town -> Mafia Town - Act 3: Connection 1
-   =>   Contractual Obligations -> Mafia Town - Act 4: Connection 2
+   =>   Welcome to Mafia Town -> Mafia Town - Act 2: Connection 1
+   =>   Dead Bird Studio Basement -> Mafia Town - Act 4: Connection 1
    =>   The Big Parade -> Mafia Town - Act 6: Connection 1
    =>   The Subcon Well
 Subcon Well - On Pipe (Player1)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Welcome to Mafia Town -> Mafia Town - Act 3: Connection 1
-   =>   Contractual Obligations -> Mafia Town - Act 4: Connection 2
+   =>   Welcome to Mafia Town -> Mafia Town - Act 2: Connection 1
+   =>   Dead Bird Studio Basement -> Mafia Town - Act 4: Connection 1
    =>   The Big Parade -> Mafia Town - Act 6: Connection 1
    =>   The Subcon Well
 Superbunny Cave - Bottom (Player2)

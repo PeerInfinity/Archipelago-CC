@@ -29,7 +29,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("massan -> massan_after_swamp_shrine", player),
-        (True_()) & (True_())
+        (True_()) & (Has("event_visited_swamp_shrine"))
     )
 
     world.set_rule(
@@ -49,12 +49,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("gumi -> gumi_after_swamp_shrine", player),
-        (True_()) & (True_())
+        (True_()) & (Has("event_visited_swamp_shrine"))
     )
 
     world.set_rule(
         multiworld.get_entrance("route_gumi_ryuma -> helga_hut", player),
-        (True_()) & (Has("Einstein Whistle"))
+        (Has("Einstein Whistle")) & (Has("event_visited_massan"))
     )
 
     world.set_rule(
@@ -64,7 +64,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("ryuma -> ryuma_after_thieves_hideout", player),
-        (True_()) & (True_())
+        (True_()) & (Has("event_visited_thieves_hideout_post_key"))
     )
 
     world.set_rule(
@@ -84,7 +84,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("helga_hut -> route_gumi_ryuma", player),
-        (True_()) & (Has("Einstein Whistle"))
+        (Has("Einstein Whistle")) & (Has("event_visited_massan"))
     )
 
     world.set_rule(
@@ -109,7 +109,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("mercator -> mercator_repaired_docks", player),
-        (True_()) & (True_())
+        (True_()) & (Has("event_visited_ryuma_lighthouse_repaired"))
     )
 
     world.set_rule(
@@ -139,7 +139,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("mir_tower_sector -> verla_shore", player),
-        (True_()) & (True_())
+        (True_()) & (Has("event_visited_verla_mines"))
     )
 
     world.set_rule(
@@ -184,17 +184,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("verla_shore -> mir_tower_sector", player),
-        (True_()) & (True_())
+        (True_()) & (Has("event_visited_verla_mines"))
     )
 
     world.set_rule(
         multiworld.get_entrance("verla -> verla_after_mines", player),
-        (True_()) & (True_())
+        (True_()) & (Has("event_visited_verla_mines"))
     )
 
     world.set_rule(
         multiworld.get_entrance("verla_after_mines -> verla", player),
-        (True_()) & (True_())
+        (True_()) & (Has("event_visited_verla_mines"))
     )
 
     world.set_rule(
@@ -264,7 +264,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("king_nole_labyrinth_post_door -> king_nole_labyrinth_sacred_tree", player),
-        (True_()) & (Has("Axe Magic"))
+        (Has("Axe Magic")) & (Has("event_visited_king_nole_labyrinth_raft_entrance"))
     )
 
     world.set_rule(
