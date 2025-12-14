@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-14 04:20:57
+**Generated:** 2025-12-14 03:03:19
 
-**Source Data Created:** 2025-12-14T00:56:22.253321
+**Source Data Created:** 2025-12-14T02:30:56.265383
 
-**Source Data Last Updated:** 2025-12-14T00:56:22.253326
+**Source Data Last Updated:** 2025-12-14T02:30:56.265389
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 72 (98.6%)
-- **Failed:** 1 (1.4%)
-- **Games with Intermittent Failures:** 1
-- **Total Intermittent Failures:** 1
+- **Passed:** 73 (100.0%)
+- **Failed:** 0 (0.0%)
+- **Games with Intermittent Failures:** 0
+- **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 29/72 (40.3% of passed)
-- **Passing with Generic Logic:** 62/72 (86.1% of passed)
-- **Passing with Both Generic:** 29/72 (40.3% of passed)
+- **Passing with Generic Exporter:** 29/73 (39.7% of passed)
+- **Passing with Generic Logic:** 64/73 (87.7% of passed)
+- **Passing with Both Generic:** 29/73 (39.7% of passed)
 
 ## Test Results
 
@@ -59,7 +59,7 @@
 | Inscryption | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | 8.1KB | ✅ |
 | Kingdom Hearts | ✅ Passed | 0 | 10.3 | 10.3 | 🟢 Complete | 58.5KB | 5.4KB |
 | Kingdom Hearts 2 | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 33.1KB | 105.3KB |
-| Kirby's Dream Land 3 | ❌ Failed | 0 | 8.5 | 11.1 | 🟡 76.6% | 13.6KB | 9.0KB |
+| Kirby's Dream Land 3 | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 13.6KB | 9.0KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 16.4KB | ✅ |
 | Lingo | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 33.7KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 17.9KB | ✅ |
@@ -103,15 +103,6 @@
 | Yacht Dice | ✅ Passed | 0 | 21.1 | 21.1 | 🟢 Complete | 1.6KB | 285.0KB |
 | Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 10.8KB | ✅ |
 | shapez | ✅ Passed | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
-
-## Intermittent Failures
-
-These seeds were previously failing but passed during a retest run:
-
-| Template | Seed | Timestamp | Notes |
-|----------|------|-----------|-------|
-| Super Metroid | 1 | 2025-12-14 00:50 | Previously failed, now passing |
-
 
 ## Notes
 

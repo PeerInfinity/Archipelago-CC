@@ -4,21 +4,23 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-12-14 04:20:57
+[View WorldGen Template Results](./test-results-multiclient-worldgen.md)
+
+**Generated:** 2025-12-14 03:03:19
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 72 (98.6%)
-- **Failed:** 1 (1.4%)
+- **Passed:** 73 (100.0%)
+- **Failed:** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 29/72 (40.3% of passed)
-- **Passing with Generic Logic:** 62/72 (86.1% of passed)
-- **Passing with Both Generic:** 29/72 (40.3% of passed)
+- **Passing with Generic Exporter:** 29/73 (39.7% of passed)
+- **Passing with Generic Logic:** 64/73 (87.7% of passed)
+- **Passing with Both Generic:** 29/73 (39.7% of passed)
 
 ## Test Results
 
@@ -53,7 +55,7 @@
 | Inscryption | ✅ Passed | 0 | ✅ | 100/100 | 100/100 | 0/0 | ✅ | 100/100 | 8.1KB | ✅ |
 | Kingdom Hearts | ✅ Passed | 0 | ✅ | 512/512 | 511/511 | 1/1 | ✅ | 512/512 | 58.5KB | 5.4KB |
 | Kingdom Hearts 2 | ✅ Passed | 0 | ✅ | 705/705 | 643/643 | 62/62 | ✅ | 705/705 | 33.1KB | 105.3KB |
-| Kirby's Dream Land 3 | ❌ Failed | 0 | ❌ | 566/567 | 64/65 | 502/502 | ❌ | 565/567 | 13.6KB | 9.0KB |
+| Kirby's Dream Land 3 | ✅ Passed | 0 | ✅ | 567/567 | 65/65 | 502/502 | ✅ | 567/567 | 13.6KB | 9.0KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | ✅ | 298/298 | 291/291 | 7/7 | ✅ | 298/298 | 16.4KB | ✅ |
 | Lingo | ✅ Passed | 0 | ✅ | 156/156 | 155/155 | 1/1 | ✅ | 156/156 | 33.7KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | ✅ | 226/226 | 220/220 | 6/6 | ✅ | 226/226 | 17.9KB | ✅ |

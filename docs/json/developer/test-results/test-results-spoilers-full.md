@@ -4,25 +4,27 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-12-14 04:20:57
+[View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Source Data Created:** 2025-12-14T01:12:46.110094
+**Generated:** 2025-12-14 03:03:19
 
-**Source Data Last Updated:** 2025-12-14T01:12:46.110099
+**Source Data Created:** 2025-12-14T02:40:47.898646
+
+**Source Data Last Updated:** 2025-12-14T02:40:47.898651
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 72 (98.6%)
-- **Failed:** 1 (1.4%)
-- **Games with Intermittent Failures:** 0
-- **Total Intermittent Failures:** 0
+- **Passed:** 73 (100.0%)
+- **Failed:** 0 (0.0%)
+- **Games with Intermittent Failures:** 1
+- **Total Intermittent Failures:** 1
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 29/72 (40.3% of passed)
-- **Passing with Generic Logic:** 62/72 (86.1% of passed)
-- **Passing with Both Generic:** 29/72 (40.3% of passed)
+- **Passing with Generic Exporter:** 29/73 (39.7% of passed)
+- **Passing with Generic Logic:** 64/73 (87.7% of passed)
+- **Passing with Both Generic:** 29/73 (39.7% of passed)
 
 ## Test Results
 
@@ -57,7 +59,7 @@
 | Inscryption | ✅ Passed | 0 | 10.2 | 10.2 | 🟢 Complete | 8.1KB | ✅ |
 | Kingdom Hearts | ✅ Passed | 0 | 10.8 | 10.8 | 🟢 Complete | 58.5KB | 5.4KB |
 | Kingdom Hearts 2 | ✅ Passed | 0 | 15.2 | 15.2 | 🟢 Complete | 33.1KB | 105.3KB |
-| Kirby's Dream Land 3 | ❌ Failed | 0 | 8.8 | 11.3 | 🟡 77.9% | 13.6KB | 9.0KB |
+| Kirby's Dream Land 3 | ✅ Passed | 0 | 11.3 | 11.3 | 🟢 Complete | 13.6KB | 9.0KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 16.4KB | ✅ |
 | Lingo | ✅ Passed | 0 | 6.12 | 6.12 | 🟢 Complete | 33.7KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 17.9KB | ✅ |
@@ -101,6 +103,15 @@
 | Yacht Dice | ✅ Passed | 0 | 21.1 | 21.1 | 🟢 Complete | 1.6KB | 285.0KB |
 | Yoshi's Island | ✅ Passed | 0 | 13.1 | 13.1 | 🟢 Complete | 10.8KB | ✅ |
 | shapez | ✅ Passed | 0 | 6.2 | 6.2 | 🟢 Complete | ✅ | ✅ |
+
+## Intermittent Failures
+
+These seeds were previously failing but passed during a retest run:
+
+| Template | Seed | Timestamp | Notes |
+|----------|------|-----------|-------|
+| ChocolateChipCookies | 1 | 2025-12-14 02:35 | Previously failed, now passing |
+
 
 ## Notes
 
