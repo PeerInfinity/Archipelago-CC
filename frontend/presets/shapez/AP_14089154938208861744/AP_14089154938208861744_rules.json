@@ -3393,6 +3393,21 @@
           }
         ],
         "locations": []
+      },
+      "Achievements needing a MAM": {
+        "name": "Achievements needing a MAM",
+        "exits": [],
+        "locations": []
+      },
+      "Shapesanity Colorful Half Mixed": {
+        "name": "Shapesanity Colorful Half Mixed",
+        "exits": [],
+        "locations": []
+      },
+      "Shapesanity Colorful East Windmill Mixed": {
+        "name": "Shapesanity Colorful East Windmill Mixed",
+        "exits": [],
+        "locations": []
       }
     }
   },
@@ -4533,9 +4548,320 @@
   },
   "helpers": {
     "1": {
+      "can_build_mam": {
+        "params": [
+          "floating"
+        ],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "can_make_stitched_shape",
+              "args": [
+                {
+                  "type": "name",
+                  "name": "floating"
+                }
+              ]
+            },
+            {
+              "type": "helper",
+              "name": "can_paint",
+              "args": []
+            },
+            {
+              "type": "helper",
+              "name": "can_mix_colors",
+              "args": []
+            },
+            {
+              "type": "helper",
+              "name": "has_balancer",
+              "args": []
+            },
+            {
+              "type": "helper",
+              "name": "has_tunnel",
+              "args": []
+            },
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Belt Reader"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Item Filter"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Logic Gates"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Storage"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Virtual Processing"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Wires"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "can_cut_half": {
+        "type": "item_check",
+        "item": "Cutter"
+      },
+      "can_make_east_windmill": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "can_stack",
+            "args": []
+          },
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Quad Cutter"
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "helper",
+                    "name": "can_cut_half",
+                    "args": []
+                  },
+                  {
+                    "type": "helper",
+                    "name": "can_rotate_180",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "can_make_half_half_shape": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "can_stack",
+            "args": []
+          },
+          {
+            "type": "state_method",
+            "method": "has_any",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Cutter",
+                  "Quad Cutter"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "can_make_half_shape": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "can_cut_half",
+            "args": []
+          },
+          {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Quad Cutter",
+                  "Stacker"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "can_make_stitched_shape": {
+        "params": [
+          "floating"
+        ],
+        "body": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "can_stack",
+              "args": []
+            },
+            {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Quad Cutter"
+                    },
+                    {
+                      "type": "not",
+                      "condition": {
+                        "type": "name",
+                        "name": "floating"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "can_cut_half",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "can_rotate_90",
+                      "args": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "can_mix_colors": {
+        "type": "item_check",
+        "item": "Color Mixer"
+      },
+      "can_paint": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "state_method",
+            "method": "has_any",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Double Painter",
+                  "Painter"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "helper",
+            "name": "can_use_quad_painter",
+            "args": []
+          }
+        ]
+      },
+      "can_rotate_180": {
+        "type": "state_method",
+        "method": "has_any",
+        "args": [
+          {
+            "type": "constant",
+            "value": [
+              "Rotator",
+              "Rotator (180\u00b0)",
+              "Rotator (CCW)"
+            ]
+          }
+        ]
+      },
+      "can_rotate_90": {
+        "type": "state_method",
+        "method": "has_any",
+        "args": [
+          {
+            "type": "constant",
+            "value": [
+              "Rotator",
+              "Rotator (CCW)"
+            ]
+          }
+        ]
+      },
       "can_stack": {
         "type": "item_check",
         "item": "Stacker"
+      },
+      "can_use_quad_painter": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Quad Painter",
+                  "Wires"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "state_method",
+            "method": "has_any",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Constant Signal",
+                  "Switch"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "has_balancer": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Balancer"
+          },
+          {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Compact Merger",
+                  "Compact Splitter"
+                ]
+              }
+            ]
+          }
+        ]
       },
       "has_logic_list_building": {
         "params": [
@@ -4772,29 +5098,6 @@
           }
         }
       },
-      "can_paint": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "state_method",
-            "method": "has_any",
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Double Painter",
-                  "Painter"
-                ]
-              }
-            ]
-          },
-          {
-            "type": "helper",
-            "name": "can_use_quad_painter",
-            "args": []
-          }
-        ]
-      },
       "has_tunnel": {
         "type": "state_method",
         "method": "has_any",
@@ -4804,86 +5107,6 @@
             "value": [
               "Tunnel",
               "Tunnel Tier II"
-            ]
-          }
-        ]
-      },
-      "can_make_half_shape": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "can_cut_half",
-            "args": []
-          },
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Quad Cutter",
-                  "Stacker"
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "can_use_quad_painter": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Quad Painter",
-                  "Wires"
-                ]
-              }
-            ]
-          },
-          {
-            "type": "state_method",
-            "method": "has_any",
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Constant Signal",
-                  "Switch"
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "can_cut_half": {
-        "type": "item_check",
-        "item": "Cutter"
-      },
-      "has_balancer": {
-        "type": "or",
-        "conditions": [
-          {
-            "type": "item_check",
-            "item": "Balancer"
-          },
-          {
-            "type": "state_method",
-            "method": "has_all",
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Compact Merger",
-                  "Compact Splitter"
-                ]
-              }
             ]
           }
         ]
@@ -4905,7 +5128,6 @@
             },
             {
               "type": "for_range",
-              "var": "_",
               "count": {
                 "type": "state_method",
                 "method": "count",
@@ -4926,7 +5148,8 @@
                     "value": 2
                   }
                 }
-              ]
+              ],
+              "var": "_"
             },
             {
               "type": "assign",
@@ -5006,214 +5229,6 @@
             }
           ]
         }
-      },
-      "can_make_east_windmill": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "can_stack",
-            "args": []
-          },
-          {
-            "type": "or",
-            "conditions": [
-              {
-                "type": "item_check",
-                "item": "Quad Cutter"
-              },
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "helper",
-                    "name": "can_cut_half",
-                    "args": []
-                  },
-                  {
-                    "type": "helper",
-                    "name": "can_rotate_180",
-                    "args": []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "can_make_stitched_shape": {
-        "params": [
-          "floating"
-        ],
-        "body": {
-          "type": "and",
-          "conditions": [
-            {
-              "type": "helper",
-              "name": "can_stack",
-              "args": []
-            },
-            {
-              "type": "or",
-              "conditions": [
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "item_check",
-                      "item": "Quad Cutter"
-                    },
-                    {
-                      "type": "not",
-                      "condition": {
-                        "type": "name",
-                        "name": "floating"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "and",
-                  "conditions": [
-                    {
-                      "type": "helper",
-                      "name": "can_cut_half",
-                      "args": []
-                    },
-                    {
-                      "type": "helper",
-                      "name": "can_rotate_90",
-                      "args": []
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      },
-      "can_rotate_90": {
-        "type": "state_method",
-        "method": "has_any",
-        "args": [
-          {
-            "type": "constant",
-            "value": [
-              "Rotator",
-              "Rotator (CCW)"
-            ]
-          }
-        ]
-      },
-      "can_build_mam": {
-        "params": [
-          "floating"
-        ],
-        "body": {
-          "type": "and",
-          "conditions": [
-            {
-              "type": "helper",
-              "name": "can_make_stitched_shape",
-              "args": [
-                {
-                  "type": "name",
-                  "name": "floating"
-                }
-              ]
-            },
-            {
-              "type": "helper",
-              "name": "can_paint",
-              "args": []
-            },
-            {
-              "type": "helper",
-              "name": "can_mix_colors",
-              "args": []
-            },
-            {
-              "type": "helper",
-              "name": "has_balancer",
-              "args": []
-            },
-            {
-              "type": "helper",
-              "name": "has_tunnel",
-              "args": []
-            },
-            {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "item_check",
-                  "item": "Belt Reader"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Item Filter"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Logic Gates"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Storage"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Virtual Processing"
-                },
-                {
-                  "type": "item_check",
-                  "item": "Wires"
-                }
-              ]
-            }
-          ]
-        }
-      },
-      "can_rotate_180": {
-        "type": "state_method",
-        "method": "has_any",
-        "args": [
-          {
-            "type": "constant",
-            "value": [
-              "Rotator",
-              "Rotator (180\u00b0)",
-              "Rotator (CCW)"
-            ]
-          }
-        ]
-      },
-      "can_mix_colors": {
-        "type": "item_check",
-        "item": "Color Mixer"
-      },
-      "can_make_half_half_shape": {
-        "type": "and",
-        "conditions": [
-          {
-            "type": "helper",
-            "name": "can_stack",
-            "args": []
-          },
-          {
-            "type": "state_method",
-            "method": "has_any",
-            "args": [
-              {
-                "type": "constant",
-                "value": [
-                  "Cutter",
-                  "Quad Cutter"
-                ]
-              }
-            ]
-          }
-        ]
       }
     }
   }

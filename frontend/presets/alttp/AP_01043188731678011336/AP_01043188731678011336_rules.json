@@ -3118,14 +3118,16 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_reach_region",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": "Desert Palace Main (Outer)"
-                    }
-                  ]
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "region_reference",
+                      "region": "Desert Palace Main (Outer)"
+                    },
+                    "attr": "can_reach"
+                  },
+                  "args": []
                 }
               ]
             },
@@ -3288,14 +3290,11 @@
                             {
                               "type": "compare",
                               "left": {
-                                "type": "helper",
-                                "name": "location_item_name",
-                                "args": [
-                                  {
-                                    "type": "constant",
-                                    "value": "Eastern Palace - Big Key Chest"
-                                  }
-                                ]
+                                "type": "placement_lookup",
+                                "location": {
+                                  "type": "constant",
+                                  "value": "Eastern Palace - Big Key Chest"
+                                }
                               },
                               "op": "==",
                               "right": {
@@ -3680,50 +3679,9 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "helper",
-                      "name": "location_item_name",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Sewers - Key Rat Key Drop"
-                        }
-                      ]
-                    },
-                    "op": "==",
-                    "right": {
-                      "type": "list",
-                      "value": [
-                        {
-                          "type": "constant",
-                          "value": "Small Key (Hyrule Castle)"
-                        },
-                        {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      ]
-                    }
-                  },
-                  "if_true": {
-                    "type": "count_check",
-                    "item": "Small Key (Hyrule Castle)",
-                    "count": {
-                      "type": "constant",
-                      "value": 2
-                    }
-                  },
-                  "if_false": {
-                    "type": "count_check",
-                    "item": "Small Key (Hyrule Castle)",
-                    "count": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  }
+                  "type": "helper",
+                  "name": "basement_key_rule",
+                  "args": []
                 },
                 {
                   "type": "helper",
@@ -3788,12 +3746,10 @@
                           "object": {
                             "type": "subscript",
                             "value": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "name",
-                                "name": "world"
-                              },
-                              "attr": "worlds"
+                              "type": "constant",
+                              "value": {
+                                "1": "<worlds.alttp.ALTTPWorld object at 0x7fa523066f60>"
+                              }
                             },
                             "index": {
                               "type": "constant",
@@ -3875,50 +3831,9 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "conditional",
-                  "test": {
-                    "type": "compare",
-                    "left": {
-                      "type": "helper",
-                      "name": "location_item_name",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Sewers - Key Rat Key Drop"
-                        }
-                      ]
-                    },
-                    "op": "==",
-                    "right": {
-                      "type": "list",
-                      "value": [
-                        {
-                          "type": "constant",
-                          "value": "Small Key (Hyrule Castle)"
-                        },
-                        {
-                          "type": "constant",
-                          "value": 1
-                        }
-                      ]
-                    }
-                  },
-                  "if_true": {
-                    "type": "count_check",
-                    "item": "Small Key (Hyrule Castle)",
-                    "count": {
-                      "type": "constant",
-                      "value": 2
-                    }
-                  },
-                  "if_false": {
-                    "type": "count_check",
-                    "item": "Small Key (Hyrule Castle)",
-                    "count": {
-                      "type": "constant",
-                      "value": 3
-                    }
-                  }
+                  "type": "helper",
+                  "name": "basement_key_rule",
+                  "args": []
                 },
                 {
                   "type": "helper",
@@ -4015,8 +3930,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "constant",
-                        "value": 1
+                        "type": "setting_value",
+                        "setting": "mode"
                       },
                       "op": "==",
                       "right": {
@@ -4027,8 +3942,8 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "constant",
-                        "value": 0
+                        "type": "setting_value",
+                        "setting": "small_key_shuffle"
                       },
                       "op": "==",
                       "right": {
@@ -5642,14 +5557,11 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "helper",
-                        "name": "location_item_name",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Tower of Hera - Big Key Chest"
-                          }
-                        ]
+                        "type": "placement_lookup",
+                        "location": {
+                          "type": "constant",
+                          "value": "Tower of Hera - Big Key Chest"
+                        }
                       },
                       "op": "==",
                       "right": {
@@ -5992,17 +5904,9 @@
                       ]
                     },
                     {
-                      "type": "and",
-                      "conditions": [
-                        {
-                          "type": "item_check",
-                          "item": "Hammer"
-                        },
-                        {
-                          "type": "item_check",
-                          "item": "Moon Pearl"
-                        }
-                      ]
+                      "type": "helper",
+                      "name": "cross_peg_bridge",
+                      "args": []
                     }
                   ]
                 }
@@ -6100,12 +6004,10 @@
                         "object": {
                           "type": "subscript",
                           "value": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "name",
-                              "name": "world"
-                            },
-                            "attr": "worlds"
+                            "type": "constant",
+                            "value": {
+                              "1": "<worlds.alttp.ALTTPWorld object at 0x7fa523066f60>"
+                            }
                           },
                           "index": {
                             "type": "constant",
@@ -8056,31 +7958,8 @@
               "name": "has_crystals",
               "args": [
                 {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "subscript",
-                      "value": {
-                        "type": "attribute",
-                        "object": {
-                          "type": "attribute",
-                          "object": {
-                            "type": "name",
-                            "name": "state"
-                          },
-                          "attr": "multiworld"
-                        },
-                        "attr": "worlds"
-                      },
-                      "index": {
-                        "type": "constant",
-                        "value": 1
-                      }
-                    },
-                    "attr": "options"
-                  },
-                  "attr": "crystals_needed_for_gt"
+                  "type": "setting_value",
+                  "setting": "crystals_needed_for_gt"
                 }
               ]
             }
@@ -8807,31 +8686,8 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "subscript",
-                                "value": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "name",
-                                      "name": "state"
-                                    },
-                                    "attr": "multiworld"
-                                  },
-                                  "attr": "worlds"
-                                },
-                                "index": {
-                                  "type": "constant",
-                                  "value": 1
-                                }
-                              },
-                              "attr": "options"
-                            },
-                            "attr": "enemy_health"
+                            "type": "setting_value",
+                            "setting": "enemy_health"
                           },
                           "op": "in",
                           "right": {
@@ -9132,14 +8988,11 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "helper",
-                        "name": "location_item_name",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Swamp Palace - Big Chest"
-                          }
-                        ]
+                        "type": "placement_lookup",
+                        "location": {
+                          "type": "constant",
+                          "value": "Swamp Palace - Big Chest"
+                        }
                       },
                       "op": "==",
                       "right": {
@@ -9637,14 +9490,11 @@
                             {
                               "type": "compare",
                               "left": {
-                                "type": "helper",
-                                "name": "location_item_name",
-                                "args": [
-                                  {
-                                    "type": "constant",
-                                    "value": "Thieves' Town - Big Chest"
-                                  }
-                                ]
+                                "type": "placement_lookup",
+                                "location": {
+                                  "type": "constant",
+                                  "value": "Thieves' Town - Big Chest"
+                                }
                               },
                               "op": "==",
                               "right": {
@@ -10174,14 +10024,11 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "helper",
-                            "name": "location_item_name",
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": "Skull Woods - Big Chest"
-                              }
-                            ]
+                            "type": "placement_lookup",
+                            "location": {
+                              "type": "constant",
+                              "value": "Skull Woods - Big Chest"
+                            }
                           },
                           "op": "==",
                           "right": {
@@ -10708,71 +10555,72 @@
                     {
                       "type": "conditional",
                       "test": {
-                        "type": "helper",
-                        "name": "item_name_in_location_names",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Big Key (Ice Palace)"
-                          },
-                          {
-                            "type": "list",
-                            "value": [
-                              {
-                                "type": "list",
-                                "value": [
-                                  {
-                                    "type": "constant",
-                                    "value": "Ice Palace - Spike Room"
-                                  },
-                                  {
-                                    "type": "constant",
-                                    "value": 1
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "list",
-                                "value": [
-                                  {
-                                    "type": "constant",
-                                    "value": "Ice Palace - Hammer Block Key Drop"
-                                  },
-                                  {
-                                    "type": "constant",
-                                    "value": 1
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "list",
-                                "value": [
-                                  {
-                                    "type": "constant",
-                                    "value": "Ice Palace - Big Key Chest"
-                                  },
-                                  {
-                                    "type": "constant",
-                                    "value": 1
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "list",
-                                "value": [
-                                  {
-                                    "type": "constant",
-                                    "value": "Ice Palace - Map Chest"
-                                  },
-                                  {
-                                    "type": "constant",
-                                    "value": 1
-                                  }
-                                ]
-                              }
-                            ]
-                          }
-                        ]
+                        "type": "placement_search",
+                        "item": {
+                          "type": "constant",
+                          "value": "Big Key (Ice Palace)"
+                        },
+                        "player": {
+                          "type": "constant",
+                          "value": 1
+                        },
+                        "locations": {
+                          "type": "list",
+                          "value": [
+                            {
+                              "type": "list",
+                              "value": [
+                                {
+                                  "type": "constant",
+                                  "value": "Ice Palace - Spike Room"
+                                },
+                                {
+                                  "type": "constant",
+                                  "value": 1
+                                }
+                              ]
+                            },
+                            {
+                              "type": "list",
+                              "value": [
+                                {
+                                  "type": "constant",
+                                  "value": "Ice Palace - Hammer Block Key Drop"
+                                },
+                                {
+                                  "type": "constant",
+                                  "value": 1
+                                }
+                              ]
+                            },
+                            {
+                              "type": "list",
+                              "value": [
+                                {
+                                  "type": "constant",
+                                  "value": "Ice Palace - Big Key Chest"
+                                },
+                                {
+                                  "type": "constant",
+                                  "value": 1
+                                }
+                              ]
+                            },
+                            {
+                              "type": "list",
+                              "value": [
+                                {
+                                  "type": "constant",
+                                  "value": "Ice Palace - Map Chest"
+                                },
+                                {
+                                  "type": "constant",
+                                  "value": 1
+                                }
+                              ]
+                            }
+                          ]
+                        }
                       },
                       "if_true": {
                         "type": "count_check",
@@ -11242,14 +11090,11 @@
                   {
                     "type": "compare",
                     "left": {
-                      "type": "helper",
-                      "name": "location_item_name",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Misery Mire - Big Key Chest"
-                        }
-                      ]
+                      "type": "placement_lookup",
+                      "location": {
+                        "type": "constant",
+                        "value": "Misery Mire - Big Key Chest"
+                      }
                     },
                     "op": "in",
                     "right": {
@@ -11274,14 +11119,11 @@
                   {
                     "type": "compare",
                     "left": {
-                      "type": "helper",
-                      "name": "location_item_name",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Misery Mire - Compass Chest"
-                        }
-                      ]
+                      "type": "placement_lookup",
+                      "location": {
+                        "type": "constant",
+                        "value": "Misery Mire - Compass Chest"
+                      }
                     },
                     "op": "in",
                     "right": {
@@ -11599,14 +11441,11 @@
                       {
                         "type": "compare",
                         "left": {
-                          "type": "helper",
-                          "name": "location_item_name",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "Misery Mire - Big Key Chest"
-                            }
-                          ]
+                          "type": "placement_lookup",
+                          "location": {
+                            "type": "constant",
+                            "value": "Misery Mire - Big Key Chest"
+                          }
                         },
                         "op": "==",
                         "right": {
@@ -11626,14 +11465,11 @@
                       {
                         "type": "compare",
                         "left": {
-                          "type": "helper",
-                          "name": "location_item_name",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "Misery Mire - Compass Chest"
-                            }
-                          ]
+                          "type": "placement_lookup",
+                          "location": {
+                            "type": "constant",
+                            "value": "Misery Mire - Compass Chest"
+                          }
                         },
                         "op": "==",
                         "right": {
@@ -11653,14 +11489,11 @@
                       {
                         "type": "compare",
                         "left": {
-                          "type": "helper",
-                          "name": "location_item_name",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "Misery Mire - Conveyor Crystal Key Drop"
-                            }
-                          ]
+                          "type": "placement_lookup",
+                          "location": {
+                            "type": "constant",
+                            "value": "Misery Mire - Conveyor Crystal Key Drop"
+                          }
                         },
                         "op": "==",
                         "right": {
@@ -12123,31 +11956,32 @@
             "access_rule": {
               "type": "conditional",
               "test": {
-                "type": "helper",
-                "name": "item_name_in_location_names",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Big Key (Turtle Rock)"
-                  },
-                  {
-                    "type": "constant",
-                    "value": [
-                      [
-                        "Turtle Rock - Compass Chest",
-                        1
-                      ],
-                      [
-                        "Turtle Rock - Roller Room - Left",
-                        1
-                      ],
-                      [
-                        "Turtle Rock - Roller Room - Right",
-                        1
-                      ]
+                "type": "placement_search",
+                "item": {
+                  "type": "constant",
+                  "value": "Big Key (Turtle Rock)"
+                },
+                "player": {
+                  "type": "constant",
+                  "value": 1
+                },
+                "locations": {
+                  "type": "constant",
+                  "value": [
+                    [
+                      "Turtle Rock - Compass Chest",
+                      1
+                    ],
+                    [
+                      "Turtle Rock - Roller Room - Left",
+                      1
+                    ],
+                    [
+                      "Turtle Rock - Roller Room - Right",
+                      1
                     ]
-                  }
-                ]
+                  ]
+                }
               },
               "if_true": {
                 "type": "count_check",
@@ -12236,45 +12070,46 @@
             "access_rule": {
               "type": "conditional",
               "test": {
-                "type": "helper",
-                "name": "item_name_in_location_names",
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "Big Key (Turtle Rock)"
-                  },
-                  {
-                    "type": "function_call",
-                    "function": {
-                      "type": "attribute",
-                      "object": {
-                        "type": "name",
-                        "name": "front_locked_locations"
-                      },
-                      "attr": "union"
+                "type": "placement_search",
+                "item": {
+                  "type": "constant",
+                  "value": "Big Key (Turtle Rock)"
+                },
+                "player": {
+                  "type": "constant",
+                  "value": 1
+                },
+                "locations": {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "front_locked_locations"
                     },
-                    "args": [
-                      {
-                        "type": "list",
-                        "value": [
-                          {
-                            "type": "list",
-                            "value": [
-                              {
-                                "type": "constant",
-                                "value": "Turtle Rock - Pokey 1 Key Drop"
-                              },
-                              {
-                                "type": "constant",
-                                "value": 1
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
+                    "attr": "union"
+                  },
+                  "args": [
+                    {
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "list",
+                          "value": [
+                            {
+                              "type": "constant",
+                              "value": "Turtle Rock - Pokey 1 Key Drop"
+                            },
+                            {
+                              "type": "constant",
+                              "value": 1
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
               },
               "if_true": {
                 "type": "count_check",
@@ -12474,9 +12309,70 @@
                                   "type": "count_check",
                                   "item": "Small Key (Turtle Rock)",
                                   "count": {
-                                    "type": "helper",
-                                    "name": "tr_big_key_chest_keys_needed",
-                                    "args": []
+                                    "type": "conditional",
+                                    "test": {
+                                      "type": "compare",
+                                      "left": {
+                                        "type": "placement_lookup",
+                                        "location": {
+                                          "type": "constant",
+                                          "value": "Turtle Rock - Big Key Chest"
+                                        }
+                                      },
+                                      "op": "==",
+                                      "right": {
+                                        "type": "list",
+                                        "value": [
+                                          {
+                                            "type": "constant",
+                                            "value": "Small Key (Turtle Rock)"
+                                          },
+                                          {
+                                            "type": "constant",
+                                            "value": 1
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "if_true": {
+                                      "type": "constant",
+                                      "value": 0
+                                    },
+                                    "if_false": {
+                                      "type": "conditional",
+                                      "test": {
+                                        "type": "compare",
+                                        "left": {
+                                          "type": "placement_lookup",
+                                          "location": {
+                                            "type": "constant",
+                                            "value": "Turtle Rock - Big Key Chest"
+                                          }
+                                        },
+                                        "op": "==",
+                                        "right": {
+                                          "type": "list",
+                                          "value": [
+                                            {
+                                              "type": "constant",
+                                              "value": "Big Key (Turtle Rock)"
+                                            },
+                                            {
+                                              "type": "constant",
+                                              "value": 1
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      "if_true": {
+                                        "type": "constant",
+                                        "value": 4
+                                      },
+                                      "if_false": {
+                                        "type": "constant",
+                                        "value": 6
+                                      }
+                                    }
                                   }
                                 },
                                 {
@@ -13315,14 +13211,11 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "helper",
-                            "name": "location_item_name",
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": "Palace of Darkness - Big Key Chest"
-                              }
-                            ]
+                            "type": "placement_lookup",
+                            "location": {
+                              "type": "constant",
+                              "value": "Palace of Darkness - Big Key Chest"
+                            }
                           },
                           "op": "in",
                           "right": {
@@ -13578,14 +13471,11 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "helper",
-                        "name": "location_item_name",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Palace of Darkness - Harmless Hellway"
-                          }
-                        ]
+                        "type": "placement_lookup",
+                        "location": {
+                          "type": "constant",
+                          "value": "Palace of Darkness - Harmless Hellway"
+                        }
                       },
                       "op": "in",
                       "right": {
@@ -14094,39 +13984,40 @@
                           }
                         },
                         {
-                          "type": "helper",
-                          "name": "item_name_in_location_names",
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "Big Key (Ganons Tower)"
-                            },
-                            {
-                              "type": "constant",
-                              "value": [
-                                [
-                                  "Ganons Tower - Compass Room - Top Left",
-                                  1
-                                ],
-                                [
-                                  "Ganons Tower - Compass Room - Top Right",
-                                  1
-                                ],
-                                [
-                                  "Ganons Tower - Compass Room - Bottom Left",
-                                  1
-                                ],
-                                [
-                                  "Ganons Tower - Compass Room - Bottom Right",
-                                  1
-                                ],
-                                [
-                                  "Ganons Tower - Conveyor Star Pits Pot Key",
-                                  1
-                                ]
+                          "type": "placement_search",
+                          "item": {
+                            "type": "constant",
+                            "value": "Big Key (Ganons Tower)"
+                          },
+                          "player": {
+                            "type": "constant",
+                            "value": 1
+                          },
+                          "locations": {
+                            "type": "constant",
+                            "value": [
+                              [
+                                "Ganons Tower - Compass Room - Top Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Top Right",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Bottom Left",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Compass Room - Bottom Right",
+                                1
+                              ],
+                              [
+                                "Ganons Tower - Conveyor Star Pits Pot Key",
+                                1
                               ]
-                            }
-                          ]
+                            ]
+                          }
                         }
                       ]
                     },
@@ -14192,39 +14083,40 @@
                       }
                     },
                     {
-                      "type": "helper",
-                      "name": "item_name_in_location_names",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Big Key (Ganons Tower)"
-                        },
-                        {
-                          "type": "constant",
-                          "value": [
-                            [
-                              "Ganons Tower - Bob's Chest",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Big Chest",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Big Key Room - Left",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Big Key Room - Right",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Big Key Chest",
-                              1
-                            ]
+                      "type": "placement_search",
+                      "item": {
+                        "type": "constant",
+                        "value": "Big Key (Ganons Tower)"
+                      },
+                      "player": {
+                        "type": "constant",
+                        "value": 1
+                      },
+                      "locations": {
+                        "type": "constant",
+                        "value": [
+                          [
+                            "Ganons Tower - Bob's Chest",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Chest",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Key Room - Left",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Key Room - Right",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Key Chest",
+                            1
                           ]
-                        }
-                      ]
+                        ]
+                      }
                     }
                   ]
                 },
@@ -14265,39 +14157,40 @@
                               }
                             },
                             {
-                              "type": "helper",
-                              "name": "item_name_in_location_names",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "Big Key (Ganons Tower)"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    [
-                                      "Ganons Tower - Compass Room - Top Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Top Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Bottom Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Bottom Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Conveyor Star Pits Pot Key",
-                                      1
-                                    ]
+                              "type": "placement_search",
+                              "item": {
+                                "type": "constant",
+                                "value": "Big Key (Ganons Tower)"
+                              },
+                              "player": {
+                                "type": "constant",
+                                "value": 1
+                              },
+                              "locations": {
+                                "type": "constant",
+                                "value": [
+                                  [
+                                    "Ganons Tower - Compass Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Bottom Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Conveyor Star Pits Pot Key",
+                                    1
                                   ]
-                                }
-                              ]
+                                ]
+                              }
                             }
                           ]
                         },
@@ -14370,39 +14263,40 @@
                               }
                             },
                             {
-                              "type": "helper",
-                              "name": "item_name_in_location_names",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "Big Key (Ganons Tower)"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    [
-                                      "Ganons Tower - Compass Room - Top Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Top Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Bottom Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Bottom Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Conveyor Star Pits Pot Key",
-                                      1
-                                    ]
+                              "type": "placement_search",
+                              "item": {
+                                "type": "constant",
+                                "value": "Big Key (Ganons Tower)"
+                              },
+                              "player": {
+                                "type": "constant",
+                                "value": 1
+                              },
+                              "locations": {
+                                "type": "constant",
+                                "value": [
+                                  [
+                                    "Ganons Tower - Compass Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Bottom Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Conveyor Star Pits Pot Key",
+                                    1
                                   ]
-                                }
-                              ]
+                                ]
+                              }
                             }
                           ]
                         },
@@ -14475,39 +14369,40 @@
                               }
                             },
                             {
-                              "type": "helper",
-                              "name": "item_name_in_location_names",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "Big Key (Ganons Tower)"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    [
-                                      "Ganons Tower - Compass Room - Top Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Top Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Bottom Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Bottom Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Conveyor Star Pits Pot Key",
-                                      1
-                                    ]
+                              "type": "placement_search",
+                              "item": {
+                                "type": "constant",
+                                "value": "Big Key (Ganons Tower)"
+                              },
+                              "player": {
+                                "type": "constant",
+                                "value": 1
+                              },
+                              "locations": {
+                                "type": "constant",
+                                "value": [
+                                  [
+                                    "Ganons Tower - Compass Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Bottom Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Conveyor Star Pits Pot Key",
+                                    1
                                   ]
-                                }
-                              ]
+                                ]
+                              }
                             }
                           ]
                         },
@@ -14580,39 +14475,40 @@
                               }
                             },
                             {
-                              "type": "helper",
-                              "name": "item_name_in_location_names",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "Big Key (Ganons Tower)"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    [
-                                      "Ganons Tower - Compass Room - Top Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Top Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Bottom Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Bottom Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Conveyor Star Pits Pot Key",
-                                      1
-                                    ]
+                              "type": "placement_search",
+                              "item": {
+                                "type": "constant",
+                                "value": "Big Key (Ganons Tower)"
+                              },
+                              "player": {
+                                "type": "constant",
+                                "value": 1
+                              },
+                              "locations": {
+                                "type": "constant",
+                                "value": [
+                                  [
+                                    "Ganons Tower - Compass Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Bottom Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Conveyor Star Pits Pot Key",
+                                    1
                                   ]
-                                }
-                              ]
+                                ]
+                              }
                             }
                           ]
                         },
@@ -14685,39 +14581,40 @@
                               }
                             },
                             {
-                              "type": "helper",
-                              "name": "item_name_in_location_names",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "Big Key (Ganons Tower)"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    [
-                                      "Ganons Tower - Compass Room - Top Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Top Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Bottom Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Compass Room - Bottom Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Conveyor Star Pits Pot Key",
-                                      1
-                                    ]
+                              "type": "placement_search",
+                              "item": {
+                                "type": "constant",
+                                "value": "Big Key (Ganons Tower)"
+                              },
+                              "player": {
+                                "type": "constant",
+                                "value": 1
+                              },
+                              "locations": {
+                                "type": "constant",
+                                "value": [
+                                  [
+                                    "Ganons Tower - Compass Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Compass Room - Bottom Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Conveyor Star Pits Pot Key",
+                                    1
                                   ]
-                                }
-                              ]
+                                ]
+                              }
                             }
                           ]
                         },
@@ -14787,14 +14684,11 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "helper",
-                        "name": "location_item_name",
-                        "args": [
-                          {
-                            "type": "constant",
-                            "value": "Ganons Tower - Map Chest"
-                          }
-                        ]
+                        "type": "placement_lookup",
+                        "location": {
+                          "type": "constant",
+                          "value": "Ganons Tower - Map Chest"
+                        }
                       },
                       "op": "in",
                       "right": {
@@ -15048,55 +14942,56 @@
                       }
                     },
                     {
-                      "type": "helper",
-                      "name": "item_name_in_location_names",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": "Big Key (Ganons Tower)"
-                        },
-                        {
-                          "type": "constant",
-                          "value": [
-                            [
-                              "Ganons Tower - Randomizer Room - Top Left",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Randomizer Room - Top Right",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Randomizer Room - Bottom Left",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Randomizer Room - Bottom Right",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Bob's Chest",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Big Chest",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Big Key Room - Left",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Big Key Room - Right",
-                              1
-                            ],
-                            [
-                              "Ganons Tower - Big Key Chest",
-                              1
-                            ]
+                      "type": "placement_search",
+                      "item": {
+                        "type": "constant",
+                        "value": "Big Key (Ganons Tower)"
+                      },
+                      "player": {
+                        "type": "constant",
+                        "value": 1
+                      },
+                      "locations": {
+                        "type": "constant",
+                        "value": [
+                          [
+                            "Ganons Tower - Randomizer Room - Top Left",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Randomizer Room - Top Right",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Randomizer Room - Bottom Left",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Randomizer Room - Bottom Right",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Bob's Chest",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Chest",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Key Room - Left",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Key Room - Right",
+                            1
+                          ],
+                          [
+                            "Ganons Tower - Big Key Chest",
+                            1
                           ]
-                        }
-                      ]
+                        ]
+                      }
                     }
                   ]
                 },
@@ -15137,63 +15032,65 @@
                           "type": "or",
                           "conditions": [
                             {
-                              "type": "helper",
-                              "name": "item_name_in_location_names",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "Big Key (Ganons Tower)"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    [
-                                      "Ganons Tower - Randomizer Room - Top Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Top Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Bottom Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Bottom Right",
-                                      1
-                                    ]
+                              "type": "placement_search",
+                              "item": {
+                                "type": "constant",
+                                "value": "Big Key (Ganons Tower)"
+                              },
+                              "player": {
+                                "type": "constant",
+                                "value": 1
+                              },
+                              "locations": {
+                                "type": "constant",
+                                "value": [
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Right",
+                                    1
                                   ]
-                                }
-                              ]
+                                ]
+                              }
                             },
                             {
-                              "type": "helper",
-                              "name": "item_name_in_location_names",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "Small Key (Ganons Tower)"
-                                },
-                                {
-                                  "type": "list",
-                                  "value": [
-                                    {
-                                      "type": "list",
-                                      "value": [
-                                        {
-                                          "type": "constant",
-                                          "value": "Ganons Tower - Firesnake Room"
-                                        },
-                                        {
-                                          "type": "constant",
-                                          "value": 1
-                                        }
-                                      ]
-                                    }
-                                  ]
-                                }
-                              ]
+                              "type": "placement_search",
+                              "item": {
+                                "type": "constant",
+                                "value": "Small Key (Ganons Tower)"
+                              },
+                              "player": {
+                                "type": "constant",
+                                "value": 1
+                              },
+                              "locations": {
+                                "type": "list",
+                                "value": [
+                                  {
+                                    "type": "list",
+                                    "value": [
+                                      {
+                                        "type": "constant",
+                                        "value": "Ganons Tower - Firesnake Room"
+                                      },
+                                      {
+                                        "type": "constant",
+                                        "value": 1
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
                             }
                           ]
                         }
@@ -15272,35 +15169,36 @@
                               }
                             },
                             {
-                              "type": "helper",
-                              "name": "item_name_in_location_names",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "Big Key (Ganons Tower)"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    [
-                                      "Ganons Tower - Randomizer Room - Top Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Top Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Bottom Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Bottom Right",
-                                      1
-                                    ]
+                              "type": "placement_search",
+                              "item": {
+                                "type": "constant",
+                                "value": "Big Key (Ganons Tower)"
+                              },
+                              "player": {
+                                "type": "constant",
+                                "value": 1
+                              },
+                              "locations": {
+                                "type": "constant",
+                                "value": [
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Right",
+                                    1
                                   ]
-                                }
-                              ]
+                                ]
+                              }
                             }
                           ]
                         },
@@ -15360,35 +15258,36 @@
                               }
                             },
                             {
-                              "type": "helper",
-                              "name": "item_name_in_location_names",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "Big Key (Ganons Tower)"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    [
-                                      "Ganons Tower - Randomizer Room - Top Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Top Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Bottom Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Bottom Right",
-                                      1
-                                    ]
+                              "type": "placement_search",
+                              "item": {
+                                "type": "constant",
+                                "value": "Big Key (Ganons Tower)"
+                              },
+                              "player": {
+                                "type": "constant",
+                                "value": 1
+                              },
+                              "locations": {
+                                "type": "constant",
+                                "value": [
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Right",
+                                    1
                                   ]
-                                }
-                              ]
+                                ]
+                              }
                             }
                           ]
                         },
@@ -15448,35 +15347,36 @@
                               }
                             },
                             {
-                              "type": "helper",
-                              "name": "item_name_in_location_names",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "Big Key (Ganons Tower)"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    [
-                                      "Ganons Tower - Randomizer Room - Top Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Top Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Bottom Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Bottom Right",
-                                      1
-                                    ]
+                              "type": "placement_search",
+                              "item": {
+                                "type": "constant",
+                                "value": "Big Key (Ganons Tower)"
+                              },
+                              "player": {
+                                "type": "constant",
+                                "value": 1
+                              },
+                              "locations": {
+                                "type": "constant",
+                                "value": [
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Right",
+                                    1
                                   ]
-                                }
-                              ]
+                                ]
+                              }
                             }
                           ]
                         },
@@ -15536,35 +15436,36 @@
                               }
                             },
                             {
-                              "type": "helper",
-                              "name": "item_name_in_location_names",
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "Big Key (Ganons Tower)"
-                                },
-                                {
-                                  "type": "constant",
-                                  "value": [
-                                    [
-                                      "Ganons Tower - Randomizer Room - Top Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Top Right",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Bottom Left",
-                                      1
-                                    ],
-                                    [
-                                      "Ganons Tower - Randomizer Room - Bottom Right",
-                                      1
-                                    ]
+                              "type": "placement_search",
+                              "item": {
+                                "type": "constant",
+                                "value": "Big Key (Ganons Tower)"
+                              },
+                              "player": {
+                                "type": "constant",
+                                "value": 1
+                              },
+                              "locations": {
+                                "type": "constant",
+                                "value": [
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Top Right",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Left",
+                                    1
+                                  ],
+                                  [
+                                    "Ganons Tower - Randomizer Room - Bottom Right",
+                                    1
                                   ]
-                                }
-                              ]
+                                ]
+                              }
                             }
                           ]
                         },
@@ -16233,8 +16134,13 @@
                         },
                         {
                           "type": "helper",
-                          "name": "has_crystals_for_ganon",
-                          "args": []
+                          "name": "has_crystals",
+                          "args": [
+                            {
+                              "type": "setting_value",
+                              "setting": "crystals_needed_for_ganon"
+                            }
+                          ]
                         }
                       ]
                     },
@@ -16797,33 +16703,6 @@
                       "type": "and",
                       "conditions": [
                         {
-                          "type": "attribute",
-                          "object": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "subscript",
-                              "value": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "name",
-                                    "name": "state"
-                                  },
-                                  "attr": "multiworld"
-                                },
-                                "attr": "worlds"
-                              },
-                              "index": {
-                                "type": "name",
-                                "name": "player"
-                              }
-                            },
-                            "attr": "options"
-                          },
-                          "attr": "swordless"
-                        },
-                        {
                           "type": "helper",
                           "name": "can_extend_magic",
                           "args": [
@@ -16832,6 +16711,10 @@
                               "value": 16
                             }
                           ]
+                        },
+                        {
+                          "type": "setting_value",
+                          "setting": "swordless"
                         },
                         {
                           "type": "item_check",
@@ -16879,36 +16762,13 @@
                           "type": "or",
                           "conditions": [
                             {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "subscript",
-                                  "value": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "state"
-                                      },
-                                      "attr": "multiworld"
-                                    },
-                                    "attr": "worlds"
-                                  },
-                                  "index": {
-                                    "type": "name",
-                                    "name": "player"
-                                  }
-                                },
-                                "attr": "options"
-                              },
-                              "attr": "swordless"
-                            },
-                            {
                               "type": "helper",
                               "name": "has_sword",
                               "args": []
+                            },
+                            {
+                              "type": "setting_value",
+                              "setting": "swordless"
                             }
                           ]
                         },
@@ -17420,7 +17280,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Hammer": {
@@ -17433,7 +17293,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Hookshot": {
@@ -17446,7 +17306,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Magic Mirror": {
@@ -17459,7 +17319,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Flute": {
@@ -17472,7 +17332,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Pegasus Boots": {
@@ -17485,7 +17345,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Power Glove": {
@@ -17511,7 +17371,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Mushroom": {
@@ -17524,7 +17384,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Shovel": {
@@ -17537,7 +17397,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Lamp": {
@@ -17550,7 +17410,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Magic Powder": {
@@ -17563,7 +17423,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Moon Pearl": {
@@ -17576,7 +17436,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Cane of Somaria": {
@@ -17590,7 +17450,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Fire Rod": {
@@ -17604,7 +17464,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Flippers": {
@@ -17617,7 +17477,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Ice Rod": {
@@ -17631,7 +17491,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Titans Mitts": {
@@ -17657,7 +17517,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Ether": {
@@ -17670,7 +17530,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Quake": {
@@ -17683,7 +17543,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Bottle": {
@@ -17905,7 +17765,7 @@
       "Triforce": {
         "name": "Triforce",
         "hint_text": "the Triforce",
-        "id": 106,
+        "id": null,
         "groups": [
           "Event",
           "Everything",
@@ -18041,7 +17901,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "filler"
       },
       "Arrows (10)": {
@@ -18054,7 +17914,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 24,
+        "max_count": 12,
         "classification": "filler"
       },
       "Arrow Upgrade (+10)": {
@@ -18118,7 +17978,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 32,
+        "max_count": 16,
         "classification": "filler"
       },
       "Bombs (10)": {
@@ -18131,7 +17991,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "filler"
       },
       "Bomb Upgrade (+10)": {
@@ -18224,7 +18084,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Red Boomerang": {
@@ -18238,7 +18098,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Blue Shield": {
@@ -18304,7 +18164,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Cane of Byrna": {
@@ -18318,7 +18178,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Boss Heart Container": {
@@ -18344,7 +18204,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "useful"
       },
       "Piece of Heart": {
@@ -18371,7 +18231,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 4,
+        "max_count": 2,
         "classification": "filler"
       },
       "Rupees (5)": {
@@ -18385,7 +18245,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 8,
+        "max_count": 4,
         "classification": "filler"
       },
       "Rupees (20)": {
@@ -18399,7 +18259,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 56,
+        "max_count": 28,
         "classification": "filler"
       },
       "Rupees (50)": {
@@ -18413,7 +18273,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 14,
+        "max_count": 7,
         "classification": "filler"
       },
       "Rupees (100)": {
@@ -18427,7 +18287,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "filler"
       },
       "Rupees (300)": {
@@ -18441,7 +18301,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 10,
+        "max_count": 5,
         "classification": "filler"
       },
       "Rupoor": {
@@ -18530,7 +18390,7 @@
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
+        "max_count": 1,
         "classification": "progression"
       },
       "Magic Upgrade (1/4)": {
@@ -19421,7 +19281,7 @@
       "Activated Flute": {
         "name": "Activated Flute",
         "hint_text": "the Flute",
-        "id": 74,
+        "id": null,
         "groups": [
           "Event",
           "Everything",
@@ -19657,6 +19517,9 @@
       "__max_progressive_bottle": 4
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {
       "Progressive Sword": {
@@ -19749,7 +19612,7 @@
       "retro_bow": false,
       "swordless": false,
       "enemy_shuffle": false,
-      "enemy_health": "easy",
+      "enemy_health": "default",
       "enemy_damage": "default",
       "bombless_start": false,
       "glitches_required": "none",
@@ -19760,6 +19623,7 @@
       "mode": "open",
       "crystals_needed_for_gt": 7,
       "crystals_needed_for_ganon": 7,
+      "item_functionality": "hard",
       "shuffle_capacity_upgrades": "off",
       "treasure_hunt_required": 0,
       "can_take_damage": true,
@@ -19768,12 +19632,142 @@
         "boss_heart_container_limit": 10,
         "heart_piece_limit": 24
       },
+      "logical_heart_pieces": 24,
+      "logical_heart_containers": 10,
       "required_medallions": [
         "Bombos",
         "Bombos"
       ],
       "misery_mire_medallion": "Bombos",
-      "turtle_rock_medallion": "Bombos"
+      "turtle_rock_medallion": "Bombos",
+      "shop_items": {
+        "Red Potion": {
+          "unlimited": [
+            "Cave Shop (Dark Death Mountain)",
+            "Dark Lake Hylia Shop",
+            "Dark World Lumberjack Shop",
+            "Village of Outcasts Shop",
+            "Dark World Potion Shop",
+            "Light World Death Mountain Shop",
+            "Kakariko Shop",
+            "Cave Shop (Lake Hylia)",
+            "Potion Shop"
+          ],
+          "limited": [
+            "Cave Shop (Dark Death Mountain)",
+            "Dark Lake Hylia Shop",
+            "Dark World Lumberjack Shop",
+            "Village of Outcasts Shop",
+            "Dark World Potion Shop",
+            "Light World Death Mountain Shop",
+            "Kakariko Shop",
+            "Cave Shop (Lake Hylia)",
+            "Potion Shop"
+          ]
+        },
+        "Small Heart": {
+          "unlimited": [
+            "Cave Shop (Dark Death Mountain)",
+            "Light World Death Mountain Shop",
+            "Kakariko Shop",
+            "Cave Shop (Lake Hylia)"
+          ],
+          "limited": [
+            "Cave Shop (Dark Death Mountain)",
+            "Light World Death Mountain Shop",
+            "Kakariko Shop",
+            "Cave Shop (Lake Hylia)"
+          ]
+        },
+        "Bombs (10)": {
+          "unlimited": [
+            "Cave Shop (Dark Death Mountain)",
+            "Dark Lake Hylia Shop",
+            "Dark World Lumberjack Shop",
+            "Village of Outcasts Shop",
+            "Dark World Potion Shop",
+            "Light World Death Mountain Shop",
+            "Kakariko Shop",
+            "Cave Shop (Lake Hylia)"
+          ],
+          "limited": [
+            "Cave Shop (Dark Death Mountain)",
+            "Dark Lake Hylia Shop",
+            "Dark World Lumberjack Shop",
+            "Village of Outcasts Shop",
+            "Dark World Potion Shop",
+            "Light World Death Mountain Shop",
+            "Kakariko Shop",
+            "Cave Shop (Lake Hylia)"
+          ]
+        },
+        "Red Shield": {
+          "unlimited": [
+            "Red Shield Shop"
+          ],
+          "limited": [
+            "Red Shield Shop"
+          ]
+        },
+        "Bee": {
+          "unlimited": [
+            "Red Shield Shop"
+          ],
+          "limited": [
+            "Red Shield Shop"
+          ]
+        },
+        "Arrows (10)": {
+          "unlimited": [
+            "Red Shield Shop"
+          ],
+          "limited": [
+            "Red Shield Shop"
+          ]
+        },
+        "Blue Shield": {
+          "unlimited": [
+            "Dark Lake Hylia Shop",
+            "Dark World Lumberjack Shop",
+            "Village of Outcasts Shop",
+            "Dark World Potion Shop"
+          ],
+          "limited": [
+            "Dark Lake Hylia Shop",
+            "Dark World Lumberjack Shop",
+            "Village of Outcasts Shop",
+            "Dark World Potion Shop"
+          ]
+        },
+        "Green Potion": {
+          "unlimited": [
+            "Potion Shop"
+          ],
+          "limited": [
+            "Potion Shop"
+          ]
+        },
+        "Blue Potion": {
+          "unlimited": [
+            "Potion Shop"
+          ],
+          "limited": [
+            "Potion Shop"
+          ]
+        },
+        "Bomb Upgrade (+5)": {
+          "unlimited": [],
+          "limited": [
+            "Capacity Upgrade"
+          ]
+        },
+        "Arrow Upgrade (+5)": {
+          "unlimited": [],
+          "limited": [
+            "Capacity Upgrade"
+          ]
+        }
+      }
     }
   },
   "game_info": {
@@ -19784,5 +19778,1691 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "GanonDefeatRule": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "setting_value",
+              "setting": "swordless"
+            },
+            "body": [
+              {
+                "type": "return",
+                "value": {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Hammer"
+                    },
+                    {
+                      "type": "helper",
+                      "name": "has_fire_source",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Silver Bow"
+                    },
+                    {
+                      "type": "helper",
+                      "name": "can_shoot_arrows",
+                      "args": []
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "type": "assign",
+            "name": "can_hurt",
+            "value": {
+              "type": "helper",
+              "name": "has_beam_sword",
+              "args": []
+            }
+          },
+          {
+            "type": "assign",
+            "name": "common",
+            "value": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "name",
+                  "name": "can_hurt"
+                },
+                {
+                  "type": "helper",
+                  "name": "has_fire_source",
+                  "args": []
+                }
+              ]
+            }
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "setting_value",
+                "setting": "glitches_required"
+              },
+              "op": "!=",
+              "right": {
+                "type": "constant",
+                "value": "no_glitches"
+              }
+            },
+            "body": [
+              {
+                "type": "return",
+                "value": {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "name",
+                      "name": "common"
+                    },
+                    {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Tempered Sword"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Golden Sword"
+                        },
+                        {
+                          "type": "and",
+                          "conditions": [
+                            {
+                              "type": "item_check",
+                              "item": "Silver Bow"
+                            },
+                            {
+                              "type": "helper",
+                              "name": "can_shoot_arrows",
+                              "args": []
+                            }
+                          ]
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Lamp"
+                        },
+                        {
+                          "type": "helper",
+                          "name": "can_extend_magic",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": 12
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            ],
+            "orelse": [
+              {
+                "type": "return",
+                "value": {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "name",
+                      "name": "common"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Silver Bow"
+                    },
+                    {
+                      "type": "helper",
+                      "name": "can_shoot_arrows",
+                      "args": []
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "basement_key_rule": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "placement_lookup",
+            "location": {
+              "type": "constant",
+              "value": "Sewers - Key Rat Key Drop"
+            }
+          },
+          "op": "==",
+          "right": {
+            "type": "list",
+            "value": [
+              {
+                "type": "constant",
+                "value": "Small Key (Hyrule Castle)"
+              },
+              {
+                "type": "constant",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "if_true": {
+          "type": "count_check",
+          "item": "Small Key (Hyrule Castle)",
+          "count": {
+            "type": "constant",
+            "value": 2
+          }
+        },
+        "if_false": {
+          "type": "count_check",
+          "item": "Small Key (Hyrule Castle)",
+          "count": {
+            "type": "constant",
+            "value": 3
+          }
+        }
+      },
+      "bottle_count": {
+        "type": "min",
+        "args": [
+          {
+            "type": "setting_value",
+            "setting": "difficulty_requirements.progressive_bottle_limit"
+          },
+          {
+            "type": "group_count",
+            "group": "Bottles"
+          }
+        ]
+      },
+      "can_activate_crystal_switch": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "has_melee_weapon",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "can_use_bombs",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "can_shoot_arrows",
+            "args": []
+          },
+          {
+            "type": "state_method",
+            "method": "has_any",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Blue Boomerang",
+                  "Cane of Byrna",
+                  "Cane of Somaria",
+                  "Fire Rod",
+                  "Hookshot",
+                  "Ice Rod",
+                  "Red Boomerang"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "can_bomb_or_bonk": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Pegasus Boots"
+          },
+          {
+            "type": "helper",
+            "name": "can_use_bombs",
+            "args": []
+          }
+        ]
+      },
+      "can_buy": {
+        "params": [
+          "item"
+        ],
+        "body": {
+          "type": "any_of",
+          "iterator_info": {
+            "target": {
+              "type": "name",
+              "name": "region"
+            },
+            "iterator": {
+              "type": "subscript",
+              "value": {
+                "type": "subscript",
+                "value": {
+                  "type": "setting_value",
+                  "setting": "shop_items"
+                },
+                "index": {
+                  "type": "name",
+                  "name": "item"
+                }
+              },
+              "index": {
+                "type": "constant",
+                "value": "limited"
+              }
+            }
+          },
+          "element_rule": {
+            "type": "can_reach",
+            "region": {
+              "type": "name",
+              "name": "region"
+            }
+          }
+        }
+      },
+      "can_buy_unlimited": {
+        "params": [
+          "item"
+        ],
+        "body": {
+          "type": "any_of",
+          "iterator_info": {
+            "target": {
+              "type": "name",
+              "name": "region"
+            },
+            "iterator": {
+              "type": "subscript",
+              "value": {
+                "type": "subscript",
+                "value": {
+                  "type": "setting_value",
+                  "setting": "shop_items"
+                },
+                "index": {
+                  "type": "name",
+                  "name": "item"
+                }
+              },
+              "index": {
+                "type": "constant",
+                "value": "unlimited"
+              }
+            }
+          },
+          "element_rule": {
+            "type": "can_reach",
+            "region": {
+              "type": "name",
+              "name": "region"
+            }
+          }
+        }
+      },
+      "can_extend_magic": {
+        "params": [
+          "smallmagic",
+          "fullrefill"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "basemagic",
+              "value": {
+                "type": "constant",
+                "value": 8
+              }
+            },
+            {
+              "type": "assign",
+              "name": "basemagic",
+              "value": {
+                "type": "conditional",
+                "test": {
+                  "type": "item_check",
+                  "item": "Magic Upgrade (1/4)"
+                },
+                "if_true": {
+                  "type": "constant",
+                  "value": 32
+                },
+                "if_false": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "item_check",
+                    "item": "Magic Upgrade (1/2)"
+                  },
+                  "if_true": {
+                    "type": "constant",
+                    "value": 16
+                  },
+                  "if_false": {
+                    "type": "name",
+                    "name": "basemagic"
+                  }
+                }
+              }
+            },
+            {
+              "type": "assign",
+              "name": "basemagic",
+              "value": {
+                "type": "conditional",
+                "test": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "can_buy_unlimited",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Green Potion"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "helper",
+                      "name": "can_buy_unlimited",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Blue Potion"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "if_true": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "compare",
+                        "left": {
+                          "type": "setting_value",
+                          "setting": "item_functionality"
+                        },
+                        "op": "==",
+                        "right": {
+                          "type": "constant",
+                          "value": "hard"
+                        }
+                      },
+                      {
+                        "type": "not",
+                        "condition": {
+                          "type": "name",
+                          "name": "fullrefill"
+                        }
+                      }
+                    ]
+                  },
+                  "if_true": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "name",
+                      "name": "basemagic"
+                    },
+                    "op": "+",
+                    "right": {
+                      "type": "helper",
+                      "name": "int",
+                      "args": [
+                        {
+                          "type": "binary_op",
+                          "left": {
+                            "type": "binary_op",
+                            "left": {
+                              "type": "name",
+                              "name": "basemagic"
+                            },
+                            "op": "*",
+                            "right": {
+                              "type": "constant",
+                              "value": 0.5
+                            }
+                          },
+                          "op": "*",
+                          "right": {
+                            "type": "helper",
+                            "name": "bottle_count",
+                            "args": []
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "if_false": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "compare",
+                          "left": {
+                            "type": "setting_value",
+                            "setting": "item_functionality"
+                          },
+                          "op": "==",
+                          "right": {
+                            "type": "constant",
+                            "value": "expert"
+                          }
+                        },
+                        {
+                          "type": "not",
+                          "condition": {
+                            "type": "name",
+                            "name": "fullrefill"
+                          }
+                        }
+                      ]
+                    },
+                    "if_true": {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "name",
+                        "name": "basemagic"
+                      },
+                      "op": "+",
+                      "right": {
+                        "type": "helper",
+                        "name": "int",
+                        "args": [
+                          {
+                            "type": "binary_op",
+                            "left": {
+                              "type": "binary_op",
+                              "left": {
+                                "type": "name",
+                                "name": "basemagic"
+                              },
+                              "op": "*",
+                              "right": {
+                                "type": "constant",
+                                "value": 0.25
+                              }
+                            },
+                            "op": "*",
+                            "right": {
+                              "type": "helper",
+                              "name": "bottle_count",
+                              "args": []
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "if_false": {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "name",
+                        "name": "basemagic"
+                      },
+                      "op": "+",
+                      "right": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "name",
+                          "name": "basemagic"
+                        },
+                        "op": "*",
+                        "right": {
+                          "type": "helper",
+                          "name": "bottle_count",
+                          "args": []
+                        }
+                      }
+                    }
+                  }
+                },
+                "if_false": {
+                  "type": "name",
+                  "name": "basemagic"
+                }
+              }
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "basemagic"
+                },
+                "op": ">=",
+                "right": {
+                  "type": "name",
+                  "name": "smallmagic"
+                }
+              }
+            }
+          ]
+        },
+        "defaults": {
+          "smallmagic": 16,
+          "fullrefill": false
+        }
+      },
+      "can_get_good_bee": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "cave",
+            "value": {
+              "type": "region_reference",
+              "region": "Good Bee Cave"
+            }
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "group_check",
+                  "group": "Bottles"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Bug Catching Net"
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Pegasus Boots"
+                    },
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "has_sword",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Quake"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "function_call",
+                  "function": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "cave"
+                    },
+                    "attr": "can_reach"
+                  },
+                  "args": []
+                },
+                {
+                  "type": "helper",
+                  "name": "is_not_bunny",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "cave"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "can_hold_arrows": {
+        "params": [
+          "quantity"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "setting_value",
+                "setting": "shuffle_capacity_upgrades"
+              },
+              "body": [
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "name",
+                      "name": "quantity"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "return",
+                      "value": {
+                        "type": "constant",
+                        "value": true
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "item_check",
+                    "item": "Arrow Upgrade (70)"
+                  },
+                  "body": [
+                    {
+                      "type": "assign",
+                      "name": "arrows",
+                      "value": {
+                        "type": "constant",
+                        "value": 70
+                      }
+                    }
+                  ],
+                  "orelse": [
+                    {
+                      "type": "assign",
+                      "name": "arrows",
+                      "value": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "binary_op",
+                          "left": {
+                            "type": "constant",
+                            "value": 30
+                          },
+                          "op": "+",
+                          "right": {
+                            "type": "binary_op",
+                            "left": {
+                              "type": "state_method",
+                              "method": "count",
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": "Arrow Upgrade (+5)"
+                                }
+                              ]
+                            },
+                            "op": "*",
+                            "right": {
+                              "type": "constant",
+                              "value": 5
+                            }
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "type": "binary_op",
+                          "left": {
+                            "type": "state_method",
+                            "method": "count",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": "Arrow Upgrade (+10)"
+                              }
+                            ]
+                          },
+                          "op": "*",
+                          "right": {
+                            "type": "constant",
+                            "value": 10
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "assign",
+                      "name": "arrows",
+                      "op": "+=",
+                      "value": {
+                        "type": "max",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": 0
+                          },
+                          {
+                            "type": "binary_op",
+                            "left": {
+                              "type": "binary_op",
+                              "left": {
+                                "type": "state_method",
+                                "method": "count",
+                                "args": [
+                                  {
+                                    "type": "constant",
+                                    "value": "Arrow Upgrade (+5)"
+                                  }
+                                ]
+                              },
+                              "op": "-",
+                              "right": {
+                                "type": "constant",
+                                "value": 6
+                              }
+                            },
+                            "op": "*",
+                            "right": {
+                              "type": "constant",
+                              "value": 10
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "compare",
+                    "left": {
+                      "type": "min",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": 70
+                        },
+                        {
+                          "type": "name",
+                          "name": "arrows"
+                        }
+                      ]
+                    },
+                    "op": ">=",
+                    "right": {
+                      "type": "name",
+                      "name": "quantity"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "compare",
+                    "left": {
+                      "type": "name",
+                      "name": "quantity"
+                    },
+                    "op": "<=",
+                    "right": {
+                      "type": "constant",
+                      "value": 30
+                    }
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Capacity Upgrade Shop"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "can_kill_most_things": {
+        "params": [
+          "enemies"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "setting_value",
+            "setting": "enemy_shuffle"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "has_melee_weapon",
+                "args": []
+              },
+              {
+                "type": "item_check",
+                "item": "Cane of Somaria"
+              },
+              {
+                "type": "item_check",
+                "item": "Cane of Byrna"
+              },
+              {
+                "type": "helper",
+                "name": "can_extend_magic",
+                "args": []
+              },
+              {
+                "type": "helper",
+                "name": "can_shoot_arrows",
+                "args": []
+              },
+              {
+                "type": "item_check",
+                "item": "Fire Rod"
+              },
+              {
+                "type": "helper",
+                "name": "can_use_bombs",
+                "args": [
+                  {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "name",
+                      "name": "enemies"
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 4
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "has_melee_weapon",
+                "args": []
+              },
+              {
+                "type": "item_check",
+                "item": "Cane of Somaria"
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Cane of Byrna"
+                  },
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "compare",
+                        "left": {
+                          "type": "name",
+                          "name": "enemies"
+                        },
+                        "op": "<",
+                        "right": {
+                          "type": "constant",
+                          "value": 6
+                        }
+                      },
+                      {
+                        "type": "helper",
+                        "name": "can_extend_magic",
+                        "args": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "can_shoot_arrows",
+                "args": []
+              },
+              {
+                "type": "item_check",
+                "item": "Fire Rod"
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "compare",
+                    "left": {
+                      "type": "setting_value",
+                      "setting": "enemy_health"
+                    },
+                    "op": "in",
+                    "right": {
+                      "type": "list",
+                      "value": [
+                        {
+                          "type": "constant",
+                          "value": "easy"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "default"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "type": "helper",
+                    "name": "can_use_bombs",
+                    "args": [
+                      {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "name",
+                          "name": "enemies"
+                        },
+                        "op": "*",
+                        "right": {
+                          "type": "constant",
+                          "value": 4
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "defaults": {
+          "enemies": 5
+        }
+      },
+      "can_lift_heavy_rocks": {
+        "type": "item_check",
+        "item": "Titans Mitts"
+      },
+      "can_lift_rocks": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Power Glove"
+          },
+          {
+            "type": "item_check",
+            "item": "Titans Mitts"
+          }
+        ]
+      },
+      "can_melt_things": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Fire Rod"
+          },
+          {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Bombos"
+              },
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "setting_value",
+                    "setting": "swordless"
+                  },
+                  {
+                    "type": "helper",
+                    "name": "has_sword",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "can_retrieve_tablet": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Book of Mudora"
+          },
+          {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "has_beam_sword",
+                "args": []
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "setting_value",
+                    "setting": "swordless"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Hammer"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "can_shoot_arrows": {
+        "params": [
+          "count"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "setting_value",
+            "setting": "retro_bow"
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Bow"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Silver Bow"
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "can_buy",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Single Arrow"
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Bow"
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Silver Bow"
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "can_hold_arrows",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "count"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "defaults": {
+          "count": 0
+        }
+      },
+      "can_use_bombs": {
+        "params": [
+          "quantity"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "bombs",
+              "value": {
+                "type": "conditional",
+                "test": {
+                  "type": "setting_value",
+                  "setting": "bombless_start"
+                },
+                "if_true": {
+                  "type": "constant",
+                  "value": 0
+                },
+                "if_false": {
+                  "type": "constant",
+                  "value": 10
+                }
+              }
+            },
+            {
+              "type": "assign",
+              "name": "bombs",
+              "op": "+=",
+              "value": {
+                "type": "binary_op",
+                "left": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Bomb Upgrade (+5)"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 5
+                    }
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "state_method",
+                      "method": "count",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Bomb Upgrade (+10)"
+                        }
+                      ]
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 10
+                    }
+                  }
+                },
+                "op": "+",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Bomb Upgrade (50)"
+                      }
+                    ]
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "constant",
+                    "value": 50
+                  }
+                }
+              }
+            },
+            {
+              "type": "assign",
+              "name": "bombs",
+              "op": "+=",
+              "value": {
+                "type": "max",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": 0
+                  },
+                  {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "state_method",
+                        "method": "count",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Bomb Upgrade (+5)"
+                          }
+                        ]
+                      },
+                      "op": "-",
+                      "right": {
+                        "type": "constant",
+                        "value": 6
+                      }
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "constant",
+                      "value": 10
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "setting_value",
+                      "setting": "shuffle_capacity_upgrades"
+                    }
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Capacity Upgrade Shop"
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "assign",
+                  "name": "bombs",
+                  "op": "+=",
+                  "value": {
+                    "type": "constant",
+                    "value": 40
+                  }
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "bombs"
+                },
+                "op": ">=",
+                "right": {
+                  "type": "min",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "quantity"
+                    },
+                    {
+                      "type": "constant",
+                      "value": 50
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "defaults": {
+          "quantity": 1
+        }
+      },
+      "cross_peg_bridge": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Hammer"
+          },
+          {
+            "type": "item_check",
+            "item": "Moon Pearl"
+          }
+        ]
+      },
+      "has_beam_sword": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Master Sword"
+          },
+          {
+            "type": "item_check",
+            "item": "Tempered Sword"
+          },
+          {
+            "type": "item_check",
+            "item": "Golden Sword"
+          }
+        ]
+      },
+      "has_crystals": {
+        "params": [
+          "count"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "found",
+              "value": {
+                "type": "group_count",
+                "group": "Crystals"
+              }
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "found"
+                },
+                "op": ">=",
+                "right": {
+                  "type": "name",
+                  "name": "count"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "has_fire_source": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Fire Rod"
+          },
+          {
+            "type": "item_check",
+            "item": "Lamp"
+          }
+        ]
+      },
+      "has_hearts": {
+        "params": [
+          "count"
+        ],
+        "body": {
+          "type": "compare",
+          "left": {
+            "type": "helper",
+            "name": "heart_count",
+            "args": []
+          },
+          "op": ">=",
+          "right": {
+            "type": "name",
+            "name": "count"
+          }
+        }
+      },
+      "has_melee_weapon": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "has_sword",
+            "args": []
+          },
+          {
+            "type": "item_check",
+            "item": "Hammer"
+          }
+        ]
+      },
+      "has_misery_mire_medallion": {
+        "type": "item_check",
+        "item": {
+          "type": "setting_value",
+          "setting": "required_medallions",
+          "index": 0
+        }
+      },
+      "has_sword": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Fighter Sword"
+          },
+          {
+            "type": "item_check",
+            "item": "Master Sword"
+          },
+          {
+            "type": "item_check",
+            "item": "Tempered Sword"
+          },
+          {
+            "type": "item_check",
+            "item": "Golden Sword"
+          }
+        ]
+      },
+      "has_turtle_rock_medallion": {
+        "type": "item_check",
+        "item": {
+          "type": "setting_value",
+          "setting": "required_medallions",
+          "index": 1
+        }
+      },
+      "heart_count": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "max_heart_pieces",
+            "value": {
+              "type": "setting_value",
+              "setting": "logical_heart_pieces"
+            }
+          },
+          {
+            "type": "assign",
+            "name": "max_heart_containers",
+            "value": {
+              "type": "setting_value",
+              "setting": "logical_heart_containers"
+            }
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "binary_op",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "min",
+                    "args": [
+                      {
+                        "type": "state_method",
+                        "method": "count",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Boss Heart Container"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "name",
+                        "name": "max_heart_containers"
+                      }
+                    ]
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Sanctuary Heart Container"
+                      }
+                    ]
+                  }
+                },
+                "op": "+",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "min",
+                    "args": [
+                      {
+                        "type": "state_method",
+                        "method": "count",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Piece of Heart"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "name",
+                        "name": "max_heart_pieces"
+                      }
+                    ]
+                  },
+                  "op": "//",
+                  "right": {
+                    "type": "constant",
+                    "value": 4
+                  }
+                }
+              },
+              "op": "+",
+              "right": {
+                "type": "constant",
+                "value": 3
+              }
+            }
+          }
+        ]
+      },
+      "is_not_bunny": {
+        "params": [
+          "region"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "item_check",
+            "item": "Moon Pearl"
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "setting_value",
+                "setting": "mode"
+              },
+              "op": "!=",
+              "right": {
+                "type": "constant",
+                "value": "inverted"
+              }
+            },
+            "if_true": {
+              "type": "region_attribute",
+              "region": {
+                "type": "name",
+                "name": "region"
+              },
+              "attr": "is_light_world"
+            },
+            "if_false": {
+              "type": "region_attribute",
+              "region": {
+                "type": "name",
+                "name": "region"
+              },
+              "attr": "is_dark_world"
+            }
+          }
+        }
+      },
+      "can_defeat_boss": {
+        "params": [
+          "location_name",
+          "boss_type"
+        ],
+        "body": {
+          "type": "helper",
+          "name": "can_kill_most_things",
+          "args": [
+            {
+              "type": "constant",
+              "value": 1
+            }
+          ]
+        }
+      }
+    }
+  }
 }

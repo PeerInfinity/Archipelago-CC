@@ -36,3 +36,19 @@ MAX_RULE_SIZE_KB = 100
 # Maximum size of total export data in megabytes.
 # Checked periodically during region processing.
 MAX_EXPORT_SIZE_MB = 10
+
+# =============================================================================
+# Sorting Configuration
+# =============================================================================
+
+# Keys where sorting list values is safe (order is not semantically meaningful).
+# Used by sort_lists_for_consistency() to ensure deterministic JSON output.
+SAFE_TO_SORT_KEYS = {
+    'allowed_legendary_hunt_encounters',
+    'dependencies',
+    'disabled_entities',
+    'enabled_filler_buffs',
+    'exclude_locations',
+    'goal',
+    'move_rando_actions',
+}

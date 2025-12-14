@@ -1338,8 +1338,12 @@
                   "type": "item_check",
                   "item": "Key Piece",
                   "count": {
-                    "type": "constant",
-                    "value": 5
+                    "type": "attribute",
+                    "object": {
+                      "type": "setting_value",
+                      "setting": "key_pieces"
+                    },
+                    "attr": "value"
                   }
                 }
               ]

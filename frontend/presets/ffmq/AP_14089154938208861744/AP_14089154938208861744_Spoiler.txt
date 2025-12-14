@@ -598,7 +598,8 @@ Doom Castle B2 - Sun Door Chest
 Dualhead Hydra
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Lava Dome
    =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
    =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
@@ -791,7 +792,8 @@ Ice Pyramid B1 - West Box
 Jinn
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Mine
    =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior South East Platforms
    =>   Mine Exterior South East Platforms
@@ -810,7 +812,8 @@ Kaeli Companion
 Lava Dome - Exterior Dead End Caldera Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Lava Dome
    =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
    =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
@@ -824,7 +827,8 @@ Lava Dome - Exterior Dead End Caldera Box
 Lava Dome - Hydra Room Northwest Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Lava Dome
    =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
    =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
@@ -838,7 +842,8 @@ Lava Dome - Hydra Room Northwest Box
 Lava Dome - U-Bend Room North Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Lava Dome
    =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Split Corridor Room
    =>   Lava Dome Split Corridor -> Lava Dome Split Corridor - Upper Stairs
@@ -847,7 +852,8 @@ Lava Dome - U-Bend Room North Box
 Lava Dome Plate
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Lava Dome
    =>   Lava Dome Inner Ring Main Loop -> Lava Dome Inner Ring Main Loop - To Big Jump Room Left
    =>   Lava Dome Big Jump Room Main Area -> Lava Dome Big Jump Room - Lower Right Stairs
@@ -881,7 +887,8 @@ Mac Ship Steering Wheel
 Medusa
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Volcano
    =>   Volcano Base -> Volcano Base - Left Stairs Script
    =>   Volcano Left Path -> Volcano Left Path - To Volcano Cross Right-Left
@@ -890,7 +897,8 @@ Medusa
 Mine - Cliff Northeast Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Mine
    =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior South East Platforms
    =>   Mine Exterior South East Platforms -> Mine Exterior - To Cliff
@@ -898,7 +906,8 @@ Mine - Cliff Northeast Box
 Mine - Crescent Room Chest
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Mine
    =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior North Ledge
    =>   Mine Exterior North Ledge -> Mine Exterior - To Crescent Room
@@ -906,14 +915,16 @@ Mine - Crescent Room Chest
 Mine - Parallel Room East Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Mine
    =>   Mine Exterior North West Platforms -> Mine Exterior - To Parallel Room
    =>   Mine Parallel Room
 Mine - Parallel Room West Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Mine
    =>   Mine Exterior North West Platforms -> Mine Exterior - To Parallel Room
    =>   Mine Parallel Room
@@ -1123,14 +1134,16 @@ Phoebe Companion
 Reuben Companion
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Fireburg
    =>   Fireburg Upper Plaza -> Fireburg - Reuben House
    =>   Reuben's House
 Reuben's dad Saved
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Mine
    =>   Mine Exterior North West Platforms -> Mine Exterior North West Platforms to Mine Exterior South East Platforms
    =>   Mine Exterior South East Platforms -> Mine Exterior - To Cliff
@@ -1237,7 +1250,8 @@ Twinhead Wyvern
 Volcano - Base East Right Box
         Menu -> Enter Overworld
    =>   Overworld -> Overworld to Subregion Foresta
-   =>   Subregion Foresta -> Subregion Foresta to Subregion Fireburg
+   =>   Subregion Foresta -> Subregion Foresta to Subregion Windia
+   =>   Subregion Windia -> Subregion Windia to Subregion Fireburg
    =>   Subregion Fireburg -> Overworld - Volcano
    =>   Volcano Base
 Windia - Inn Bedroom South Box

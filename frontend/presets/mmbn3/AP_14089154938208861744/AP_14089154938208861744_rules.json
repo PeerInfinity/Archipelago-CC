@@ -2195,10 +2195,16 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Magnum1 A",
-                        "Press"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Magnum1 A"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Press"
+                        }
                       ]
                     }
                   ]
@@ -8645,5 +8651,296 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "explore_score": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "can_reach",
+            "region": {
+              "type": "constant",
+              "value": "WWW Island"
+            }
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": true
+          }
+        },
+        "if_true": {
+          "type": "constant",
+          "value": 999
+        },
+        "if_false": {
+          "type": "binary_op",
+          "op": "+",
+          "left": {
+            "type": "binary_op",
+            "op": "+",
+            "left": {
+              "type": "binary_op",
+              "op": "+",
+              "left": {
+                "type": "binary_op",
+                "op": "+",
+                "left": {
+                  "type": "binary_op",
+                  "op": "+",
+                  "left": {
+                    "type": "binary_op",
+                    "op": "+",
+                    "left": {
+                      "type": "binary_op",
+                      "op": "+",
+                      "left": {
+                        "type": "binary_op",
+                        "op": "+",
+                        "left": {
+                          "type": "conditional",
+                          "test": {
+                            "type": "compare",
+                            "left": {
+                              "type": "can_reach",
+                              "region": {
+                                "type": "constant",
+                                "value": "SciLab Overworld"
+                              }
+                            },
+                            "op": "==",
+                            "right": {
+                              "type": "constant",
+                              "value": true
+                            }
+                          },
+                          "if_true": {
+                            "type": "constant",
+                            "value": 3
+                          },
+                          "if_false": {
+                            "type": "constant",
+                            "value": 0
+                          }
+                        },
+                        "right": {
+                          "type": "conditional",
+                          "test": {
+                            "type": "compare",
+                            "left": {
+                              "type": "can_reach",
+                              "region": {
+                                "type": "constant",
+                                "value": "SciLab Cyberworld"
+                              }
+                            },
+                            "op": "==",
+                            "right": {
+                              "type": "constant",
+                              "value": true
+                            }
+                          },
+                          "if_true": {
+                            "type": "constant",
+                            "value": 1
+                          },
+                          "if_false": {
+                            "type": "constant",
+                            "value": 0
+                          }
+                        }
+                      },
+                      "right": {
+                        "type": "conditional",
+                        "test": {
+                          "type": "compare",
+                          "left": {
+                            "type": "can_reach",
+                            "region": {
+                              "type": "constant",
+                              "value": "Yoka Overworld"
+                            }
+                          },
+                          "op": "==",
+                          "right": {
+                            "type": "constant",
+                            "value": true
+                          }
+                        },
+                        "if_true": {
+                          "type": "constant",
+                          "value": 2
+                        },
+                        "if_false": {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      }
+                    },
+                    "right": {
+                      "type": "conditional",
+                      "test": {
+                        "type": "compare",
+                        "left": {
+                          "type": "can_reach",
+                          "region": {
+                            "type": "constant",
+                            "value": "Yoka Cyberworld"
+                          }
+                        },
+                        "op": "==",
+                        "right": {
+                          "type": "constant",
+                          "value": true
+                        }
+                      },
+                      "if_true": {
+                        "type": "constant",
+                        "value": 1
+                      },
+                      "if_false": {
+                        "type": "constant",
+                        "value": 0
+                      }
+                    }
+                  },
+                  "right": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "compare",
+                      "left": {
+                        "type": "can_reach",
+                        "region": {
+                          "type": "constant",
+                          "value": "Beach Overworld"
+                        }
+                      },
+                      "op": "==",
+                      "right": {
+                        "type": "constant",
+                        "value": true
+                      }
+                    },
+                    "if_true": {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    "if_false": {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  }
+                },
+                "right": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "can_reach",
+                      "region": {
+                        "type": "constant",
+                        "value": "Beach Cyberworld"
+                      }
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": true
+                    }
+                  },
+                  "if_true": {
+                    "type": "constant",
+                    "value": 1
+                  },
+                  "if_false": {
+                    "type": "constant",
+                    "value": 0
+                  }
+                }
+              },
+              "right": {
+                "type": "conditional",
+                "test": {
+                  "type": "compare",
+                  "left": {
+                    "type": "can_reach",
+                    "region": {
+                      "type": "constant",
+                      "value": "Undernet"
+                    }
+                  },
+                  "op": "==",
+                  "right": {
+                    "type": "constant",
+                    "value": true
+                  }
+                },
+                "if_true": {
+                  "type": "constant",
+                  "value": 2
+                },
+                "if_false": {
+                  "type": "constant",
+                  "value": 0
+                }
+              }
+            },
+            "right": {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "can_reach",
+                  "region": {
+                    "type": "constant",
+                    "value": "Deep Undernet"
+                  }
+                },
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": true
+                }
+              },
+              "if_true": {
+                "type": "constant",
+                "value": 1
+              },
+              "if_false": {
+                "type": "constant",
+                "value": 0
+              }
+            }
+          },
+          "right": {
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "can_reach",
+                "region": {
+                  "type": "constant",
+                  "value": "Secret Area"
+                }
+              },
+              "op": "==",
+              "right": {
+                "type": "constant",
+                "value": true
+              }
+            },
+            "if_true": {
+              "type": "constant",
+              "value": 1
+            },
+            "if_false": {
+              "type": "constant",
+              "value": 0
+            }
+          }
+        }
+      }
+    }
+  }
 }

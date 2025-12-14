@@ -15,7 +15,7 @@ import Utils
 from .analyzer import analyze_rule, reset_analyze_rule_counter
 from .analyzer.cache import clear_caches as clear_analyzer_caches
 from .games import get_game_export_handler, clear_handler_cache
-from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB
+from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB, SAFE_TO_SORT_KEYS
 from BaseClasses import ItemClassification
 
 logger = logging.getLogger(__name__)
@@ -1511,6 +1511,26 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                 logger.exception("Full traceback:")
                 continue
 
+        # Create missing regions that are referenced by exits but not defined
+        # This handles cases where terminal regions (with no locations or exits) get
+        # filtered out by the world but are still referenced as exit targets
+        exit_targets = set()
+        for region_data in regions_data.values():
+            for exit_data in region_data.get('exits', []):
+                target = exit_data.get('connected_region')
+                if target:
+                    exit_targets.add(target)
+
+        missing_regions = exit_targets - set(regions_data.keys())
+        for missing_region in missing_regions:
+            logger.debug(f"Creating placeholder for missing terminal region: {missing_region}")
+            regions_data[missing_region] = {
+                'name': missing_region,
+                'entrances': [],
+                'exits': [],
+                'locations': [],
+            }
+
         # Sort all rules for consistency
         regions_data = sort_rule_for_consistency(regions_data)
         dungeons_data = sort_rule_for_consistency(dungeons_data)
@@ -1786,16 +1806,6 @@ def sort_lists_for_consistency(data, key_name=None):
     Returns:
         The data structure with whitelisted lists sorted
     """
-    # Keys where sorting is safe (order is not semantically meaningful)
-    SAFE_TO_SORT_KEYS = {
-        'exclude_locations',
-        'allowed_legendary_hunt_encounters',
-        'move_rando_actions',
-        'enabled_filler_buffs',
-        'goal',
-        'disabled_entities',
-    }
-
     if data is None or isinstance(data, (bool, int, float, str)):
         return data
 

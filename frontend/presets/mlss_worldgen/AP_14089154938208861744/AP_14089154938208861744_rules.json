@@ -33,40 +33,45 @@
             "name": "BaseUltraRocks",
             "connected_region": "BaseUltraRocks",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Chucklehuck Woods",
             "connected_region": "Chucklehuck Woods",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "BooStatue",
             "connected_region": "BooStatue",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Hooniversity",
             "connected_region": "Hooniversity",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "TeeheeValley",
             "connected_region": "TeeheeValley",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
@@ -81,32 +86,36 @@
             "name": "Sewers",
             "connected_region": "Sewers",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Airport",
             "connected_region": "Airport",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Theater",
             "connected_region": "Theater",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Surfable",
             "connected_region": "Surfable",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -235,8 +244,9 @@
             "name": "Hoohoo Village Hammer House Block",
             "id": 3790641,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Counter Badge",
@@ -580,8 +590,9 @@
             "name": "Hoohoo Mountain Base Bridge Room Digspot",
             "id": 3791292,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -610,8 +621,9 @@
             "name": "Hoohoo Mountain Base Boostatue Room Block 2",
             "id": 3791313,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -625,8 +637,9 @@
             "name": "Hoohoo Mountain Base Boostatue Room Digspot 1",
             "id": 3791321,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Mushroom",
@@ -640,8 +653,9 @@
             "name": "Hoohoo Mountain Base Boostatue Room Digspot 2",
             "id": 3791329,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Syrup",
@@ -1015,8 +1029,9 @@
             "name": "Hoohoo Mountain Summit Digspot",
             "id": 3790942,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -1030,8 +1045,9 @@
             "name": "Hoohoo Mountain Below Summit Digspot",
             "id": 3790955,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1045,8 +1061,9 @@
             "name": "Hoohoo Mountain Past Hoohooros Digspot",
             "id": 3791000,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1060,8 +1077,9 @@
             "name": "Hoohoo Mountain Hoohooros Room Digspot 1",
             "id": 3791037,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -1075,8 +1093,9 @@
             "name": "Hoohoo Mountain Hoohooros Room Digspot 2",
             "id": 3791045,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1090,8 +1109,9 @@
             "name": "Hoohoo Mountain Before Hoohooros Digspot",
             "id": 3791074,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1105,8 +1125,9 @@
             "name": "Hoohoo Mountain Room 2 Digspot 1",
             "id": 3791111,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "1-UP Super",
@@ -1120,8 +1141,9 @@
             "name": "Hoohoo Mountain Room 2 Digspot 2",
             "id": 3791119,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1135,8 +1157,9 @@
             "name": "Hoohoo Mountain Base Room 1 Digspot",
             "id": 3791169,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Peasley's Rose",
@@ -1150,8 +1173,9 @@
             "name": "Hoohoo Village Eastside Digspot",
             "id": 3791199,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -1165,8 +1189,9 @@
             "name": "Hoohoo Village Super Hammer Cave Digspot",
             "id": 3791618,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Max Mushroom",
@@ -1180,8 +1205,9 @@
             "name": "Hoohoo Village Super Hammer Cave Block",
             "id": 3791594,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Soulful Bros.",
@@ -1195,8 +1221,9 @@
             "name": "Hoohoo Village North Cave Room 2 Digspot",
             "id": 3791541,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1210,8 +1237,9 @@
             "name": "Hoohoo Mountain Base Minecart Cave Digspot",
             "id": 3791631,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1225,8 +1253,9 @@
             "name": "Beanbean Outskirts Farm Room Digspot 1",
             "id": 3791650,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1240,8 +1269,9 @@
             "name": "Beanbean Outskirts Farm Room Digspot 2",
             "id": 3791658,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -1255,8 +1285,9 @@
             "name": "Beanbean Outskirts Farm Room Digspot 3",
             "id": 3791666,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -1270,8 +1301,9 @@
             "name": "Beanbean Outskirts NW Block",
             "id": 3791751,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1285,8 +1317,9 @@
             "name": "Beanbean Outskirts NW Digspot",
             "id": 3791767,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Syrup",
@@ -1300,8 +1333,9 @@
             "name": "Beanbean Outskirts W Digspot 1",
             "id": 3791788,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1315,8 +1349,9 @@
             "name": "Beanbean Outskirts W Digspot 2",
             "id": 3791796,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Bean Fruit 3",
@@ -1330,8 +1365,9 @@
             "name": "Beanbean Outskirts W Digspot 3",
             "id": 3791804,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Bean Trousers",
@@ -1345,8 +1381,9 @@
             "name": "Beanbean Outskirts SW Digspot 1",
             "id": 3791817,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -1360,8 +1397,9 @@
             "name": "Beanbean Outskirts SW Digspot 2",
             "id": 3791833,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1375,8 +1413,9 @@
             "name": "Beanbean Outskirts SW Digspot 3",
             "id": 3791841,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -1390,8 +1429,9 @@
             "name": "Beanbean Outskirts N Room 1 Digspot",
             "id": 3791854,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Beauty Badge",
@@ -1405,8 +1445,9 @@
             "name": "Beanbean Outskirts N Room 2 Digspot",
             "id": 3791867,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Syrup",
@@ -1420,8 +1461,9 @@
             "name": "Beanbean Outskirts S Room 1 Digspot 1",
             "id": 3791880,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1435,8 +1477,9 @@
             "name": "Beanbean Outskirts S Room 1 Block",
             "id": 3791904,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1450,8 +1493,9 @@
             "name": "Beanbean Outskirts S Room 1 Digspot 2",
             "id": 3791912,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Castle Badge",
@@ -1465,8 +1509,9 @@
             "name": "Beanbean Outskirts S Room 2 Block 1",
             "id": 3791949,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1480,8 +1525,9 @@
             "name": "Beanbean Outskirts NE Digspot 1",
             "id": 3791994,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1495,8 +1541,9 @@
             "name": "Beanbean Outskirts NE Digspot 2",
             "id": 3792002,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -1510,8 +1557,9 @@
             "name": "Beanbean Outskirts E Digspot 1",
             "id": 3792015,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -1525,8 +1573,9 @@
             "name": "Beanbean Outskirts E Digspot 2",
             "id": 3792023,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1540,8 +1589,9 @@
             "name": "Beanbean Outskirts E Digspot 3",
             "id": 3792031,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1555,8 +1605,9 @@
             "name": "Beanbean Outskirts SE Digspot 1",
             "id": 3792044,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1570,8 +1621,9 @@
             "name": "Beanbean Outskirts SE Digspot 2",
             "id": 3792060,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Nuts",
@@ -1585,8 +1637,9 @@
             "name": "Beanbean Outskirts SE Digspot 3",
             "id": 3792068,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1600,8 +1653,9 @@
             "name": "Beanbean Outskirts North Beach Digspot 1",
             "id": 3792081,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Super Nuts",
@@ -1615,8 +1669,9 @@
             "name": "Beanbean Outskirts North Beach Digspot 2",
             "id": 3792097,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1630,8 +1685,9 @@
             "name": "Beanbean Outskirts North Beach Digspot 3",
             "id": 3792089,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Max Nuts",
@@ -1645,8 +1701,9 @@
             "name": "Beanbean Outskirts South Beach Digspot",
             "id": 3792110,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Orange Neon Egg",
@@ -1660,8 +1717,9 @@
             "name": "Woohoo Hooniversity West of Star Room Digspot 1",
             "id": 3793279,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1675,8 +1733,9 @@
             "name": "Woohoo Hooniversity West of Star Room Digspot 2",
             "id": 3793287,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "White Chuckola Fruit",
@@ -1690,8 +1749,9 @@
             "name": "Woohoo Hooniversity West of Star Room 2 Digspot",
             "id": 3793366,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1705,8 +1765,9 @@
             "name": "Woohoo Hooniversity West of Star Room 3 Digspot",
             "id": 3793379,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Thunderhand",
@@ -1720,8 +1781,9 @@
             "name": "Woohoo Hooniversity West of Star Room 4 Digspot 1",
             "id": 3793416,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1735,8 +1797,9 @@
             "name": "Woohoo Hooniversity West of Star Room 4 Digspot 2",
             "id": 3793424,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Syrup",
@@ -1750,8 +1813,9 @@
             "name": "Woohoo Hooniversity West of Star Room 5 Digspot",
             "id": 3793437,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Nuts",
@@ -1765,8 +1829,9 @@
             "name": "Woohoo Hooniversity Entrance to Mini Mario Room Digspot 1",
             "id": 3793450,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1780,8 +1845,9 @@
             "name": "Woohoo Hooniversity Entrance to Mini Mario Room Digspot 2",
             "id": 3793458,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red Pearl Bean",
@@ -1795,8 +1861,9 @@
             "name": "Woohoo Hooniversity Entrance to Mini Mario Room 2 Digspot",
             "id": 3793471,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -1810,8 +1877,9 @@
             "name": "Woohoo Hooniversity Mini Mario Puzzle Block",
             "id": 3793484,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1825,8 +1893,9 @@
             "name": "Woohoo Hooniversity Mini Mario Puzzle Digspot",
             "id": 3793492,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Syrup",
@@ -1840,8 +1909,9 @@
             "name": "Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 1",
             "id": 3793505,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1855,8 +1925,9 @@
             "name": "Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 2",
             "id": 3793513,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Nuts",
@@ -1870,8 +1941,9 @@
             "name": "Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 3",
             "id": 3793521,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Mushroom",
@@ -1885,8 +1957,9 @@
             "name": "Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 4",
             "id": 3793529,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -1900,8 +1973,9 @@
             "name": "Hoohoo Mountain Fountain Room 2 Digspot",
             "id": 3795197,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -1915,8 +1989,9 @@
             "name": "Hoohoo Mountain Past Hoohooros Connector Room Digspot 1",
             "id": 3795210,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1930,8 +2005,9 @@
             "name": "Hoohoo Mountain Past Hoohooros Connector Room Digspot 2",
             "id": 3795226,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -1945,8 +2021,9 @@
             "name": "Beanbean Outskirts Secret Scroll 1",
             "id": 2003985,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -1960,8 +2037,9 @@
             "name": "Beanbean Outskirts Secret Scroll 2",
             "id": 2003986,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Bean Fruit 1",
@@ -1975,8 +2053,9 @@
             "name": "Beanbean Outskirts Bean Fruit 1",
             "id": 2265925,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Secret Scroll 2",
@@ -1990,8 +2069,9 @@
             "name": "Beanbean Outskirts Bean Fruit 2",
             "id": 2266445,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nuts",
@@ -2005,8 +2085,9 @@
             "name": "Beanbean Outskirts Bean Fruit 3",
             "id": 2263575,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2020,8 +2101,9 @@
             "name": "Beanbean Outskirts Bean Fruit 4",
             "id": 2265402,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2035,8 +2117,9 @@
             "name": "Beanbean Outskirts Bean Fruit 5",
             "id": 2263310,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Tank Badge",
@@ -2050,8 +2133,9 @@
             "name": "Beanbean Outskirts Bean Fruit 6",
             "id": 2262901,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckoccino",
@@ -2065,8 +2149,9 @@
             "name": "Beanbean Outskirts Bean Fruit 7",
             "id": 2004017,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red Neon Egg",
@@ -2080,8 +2165,9 @@
             "name": "Hoohoo Village Mole Behind Turtle",
             "id": 2587314,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2095,8 +2181,9 @@
             "name": "Beanbean Outskirts Thunderhand Mole",
             "id": 2587080,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -2125,8 +2212,9 @@
             "name": "Beanbean Outskirts Super Hammer Upgrade",
             "id": 2003972,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Mushroom",
@@ -2140,8 +2228,9 @@
             "name": "Beanbean Outskirts Ultra Hammer Upgrade",
             "id": 2003973,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Iron Pants",
@@ -2155,8 +2244,9 @@
             "name": "Beanbean Outskirts NE Solo Mario Mole 1",
             "id": 2004021,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoohoo Blend",
@@ -2170,8 +2260,9 @@
             "name": "Beanbean Outskirts NE Solo Mario Mole 2",
             "id": 2004022,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2200,8 +2291,9 @@
             "name": "Beanbean Outskirts Solo Luigi Cave Mole",
             "id": 2369672,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Super Mushroom",
@@ -2215,8 +2307,9 @@
             "name": "Beanbean Outskirts Farm Room Mole Reward 1",
             "id": 2373700,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Syrup",
@@ -2230,8 +2323,9 @@
             "name": "Beanbean Outskirts Farm Room Mole Reward 2",
             "id": 2373757,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -2245,8 +2339,9 @@
             "name": "Beanbean Outskirts South of Hooniversity Guards Digspot 1",
             "id": 3795344,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2260,8 +2355,9 @@
             "name": "Beanbean Outskirts South of Hooniversity Guards Digspot 2",
             "id": 3795352,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Golden Mushroom",
@@ -2275,8 +2371,9 @@
             "name": "Beanbean Outskirts South of Hooniversity Guards Digspot 3",
             "id": 3795360,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2290,8 +2387,9 @@
             "name": "Beanbean Outskirts Entrance to Hoohoo Mountain Base Digspot 1",
             "id": 3795802,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Bean Fruit 2",
@@ -2305,8 +2403,9 @@
             "name": "Beanbean Outskirts Entrance to Hoohoo Mountain Base Digspot 2",
             "id": 3795810,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -2320,8 +2419,9 @@
             "name": "Beanbean Outskirts Pipe 2 Room Digspot",
             "id": 3796032,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -2335,8 +2435,9 @@
             "name": "Beanbean Outskirts Pipe 4 Room Digspot",
             "id": 3796045,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushluck Pants",
@@ -2350,8 +2451,9 @@
             "name": "Beanbean Castle Town Mini Mario Block 1",
             "id": 3790867,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -2365,8 +2467,9 @@
             "name": "Beanbean Castle Town Mini Mario Block 2",
             "id": 3790875,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Membership Card",
@@ -2380,8 +2483,9 @@
             "name": "Beanbean Castle Town Mini Mario Block 3",
             "id": 3790883,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2395,8 +2499,9 @@
             "name": "Beanbean Castle Town Mini Mario Block 4",
             "id": 3790891,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2410,8 +2515,9 @@
             "name": "Beanbean Castle Town Mini Mario Block 5",
             "id": 3790899,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Firebrand",
@@ -2430,16 +2536,18 @@
             "name": "Winkle",
             "connected_region": "Winkle",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Beanbean Castle Town",
             "connected_region": "Beanbean Castle Town",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -2448,8 +2556,9 @@
             "name": "Chateau Room 1 Digspot",
             "id": 3792160,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2493,8 +2602,9 @@
             "name": "Chateau Popple Fight Room Digspot",
             "id": 3792208,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -2508,8 +2618,9 @@
             "name": "Chateau Barrel Room Digspot",
             "id": 3792221,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2523,8 +2634,9 @@
             "name": "Chateau Goblet Room Digspot",
             "id": 3792237,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -2598,8 +2710,9 @@
             "name": "Chucklehuck Woods Solo Luigi Cave Room 2 Block",
             "id": 3791730,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -2613,8 +2726,9 @@
             "name": "Chucklehuck Woods Solo Luigi Cave Room 3 Block 1",
             "id": 3791709,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -2628,8 +2742,9 @@
             "name": "Chucklehuck Woods Solo Luigi Cave Room 3 Block 2",
             "id": 3791717,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -2658,8 +2773,9 @@
             "name": "Chucklehuck Woods Room 2 Digspot",
             "id": 3792329,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Refreshing Herb",
@@ -2673,8 +2789,9 @@
             "name": "Chucklehuck Woods Pipe Room Block 1",
             "id": 3792342,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Beanstone 4",
@@ -2688,8 +2805,9 @@
             "name": "Chucklehuck Woods Pipe Room Block 2",
             "id": 3792350,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2703,8 +2821,9 @@
             "name": "Chucklehuck Woods Pipe Room Digspot 1",
             "id": 3792366,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -2718,8 +2837,9 @@
             "name": "Chucklehuck Woods Pipe Room Digspot 2",
             "id": 3792374,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Brilliant Badge",
@@ -2733,8 +2853,9 @@
             "name": "Chucklehuck Woods Room 4 Block 1",
             "id": 3792390,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Syrup",
@@ -2748,8 +2869,9 @@
             "name": "Chucklehuck Woods Room 4 Block 2",
             "id": 3792398,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2763,8 +2885,9 @@
             "name": "Chucklehuck Woods Room 4 Block 3",
             "id": 3792406,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Super Mushroom",
@@ -2778,8 +2901,9 @@
             "name": "Chucklehuck Woods Room 7 Block 1",
             "id": 3792425,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2793,8 +2917,9 @@
             "name": "Chucklehuck Woods Room 7 Block 2",
             "id": 3792441,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Beanstone 10",
@@ -2808,8 +2933,9 @@
             "name": "Chucklehuck Woods Room 7 Digspot 1",
             "id": 3792449,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2823,8 +2949,9 @@
             "name": "Chucklehuck Woods Room 7 Digspot 2",
             "id": 3792457,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2838,8 +2965,9 @@
             "name": "Chucklehuck Woods Room 8 Digspot",
             "id": 3792470,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -2853,8 +2981,9 @@
             "name": "Chucklehuck Woods East of Chuckleroot Digspot",
             "id": 3792486,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hard Pants",
@@ -2868,8 +2997,9 @@
             "name": "Chucklehuck Woods Northeast of Chuckleroot Digspot 1",
             "id": 3792499,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -2883,8 +3013,9 @@
             "name": "Chucklehuck Woods Northeast of Chuckleroot Digspot 2",
             "id": 3792507,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -2898,8 +3029,9 @@
             "name": "Chucklehuck Woods Northeast of Chuckleroot Digspot 3",
             "id": 3792515,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -2913,8 +3045,9 @@
             "name": "Chucklehuck Woods Northeast of Chuckleroot Digspot 4",
             "id": 3792523,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Safety Slacks",
@@ -2928,8 +3061,9 @@
             "name": "Chucklehuck Woods White Fruit Room Digspot 1",
             "id": 3792536,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nuts",
@@ -2943,8 +3077,9 @@
             "name": "Chucklehuck Woods White Fruit Room Digspot 2",
             "id": 3792544,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Syrup",
@@ -2958,8 +3093,9 @@
             "name": "Chucklehuck Woods White Fruit Room Digspot 3",
             "id": 3792552,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Harhall's Pants",
@@ -3003,8 +3139,9 @@
             "name": "Chucklehuck Woods Wiggler room Digspot 1",
             "id": 3792591,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -3018,8 +3155,9 @@
             "name": "Chucklehuck Woods Wiggler room Digspot 2",
             "id": 3792599,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nuts",
@@ -3033,8 +3171,9 @@
             "name": "Chucklehuck Woods Past Chuckleroot Block 1",
             "id": 3792612,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -3048,8 +3187,9 @@
             "name": "Chucklehuck Woods Past Chuckleroot Block 2",
             "id": 3792620,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -3063,8 +3203,9 @@
             "name": "Chucklehuck Woods Past Chuckleroot Block 3",
             "id": 3792628,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -3078,8 +3219,9 @@
             "name": "Chucklehuck Woods Past Chuckleroot Block 4",
             "id": 3792636,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -3093,8 +3235,9 @@
             "name": "Chucklehuck Woods Past Chuckleroot Block 5",
             "id": 3792644,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Super Syrup",
@@ -3108,8 +3251,9 @@
             "name": "Chucklehuck Woods Past Chuckleroot Block 6",
             "id": 3792652,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nuts",
@@ -3153,8 +3297,9 @@
             "name": "Chucklehuck Woods Koopa Room Digspot",
             "id": 3792739,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -3168,8 +3313,9 @@
             "name": "Chucklehuck Woods Room 1 Digspot",
             "id": 3793353,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -3183,8 +3329,9 @@
             "name": "Beanbean Outskirts Brooch Guards Room Digspot 1",
             "id": 3795302,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Beanstar Piece 3",
@@ -3198,8 +3345,9 @@
             "name": "Beanbean Outskirts Brooch Guards Room Digspot 2",
             "id": 3795310,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Charity Badge",
@@ -3213,8 +3361,9 @@
             "name": "Beanbean Outskirts Chateau Entrance Digspot 1",
             "id": 3795323,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Excite Spring",
@@ -3228,8 +3377,9 @@
             "name": "Beanbean Outskirts Chateau Entrance Digspot 2",
             "id": 3795331,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -3243,8 +3393,9 @@
             "name": "Chateau Green Goblet",
             "id": 2418216,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -3258,8 +3409,9 @@
             "name": "Chateau Red Goblet",
             "id": 2004030,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -3273,8 +3425,9 @@
             "name": "Chucklehuck Woods Red Chuckola Fruit",
             "id": 2426401,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -3288,8 +3441,9 @@
             "name": "Chucklehuck Woods White Chuckola Fruit",
             "id": 2424600,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Power Badge",
@@ -3444,8 +3598,9 @@
             "name": "Beanbean Castle Peach's Extra Dress",
             "id": 2004019,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Super Nuts",
@@ -3459,8 +3614,9 @@
             "name": "Beanbean Castle Fake Beanstar",
             "id": 2004018,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -3549,8 +3705,9 @@
             "name": "Beanbean Castle Town Beanstone 1",
             "id": 2429309,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Syrup",
@@ -3564,8 +3721,9 @@
             "name": "Beanbean Castle Town Beanstone 2",
             "id": 2429398,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mush Badge",
@@ -3579,8 +3737,9 @@
             "name": "Beanbean Castle Town Beanstone 3",
             "id": 2429487,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -3594,8 +3753,9 @@
             "name": "Beanbean Castle Town Beanstone 4",
             "id": 2429576,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Secret Scroll 1",
@@ -3609,8 +3769,9 @@
             "name": "Beanbean Castle Town Beanstone 5",
             "id": 2429665,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -3624,8 +3785,9 @@
             "name": "Beanbean Castle Town Beanstone 6",
             "id": 2430731,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -3639,8 +3801,9 @@
             "name": "Beanbean Castle Town Beanstone 7",
             "id": 2430823,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -3654,8 +3817,9 @@
             "name": "Beanbean Castle Town Beanstone 8",
             "id": 2430915,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Golden Mushroom",
@@ -3669,8 +3833,9 @@
             "name": "Beanbean Castle Town Beanstone 9",
             "id": 2431007,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Beanstar Piece 1",
@@ -3684,8 +3849,9 @@
             "name": "Beanbean Castle Town Beanstone 10",
             "id": 2431099,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -3909,8 +4075,9 @@
             "name": "Beanbean Castle Town Beanstone Reward",
             "id": 2429041,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Syrup",
@@ -3944,40 +4111,45 @@
             "name": "Shop Chuckolator Flag",
             "connected_region": "Shop Chuckolator Flag",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Shop Mom Piranha Flag",
             "connected_region": "Shop Mom Piranha Flag",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Shop Enter Fungitown Flag",
             "connected_region": "Shop Enter Fungitown Flag",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Shop Beanstar Complete Flag",
             "connected_region": "Shop Beanstar Complete Flag",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Shop Birdo Flag",
             "connected_region": "Shop Birdo Flag",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -3986,8 +4158,9 @@
             "name": "Badge Shop Starting Flag 1",
             "id": 3933720,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nuts",
@@ -4001,8 +4174,9 @@
             "name": "Badge Shop Starting Flag 2",
             "id": 3933722,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nuts",
@@ -4016,8 +4190,9 @@
             "name": "Pants Shop Starting Flag 1",
             "id": 3933724,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -4031,8 +4206,9 @@
             "name": "Pants Shop Starting Flag 2",
             "id": 3933726,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -4046,8 +4222,9 @@
             "name": "Pants Shop Starting Flag 3",
             "id": 3933728,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sarge Badge",
@@ -4082,8 +4259,9 @@
             "name": "Pants Shop Chuckolator Flag 1",
             "id": 3933738,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -4097,8 +4275,9 @@
             "name": "Pants Shop Chuckolator Flag 2",
             "id": 3933740,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -4112,8 +4291,9 @@
             "name": "Pants Shop Chuckolator Flag 3",
             "id": 3933742,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Syrup",
@@ -4127,8 +4307,9 @@
             "name": "Badge Shop Chuckolator Flag 1",
             "id": 3933732,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Syrup",
@@ -4142,8 +4323,9 @@
             "name": "Badge Shop Chuckolator Flag 2",
             "id": 3933734,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Syrup",
@@ -4157,8 +4339,9 @@
             "name": "Badge Shop Chuckolator Flag 3",
             "id": 3933736,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -4238,8 +4421,9 @@
             "name": "Pants Shop Mom Piranha Flag 1",
             "id": 3933752,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nuts",
@@ -4253,8 +4437,9 @@
             "name": "Pants Shop Mom Piranha Flag 2",
             "id": 3933754,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -4268,8 +4453,9 @@
             "name": "Pants Shop Mom Piranha Flag 3",
             "id": 3933756,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -4283,8 +4469,9 @@
             "name": "Badge Shop Mom Piranha Flag 1",
             "id": 3933746,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -4298,8 +4485,9 @@
             "name": "Badge Shop Mom Piranha Flag 2",
             "id": 3933748,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Super Mushroom",
@@ -4313,8 +4501,9 @@
             "name": "Badge Shop Mom Piranha Flag 3",
             "id": 3933750,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -4334,8 +4523,9 @@
             "name": "Badge Shop Trunkle Flag 1",
             "id": 3933760,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -4349,8 +4539,9 @@
             "name": "Badge Shop Trunkle Flag 2",
             "id": 3933762,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -4364,8 +4555,9 @@
             "name": "Badge Shop Trunkle Flag 3",
             "id": 3933764,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -4379,8 +4571,9 @@
             "name": "Pants Shop Trunkle Flag 1",
             "id": 3933766,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Refreshing Herb",
@@ -4394,8 +4587,9 @@
             "name": "Pants Shop Trunkle Flag 2",
             "id": 3933768,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -4409,8 +4603,9 @@
             "name": "Pants Shop Trunkle Flag 3",
             "id": 3933770,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -4460,8 +4655,9 @@
             "name": "Badge Shop Beanstar Complete Flag 1",
             "id": 3933774,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Syrup",
@@ -4475,8 +4671,9 @@
             "name": "Badge Shop Beanstar Complete Flag 2",
             "id": 3933776,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -4490,8 +4687,9 @@
             "name": "Badge Shop Beanstar Complete Flag 3",
             "id": 3933778,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -4505,8 +4703,9 @@
             "name": "Pants Shop Beanstar Complete Flag 1",
             "id": 3933780,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Yellow Neon Egg",
@@ -4520,8 +4719,9 @@
             "name": "Pants Shop Beanstar Complete Flag 2",
             "id": 3933782,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -4535,8 +4735,9 @@
             "name": "Pants Shop Beanstar Complete Flag 3",
             "id": 3933784,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -4601,8 +4802,9 @@
             "name": "Badge Shop Birdo Flag 1",
             "id": 3933788,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -4616,8 +4818,9 @@
             "name": "Badge Shop Birdo Flag 2",
             "id": 3933790,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -4631,8 +4834,9 @@
             "name": "Badge Shop Birdo Flag 3",
             "id": 3933792,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -4646,8 +4850,9 @@
             "name": "Pants Shop Birdo Flag 1",
             "id": 3933794,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -4661,8 +4866,9 @@
             "name": "Pants Shop Birdo Flag 2",
             "id": 3933796,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Peasley Slacks",
@@ -4676,8 +4882,9 @@
             "name": "Pants Shop Birdo Flag 3",
             "id": 3933798,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Syrup",
@@ -4727,8 +4934,9 @@
             "name": "JokesEntrance",
             "connected_region": "JokesEntrance",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -4797,8 +5005,9 @@
             "name": "Oho Ocean North Whirlpool Digspot 1",
             "id": 3793093,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -4812,8 +5021,9 @@
             "name": "Oho Ocean North Whirlpool Digspot 2",
             "id": 3793101,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Plaid Trousers",
@@ -4827,8 +5037,9 @@
             "name": "Oho Ocean Fire Puzzle Room Digspot",
             "id": 3792983,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Great Force",
@@ -4842,8 +5053,9 @@
             "name": "Oho Ocean South Whirlpool Digspot 1",
             "id": 3793114,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Teeheespresso",
@@ -4857,8 +5069,9 @@
             "name": "Oho Ocean South Whirlpool Digspot 2",
             "id": 3793122,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -4872,8 +5085,9 @@
             "name": "Oho Ocean South Whirlpool Digspot 3",
             "id": 3793130,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Syrup",
@@ -4887,8 +5101,9 @@
             "name": "Oho Ocean South Whirlpool Digspot 4",
             "id": 3793138,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -4902,8 +5117,9 @@
             "name": "Oho Ocean South Whirlpool Digspot 5",
             "id": 3793146,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -4917,8 +5133,9 @@
             "name": "Oho Ocean South Whirlpool Digspot 6",
             "id": 3793154,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Winkle Card",
@@ -4932,8 +5149,9 @@
             "name": "Oho Ocean South Whirlpool Room 2 Digspot",
             "id": 3793167,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "High-End Badge",
@@ -4947,8 +5165,9 @@
             "name": "Joke's End Pipe Digspot",
             "id": 3794626,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -4962,8 +5181,9 @@
             "name": "Joke's End Staircase Digspot",
             "id": 3794639,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Syrup",
@@ -5007,8 +5227,9 @@
             "name": "Beanbean Outskirts Surf Beach Digspot 1",
             "id": 3792123,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -5022,8 +5243,9 @@
             "name": "Beanbean Outskirts Surf Beach Digspot 2",
             "id": 3792139,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Beanstone 6",
@@ -5037,8 +5259,9 @@
             "name": "Beanbean Outskirts Surf Beach Digspot 3",
             "id": 3792147,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Syrup",
@@ -5082,8 +5305,9 @@
             "name": "Woohoo Hooniversity Barrel Puzzle Entrance Digspot 1",
             "id": 3793300,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Bean Fruit 6",
@@ -5157,8 +5381,9 @@
             "name": "Woohoo Hooniversity Barrel Puzzle Entrance Digspot 2",
             "id": 3793340,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Super Syrup",
@@ -5262,8 +5487,9 @@
             "name": "Woohoo Hooniversity Past Cackletta Room 2 Digspot",
             "id": 3793615,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Heart Slacks",
@@ -5277,8 +5503,9 @@
             "name": "Woohoo Hooniversity Basement Room 1 Digspot",
             "id": 3794118,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mari-Lui Badge",
@@ -5292,8 +5519,9 @@
             "name": "Woohoo Hooniversity Basement Room 2 Digspot",
             "id": 3794131,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -5337,8 +5565,9 @@
             "name": "Woohoo Hooniversity Popple Room Digspot 1",
             "id": 3794170,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -5352,8 +5581,9 @@
             "name": "Woohoo Hooniversity Popple Room Digspot 2",
             "id": 3794178,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -5417,8 +5647,9 @@
             "name": "GwarharMain",
             "connected_region": "GwarharMain",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5427,8 +5658,9 @@
             "name": "Gwarhar Lagoon Pipe Room Digspot",
             "id": 3793789,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -5442,8 +5674,9 @@
             "name": "Gwarhar Lagoon Massage Parlor Entrance Digspot",
             "id": 3793814,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red Pepper",
@@ -5457,8 +5690,9 @@
             "name": "Gwarhar Lagoon First Underwater Area Room 1 Block",
             "id": 3793976,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "General Badge",
@@ -5472,8 +5706,9 @@
             "name": "Gwarhar Lagoon First Underwater Area Room 2 Block 1",
             "id": 3793989,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Purple Chuckola Fruit",
@@ -5487,8 +5722,9 @@
             "name": "Gwarhar Lagoon First Underwater Area Room 2 Block 2",
             "id": 3793997,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -5502,8 +5738,9 @@
             "name": "Gwarhar Lagoon Red Pearl Bean",
             "id": 2317340,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -5517,8 +5754,9 @@
             "name": "Gwarhar Lagoon Green Pearl Bean",
             "id": 2316891,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -5547,8 +5785,9 @@
             "name": "Oho Ocean South Room 2 Digspot",
             "id": 3793015,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Syrup",
@@ -5568,8 +5807,9 @@
             "name": "Gwarhar Lagoon Past Hermie Digspot",
             "id": 3793830,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -5598,8 +5838,9 @@
             "name": "Gwarhar Lagoon North of Spangle Room Digspot",
             "id": 3793931,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -5613,8 +5854,9 @@
             "name": "Gwarhar Lagoon West of Spangle Room Digspot",
             "id": 3793947,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Greed Wallet",
@@ -5628,8 +5870,9 @@
             "name": "Gwarhar Lagoon Second Underwater Area Room 4 Digspot",
             "id": 3794018,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -5643,8 +5886,9 @@
             "name": "Gwarhar Lagoon Second Underwater Area Room 2 Digspot 1",
             "id": 3794031,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -5658,8 +5902,9 @@
             "name": "Gwarhar Lagoon Second Underwater Area Room 2 Digspot 2",
             "id": 3794039,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Syrup",
@@ -5733,8 +5978,9 @@
             "name": "Gwarhar Lagoon Entrance to West Underwater Area Digspot",
             "id": 3793852,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Beanstar Piece 2",
@@ -5748,8 +5994,9 @@
             "name": "Gwarhar Lagoon Fire Dash Puzzle Room 1 Digspot 1",
             "id": 3793865,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Syrup",
@@ -5763,8 +6010,9 @@
             "name": "Gwarhar Lagoon Fire Dash Puzzle Room 1 Digspot 2",
             "id": 3793873,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Super Mushroom",
@@ -5778,8 +6026,9 @@
             "name": "Gwarhar Lagoon Fire Dash Puzzle Room 2 Digspot",
             "id": 3793886,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -5793,8 +6042,9 @@
             "name": "Gwarhar Lagoon Fire Dash Puzzle Room 3 Digspot 1",
             "id": 3793899,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -5808,8 +6058,9 @@
             "name": "Gwarhar Lagoon Fire Dash Puzzle Room 3 Digspot 2",
             "id": 3793907,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -5823,8 +6074,9 @@
             "name": "Gwarhar Lagoon Spangle Room Block",
             "id": 3793960,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nuts",
@@ -5838,8 +6090,9 @@
             "name": "Gwarhar Lagoon Spangle Reward",
             "id": 2322035,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -5868,8 +6121,9 @@
             "name": "Gwarhar Lagoon Spangle",
             "id": 2004023,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -5888,24 +6142,27 @@
             "name": "GwarharEntrance",
             "connected_region": "GwarharEntrance",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Oasis  ",
             "connected_region": "Oasis",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Fungitown",
             "connected_region": "Fungitown",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -5914,8 +6171,9 @@
             "name": "Teehee Valley Room 1 Digspot 1",
             "id": 3794206,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -5929,8 +6187,9 @@
             "name": "Teehee Valley Room 1 Digspot 2",
             "id": 3794214,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -5944,8 +6203,9 @@
             "name": "Teehee Valley Room 1 Digspot 3",
             "id": 3794222,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -5959,8 +6219,9 @@
             "name": "Teehee Valley Room 2 Digspot 1",
             "id": 3794235,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -5974,8 +6235,9 @@
             "name": "Teehee Valley Room 2 Digspot 2",
             "id": 3794243,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Super Syrup",
@@ -5989,8 +6251,9 @@
             "name": "Teehee Valley Room 2 Digspot 3",
             "id": 3794251,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -6004,8 +6267,9 @@
             "name": "Teehee Valley Past Ultra Hammer Rock Block 1",
             "id": 3794304,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Parasol Pants",
@@ -6019,8 +6283,9 @@
             "name": "Teehee Valley Past Ultra Hammer Rock Block 2",
             "id": 3794320,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Purple Neon Egg",
@@ -6034,8 +6299,9 @@
             "name": "Teehee Valley Past Ultra Hammer Rock Digspot 1",
             "id": 3794328,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Mushroom",
@@ -6049,8 +6315,9 @@
             "name": "Teehee Valley Past Ultra Hammer Rock Digspot 3",
             "id": 3794344,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Super Syrup",
@@ -6064,8 +6331,9 @@
             "name": "Teehee Valley Before Trunkle Digspot",
             "id": 3794416,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -6160,8 +6428,9 @@
             "name": "Winkle Area Beanstar Room Block",
             "id": 3792673,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nuts",
@@ -6175,8 +6444,9 @@
             "name": "Winkle Area Digspot",
             "id": 3792686,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -6205,8 +6475,9 @@
             "name": "Winkle Area Colloseum Digspot",
             "id": 3795107,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Beanstone 2",
@@ -6220,8 +6491,9 @@
             "name": "Beanstar Piece Winkle Area",
             "id": 2004032,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -6301,8 +6573,9 @@
             "name": "Sewers Room 5 Block 1",
             "id": 3792902,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Shroom Bells",
@@ -6316,8 +6589,9 @@
             "name": "Sewers Room 5 Block 2",
             "id": 3792910,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Miracle Badge",
@@ -6412,8 +6686,9 @@
             "name": "Airport Entrance Digspot",
             "id": 3793628,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -6427,8 +6702,9 @@
             "name": "Airport Lobby Digspot",
             "id": 3793641,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -6442,8 +6718,9 @@
             "name": "Airport Westside Digspot 1",
             "id": 3793654,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -6457,8 +6734,9 @@
             "name": "Airport Westside Digspot 2",
             "id": 3793662,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Max Syrup",
@@ -6472,8 +6750,9 @@
             "name": "Airport Westside Digspot 3",
             "id": 3793670,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Super Syrup",
@@ -6487,8 +6766,9 @@
             "name": "Airport Westside Digspot 4",
             "id": 3793678,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -6502,8 +6782,9 @@
             "name": "Airport Westside Digspot 5",
             "id": 3793686,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Super Mushroom",
@@ -6517,8 +6798,9 @@
             "name": "Airport Center Digspot 1",
             "id": 3793699,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Refreshing Herb",
@@ -6532,8 +6814,9 @@
             "name": "Airport Center Digspot 2",
             "id": 3793707,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Green Pepper",
@@ -6547,8 +6830,9 @@
             "name": "Airport Center Digspot 3",
             "id": 3793715,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -6562,8 +6846,9 @@
             "name": "Airport Center Digspot 4",
             "id": 3793723,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -6577,8 +6862,9 @@
             "name": "Airport Center Digspot 5",
             "id": 3793731,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -6592,8 +6878,9 @@
             "name": "Airport Eastside Digspot 1",
             "id": 3793744,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Beanstone 1",
@@ -6607,8 +6894,9 @@
             "name": "Airport Eastside Digspot 2",
             "id": 3793752,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Super Mushroom",
@@ -6622,8 +6910,9 @@
             "name": "Airport Eastside Digspot 3",
             "id": 3793760,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Super Mushroom",
@@ -6637,8 +6926,9 @@
             "name": "Airport Eastside Digspot 4",
             "id": 3793768,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -6652,8 +6942,9 @@
             "name": "Airport Eastside Digspot 5",
             "id": 3793776,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -6672,8 +6963,9 @@
             "name": "JokesMain",
             "connected_region": "JokesMain",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6712,8 +7004,9 @@
             "name": "Joke's End First Boiler Room Digspot 1",
             "id": 3794682,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Mushroom",
@@ -6727,8 +7020,9 @@
             "name": "Joke's End First Boiler Room Digspot 2",
             "id": 3794690,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -6832,8 +7126,9 @@
             "name": "Joke's End Furnace Room 1 Block 1",
             "id": 3794703,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Beanstar Piece 4",
@@ -6847,8 +7142,9 @@
             "name": "Joke's End Furnace Room 1 Block 2",
             "id": 3794711,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -6862,8 +7158,9 @@
             "name": "Joke's End Furnace Room 1 Block 3",
             "id": 3794719,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Queen B. Jeans",
@@ -6877,8 +7174,9 @@
             "name": "Joke's End Northeast of Boiler Room 1 Block",
             "id": 3794738,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -6892,8 +7190,9 @@
             "name": "Joke's End Northeast of Boiler Room 2 Block",
             "id": 3794764,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Beanbean Brooch",
@@ -6907,8 +7206,9 @@
             "name": "Joke's End Northeast of Boiler Room 2 Digspot",
             "id": 3794772,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Super Mushroom",
@@ -6922,8 +7222,9 @@
             "name": "Joke's End Northeast of Boiler Room 3 Digspot",
             "id": 3794751,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -6942,8 +7243,9 @@
             "name": "PostJokes",
             "connected_region": "PostJokes",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -6952,8 +7254,9 @@
             "name": "Joke's End Second Floor East Room Digspot",
             "id": 3794836,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -6967,8 +7270,9 @@
             "name": "Joke's End Final Split up Room Digspot",
             "id": 3794855,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -7012,8 +7316,9 @@
             "name": "Joke's End Solo Luigi Room 1 Digspot",
             "id": 3794892,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Azure Neon Egg",
@@ -7072,8 +7377,9 @@
             "name": "Joke's End Solo Luigi Room 2 Digspot",
             "id": 3794940,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7087,8 +7393,9 @@
             "name": "Joke's End Solo Mario Room 1 Digspot",
             "id": 3794953,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Peachy Jeans",
@@ -7147,8 +7454,9 @@
             "name": "Joke's End Second Boiler Room Digspot 1",
             "id": 3795023,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wool Trousers",
@@ -7162,8 +7470,9 @@
             "name": "Joke's End Second Boiler Room Digspot 2",
             "id": 3795031,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7237,8 +7546,9 @@
             "name": "Joke's End Before Jojora Room Digspot",
             "id": 3795255,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7252,8 +7562,9 @@
             "name": "Joke's End Jojora Room Digspot",
             "id": 3795268,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Syrup",
@@ -7282,8 +7593,9 @@
             "name": "Teehee Valley Past Ultra Hammer Rock Digspot 2 (Post-Birdo)",
             "id": 3794336,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -7297,8 +7609,9 @@
             "name": "Teehee Valley Before Birdo Digspot 1",
             "id": 3794267,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Syrup",
@@ -7312,8 +7625,9 @@
             "name": "Teehee Valley Before Birdo Digspot 2",
             "id": 3794275,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -7327,8 +7641,9 @@
             "name": "Teehee Valley Before Birdo Digspot 3",
             "id": 3794283,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Mushroom",
@@ -7342,8 +7657,9 @@
             "name": "Teehee Valley Before Birdo Digspot 4",
             "id": 3794291,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -7363,8 +7679,9 @@
             "name": "Yoshi Theater Blue Yoshi",
             "id": 2363733,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Super Syrup",
@@ -7378,8 +7695,9 @@
             "name": "Yoshi Theater Red Yoshi",
             "id": 2363070,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -7393,8 +7711,9 @@
             "name": "Yoshi Theater Green Yoshi",
             "id": 2366202,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7408,8 +7727,9 @@
             "name": "Yoshi Theater Yellow Yoshi",
             "id": 2366524,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -7423,8 +7743,9 @@
             "name": "Yoshi Theater Purple Yoshi",
             "id": 2364055,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Mushroom",
@@ -7438,8 +7759,9 @@
             "name": "Yoshi Theater Orange Yoshi",
             "id": 2363392,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -7453,8 +7775,9 @@
             "name": "Yoshi Theater Azure Yoshi",
             "id": 2366846,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Syrup",
@@ -7468,8 +7791,9 @@
             "name": "Beanstar Piece Yoshi Theater",
             "id": 2004034,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7488,16 +7812,18 @@
             "name": "Fungitown Shop Beanstar Complete Flag",
             "connected_region": "Fungitown Shop Beanstar Complete Flag",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           },
           {
             "name": "Fungitown Shop Birdo Flag",
             "connected_region": "Fungitown Shop Birdo Flag",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -7506,8 +7832,9 @@
             "name": "Teehee Valley Trunkle Room Digspot",
             "id": 3794429,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Max Syrup",
@@ -7551,8 +7878,9 @@
             "name": "Fungitown Badge Shop Starting Flag 1",
             "id": 3933828,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Street Jeans",
@@ -7566,8 +7894,9 @@
             "name": "Fungitown Badge Shop Starting Flag 2",
             "id": 3933830,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Bros. Badge",
@@ -7581,8 +7910,9 @@
             "name": "Fungitown Badge Shop Starting Flag 3",
             "id": 3933832,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -7716,8 +8046,9 @@
             "name": "Fungitown Pants Shop Starting Flag 1",
             "id": 3933834,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -7731,8 +8062,9 @@
             "name": "Fungitown Pants Shop Starting Flag 2",
             "id": 3933836,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7746,8 +8078,9 @@
             "name": "Fungitown Pants Shop Starting Flag 3",
             "id": 3933838,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7767,8 +8100,9 @@
             "name": "Fungitown Badge Shop Beanstar Complete Flag 1",
             "id": 3933842,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Red Pepper",
@@ -7782,8 +8116,9 @@
             "name": "Fungitown Badge Shop Beanstar Complete Flag 2",
             "id": 3933844,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7797,8 +8132,9 @@
             "name": "Fungitown Pants Shop Beanstar Complete Flag 1",
             "id": 3933846,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -7812,8 +8148,9 @@
             "name": "Fungitown Pants Shop Beanstar Complete Flag 2",
             "id": 3933848,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Bean Fruit 4",
@@ -7863,8 +8200,9 @@
             "name": "Fungitown Pants Shop Birdo Flag 1",
             "id": 3933856,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7878,8 +8216,9 @@
             "name": "Fungitown Pants Shop Birdo Flag 2",
             "id": 3933858,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -7893,8 +8232,9 @@
             "name": "Fungitown Badge Shop Birdo Flag 1",
             "id": 3933852,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Grab Badge",
@@ -7908,8 +8248,9 @@
             "name": "Fungitown Badge Shop Birdo Flag 2",
             "id": 3933854,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7929,8 +8270,9 @@
             "name": "Beanbean Outskirts Before Harhall Digspot 1",
             "id": 3795281,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7944,8 +8286,9 @@
             "name": "Beanbean Outskirts Before Harhall Digspot 2",
             "id": 3795289,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -7974,8 +8317,9 @@
             "name": "Beanbean Outskirts Boostatue Mole",
             "id": 2004020,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Beanlet 5",
@@ -8004,8 +8348,9 @@
             "name": "Beanbean Outskirts S Room 2 Digspot 1",
             "id": 3791973,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -8019,8 +8364,9 @@
             "name": "Beanbean Outskirts S Room 2 Digspot 2",
             "id": 3791965,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Beanlet 2",
@@ -8049,8 +8395,9 @@
             "name": "Beanbean Outskirts S Room 2 Digspot 3",
             "id": 3791925,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -8070,8 +8417,9 @@
             "name": "Oho Oasis West Digspot",
             "id": 3792799,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Blue Jeans",
@@ -8100,8 +8448,9 @@
             "name": "Oho Ocean Spike Room Digspot 1",
             "id": 3793034,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -8115,8 +8464,9 @@
             "name": "Oho Ocean Spike Room Digspot 2",
             "id": 3793042,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Mushroom",
@@ -8130,8 +8480,9 @@
             "name": "Oho Oasis Firebrand",
             "id": 2003976,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -8145,8 +8496,9 @@
             "name": "Oho Oasis Thunderhand",
             "id": 2003977,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -8211,8 +8563,9 @@
             "name": "Hoohoo Mountain Base Boostatue Room Digspot 3 (Right Side)",
             "id": 3791337,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -8241,8 +8594,9 @@
             "name": "Teehee Valley Entrance To Hoohoo Mountain Digspot",
             "id": 3794357,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Blend",
@@ -8271,8 +8625,9 @@
             "name": "Teehee Valley Upper Maze Room 2 Digspot 1",
             "id": 3794376,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hoo Bean",
@@ -8286,8 +8641,9 @@
             "name": "Teehee Valley Upper Maze Room 2 Digspot 2",
             "id": 3794384,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -8301,8 +8657,9 @@
             "name": "Guffawha Ruins Block",
             "id": 3794595,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Refreshing Herb",
@@ -8316,8 +8673,9 @@
             "name": "Hoohoo Mountain Base Guffawha Ruins Entrance Digspot",
             "id": 3791371,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Beanstone 9",
@@ -8331,8 +8689,9 @@
             "name": "Hoohoo Mountain Base Teehee Valley Entrance Digspot",
             "id": 3791392,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Bean Pants",
@@ -8387,8 +8746,9 @@
             "name": "Bowser's Castle Mini",
             "connected_region": "Bowser's Castle Mini",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -8427,8 +8787,9 @@
             "name": "Bowser's Castle Entrance Digspot",
             "id": 3795426,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -8472,8 +8833,9 @@
             "name": "Bowser's Castle Iggy & Morton Hallway Digspot",
             "id": 3795455,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nuts",
@@ -8502,8 +8864,9 @@
             "name": "Bowser's Castle Morton Room 1 Digspot",
             "id": 3795593,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Beanlet 3",
@@ -8532,8 +8895,9 @@
             "name": "Bowser's Castle Lemmy Room 1 Digspot",
             "id": 3795620,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Chuckle Bean",
@@ -8757,8 +9121,9 @@
             "name": "Bowser's Castle Wendy & Larry Hallway Digspot",
             "id": 3795526,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -10644,6 +11009,567 @@
       "Yellow Neon Egg": 1
     }
   },
+  "canonical_placements": {
+    "1": {
+      "Stardust Fields Room 1 Block 1": "Syrup",
+      "Stardust Fields Room 1 Block 2": "Fake Beanstar",
+      "Stardust Fields Room 2 Block": "Green Pepper",
+      "Stardust Fields Room 3 Block": "Chuckle Bean",
+      "Stardust Fields Room 4 Block 1": "Ultra Mushroom",
+      "Stardust Fields Room 4 Block 2": "Hammers",
+      "Stardust Fields Room 4 Block 3": "Refreshing Herb",
+      "Stardust Fields Room 5 Block": "Power Grip",
+      "Hoohoo Village Hammer House Block": "Counter Badge",
+      "Hoohoo Mountain Below Summit Block 1": "Ultra Syrup",
+      "Hoohoo Mountain Below Summit Block 2": "Hermetic Pants",
+      "Hoohoo Mountain Below Summit Block 3": "Refreshing Herb",
+      "Hoohoo Mountain Past Hoohooros Block 1": "Chuckle Bean",
+      "Hoohoo Mountain Past Hoohooros Block 2": "Hoo Bean",
+      "Hoohoo Mountain Hoohooros Room Block 1": "Hoo Bean",
+      "Hoohoo Mountain Hoohooros Room Block 2": "Beanstone 5",
+      "Hoohoo Mountain Before Hoohooros Block": "Beanlet 1",
+      "Hoohoo Mountain Fountain Room Block 1": "Chuckle Bean",
+      "Hoohoo Mountain Fountain Room Block 2": "Chuckle Bean",
+      "Hoohoo Mountain Room 1 Block 1": "Super Syrup",
+      "Hoohoo Mountain Room 1 Block 2": "Chuckle Bean",
+      "Hoohoo Mountain Room 1 Block 3": "Hoo Bean",
+      "Hoohoo Mountain Base Room 1 Block": "Hoo Bean",
+      "Hoohoo Village Eastside Block": "Hammers",
+      "Hoohoo Village Bridge Room Block 1": "Chuckle Bean",
+      "Hoohoo Village Bridge Room Block 2": "Red Chuckola Fruit",
+      "Hoohoo Village Bridge Room Block 3": "Red Goblet",
+      "Hoohoo Mountain Base Bridge Room Block 1": "Chuckle Bean",
+      "Hoohoo Mountain Base Bridge Room Block 2": "Chuckle Bean",
+      "Hoohoo Mountain Base Bridge Room Block 3": "Chuckle Bean",
+      "Hoohoo Mountain Base Bridge Room Block 4": "Mushroom",
+      "Hoohoo Mountain Base Bridge Room Digspot": "Mushroom",
+      "Hoohoo Mountain Base Boostatue Room Block 1": "Super Mushroom",
+      "Hoohoo Mountain Base Boostatue Room Block 2": "Mushroom",
+      "Hoohoo Mountain Base Boostatue Room Digspot 1": "Ultra Mushroom",
+      "Hoohoo Mountain Base Boostatue Room Digspot 2": "Ultra Syrup",
+      "Hoohoo Mountain Base Grassy Area Block 1": "Ultra Nuts",
+      "Hoohoo Mountain Base Grassy Area Block 2": "Hammers",
+      "Hoohoo Mountain Base Past Minecart Minigame Block 1": "Chuckle Bean",
+      "Hoohoo Mountain Base Past Minecart Minigame Block 2": "Chuckle Bean",
+      "Cave Connecting Stardust Fields and Hoohoo Village Block 1": "Mushroom",
+      "Cave Connecting Stardust Fields and Hoohoo Village Block 2": "Chuckle Bean",
+      "Hoohoo Village South Cave Block": "Shroom Pants",
+      "Hoohoo Village North Cave Room 1 Block": "Mushroom",
+      "Hoohoo Village North Cave Room 2 Block": "Pea Badge",
+      "Beanbean Outskirts Surf Beach Block": "Beanstone 3",
+      "Woohoo Hooniversity Star Room Block 1": "Chuckle Bean",
+      "Woohoo Hooniversity Star Room Block 2": "Chuckle Bean",
+      "Woohoo Hooniversity Star Room Block 3": "Wonder Badge",
+      "Woohoo Hooniversity Sun Door Block 1": "Chuckle Bean",
+      "Woohoo Hooniversity Sun Door Block 2": "Chuckle Bean",
+      "Woohoo Hooniversity West of Star Room 4 Block 1": "Chuckle Bean",
+      "Woohoo Hooniversity West of Star Room 4 Block 2": "Mushroom",
+      "Woohoo Hooniversity West of Star Room 4 Block 3": "Golden Mushroom",
+      "Hoohoo Mountain Fountain Room 2 Block": "Beanstone 7",
+      "Hoohoo Mountain Past Hoohooros Connector Room Block": "Chuckle Bean",
+      "Outside Woohoo Hooniversity Block": "Mushroom",
+      "Shop Starting Flag 1": "Mushroom",
+      "Shop Starting Flag 2": "Syrup",
+      "Shop Starting Flag 3": "1-UP Mushroom",
+      "Hoohoo Mountain Summit Digspot": "Hoo Bean",
+      "Hoohoo Mountain Below Summit Digspot": "Chuckle Bean",
+      "Hoohoo Mountain Past Hoohooros Digspot": "Chuckle Bean",
+      "Hoohoo Mountain Hoohooros Room Digspot 1": "Hoo Bean",
+      "Hoohoo Mountain Hoohooros Room Digspot 2": "Chuckle Bean",
+      "Hoohoo Mountain Before Hoohooros Digspot": "Chuckle Bean",
+      "Hoohoo Mountain Room 2 Digspot 1": "1-UP Super",
+      "Hoohoo Mountain Room 2 Digspot 2": "Chuckle Bean",
+      "Hoohoo Mountain Base Room 1 Digspot": "Peasley's Rose",
+      "Hoohoo Village Eastside Digspot": "Hoo Bean",
+      "Hoohoo Village Super Hammer Cave Digspot": "Max Mushroom",
+      "Hoohoo Village Super Hammer Cave Block": "Soulful Bros.",
+      "Hoohoo Village North Cave Room 2 Digspot": "Chuckle Bean",
+      "Hoohoo Mountain Base Minecart Cave Digspot": "Chuckle Bean",
+      "Beanbean Outskirts Farm Room Digspot 1": "Chuckle Bean",
+      "Beanbean Outskirts Farm Room Digspot 2": "Hoo Bean",
+      "Beanbean Outskirts Farm Room Digspot 3": "Hoo Bean",
+      "Beanbean Outskirts NW Block": "Chuckle Bean",
+      "Beanbean Outskirts NW Digspot": "Ultra Syrup",
+      "Beanbean Outskirts W Digspot 1": "Chuckle Bean",
+      "Beanbean Outskirts W Digspot 2": "Bean Fruit 3",
+      "Beanbean Outskirts W Digspot 3": "Bean Trousers",
+      "Beanbean Outskirts SW Digspot 1": "Mushroom",
+      "Beanbean Outskirts SW Digspot 2": "Chuckle Bean",
+      "Beanbean Outskirts SW Digspot 3": "Mushroom",
+      "Beanbean Outskirts N Room 1 Digspot": "Beauty Badge",
+      "Beanbean Outskirts N Room 2 Digspot": "Syrup",
+      "Beanbean Outskirts S Room 1 Digspot 1": "Chuckle Bean",
+      "Beanbean Outskirts S Room 1 Block": "Chuckle Bean",
+      "Beanbean Outskirts S Room 1 Digspot 2": "Castle Badge",
+      "Beanbean Outskirts S Room 2 Block 1": "Chuckle Bean",
+      "Beanbean Outskirts NE Digspot 1": "Chuckle Bean",
+      "Beanbean Outskirts NE Digspot 2": "Mushroom",
+      "Beanbean Outskirts E Digspot 1": "Hoo Bean",
+      "Beanbean Outskirts E Digspot 2": "Chuckle Bean",
+      "Beanbean Outskirts E Digspot 3": "Chuckle Bean",
+      "Beanbean Outskirts SE Digspot 1": "Chuckle Bean",
+      "Beanbean Outskirts SE Digspot 2": "Ultra Nuts",
+      "Beanbean Outskirts SE Digspot 3": "Chuckle Bean",
+      "Beanbean Outskirts North Beach Digspot 1": "Super Nuts",
+      "Beanbean Outskirts North Beach Digspot 2": "Chuckle Bean",
+      "Beanbean Outskirts North Beach Digspot 3": "Max Nuts",
+      "Beanbean Outskirts South Beach Digspot": "Orange Neon Egg",
+      "Woohoo Hooniversity West of Star Room Digspot 1": "Chuckle Bean",
+      "Woohoo Hooniversity West of Star Room Digspot 2": "White Chuckola Fruit",
+      "Woohoo Hooniversity West of Star Room 2 Digspot": "Chuckle Bean",
+      "Woohoo Hooniversity West of Star Room 3 Digspot": "Thunderhand",
+      "Woohoo Hooniversity West of Star Room 4 Digspot 1": "Chuckle Bean",
+      "Woohoo Hooniversity West of Star Room 4 Digspot 2": "Syrup",
+      "Woohoo Hooniversity West of Star Room 5 Digspot": "Ultra Nuts",
+      "Woohoo Hooniversity Entrance to Mini Mario Room Digspot 1": "Chuckle Bean",
+      "Woohoo Hooniversity Entrance to Mini Mario Room Digspot 2": "Red Pearl Bean",
+      "Woohoo Hooniversity Entrance to Mini Mario Room 2 Digspot": "Mushroom",
+      "Woohoo Hooniversity Mini Mario Puzzle Block": "Chuckle Bean",
+      "Woohoo Hooniversity Mini Mario Puzzle Digspot": "Ultra Syrup",
+      "Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 1": "Chuckle Bean",
+      "Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 2": "Ultra Nuts",
+      "Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 3": "Ultra Mushroom",
+      "Woohoo Hooniversity Mini Mario Puzzle Secret Area Block 4": "Mushroom",
+      "Hoohoo Mountain Fountain Room 2 Digspot": "Hoo Bean",
+      "Hoohoo Mountain Past Hoohooros Connector Room Digspot 1": "Chuckle Bean",
+      "Hoohoo Mountain Past Hoohooros Connector Room Digspot 2": "Hoo Bean",
+      "Beanbean Outskirts Secret Scroll 1": "Chuckle Bean",
+      "Beanbean Outskirts Secret Scroll 2": "Bean Fruit 1",
+      "Beanbean Outskirts Bean Fruit 1": "Secret Scroll 2",
+      "Beanbean Outskirts Bean Fruit 2": "Nuts",
+      "Beanbean Outskirts Bean Fruit 3": "Chuckle Bean",
+      "Beanbean Outskirts Bean Fruit 4": "Chuckle Bean",
+      "Beanbean Outskirts Bean Fruit 5": "Tank Badge",
+      "Beanbean Outskirts Bean Fruit 6": "Chuckoccino",
+      "Beanbean Outskirts Bean Fruit 7": "Red Neon Egg",
+      "Hoohoo Village Mole Behind Turtle": "Chuckle Bean",
+      "Beanbean Outskirts Thunderhand Mole": "Hoo Bean",
+      "Hoohoo Mountain Peasley's Rose": "Bonus Ring",
+      "Beanbean Outskirts Super Hammer Upgrade": "Ultra Mushroom",
+      "Beanbean Outskirts Ultra Hammer Upgrade": "Iron Pants",
+      "Beanbean Outskirts NE Solo Mario Mole 1": "Hoohoo Blend",
+      "Beanbean Outskirts NE Solo Mario Mole 2": "Chuckle Bean",
+      "Hoohoo Village Hammers": "Chuckle Bean",
+      "Beanbean Outskirts Solo Luigi Cave Mole": "Super Mushroom",
+      "Beanbean Outskirts Farm Room Mole Reward 1": "Ultra Syrup",
+      "Beanbean Outskirts Farm Room Mole Reward 2": "Mushroom",
+      "Beanbean Outskirts South of Hooniversity Guards Digspot 1": "Chuckle Bean",
+      "Beanbean Outskirts South of Hooniversity Guards Digspot 2": "Golden Mushroom",
+      "Beanbean Outskirts South of Hooniversity Guards Digspot 3": "Chuckle Bean",
+      "Beanbean Outskirts Entrance to Hoohoo Mountain Base Digspot 1": "Bean Fruit 2",
+      "Beanbean Outskirts Entrance to Hoohoo Mountain Base Digspot 2": "Hoo Bean",
+      "Beanbean Outskirts Pipe 2 Room Digspot": "Mushroom",
+      "Beanbean Outskirts Pipe 4 Room Digspot": "Mushluck Pants",
+      "Beanbean Castle Town Mini Mario Block 1": "Hoo Bean",
+      "Beanbean Castle Town Mini Mario Block 2": "Membership Card",
+      "Beanbean Castle Town Mini Mario Block 3": "Chuckle Bean",
+      "Beanbean Castle Town Mini Mario Block 4": "Chuckle Bean",
+      "Beanbean Castle Town Mini Mario Block 5": "Firebrand",
+      "Chateau Room 1 Digspot": "Chuckle Bean",
+      "Chateau Popple Fight Room Block 1": "Bean B. Badge",
+      "Chateau Popple Fight Room Block 2": "Chuckle Bean",
+      "Chateau Popple Fight Room Digspot": "Mushroom",
+      "Chateau Barrel Room Digspot": "Chuckle Bean",
+      "Chateau Goblet Room Digspot": "Hoo Bean",
+      "Chucklehuck Woods Cave Room 1 Block 1": "Hoo Bean",
+      "Chucklehuck Woods Cave Room 1 Block 2": "Scandal Jeans",
+      "Chucklehuck Woods Cave Room 2 Block": "Beanlet 4",
+      "Chucklehuck Woods Cave Room 3 Block": "Chuckle Bean",
+      "Chucklehuck Woods Solo Luigi Cave Room 2 Block": "Hoo Bean",
+      "Chucklehuck Woods Solo Luigi Cave Room 3 Block 1": "Mushroom",
+      "Chucklehuck Woods Solo Luigi Cave Room 3 Block 2": "Hoo Bean",
+      "Chucklehuck Woods Room 2 Block": "Chuckle Bean",
+      "Chucklehuck Woods Room 2 Digspot": "Refreshing Herb",
+      "Chucklehuck Woods Pipe Room Block 1": "Beanstone 4",
+      "Chucklehuck Woods Pipe Room Block 2": "Chuckle Bean",
+      "Chucklehuck Woods Pipe Room Digspot 1": "Hoo Bean",
+      "Chucklehuck Woods Pipe Room Digspot 2": "Brilliant Badge",
+      "Chucklehuck Woods Room 4 Block 1": "Syrup",
+      "Chucklehuck Woods Room 4 Block 2": "Chuckle Bean",
+      "Chucklehuck Woods Room 4 Block 3": "Super Mushroom",
+      "Chucklehuck Woods Room 7 Block 1": "Chuckle Bean",
+      "Chucklehuck Woods Room 7 Block 2": "Beanstone 10",
+      "Chucklehuck Woods Room 7 Digspot 1": "Chuckle Bean",
+      "Chucklehuck Woods Room 7 Digspot 2": "Chuckle Bean",
+      "Chucklehuck Woods Room 8 Digspot": "Hoo Bean",
+      "Chucklehuck Woods East of Chuckleroot Digspot": "Hard Pants",
+      "Chucklehuck Woods Northeast of Chuckleroot Digspot 1": "Chuckle Bean",
+      "Chucklehuck Woods Northeast of Chuckleroot Digspot 2": "Mushroom",
+      "Chucklehuck Woods Northeast of Chuckleroot Digspot 3": "Hoo Bean",
+      "Chucklehuck Woods Northeast of Chuckleroot Digspot 4": "Safety Slacks",
+      "Chucklehuck Woods White Fruit Room Digspot 1": "Nuts",
+      "Chucklehuck Woods White Fruit Room Digspot 2": "Syrup",
+      "Chucklehuck Woods White Fruit Room Digspot 3": "Harhall's Pants",
+      "Chucklehuck Woods West of Chuckleroot Block": "Hoo Bean",
+      "Chucklehuck Woods Southwest of Chuckleroot Block": "Chuckle Bean",
+      "Chucklehuck Woods Wiggler room Digspot 1": "Hoo Bean",
+      "Chucklehuck Woods Wiggler room Digspot 2": "Nuts",
+      "Chucklehuck Woods Past Chuckleroot Block 1": "Mushroom",
+      "Chucklehuck Woods Past Chuckleroot Block 2": "Chuckle Bean",
+      "Chucklehuck Woods Past Chuckleroot Block 3": "Chuckle Bean",
+      "Chucklehuck Woods Past Chuckleroot Block 4": "Mushroom",
+      "Chucklehuck Woods Past Chuckleroot Block 5": "Super Syrup",
+      "Chucklehuck Woods Past Chuckleroot Block 6": "Nuts",
+      "Chucklehuck Woods Koopa Room Block 1": "Hoo Bean",
+      "Chucklehuck Woods Koopa Room Block 2": "Mushroom",
+      "Chucklehuck Woods Koopa Room Digspot": "Hoo Bean",
+      "Chucklehuck Woods Room 1 Digspot": "Hoo Bean",
+      "Beanbean Outskirts Brooch Guards Room Digspot 1": "Beanstar Piece 3",
+      "Beanbean Outskirts Brooch Guards Room Digspot 2": "Charity Badge",
+      "Beanbean Outskirts Chateau Entrance Digspot 1": "Excite Spring",
+      "Beanbean Outskirts Chateau Entrance Digspot 2": "Chuckle Bean",
+      "Chateau Green Goblet": "Chuckle Bean",
+      "Chateau Red Goblet": "Chuckle Bean",
+      "Chucklehuck Woods Red Chuckola Fruit": "Chuckle Bean",
+      "Chucklehuck Woods White Chuckola Fruit": "Power Badge",
+      "Chucklehuck Woods Purple Chuckola Fruit": "Super Nuts",
+      "Beanbean Castle Town West Side House Block 1": "Bros. Rock",
+      "Beanbean Castle Town West Side House Block 2": "Chuckle Bean",
+      "Beanbean Castle Town West Side House Block 3": "Chuckle Bean",
+      "Beanbean Castle Town West Side House Block 4": "Chuckle Bean",
+      "Beanbean Castle Town East Side House Block 1": "Super Syrup",
+      "Beanbean Castle Town East Side House Block 2": "Chuckle Bean",
+      "Beanbean Castle Town East Side House Block 3": "Hoo Bean",
+      "Beanbean Castle Town East Side House Block 4": "Syrup",
+      "Beanbean Castle Peach's Extra Dress": "Super Nuts",
+      "Beanbean Castle Fake Beanstar": "Mushroom",
+      "Beanbean Castle Town Beanlet 1": "Hoo Bean",
+      "Beanbean Castle Town Beanlet 2": "Muscle Badge",
+      "Beanbean Castle Town Beanlet 3": "Chuckle Bean",
+      "Beanbean Castle Town Beanlet 4": "Chuckle Bean",
+      "Beanbean Castle Town Beanlet 5": "Hoo Bean",
+      "Beanbean Castle Town Beanstone 1": "Syrup",
+      "Beanbean Castle Town Beanstone 2": "Mush Badge",
+      "Beanbean Castle Town Beanstone 3": "Chuckle Bean",
+      "Beanbean Castle Town Beanstone 4": "Secret Scroll 1",
+      "Beanbean Castle Town Beanstone 5": "Chuckle Bean",
+      "Beanbean Castle Town Beanstone 6": "Hoo Bean",
+      "Beanbean Castle Town Beanstone 7": "Mushroom",
+      "Beanbean Castle Town Beanstone 8": "Golden Mushroom",
+      "Beanbean Castle Town Beanstone 9": "Beanstar Piece 1",
+      "Beanbean Castle Town Beanstone 10": "Chuckle Bean",
+      "Coffee Shop Brew Reward 1": "Super Mushroom",
+      "Coffee Shop Brew Reward 2": "Spangle",
+      "Coffee Shop Brew Reward 3": "Chuckle Bean",
+      "Coffee Shop Brew Reward 4": "Chuckle Bean",
+      "Coffee Shop Brew Reward 5": "Woohoo Blend",
+      "Coffee Shop Brew Reward 6": "Chuckle Bean",
+      "Coffee Shop Brew Reward 7": "Chuckle Bean",
+      "Coffee Shop Woohoo Blend": "Super Mushroom",
+      "Coffee Shop Hoohoo Blend": "Chuckle Bean",
+      "Coffee Shop Chuckle Blend": "Hoo Bean",
+      "Coffee Shop Teehee Blend": "Mushroom",
+      "Coffee Shop Hoolumbian": "Mushroom",
+      "Coffee Shop Chuckoccino": "Mushroom",
+      "Coffee Shop Teeheespresso": "Hoo Bean",
+      "Beanbean Castle Town Beanstone Reward": "Syrup",
+      "Beanbean Castle Town Beanlet Reward": "Syrup",
+      "Badge Shop Starting Flag 1": "Nuts",
+      "Badge Shop Starting Flag 2": "Nuts",
+      "Pants Shop Starting Flag 1": "Hoo Bean",
+      "Pants Shop Starting Flag 2": "Chuckle Bean",
+      "Pants Shop Starting Flag 3": "Sarge Badge",
+      "Shop Chuckolator Flag": "Green Pearl Bean",
+      "Pants Shop Chuckolator Flag 1": "Hoo Bean",
+      "Pants Shop Chuckolator Flag 2": "Hoo Bean",
+      "Pants Shop Chuckolator Flag 3": "Syrup",
+      "Badge Shop Chuckolator Flag 1": "Syrup",
+      "Badge Shop Chuckolator Flag 2": "Syrup",
+      "Badge Shop Chuckolator Flag 3": "Chuckle Bean",
+      "Shop Mom Piranha Flag 1": "Mushroom",
+      "Shop Mom Piranha Flag 2": "Hoo Bean",
+      "Shop Mom Piranha Flag 3": "Chuckle Bean",
+      "Shop Mom Piranha Flag 4": "Bean Fruit 5",
+      "Pants Shop Mom Piranha Flag 1": "Nuts",
+      "Pants Shop Mom Piranha Flag 2": "Mushroom",
+      "Pants Shop Mom Piranha Flag 3": "Hoo Bean",
+      "Badge Shop Mom Piranha Flag 1": "Chuckle Bean",
+      "Badge Shop Mom Piranha Flag 2": "Super Mushroom",
+      "Badge Shop Mom Piranha Flag 3": "Hoo Bean",
+      "Badge Shop Trunkle Flag 1": "Hoo Bean",
+      "Badge Shop Trunkle Flag 2": "Hoo Bean",
+      "Badge Shop Trunkle Flag 3": "Chuckle Bean",
+      "Pants Shop Trunkle Flag 1": "Refreshing Herb",
+      "Pants Shop Trunkle Flag 2": "Mushroom",
+      "Pants Shop Trunkle Flag 3": "Hoo Bean",
+      "Shop Trunkle Flag 1": "Hoo Bean",
+      "Shop Trunkle Flag 2": "Peach's Extra Dress",
+      "Badge Shop Beanstar Complete Flag 1": "Syrup",
+      "Badge Shop Beanstar Complete Flag 2": "Mushroom",
+      "Badge Shop Beanstar Complete Flag 3": "Hoo Bean",
+      "Pants Shop Beanstar Complete Flag 1": "Yellow Neon Egg",
+      "Pants Shop Beanstar Complete Flag 2": "Chuckle Bean",
+      "Pants Shop Beanstar Complete Flag 3": "Chuckle Bean",
+      "Shop Beanstar Complete Flag 1": "Mushroom",
+      "Shop Beanstar Complete Flag 2": "Hoo Bean",
+      "Shop Beanstar Complete Flag 3": "Mushroom",
+      "Badge Shop Birdo Flag 1": "Hoo Bean",
+      "Badge Shop Birdo Flag 2": "Mushroom",
+      "Badge Shop Birdo Flag 3": "Hoo Bean",
+      "Pants Shop Birdo Flag 1": "Hoo Bean",
+      "Pants Shop Birdo Flag 2": "Peasley Slacks",
+      "Pants Shop Birdo Flag 3": "Ultra Syrup",
+      "Shop Birdo Flag": "Mush Badge AA",
+      "Oho Ocean North Whirlpool Block 1": "Casual Slacks",
+      "Oho Ocean North Whirlpool Block 2": "Chuckle Bean",
+      "Oho Ocean North Whirlpool Block 3": "Mushroom",
+      "Oho Ocean North Whirlpool Block 4": "Chuckle Bean",
+      "Oho Ocean North Whirlpool Digspot 1": "Hoo Bean",
+      "Oho Ocean North Whirlpool Digspot 2": "Plaid Trousers",
+      "Oho Ocean Fire Puzzle Room Digspot": "Great Force",
+      "Oho Ocean South Whirlpool Digspot 1": "Teeheespresso",
+      "Oho Ocean South Whirlpool Digspot 2": "Chuckle Bean",
+      "Oho Ocean South Whirlpool Digspot 3": "Ultra Syrup",
+      "Oho Ocean South Whirlpool Digspot 4": "Chuckle Bean",
+      "Oho Ocean South Whirlpool Digspot 5": "Chuckle Bean",
+      "Oho Ocean South Whirlpool Digspot 6": "Winkle Card",
+      "Oho Ocean South Whirlpool Room 2 Digspot": "High-End Badge",
+      "Joke's End Pipe Digspot": "Chuckle Bean",
+      "Joke's End Staircase Digspot": "Syrup",
+      "Surf Minigame": "Chuckle Bean",
+      "North Ocean Whirlpool Mole": "Super Mushroom",
+      "Beanbean Outskirts Surf Beach Digspot 1": "Chuckle Bean",
+      "Beanbean Outskirts Surf Beach Digspot 2": "Beanstone 6",
+      "Beanbean Outskirts Surf Beach Digspot 3": "Syrup",
+      "Woohoo Hooniversity South Of Star Room Block": "Super Nuts",
+      "Woohoo Hooniversity Barrel Puzzle Entrance Digspot 1": "Bean Fruit 6",
+      "Woohoo Hooniversity Barrel Puzzle Entrance Block 1": "Mushroom",
+      "Woohoo Hooniversity Barrel Puzzle Entrance Block 2": "Chuckle Bean",
+      "Woohoo Hooniversity Barrel Puzzle Entrance Block 3": "Chuckle Bean",
+      "Woohoo Hooniversity Barrel Puzzle Entrance Block 4": "Bean Fruit 7",
+      "Woohoo Hooniversity Barrel Puzzle Entrance Digspot 2": "Super Syrup",
+      "Woohoo Hooniversity Past Sun Door Block 1": "Chuckle Bean",
+      "Woohoo Hooniversity Past Sun Door Block 2": "Ohoracle Badge",
+      "Woohoo Hooniversity Past Sun Door Block 3": "Hoo Bean",
+      "Woohoo Hooniversity Past Cackletta Room 1 Block": "Game Boy Horror SP",
+      "Woohoo Hooniversity Past Cackletta Room 2 Block 1": "Chuckle Bean",
+      "Woohoo Hooniversity Past Cackletta Room 2 Block 2": "Salvage Badge",
+      "Woohoo Hooniversity Past Cackletta Room 2 Digspot": "Heart Slacks",
+      "Woohoo Hooniversity Basement Room 1 Digspot": "Mari-Lui Badge",
+      "Woohoo Hooniversity Basement Room 2 Digspot": "Chuckle Bean",
+      "Woohoo Hooniversity Basement Room 3 Block": "Chuckle Bean",
+      "Woohoo Hooniversity Basement Room 4 Block": "Hoo Bean",
+      "Woohoo Hooniversity Popple Room Digspot 1": "Hoo Bean",
+      "Woohoo Hooniversity Popple Room Digspot 2": "Chuckle Bean",
+      "Woohoo Hooniversity Solo Mario Barrel Area Block 1": "Mushroom",
+      "Woohoo Hooniversity Solo Mario Barrel Area Block 2": "Hoo Bean",
+      "Woohoo Hooniversity Solo Mario Barrel Area Block 3": "Syrup",
+      "Gwarhar Lagoon Pipe Room Digspot": "Hoo Bean",
+      "Gwarhar Lagoon Massage Parlor Entrance Digspot": "Red Pepper",
+      "Gwarhar Lagoon First Underwater Area Room 1 Block": "General Badge",
+      "Gwarhar Lagoon First Underwater Area Room 2 Block 1": "Purple Chuckola Fruit",
+      "Gwarhar Lagoon First Underwater Area Room 2 Block 2": "Hoo Bean",
+      "Gwarhar Lagoon Red Pearl Bean": "Hoo Bean",
+      "Gwarhar Lagoon Green Pearl Bean": "Chuckle Bean",
+      "Oho Ocean South Room 1 Block": "Mushroom",
+      "Oho Ocean South Room 2 Digspot": "Syrup",
+      "Gwarhar Lagoon Past Hermie Digspot": "Mushroom",
+      "Gwarhar Lagoon East of Stone Bridge Block": "Chuckle Bean",
+      "Gwarhar Lagoon North of Spangle Room Digspot": "Chuckle Bean",
+      "Gwarhar Lagoon West of Spangle Room Digspot": "Greed Wallet",
+      "Gwarhar Lagoon Second Underwater Area Room 4 Digspot": "Chuckle Bean",
+      "Gwarhar Lagoon Second Underwater Area Room 2 Digspot 1": "Chuckle Bean",
+      "Gwarhar Lagoon Second Underwater Area Room 2 Digspot 2": "Ultra Syrup",
+      "Gwarhar Lagoon Second Underwater Area Room 3 Block 1": "Chuckle Bean",
+      "Gwarhar Lagoon Second Underwater Area Room 3 Block 2": "Chuckle Bean",
+      "Gwarhar Lagoon Second Underwater Area Room 3 Block 3": "Chuckle Bean",
+      "Gwarhar Lagoon Second Underwater Area Room 1 Block": "Super Mushroom",
+      "Gwarhar Lagoon Entrance to West Underwater Area Digspot": "Beanstar Piece 2",
+      "Gwarhar Lagoon Fire Dash Puzzle Room 1 Digspot 1": "Syrup",
+      "Gwarhar Lagoon Fire Dash Puzzle Room 1 Digspot 2": "Super Mushroom",
+      "Gwarhar Lagoon Fire Dash Puzzle Room 2 Digspot": "Hoo Bean",
+      "Gwarhar Lagoon Fire Dash Puzzle Room 3 Digspot 1": "Chuckle Bean",
+      "Gwarhar Lagoon Fire Dash Puzzle Room 3 Digspot 2": "Chuckle Bean",
+      "Gwarhar Lagoon Spangle Room Block": "Nuts",
+      "Gwarhar Lagoon Spangle Reward": "Chuckle Bean",
+      "Beanstar Piece Hermie": "Refreshing Herb",
+      "Gwarhar Lagoon Spangle": "Hoo Bean",
+      "Teehee Valley Room 1 Digspot 1": "Chuckle Bean",
+      "Teehee Valley Room 1 Digspot 2": "Hoo Bean",
+      "Teehee Valley Room 1 Digspot 3": "Hoo Bean",
+      "Teehee Valley Room 2 Digspot 1": "Hoo Bean",
+      "Teehee Valley Room 2 Digspot 2": "Super Syrup",
+      "Teehee Valley Room 2 Digspot 3": "Hoo Bean",
+      "Teehee Valley Past Ultra Hammer Rock Block 1": "Parasol Pants",
+      "Teehee Valley Past Ultra Hammer Rock Block 2": "Purple Neon Egg",
+      "Teehee Valley Past Ultra Hammer Rock Digspot 1": "Ultra Mushroom",
+      "Teehee Valley Past Ultra Hammer Rock Digspot 3": "Super Syrup",
+      "Teehee Valley Before Trunkle Digspot": "Chuckle Bean",
+      "S.S. Chuckola Storage Room Block 1": "Syrup",
+      "S.S. Chuckola Storage Room Block 2": "Oh-Pah Badge",
+      "S.S. Chuckola Membership Card": "Hoo Bean",
+      "Chucklehuck Woods Winkle Cave Block 1": "Green Neon Egg",
+      "Chucklehuck Woods Winkle Cave Block 2": "Hoo Bean",
+      "Winkle Area Beanstar Room Block": "Nuts",
+      "Winkle Area Digspot": "Hoo Bean",
+      "Winkle Area Outside Colloseum Block": "Chuckle Bean",
+      "Winkle Area Colloseum Digspot": "Beanstone 2",
+      "Beanstar Piece Winkle Area": "Hoo Bean",
+      "Winkle Area Winkle Card": "Super Nuts",
+      "Sewers Room 3 Block 1": "B. Brand Jeans",
+      "Sewers Room 3 Block 2": "Cobalt Necktie",
+      "Sewers Room 3 Block 3": "Chuckle Bean",
+      "Sewers Room 5 Block 1": "Shroom Bells",
+      "Sewers Room 5 Block 2": "Miracle Badge",
+      "Sewers Prison Room Block 1": "Hoo Bean",
+      "Sewers Prison Room Block 2": "Hoo Bean",
+      "Sewers Prison Room Block 3": "Max Nuts",
+      "Sewers Prison Room Block 4": "Mushroom",
+      "Beanbean Castle Beanbean Brooch": "Mushroom",
+      "Airport Entrance Digspot": "Chuckle Bean",
+      "Airport Lobby Digspot": "Chuckle Bean",
+      "Airport Westside Digspot 1": "Mushroom",
+      "Airport Westside Digspot 2": "Max Syrup",
+      "Airport Westside Digspot 3": "Super Syrup",
+      "Airport Westside Digspot 4": "Chuckle Bean",
+      "Airport Westside Digspot 5": "Super Mushroom",
+      "Airport Center Digspot 1": "Refreshing Herb",
+      "Airport Center Digspot 2": "Green Pepper",
+      "Airport Center Digspot 3": "Chuckle Bean",
+      "Airport Center Digspot 4": "Chuckle Bean",
+      "Airport Center Digspot 5": "Hoo Bean",
+      "Airport Eastside Digspot 1": "Beanstone 1",
+      "Airport Eastside Digspot 2": "Super Mushroom",
+      "Airport Eastside Digspot 3": "Super Mushroom",
+      "Airport Eastside Digspot 4": "Chuckle Bean",
+      "Airport Eastside Digspot 5": "Hoo Bean",
+      "Joke's End West of First Boiler Room Block 1": "Chuckle Bean",
+      "Joke's End West of First Boiler Room Block 2": "Mushroom",
+      "Joke's End First Boiler Room Digspot 1": "Ultra Mushroom",
+      "Joke's End First Boiler Room Digspot 2": "Chuckle Bean",
+      "Joke's End Second Floor West Room Block 1": "Green Goblet",
+      "Joke's End Second Floor West Room Block 2": "Mush Badge A",
+      "Joke's End Second Floor West Room Block 3": "Casual Coral",
+      "Joke's End Second Floor West Room Block 4": "Chuckle Bean",
+      "Joke's End Mole Reward 1": "Syrup",
+      "Joke's End Mole Reward 2": "Hoo Bean",
+      "Joke's End Furnace Room 1 Block 1": "Beanstar Piece 4",
+      "Joke's End Furnace Room 1 Block 2": "Hoo Bean",
+      "Joke's End Furnace Room 1 Block 3": "Queen B. Jeans",
+      "Joke's End Northeast of Boiler Room 1 Block": "Chuckle Bean",
+      "Joke's End Northeast of Boiler Room 2 Block": "Beanbean Brooch",
+      "Joke's End Northeast of Boiler Room 2 Digspot": "Super Mushroom",
+      "Joke's End Northeast of Boiler Room 3 Digspot": "Chuckle Bean",
+      "Joke's End Second Floor East Room Digspot": "Chuckle Bean",
+      "Joke's End Final Split up Room Digspot": "Hoo Bean",
+      "Joke's End South of Bridge Room Block": "Syrup",
+      "Joke's End Solo Luigi Room 1 Block": "Blue Neon Egg",
+      "Joke's End Solo Luigi Room 1 Digspot": "Azure Neon Egg",
+      "Joke's End Solo Mario Final Room Block 1": "Chuckle Bean",
+      "Joke's End Solo Mario Final Room Block 2": "Hoo Bean",
+      "Joke's End Solo Mario Final Room Block 3": "Chuckle Bean",
+      "Joke's End Solo Luigi Room 2 Digspot": "Chuckle Bean",
+      "Joke's End Solo Mario Room 1 Digspot": "Peachy Jeans",
+      "Joke's End Solo Mario Room 2 Block 1": "Hoo Bean",
+      "Joke's End Solo Mario Room 2 Block 2": "Spiny Badge AA",
+      "Joke's End Solo Mario Room 2 Block 3": "Hoo Bean",
+      "Joke's End Second Boiler Room Digspot 1": "Wool Trousers",
+      "Joke's End Second Boiler Room Digspot 2": "Chuckle Bean",
+      "Joke's End North of Second Boiler Room Block 1": "Ultra Mushroom",
+      "Joke's End North of Second Boiler Room Block 2": "Refreshing Herb",
+      "Joke's End Before Jojora Room Block 1": "Chuckle Bean",
+      "Joke's End Before Jojora Room Block 2": "Chuckle Bean",
+      "Joke's End Before Jojora Room Digspot": "Chuckle Bean",
+      "Joke's End Jojora Room Digspot": "Ultra Syrup",
+      "Teehee Valley Past Ultra Hammer Rock Digspot 2 (Post-Birdo)": "Hoo Bean",
+      "Teehee Valley Before Birdo Digspot 1": "Syrup",
+      "Teehee Valley Before Birdo Digspot 2": "Mushroom",
+      "Teehee Valley Before Birdo Digspot 3": "Ultra Mushroom",
+      "Teehee Valley Before Birdo Digspot 4": "Hoo Bean",
+      "Yoshi Theater Blue Yoshi": "Super Syrup",
+      "Yoshi Theater Red Yoshi": "Mushroom",
+      "Yoshi Theater Green Yoshi": "Chuckle Bean",
+      "Yoshi Theater Yellow Yoshi": "Mushroom",
+      "Yoshi Theater Purple Yoshi": "Ultra Mushroom",
+      "Yoshi Theater Orange Yoshi": "Mushroom",
+      "Yoshi Theater Azure Yoshi": "Ultra Syrup",
+      "Beanstar Piece Yoshi Theater": "Chuckle Bean",
+      "Teehee Valley Trunkle Room Digspot": "Max Syrup",
+      "Fungitown Embassy Room Block": "Chuckle Bean",
+      "Fungitown Entrance Room Block": "Chuckle Bean",
+      "Fungitown Badge Shop Starting Flag 1": "Street Jeans",
+      "Fungitown Badge Shop Starting Flag 2": "Bros. Badge",
+      "Fungitown Badge Shop Starting Flag 3": "Hoo Bean",
+      "Fungitown Shop Starting Flag 1": "Hoo Bean",
+      "Fungitown Shop Starting Flag 2": "Chuckle Bean",
+      "Fungitown Shop Starting Flag 3": "Chuckle Bean",
+      "Fungitown Shop Starting Flag 4": "Chuckle Bean",
+      "Fungitown Shop Starting Flag 5": "Chuckle Bean",
+      "Fungitown Shop Starting Flag 6": "Chuckle Bean",
+      "Fungitown Shop Starting Flag 7": "Chuckle Bean",
+      "Fungitown Shop Starting Flag 8": "Hoo Bean",
+      "Fungitown Pants Shop Starting Flag 1": "Hoo Bean",
+      "Fungitown Pants Shop Starting Flag 2": "Chuckle Bean",
+      "Fungitown Pants Shop Starting Flag 3": "Chuckle Bean",
+      "Fungitown Badge Shop Beanstar Complete Flag 1": "Red Pepper",
+      "Fungitown Badge Shop Beanstar Complete Flag 2": "Chuckle Bean",
+      "Fungitown Pants Shop Beanstar Complete Flag 1": "Hoo Bean",
+      "Fungitown Pants Shop Beanstar Complete Flag 2": "Bean Fruit 4",
+      "Fungitown Shop Beanstar Complete Flag": "Chuckle Bean",
+      "Fungitown Shop Birdo Flag": "Chuckle Bean",
+      "Fungitown Pants Shop Birdo Flag 1": "Chuckle Bean",
+      "Fungitown Pants Shop Birdo Flag 2": "Mushroom",
+      "Fungitown Badge Shop Birdo Flag 1": "Grab Badge",
+      "Fungitown Badge Shop Birdo Flag 2": "Chuckle Bean",
+      "Beanbean Outskirts Before Harhall Digspot 1": "Chuckle Bean",
+      "Beanbean Outskirts Before Harhall Digspot 2": "Chuckle Bean",
+      "Beanstar Piece Harhall": "Teehee Blend",
+      "Beanbean Outskirts Boostatue Mole": "Beanlet 5",
+      "Harhall's Pants": "Hoo Bean",
+      "Beanbean Outskirts S Room 2 Digspot 1": "Mushroom",
+      "Beanbean Outskirts S Room 2 Digspot 2": "Beanlet 2",
+      "Beanbean Outskirts S Room 2 Block 2": "Syrup",
+      "Beanbean Outskirts S Room 2 Digspot 3": "Mushroom",
+      "Oho Oasis West Digspot": "Blue Jeans",
+      "Oho Oasis Fire Palace Block": "Chuckle Bean",
+      "Oho Ocean Spike Room Digspot 1": "Chuckle Bean",
+      "Oho Ocean Spike Room Digspot 2": "Ultra Mushroom",
+      "Oho Oasis Firebrand": "Hoo Bean",
+      "Oho Oasis Thunderhand": "Mushroom",
+      "Hoohoo Mountain Base Past Ultra Hammer Rocks Block 1": "Chuckle Bean",
+      "Hoohoo Mountain Base Past Ultra Hammer Rocks Block 2": "Shroom Slacks",
+      "Hoohoo Mountain Base Past Ultra Hammer Rocks Block 3": "Chuckle Bean",
+      "Hoohoo Mountain Base Boostatue Room Digspot 3 (Right Side)": "Chuckle Bean",
+      "Hoohoo Mountain Base Mole Near Teehee Valley": "Tropic Slacks",
+      "Teehee Valley Entrance To Hoohoo Mountain Digspot": "Chuckle Blend",
+      "Teehee Valley Upper Maze Room 1 Block": "Beanstar Pants",
+      "Teehee Valley Upper Maze Room 2 Digspot 1": "Hoo Bean",
+      "Teehee Valley Upper Maze Room 2 Digspot 2": "Chuckle Bean",
+      "Guffawha Ruins Block": "Refreshing Herb",
+      "Hoohoo Mountain Base Guffawha Ruins Entrance Digspot": "Beanstone 9",
+      "Hoohoo Mountain Base Teehee Valley Entrance Digspot": "Bean Pants",
+      "Hoohoo Mountain Base Teehee Valley Entrance Block": "#1 Trousers",
+      "Cackletta's Soul": "Victory",
+      "Bowser's Castle Entrance Block 1": "Chuckle Bean",
+      "Bowser's Castle Entrance Block 2": "Chuckle Bean",
+      "Bowser's Castle Entrance Digspot": "Chuckle Bean",
+      "Bowser's Castle Iggy & Morton Hallway Block 1": "Chuckle Bean",
+      "Bowser's Castle Iggy & Morton Hallway Block 2": "Heart Jeans",
+      "Bowser's Castle Iggy & Morton Hallway Digspot": "Nuts",
+      "Bowser's Castle Past Morton Block": "Mushwin Pants",
+      "Bowser's Castle Morton Room 1 Digspot": "Beanlet 3",
+      "Bowser's Castle Lemmy Room 1 Block": "Hoo Bean",
+      "Bowser's Castle Lemmy Room 1 Digspot": "Chuckle Bean",
+      "Bowser's Castle Ludwig Room 1 Block": "Hoo Bean",
+      "Bowser's Castle Lemmy Room Mole": "Mushroom",
+      "Bowser's Castle Ludwig & Roy Hallway Block 1": "Hoo Bean",
+      "Bowser's Castle Ludwig & Roy Hallway Block 2": "Chuckle Bean",
+      "Bowser's Castle Roy Corridor Block 1": "Chuckle Bean",
+      "Bowser's Castle Roy Corridor Block 2": "Hoolumbian",
+      "Bowser's Castle Mini Mario Sidescroller Block 1": "1-UP Mushroom",
+      "Bowser's Castle Mini Mario Sidescroller Block 2": "Ultra Mushroom",
+      "Bowser's Castle Mini Mario Maze Block 1": "Super Mushroom",
+      "Bowser's Castle Mini Mario Maze Block 2": "Refreshing Herb",
+      "Bowser's Castle Before Wendy Fight Block 1": "Hoo Bean",
+      "Bowser's Castle Before Wendy Fight Block 2": "Ultra Nuts",
+      "Bowser's Castle Larry Room Block": "Hoo Bean",
+      "Bowser's Castle Wendy & Larry Hallway Digspot": "Mushroom",
+      "Bowser's Castle Before Fawful Fight Block 1": "Chuckle Bean",
+      "Bowser's Castle Before Fawful Fight Block 2": "Chuckle Bean",
+      "Bowser's Castle Great Door Block 1": "Hoo Bean",
+      "Bowser's Castle Great Door Block 2": "Beanstone 8"
+    }
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -10654,7 +11580,21 @@
     "1": {
       "game": "Mario & Luigi Superstar Saga WorldGen",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": false,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      }
     }
   },
   "game_info": {
@@ -10662,6 +11602,29 @@
       "name": "Mario & Luigi Superstar Saga WorldGen",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "partyTime",
+      "web_tutorials": [
+        {
+          "name": "Setup Guide",
+          "description": "A guide to setting up Mario & Luigi: Superstar Saga for Archipelago.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "jamesbrq"
+          ]
+        }
+      ],
+      "world_description": "Adventure with Mario and Luigi together in the Beanbean Kingdom\nto stop the evil Cackletta and retrieve the Beanstar.",
+      "slot_data": {
+        "CastleSkip": 0,
+        "SkipMinecart": 0,
+        "DisableSurf": 0,
+        "HarhallsPants": 0,
+        "ChuckleBeans": 2,
+        "DifficultLogic": 0,
+        "Coins": 0
       }
     }
   },

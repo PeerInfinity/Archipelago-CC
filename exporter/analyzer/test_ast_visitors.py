@@ -435,17 +435,23 @@ class TestLambdaAnalysis(TestHelperMixin, unittest.TestCase):
         self.assertEqual(result, {"type": "constant", "value": True})
 
     def test_lambda_with_comparison(self):
-        """Lambda with comparison should produce compare rule."""
+        """Lambda with non-state parameter wraps body in lambda structure."""
         func = lambda x: x > 5
         result = self.analyze_lambda(func)
-        self.assertEqual(result["type"], "compare")
-        self.assertEqual(result["op"], ">")
+        # Non-rule lambdas (first param not 'state'/'self'/'sm') return wrapped structure
+        self.assertEqual(result["type"], "lambda")
+        self.assertEqual(result["params"], ["x"])
+        self.assertEqual(result["body"]["type"], "compare")
+        self.assertEqual(result["body"]["op"], ">")
 
     def test_lambda_with_and(self):
-        """Lambda with and should produce and rule."""
+        """Lambda with non-state parameters wraps body in lambda structure."""
         func = lambda a, b: a and b
         result = self.analyze_lambda(func)
-        self.assertEqual(result["type"], "and")
+        # Non-rule lambdas (first param not 'state'/'self'/'sm') return wrapped structure
+        self.assertEqual(result["type"], "lambda")
+        self.assertEqual(result["params"], ["a", "b"])
+        self.assertEqual(result["body"]["type"], "and")
 
 
 @skip_if_no_imports

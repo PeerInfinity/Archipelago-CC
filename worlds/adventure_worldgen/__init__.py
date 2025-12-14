@@ -95,7 +95,7 @@ class AdventureWorldGenWorld(RuleWorldMixin, World):
     }
 
     item_name_groups: ClassVar[Dict[str, frozenset]] = {
-        "Everything": frozenset(["Yellow Key", "White Key", "Black Key", "Bridge", "Magnet", "Sword", "Chalice", "Left Difficulty Switch", "Right Difficulty Switch", "Freeincarnate", "Slow Yorgle", "Slow Grundle", "Slow Rhindle", "Revive Dragons", "nothing"]),
+        "Everything": frozenset(["nothing", "Sword", "Bridge", "Yellow Key", "White Key", "Black Key", "Chalice", "Magnet", "Left Difficulty Switch", "Right Difficulty Switch", "Freeincarnate", "Slow Yorgle", "Slow Grundle", "Slow Rhindle", "Revive Dragons"]),
         "Event": frozenset(["Victory"]),
     }
 

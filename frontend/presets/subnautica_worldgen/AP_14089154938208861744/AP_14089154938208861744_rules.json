@@ -34,8 +34,9 @@
             "name": "Blood Kelp Trench Wreck - Outside Databox",
             "id": 33000,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Engine Fragment",
@@ -49,8 +50,9 @@
             "name": "Blood Kelp Trench Wreck - Inside Databox",
             "id": 33001,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Spotlight",
@@ -64,8 +66,9 @@
             "name": "Blood Kelp Trench Wreck - PDA",
             "id": 33002,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Large Room",
@@ -79,8 +82,9 @@
             "name": "Bulb Zone West Wreck - Outside Databox",
             "id": 33003,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Fire Suppression System",
@@ -94,8 +98,9 @@
             "name": "Bulb Zone West Wreck - Under Databox",
             "id": 33004,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Laser Cutter Fragment",
@@ -109,8 +114,9 @@
             "name": "Bulb Zone West Wreck - Inside Databox",
             "id": 33005,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Shield Generator",
@@ -124,8 +130,9 @@
             "name": "Bulb Zone West Wreck - PDA",
             "id": 33006,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Crystalline Sulfur",
@@ -139,8 +146,9 @@
             "name": "Bulb Zone East Wreck - Databox",
             "id": 33007,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Beacon Fragment",
@@ -154,8 +162,9 @@
             "name": "Dunes North Wreck - Outside Databox",
             "id": 33008,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Creature Decoy",
@@ -169,8 +178,9 @@
             "name": "Dunes North Wreck - Office Databox",
             "id": 33009,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Bridge Fragment",
@@ -184,8 +194,9 @@
             "name": "Dunes North Wreck - PDA",
             "id": 33010,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Engine Fragment",
@@ -199,8 +210,9 @@
             "name": "Dunes North Wreck - Cargo Databox",
             "id": 33011,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Bioreactor Fragment",
@@ -214,8 +226,9 @@
             "name": "Dunes West Wreck - Databox",
             "id": 33012,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Hull Fragment",
@@ -229,8 +242,9 @@
             "name": "Dunes East Wreck - Outside Databox",
             "id": 33013,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Power Cell Charger Fragment",
@@ -244,8 +258,9 @@
             "name": "Dunes East Wreck - Inside Databox",
             "id": 33014,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Thermal Reactor Module",
@@ -259,8 +274,9 @@
             "name": "Grand Reef North Wreck - Outside Databox",
             "id": 33015,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Seaglide Fragment",
@@ -274,8 +290,9 @@
             "name": "Grand Reef North Wreck - Elevator Databox",
             "id": 33016,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Seamoth Fragment",
@@ -289,8 +306,9 @@
             "name": "Grand Reef North Wreck - Bottom Databox",
             "id": 33017,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Alien Containment",
@@ -304,8 +322,9 @@
             "name": "Grand Reef North Wreck - Hangar PDA",
             "id": 33018,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Thermal Plant Fragment",
@@ -319,8 +338,9 @@
             "name": "Grand Reef South Wreck - Trench Databox",
             "id": 33019,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Grav Trap Fragment",
@@ -334,8 +354,9 @@
             "name": "Grand Reef South Wreck - Comms Databox",
             "id": 33020,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Hull Fragment",
@@ -349,8 +370,9 @@
             "name": "Grand Reef South Wreck - Outside Databox",
             "id": 33021,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Modification Station Fragment",
@@ -364,8 +386,9 @@
             "name": "Grand Reef South Wreck - PDA",
             "id": 33022,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resources Bundle",
@@ -379,8 +402,9 @@
             "name": "Grassy Plateaus South Wreck - Databox",
             "id": 33023,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Seaglide Fragment",
@@ -394,8 +418,9 @@
             "name": "Grassy Plateaus South Wreck - PDA",
             "id": 33024,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Decoy Tube Upgrade",
@@ -409,8 +434,9 @@
             "name": "Grassy Plateaus East Wreck - Breach Databox",
             "id": 33025,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Prawn Suit Fragment",
@@ -424,8 +450,9 @@
             "name": "Grassy Plateaus East Wreck - Hangar Databox",
             "id": 33026,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Exterior Growbed",
@@ -439,8 +466,9 @@
             "name": "Grassy Plateaus West Wreck - Locker PDA",
             "id": 33027,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Lightweight High Capacity Tank",
@@ -454,8 +482,9 @@
             "name": "Grassy Plateaus West Wreck - Data Terminal",
             "id": 33028,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mobile Vehicle Bay Fragment",
@@ -469,8 +498,9 @@
             "name": "Grassy Plateaus Southwest Wreck - Databox",
             "id": 33029,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Moonpool Fragment",
@@ -484,8 +514,9 @@
             "name": "Safe Shallows Wreck - PDA",
             "id": 33030,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Bridge Fragment",
@@ -499,8 +530,9 @@
             "name": "Kelp Forest Wreck - Databox",
             "id": 33031,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Seaglide Fragment",
@@ -514,8 +546,9 @@
             "name": "Kelp Forest Wreck - PDA",
             "id": 33032,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Seamoth Fragment",
@@ -529,8 +562,9 @@
             "name": "Mountains West Wreck - Outside Databox",
             "id": 33033,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Propulsion Cannon Fragment",
@@ -544,8 +578,9 @@
             "name": "Mountains West Wreck - Data Terminal",
             "id": 33034,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mobile Vehicle Bay Fragment",
@@ -559,8 +594,9 @@
             "name": "Mountains West Wreck - Hangar Databox",
             "id": 33035,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Moonpool Fragment",
@@ -574,8 +610,9 @@
             "name": "Mountains West Wreck - Office Databox",
             "id": 33036,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nuclear Reactor Fragment",
@@ -589,8 +626,9 @@
             "name": "Mountains East Wreck - Comms Databox",
             "id": 33037,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Hull Fragment",
@@ -604,8 +642,9 @@
             "name": "Mountains East Wreck - Outside Databox",
             "id": 33038,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Bridge Fragment",
@@ -619,8 +658,9 @@
             "name": "Northwestern Mushroom Forest Wreck - Cargo Databox",
             "id": 33039,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Stasis Rifle Fragment",
@@ -634,8 +674,9 @@
             "name": "Northwestern Mushroom Forest Wreck - Office Databox",
             "id": 33040,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Exterior Growbed",
@@ -649,8 +690,9 @@
             "name": "Northwestern Mushroom Forest Wreck - PDA",
             "id": 33041,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra High Capacity Tank",
@@ -664,8 +706,9 @@
             "name": "Sea Treader's Path Wreck - Outside Databox",
             "id": 33042,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Scanner Room Fragment",
@@ -679,8 +722,9 @@
             "name": "Sea Treader's Path Wreck - Hangar Databox",
             "id": 33043,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Moonpool Fragment",
@@ -694,8 +738,9 @@
             "name": "Sea Treader's Path Wreck - Lobby Databox",
             "id": 33044,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Propulsion Cannon Fragment",
@@ -709,8 +754,9 @@
             "name": "Sea Treader's Path Wreck - PDA",
             "id": 33045,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Depth Module MK1",
@@ -724,8 +770,9 @@
             "name": "Sparse Reef Wreck - Locker Databox",
             "id": 33046,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Swim Charge Fins",
@@ -739,8 +786,9 @@
             "name": "Sparse Reef Wreck - Outside Databox",
             "id": 33047,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Prawn Suit Propulsion Cannon Fragment",
@@ -754,8 +802,9 @@
             "name": "Sparse Reef Wreck - Lab Databox",
             "id": 33048,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Modification Station Fragment",
@@ -769,8 +818,9 @@
             "name": "Underwater Islands Wreck - Outside Databox",
             "id": 33049,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Scanner Room Fragment",
@@ -784,8 +834,9 @@
             "name": "Underwater Islands Wreck - Hangar Databox",
             "id": 33050,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Laser Cutter Fragment",
@@ -799,8 +850,9 @@
             "name": "Underwater Islands Wreck - Data Terminal",
             "id": 33051,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Power Transmitter Fragment",
@@ -814,8 +866,9 @@
             "name": "Underwater Islands Wreck - Cable Databox",
             "id": 33052,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Battery Charger fragment",
@@ -829,8 +882,9 @@
             "name": "Underwater Islands Wreck - Pipes Databox 1",
             "id": 33053,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Power Cell Charger Fragment",
@@ -844,8 +898,9 @@
             "name": "Underwater Islands Wreck - Pipes Databox 2",
             "id": 33054,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ultra Glide Fins",
@@ -859,8 +914,9 @@
             "name": "Degasi Seabase - Deep Grand Reef - Bedroom Databox",
             "id": 33055,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Prawn Suit Propulsion Cannon Fragment",
@@ -874,8 +930,9 @@
             "name": "Degasi Seabase - Deep Grand Reef - Observatory Databox",
             "id": 33056,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Scanner Room Fragment",
@@ -889,8 +946,9 @@
             "name": "Degasi Seabase - Deep Grand Reef - Bedroom PDA",
             "id": 33057,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Neptune Cockpit",
@@ -904,8 +962,9 @@
             "name": "Degasi Seabase - Deep Grand Reef - Outside PDA",
             "id": 33058,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Laser Cutter Fragment",
@@ -919,8 +978,9 @@
             "name": "Degasi Seabase - Deep Grand Reef - Observatory PDA",
             "id": 33059,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Modification Station Fragment",
@@ -934,8 +994,9 @@
             "name": "Degasi Seabase - Deep Grand Reef - Lab PDA",
             "id": 33060,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Engine Fragment",
@@ -949,8 +1010,9 @@
             "name": "Floating Island - Lake PDA",
             "id": 33061,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mobile Vehicle Bay Fragment",
@@ -964,8 +1026,9 @@
             "name": "Degasi Seabase - Floating Island - Databox",
             "id": 33062,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Modification Station Fragment",
@@ -979,8 +1042,9 @@
             "name": "Degasi Seabase - Floating Island - Room PDA",
             "id": 33063,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Beacon Fragment",
@@ -994,8 +1058,9 @@
             "name": "Degasi Seabase - Floating Island - Green Wall PDA",
             "id": 33064,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ion Power Cell",
@@ -1009,8 +1074,9 @@
             "name": "Degasi Seabase - Floating Island - Corridor PDA",
             "id": 33065,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Prawn Suit Torpedo Arm Fragment",
@@ -1024,8 +1090,9 @@
             "name": "Degasi Seabase - Floating Island - North Observatory PDA",
             "id": 33066,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Prawn Suit Torpedo Arm Fragment",
@@ -1039,8 +1106,9 @@
             "name": "Degasi Seabase - Floating Island - South Observatory PDA",
             "id": 33067,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Prawn Suit Grappling Arm Fragment",
@@ -1054,8 +1122,9 @@
             "name": "Jellyshroom Cave - PDA",
             "id": 33068,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Crystalline Sulfur",
@@ -1069,8 +1138,9 @@
             "name": "Degasi Seabase - Jellyshroom Cave - Bedroom Databox",
             "id": 33069,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mobile Vehicle Bay Fragment",
@@ -1084,8 +1154,9 @@
             "name": "Degasi Seabase - Jellyshroom Cave - Detached PDA",
             "id": 33070,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mobile Vehicle Bay Fragment",
@@ -1099,8 +1170,9 @@
             "name": "Degasi Seabase - Jellyshroom Cave - Office PDA",
             "id": 33071,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Gold",
@@ -1114,8 +1186,9 @@
             "name": "Degasi Seabase - Jellyshroom Cave - Locker PDA",
             "id": 33072,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Seamoth Fragment",
@@ -1129,8 +1202,9 @@
             "name": "Degasi Seabase - Jellyshroom Cave - Bedroom PDA",
             "id": 33073,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Silver Ore",
@@ -1144,8 +1218,9 @@
             "name": "Degasi Seabase - Jellyshroom Cave - Observatory PDA",
             "id": 33074,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Neptune Gantry",
@@ -1159,8 +1234,9 @@
             "name": "Lifepod 2 - Databox",
             "id": 33075,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Observatory",
@@ -1174,8 +1250,9 @@
             "name": "Lifepod 2 - PDA",
             "id": 33076,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Engine Fragment",
@@ -1189,8 +1266,9 @@
             "name": "Lifepod 3 - Databox",
             "id": 33077,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Bioreactor Fragment",
@@ -1204,8 +1282,9 @@
             "name": "Lifepod 3 - PDA",
             "id": 33078,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Seamoth Fragment",
@@ -1219,8 +1298,9 @@
             "name": "Lifepod 4 - Databox",
             "id": 33079,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Prawn Suit Drill Arm Fragment",
@@ -1234,8 +1314,9 @@
             "name": "Lifepod 4 - PDA",
             "id": 33080,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Repulsion Cannon",
@@ -1249,8 +1330,9 @@
             "name": "Lifepod 6 - Databox",
             "id": 33081,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Neptune Fuel Reserve",
@@ -1264,8 +1346,9 @@
             "name": "Lifepod 6 - Inside PDA",
             "id": 33082,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Furniture",
@@ -1279,8 +1362,9 @@
             "name": "Lifepod 6 - Outside PDA",
             "id": 33083,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nuclear Reactor Fragment",
@@ -1294,8 +1378,9 @@
             "name": "Lifepod 7 - PDA",
             "id": 33084,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Multipurpose Room",
@@ -1309,8 +1394,9 @@
             "name": "Lifepod 12 - Databox",
             "id": 33085,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resources Bundle",
@@ -1324,8 +1410,9 @@
             "name": "Lifepod 12 - PDA",
             "id": 33086,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Salt Deposit",
@@ -1339,8 +1426,9 @@
             "name": "Lifepod 13 - Databox",
             "id": 33087,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Seamoth Fragment",
@@ -1354,8 +1442,9 @@
             "name": "Lifepod 13 - PDA",
             "id": 33088,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Kyanite",
@@ -1369,8 +1458,9 @@
             "name": "Lifepod 17 - PDA",
             "id": 33089,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Prawn Suit Fragment",
@@ -1384,8 +1474,9 @@
             "name": "Lifepod 19 - Databox",
             "id": 33090,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Seamoth Fragment",
@@ -1399,8 +1490,9 @@
             "name": "Lifepod 19 - Outside PDA",
             "id": 33091,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Compass",
@@ -1414,8 +1506,9 @@
             "name": "Lifepod 19 - Inside PDA",
             "id": 33092,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Prawn Suit Fragment",
@@ -1429,8 +1522,9 @@
             "name": "Aurora Seamoth Bay - Upgrade Console",
             "id": 33093,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Prawn Suit Fragment",
@@ -1444,8 +1538,9 @@
             "name": "Aurora Drive Room - Upgrade Console",
             "id": 33094,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Titanium",
@@ -1459,8 +1554,9 @@
             "name": "Aurora Prawn Suit Bay - Upgrade Console",
             "id": 33095,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nuclear Reactor Fragment",
@@ -1474,8 +1570,9 @@
             "name": "Aurora - Office PDA",
             "id": 33096,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water Filtration Machine",
@@ -1489,8 +1586,9 @@
             "name": "Aurora - Corridor PDA",
             "id": 33097,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Bulkhead",
@@ -1504,8 +1602,9 @@
             "name": "Aurora - Cargo Bay PDA",
             "id": 33098,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Docking Bay Repair Module",
@@ -1519,8 +1618,9 @@
             "name": "Aurora - Seamoth Bay PDA",
             "id": 33099,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Bridge Fragment",
@@ -1534,8 +1634,9 @@
             "name": "Aurora - Medkit Locker PDA",
             "id": 33100,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Seaglide Fragment",
@@ -1549,8 +1650,9 @@
             "name": "Aurora - Locker PDA",
             "id": 33101,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Bridge Fragment",
@@ -1564,8 +1666,9 @@
             "name": "Aurora - Canteen PDA",
             "id": 33102,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Grav Trap Fragment",
@@ -1579,8 +1682,9 @@
             "name": "Aurora - Cabin 4 PDA",
             "id": 33103,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Furniture",
@@ -1594,8 +1698,9 @@
             "name": "Aurora - Cabin 7 PDA",
             "id": 33104,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Hull Fragment",
@@ -1609,8 +1714,9 @@
             "name": "Aurora - Cabin 1 PDA",
             "id": 33105,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Thermal Plant Fragment",
@@ -1624,8 +1730,9 @@
             "name": "Aurora - Captain PDA",
             "id": 33106,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water Filtration Suit",
@@ -1639,8 +1746,9 @@
             "name": "Aurora - Ring PDA",
             "id": 33107,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Prawn Suit Fragment",
@@ -1654,8 +1762,9 @@
             "name": "Aurora - Lab PDA",
             "id": 33108,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Laser Cutter Fragment",
@@ -1669,8 +1778,9 @@
             "name": "Aurora - Office Data Terminal",
             "id": 33109,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Lithium",
@@ -1684,8 +1794,9 @@
             "name": "Aurora - Captain Data Terminal",
             "id": 33110,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Neptune Launch Platform",
@@ -1699,8 +1810,9 @@
             "name": "Aurora - Battery Room Data Terminal",
             "id": 33111,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ion Battery",
@@ -1714,8 +1826,9 @@
             "name": "Aurora - Lab Data Terminal",
             "id": 33112,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Battery Charger fragment",
@@ -1729,8 +1842,9 @@
             "name": "Quarantine Enforcement Platform's - Upper Alien Data Terminal",
             "id": 33113,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Engine Fragment",
@@ -1744,8 +1858,9 @@
             "name": "Quarantine Enforcement Platform's - Mid Alien Data Terminal",
             "id": 33114,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Vehicle Upgrade Console",
@@ -1759,8 +1874,9 @@
             "name": "Dunes Sanctuary - Alien Data Terminal",
             "id": 33115,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Silver Ore",
@@ -1774,8 +1890,9 @@
             "name": "Deep Sparse Reef Sanctuary - Alien Data Terminal",
             "id": 33116,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Hull Fragment",
@@ -1789,8 +1906,9 @@
             "name": "Northern Blood Kelp Zone Sanctuary - Alien Data Terminal",
             "id": 33117,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Stasis Rifle Fragment",
@@ -1804,8 +1922,9 @@
             "name": "Lost River Laboratory Cache - Alien Data Terminal",
             "id": 33118,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Neptune Boosters",
@@ -1819,8 +1938,9 @@
             "name": "Disease Research Facility - Upper Alien Data Terminal",
             "id": 33119,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Prawn Suit Fragment",
@@ -1834,8 +1954,9 @@
             "name": "Disease Research Facility - Mid Alien Data Terminal",
             "id": 33120,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Radiation Suit",
@@ -1849,8 +1970,9 @@
             "name": "Disease Research Facility - Lower Alien Data Terminal",
             "id": 33121,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cyclops Sonar Upgrade",
@@ -1864,8 +1986,9 @@
             "name": "Alien Thermal Plant - Entrance Alien Data Terminal",
             "id": 33122,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Prawn Suit Fragment",
@@ -1879,8 +2002,9 @@
             "name": "Alien Thermal Plant - Green Alien Data Terminal",
             "id": 33123,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Floodlight",
@@ -1894,8 +2018,9 @@
             "name": "Alien Thermal Plant - Yellow Alien Data Terminal",
             "id": 33124,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Prawn Suit Grappling Arm Fragment",
@@ -1909,8 +2034,9 @@
             "name": "Primary Containment Facility's Antechamber - Alien Data Terminal",
             "id": 33125,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Farming",
@@ -1924,8 +2050,9 @@
             "name": "Primary Containment Facility's Egg Laboratory - Alien Data Terminal",
             "id": 33126,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Diamond",
@@ -1939,8 +2066,9 @@
             "name": "Primary Containment Facility's Pipe Room - Alien Data Terminal",
             "id": 33127,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Farming",
@@ -1954,8 +2082,9 @@
             "name": "Grassy Plateaus West Wreck - Beam PDA",
             "id": 33128,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mobile Vehicle Bay Fragment",
@@ -1969,8 +2098,9 @@
             "name": "Floating Island - Cave Entrance PDA",
             "id": 33129,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Reinforced Dive Suit",
@@ -1984,8 +2114,9 @@
             "name": "Degasi Seabase - Jellyshroom Cave - Outside PDA",
             "id": 33130,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Prawn Suit Drill Arm Fragment",
@@ -1999,22 +2130,19 @@
             "name": "Neptune Launch",
             "id": null,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Ion Battery",
-                    "Ion Power Cell",
-                    "Neptune Boosters",
-                    "Neptune Cockpit",
-                    "Neptune Fuel Reserve",
-                    "Neptune Gantry",
-                    "Neptune Launch Platform"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Ion Battery",
+                  "Ion Power Cell",
+                  "Neptune Boosters",
+                  "Neptune Cockpit",
+                  "Neptune Fuel Reserve",
+                  "Neptune Gantry",
+                  "Neptune Launch Platform"
+                ]
+              }
             },
             "item": {
               "name": "Victory",
@@ -2028,8 +2156,9 @@
             "name": "Disable Quarantine",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Disable Quarantine",
@@ -2043,8 +2172,9 @@
             "name": "Full Infection",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Full Infection",
@@ -2058,8 +2188,9 @@
             "name": "Repair Aurora Drive",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Repair Aurora Drive",
@@ -3357,6 +3488,145 @@
       "Water Filtration Suit": 1
     }
   },
+  "canonical_placements": {
+    "1": {
+      "Blood Kelp Trench Wreck - Outside Databox": "Cyclops Engine Fragment",
+      "Blood Kelp Trench Wreck - Inside Databox": "Spotlight",
+      "Blood Kelp Trench Wreck - PDA": "Large Room",
+      "Bulb Zone West Wreck - Outside Databox": "Cyclops Fire Suppression System",
+      "Bulb Zone West Wreck - Under Databox": "Laser Cutter Fragment",
+      "Bulb Zone West Wreck - Inside Databox": "Cyclops Shield Generator",
+      "Bulb Zone West Wreck - PDA": "Crystalline Sulfur",
+      "Bulb Zone East Wreck - Databox": "Beacon Fragment",
+      "Dunes North Wreck - Outside Databox": "Creature Decoy",
+      "Dunes North Wreck - Office Databox": "Cyclops Bridge Fragment",
+      "Dunes North Wreck - PDA": "Cyclops Engine Fragment",
+      "Dunes North Wreck - Cargo Databox": "Bioreactor Fragment",
+      "Dunes West Wreck - Databox": "Cyclops Hull Fragment",
+      "Dunes East Wreck - Outside Databox": "Power Cell Charger Fragment",
+      "Dunes East Wreck - Inside Databox": "Cyclops Thermal Reactor Module",
+      "Grand Reef North Wreck - Outside Databox": "Seaglide Fragment",
+      "Grand Reef North Wreck - Elevator Databox": "Seamoth Fragment",
+      "Grand Reef North Wreck - Bottom Databox": "Alien Containment",
+      "Grand Reef North Wreck - Hangar PDA": "Thermal Plant Fragment",
+      "Grand Reef South Wreck - Trench Databox": "Grav Trap Fragment",
+      "Grand Reef South Wreck - Comms Databox": "Cyclops Hull Fragment",
+      "Grand Reef South Wreck - Outside Databox": "Modification Station Fragment",
+      "Grand Reef South Wreck - PDA": "Resources Bundle",
+      "Grassy Plateaus South Wreck - Databox": "Seaglide Fragment",
+      "Grassy Plateaus South Wreck - PDA": "Cyclops Decoy Tube Upgrade",
+      "Grassy Plateaus East Wreck - Breach Databox": "Prawn Suit Fragment",
+      "Grassy Plateaus East Wreck - Hangar Databox": "Exterior Growbed",
+      "Grassy Plateaus West Wreck - Locker PDA": "Lightweight High Capacity Tank",
+      "Grassy Plateaus West Wreck - Data Terminal": "Mobile Vehicle Bay Fragment",
+      "Grassy Plateaus Southwest Wreck - Databox": "Moonpool Fragment",
+      "Safe Shallows Wreck - PDA": "Cyclops Bridge Fragment",
+      "Kelp Forest Wreck - Databox": "Seaglide Fragment",
+      "Kelp Forest Wreck - PDA": "Seamoth Fragment",
+      "Mountains West Wreck - Outside Databox": "Propulsion Cannon Fragment",
+      "Mountains West Wreck - Data Terminal": "Mobile Vehicle Bay Fragment",
+      "Mountains West Wreck - Hangar Databox": "Moonpool Fragment",
+      "Mountains West Wreck - Office Databox": "Nuclear Reactor Fragment",
+      "Mountains East Wreck - Comms Databox": "Cyclops Hull Fragment",
+      "Mountains East Wreck - Outside Databox": "Cyclops Bridge Fragment",
+      "Northwestern Mushroom Forest Wreck - Cargo Databox": "Stasis Rifle Fragment",
+      "Northwestern Mushroom Forest Wreck - Office Databox": "Exterior Growbed",
+      "Northwestern Mushroom Forest Wreck - PDA": "Ultra High Capacity Tank",
+      "Sea Treader's Path Wreck - Outside Databox": "Scanner Room Fragment",
+      "Sea Treader's Path Wreck - Hangar Databox": "Moonpool Fragment",
+      "Sea Treader's Path Wreck - Lobby Databox": "Propulsion Cannon Fragment",
+      "Sea Treader's Path Wreck - PDA": "Cyclops Depth Module MK1",
+      "Sparse Reef Wreck - Locker Databox": "Swim Charge Fins",
+      "Sparse Reef Wreck - Outside Databox": "Prawn Suit Propulsion Cannon Fragment",
+      "Sparse Reef Wreck - Lab Databox": "Modification Station Fragment",
+      "Underwater Islands Wreck - Outside Databox": "Scanner Room Fragment",
+      "Underwater Islands Wreck - Hangar Databox": "Laser Cutter Fragment",
+      "Underwater Islands Wreck - Data Terminal": "Power Transmitter Fragment",
+      "Underwater Islands Wreck - Cable Databox": "Battery Charger fragment",
+      "Underwater Islands Wreck - Pipes Databox 1": "Power Cell Charger Fragment",
+      "Underwater Islands Wreck - Pipes Databox 2": "Ultra Glide Fins",
+      "Degasi Seabase - Deep Grand Reef - Bedroom Databox": "Prawn Suit Propulsion Cannon Fragment",
+      "Degasi Seabase - Deep Grand Reef - Observatory Databox": "Scanner Room Fragment",
+      "Degasi Seabase - Deep Grand Reef - Bedroom PDA": "Neptune Cockpit",
+      "Degasi Seabase - Deep Grand Reef - Outside PDA": "Laser Cutter Fragment",
+      "Degasi Seabase - Deep Grand Reef - Observatory PDA": "Modification Station Fragment",
+      "Degasi Seabase - Deep Grand Reef - Lab PDA": "Cyclops Engine Fragment",
+      "Floating Island - Lake PDA": "Mobile Vehicle Bay Fragment",
+      "Degasi Seabase - Floating Island - Databox": "Modification Station Fragment",
+      "Degasi Seabase - Floating Island - Room PDA": "Beacon Fragment",
+      "Degasi Seabase - Floating Island - Green Wall PDA": "Ion Power Cell",
+      "Degasi Seabase - Floating Island - Corridor PDA": "Prawn Suit Torpedo Arm Fragment",
+      "Degasi Seabase - Floating Island - North Observatory PDA": "Prawn Suit Torpedo Arm Fragment",
+      "Degasi Seabase - Floating Island - South Observatory PDA": "Prawn Suit Grappling Arm Fragment",
+      "Jellyshroom Cave - PDA": "Crystalline Sulfur",
+      "Degasi Seabase - Jellyshroom Cave - Bedroom Databox": "Mobile Vehicle Bay Fragment",
+      "Degasi Seabase - Jellyshroom Cave - Detached PDA": "Mobile Vehicle Bay Fragment",
+      "Degasi Seabase - Jellyshroom Cave - Office PDA": "Gold",
+      "Degasi Seabase - Jellyshroom Cave - Locker PDA": "Seamoth Fragment",
+      "Degasi Seabase - Jellyshroom Cave - Bedroom PDA": "Silver Ore",
+      "Degasi Seabase - Jellyshroom Cave - Observatory PDA": "Neptune Gantry",
+      "Lifepod 2 - Databox": "Observatory",
+      "Lifepod 2 - PDA": "Cyclops Engine Fragment",
+      "Lifepod 3 - Databox": "Bioreactor Fragment",
+      "Lifepod 3 - PDA": "Seamoth Fragment",
+      "Lifepod 4 - Databox": "Prawn Suit Drill Arm Fragment",
+      "Lifepod 4 - PDA": "Repulsion Cannon",
+      "Lifepod 6 - Databox": "Neptune Fuel Reserve",
+      "Lifepod 6 - Inside PDA": "Furniture",
+      "Lifepod 6 - Outside PDA": "Nuclear Reactor Fragment",
+      "Lifepod 7 - PDA": "Multipurpose Room",
+      "Lifepod 12 - Databox": "Resources Bundle",
+      "Lifepod 12 - PDA": "Salt Deposit",
+      "Lifepod 13 - Databox": "Seamoth Fragment",
+      "Lifepod 13 - PDA": "Kyanite",
+      "Lifepod 17 - PDA": "Prawn Suit Fragment",
+      "Lifepod 19 - Databox": "Seamoth Fragment",
+      "Lifepod 19 - Outside PDA": "Compass",
+      "Lifepod 19 - Inside PDA": "Prawn Suit Fragment",
+      "Aurora Seamoth Bay - Upgrade Console": "Prawn Suit Fragment",
+      "Aurora Drive Room - Upgrade Console": "Titanium",
+      "Aurora Prawn Suit Bay - Upgrade Console": "Nuclear Reactor Fragment",
+      "Aurora - Office PDA": "Water Filtration Machine",
+      "Aurora - Corridor PDA": "Bulkhead",
+      "Aurora - Cargo Bay PDA": "Cyclops Docking Bay Repair Module",
+      "Aurora - Seamoth Bay PDA": "Cyclops Bridge Fragment",
+      "Aurora - Medkit Locker PDA": "Seaglide Fragment",
+      "Aurora - Locker PDA": "Cyclops Bridge Fragment",
+      "Aurora - Canteen PDA": "Grav Trap Fragment",
+      "Aurora - Cabin 4 PDA": "Furniture",
+      "Aurora - Cabin 7 PDA": "Cyclops Hull Fragment",
+      "Aurora - Cabin 1 PDA": "Thermal Plant Fragment",
+      "Aurora - Captain PDA": "Water Filtration Suit",
+      "Aurora - Ring PDA": "Prawn Suit Fragment",
+      "Aurora - Lab PDA": "Laser Cutter Fragment",
+      "Aurora - Office Data Terminal": "Lithium",
+      "Aurora - Captain Data Terminal": "Neptune Launch Platform",
+      "Aurora - Battery Room Data Terminal": "Ion Battery",
+      "Aurora - Lab Data Terminal": "Battery Charger fragment",
+      "Quarantine Enforcement Platform's - Upper Alien Data Terminal": "Cyclops Engine Fragment",
+      "Quarantine Enforcement Platform's - Mid Alien Data Terminal": "Vehicle Upgrade Console",
+      "Dunes Sanctuary - Alien Data Terminal": "Silver Ore",
+      "Deep Sparse Reef Sanctuary - Alien Data Terminal": "Cyclops Hull Fragment",
+      "Northern Blood Kelp Zone Sanctuary - Alien Data Terminal": "Stasis Rifle Fragment",
+      "Lost River Laboratory Cache - Alien Data Terminal": "Neptune Boosters",
+      "Disease Research Facility - Upper Alien Data Terminal": "Prawn Suit Fragment",
+      "Disease Research Facility - Mid Alien Data Terminal": "Radiation Suit",
+      "Disease Research Facility - Lower Alien Data Terminal": "Cyclops Sonar Upgrade",
+      "Alien Thermal Plant - Entrance Alien Data Terminal": "Prawn Suit Fragment",
+      "Alien Thermal Plant - Green Alien Data Terminal": "Floodlight",
+      "Alien Thermal Plant - Yellow Alien Data Terminal": "Prawn Suit Grappling Arm Fragment",
+      "Primary Containment Facility's Antechamber - Alien Data Terminal": "Farming",
+      "Primary Containment Facility's Egg Laboratory - Alien Data Terminal": "Diamond",
+      "Primary Containment Facility's Pipe Room - Alien Data Terminal": "Farming",
+      "Grassy Plateaus West Wreck - Beam PDA": "Mobile Vehicle Bay Fragment",
+      "Floating Island - Cave Entrance PDA": "Reinforced Dive Suit",
+      "Degasi Seabase - Jellyshroom Cave - Outside PDA": "Prawn Suit Drill Arm Fragment",
+      "Neptune Launch": "Victory",
+      "Disable Quarantine": "Disable Quarantine",
+      "Full Infection": "Full Infection",
+      "Repair Aurora Drive": "Repair Aurora Drive"
+    }
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -3367,7 +3637,21 @@
     "1": {
       "game": "Subnautica WorldGen",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": false,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      }
     }
   },
   "game_info": {
@@ -3375,6 +3659,29 @@
       "name": "Subnautica WorldGen",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "grass",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Subnautica randomizer connected to an Archipelago Multiworld",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Berserker"
+          ]
+        }
+      ],
+      "world_description": "Subnautica is an undersea exploration game. Stranded on an alien world, you become infected by\nan unknown bacteria. The planet's automatic quarantine will shoot you down if you try to leave.\nYou must find a cure for yourself, build an escape rocket, and leave the planet.",
+      "slot_data": {
+        "goal": "launch",
+        "swim_rule": "easy",
+        "vanilla_tech": [],
+        "creatures_to_scan": [],
+        "death_link": 0,
+        "free_samples": 0,
+        "empty_tanks": 1
       }
     }
   },

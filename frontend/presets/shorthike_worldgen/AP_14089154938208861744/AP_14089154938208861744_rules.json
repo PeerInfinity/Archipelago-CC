@@ -394,8 +394,12 @@
             "name": "Visitor's Center Shop Hat",
             "id": 83023,
             "access_rule": {
-              "type": "item_check",
-              "item": "Progressive Fishing Rod"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Progressive Fishing Rod",
+                "count": 1
+              }
             },
             "item": {
               "name": "Seashell",
@@ -409,8 +413,12 @@
             "name": "Tough Bird Salesman Golden Feather 1",
             "id": 83024,
             "access_rule": {
-              "type": "item_check",
-              "item": "Progressive Fishing Rod"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Progressive Fishing Rod",
+                "count": 1
+              }
             },
             "item": {
               "name": "Seashell",
@@ -424,8 +432,12 @@
             "name": "Tough Bird Salesman Golden Feather 2",
             "id": 83025,
             "access_rule": {
-              "type": "item_check",
-              "item": "Progressive Fishing Rod"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Progressive Fishing Rod",
+                "count": 1
+              }
             },
             "item": {
               "name": "Stick",
@@ -439,8 +451,12 @@
             "name": "Tough Bird Salesman Golden Feather 3",
             "id": 83026,
             "access_rule": {
-              "type": "item_check",
-              "item": "Progressive Fishing Rod"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Progressive Fishing Rod",
+                "count": 1
+              }
             },
             "item": {
               "name": "Sunhat",
@@ -454,8 +470,12 @@
             "name": "Tough Bird Salesman Golden Feather 4",
             "id": 83027,
             "access_rule": {
-              "type": "item_check",
-              "item": "Progressive Fishing Rod"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Progressive Fishing Rod",
+                "count": 1
+              }
             },
             "item": {
               "name": "Golden Feather",
@@ -469,8 +489,12 @@
             "name": "Tough Bird Salesman (400 Coins)",
             "id": 83028,
             "access_rule": {
-              "type": "item_check",
-              "item": "Progressive Fishing Rod"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Progressive Fishing Rod",
+                "count": 1
+              }
             },
             "item": {
               "name": "Medal",
@@ -484,8 +508,12 @@
             "name": "Beachstickball (10 Hits)",
             "id": 83029,
             "access_rule": {
-              "type": "item_check",
-              "item": "Stick"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Stick",
+                "count": 1
+              }
             },
             "item": {
               "name": "Stick",
@@ -499,8 +527,12 @@
             "name": "Beachstickball (20 Hits)",
             "id": 83030,
             "access_rule": {
-              "type": "item_check",
-              "item": "Stick"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Stick",
+                "count": 1
+              }
             },
             "item": {
               "name": "Seashell",
@@ -514,8 +546,12 @@
             "name": "Beachstickball (30 Hits)",
             "id": 83031,
             "access_rule": {
-              "type": "item_check",
-              "item": "Stick"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Stick",
+                "count": 1
+              }
             },
             "item": {
               "name": "Seashell",
@@ -529,8 +565,12 @@
             "name": "Shovel Kid Trade",
             "id": 83032,
             "access_rule": {
-              "type": "item_check",
-              "item": "Toy Shovel"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Toy Shovel",
+                "count": 1
+              }
             },
             "item": {
               "name": "Pickaxe",
@@ -604,8 +644,12 @@
             "name": "Catch 3 Fish Reward",
             "id": 83037,
             "access_rule": {
-              "type": "item_check",
-              "item": "Progressive Fishing Rod"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Progressive Fishing Rod",
+                "count": 1
+              }
             },
             "item": {
               "name": "25 Coins",
@@ -619,17 +663,24 @@
             "name": "Catch All Fish Reward",
             "id": 83038,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Golden Feather",
-                  "count": 7
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Golden Feather",
+                    "count": 7
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Progressive Fishing Rod",
-                  "count": 2
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Progressive Fishing Rod",
+                    "count": 2
+                  }
                 }
               ]
             },
@@ -660,8 +711,12 @@
             "name": "Catch Fish with Permit",
             "id": 83129,
             "access_rule": {
-              "type": "item_check",
-              "item": "Progressive Fishing Rod"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Progressive Fishing Rod",
+                "count": 1
+              }
             },
             "item": {
               "name": "Seashell",
@@ -675,8 +730,12 @@
             "name": "Return Camping Permit",
             "id": 83130,
             "access_rule": {
-              "type": "item_check",
-              "item": "Camping Permit"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Camping Permit",
+                "count": 1
+              }
             },
             "item": {
               "name": "Progressive Fishing Rod",
@@ -930,8 +989,12 @@
             "name": "Boat Rental",
             "id": 83055,
             "access_rule": {
-              "type": "item_check",
-              "item": "Progressive Fishing Rod"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Progressive Fishing Rod",
+                "count": 1
+              }
             },
             "item": {
               "name": "Stick",
@@ -945,8 +1008,12 @@
             "name": "Boat Challenge Reward",
             "id": 83056,
             "access_rule": {
-              "type": "item_check",
-              "item": "Motorboat Key"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Motorboat Key",
+                "count": 1
+              }
             },
             "item": {
               "name": "Bucket",
@@ -975,9 +1042,12 @@
             "name": "Collect 15 Seashells",
             "id": 83058,
             "access_rule": {
-              "type": "item_check",
-              "item": "Seashell",
-              "count": 15
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Seashell",
+                "count": 15
+              }
             },
             "item": {
               "name": "15 Coins",
@@ -991,16 +1061,24 @@
             "name": "Return to Shell Kid",
             "id": 83132,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Seashell",
-                  "count": 15
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Seashell",
+                    "count": 15
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Shell Necklace"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Shell Necklace",
+                    "count": 1
+                  }
                 }
               ]
             },
@@ -1031,8 +1109,12 @@
             "name": "Sue the Rabbit Shoes Reward",
             "id": 83060,
             "access_rule": {
-              "type": "item_check",
-              "item": "Headband"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Headband",
+                "count": 1
+              }
             },
             "item": {
               "name": "Golden Feather",
@@ -1046,8 +1128,12 @@
             "name": "Purchase Sunhat",
             "id": 83061,
             "access_rule": {
-              "type": "item_check",
-              "item": "Progressive Fishing Rod"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Progressive Fishing Rod",
+                "count": 1
+              }
             },
             "item": {
               "name": "Bucket",
@@ -1076,8 +1162,12 @@
             "name": "Ranger May Shell Necklace Golden Feather",
             "id": 83063,
             "access_rule": {
-              "type": "item_check",
-              "item": "Shell Necklace"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Shell Necklace",
+                "count": 1
+              }
             },
             "item": {
               "name": "13 Coins",
@@ -1091,8 +1181,12 @@
             "name": "Sand Castle Golden Feather",
             "id": 83064,
             "access_rule": {
-              "type": "item_check",
-              "item": "Toy Shovel"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Toy Shovel",
+                "count": 1
+              }
             },
             "item": {
               "name": "Camping Permit",
@@ -1166,9 +1260,12 @@
             "name": "Secret Island Peak",
             "id": 83069,
             "access_rule": {
-              "type": "item_check",
-              "item": "Golden Feather",
-              "count": 5
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Golden Feather",
+                "count": 5
+              }
             },
             "item": {
               "name": "Pickaxe",
@@ -1182,8 +1279,12 @@
             "name": "Wristwatch Trade",
             "id": 83070,
             "access_rule": {
-              "type": "item_check",
-              "item": "Wristwatch"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Wristwatch",
+                "count": 1
+              }
             },
             "item": {
               "name": "Stick",
@@ -1197,26 +1298,38 @@
             "name": "Lighthouse Golden Chest",
             "id": 83071,
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "rule": "And",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "item_check",
-                      "item": "Bucket"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Golden Feather",
+                        "count": 0
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Golden Feather",
-                      "count": 0
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Bucket",
+                        "count": 1
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Golden Feather",
-                  "count": 2
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Golden Feather",
+                    "count": 2
+                  }
                 }
               ]
             },
@@ -1262,9 +1375,12 @@
             "name": "North Cliff Golden Chest",
             "id": 83074,
             "access_rule": {
-              "type": "item_check",
-              "item": "Golden Feather",
-              "count": 3
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Golden Feather",
+                "count": 3
+              }
             },
             "item": {
               "name": "25 Coins",
@@ -1323,8 +1439,12 @@
             "name": "Sid Beach Buried Treasure Chest",
             "id": 83078,
             "access_rule": {
-              "type": "item_check",
-              "item": "Shovel"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Shovel",
+                "count": 1
+              }
             },
             "item": {
               "name": "Medal",
@@ -1353,8 +1473,12 @@
             "name": "Visitor's Center Buried Chest",
             "id": 83080,
             "access_rule": {
-              "type": "item_check",
-              "item": "Shovel"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Shovel",
+                "count": 1
+              }
             },
             "item": {
               "name": "Seashell",
@@ -1383,8 +1507,12 @@
             "name": "Shirley's Point Chest",
             "id": 83082,
             "access_rule": {
-              "type": "item_check",
-              "item": "Golden Feather"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Golden Feather",
+                "count": 1
+              }
             },
             "item": {
               "name": "Seashell",
@@ -1428,8 +1556,12 @@
             "name": "King Buried Treasure Chest",
             "id": 83085,
             "access_rule": {
-              "type": "item_check",
-              "item": "Shovel"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Shovel",
+                "count": 1
+              }
             },
             "item": {
               "name": "Toy Shovel",
@@ -1443,8 +1575,12 @@
             "name": "Good Creek Path Buried Chest",
             "id": 83086,
             "access_rule": {
-              "type": "item_check",
-              "item": "Shovel"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Shovel",
+                "count": 1
+              }
             },
             "item": {
               "name": "13 Coins",
@@ -1533,9 +1669,12 @@
             "name": "Bucket Cliff Chest",
             "id": 83092,
             "access_rule": {
-              "type": "item_check",
-              "item": "Golden Feather",
-              "count": 3
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Golden Feather",
+                "count": 3
+              }
             },
             "item": {
               "name": "21 Coins",
@@ -1549,8 +1688,12 @@
             "name": "In Her Shadow Buried Treasure Chest",
             "id": 83093,
             "access_rule": {
-              "type": "item_check",
-              "item": "Shovel"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Shovel",
+                "count": 1
+              }
             },
             "item": {
               "name": "Seashell",
@@ -1564,8 +1707,12 @@
             "name": "Meteor Lake Buried Chest",
             "id": 83094,
             "access_rule": {
-              "type": "item_check",
-              "item": "Shovel"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Shovel",
+                "count": 1
+              }
             },
             "item": {
               "name": "Bait",
@@ -1729,9 +1876,12 @@
             "name": "Hawk Peak West Chest",
             "id": 83106,
             "access_rule": {
-              "type": "item_check",
-              "item": "Golden Feather",
-              "count": 3
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Golden Feather",
+                "count": 3
+              }
             },
             "item": {
               "name": "13 Coins",
@@ -1745,16 +1895,24 @@
             "name": "Hawk Peak East Buried Chest",
             "id": 83107,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Golden Feather",
-                  "count": 3
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Golden Feather",
+                    "count": 3
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Shovel"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Shovel",
+                    "count": 1
+                  }
                 }
               ]
             },
@@ -1770,9 +1928,12 @@
             "name": "Hawk Peak Northeast Chest",
             "id": 83108,
             "access_rule": {
-              "type": "item_check",
-              "item": "Golden Feather",
-              "count": 3
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Golden Feather",
+                "count": 3
+              }
             },
             "item": {
               "name": "Golden Feather",
@@ -1816,8 +1977,12 @@
             "name": "North Coast Buried Chest",
             "id": 83111,
             "access_rule": {
-              "type": "item_check",
-              "item": "Shovel"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Shovel",
+                "count": 1
+              }
             },
             "item": {
               "name": "25 Coins",
@@ -1831,8 +1996,12 @@
             "name": "Small South Island Buried Chest",
             "id": 83112,
             "access_rule": {
-              "type": "item_check",
-              "item": "Shovel"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Shovel",
+                "count": 1
+              }
             },
             "item": {
               "name": "25 Coins",
@@ -1861,8 +2030,12 @@
             "name": "Secret Island Treehouse Chest",
             "id": 83114,
             "access_rule": {
-              "type": "item_check",
-              "item": "Golden Feather"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Golden Feather",
+                "count": 1
+              }
             },
             "item": {
               "name": "Seashell",
@@ -1876,8 +2049,12 @@
             "name": "Sunhat Island Buried Chest",
             "id": 83115,
             "access_rule": {
-              "type": "item_check",
-              "item": "Shovel"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Shovel",
+                "count": 1
+              }
             },
             "item": {
               "name": "Golden Feather",
@@ -1891,8 +2068,12 @@
             "name": "Orange Islands South Buried Chest",
             "id": 83116,
             "access_rule": {
-              "type": "item_check",
-              "item": "Shovel"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Shovel",
+                "count": 1
+              }
             },
             "item": {
               "name": "13 Coins",
@@ -1921,34 +2102,52 @@
             "name": "Orange Islands North Buried Chest",
             "id": 83118,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "rule": "And",
+                      "options": [],
+                      "children": [
                         {
-                          "type": "item_check",
-                          "item": "Bucket"
+                          "rule": "Has",
+                          "options": [],
+                          "args": {
+                            "item_name": "Golden Feather",
+                            "count": 0
+                          }
                         },
                         {
-                          "type": "item_check",
-                          "item": "Golden Feather",
-                          "count": 0
+                          "rule": "Has",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bucket",
+                            "count": 1
+                          }
                         }
                       ]
                     },
                     {
-                      "type": "item_check",
-                      "item": "Golden Feather"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Golden Feather",
+                        "count": 1
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Shovel"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Shovel",
+                    "count": 1
+                  }
                 }
               ]
             },
@@ -1994,8 +2193,12 @@
             "name": "A Stormy View Buried Treasure Chest",
             "id": 83121,
             "access_rule": {
-              "type": "item_check",
-              "item": "Shovel"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Shovel",
+                "count": 1
+              }
             },
             "item": {
               "name": "7 Coins",
@@ -2009,35 +2212,52 @@
             "name": "Orange Islands Ruins Buried Chest",
             "id": 83122,
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "or",
-                  "conditions": [
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "and",
-                      "conditions": [
+                      "rule": "And",
+                      "options": [],
+                      "children": [
                         {
-                          "type": "item_check",
-                          "item": "Bucket"
+                          "rule": "Has",
+                          "options": [],
+                          "args": {
+                            "item_name": "Golden Feather",
+                            "count": 0
+                          }
                         },
                         {
-                          "type": "item_check",
-                          "item": "Golden Feather",
-                          "count": 0
+                          "rule": "Has",
+                          "options": [],
+                          "args": {
+                            "item_name": "Bucket",
+                            "count": 1
+                          }
                         }
                       ]
                     },
                     {
-                      "type": "item_check",
-                      "item": "Golden Feather",
-                      "count": 2
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Golden Feather",
+                        "count": 2
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Shovel"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Shovel",
+                    "count": 1
+                  }
                 }
               ]
             },
@@ -2053,25 +2273,26 @@
             "name": "Lighthouse Race Reward",
             "id": 83123,
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Bucket",
-                        "Golden Feather"
-                      ]
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Bucket",
+                      "Golden Feather"
+                    ]
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Golden Feather",
-                  "count": 2
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Golden Feather",
+                    "count": 2
+                  }
                 }
               ]
             },
@@ -2087,25 +2308,38 @@
             "name": "Old Building Race Reward",
             "id": 83124,
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "and",
-                  "conditions": [
+                  "rule": "And",
+                  "options": [],
+                  "children": [
                     {
-                      "type": "item_check",
-                      "item": "Bucket"
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Golden Feather",
+                        "count": 0
+                      }
                     },
                     {
-                      "type": "item_check",
-                      "item": "Golden Feather",
-                      "count": 0
+                      "rule": "Has",
+                      "options": [],
+                      "args": {
+                        "item_name": "Bucket",
+                        "count": 1
+                      }
                     }
                   ]
                 },
                 {
-                  "type": "item_check",
-                  "item": "Golden Feather"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Golden Feather",
+                    "count": 1
+                  }
                 }
               ]
             },
@@ -2121,9 +2355,12 @@
             "name": "Hawk Peak Race Reward",
             "id": 83125,
             "access_rule": {
-              "type": "item_check",
-              "item": "Golden Feather",
-              "count": 7
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Golden Feather",
+                "count": 7
+              }
             },
             "item": {
               "name": "Stick",
@@ -2633,6 +2870,141 @@
       "Wristwatch": 1
     }
   },
+  "canonical_placements": {
+    "1": {
+      "Start Beach Seashell": "13 Coins",
+      "Beach Hut Seashell": "Seashell",
+      "Beach Umbrella Seashell": "Seashell",
+      "Sid Beach Mound Seashell": "13 Coins",
+      "Sid Beach Seashell": "Seashell",
+      "Shirley's Point Beach Seashell": "13 Coins",
+      "Shirley's Point Rock Seashell": "Pickaxe",
+      "Visitor's Center Beach Seashell": "Golden Feather",
+      "West River Seashell": "13 Coins",
+      "West Riverbank Seashell": "13 Coins",
+      "Stone Tower Riverbank Seashell": "13 Coins",
+      "North Beach Seashell": "13 Coins",
+      "North Coast Seashell": "The King Map",
+      "Boat Cliff Seashell": "33 Coins",
+      "Boat Isle Mound Seashell": "Fishing Journal",
+      "East Coast Seashell": "Silver Feather",
+      "House North Beach Seashell": "Seashell",
+      "Airstream Island North Seashell": "27 Coins",
+      "Airstream Island South Seashell": "25 Coins",
+      "Secret Island Beach Seashell": "25 Coins",
+      "Meteor Lake Seashell": "Golden Feather",
+      "Good Creek Path Seashell": "33 Coins",
+      "Visitor's Center Shop Golden Feather 1": "In Her Shadow Map",
+      "Visitor's Center Shop Golden Feather 2": "Provincial Park Hat",
+      "Visitor's Center Shop Hat": "Seashell",
+      "Tough Bird Salesman Golden Feather 1": "Seashell",
+      "Tough Bird Salesman Golden Feather 2": "Stick",
+      "Tough Bird Salesman Golden Feather 3": "Sunhat",
+      "Tough Bird Salesman Golden Feather 4": "Golden Feather",
+      "Tough Bird Salesman (400 Coins)": "Medal",
+      "Beachstickball (10 Hits)": "Stick",
+      "Beachstickball (20 Hits)": "Seashell",
+      "Beachstickball (30 Hits)": "Seashell",
+      "Shovel Kid Trade": "Pickaxe",
+      "Compass Guy": "Shovel",
+      "Hawk Peak Bucket Rock": "33 Coins",
+      "Orange Islands Bucket Rock": "33 Coins",
+      "Bill the Walrus Fisherman": "Golden Feather",
+      "Catch 3 Fish Reward": "25 Coins",
+      "Catch All Fish Reward": "Seashell",
+      "Permit Guy Bribe": "Seashell",
+      "Catch Fish with Permit": "Seashell",
+      "Return Camping Permit": "Progressive Fishing Rod",
+      "Blocked Mine Pickaxe 1": "Golden Feather",
+      "Blocked Mine Pickaxe 2": "Seashell",
+      "Blocked Mine Pickaxe 3": "Golden Feather",
+      "Blackwood Trail Lookout Toy Shovel": "Shell Necklace",
+      "Shirley's Point Beach Toy Shovel": "Golden Feather",
+      "Visitor's Center Beach Toy Shovel": "Running Shoes",
+      "Blackwood Trail Rock Toy Shovel": "Golden Feather",
+      "Beach Hut Cliff Toy Shovel": "Progressive Fishing Rod",
+      "Secret Island Beach Trail Stick": "Seashell",
+      "Below Lighthouse Walkway Stick": "13 Coins",
+      "Beach Hut Rocky Pool Sand Stick": "Seashell",
+      "Cliff Overlooking West River Waterfall Stick": "Toy Shovel",
+      "Trail to Tough Bird Salesman Stick": "Golden Feather",
+      "North Beach Stick": "Golden Feather",
+      "Beachstickball Court Stick": "Baseball Cap",
+      "Stick Under Sid Beach Umbrella": "Golden Feather",
+      "Boat Rental": "Stick",
+      "Boat Challenge Reward": "Bucket",
+      "Outlook Point Dog Gift": "Toy Shovel",
+      "Collect 15 Seashells": "15 Coins",
+      "Return to Shell Kid": "Golden Feather",
+      "Taylor the Turtle Headband Gift": "Compass",
+      "Sue the Rabbit Shoes Reward": "Golden Feather",
+      "Purchase Sunhat": "Bucket",
+      "Blackwood Forest Golden Feather": "25 Coins",
+      "Ranger May Shell Necklace Golden Feather": "13 Coins",
+      "Sand Castle Golden Feather": "Camping Permit",
+      "Artist Golden Feather": "Golden Feather",
+      "Visitor Camp Rock Golden Feather": "13 Coins",
+      "Outlook Cliff Golden Feather": "Silver Feather",
+      "Meteor Lake Cliff Golden Feather": "32 Coins",
+      "Secret Island Peak": "Pickaxe",
+      "Wristwatch Trade": "Stick",
+      "Lighthouse Golden Chest": "33 Coins",
+      "Outlook Golden Chest": "Golden Feather",
+      "Stone Tower Golden Chest": "50 Coins",
+      "North Cliff Golden Chest": "25 Coins",
+      "Blackwood Cliff Chest": "Walkie Talkie",
+      "White Coast Trail Chest": "Seashell",
+      "Sid Beach Chest": "13 Coins",
+      "Sid Beach Buried Treasure Chest": "Medal",
+      "Sid Beach Cliff Chest": "13 Coins",
+      "Visitor's Center Buried Chest": "Seashell",
+      "Visitor's Center Hidden Chest": "Motorboat Key",
+      "Shirley's Point Chest": "Seashell",
+      "Caravan Cliff Chest": "13 Coins",
+      "Caravan Arch Chest": "A Stormy View Map",
+      "King Buried Treasure Chest": "Toy Shovel",
+      "Good Creek Path Buried Chest": "13 Coins",
+      "Good Creek Path West Chest": "Golden Feather",
+      "Good Creek Path East Chest": "Seashell",
+      "West Waterfall Chest": "Golden Feather",
+      "Stone Tower West Cliff Chest": "Stick",
+      "Bucket Path Chest": "13 Coins",
+      "Bucket Cliff Chest": "21 Coins",
+      "In Her Shadow Buried Treasure Chest": "Seashell",
+      "Meteor Lake Buried Chest": "Bait",
+      "Meteor Lake Chest": "13 Coins",
+      "House North Beach Chest": "Medal",
+      "East Coast Chest": "Stick",
+      "Fisherman's Boat Chest 1": "Headband",
+      "Fisherman's Boat Chest 2": "Seashell",
+      "Airstream Island Chest": "18 Coins",
+      "West River Waterfall Head Chest": "13 Coins",
+      "Old Building Chest": "13 Coins",
+      "Old Building West Chest": "The Treasure of Sid Beach Map",
+      "Old Building East Chest": "Toy Shovel",
+      "Hawk Peak West Chest": "13 Coins",
+      "Hawk Peak East Buried Chest": "Stick",
+      "Hawk Peak Northeast Chest": "Golden Feather",
+      "Northern East Coast Chest": "Toy Shovel",
+      "North Coast Chest": "33 Coins",
+      "North Coast Buried Chest": "25 Coins",
+      "Small South Island Buried Chest": "25 Coins",
+      "Secret Island Bottom Chest": "7 Coins",
+      "Secret Island Treehouse Chest": "Seashell",
+      "Sunhat Island Buried Chest": "Golden Feather",
+      "Orange Islands South Buried Chest": "13 Coins",
+      "Orange Islands West Chest": "13 Coins",
+      "Orange Islands North Buried Chest": "Wristwatch",
+      "Orange Islands East Chest": "Seashell",
+      "Orange Islands South Hidden Chest": "Golden Feather",
+      "A Stormy View Buried Treasure Chest": "7 Coins",
+      "Orange Islands Ruins Buried Chest": "Seashell",
+      "Lighthouse Race Reward": "7 Coins",
+      "Old Building Race Reward": "21 Coins",
+      "Hawk Peak Race Reward": "Stick",
+      "Lose Race Gift": "Bait"
+    }
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -2643,7 +3015,21 @@
     "1": {
       "game": "A Short Hike WorldGen",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": false,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      }
     }
   },
   "game_info": {
@@ -2651,6 +3037,30 @@
       "name": "A Short Hike WorldGen",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "ocean",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the A Short Hike randomizer connected to an Archipelago Multiworld",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Chandler"
+          ]
+        }
+      ],
+      "world_description": "A Short Hike is a relaxing adventure set on the islands of Hawk Peak. Fly and climb using Claire's wings and Golden Feathers\nto make your way up to the summit. Along the way you'll meet other hikers, discover hidden treasures,\nand take in the beautiful world around you.",
+      "slot_data": {
+        "settings": {
+          "goal": 3,
+          "logicLevel": 1,
+          "costMultiplier": 100,
+          "shopCheckLogic": 1,
+          "minShopCheckLogic": 1,
+          "easierRaces": false
+        }
       }
     }
   },

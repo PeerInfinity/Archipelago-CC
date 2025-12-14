@@ -48,16 +48,20 @@ Playthrough:
 
 }
 1: {
-  Clarion Call: Trinket 06
   NPC Trinket: Trinket 07
-  One Way Room: Trinket 11
   Overworld (Left of Ship): Trinket 03
   Overworld (Sad Elephant): Trinket 01
   Overworld (Square Room): Trinket 08
-  Prize for the Reckless: Trinket 05
+  Trench Warfare: Trinket 02
+}
+2: {
   Purest Unobtainium: Trinket 10
   The Tantalizing Trinket: Trinket 09
-  Trench Warfare: Trinket 02
-  You Just Keep Coming Back: Trinket 12
   Young Man, It's Worth the Challenge: Trinket 04
+}
+3: {
+  Clarion Call: Trinket 06
+  One Way Room: Trinket 11
+  Prize for the Reckless: Trinket 05
+  You Just Keep Coming Back: Trinket 12
 }

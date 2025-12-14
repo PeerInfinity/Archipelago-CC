@@ -33,17 +33,14 @@
             "name": "Eolis -> Path to Apolune",
             "connected_region": "Path to Apolune",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Key Jack",
-                    "Progressive Sword"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Key Jack",
+                  "Progressive Sword"
+                ]
+              }
             }
           }
         ],
@@ -67,18 +64,9 @@
             "name": "Eolis Key Jack",
             "id": 400101,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Deluge",
-                    "Progressive Sword",
-                    "Ring of Elf"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "_faxanaduworldgen_can_buy_in_eolis",
+              "args": []
             },
             "item": {
               "name": "Elixir",
@@ -92,18 +80,9 @@
             "name": "Eolis Hand Dagger",
             "id": 400102,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Deluge",
-                    "Progressive Sword",
-                    "Ring of Elf"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "_faxanaduworldgen_can_buy_in_eolis",
+              "args": []
             },
             "item": {
               "name": "Key King",
@@ -117,18 +96,9 @@
             "name": "Eolis Red Potion",
             "id": 400103,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Deluge",
-                    "Progressive Sword",
-                    "Ring of Elf"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "_faxanaduworldgen_can_buy_in_eolis",
+              "args": []
             },
             "item": {
               "name": "Key Jack",
@@ -142,18 +112,9 @@
             "name": "Eolis Elixir",
             "id": 400104,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Deluge",
-                    "Progressive Sword",
-                    "Ring of Elf"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "_faxanaduworldgen_can_buy_in_eolis",
+              "args": []
             },
             "item": {
               "name": "Black Onyx",
@@ -167,18 +128,9 @@
             "name": "Eolis Deluge",
             "id": 400105,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Deluge",
-                    "Progressive Sword",
-                    "Ring of Elf"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "_faxanaduworldgen_can_buy_in_eolis",
+              "args": []
             },
             "item": {
               "name": "Wingboots",
@@ -207,8 +159,12 @@
             "name": "Path to Apolune Magic Shield",
             "id": 400106,
             "access_rule": {
-              "type": "item_check",
-              "item": "Key King"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key King",
+                "count": 1
+              }
             },
             "item": {
               "name": "Unlock Wingboots",
@@ -222,8 +178,12 @@
             "name": "Path to Apolune Death",
             "id": 400107,
             "access_rule": {
-              "type": "item_check",
-              "item": "Key Ace"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key Ace",
+                "count": 1
+              }
             },
             "item": {
               "name": "Hourglass",
@@ -242,16 +202,24 @@
             "name": "Apolune -> Tower of Trunk",
             "connected_region": "Tower of Trunk",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key Jack"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key Jack",
+                "count": 1
+              }
             }
           },
           {
             "name": "Apolune -> Path to Forepaw",
             "connected_region": "Path to Forepaw",
             "access_rule": {
-              "type": "item_check",
-              "item": "Mattock"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Mattock",
+                "count": 1
+              }
             }
           }
         ],
@@ -320,8 +288,12 @@
             "name": "Apolune Key Jack",
             "id": 400112,
             "access_rule": {
-              "type": "item_check",
-              "item": "Unlock Wingboots"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Unlock Wingboots",
+                "count": 1
+              }
             },
             "item": {
               "name": "Wingboots",
@@ -341,16 +313,24 @@
             "name": "Tower of Trunk Hidden Mattock",
             "id": 400113,
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Deluge"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Progressive Sword",
+                    "count": 2
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Progressive Sword",
-                  "count": 2
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Deluge",
+                    "count": 1
+                  }
                 }
               ]
             },
@@ -426,17 +406,14 @@
             "name": "Path to Forepaw Glove",
             "id": 400117,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Deluge",
-                    "Unlock Wingboots"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Deluge",
+                  "Unlock Wingboots"
+                ]
+              }
             },
             "item": {
               "name": "Poison",
@@ -575,44 +552,53 @@
             "name": "Trunk -> Joker Spring",
             "connected_region": "Joker Spring",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key Joker"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key Joker",
+                "count": 1
+              }
             }
           },
           {
             "name": "Trunk -> Tower of Fortress",
             "connected_region": "Tower of Fortress",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key Jack"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key Jack",
+                "count": 1
+              }
             }
           },
           {
             "name": "Trunk -> Path to Mascon",
             "connected_region": "Path to Mascon",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Joker Spring Flow",
-                        "Key Queen",
-                        "Ring of Ruby",
-                        "Sky Spring Flow",
-                        "Tower of Fortress Spring Flow"
-                      ]
-                    }
-                  ]
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Progressive Sword",
+                    "count": 2
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Progressive Sword",
-                  "count": 2
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Joker Spring Flow",
+                      "Key Queen",
+                      "Ring of Ruby",
+                      "Sky Spring Flow",
+                      "Tower of Fortress Spring Flow"
+                    ]
+                  }
                 }
               ]
             }
@@ -653,8 +639,12 @@
             "name": "Trunk Red Potion",
             "id": 400127,
             "access_rule": {
-              "type": "item_check",
-              "item": "Unlock Wingboots"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Unlock Wingboots",
+                "count": 1
+              }
             },
             "item": {
               "name": "Red Potion",
@@ -668,8 +658,12 @@
             "name": "Sky Spring",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Unlock Wingboots"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Unlock Wingboots",
+                "count": 1
+              }
             },
             "item": {
               "name": "Sky Spring Flow",
@@ -815,8 +809,12 @@
             "name": "Tower of Fortress Guru",
             "id": 400135,
             "access_rule": {
-              "type": "item_check",
-              "item": "Sky Spring Flow"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Sky Spring Flow",
+                "count": 1
+              }
             },
             "item": {
               "name": "Progressive Sword",
@@ -830,8 +828,12 @@
             "name": "Tower of Fortress Spring",
             "id": null,
             "access_rule": {
-              "type": "item_check",
-              "item": "Spring Elixir"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Spring Elixir",
+                "count": 1
+              }
             },
             "item": {
               "name": "Tower of Fortress Spring Flow",
@@ -850,16 +852,24 @@
             "name": "Path to Mascon -> Tower of Red Potion",
             "connected_region": "Tower of Red Potion",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Key Queen"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Red Potion",
+                    "count": 4
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Red Potion",
-                  "count": 4
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Key Queen",
+                    "count": 1
+                  }
                 }
               ]
             }
@@ -1024,16 +1034,24 @@
             "name": "Path to Victim -> Tower of Suffer",
             "connected_region": "Tower of Suffer",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key Queen"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key Queen",
+                "count": 1
+              }
             }
           },
           {
             "name": "Path to Victim -> Victim",
             "connected_region": "Victim",
             "access_rule": {
-              "type": "item_check",
-              "item": "Unlock Wingboots"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Unlock Wingboots",
+                "count": 1
+              }
             }
           }
         ],
@@ -1042,8 +1060,12 @@
             "name": "Misty Shop Death",
             "id": 400144,
             "access_rule": {
-              "type": "item_check",
-              "item": "Unlock Wingboots"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Unlock Wingboots",
+                "count": 1
+              }
             },
             "item": {
               "name": "Wingboots",
@@ -1102,20 +1124,9 @@
             "name": "Misty Doctor Office",
             "id": 400148,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Death",
-                    "Deluge",
-                    "Fire",
-                    "Thunder",
-                    "Tilte"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "_faxanaduworldgen_has_any_magic",
+              "args": []
             },
             "item": {
               "name": "Red Potion",
@@ -1135,16 +1146,24 @@
             "name": "Tower of Suffer Hidden Wingboots",
             "id": 400149,
             "access_rule": {
-              "type": "or",
-              "conditions": [
+              "rule": "Or",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "Deluge"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Progressive Sword",
+                    "count": 2
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Progressive Sword",
-                  "count": 2
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Deluge",
+                    "count": 1
+                  }
                 }
               ]
             },
@@ -1220,8 +1239,12 @@
             "name": "Victim Mattock",
             "id": 400153,
             "access_rule": {
-              "type": "item_check",
-              "item": "Unlock Wingboots"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Unlock Wingboots",
+                "count": 1
+              }
             },
             "item": {
               "name": "Wingboots",
@@ -1285,33 +1308,38 @@
             "name": "Mist -> Useless Tower",
             "connected_region": "Useless Tower",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Key King",
-                    "Unlock Wingboots"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Key King",
+                  "Unlock Wingboots"
+                ]
+              }
             }
           },
           {
             "name": "Mist -> Tower of Mist",
             "connected_region": "Tower of Mist",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key King"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key King",
+                "count": 1
+              }
             }
           },
           {
             "name": "Mist -> Path to Conflate",
             "connected_region": "Path to Conflate",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key Ace"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key Ace",
+                "count": 1
+              }
             }
           }
         ],
@@ -1395,8 +1423,12 @@
             "name": "Misty House",
             "id": 400162,
             "access_rule": {
-              "type": "item_check",
-              "item": "Black Onyx"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Black Onyx",
+                "count": 1
+              }
             },
             "item": {
               "name": "Ointment",
@@ -1487,8 +1519,12 @@
             "name": "Path to Conflate -> Helm Branch",
             "connected_region": "Helm Branch",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key King"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key King",
+                "count": 1
+              }
             }
           },
           {
@@ -1503,8 +1539,12 @@
             "name": "Path to Conflate -> Branches",
             "connected_region": "Branches",
             "access_rule": {
-              "type": "item_check",
-              "item": "Key King"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Key King",
+                "count": 1
+              }
             }
           }
         ],
@@ -1645,9 +1685,12 @@
             "name": "Conflate Guru",
             "id": 400175,
             "access_rule": {
-              "type": "item_check",
-              "item": "Progressive Armor",
-              "count": 3
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Progressive Armor",
+                "count": 3
+              }
             },
             "item": {
               "name": "Progressive Sword",
@@ -1706,8 +1749,12 @@
             "name": "Branches Hidden Mattock",
             "id": 400178,
             "access_rule": {
-              "type": "item_check",
-              "item": "Unlock Wingboots"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Unlock Wingboots",
+                "count": 1
+              }
             },
             "item": {
               "name": "Progressive Shield",
@@ -1811,8 +1858,12 @@
             "name": "Path to Daybreak Glove",
             "id": 400184,
             "access_rule": {
-              "type": "item_check",
-              "item": "Unlock Wingboots"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Unlock Wingboots",
+                "count": 1
+              }
             },
             "item": {
               "name": "Tilte",
@@ -1846,8 +1897,12 @@
             "name": "Daybreak -> Dartmoor Castle",
             "connected_region": "Dartmoor Castle",
             "access_rule": {
-              "type": "item_check",
-              "item": "Ring of Dworf"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Ring of Dworf",
+                "count": 1
+              }
             }
           }
         ],
@@ -1952,8 +2007,12 @@
             "name": "Dartmoor Castle -> Evil Fortress",
             "connected_region": "Evil Fortress",
             "access_rule": {
-              "type": "item_check",
-              "item": "Demons Ring"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Demons Ring",
+                "count": 1
+              }
             }
           }
         ],
@@ -1962,8 +2021,12 @@
             "name": "Dartmoor Castle Hidden Hourglass",
             "id": 400191,
             "access_rule": {
-              "type": "item_check",
-              "item": "Unlock Wingboots"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Unlock Wingboots",
+                "count": 1
+              }
             },
             "item": {
               "name": "Poison",
@@ -1977,20 +2040,9 @@
             "name": "Dartmoor Castle Hidden Red Potion",
             "id": 400192,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Death",
-                    "Deluge",
-                    "Fire",
-                    "Thunder",
-                    "Tilte"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "_faxanaduworldgen_has_any_magic",
+              "args": []
             },
             "item": {
               "name": "Ring of Elf",
@@ -2076,20 +2128,9 @@
             "name": "Fraternal Castle Shop Hidden Ointment",
             "id": 400197,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Death",
-                    "Deluge",
-                    "Fire",
-                    "Thunder",
-                    "Tilte"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "_faxanaduworldgen_has_any_magic",
+              "args": []
             },
             "item": {
               "name": "Red Potion",
@@ -2178,9 +2219,12 @@
             "name": "Fraternal Castle Guru",
             "id": 400204,
             "access_rule": {
-              "type": "item_check",
-              "item": "Progressive Sword",
-              "count": 4
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Progressive Sword",
+                "count": 4
+              }
             },
             "item": {
               "name": "Red Potion",
@@ -2693,6 +2737,7 @@
   },
   "item_groups": {
     "1": [
+      "Event",
       "Everything"
     ]
   },
@@ -2733,6 +2778,124 @@
       "Wingboots": 4
     }
   },
+  "canonical_placements": {
+    "1": {
+      "Eolis Guru": "Progressive Sword",
+      "Eolis Key Jack": "Elixir",
+      "Eolis Hand Dagger": "Key King",
+      "Eolis Red Potion": "Key Jack",
+      "Eolis Elixir": "Black Onyx",
+      "Eolis Deluge": "Wingboots",
+      "Path to Apolune Magic Shield": "Unlock Wingboots",
+      "Path to Apolune Death": "Hourglass",
+      "Apolune Small Shield": "Hourglass",
+      "Apolune Hand Dagger": "Red Potion",
+      "Apolune Deluge": "Red Potion",
+      "Apolune Red Potion": "Ointment",
+      "Apolune Key Jack": "Wingboots",
+      "Tower of Trunk Hidden Mattock": "Progressive Shield",
+      "Tower of Trunk Hidden Hourglass": "Poison",
+      "Tower of Trunk Boss Mattock": "Mattock",
+      "Path to Forepaw Hidden Red Potion": "Poison",
+      "Path to Forepaw Glove": "Poison",
+      "Forepaw Long Sword": "Ring of Ruby",
+      "Forepaw Studded Mail": "Red Potion",
+      "Forepaw Small Shield": "Key Queen",
+      "Forepaw Red Potion": "Red Potion",
+      "Forepaw Wingboots": "Red Potion",
+      "Forepaw Key Jack": "Red Potion",
+      "Forepaw Key Queen": "Red Potion",
+      "Trunk Hidden Ointment": "Red Potion",
+      "Trunk Hidden Red Potion": "Red Potion",
+      "Trunk Red Potion": "Red Potion",
+      "Sky Spring": "Sky Spring Flow",
+      "Joker Spring Ruby Ring": "Elixir",
+      "Joker Spring": "Joker Spring Flow",
+      "Tower of Fortress Poison 1": "Key Joker",
+      "Tower of Fortress Poison 2": "Spring Elixir",
+      "Tower of Fortress Hidden Wingboots": "Hourglass",
+      "Tower of Fortress Ointment": "Ointment",
+      "Tower of Fortress Boss Wingboots": "Glove",
+      "Tower of Fortress Elixir": "Red Potion",
+      "Tower of Fortress Guru": "Progressive Sword",
+      "Tower of Fortress Spring": "Tower of Fortress Spring Flow",
+      "Path to Mascon Hidden Wingboots": "Poison",
+      "Tower of Red Potion": "Ring of Dworf",
+      "Mascon Large Shield": "Red Potion",
+      "Mascon Thunder": "Hourglass",
+      "Mascon Mattock": "Red Potion",
+      "Mascon Red Potion": "Hourglass",
+      "Mascon Key Jack": "Key Ace",
+      "Mascon Key Queen": "Hourglass",
+      "Misty Shop Death": "Wingboots",
+      "Misty Shop Hourglass": "Death",
+      "Misty Shop Elixir": "Progressive Shield",
+      "Misty Shop Red Potion": "Hourglass",
+      "Misty Doctor Office": "Red Potion",
+      "Tower of Suffer Hidden Wingboots": "Progressive Armor",
+      "Tower of Suffer Hidden Hourglass": "Poison",
+      "Tower of Suffer Pendant": "Red Potion",
+      "Victim Full Plate": "Red Potion",
+      "Victim Mattock": "Wingboots",
+      "Victim Red Potion": "Red Potion",
+      "Victim Key King": "Hourglass",
+      "Victim Key Queen": "Progressive Armor",
+      "Victim Tavern": "Red Potion",
+      "Mist Hidden Poison 1": "Red Potion",
+      "Mist Hidden Poison 2": "Red Potion",
+      "Mist Hidden Wingboots": "Poison",
+      "Misty Magic Hall": "Ointment",
+      "Misty House": "Ointment",
+      "Useless Tower": "Red Potion",
+      "Tower of Mist Hidden Ointment": "Red Potion",
+      "Tower of Mist Elixir": "Red Potion",
+      "Tower of Mist Black Onyx": "Red Potion",
+      "Path to Conflate Hidden Ointment": "Hourglass",
+      "Path to Conflate Poison": "Poison",
+      "Helm Branch Hidden Glove": "Poison",
+      "Helm Branch Battle Helmet": "Glove",
+      "Conflate Giant Blade": "Red Potion",
+      "Conflate Magic Shield": "Progressive Sword",
+      "Conflate Wingboots": "Hourglass",
+      "Conflate Red Potion": "Red Potion",
+      "Conflate Guru": "Progressive Sword",
+      "Branches Hidden Ointment": "Red Potion",
+      "Branches Poison": "Red Potion",
+      "Branches Hidden Mattock": "Progressive Shield",
+      "Branches Hidden Hourglass": "Deluge",
+      "Path to Daybreak Hidden Wingboots 1": "Red Potion",
+      "Path to Daybreak Magical Rod": "Poison",
+      "Path to Daybreak Hidden Wingboots 2": "Poison",
+      "Path to Daybreak Poison": "Ointment",
+      "Path to Daybreak Glove": "Tilte",
+      "Path to Daybreak Battle Suit": "Elixir",
+      "Daybreak Tilte": "Progressive Shield",
+      "Daybreak Giant Blade": "Red Potion",
+      "Daybreak Red Potion": "Red Potion",
+      "Daybreak Key King": "Ointment",
+      "Daybreak Key Queen": "Demons Ring",
+      "Dartmoor Castle Hidden Hourglass": "Poison",
+      "Dartmoor Castle Hidden Red Potion": "Ring of Elf",
+      "Dartmoor Giant Blade": "Ointment",
+      "Dartmoor Red Potion": "Fire",
+      "Dartmoor Key King": "Magical Rod",
+      "Fraternal Castle Hidden Ointment": "Elixir",
+      "Fraternal Castle Shop Hidden Ointment": "Red Potion",
+      "Fraternal Castle Poison 1": "Red Potion",
+      "Fraternal Castle Poison 2": "Poison",
+      "Fraternal Castle Poison 3": "Poison",
+      "Fraternal Castle Hidden Hourglass": "Thunder",
+      "Fraternal Castle Dragon Slayer": "Poison",
+      "Fraternal Castle Guru": "Red Potion",
+      "Evil Fortress Ointment": "Ointment",
+      "Evil Fortress Poison 1": "Poison",
+      "Evil Fortress Glove": "Poison",
+      "Evil Fortress Poison 2": "Red Potion",
+      "Evil Fortress Poison 3": "Progressive Armor",
+      "Evil Fortress Hidden Glove": "Poison",
+      "Evil One": "Killed Evil One"
+    }
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -2743,7 +2906,21 @@
     "1": {
       "game": "Faxanadu WorldGen",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": false,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      }
     }
   },
   "game_info": {
@@ -2751,8 +2928,64 @@
       "name": "Faxanadu WorldGen",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "dirt",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Faxanadu randomizer connected to an Archipelago Multiworld",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Daivuk"
+          ]
+        }
+      ],
+      "world_description": "Faxanadu is an action role-playing platform video game developed by Hudson Soft for the Nintendo Entertainment System",
+      "slot_data": {
+        "keep_shop_red_potions": 0,
+        "random_musics": 0,
+        "random_sounds": 0,
+        "random_npcs": 0,
+        "random_monsters": 0,
+        "random_rewards": 0,
+        "daxanadu_version": "0.3.0"
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "_faxanaduworldgen_can_buy_in_eolis": {
+        "type": "state_method",
+        "method": "has_any",
+        "args": [
+          {
+            "type": "constant",
+            "value": [
+              "Deluge",
+              "Progressive Sword",
+              "Ring of Elf"
+            ]
+          }
+        ]
+      },
+      "_faxanaduworldgen_has_any_magic": {
+        "type": "state_method",
+        "method": "has_any",
+        "args": [
+          {
+            "type": "constant",
+            "value": [
+              "Death",
+              "Deluge",
+              "Fire",
+              "Thunder",
+              "Tilte"
+            ]
+          }
+        ]
+      }
+    }
+  }
 }

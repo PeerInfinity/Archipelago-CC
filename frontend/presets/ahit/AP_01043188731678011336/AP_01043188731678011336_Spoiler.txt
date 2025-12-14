@@ -582,9 +582,10 @@ Act Completion (Time Rift - Dead Bird Studio)
    =>   Time Rift - Dead Bird Studio
 Act Completion (Time Rift - Gallery)
         Menu -> Save File -> Spaceship
-   =>   Spaceship -> Telescope -> Mafia Town
-   =>   Mafia Town -> Mafia Town - Act 1
-   =>   Welcome to Mafia Town -> Time Rift - Sewers Portal - Entrance 1
+   =>   Spaceship -> Telescope -> Battle of the Birds
+   =>   Battle of the Birds -> Battle of the Birds - Act 1
+   =>   She Came from Outer Space -> Battle of the Birds - Act 2: Connection 1
+   =>   Down with the Mafia! -> Time Rift - Sewers Portal - Entrance 4
    =>   Time Rift - Gallery
 Act Completion (Time Rift - Mafia of Cooks)
         Menu -> Save File -> Spaceship
@@ -615,10 +616,8 @@ Act Completion (Time Rift - The Owl Express)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Welcome to Mafia Town -> Mafia Town - Act 2: Connection 1
-   =>   Dead Bird Studio Basement -> Mafia Town - Act 4: Connection 1
-   =>   The Big Parade -> Mafia Town - Act 6: Connection 1
-   =>   The Subcon Well -> Time Rift - Village Portal - Entrance 2
+   =>   Welcome to Mafia Town -> Mafia Town - Act 3: Connection 1
+   =>   Contractual Obligations -> Time Rift - Village Portal - Entrance 1
    =>   Time Rift - The Owl Express
 Act Completion (Time Rift - Village)
         Menu -> Save File -> Spaceship

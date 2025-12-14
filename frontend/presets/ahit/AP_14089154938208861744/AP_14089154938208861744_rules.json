@@ -2757,48 +2757,6 @@
                   "test": {
                     "type": "not",
                     "condition": {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "or",
-                    "conditions": [
-                      {
-                        "type": "and",
-                        "conditions": [
-                          {
-                            "type": "constant",
-                            "value": true
-                          },
-                          {
-                            "type": "helper",
-                            "name": "can_use_hat",
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": 1
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Umbrella"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
                       "type": "helper",
                       "name": "painting_logic",
                       "args": []
@@ -2820,8 +2778,8 @@
                         {
                           "type": "not",
                           "condition": {
-                            "type": "constant",
-                            "value": 0
+                            "type": "setting_value",
+                            "setting": "NoPaintingSkips"
                           }
                         }
                       ]
@@ -2855,6 +2813,48 @@
                         "value": 1
                       }
                     }
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "test": {
+                    "type": "not",
+                    "condition": {
+                      "type": "setting_value",
+                      "setting": "UmbrellaLogic"
+                    }
+                  },
+                  "if_true": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "if_false": {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "helper",
+                            "name": "can_use_hat",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": 1
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Umbrella"
+                      }
+                    ]
                   }
                 },
                 {
@@ -2875,48 +2875,6 @@
                   "test": {
                     "type": "not",
                     "condition": {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "or",
-                    "conditions": [
-                      {
-                        "type": "and",
-                        "conditions": [
-                          {
-                            "type": "constant",
-                            "value": true
-                          },
-                          {
-                            "type": "helper",
-                            "name": "can_use_hat",
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": 1
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Umbrella"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
                       "type": "helper",
                       "name": "painting_logic",
                       "args": []
@@ -2938,8 +2896,8 @@
                         {
                           "type": "not",
                           "condition": {
-                            "type": "constant",
-                            "value": 0
+                            "type": "setting_value",
+                            "setting": "NoPaintingSkips"
                           }
                         }
                       ]
@@ -2973,6 +2931,48 @@
                         "value": 1
                       }
                     }
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "test": {
+                    "type": "not",
+                    "condition": {
+                      "type": "setting_value",
+                      "setting": "UmbrellaLogic"
+                    }
+                  },
+                  "if_true": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "if_false": {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "helper",
+                            "name": "can_use_hat",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": 1
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Umbrella"
+                      }
+                    ]
                   }
                 },
                 {
@@ -2995,48 +2995,6 @@
                   "test": {
                     "type": "not",
                     "condition": {
-                      "type": "constant",
-                      "value": 0
-                    }
-                  },
-                  "if_true": {
-                    "type": "constant",
-                    "value": true
-                  },
-                  "if_false": {
-                    "type": "or",
-                    "conditions": [
-                      {
-                        "type": "and",
-                        "conditions": [
-                          {
-                            "type": "constant",
-                            "value": true
-                          },
-                          {
-                            "type": "helper",
-                            "name": "can_use_hat",
-                            "args": [
-                              {
-                                "type": "constant",
-                                "value": 1
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "type": "item_check",
-                        "item": "Umbrella"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "type": "conditional",
-                  "test": {
-                    "type": "not",
-                    "condition": {
                       "type": "helper",
                       "name": "painting_logic",
                       "args": []
@@ -3058,8 +3016,8 @@
                         {
                           "type": "not",
                           "condition": {
-                            "type": "constant",
-                            "value": 0
+                            "type": "setting_value",
+                            "setting": "NoPaintingSkips"
                           }
                         }
                       ]
@@ -3093,6 +3051,48 @@
                         "value": 1
                       }
                     }
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "test": {
+                    "type": "not",
+                    "condition": {
+                      "type": "setting_value",
+                      "setting": "UmbrellaLogic"
+                    }
+                  },
+                  "if_true": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "if_false": {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "helper",
+                            "name": "can_use_hat",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": 1
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Umbrella"
+                      }
+                    ]
                   }
                 },
                 {
@@ -3649,8 +3649,8 @@
                       "test": {
                         "type": "not",
                         "condition": {
-                          "type": "constant",
-                          "value": 0
+                          "type": "setting_value",
+                          "setting": "UmbrellaLogic"
                         }
                       },
                       "if_true": {
@@ -3977,8 +3977,8 @@
                       "test": {
                         "type": "not",
                         "condition": {
-                          "type": "constant",
-                          "value": 0
+                          "type": "setting_value",
+                          "setting": "UmbrellaLogic"
                         }
                       },
                       "if_true": {
@@ -5944,8 +5944,8 @@
                     {
                       "type": "not",
                       "condition": {
-                        "type": "constant",
-                        "value": 0
+                        "type": "setting_value",
+                        "setting": "NoPaintingSkips"
                       }
                     }
                   ]
@@ -8139,6 +8139,31 @@
           "type": "block",
           "statements": [
             {
+              "type": "assign",
+              "name": "entrance",
+              "value": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "world"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_entrance"
+                },
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "act_entrance"
+                  }
+                ]
+              }
+            },
+            {
               "type": "if_statement",
               "test": {
                 "type": "not",
@@ -8204,6 +8229,40 @@
               ]
             },
             {
+              "type": "assign",
+              "name": "name",
+              "value": {
+                "type": "f_string",
+                "parts": [
+                  {
+                    "type": "constant",
+                    "value": "Act Completion ("
+                  },
+                  {
+                    "type": "formatted_value",
+                    "value": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "entrance"
+                        },
+                        "attr": "connected_region"
+                      },
+                      "attr": "name"
+                    }
+                  },
+                  {
+                    "type": "constant",
+                    "value": ")"
+                  }
+                ],
+                "all_simple": true,
+                "value": "Act Completion ({...})"
+              }
+            },
+            {
               "type": "return",
               "value": {
                 "type": "function_call",
@@ -8245,24 +8304,22 @@
         "body": {
           "type": "conditional",
           "test": {
-            "type": "attribute",
-            "object": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "options"
-            },
-            "attr": "HatItems"
+            "type": "setting_value",
+            "setting": "HatItems"
           },
           "if_true": {
             "type": "item_check",
             "item": {
               "type": "subscript",
               "value": {
-                "type": "name",
-                "name": "hat_type_to_item"
+                "type": "constant",
+                "value": {
+                  "0": "Sprint Hat",
+                  "1": "Brewing Hat",
+                  "2": "Ice Hat",
+                  "3": "Dweller Mask",
+                  "4": "Time Stop Hat"
+                }
               },
               "index": {
                 "type": "name",
@@ -8321,16 +8378,8 @@
         "name": "Difficulty",
         "args": [
           {
-            "type": "attribute",
-            "object": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "options"
-            },
-            "attr": "LogicDifficulty"
+            "type": "setting_value",
+            "setting": "LogicDifficulty"
           }
         ]
       },
@@ -8351,7 +8400,6 @@
             },
             {
               "type": "for_iter",
-              "var": "h",
               "iterable": {
                 "type": "attribute",
                 "object": {
@@ -8401,7 +8449,8 @@
                     }
                   ]
                 }
-              ]
+              ],
+              "var": "h"
             },
             {
               "type": "return",
@@ -8451,16 +8500,8 @@
         "name": "bool",
         "args": [
           {
-            "type": "attribute",
-            "object": {
-              "type": "attribute",
-              "object": {
-                "type": "name",
-                "name": "world"
-              },
-              "attr": "options"
-            },
-            "attr": "ShuffleSubconPaintings"
+            "type": "setting_value",
+            "setting": "ShuffleSubconPaintings"
           }
         ]
       }

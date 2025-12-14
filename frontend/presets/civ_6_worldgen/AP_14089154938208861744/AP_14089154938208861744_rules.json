@@ -33,38 +33,33 @@
             "name": "ERA_ANCIENT -> ERA_CLASSICAL",
             "connected_region": "ERA_CLASSICAL",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Animal Husbandry",
-                        "Foreign Trade",
-                        "Irrigation",
-                        "Mining",
-                        "Sailing",
-                        "State Workforce"
-                      ]
+                  "rule": "HasAllCounts",
+                  "options": [],
+                  "args": {
+                    "items": {
+                      "Progressive Campus": 1,
+                      "Progressive Encampment": 1,
+                      "Progressive Holy Site": 1
                     }
-                  ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all_counts",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": {
-                        "Progressive Campus": 1,
-                        "Progressive Encampment": 1,
-                        "Progressive Holy Site": 1
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Animal Husbandry",
+                      "Foreign Trade",
+                      "Irrigation",
+                      "Mining",
+                      "Sailing",
+                      "State Workforce"
+                    ]
+                  }
                 }
               ]
             }
@@ -510,39 +505,34 @@
             "name": "ERA_CLASSICAL -> ERA_MEDIEVAL",
             "connected_region": "ERA_MEDIEVAL",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Political Philosophy",
-                        "Shipbuilding"
-                      ]
+                  "rule": "HasAllCounts",
+                  "options": [],
+                  "args": {
+                    "items": {
+                      "Progressive Campus": 1,
+                      "Progressive Commercial Hub": 1,
+                      "Progressive Diplomatic Quarter": 1,
+                      "Progressive Encampment": 1,
+                      "Progressive Entertainment Complex": 1,
+                      "Progressive Harbor": 1,
+                      "Progressive Holy Site": 2,
+                      "Progressive Theater": 1
                     }
-                  ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all_counts",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": {
-                        "Progressive Campus": 1,
-                        "Progressive Commercial Hub": 1,
-                        "Progressive Diplomatic Quarter": 1,
-                        "Progressive Encampment": 1,
-                        "Progressive Entertainment Complex": 1,
-                        "Progressive Harbor": 1,
-                        "Progressive Holy Site": 2,
-                        "Progressive Theater": 1
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Political Philosophy",
+                      "Shipbuilding"
+                    ]
+                  }
                 }
               ]
             }
@@ -783,31 +773,33 @@
             "name": "ERA_MEDIEVAL -> ERA_RENAISSANCE",
             "connected_region": "ERA_RENAISSANCE",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all_counts",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": {
-                        "Progressive Campus": 2,
-                        "Progressive Commercial Hub": 1,
-                        "Progressive Diplomatic Quarter": 1,
-                        "Progressive Encampment": 2,
-                        "Progressive Entertainment Complex": 1,
-                        "Progressive Harbor": 1,
-                        "Progressive Holy Site": 2,
-                        "Progressive Industrial Zone": 1,
-                        "Progressive Theater": 1
-                      }
+                  "rule": "HasAllCounts",
+                  "options": [],
+                  "args": {
+                    "items": {
+                      "Progressive Campus": 2,
+                      "Progressive Commercial Hub": 1,
+                      "Progressive Diplomatic Quarter": 1,
+                      "Progressive Encampment": 2,
+                      "Progressive Entertainment Complex": 1,
+                      "Progressive Harbor": 1,
+                      "Progressive Holy Site": 2,
+                      "Progressive Industrial Zone": 1,
+                      "Progressive Theater": 1
                     }
-                  ]
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Divine Right"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Divine Right",
+                    "count": 1
+                  }
                 }
               ]
             }
@@ -1048,41 +1040,36 @@
             "name": "ERA_RENAISSANCE -> ERA_INDUSTRIAL",
             "connected_region": "ERA_INDUSTRIAL",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Cartography",
-                        "Exploration",
-                        "Reformed Church"
-                      ]
+                  "rule": "HasAllCounts",
+                  "options": [],
+                  "args": {
+                    "items": {
+                      "Progressive Campus": 2,
+                      "Progressive Commercial Hub": 2,
+                      "Progressive Diplomatic Quarter": 2,
+                      "Progressive Encampment": 2,
+                      "Progressive Entertainment Complex": 1,
+                      "Progressive Harbor": 2,
+                      "Progressive Holy Site": 2,
+                      "Progressive Industrial Zone": 1,
+                      "Progressive Theater": 2
                     }
-                  ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all_counts",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": {
-                        "Progressive Campus": 2,
-                        "Progressive Commercial Hub": 2,
-                        "Progressive Diplomatic Quarter": 2,
-                        "Progressive Encampment": 2,
-                        "Progressive Entertainment Complex": 1,
-                        "Progressive Harbor": 2,
-                        "Progressive Holy Site": 2,
-                        "Progressive Industrial Zone": 1,
-                        "Progressive Theater": 2
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Cartography",
+                      "Exploration",
+                      "Reformed Church"
+                    ]
+                  }
                 }
               ]
             }
@@ -1323,31 +1310,33 @@
             "name": "ERA_INDUSTRIAL -> ERA_MODERN",
             "connected_region": "ERA_MODERN",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all_counts",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": {
-                        "Progressive Campus": 2,
-                        "Progressive Commercial Hub": 3,
-                        "Progressive Diplomatic Quarter": 2,
-                        "Progressive Encampment": 3,
-                        "Progressive Entertainment Complex": 2,
-                        "Progressive Harbor": 2,
-                        "Progressive Holy Site": 2,
-                        "Progressive Industrial Zone": 2,
-                        "Progressive Theater": 2
-                      }
+                  "rule": "HasAllCounts",
+                  "options": [],
+                  "args": {
+                    "items": {
+                      "Progressive Campus": 2,
+                      "Progressive Commercial Hub": 3,
+                      "Progressive Diplomatic Quarter": 2,
+                      "Progressive Encampment": 3,
+                      "Progressive Entertainment Complex": 2,
+                      "Progressive Harbor": 2,
+                      "Progressive Holy Site": 2,
+                      "Progressive Industrial Zone": 2,
+                      "Progressive Theater": 2
                     }
-                  ]
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Nationalism"
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Nationalism",
+                    "count": 1
+                  }
                 }
               ]
             }
@@ -1588,43 +1577,38 @@
             "name": "ERA_MODERN -> ERA_ATOMIC",
             "connected_region": "ERA_ATOMIC",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Class Struggle",
-                        "Refining",
-                        "Suffrage",
-                        "Totalitarianism"
-                      ]
+                  "rule": "HasAllCounts",
+                  "options": [],
+                  "args": {
+                    "items": {
+                      "Progressive Aerodrome": 1,
+                      "Progressive Campus": 3,
+                      "Progressive Commercial Hub": 3,
+                      "Progressive Diplomatic Quarter": 2,
+                      "Progressive Encampment": 3,
+                      "Progressive Entertainment Complex": 2,
+                      "Progressive Harbor": 2,
+                      "Progressive Holy Site": 2,
+                      "Progressive Industrial Zone": 3,
+                      "Progressive Theater": 3
                     }
-                  ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all_counts",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": {
-                        "Progressive Aerodrome": 1,
-                        "Progressive Campus": 3,
-                        "Progressive Commercial Hub": 3,
-                        "Progressive Diplomatic Quarter": 2,
-                        "Progressive Encampment": 3,
-                        "Progressive Entertainment Complex": 2,
-                        "Progressive Harbor": 2,
-                        "Progressive Holy Site": 2,
-                        "Progressive Industrial Zone": 3,
-                        "Progressive Theater": 3
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Class Struggle",
+                      "Refining",
+                      "Suffrage",
+                      "Totalitarianism"
+                    ]
+                  }
                 }
               ]
             }
@@ -1895,42 +1879,37 @@
             "name": "ERA_ATOMIC -> ERA_INFORMATION",
             "connected_region": "ERA_INFORMATION",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Combined Arms",
-                        "Plastics"
-                      ]
+                  "rule": "HasAllCounts",
+                  "options": [],
+                  "args": {
+                    "items": {
+                      "Progressive Aerodrome": 2,
+                      "Progressive Campus": 3,
+                      "Progressive Commercial Hub": 3,
+                      "Progressive Diplomatic Quarter": 2,
+                      "Progressive Encampment": 3,
+                      "Progressive Entertainment Complex": 3,
+                      "Progressive Harbor": 2,
+                      "Progressive Holy Site": 2,
+                      "Progressive Industrial Zone": 4,
+                      "Progressive Space Port": 1,
+                      "Progressive Theater": 3
                     }
-                  ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all_counts",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": {
-                        "Progressive Aerodrome": 2,
-                        "Progressive Campus": 3,
-                        "Progressive Commercial Hub": 3,
-                        "Progressive Diplomatic Quarter": 2,
-                        "Progressive Encampment": 3,
-                        "Progressive Entertainment Complex": 3,
-                        "Progressive Harbor": 2,
-                        "Progressive Holy Site": 2,
-                        "Progressive Industrial Zone": 4,
-                        "Progressive Space Port": 1,
-                        "Progressive Theater": 3
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Combined Arms",
+                      "Plastics"
+                    ]
+                  }
                 }
               ]
             }
@@ -2141,43 +2120,38 @@
             "name": "ERA_INFORMATION -> ERA_FUTURE",
             "connected_region": "ERA_FUTURE",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "state_method",
-                  "method": "has_all",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": [
-                        "Corporate Libertarianism",
-                        "Digital Democracy",
-                        "Synthetic Technocracy"
-                      ]
+                  "rule": "HasAllCounts",
+                  "options": [],
+                  "args": {
+                    "items": {
+                      "Progressive Aerodrome": 2,
+                      "Progressive Campus": 3,
+                      "Progressive Commercial Hub": 3,
+                      "Progressive Diplomatic Quarter": 2,
+                      "Progressive Encampment": 3,
+                      "Progressive Entertainment Complex": 3,
+                      "Progressive Harbor": 2,
+                      "Progressive Holy Site": 2,
+                      "Progressive Industrial Zone": 4,
+                      "Progressive Space Port": 4,
+                      "Progressive Theater": 3
                     }
-                  ]
+                  }
                 },
                 {
-                  "type": "state_method",
-                  "method": "has_all_counts",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": {
-                        "Progressive Aerodrome": 2,
-                        "Progressive Campus": 3,
-                        "Progressive Commercial Hub": 3,
-                        "Progressive Diplomatic Quarter": 2,
-                        "Progressive Encampment": 3,
-                        "Progressive Entertainment Complex": 3,
-                        "Progressive Harbor": 2,
-                        "Progressive Holy Site": 2,
-                        "Progressive Industrial Zone": 4,
-                        "Progressive Space Port": 4,
-                        "Progressive Theater": 3
-                      }
-                    }
-                  ]
+                  "rule": "HasAll",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Corporate Libertarianism",
+                      "Digital Democracy",
+                      "Synthetic Technocracy"
+                    ]
+                  }
                 }
               ]
             }
@@ -2644,8 +2618,9 @@
             "name": "Complete a victory type",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Victory",
@@ -4651,6 +4626,159 @@
       "Victory": 1
     }
   },
+  "canonical_placements": {
+    "1": {
+      "TECH_AP_ANCIENT_00": "Progressive Theater",
+      "TECH_AP_ANCIENT_01": "State Workforce",
+      "TECH_AP_ANCIENT_02": "Mining",
+      "TECH_AP_ANCIENT_03": "Sailing",
+      "TECH_AP_ANCIENT_04": "Shipbuilding",
+      "TECH_AP_ANCIENT_05": "Animal Husbandry",
+      "TECH_AP_ANCIENT_06": "Irrigation",
+      "TECH_AP_ANCIENT_07": "Progressive Holy Site",
+      "TECH_AP_ANCIENT_08": "Progressive Campus",
+      "TECH_AP_ANCIENT_09": "Sanitation",
+      "TECH_AP_ANCIENT_10": "Military Tactics",
+      "CIVIC_AP_ANCIENT_00": "Stirrups",
+      "CIVIC_AP_ANCIENT_01": "Progressive Neighborhood",
+      "CIVIC_AP_ANCIENT_02": "Recorded History",
+      "CIVIC_AP_ANCIENT_03": "Political Philosophy",
+      "CIVIC_AP_ANCIENT_04": "Progressive Encampment",
+      "CIVIC_AP_ANCIENT_05": "Progressive Diplomatic Quarter",
+      "CIVIC_AP_ANCIENT_06": "Foreign Trade",
+      "GOODY_HUT_1": "Faith: Large",
+      "GOODY_HUT_2": "Gold: Small",
+      "GOODY_HUT_3": "Faith: Small",
+      "GOODY_HUT_4": "Gold: Medium",
+      "GOODY_HUT_5": "Gold: Medium",
+      "GOODY_HUT_6": "Additional Population",
+      "GOODY_HUT_7": "Faith: Medium",
+      "GOODY_HUT_8": "Faith: Medium",
+      "GOODY_HUT_9": "Governor Title",
+      "GOODY_HUT_10": "Gold: Medium",
+      "TECH_AP_CLASSICAL_11": "Ballistics",
+      "TECH_AP_CLASSICAL_12": "Early Empire",
+      "TECH_AP_CLASSICAL_13": "Progressive Commercial Hub",
+      "TECH_AP_CLASSICAL_14": "Progressive Commercial Hub",
+      "TECH_AP_CLASSICAL_15": "Gunpowder",
+      "TECH_AP_CLASSICAL_16": "Progressive Harbor",
+      "TECH_AP_CLASSICAL_17": "Computers",
+      "TECH_AP_CLASSICAL_18": "Steel",
+      "CIVIC_AP_CLASSICAL_07": "Information Warfare",
+      "CIVIC_AP_CLASSICAL_08": "Progressive Entertainment Complex",
+      "CIVIC_AP_CLASSICAL_09": "Predictive Systems",
+      "CIVIC_AP_CLASSICAL_10": "Rapid Deployment",
+      "CIVIC_AP_CLASSICAL_11": "Progressive Holy Site",
+      "CIVIC_AP_CLASSICAL_12": "Progressive Campus",
+      "CIVIC_AP_CLASSICAL_13": "Totalitarianism",
+      "TECH_AP_MEDIEVAL_19": "Divine Right",
+      "TECH_AP_MEDIEVAL_20": "Rifling",
+      "TECH_AP_MEDIEVAL_21": "Machinery",
+      "TECH_AP_MEDIEVAL_22": "Combined Arms",
+      "TECH_AP_MEDIEVAL_23": "Cybernetics",
+      "TECH_AP_MEDIEVAL_24": "Composites",
+      "TECH_AP_MEDIEVAL_25": "Progressive Commercial Hub",
+      "TECH_AP_MEDIEVAL_67": "Exploration",
+      "CIVIC_AP_MEDIEVAL_14": "Progressive Encampment",
+      "CIVIC_AP_MEDIEVAL_15": "Social Media",
+      "CIVIC_AP_MEDIEVAL_16": "Printing",
+      "CIVIC_AP_MEDIEVAL_17": "Progressive Industrial Zone",
+      "CIVIC_AP_MEDIEVAL_18": "Engineering",
+      "CIVIC_AP_MEDIEVAL_19": "Guidance Systems",
+      "CIVIC_AP_MEDIEVAL_20": "Refining",
+      "TECH_AP_RENAISSANCE_26": "Colonialism",
+      "TECH_AP_RENAISSANCE_27": "Exodus Imperative",
+      "TECH_AP_RENAISSANCE_28": "Progressive Diplomatic Quarter",
+      "TECH_AP_RENAISSANCE_29": "Advanced Ballistics",
+      "TECH_AP_RENAISSANCE_30": "Progressive Neighborhood",
+      "TECH_AP_RENAISSANCE_31": "Progressive Harbor",
+      "TECH_AP_RENAISSANCE_32": "Cartography",
+      "TECH_AP_RENAISSANCE_33": "Reformed Church",
+      "TECH_AP_RENAISSANCE_34": "Digital Democracy",
+      "CIVIC_AP_RENAISSANCE_21": "Suffrage",
+      "CIVIC_AP_RENAISSANCE_22": "Square Rigging",
+      "CIVIC_AP_RENAISSANCE_23": "Progressive Theater",
+      "CIVIC_AP_RENAISSANCE_24": "Civil Service",
+      "CIVIC_AP_RENAISSANCE_25": "Guilds",
+      "CIVIC_AP_RENAISSANCE_26": "The Wheel",
+      "TECH_AP_INDUSTRIAL_35": "Defensive Tactics",
+      "TECH_AP_INDUSTRIAL_36": "Nationalism",
+      "TECH_AP_INDUSTRIAL_37": "Nuclear Fusion",
+      "TECH_AP_INDUSTRIAL_38": "Progressive Industrial Zone",
+      "TECH_AP_INDUSTRIAL_39": "Naval Tradition",
+      "TECH_AP_INDUSTRIAL_40": "Global Warming Mitigation",
+      "TECH_AP_INDUSTRIAL_41": "Progressive Entertainment Complex",
+      "TECH_AP_INDUSTRIAL_42": "Advanced AI",
+      "CIVIC_AP_INDUSTRIAL_27": "Globalization",
+      "CIVIC_AP_INDUSTRIAL_28": "Lasers",
+      "CIVIC_AP_INDUSTRIAL_29": "Progressive Neighborhood",
+      "CIVIC_AP_INDUSTRIAL_30": "The Enlightenment",
+      "CIVIC_AP_INDUSTRIAL_31": "Progressive Preserve",
+      "CIVIC_AP_INDUSTRIAL_32": "Progressive Encampment",
+      "CIVIC_AP_INDUSTRIAL_33": "Civil Engineering",
+      "TECH_AP_MODERN_43": "Opera and Ballet",
+      "TECH_AP_MODERN_44": "Castles",
+      "TECH_AP_MODERN_45": "Class Struggle",
+      "TECH_AP_MODERN_46": "Progressive Entertainment Complex",
+      "TECH_AP_MODERN_47": "Progressive Theater",
+      "TECH_AP_MODERN_48": "Progressive Campus",
+      "TECH_AP_MODERN_49": "Progressive Aerodrome",
+      "TECH_AP_MODERN_68": "Future Tech",
+      "CIVIC_AP_MODERN_34": "Progressive Industrial Zone",
+      "CIVIC_AP_MODERN_35": "Progressive Industrial Zone",
+      "CIVIC_AP_MODERN_36": "Mobilization",
+      "CIVIC_AP_MODERN_37": "Mercantilism",
+      "CIVIC_AP_MODERN_38": "Military Tradition",
+      "CIVIC_AP_MODERN_39": "Plastics",
+      "CIVIC_AP_MODERN_40": "Mass Media",
+      "CIVIC_AP_MODERN_41": "Robotics",
+      "CIVIC_AP_MODERN_42": "Stealth Technology",
+      "TECH_AP_ATOMIC_50": "Progressive Aerodrome",
+      "TECH_AP_ATOMIC_51": "Ideology",
+      "TECH_AP_ATOMIC_52": "Progressive Space Port",
+      "TECH_AP_ATOMIC_53": "Progressive Preserve",
+      "TECH_AP_ATOMIC_54": "Progressive Space Port",
+      "TECH_AP_ATOMIC_55": "Smart Power Doctrine",
+      "TECH_AP_ATOMIC_56": "Near Future Governance",
+      "TECH_AP_ATOMIC_57": "Nuclear Program",
+      "CIVIC_AP_ATOMIC_43": "Pottery",
+      "CIVIC_AP_ATOMIC_44": "Craftsmanship",
+      "CIVIC_AP_ATOMIC_45": "Buttress",
+      "CIVIC_AP_ATOMIC_46": "Metal Casting",
+      "CIVIC_AP_ATOMIC_47": "Mercenaries",
+      "TECH_AP_INFORMATION_58": "Future Civic",
+      "TECH_AP_INFORMATION_59": "Astronomy",
+      "TECH_AP_INFORMATION_60": "Military Training",
+      "TECH_AP_INFORMATION_61": "Synthetic Materials",
+      "TECH_AP_INFORMATION_62": "Cultural Hegemony",
+      "TECH_AP_INFORMATION_63": "Medieval Faires",
+      "TECH_AP_INFORMATION_64": "Progressive Space Port",
+      "TECH_AP_INFORMATION_65": "Cold War",
+      "TECH_AP_INFORMATION_66": "Corporate Libertarianism",
+      "CIVIC_AP_INFORMATION_48": "Advanced Power Cells",
+      "CIVIC_AP_INFORMATION_49": "Progressive Space Port",
+      "CIVIC_AP_INFORMATION_51": "Steam Power",
+      "CIVIC_AP_INFORMATION_52": "Synthetic Technocracy",
+      "CIVIC_AP_INFORMATION_53": "Siege Tactics",
+      "CIVIC_AP_INFORMATION_54": "Masonry",
+      "CIVIC_AP_INFORMATION_55": "Code of Laws",
+      "TECH_AP_FUTURE_69": "Scientific Theory",
+      "TECH_AP_FUTURE_70": "Space Race",
+      "TECH_AP_FUTURE_71": "Construction",
+      "TECH_AP_FUTURE_72": "Iron Working",
+      "TECH_AP_FUTURE_73": "Feudalism",
+      "TECH_AP_FUTURE_74": "Environmentalism",
+      "TECH_AP_FUTURE_75": "Horseback Riding",
+      "TECH_AP_FUTURE_76": "Combustion",
+      "CIVIC_AP_FUTURE_50": "Scorched Earth",
+      "CIVIC_AP_FUTURE_56": "Cultural Heritage",
+      "CIVIC_AP_FUTURE_57": "Progressive Space Port",
+      "CIVIC_AP_FUTURE_58": "Archery",
+      "CIVIC_AP_FUTURE_59": "Seasteads",
+      "CIVIC_AP_FUTURE_60": "Telecommunications",
+      "Complete a victory type": "Victory"
+    }
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -4661,7 +4789,21 @@
     "1": {
       "game": "Civilization VI WorldGen",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": false,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      }
     }
   },
   "game_info": {
@@ -4669,6 +4811,29 @@
       "name": "Civilization VI WorldGen",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "ocean",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up Civilization VI for MultiWorld.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "hesto2"
+          ]
+        }
+      ],
+      "world_description": "Civilization VI is a turn-based strategy video game in which one or more players compete alongside computer-controlled opponents to grow their individual civilization from a small tribe to control the entire planet across several periods of development.",
+      "slot_data": {
+        "progression_style": 0,
+        "death_link": 0,
+        "research_cost_multiplier": 100,
+        "death_link_effect": [
+          "Unit Killed"
+        ],
+        "death_link_effect_percent": 20
       }
     }
   },

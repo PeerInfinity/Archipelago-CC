@@ -90,6 +90,15 @@ class RegionData:
 
 
 @dataclass
+class HelperData:
+    """Extracted helper function data."""
+    name: str
+    params: List[str] = field(default_factory=list)  # Parameters (excluding state/player)
+    body: Optional[Dict[str, Any]] = None  # The rule body
+    defaults: Dict[str, Any] = field(default_factory=dict)  # Default parameter values
+
+
+@dataclass
 class ExtractedData:
     """All extracted data from a JSON rules file."""
     metadata: GameMetadata
@@ -101,6 +110,7 @@ class ExtractedData:
     item_name_groups: Dict[str, List[str]]  # group_name -> [item_names]
     start_region: str
     original_placements: Dict[str, str]  # location -> item (from locked items at generation time)
+    helpers: Dict[str, HelperData] = field(default_factory=dict)  # Helper function definitions
     itempool_counts: Dict[str, int] = field(default_factory=dict)  # item -> count
     locked_placements: Dict[str, str] = field(default_factory=dict)  # location -> item (must ALWAYS be placed via place_locked_item, e.g., events)
     starting_items: Dict[str, int] = field(default_factory=dict)  # item -> count (precollected items)
@@ -315,6 +325,18 @@ def extract_regions(json_data: Dict[str, Any]) -> Tuple[Dict[str, RegionData], D
                 access_rule=exit_info.get('access_rule'),
             )
 
+    # Create missing regions that are referenced by exits but not defined
+    # This handles cases where exits connect to regions that aren't top-level
+    for exit_data in exits.values():
+        target = exit_data.target_region
+        if target and target not in regions:
+            regions[target] = RegionData(
+                name=target,
+                locations=[],
+                exits=[],
+                hint_text=None,
+            )
+
     return regions, exits
 
 
@@ -479,6 +501,47 @@ def compute_state_counter_accumulator_rules(
     return accumulator_rules, prog_items_init
 
 
+def extract_helpers(json_data: Dict[str, Any]) -> Dict[str, HelperData]:
+    """
+    Extract helper function definitions from JSON.
+
+    Helpers are stored in rules.json in two formats:
+    1. Simple helpers (no params): Just a rule body directly
+       {"can_stack": {"type": "item_check", "item": "Stacker"}}
+
+    2. Parameterized helpers: Have params, body, and optional defaults
+       {"has_x_belt_multiplier": {"params": ["needed"], "body": {...}, "defaults": {...}}}
+
+    Returns:
+        Dict mapping helper name to HelperData
+    """
+    helpers: Dict[str, HelperData] = {}
+    helpers_data = json_data.get('helpers', {}).get('1', {})
+
+    for helper_name, helper_def in helpers_data.items():
+        if not isinstance(helper_def, dict):
+            continue
+
+        if 'params' in helper_def or 'body' in helper_def:
+            # Parameterized helper with explicit params/body structure
+            helpers[helper_name] = HelperData(
+                name=helper_name,
+                params=helper_def.get('params', []),
+                body=helper_def.get('body', helper_def),
+                defaults=helper_def.get('defaults', {})
+            )
+        else:
+            # Simple helper - the entire helper_def is the body
+            helpers[helper_name] = HelperData(
+                name=helper_name,
+                params=[],
+                body=helper_def,
+                defaults={}
+            )
+
+    return helpers
+
+
 def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
     """
     Extract all data from a JSON rules file.
@@ -495,6 +558,7 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
     regions, exits = extract_regions(json_data)
     start_region = extract_start_region(json_data)
     itempool_counts = extract_itempool_counts(json_data)
+    helpers = extract_helpers(json_data)
 
     # Get starting items from JSON
     starting_items = extract_starting_items(json_data)
@@ -541,6 +605,7 @@ def extract_all(json_data: Dict[str, Any]) -> ExtractedData:
         item_name_groups=item_name_groups,
         start_region=start_region,
         original_placements=original_placements,
+        helpers=helpers,
         itempool_counts=itempool_counts,
         locked_placements=locked_placements,
         starting_items=starting_items,

@@ -33,5 +33,5 @@ item_table: Dict[str, ItemData] = {
     "Treasure Bumper": ItemData(595008, ItemClassification.progression),
     "Rainbow Trap": ItemData(595009, ItemClassification.trap),
     "Spinner Trap": ItemData(595010, ItemClassification.trap),
-    "Killer Trap": ItemData(595011, ItemClassification.trap),
+    "Killer Trap": ItemData(595011, ItemClassification.filler),
 }

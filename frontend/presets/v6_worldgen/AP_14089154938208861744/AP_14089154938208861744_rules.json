@@ -20,32 +20,60 @@
             "name": "Menu -> Laboratory",
             "connected_region": "Laboratory",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Trinket 01",
+                  "Trinket 02",
+                  "Trinket 03"
+                ]
+              }
             }
           },
           {
             "name": "Menu -> The Tower",
             "connected_region": "The Tower",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Trinket 04",
+                  "Trinket 05",
+                  "Trinket 06"
+                ]
+              }
             }
           },
           {
             "name": "Menu -> Space Station 2",
             "connected_region": "Space Station 2",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Trinket 07",
+                  "Trinket 08",
+                  "Trinket 09"
+                ]
+              }
             }
           },
           {
             "name": "Menu -> Warp Zone",
             "connected_region": "Warp Zone",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Trinket 10",
+                  "Trinket 11",
+                  "Trinket 12"
+                ]
+              }
             }
           }
         ],
@@ -144,8 +172,9 @@
             "name": "NPC Trinket",
             "id": 2515018,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Trinket 07",
@@ -159,8 +188,9 @@
             "name": "V",
             "id": 2515019,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Trinket 17",
@@ -639,6 +669,30 @@
       "Trinket 20": 1
     }
   },
+  "canonical_placements": {
+    "1": {
+      "Overworld (Pipe-shaped Segment)": "Trinket 14",
+      "Overworld (Left of Ship)": "Trinket 03",
+      "Overworld (Square Room)": "Trinket 08",
+      "Overworld (Sad Elephant)": "Trinket 01",
+      "It's a Secret to Nobody": "Trinket 20",
+      "Trench Warfare": "Trinket 02",
+      "NPC Trinket": "Trinket 07",
+      "V": "Trinket 17",
+      "Young Man, It's Worth the Challenge": "Trinket 04",
+      "Overworld (Outside Entanglement Generator)": "Trinket 16",
+      "The Tantalizing Trinket": "Trinket 09",
+      "Purest Unobtainium": "Trinket 10",
+      "The Tower 1": "Trinket 18",
+      "The Tower 2": "Trinket 15",
+      "One Way Room": "Trinket 11",
+      "You Just Keep Coming Back": "Trinket 12",
+      "Clarion Call": "Trinket 06",
+      "Prize for the Reckless": "Trinket 05",
+      "Doing things the hard way": "Trinket 19",
+      "Edge Games": "Trinket 13"
+    }
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -649,7 +703,21 @@
     "1": {
       "game": "VVVVVV WorldGen",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": false,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      }
     }
   },
   "game_info": {
@@ -657,6 +725,48 @@
       "name": "VVVVVV WorldGen",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "grass",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up VVVVVV for Multiworld.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "N00byKing"
+          ]
+        }
+      ],
+      "world_description": "VVVVVV is a platform game all about exploring one simple mechanical idea - what if you reversed gravity instead of jumping?",
+      "slot_data": {
+        "MusicRando": {
+          "1": 1,
+          "2": 2,
+          "3": 3,
+          "4": 4,
+          "9": 9,
+          "11": 11,
+          "12": 12
+        },
+        "AreaRando": {
+          "1": 1,
+          "2": 2,
+          "3": 3,
+          "4": 4,
+          "0": 0
+        },
+        "DoorCost": 3,
+        "AreaCostRando": {
+          "1": 1,
+          "2": 2,
+          "3": 3,
+          "4": 4,
+          "0": 0
+        },
+        "DeathLink": 0,
+        "DeathLink_Amnesty": 15
       }
     }
   },

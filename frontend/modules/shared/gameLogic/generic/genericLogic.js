@@ -164,14 +164,40 @@ export const helperFunctions = {
    */
   location_item_name(snapshot, staticData, locationName) {
     // Find the location in staticData
-    const locations = staticData?.locations || [];
+    let location = null;
 
-    // Handle both array and object formats
-    let location;
-    if (Array.isArray(locations)) {
-      location = locations.find(loc => loc?.name === locationName);
-    } else if (typeof locations === 'object') {
-      location = locations[locationName];
+    // Helper to check if something is a Map (handles cross-realm cases)
+    const isMap = (obj) => obj && typeof obj.get === 'function' && typeof obj.has === 'function';
+
+    // First try: Check staticData.locations directly (handles array, Map, and object formats)
+    const locations = staticData?.locations;
+    if (locations) {
+      if (Array.isArray(locations)) {
+        location = locations.find(loc => loc?.name === locationName);
+      } else if (isMap(locations)) {
+        location = locations.get(locationName);
+      } else if (typeof locations === 'object') {
+        location = locations[locationName];
+      }
+    }
+
+    // Second try: Search in regions if not found in flat locations
+    // This handles the case where locations are nested inside region objects
+    if (!location && staticData?.regions) {
+      const regions = staticData.regions;
+      const regionEntries = isMap(regions)
+        ? Array.from(regions.values())
+        : (typeof regions === 'object' ? Object.values(regions) : []);
+
+      for (const region of regionEntries) {
+        if (region?.locations && Array.isArray(region.locations)) {
+          const foundLoc = region.locations.find(l => l?.name === locationName);
+          if (foundLoc) {
+            location = foundLoc;
+            break;
+          }
+        }
+      }
     }
 
     if (!location || !location.item) {

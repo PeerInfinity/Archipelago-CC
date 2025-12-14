@@ -363,7 +363,9 @@ Castle Basement: Giantess guarded chest
    =>   Lake desolation -> Lake desolation -> Lower lake desolation
    =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
    =>   Eastern lake desolation -> Eastern lake desolation -> Library
-   =>   Library -> Library -> Space time continuum
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Sealed Caves (Sirens)
+   =>   Sealed Caves (Sirens) -> Sealed Caves (Sirens) -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Forest
    =>   Forest -> Forest -> Castle Ramparts
@@ -376,7 +378,9 @@ Castle Ramparts: Giantess guarded room
    =>   Lake desolation -> Lake desolation -> Lower lake desolation
    =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
    =>   Eastern lake desolation -> Eastern lake desolation -> Library
-   =>   Library -> Library -> Space time continuum
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Sealed Caves (Sirens)
+   =>   Sealed Caves (Sirens) -> Sealed Caves (Sirens) -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Forest
    =>   Forest -> Forest -> Castle Ramparts
@@ -387,7 +391,9 @@ Castle Ramparts: Knight and archer guarded room
    =>   Lake desolation -> Lake desolation -> Lower lake desolation
    =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
    =>   Eastern lake desolation -> Eastern lake desolation -> Library
-   =>   Library -> Library -> Space time continuum
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Sealed Caves (Sirens)
+   =>   Sealed Caves (Sirens) -> Sealed Caves (Sirens) -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Forest
    =>   Forest -> Forest -> Castle Ramparts
@@ -398,7 +404,9 @@ Castle Ramparts: Pedestal
    =>   Lake desolation -> Lake desolation -> Lower lake desolation
    =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
    =>   Eastern lake desolation -> Eastern lake desolation -> Library
-   =>   Library -> Library -> Space time continuum
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Sealed Caves (Sirens)
+   =>   Sealed Caves (Sirens) -> Sealed Caves (Sirens) -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Forest
    =>   Forest -> Forest -> Castle Ramparts
@@ -409,7 +417,9 @@ Caves of Banishment (Maw): Last chance before Maw
    =>   Lake desolation -> Lake desolation -> Lower lake desolation
    =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
    =>   Eastern lake desolation -> Eastern lake desolation -> Library
-   =>   Library -> Library -> Space time continuum
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Sealed Caves (Sirens)
+   =>   Sealed Caves (Sirens) -> Sealed Caves (Sirens) -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Lower Lake Serene
    =>   Lower Lake Serene -> Lower Lake Serene -> Caves of Banishment (upper)
@@ -421,7 +431,9 @@ Caves of Banishment (Sirens): Siren room underwater left chest
    =>   Lake desolation -> Lake desolation -> Lower lake desolation
    =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
    =>   Eastern lake desolation -> Eastern lake desolation -> Library
-   =>   Library -> Library -> Space time continuum
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Sealed Caves (Sirens)
+   =>   Sealed Caves (Sirens) -> Sealed Caves (Sirens) -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Forest
    =>   Forest -> Forest -> Caves of Banishment (Sirens)
@@ -432,7 +444,9 @@ Forest: Waterfall chest 1
    =>   Lake desolation -> Lake desolation -> Lower lake desolation
    =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
    =>   Eastern lake desolation -> Eastern lake desolation -> Library
-   =>   Library -> Library -> Space time continuum
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Sealed Caves (Sirens)
+   =>   Sealed Caves (Sirens) -> Sealed Caves (Sirens) -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Forest
    =>   Forest
@@ -442,7 +456,9 @@ Killed Aelana
    =>   Lake desolation -> Lake desolation -> Lower lake desolation
    =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
    =>   Eastern lake desolation -> Eastern lake desolation -> Library
-   =>   Library -> Library -> Space time continuum
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Sealed Caves (Sirens)
+   =>   Sealed Caves (Sirens) -> Sealed Caves (Sirens) -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Forest
    =>   Forest -> Forest -> Castle Ramparts
@@ -473,7 +489,9 @@ Killed Maw
    =>   Lake desolation -> Lake desolation -> Lower lake desolation
    =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
    =>   Eastern lake desolation -> Eastern lake desolation -> Library
-   =>   Library -> Library -> Space time continuum
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Sealed Caves (Sirens)
+   =>   Sealed Caves (Sirens) -> Sealed Caves (Sirens) -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Lower Lake Serene
    =>   Lower Lake Serene -> Lower Lake Serene -> Caves of Banishment (upper)
@@ -502,7 +520,9 @@ Killed Twins
    =>   Lake desolation -> Lake desolation -> Lower lake desolation
    =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
    =>   Eastern lake desolation -> Eastern lake desolation -> Library
-   =>   Library -> Library -> Space time continuum
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Sealed Caves (Sirens)
+   =>   Sealed Caves (Sirens) -> Sealed Caves (Sirens) -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Forest
    =>   Forest -> Forest -> Castle Ramparts
@@ -524,17 +544,23 @@ Lab: Left terminal (Biotechnology)
 Lake Desolation (Upper): Crash site chest 1
         Menu -> Tutorial
    =>   Tutorial -> Start Game
-   =>   Lake desolation -> Lake desolation -> Upper lake desolation
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Upper lake desolation
    =>   Upper lake desolation
 Lake Desolation (Upper): Double jump cave platform
         Menu -> Tutorial
    =>   Tutorial -> Start Game
-   =>   Lake desolation -> Lake desolation -> Upper lake desolation
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Upper lake desolation
    =>   Upper lake desolation
 Lake Desolation (Upper): Secret room
         Menu -> Tutorial
    =>   Tutorial -> Start Game
-   =>   Lake desolation -> Lake desolation -> Upper lake desolation
+   =>   Lake desolation -> Lake desolation -> Lower lake desolation
+   =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
+   =>   Eastern lake desolation -> Eastern lake desolation -> Upper lake desolation
    =>   Upper lake desolation
 Lake Desolation: Starter chest 1
         Menu -> Tutorial
@@ -546,7 +572,9 @@ Lake Serene: Behind the vines
    =>   Lake desolation -> Lake desolation -> Lower lake desolation
    =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
    =>   Eastern lake desolation -> Eastern lake desolation -> Library
-   =>   Library -> Library -> Space time continuum
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Sealed Caves (Sirens)
+   =>   Sealed Caves (Sirens) -> Sealed Caves (Sirens) -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Upper Lake Serene
    =>   Upper Lake Serene
@@ -571,7 +599,9 @@ Royal Towers: Before Aelana
    =>   Lake desolation -> Lake desolation -> Lower lake desolation
    =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
    =>   Eastern lake desolation -> Eastern lake desolation -> Library
-   =>   Library -> Library -> Space time continuum
+   =>   Library -> Library -> Varndagroth tower left
+   =>   Varndagroth tower left -> Varndagroth tower left -> Sealed Caves (Sirens)
+   =>   Sealed Caves (Sirens) -> Sealed Caves (Sirens) -> Space time continuum
    =>   Space time continuum -> Space time continuum -> Left Side forest Caves
    =>   Left Side forest Caves -> Left Side forest Caves -> Forest
    =>   Forest -> Forest -> Castle Ramparts
@@ -587,8 +617,7 @@ Sealed Caves (Sirens): Water hook
    =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
    =>   Eastern lake desolation -> Eastern lake desolation -> Library
    =>   Library -> Library -> Varndagroth tower left
-   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (lower)
-   =>   Varndagroth tower right (lower) -> Varndagroth tower right (lower) -> Sealed Caves (Sirens)
+   =>   Varndagroth tower left -> Varndagroth tower left -> Sealed Caves (Sirens)
    =>   Sealed Caves (Sirens)
 Sealed Caves (Xarion): Jacksquat room
         Menu -> Tutorial
@@ -621,8 +650,8 @@ Varndagroth Towers (Right): Spider Hell
    =>   Lower lake desolation -> Lower lake desolation -> Eastern lake desolation
    =>   Eastern lake desolation -> Eastern lake desolation -> Library
    =>   Library -> Library -> Varndagroth tower left
-   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (lower)
-   =>   Varndagroth tower right (lower) -> Varndagroth tower right (lower) -> Varndagroth tower right (elevator)
+   =>   Varndagroth tower left -> Varndagroth tower left -> Varndagroth tower right (upper)
+   =>   Varndagroth tower right (upper) -> Varndagroth tower right (upper) -> Varndagroth tower right (elevator)
    =>   Varndagroth tower right (elevator)
 Varndagroth Towers: Bridge
         Menu -> Tutorial

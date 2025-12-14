@@ -5477,5 +5477,1140 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "can_access_location": {
+        "params": [
+          "loc"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "need_laser_cutter",
+              "value": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "loc"
+                  },
+                  "attr": "get"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "need_laser_cutter"
+                  },
+                  {
+                    "type": "constant",
+                    "value": false
+                  }
+                ]
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "name",
+                    "name": "need_laser_cutter"
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "helper",
+                      "name": "has_laser_cutter",
+                      "args": []
+                    }
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": false
+                  }
+                }
+              ]
+            },
+            {
+              "type": "assign",
+              "name": "need_propulsion_cannon",
+              "value": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "loc"
+                  },
+                  "attr": "get"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "need_propulsion_cannon"
+                  },
+                  {
+                    "type": "constant",
+                    "value": false
+                  }
+                ]
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "name",
+                    "name": "need_propulsion_cannon"
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "helper",
+                      "name": "has_propulsion_cannon",
+                      "args": []
+                    }
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": false
+                  }
+                }
+              ]
+            },
+            {
+              "type": "assign",
+              "name": "pos",
+              "value": {
+                "type": "subscript",
+                "value": {
+                  "type": "name",
+                  "name": "loc"
+                },
+                "index": {
+                  "type": "constant",
+                  "value": "position"
+                }
+              }
+            },
+            {
+              "type": "assign",
+              "name": "pos_x",
+              "value": {
+                "type": "subscript",
+                "value": {
+                  "type": "name",
+                  "name": "pos"
+                },
+                "index": {
+                  "type": "constant",
+                  "value": "x"
+                }
+              }
+            },
+            {
+              "type": "assign",
+              "name": "pos_y",
+              "value": {
+                "type": "subscript",
+                "value": {
+                  "type": "name",
+                  "name": "pos"
+                },
+                "index": {
+                  "type": "constant",
+                  "value": "y"
+                }
+              }
+            },
+            {
+              "type": "assign",
+              "name": "pos_z",
+              "value": {
+                "type": "subscript",
+                "value": {
+                  "type": "name",
+                  "name": "pos"
+                },
+                "index": {
+                  "type": "constant",
+                  "value": "z"
+                }
+              }
+            },
+            {
+              "type": "assign",
+              "name": "need_radiation_suit",
+              "value": {
+                "type": "helper",
+                "name": "is_radiated",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "pos_x"
+                  },
+                  {
+                    "type": "name",
+                    "name": "pos_y"
+                  },
+                  {
+                    "type": "name",
+                    "name": "pos_z"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "name",
+                    "name": "need_radiation_suit"
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "item_check",
+                      "item": "Radiation Suit"
+                    }
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": false
+                  }
+                }
+              ]
+            },
+            {
+              "type": "assign",
+              "name": "map_center_dist",
+              "value": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "math"
+                  },
+                  "attr": "sqrt"
+                },
+                "args": [
+                  {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "name",
+                        "name": "pos_x"
+                      },
+                      "op": "**",
+                      "right": {
+                        "type": "constant",
+                        "value": 2
+                      }
+                    },
+                    "op": "+",
+                    "right": {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "name",
+                        "name": "pos_z"
+                      },
+                      "op": "**",
+                      "right": {
+                        "type": "constant",
+                        "value": 2
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "compare",
+                        "left": {
+                          "type": "name",
+                          "name": "map_center_dist"
+                        },
+                        "op": ">",
+                        "right": {
+                          "type": "constant",
+                          "value": 800
+                        }
+                      },
+                      {
+                        "type": "compare",
+                        "left": {
+                          "type": "name",
+                          "name": "pos_y"
+                        },
+                        "op": "<",
+                        "right": {
+                          "type": "constant",
+                          "value": -200
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "not",
+                    "condition": {
+                      "type": "helper",
+                      "name": "has_seaglide",
+                      "args": []
+                    }
+                  }
+                ]
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": false
+                  }
+                }
+              ]
+            },
+            {
+              "type": "assign",
+              "name": "depth",
+              "value": {
+                "type": "negate",
+                "operand": {
+                  "type": "name",
+                  "name": "pos_y"
+                }
+              }
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "helper",
+                  "name": "get_max_depth",
+                  "args": []
+                },
+                "op": ">=",
+                "right": {
+                  "type": "name",
+                  "name": "depth"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "get_cyclops_max_depth": {
+        "type": "conditional",
+        "test": {
+          "type": "helper",
+          "name": "has_cyclops",
+          "args": []
+        },
+        "if_true": {
+          "type": "conditional",
+          "test": {
+            "type": "helper",
+            "name": "has_cyclops_depth_module_mk3",
+            "args": []
+          },
+          "if_true": {
+            "type": "constant",
+            "value": 1700
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "helper",
+              "name": "has_cyclops_depth_module_mk2",
+              "args": []
+            },
+            "if_true": {
+              "type": "constant",
+              "value": 1300
+            },
+            "if_false": {
+              "type": "conditional",
+              "test": {
+                "type": "helper",
+                "name": "has_cyclops_depth_module_mk1",
+                "args": []
+              },
+              "if_true": {
+                "type": "constant",
+                "value": 900
+              },
+              "if_false": {
+                "type": "constant",
+                "value": 500
+              }
+            }
+          }
+        },
+        "if_false": {
+          "type": "constant",
+          "value": 0
+        }
+      },
+      "get_max_depth": {
+        "type": "binary_op",
+        "left": {
+          "type": "helper",
+          "name": "get_max_swim_depth",
+          "args": []
+        },
+        "op": "+",
+        "right": {
+          "type": "max",
+          "args": [
+            {
+              "type": "helper",
+              "name": "get_seamoth_max_depth",
+              "args": []
+            },
+            {
+              "type": "helper",
+              "name": "get_cyclops_max_depth",
+              "args": []
+            },
+            {
+              "type": "helper",
+              "name": "get_prawn_max_depth",
+              "args": []
+            }
+          ]
+        }
+      },
+      "get_max_swim_depth": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "swim_rule",
+            "value": {
+              "type": "setting_value",
+              "setting": "swim_rule"
+            }
+          },
+          {
+            "type": "assign",
+            "name": "depth",
+            "value": {
+              "type": "subscript",
+              "value": {
+                "type": "constant",
+                "value": [
+                  200,
+                  400,
+                  600
+                ]
+              },
+              "index": {
+                "type": "binary_op",
+                "left": {
+                  "type": "name",
+                  "name": "swim_rule"
+                },
+                "op": "%",
+                "right": {
+                  "type": "constant",
+                  "value": 3
+                }
+              }
+            }
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "name",
+                "name": "swim_rule"
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 2
+              }
+            },
+            "body": [
+              {
+                "type": "if_statement",
+                "test": {
+                  "type": "helper",
+                  "name": "has_seaglide",
+                  "args": []
+                },
+                "body": [
+                  {
+                    "type": "if_statement",
+                    "test": {
+                      "type": "helper",
+                      "name": "has_ultra_high_capacity_tank",
+                      "args": []
+                    },
+                    "body": [
+                      {
+                        "type": "assign",
+                        "name": "depth",
+                        "op": "+=",
+                        "value": {
+                          "type": "constant",
+                          "value": 350
+                        }
+                      }
+                    ],
+                    "orelse": [
+                      {
+                        "type": "assign",
+                        "name": "depth",
+                        "op": "+=",
+                        "value": {
+                          "type": "constant",
+                          "value": 200
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "orelse": [
+                  {
+                    "type": "if_statement",
+                    "test": {
+                      "type": "helper",
+                      "name": "has_ultra_glide_fins",
+                      "args": []
+                    },
+                    "body": [
+                      {
+                        "type": "if_statement",
+                        "test": {
+                          "type": "helper",
+                          "name": "has_ultra_high_capacity_tank",
+                          "args": []
+                        },
+                        "body": [
+                          {
+                            "type": "assign",
+                            "name": "depth",
+                            "op": "+=",
+                            "value": {
+                              "type": "constant",
+                              "value": 150
+                            }
+                          }
+                        ],
+                        "orelse": [
+                          {
+                            "type": "if_statement",
+                            "test": {
+                              "type": "helper",
+                              "name": "has_lightweight_high_capacity_tank",
+                              "args": []
+                            },
+                            "body": [
+                              {
+                                "type": "assign",
+                                "name": "depth",
+                                "op": "+=",
+                                "value": {
+                                  "type": "constant",
+                                  "value": 75
+                                }
+                              }
+                            ],
+                            "orelse": [
+                              {
+                                "type": "assign",
+                                "name": "depth",
+                                "op": "+=",
+                                "value": {
+                                  "type": "constant",
+                                  "value": 50
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "orelse": [
+                      {
+                        "type": "if_statement",
+                        "test": {
+                          "type": "helper",
+                          "name": "has_ultra_high_capacity_tank",
+                          "args": []
+                        },
+                        "body": [
+                          {
+                            "type": "assign",
+                            "name": "depth",
+                            "op": "+=",
+                            "value": {
+                              "type": "constant",
+                              "value": 100
+                            }
+                          }
+                        ],
+                        "orelse": [
+                          {
+                            "type": "if_statement",
+                            "test": {
+                              "type": "helper",
+                              "name": "has_lightweight_high_capacity_tank",
+                              "args": []
+                            },
+                            "body": [
+                              {
+                                "type": "assign",
+                                "name": "depth",
+                                "op": "+=",
+                                "value": {
+                                  "type": "constant",
+                                  "value": 25
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "name",
+              "name": "depth"
+            }
+          }
+        ]
+      },
+      "get_prawn_max_depth": {
+        "type": "conditional",
+        "test": {
+          "type": "helper",
+          "name": "has_prawn",
+          "args": []
+        },
+        "if_true": {
+          "type": "conditional",
+          "test": {
+            "type": "helper",
+            "name": "has_prawn_depth_module_mk2",
+            "args": []
+          },
+          "if_true": {
+            "type": "constant",
+            "value": 1700
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "helper",
+              "name": "has_prawn_depth_module_mk1",
+              "args": []
+            },
+            "if_true": {
+              "type": "constant",
+              "value": 1300
+            },
+            "if_false": {
+              "type": "constant",
+              "value": 900
+            }
+          }
+        },
+        "if_false": {
+          "type": "constant",
+          "value": 0
+        }
+      },
+      "get_seamoth_max_depth": {
+        "type": "conditional",
+        "test": {
+          "type": "helper",
+          "name": "has_seamoth",
+          "args": []
+        },
+        "if_true": {
+          "type": "conditional",
+          "test": {
+            "type": "helper",
+            "name": "has_seamoth_depth_module_mk3",
+            "args": []
+          },
+          "if_true": {
+            "type": "constant",
+            "value": 900
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "helper",
+              "name": "has_seamoth_depth_module_mk2",
+              "args": []
+            },
+            "if_true": {
+              "type": "constant",
+              "value": 500
+            },
+            "if_false": {
+              "type": "conditional",
+              "test": {
+                "type": "helper",
+                "name": "has_seamoth_depth_module_mk1",
+                "args": []
+              },
+              "if_true": {
+                "type": "constant",
+                "value": 300
+              },
+              "if_false": {
+                "type": "constant",
+                "value": 200
+              }
+            }
+          }
+        },
+        "if_false": {
+          "type": "constant",
+          "value": 0
+        }
+      },
+      "has_cyclops": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "has_cyclops_bridge",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has_cyclops_engine",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has_cyclops_hull",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has_mobile_vehicle_bay",
+            "args": []
+          }
+        ]
+      },
+      "has_cyclops_bridge": {
+        "type": "item_check",
+        "item": "Cyclops Bridge Fragment",
+        "count": {
+          "type": "constant",
+          "value": 3
+        }
+      },
+      "has_cyclops_depth_module_mk1": {
+        "type": "item_check",
+        "item": "Cyclops Depth Module MK1"
+      },
+      "has_cyclops_depth_module_mk2": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "has_cyclops_depth_module_mk1",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has_modification_station",
+            "args": []
+          }
+        ]
+      },
+      "has_cyclops_depth_module_mk3": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "has_cyclops_depth_module_mk2",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has_modification_station",
+            "args": []
+          }
+        ]
+      },
+      "has_cyclops_engine": {
+        "type": "item_check",
+        "item": "Cyclops Engine Fragment",
+        "count": {
+          "type": "constant",
+          "value": 3
+        }
+      },
+      "has_cyclops_hull": {
+        "type": "item_check",
+        "item": "Cyclops Hull Fragment",
+        "count": {
+          "type": "constant",
+          "value": 3
+        }
+      },
+      "has_cyclops_shield": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "has_cyclops",
+            "args": []
+          },
+          {
+            "type": "item_check",
+            "item": "Cyclops Shield Generator"
+          }
+        ]
+      },
+      "has_laser_cutter": {
+        "type": "item_check",
+        "item": "Laser Cutter Fragment",
+        "count": {
+          "type": "constant",
+          "value": 3
+        }
+      },
+      "has_lightweight_high_capacity_tank": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "has_modification_station",
+            "args": []
+          },
+          {
+            "type": "item_check",
+            "item": "Lightweight High Capacity Tank"
+          }
+        ]
+      },
+      "has_mobile_vehicle_bay": {
+        "type": "item_check",
+        "item": "Mobile Vehicle Bay Fragment",
+        "count": {
+          "type": "constant",
+          "value": 3
+        }
+      },
+      "has_modification_station": {
+        "type": "item_check",
+        "item": "Modification Station Fragment",
+        "count": {
+          "type": "constant",
+          "value": 3
+        }
+      },
+      "has_moonpool": {
+        "type": "item_check",
+        "item": "Moonpool Fragment",
+        "count": {
+          "type": "constant",
+          "value": 2
+        }
+      },
+      "has_prawn": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Prawn Suit Fragment",
+            "count": {
+              "type": "constant",
+              "value": 4
+            }
+          },
+          {
+            "type": "helper",
+            "name": "has_mobile_vehicle_bay",
+            "args": []
+          }
+        ]
+      },
+      "has_prawn_depth_module_mk1": {
+        "type": "helper",
+        "name": "has_vehicle_upgrade_console",
+        "args": []
+      },
+      "has_prawn_depth_module_mk2": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "has_prawn_depth_module_mk1",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has_modification_station",
+            "args": []
+          }
+        ]
+      },
+      "has_propulsion_cannon": {
+        "type": "item_check",
+        "item": "Propulsion Cannon Fragment",
+        "count": {
+          "type": "constant",
+          "value": 2
+        }
+      },
+      "has_seaglide": {
+        "type": "item_check",
+        "item": "Seaglide Fragment",
+        "count": {
+          "type": "constant",
+          "value": 2
+        }
+      },
+      "has_seamoth": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Seamoth Fragment",
+            "count": {
+              "type": "constant",
+              "value": 3
+            }
+          },
+          {
+            "type": "helper",
+            "name": "has_mobile_vehicle_bay",
+            "args": []
+          }
+        ]
+      },
+      "has_seamoth_depth_module_mk1": {
+        "type": "helper",
+        "name": "has_vehicle_upgrade_console",
+        "args": []
+      },
+      "has_seamoth_depth_module_mk2": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "has_seamoth_depth_module_mk1",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has_modification_station",
+            "args": []
+          }
+        ]
+      },
+      "has_seamoth_depth_module_mk3": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "has_seamoth_depth_module_mk2",
+            "args": []
+          },
+          {
+            "type": "helper",
+            "name": "has_modification_station",
+            "args": []
+          }
+        ]
+      },
+      "has_ultra_glide_fins": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "has_modification_station",
+            "args": []
+          },
+          {
+            "type": "item_check",
+            "item": "Ultra Glide Fins"
+          }
+        ]
+      },
+      "has_ultra_high_capacity_tank": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "helper",
+            "name": "has_modification_station",
+            "args": []
+          },
+          {
+            "type": "item_check",
+            "item": "Ultra High Capacity Tank"
+          }
+        ]
+      },
+      "has_vehicle_upgrade_console": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Vehicle Upgrade Console"
+          },
+          {
+            "type": "helper",
+            "name": "has_moonpool",
+            "args": []
+          }
+        ]
+      },
+      "is_radiated": {
+        "params": [
+          "x",
+          "y",
+          "z"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "aurora_dist",
+              "value": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "math"
+                  },
+                  "attr": "sqrt"
+                },
+                "args": [
+                  {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "binary_op",
+                          "left": {
+                            "type": "name",
+                            "name": "x"
+                          },
+                          "op": "-",
+                          "right": {
+                            "type": "constant",
+                            "value": 1038.0
+                          }
+                        },
+                        "op": "**",
+                        "right": {
+                          "type": "constant",
+                          "value": 2
+                        }
+                      },
+                      "op": "+",
+                      "right": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "name",
+                          "name": "y"
+                        },
+                        "op": "**",
+                        "right": {
+                          "type": "constant",
+                          "value": 2
+                        }
+                      }
+                    },
+                    "op": "+",
+                    "right": {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "name",
+                          "name": "z"
+                        },
+                        "op": "-",
+                        "right": {
+                          "type": "constant",
+                          "value": -163.1
+                        }
+                      },
+                      "op": "**",
+                      "right": {
+                        "type": "constant",
+                        "value": 2
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "compare",
+                "left": {
+                  "type": "name",
+                  "name": "aurora_dist"
+                },
+                "op": "<",
+                "right": {
+                  "type": "constant",
+                  "value": 950
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
 }

@@ -23402,6 +23402,17 @@
           "animal_cave": "animal_cave",
           "desert_cave": "desert_cave"
         }
+      },
+      "accumulator_rules": [
+        {
+          "pattern": "^(\\d+) Rupees$",
+          "extract_value": true,
+          "target": "RUPEES",
+          "discriminator": null
+        }
+      ],
+      "prog_items_init": {
+        "RUPEES": 0
       }
     }
   },

@@ -264,12 +264,24 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Celestial Sash",
-                    "Lightwall",
-                    "Succubus Hairpin",
-                    "Timespinner Wheel"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Celestial Sash"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Lightwall"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Succubus Hairpin"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Timespinner Wheel"
+                    }
                   ]
                 }
               ]
@@ -343,11 +355,20 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Celestial Sash",
-                    "Lightwall",
-                    "Succubus Hairpin"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Celestial Sash"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Lightwall"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Succubus Hairpin"
+                    }
                   ]
                 }
               ]
@@ -481,12 +502,24 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Celestial Sash",
-                    "Lightwall",
-                    "Succubus Hairpin",
-                    "Timespinner Wheel"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Celestial Sash"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Lightwall"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Succubus Hairpin"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Timespinner Wheel"
+                    }
                   ]
                 }
               ]
@@ -621,12 +654,24 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Security Keycard A",
-                    "Security Keycard B",
-                    "Security Keycard C",
-                    "Security Keycard D"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard A"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard B"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard C"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard D"
+                    }
                   ]
                 }
               ]
@@ -719,12 +764,24 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Security Keycard A",
-                    "Security Keycard B",
-                    "Security Keycard C",
-                    "Security Keycard D"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard A"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard B"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard C"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard D"
+                    }
                   ]
                 }
               ]
@@ -745,12 +802,24 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Security Keycard A",
-                    "Security Keycard B",
-                    "Security Keycard C",
-                    "Security Keycard D"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard A"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard B"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard C"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard D"
+                    }
                   ]
                 }
               ]
@@ -771,12 +840,24 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Security Keycard A",
-                    "Security Keycard B",
-                    "Security Keycard C",
-                    "Security Keycard D"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard A"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard B"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard C"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard D"
+                    }
                   ]
                 }
               ]
@@ -842,10 +923,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Library Keycard V",
-                    "Tablet"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Library Keycard V"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Tablet"
+                    }
                   ]
                 }
               ]
@@ -866,10 +953,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Library Keycard V",
-                    "Tablet"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Library Keycard V"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Tablet"
+                    }
                   ]
                 }
               ]
@@ -890,10 +983,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Library Keycard V",
-                    "Tablet"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Library Keycard V"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Tablet"
+                    }
                   ]
                 }
               ]
@@ -1032,11 +1131,20 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Security Keycard A",
-                    "Security Keycard B",
-                    "Security Keycard C"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard A"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard B"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard C"
+                    }
                   ]
                 }
               ]
@@ -1050,10 +1158,16 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Security Keycard A",
-                    "Security Keycard B"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard A"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard B"
+                    }
                   ]
                 }
               ]
@@ -1134,11 +1248,20 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Security Keycard A",
-                    "Security Keycard B",
-                    "Security Keycard C"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard A"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard B"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard C"
+                    }
                   ]
                 }
               ]
@@ -1307,10 +1430,16 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Security Keycard A",
-                    "Security Keycard B"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard A"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard B"
+                    }
                   ]
                 }
               ]
@@ -1350,11 +1479,20 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Killed Aelana",
-                    "Killed Maw",
-                    "Killed Twins"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Killed Aelana"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Killed Maw"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Killed Twins"
+                    }
                   ]
                 }
               ]
@@ -1440,11 +1578,20 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Security Keycard A",
-                    "Security Keycard B",
-                    "Security Keycard C"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard A"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard B"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Security Keycard C"
+                    }
                   ]
                 }
               ]
@@ -1625,11 +1772,20 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Killed Aelana",
-                    "Killed Maw",
-                    "Killed Twins"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Killed Aelana"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Killed Maw"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Killed Twins"
+                    }
                   ]
                 }
               ]
@@ -1661,11 +1817,20 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Celestial Sash",
-                    "Lightwall",
-                    "Succubus Hairpin"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Celestial Sash"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Lightwall"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Succubus Hairpin"
+                    }
                   ]
                 }
               ]
@@ -1960,11 +2125,20 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Celestial Sash",
-                    "Lightwall",
-                    "Succubus Hairpin"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Celestial Sash"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Lightwall"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Succubus Hairpin"
+                    }
                   ]
                 }
               ]
@@ -2001,11 +2175,20 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Celestial Sash",
-                    "Lightwall",
-                    "Succubus Hairpin"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Celestial Sash"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Lightwall"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Succubus Hairpin"
+                    }
                   ]
                 }
               ]
@@ -2300,13 +2483,28 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Timespinner Gear 1",
-                    "Timespinner Gear 2",
-                    "Timespinner Gear 3",
-                    "Timespinner Spindle",
-                    "Timespinner Wheel"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Timespinner Gear 1"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Timespinner Gear 2"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Timespinner Gear 3"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Timespinner Spindle"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Timespinner Wheel"
+                    }
                   ]
                 }
               ]
@@ -2395,11 +2593,20 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Celestial Sash",
-                    "Lightwall",
-                    "Succubus Hairpin"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Celestial Sash"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Lightwall"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Succubus Hairpin"
+                    }
                   ]
                 }
               ]
@@ -2699,12 +2906,24 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Celestial Sash",
-                    "Lightwall",
-                    "Succubus Hairpin",
-                    "Timespinner Wheel"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Celestial Sash"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Lightwall"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Succubus Hairpin"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Timespinner Wheel"
+                    }
                   ]
                 }
               ]
@@ -2820,11 +3039,20 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Celestial Sash",
-                    "Lightwall",
-                    "Succubus Hairpin"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Celestial Sash"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Lightwall"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Succubus Hairpin"
+                    }
                   ]
                 }
               ]
@@ -2902,10 +3130,16 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Timespinner Spindle",
-                        "Timespinner Wheel"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Timespinner Spindle"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Timespinner Wheel"
+                        }
                       ]
                     }
                   ]
@@ -3228,12 +3462,24 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Celestial Sash",
-                    "Lightwall",
-                    "Succubus Hairpin",
-                    "Timespinner Wheel"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Celestial Sash"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Lightwall"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Succubus Hairpin"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Timespinner Wheel"
+                    }
                   ]
                 }
               ]
@@ -3375,11 +3621,20 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Celestial Sash",
-                    "Lightwall",
-                    "Succubus Hairpin"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Celestial Sash"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Lightwall"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Succubus Hairpin"
+                    }
                   ]
                 }
               ]
@@ -3920,10 +4175,16 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Gas Mask",
-                    "Talaria Attachment"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Gas Mask"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Talaria Attachment"
+                    }
                   ]
                 }
               ]
@@ -3998,10 +4259,16 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Gas Mask",
-                    "Talaria Attachment"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Gas Mask"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Talaria Attachment"
+                    }
                   ]
                 }
               ]
@@ -4037,10 +4304,16 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Gas Mask",
-                    "Talaria Attachment"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Gas Mask"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Talaria Attachment"
+                    }
                   ]
                 }
               ]
@@ -4401,12 +4674,24 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Celestial Sash",
-                    "Lightwall",
-                    "Succubus Hairpin",
-                    "Timespinner Wheel"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Celestial Sash"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Lightwall"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Succubus Hairpin"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Timespinner Wheel"
+                    }
                   ]
                 }
               ]
@@ -4427,12 +4712,24 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Celestial Sash",
-                    "Lightwall",
-                    "Succubus Hairpin",
-                    "Timespinner Wheel"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Celestial Sash"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Lightwall"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Succubus Hairpin"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Timespinner Wheel"
+                    }
                   ]
                 }
               ]
@@ -4453,12 +4750,24 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Celestial Sash",
-                    "Lightwall",
-                    "Succubus Hairpin",
-                    "Timespinner Wheel"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Celestial Sash"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Lightwall"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Succubus Hairpin"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Timespinner Wheel"
+                    }
                   ]
                 }
               ]
@@ -4636,11 +4945,20 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Plasma Geyser",
-                    "Plasma Orb",
-                    "Royal Ring"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Plasma Geyser"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Plasma Orb"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Royal Ring"
+                    }
                   ]
                 }
               ]
@@ -4700,11 +5018,20 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Celestial Sash",
-                    "Lightwall",
-                    "Succubus Hairpin"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Celestial Sash"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Lightwall"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Succubus Hairpin"
+                    }
                   ]
                 }
               ]
@@ -4959,10 +5286,16 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Celestial Sash",
-                    "Lightwall"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Celestial Sash"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Lightwall"
+                    }
                   ]
                 }
               ]
@@ -5032,11 +5365,20 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Celestial Sash",
-                    "Lightwall",
-                    "Succubus Hairpin"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Celestial Sash"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Lightwall"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Succubus Hairpin"
+                    }
                   ]
                 }
               ]
@@ -5291,13 +5633,28 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Timespinner Gear 1",
-                        "Timespinner Gear 2",
-                        "Timespinner Gear 3",
-                        "Timespinner Spindle",
-                        "Timespinner Wheel"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Timespinner Gear 1"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Timespinner Gear 2"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Timespinner Gear 3"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Timespinner Spindle"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Timespinner Wheel"
+                        }
                       ]
                     }
                   ]
@@ -9195,11 +9552,20 @@
           "method": "has_all",
           "args": [
             {
-              "type": "constant",
-              "value": [
-                "Laser Access A",
-                "Laser Access I",
-                "Laser Access M"
+              "type": "set",
+              "elements": [
+                {
+                  "type": "constant",
+                  "value": "Laser Access A"
+                },
+                {
+                  "type": "constant",
+                  "value": "Laser Access I"
+                },
+                {
+                  "type": "constant",
+                  "value": "Laser Access M"
+                }
               ]
             }
           ]
@@ -9209,11 +9575,20 @@
           "method": "has_all",
           "args": [
             {
-              "type": "constant",
-              "value": [
-                "Killed Aelana",
-                "Killed Maw",
-                "Killed Twins"
+              "type": "set",
+              "elements": [
+                {
+                  "type": "constant",
+                  "value": "Killed Aelana"
+                },
+                {
+                  "type": "constant",
+                  "value": "Killed Maw"
+                },
+                {
+                  "type": "constant",
+                  "value": "Killed Twins"
+                }
               ]
             }
           ]
@@ -9377,19 +9752,25 @@
         }
       },
       "has_doublejump": {
-        "type": "or",
-        "conditions": [
+        "type": "state_method",
+        "method": "has_any",
+        "args": [
           {
-            "type": "item_check",
-            "item": "Celestial Sash"
-          },
-          {
-            "type": "item_check",
-            "item": "Lightwall"
-          },
-          {
-            "type": "item_check",
-            "item": "Succubus Hairpin"
+            "type": "set",
+            "elements": [
+              {
+                "type": "constant",
+                "value": "Celestial Sash"
+              },
+              {
+                "type": "constant",
+                "value": "Lightwall"
+              },
+              {
+                "type": "constant",
+                "value": "Succubus Hairpin"
+              }
+            ]
           }
         ]
       },
@@ -9418,36 +9799,48 @@
         ]
       },
       "has_fastjump_on_npc": {
-        "type": "and",
-        "conditions": [
+        "type": "state_method",
+        "method": "has_all",
+        "args": [
           {
-            "type": "item_check",
-            "item": "Talaria Attachment"
-          },
-          {
-            "type": "item_check",
-            "item": "Timespinner Wheel"
+            "type": "set",
+            "elements": [
+              {
+                "type": "constant",
+                "value": "Talaria Attachment"
+              },
+              {
+                "type": "constant",
+                "value": "Timespinner Wheel"
+              }
+            ]
           }
         ]
       },
       "has_fire": {
-        "type": "or",
-        "conditions": [
+        "type": "state_method",
+        "method": "has_any",
+        "args": [
           {
-            "type": "item_check",
-            "item": "Djinn Inferno"
-          },
-          {
-            "type": "item_check",
-            "item": "Fire Orb"
-          },
-          {
-            "type": "item_check",
-            "item": "Infernal Flames"
-          },
-          {
-            "type": "item_check",
-            "item": "Pyro Ring"
+            "type": "set",
+            "elements": [
+              {
+                "type": "constant",
+                "value": "Djinn Inferno"
+              },
+              {
+                "type": "constant",
+                "value": "Fire Orb"
+              },
+              {
+                "type": "constant",
+                "value": "Infernal Flames"
+              },
+              {
+                "type": "constant",
+                "value": "Pyro Ring"
+              }
+            ]
           }
         ]
       },
@@ -9498,63 +9891,87 @@
           "method": "has_any",
           "args": [
             {
-              "type": "constant",
-              "value": [
-                "Security Keycard A",
-                "Security Keycard B"
+              "type": "set",
+              "elements": [
+                {
+                  "type": "constant",
+                  "value": "Security Keycard A"
+                },
+                {
+                  "type": "constant",
+                  "value": "Security Keycard B"
+                }
               ]
             }
           ]
         }
       },
       "has_pink": {
-        "type": "or",
-        "conditions": [
+        "type": "state_method",
+        "method": "has_any",
+        "args": [
           {
-            "type": "item_check",
-            "item": "Plasma Geyser"
-          },
-          {
-            "type": "item_check",
-            "item": "Plasma Orb"
-          },
-          {
-            "type": "item_check",
-            "item": "Royal Ring"
+            "type": "set",
+            "elements": [
+              {
+                "type": "constant",
+                "value": "Plasma Geyser"
+              },
+              {
+                "type": "constant",
+                "value": "Plasma Orb"
+              },
+              {
+                "type": "constant",
+                "value": "Royal Ring"
+              }
+            ]
           }
         ]
       },
       "has_timestop": {
-        "type": "or",
-        "conditions": [
+        "type": "state_method",
+        "method": "has_any",
+        "args": [
           {
-            "type": "item_check",
-            "item": "Celestial Sash"
-          },
-          {
-            "type": "item_check",
-            "item": "Lightwall"
-          },
-          {
-            "type": "item_check",
-            "item": "Succubus Hairpin"
-          },
-          {
-            "type": "item_check",
-            "item": "Timespinner Wheel"
+            "type": "set",
+            "elements": [
+              {
+                "type": "constant",
+                "value": "Celestial Sash"
+              },
+              {
+                "type": "constant",
+                "value": "Lightwall"
+              },
+              {
+                "type": "constant",
+                "value": "Succubus Hairpin"
+              },
+              {
+                "type": "constant",
+                "value": "Timespinner Wheel"
+              }
+            ]
           }
         ]
       },
       "has_upwarddash": {
-        "type": "or",
-        "conditions": [
+        "type": "state_method",
+        "method": "has_any",
+        "args": [
           {
-            "type": "item_check",
-            "item": "Celestial Sash"
-          },
-          {
-            "type": "item_check",
-            "item": "Lightwall"
+            "type": "set",
+            "elements": [
+              {
+                "type": "constant",
+                "value": "Celestial Sash"
+              },
+              {
+                "type": "constant",
+                "value": "Lightwall"
+              }
+            ]
           }
         ]
       }

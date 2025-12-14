@@ -26,15 +26,37 @@ function hasEvent(snapshot, eventName) {
 
 // Helper function to check if player has any item from a group
 function hasGroup(snapshot, groupName, staticData) {
-    if (!snapshot?.inventory || !staticData?.items) {
+    if (!snapshot?.inventory) {
         return false;
     }
 
-    // Check if any item in inventory belongs to the specified group
+    // Get the player ID to look up player-specific item data
+    const playerId = snapshot?.player?.id || snapshot?.player?.slot || DEFAULT_PLAYER_ID;
+
+    // Items may be nested under player ID (staticData.items[playerId]) or flat (staticData.items)
+    const playerItems = staticData?.items?.[playerId] || staticData?.items;
+
+    // Also check itemsByPlayer structure used by some games
+    const itemsByPlayer = staticData?.itemsByPlayer?.[playerId];
+
+    // Try item_groups structure: { groupName: [itemNames...] }
+    const itemGroups = staticData?.item_groups?.[playerId] || staticData?.item_groups;
+    if (typeof itemGroups === 'object' && itemGroups[groupName] && Array.isArray(itemGroups[groupName])) {
+        for (const itemInGroup of itemGroups[groupName]) {
+            const itemCount = snapshot.inventory[itemInGroup] || 0;
+            if (itemCount > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Fallback: Check if any item in inventory belongs to the specified group
     for (const itemName in snapshot.inventory) {
         const count = snapshot.inventory[itemName];
         if (count > 0) {
-            const itemDef = staticData.items[itemName];
+            // Try multiple locations for item definition
+            const itemDef = playerItems?.[itemName] || itemsByPlayer?.[itemName];
             const matches = itemDef?.groups?.includes(groupName);
             if (matches) {
                 return true;
@@ -46,15 +68,39 @@ function hasGroup(snapshot, groupName, staticData) {
 
 // Helper function to count unique items from a group
 function countGroupUnique(snapshot, groupName, staticData) {
-    if (!snapshot?.inventory || !staticData?.items) {
+    if (!snapshot?.inventory) {
         return 0;
     }
 
+    // Get the player ID to look up player-specific item data
+    const playerId = snapshot?.player?.id || snapshot?.player?.slot || DEFAULT_PLAYER_ID;
+
+    // Items may be nested under player ID (staticData.items[playerId]) or flat (staticData.items)
+    const playerItems = staticData?.items?.[playerId] || staticData?.items;
+
+    // Also check itemsByPlayer structure used by some games
+    const itemsByPlayer = staticData?.itemsByPlayer?.[playerId];
+
+    // Try item_groups structure: { groupName: [itemNames...] }
+    const itemGroups = staticData?.item_groups?.[playerId] || staticData?.item_groups;
+    if (typeof itemGroups === 'object' && itemGroups[groupName] && Array.isArray(itemGroups[groupName])) {
+        let count = 0;
+        for (const itemInGroup of itemGroups[groupName]) {
+            const itemCount = snapshot.inventory[itemInGroup] || 0;
+            if (itemCount > 0) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    // Fallback: iterate inventory and check each item's groups
     let count = 0;
     for (const itemName in snapshot.inventory) {
         const itemCount = snapshot.inventory[itemName];
         if (itemCount > 0) {
-            const itemDef = staticData.items[itemName];
+            // Try multiple locations for item definition
+            const itemDef = playerItems?.[itemName] || itemsByPlayer?.[itemName];
             if (itemDef?.groups?.includes(groupName)) {
                 count++;  // Count unique items, not total quantity
             }
@@ -578,7 +624,7 @@ function spots_s_glitchless(snapshot, staticData, limit, accessCache) {
         if (snapshot?.inventory) {
             // Count unique character items
             for (const itemName in snapshot?.inventory) {
-                if (itemName.match(/^(Red|Tryce|Bel|Vinyl|Solace|Rave|Mesh|Shine|Rise|Coil|DOT EXE|Dev|Frank|Rietveld|DJ Cyber|Eclipse|Vela|Max|Nunchaku Girl|Bumpy|Flesh Prince|Irene|Felix|Oldhead|Base|Jay|Futurism|Jazz|Veronica|Magnum)$/) && snapshot?.inventory[itemName] > 0) {
+                if (itemName.match(/^(Red|Tryce|Bel|Vinyl|Solace|Rave|Mesh|Shine|Rise|Coil|DOT\.EXE|Dev|Frank|Rietveld|DJ Cyber|Eclipse|Vela|Max|Nunchaku Girl|Bumpy|Flesh Prince|Irene|Felix|Oldhead|Base|Jay|Futurism|Jazz|Veronica|Magnum)$/) && snapshot?.inventory[itemName] > 0) {
                     characterCount++;
                 }
             }
@@ -623,7 +669,7 @@ function spots_s_glitched(snapshot, staticData, limit, accessCache) {
         if (snapshot?.inventory) {
             // Count unique character items
             for (const itemName in snapshot?.inventory) {
-                if (itemName.match(/^(Red|Tryce|Bel|Vinyl|Solace|Rave|Mesh|Shine|Rise|Coil|DOT EXE|Dev|Frank|Rietveld|DJ Cyber|Eclipse|Vela|Max|Nunchaku Girl|Bumpy|Flesh Prince|Irene|Felix|Oldhead|Base|Jay|Futurism|Jazz|Veronica|Magnum)$/) && snapshot?.inventory[itemName] > 0) {
+                if (itemName.match(/^(Red|Tryce|Bel|Vinyl|Solace|Rave|Mesh|Shine|Rise|Coil|DOT\.EXE|Dev|Frank|Rietveld|DJ Cyber|Eclipse|Vela|Max|Nunchaku Girl|Bumpy|Flesh Prince|Irene|Felix|Oldhead|Base|Jay|Futurism|Jazz|Veronica|Magnum)$/) && snapshot?.inventory[itemName] > 0) {
                     characterCount++;
                 }
             }
