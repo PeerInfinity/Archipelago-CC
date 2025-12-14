@@ -4460,7 +4460,8 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
     // HasFromList: N items from a list
     case 'HasFromList': {
-      const items = args.item_names || [];
+      // Support both "items" (from Resolved._get_args_dict) and "item_names" (from Rule.to_dict)
+      const items = args.items || args.item_names || [];
       const count = args.count ?? 1;
       let found = 0;
       let hasUndefined = false;
@@ -4480,7 +4481,8 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
     // HasFromListUnique: N unique items from a list
     case 'HasFromListUnique': {
-      const items = args.item_names || [];
+      // Support both "items" (from Resolved._get_args_dict) and "item_names" (from Rule.to_dict)
+      const items = args.items || args.item_names || [];
       const count = args.count ?? 1;
       let found = 0;
       let hasUndefined = false;
@@ -4499,14 +4501,16 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
     // HasGroup: items from an item group
     case 'HasGroup': {
-      const groupName = args.item_name_group;
+      // Support both "group" (from Resolved._get_args_dict) and "item_name_group" (from Rule.to_dict)
+      const groupName = args.group || args.item_name_group;
       const count = args.count ?? 1;
       return evaluateRule({ type: 'group_check', group: groupName, count }, context, depth + 1, localScope);
     }
 
     // HasGroupUnique: unique items from an item group
     case 'HasGroupUnique': {
-      const groupName = args.item_name_group;
+      // Support both "group" (from Resolved._get_args_dict) and "item_name_group" (from Rule.to_dict)
+      const groupName = args.group || args.item_name_group;
       const count = args.count ?? 1;
       // For unique, we use the same group_check - the semantics are handled by the group logic
       return evaluateRule({ type: 'group_check', group: groupName, count }, context, depth + 1, localScope);
