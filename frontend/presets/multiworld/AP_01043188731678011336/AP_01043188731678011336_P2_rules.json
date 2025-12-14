@@ -3753,13 +3753,12 @@
                           "object": {
                             "type": "subscript",
                             "value": {
-                              "type": "constant",
-                              "value": {
-                                "1": "<worlds.ahit.HatInTimeWorld object at 0x7f5bd85e0590>",
-                                "2": "<worlds.alttp.ALTTPWorld object at 0x7f5bd8233a70>",
-                                "3": "<worlds.shorthike.ShortHikeWorld object at 0x7f5bd8cf03e0>",
-                                "4": "<worlds.adventure.AdventureWorld object at 0x7f5bd8231ee0>"
-                              }
+                              "type": "attribute",
+                              "object": {
+                                "type": "name",
+                                "name": "world"
+                              },
+                              "attr": "worlds"
                             },
                             "index": {
                               "type": "constant",
@@ -6014,13 +6013,12 @@
                         "object": {
                           "type": "subscript",
                           "value": {
-                            "type": "constant",
-                            "value": {
-                              "1": "<worlds.ahit.HatInTimeWorld object at 0x7f5bd85e0590>",
-                              "2": "<worlds.alttp.ALTTPWorld object at 0x7f5bd8233a70>",
-                              "3": "<worlds.shorthike.ShortHikeWorld object at 0x7f5bd8cf03e0>",
-                              "4": "<worlds.adventure.AdventureWorld object at 0x7f5bd8231ee0>"
-                            }
+                            "type": "attribute",
+                            "object": {
+                              "type": "name",
+                              "name": "world"
+                            },
+                            "attr": "worlds"
                           },
                           "index": {
                             "type": "constant",
@@ -19916,7 +19914,7 @@
       "enemy_health": "default",
       "enemy_damage": "default",
       "bombless_start": false,
-      "glitches_required": "none",
+      "glitches_required": "no_glitches",
       "pot_shuffle": "off",
       "dungeon_counters": "on",
       "glitch_boots": "on",
