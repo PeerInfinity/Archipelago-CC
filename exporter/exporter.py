@@ -15,7 +15,7 @@ import Utils
 from .analyzer import analyze_rule, reset_analyze_rule_counter
 from .analyzer.cache import clear_caches as clear_analyzer_caches
 from .games import get_game_export_handler, clear_handler_cache
-from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB
+from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB, SAFE_TO_SORT_KEYS
 from BaseClasses import ItemClassification
 
 logger = logging.getLogger(__name__)
@@ -1806,16 +1806,6 @@ def sort_lists_for_consistency(data, key_name=None):
     Returns:
         The data structure with whitelisted lists sorted
     """
-    # Keys where sorting is safe (order is not semantically meaningful)
-    SAFE_TO_SORT_KEYS = {
-        'exclude_locations',
-        'allowed_legendary_hunt_encounters',
-        'move_rando_actions',
-        'enabled_filler_buffs',
-        'goal',
-        'disabled_entities',
-    }
-
     if data is None or isinstance(data, (bool, int, float, str)):
         return data
 

@@ -355,4 +355,5 @@ fi
 #remove empty preset directories
 find frontend/presets -type d -empty -delete
 
+#rm -rf frontend/modules/textAdventure-remote/shared
 #cp -r frontend/modules/shared frontend/modules/textAdventure-remote/

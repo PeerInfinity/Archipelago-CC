@@ -1,32 +1,11 @@
 /**
  * Overcooked! 2 game-specific helper functions
  *
- * This implements the access logic for Overcooked! 2, including star counting
- * and level completion requirements.
+ * This implements the level star requirements logic for Overcooked! 2.
+ * The star counting (has_enough_stars) is now inlined in the rules.json.
  */
 
 import { DEFAULT_PLAYER_ID } from '../../playerIdUtils.js';
-
-/**
- * Check if player has enough total stars (Star + Bonus Star)
- *
- * @param {Object} snapshot - Game state snapshot
- * @param {Object} staticData - Static game data
- * @param {number} requiredStars - Number of stars required
- * @returns {boolean} True if player has enough stars
- */
-export function has_enough_stars(snapshot, staticData, requiredStars) {
-    if (!snapshot || !snapshot.inventory) {
-        return false;
-    }
-
-    // Count both Star and Bonus Star items
-    const starCount = snapshot.inventory['Star'] || 0;
-    const bonusStarCount = snapshot.inventory['Bonus Star'] || 0;
-    const totalStars = starCount + bonusStarCount;
-
-    return totalStars >= requiredStars;
-}
 
 /**
  * Check if player can earn a specific number of stars on a level
@@ -142,50 +121,6 @@ function checkStarRequirements(snapshot, requirements, stars) {
 
         // Need at least weight of 1.0 to complete (with tolerance for rounding)
         if (totalWeight < 0.99) {
-            return false;
-        }
-    }
-
-    // All requirements met
-    return true;
-}
-
-/**
- * Check if player meets requirements for a level
- *
- * This is a simpler version that just checks the requirements without star-specific logic.
- *
- * @param {Object} snapshot - Game state snapshot
- * @param {Object} staticData - Static game data
- * @param {Object} level - Level object
- * @param {Object} requirements - Requirements object with exclusive and additive properties
- * @returns {boolean} True if player meets the requirements
- */
-export function meets_requirements(snapshot, staticData, level, requirements) {
-    if (!snapshot || !requirements) {
-        return false;
-    }
-
-    // Check exclusive requirements (must have ALL of these items)
-    if (requirements.exclusive && requirements.exclusive.length > 0) {
-        for (const itemName of requirements.exclusive) {
-            if (!snapshot.inventory[itemName]) {
-                return false;
-            }
-        }
-    }
-
-    // Check additive requirements (sum of weights must be >= 1.0)
-    if (requirements.additive && Object.keys(requirements.additive).length > 0) {
-        let totalWeight = 0;
-        for (const [itemName, weight] of Object.entries(requirements.additive)) {
-            if (snapshot.inventory[itemName]) {
-                totalWeight += weight;
-            }
-        }
-
-        // Need at least weight of 1.0 to complete
-        if (totalWeight < 1.0) {
             return false;
         }
     }

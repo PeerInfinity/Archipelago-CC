@@ -1356,9 +1356,10 @@ export default {
             ));
     },
     terran_can_rescue: (snapshot, staticData) => {
-        // Can rescue requires ground units that can reach and defend the rescue targets
-        // Any terran common unit should suffice
-        return terran_common_unit(snapshot, staticData);
+        // Rescuing in The Moebius Factor - requires transport or air units
+        // From Python: has_any((MEDIVAC, HERCULES, RAVEN, VIKING)) or advanced_tactics
+        return has_any(snapshot, ['Medivac', 'Hercules', 'Raven', 'Viking'])
+            || isAdvancedTactics(staticData);
     },
     terran_cliffjumper,
     terran_able_to_snipe_defiler: (snapshot, staticData) => {
