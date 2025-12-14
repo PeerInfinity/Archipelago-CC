@@ -299,12 +299,6 @@ Playthrough:
   Dex's HP BMD 2: Progressive Undernet Rank
   Numberman Code 03: Unlocker
   Numberman Code 06: SubPET
-  Numberman Code 13: CACDCPas
-  Numberman Code 14: Unlocker
-  Numberman Code 15: Unlocker
-  Numberman Code 25: CYokaPas
-  Numberman Code 29: BlckMnd
-  Numberman Code 31: DynaWave V
   Undernet 6 Central BMD: CSciPass
   Undernet 7 Upper BMD: Unlocker
   Yai's HP BMD 1: CBeacPas
@@ -314,17 +308,14 @@ Playthrough:
   Job: Hide and seek! Second Child: HoleMetr H
   Job: Hide and seek! Third Child: Press
   Job: My Navi is sick: Unlocker
+  Numberman Code 13: CACDCPas
+  Numberman Code 14: Unlocker
+  Numberman Code 15: Unlocker
   SciLab Vending Machine BMD: Recov120 S
-  Villain: GrabBack K
 }
 3: {
   ACDC Recov120 S Trade: Needle
   ACDC SonicWav W Trade: Unlocker
-  Undernet 1 South BMD: Shadow J
-  Undernet 2 Lower BMD: WideSwrd C
-  Undernet 2 Upper BMD: Progressive Undernet Rank
-  Undernet 4 Bottom West BMD: Progressive Undernet Rank
-  Undernet 4 Top North BMD: Unlocker
 }
 4: {
   Chocolate Shop 05: Progressive Undernet Rank
@@ -332,17 +323,26 @@ Playthrough:
   Chocolate Shop 20: WWW ID
   Chocolate Shop 21: Progressive Undernet Rank
   Chocolate Shop 26: Progressive Undernet Rank
+  Numberman Code 25: CYokaPas
+  Numberman Code 29: BlckMnd
+  Numberman Code 31: DynaWave V
   Tamako's HP PMD: Shake1 S
+  Undernet 1 South BMD: Shadow J
+  Undernet 2 Lower BMD: WideSwrd C
+  Undernet 2 Upper BMD: Progressive Undernet Rank
+  Undernet 4 Bottom West BMD: Progressive Undernet Rank
+  Undernet 4 Top North BMD: Unlocker
   Yoka Zoo Garbage: PETCase
 }
 5: {
   Beach Hospital Bed BMD: Progressive Undernet Rank
   Beach Hospital Plaque: Bubbler C
-  Hades GrabBack K Trade: Unlocker
   Hospital 1 North BMD: Unlocker
   Hospital 2 Central BMD: Unlocker
   Hospital 3 Central BMD: Progressive Undernet Rank
+  Villain: GrabBack K
 }
 6: {
   Alpha Defeated: Victory
+  Hades GrabBack K Trade: Unlocker
 }
