@@ -402,6 +402,24 @@ export async function timerSendTest(testController) {
           testController.log(`  ${loc.name} (region: ${loc.region}, rule: ${ruleType}) - ${ruleStr}`);
         }
 
+        // Debug: Log inventory state for first unchecked event to help diagnose issues
+        if (uncheckedEvents.length > 0) {
+          const firstUnchecked = uncheckedEvents[0];
+          testController.log(`DEBUG: Inventory state when checking ${firstUnchecked.name}:`);
+          const inventory = finalSnapshot.inventory || {};
+
+          // Log counts of progressive items (common requirements)
+          const progressiveItems = Object.keys(inventory).filter(k => k.startsWith('Progressive'));
+          if (progressiveItems.length > 0) {
+            testController.log(`  Progressive items: ${progressiveItems.map(k => `${k}: ${inventory[k]}`).join(', ')}`);
+          }
+
+          // Log region reachability for the unchecked event
+          const reachableRegions = finalSnapshot.knownReachableRegions || [];
+          const reachableSet = new Set(reachableRegions);
+          testController.log(`  ${firstUnchecked.region} region reachable: ${reachableSet.has(firstUnchecked.region)}`);
+        }
+
         // Check if all manually-checkable locations were checked
         const manualLocs = locationsArray.filter(loc => loc.id !== null && loc.id !== undefined);
         const uncheckedManual = manualLocs.filter(loc => !checkedSet.has(loc.name));

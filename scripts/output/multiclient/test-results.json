@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-14T22:47:01.712768",
-    "last_updated": "2025-12-14T22:47:01.712773",
+    "last_updated": "2025-12-14T23:16:35.997303",
     "script_version": "1.0.0"
   },
   "results": {
@@ -64,11 +64,11 @@
       "game_name_from_yaml": "A Link to the Past",
       "generation": {
         "error_count": 0,
-        "error_type": null,
-        "processing_time_seconds": 9.24,
-        "return_code": 0,
-        "success": true,
-        "warning_count": 3
+        "note": "Skipped in test-only mode",
+        "processing_time_seconds": 0,
+        "return_code": null,
+        "success": false,
+        "warning_count": 0
       },
       "multiclient_test": {
         "client1_event_locations": 19,
@@ -78,17 +78,17 @@
         "client1_manually_checkable_checked": 249,
         "client1_passed": false,
         "client1_total_locations": 268,
-        "client2_locations_received": 265,
+        "client2_locations_received": 0,
         "client2_passed": false,
-        "client2_total_locations": 268,
-        "error_count": 210,
-        "locations_checked": 265,
-        "processing_time_seconds": 97.65,
+        "client2_total_locations": 0,
+        "error_count": 3,
+        "locations_checked": 267,
+        "processing_time_seconds": 31.15,
         "return_code": 1,
-        "single_client_mode": false,
+        "single_client_mode": true,
         "success": false,
-        "total_locations": 268,
-        "warning_count": 693
+        "total_locations": 249,
+        "warning_count": 52
       },
       "rules_file": {
         "path": "frontend/presets/alttp/AP_14089154938208861744/AP_14089154938208861744_rules.json",
@@ -98,7 +98,7 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "template_filename": "A Link to the Past.yaml",
-      "timestamp": "2025-12-14T22:44:46.686711",
+      "timestamp": "2025-12-14T23:16:04.832839",
       "world_info": {
         "exporter_path": "exporter/games/alttp.py",
         "exporter_size": 40009,
