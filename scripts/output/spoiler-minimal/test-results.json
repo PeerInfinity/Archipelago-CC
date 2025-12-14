@@ -40,7 +40,7 @@
       ],
       "last_updated": "2025-12-14T21:52:12.152995"
     },
-    "last_updated": "2025-12-14T21:52:12.152993",
+    "last_updated": "2025-12-14T23:01:22.652691",
     "script_version": "1.0.0"
   },
   "results": {
@@ -54266,7 +54266,7 @@
         "success": true,
         "warning_count": 0
       },
-      "consecutive_passes_before_failure": 0,
+      "consecutive_passes_before_failure": 1,
       "consistency_tests": {
         "1": {
           "new_rules_hash": "0b943b97508ae46ea668f0192dab5177b773eaea73ef02b919d6b1b9c4723d86",
@@ -54370,7 +54370,7 @@
         }
       },
       "first_failure_reason": "Test failed at sphere 1.2",
-      "first_failure_seed": 1,
+      "first_failure_seed": 2,
       "game_name_from_filename": "shapez",
       "game_name_from_yaml": "shapez",
       "generation": {
@@ -54388,47 +54388,35 @@
             "success": true,
             "warning_count": 0
           },
-          "consistency_tests": {
-            "1": {
-              "new_rules_hash": "0b943b97508ae46ea668f0192dab5177b773eaea73ef02b919d6b1b9c4723d86",
-              "new_sphere_log_hash": "21e18e3835641b6a7fef5e9c3c027688f72006e59c5b76ad3458d17ddb69bff1",
-              "original_rules_hash": "ea5204909d2f382f69af7c37fbc6426c6e9e3dadd3feafacbad3a076963c3625",
-              "original_sphere_log_hash": "21e18e3835641b6a7fef5e9c3c027688f72006e59c5b76ad3458d17ddb69bff1",
-              "rules_identical": false,
-              "seed": "1",
-              "spoilers_identical": true,
-              "timestamp": "2025-12-14T21:50:44.477045"
-            }
-          },
           "game_name_from_filename": "shapez",
           "game_name_from_yaml": "shapez",
           "generation": {
             "error_count": 0,
             "error_type": null,
-            "processing_time_seconds": 4.22,
+            "processing_time_seconds": 8.22,
             "return_code": 0,
             "success": true,
-            "warning_count": 1
+            "warning_count": 0
           },
           "rules_file": {
             "path": "frontend/presets/shapez/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-            "size_bytes": 139227,
+            "size_bytes": 139314,
             "size_mb": 0.13
           },
           "seed": "1",
           "seed_id": "AP_14089154938208861744",
           "spoiler_test": {
-            "error_count": 8,
-            "pass_fail": "failed",
-            "processing_time_seconds": 14.34,
-            "return_code": 1,
-            "sphere_reached": 1.2,
-            "success": false,
+            "error_count": 0,
+            "pass_fail": "passed",
+            "processing_time_seconds": 10.48,
+            "return_code": 0,
+            "sphere_reached": 5.7,
+            "success": true,
             "total_spheres": 5.7,
             "warning_count": 0
           },
           "template_filename": "shapez.yaml",
-          "timestamp": "2025-12-14T21:44:19.441853",
+          "timestamp": "2025-12-14T23:01:03.479547",
           "world_info": {
             "exporter_path": null,
             "exporter_size": 0,
@@ -54981,8 +54969,8 @@
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "seed_range": "1-10",
-      "seeds_failed": 10,
-      "seeds_passed": 0,
+      "seeds_failed": 9,
+      "seeds_passed": 1,
       "spoiler_test": {
         "error_count": 8,
         "pass_fail": "failed",
@@ -54996,10 +54984,10 @@
       "summary": {
         "all_passed": false,
         "any_failed": true,
-        "failure_rate": 1.0
+        "failure_rate": 0.9
       },
       "template_filename": "shapez.yaml",
-      "timestamp": "2025-12-14T21:44:19.441853",
+      "timestamp": "2025-12-14T23:01:03.479547",
       "total_seeds_tested": 10,
       "world_info": {
         "exporter_path": null,
