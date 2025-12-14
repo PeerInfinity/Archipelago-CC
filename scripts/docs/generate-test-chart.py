@@ -1635,13 +1635,22 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
             md_content += f"- **Templates passing 0 tests:** {passed_counts[0]}/{total_templates} ({passed_counts[0]/total_templates*100:.1f}%)\n"
 
     # Calculate generic exporter/logic statistics for games passing all tests
+    # For worldgen summaries, look up the original game name to get exporter/logic data
     passed_all_with_generic_exporter = 0
     passed_all_with_generic_logic = 0
     passed_all_with_both_generic = 0
 
     for game in all_games:
         if tests_passed_count.get(game, 0) == num_tests:
-            has_exporter, has_logic = games_exporter_logic.get(game, (False, False))
+            # For worldgen, look up original game's exporter/logic data from world_mapping
+            lookup_game = game
+            if is_worldgen and game.endswith(' WorldGen'):
+                lookup_game = game[:-9]  # len(' WorldGen') == 9
+            if world_mapping and lookup_game in world_mapping:
+                has_exporter = world_mapping[lookup_game].get('has_custom_exporter', False)
+                has_logic = world_mapping[lookup_game].get('has_custom_game_logic', False)
+            else:
+                has_exporter, has_logic = games_exporter_logic.get(game, (False, False))
             if not has_exporter:
                 passed_all_with_generic_exporter += 1
             if not has_logic:
@@ -1650,13 +1659,17 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
                 passed_all_with_both_generic += 1
 
     # Calculate combined file sizes from world_mapping
+    # For worldgen summaries, look up the original game name to get file sizes
     total_exporter_size = 0
     total_logic_size = 0
     if world_mapping:
         for game in all_games:
-            if game in world_mapping:
-                total_exporter_size += world_mapping[game].get('exporter_size', 0)
-                total_logic_size += world_mapping[game].get('game_logic_size', 0)
+            lookup_game = game
+            if is_worldgen and game.endswith(' WorldGen'):
+                lookup_game = game[:-9]  # len(' WorldGen') == 9
+            if lookup_game in world_mapping:
+                total_exporter_size += world_mapping[lookup_game].get('exporter_size', 0)
+                total_logic_size += world_mapping[lookup_game].get('game_logic_size', 0)
 
     def format_size_kb(size_bytes):
         """Format size in KB with one decimal."""
@@ -1694,10 +1707,15 @@ def generate_summary_chart(minimal_data, full_data, multiclient_data, multiworld
         multiworld_result = games_multiworld.get(game, "N/A") if multiworld_data is not None else None
 
         # Get exporter/logic info - use file sizes from world_mapping if available
+        # For worldgen summaries, look up the original game name to get exporter/logic data
         has_exporter, has_logic = games_exporter_logic.get(game, (False, False))
-        if world_mapping and game in world_mapping:
-            exporter_size = world_mapping[game].get('exporter_size', 0)
-            game_logic_size = world_mapping[game].get('game_logic_size', 0)
+        lookup_game = game
+        if is_worldgen and game.endswith(' WorldGen'):
+            # Strip " WorldGen" suffix to look up original game's exporter/logic data
+            lookup_game = game[:-9]  # len(' WorldGen') == 9
+        if world_mapping and lookup_game in world_mapping:
+            exporter_size = world_mapping[lookup_game].get('exporter_size', 0)
+            game_logic_size = world_mapping[lookup_game].get('game_logic_size', 0)
             exporter_indicator = format_file_size(exporter_size)
             logic_indicator = format_file_size(game_logic_size)
         else:

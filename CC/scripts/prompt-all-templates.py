@@ -382,6 +382,8 @@ def run_all_promptfiles(project_root):
         (['--helper-export', '--CC'], 'helper-export.txt'),
         (['--new-rule-types', '--CC'], 'new-rule-types.txt'),
         (['--gen-errors', '--CC'], 'gen-errors.txt'),
+        (['--worldgen-gen-failures', '--worldgen-test-mode', 'canonical'], 'worldgen-gen-failures.txt'),
+        (['--worldgen-spoiler-failures', '--worldgen-test-mode', 'canonical'], 'worldgen-spoiler-failures.txt'),
     ]
 
     script_path = Path(__file__).resolve()
@@ -523,6 +525,349 @@ def generate_new_rule_types_prompt(game_name):
 Then, please read CC/implementing-new-rule-types.md
 
 Then please investigate what needs to be done next to continue adding support for the rule types required by the helper functions in {game_name}.
+"""
+
+
+def load_worldgen_test_results(project_root, test_mode='canonical'):
+    """Load the world generator test results JSON file.
+
+    Args:
+        project_root: Path to the project root
+        test_mode: 'canonical' or 'random'
+
+    Returns:
+        Dict with 'metadata' and 'results' keys, or empty dict if not found
+    """
+    results_file = Path(project_root) / 'scripts' / 'output' / 'world-generator' / f'test-results-{test_mode}.json'
+    if not results_file.exists():
+        return {}
+
+    try:
+        with open(results_file, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Error loading worldgen test results: {e}", file=sys.stderr)
+        return {}
+
+
+def get_worldgen_gen_failures(project_root, test_mode='canonical'):
+    """Get list of games that failed at the Test Gen stage.
+
+    Returns list of dicts with game_name, template, error, and other details.
+    """
+    data = load_worldgen_test_results(project_root, test_mode)
+    results = data.get('results', {})
+    failures = []
+
+    for game_name, result in results.items():
+        test_world = result.get('test_world', {})
+        seed_gen = test_world.get('seed_generation', {})
+
+        # Check if world generation succeeded but seed generation failed
+        world_gen_success = test_world.get('world_generation', {}).get('success', False)
+        seed_gen_success = seed_gen.get('success', False)
+
+        if world_gen_success and not seed_gen_success:
+            failures.append({
+                'game_name': game_name,
+                'template': result.get('template', f'{game_name}.yaml'),
+                'error': seed_gen.get('error', 'Unknown error'),
+                'test_template_name': test_world.get('test_template_name'),
+                'world_dir': test_world.get('world_dir'),
+            })
+
+    return failures
+
+
+def get_worldgen_spoiler_failures(project_root, test_mode='canonical'):
+    """Get list of games that failed at the Test Spoiler stage.
+
+    Returns list of dicts with game_name, template, and other details.
+    """
+    data = load_worldgen_test_results(project_root, test_mode)
+    results = data.get('results', {})
+    failures = []
+
+    for game_name, result in results.items():
+        test_world = result.get('test_world', {})
+        seed_gen = test_world.get('seed_generation', {})
+        spoiler_test = test_world.get('spoiler_test', {})
+
+        # Check if seed generation succeeded but spoiler test failed
+        seed_gen_success = seed_gen.get('success', False)
+        spoiler_pass = spoiler_test.get('pass_fail') == 'pass'
+
+        if seed_gen_success and not spoiler_pass:
+            failures.append({
+                'game_name': game_name,
+                'template': result.get('template', f'{game_name}.yaml'),
+                'test_template_name': test_world.get('test_template_name'),
+                'world_dir': test_world.get('world_dir'),
+                'spoiler_error': spoiler_test.get('error'),
+            })
+
+    return failures
+
+
+def categorize_worldgen_error(error_msg):
+    """Categorize a worldgen error message into a type for targeted debugging.
+
+    Returns a tuple of (category, details).
+    """
+    if not error_msg:
+        return ('unknown', None)
+
+    if 'NameError' in error_msg:
+        # Extract the undefined name
+        import re
+        match = re.search(r"name '([^']+)' is not defined", error_msg)
+        undefined_name = match.group(1) if match else None
+        return ('name_error', {'undefined_name': undefined_name})
+
+    if 'FillError' in error_msg:
+        return ('fill_error', None)
+
+    if 'KeyError' in error_msg:
+        import re
+        match = re.search(r"KeyError: (.+)", error_msg)
+        key = match.group(1) if match else None
+        return ('key_error', {'key': key})
+
+    if 'TypeError' in error_msg:
+        return ('type_error', {'message': error_msg})
+
+    if 'AttributeError' in error_msg:
+        return ('attribute_error', {'message': error_msg})
+
+    return ('other', {'message': error_msg})
+
+
+def generate_worldgen_gen_failure_prompt(game_name, template_file, error_msg, world_mapping, seed=1):
+    """Generate a prompt for debugging a WorldGen Test Gen failure."""
+    setup_doc = "CC/cloud-setup.md"
+    debug_doc = "CC/debugging-worldgen-failures.md"
+
+    # Get world directory from mapping
+    world_dir = None
+    if game_name in world_mapping:
+        world_dir = world_mapping[game_name].get('world_directory', game_name.lower().replace(' ', ''))
+    else:
+        world_dir = game_name.lower().replace(' ', '')
+
+    error_category, error_details = categorize_worldgen_error(error_msg)
+
+    # Build error-specific guidance
+    error_guidance = ""
+    if error_category == 'name_error' and error_details:
+        undefined_name = error_details.get('undefined_name', '')
+        error_guidance = f"""
+## Error Analysis
+
+This is a **NameError** - the helper function `{undefined_name}` is not defined in the generated world.
+
+This typically means:
+1. The helper function exists in the original world's `Rules.py` but wasn't exported
+2. The world generator didn't generate code for this helper
+
+**Investigation commands:**
+```bash
+# Find the helper in the original world
+grep -n "{undefined_name.replace('_worldgen', '').split('_', 1)[-1] if '_worldgen_' in undefined_name else undefined_name}" worlds/{world_dir}/Rules.py
+
+# Check if it's in the exported helpers
+python -c "
+import json
+with open('frontend/presets/{world_dir}/AP_14089154938208861744/AP_14089154938208861744_rules.json') as f:
+    data = json.load(f)
+helpers = data.get('helpers', {{}})
+print('Exported helpers:', list(helpers.keys())[:20])
+"
+
+# Check the generated world for the function
+grep -n "def.*{undefined_name.split('_')[-1] if '_' in undefined_name else undefined_name}" worlds/{world_dir}_worldgen/__init__.py
+```
+"""
+    elif error_category == 'fill_error':
+        error_guidance = f"""
+## Error Analysis
+
+This is a **FillError** - the item pool doesn't match the available locations.
+
+This typically means:
+1. Item pool counts are wrong in the generated world
+2. Locked placements aren't being accounted for correctly
+3. Event items are being incorrectly included in the pool
+
+**Investigation commands:**
+```bash
+# Compare item pool sizes
+echo "=== Original world ===" && grep -A 20 "ITEMPOOL_COUNTS" worlds/{world_dir}/__init__.py | head -25
+echo "=== WorldGen world ===" && grep -A 20 "ITEMPOOL_COUNTS" worlds/{world_dir}_worldgen/__init__.py | head -25
+
+# Check locked placements
+grep -A 10 "LOCKED_PLACEMENTS" worlds/{world_dir}_worldgen/__init__.py | head -15
+
+# Check location count
+grep -c "'name':" worlds/{world_dir}_worldgen/__init__.py || echo "Check location definitions"
+```
+"""
+    elif error_category == 'key_error':
+        key = error_details.get('key', 'unknown') if error_details else 'unknown'
+        error_guidance = f"""
+## Error Analysis
+
+This is a **KeyError** for key: `{key}`
+
+This typically means:
+1. A lookup table is missing an expected entry
+2. There's a type mismatch (e.g., string vs int key)
+3. The rules.json has unexpected data
+
+**Investigation commands:**
+```bash
+# Search for the key in the generated world
+grep -n "{key}" worlds/{world_dir}_worldgen/__init__.py
+
+# Check the rules.json structure
+python -c "
+import json
+with open('frontend/presets/{world_dir}/AP_14089154938208861744/AP_14089154938208861744_rules.json') as f:
+    data = json.load(f)
+# Print a summary of the structure
+print('Top-level keys:', list(data.keys()))
+if 'regions' in data:
+    print('Region count:', len(data['regions'].get('1', {{}})))
+"
+```
+"""
+    else:
+        error_guidance = f"""
+## Error Analysis
+
+Error type: **{error_category}**
+Error message: `{error_msg}`
+
+Review the error message and check the generated world code for issues.
+"""
+
+    return f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
+
+Then, please read {debug_doc}
+
+## Game Information
+
+- **Game**: {game_name}
+- **Template**: `{template_file}`
+- **World directory**: `worlds/{world_dir}/`
+- **WorldGen directory**: `worlds/{world_dir}_worldgen/`
+
+## The Error
+
+```
+{error_msg}
+```
+{error_guidance}
+
+## Test Commands
+
+```bash
+source .venv/bin/activate
+
+# Regenerate the worldgen world (if needed)
+python scripts/test/test-world-generator.py --include-list "{template_file}" --phase generate-test-worlds --canonical-seed1
+
+# Regenerate templates
+python scripts/test/test-world-generator.py --include-list "{template_file}" --phase regenerate-templates
+
+# Try to generate a seed (this will show the full error)
+python Generate.py --weights_file_path "Templates/{game_name} WorldGen.yaml" --multi 1 --seed {seed}
+```
+
+## Goal
+
+Fix the world generator so that `{game_name} WorldGen` can successfully generate a seed.
+"""
+
+
+def generate_worldgen_spoiler_failure_prompt(game_name, template_file, world_mapping, seed=1):
+    """Generate a prompt for debugging a WorldGen Test Spoiler failure."""
+    setup_doc = "CC/cloud-setup.md"
+    debug_doc = "CC/debugging-worldgen-failures.md"
+
+    # Get world directory from mapping
+    world_dir = None
+    if game_name in world_mapping:
+        world_dir = world_mapping[game_name].get('world_directory', game_name.lower().replace(' ', ''))
+    else:
+        world_dir = game_name.lower().replace(' ', '')
+
+    return f"""First, please read {setup_doc} and complete the environment setup if you haven't already.
+
+Then, please read {debug_doc}
+
+## Game Information
+
+- **Game**: {game_name}
+- **Template**: `{template_file}`
+- **World directory**: `worlds/{world_dir}/`
+- **WorldGen directory**: `worlds/{world_dir}_worldgen/`
+
+## The Problem
+
+The `{game_name} WorldGen` world generates a seed successfully, but the **spoiler test fails**.
+
+This means the generated rules don't match the original world's logic - locations that should be accessible aren't (or vice versa).
+
+## Test Commands
+
+```bash
+source .venv/bin/activate
+
+# Run the spoiler test and see the failure
+npm test -- --mode=test-spoilers --game=presets/{world_dir}_worldgen/AP_14089154938208861744 --seed={seed}
+
+# Analyze the failure
+npm run test:analyze
+cat playwright-analysis.txt
+```
+
+## Investigation Steps
+
+1. **Compare sphere logs** to see where they diverge:
+```bash
+echo "=== Original sphere log (first 20 lines) ==="
+head -20 frontend/presets/{world_dir}/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl
+
+echo "=== WorldGen sphere log (first 20 lines) ==="
+head -20 frontend/presets/{world_dir}_worldgen/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl
+```
+
+2. **Check the rules.json** for the failing location:
+```bash
+# Extract a specific location's rule (replace LOCATION_NAME)
+python -c "
+import json
+with open('frontend/presets/{world_dir}/AP_14089154938208861744/AP_14089154938208861744_rules.json') as f:
+    data = json.load(f)
+regions = data.get('regions', {{}}).get('1', {{}})
+for region_name, region in regions.items():
+    for loc in region.get('locations', []):
+        # Print first few locations to understand the structure
+        print(f'{{region_name}}: {{loc.get(\"name\")}}')
+" | head -30
+```
+
+3. **Enable frontend debug logging**:
+```bash
+# Edit frontend/settings.json and set logLevel to "debug"
+# Then re-run the test to see rule evaluation details
+```
+
+## Goal
+
+Fix the world generator so that the spoiler test passes for `{game_name} WorldGen`.
+
+The rules generated by the world generator must produce the same accessibility logic as the original world.
 """
 
 
@@ -865,6 +1210,12 @@ def main():
                        help='Generate prompts for games with JavaScript helpers to investigate implementing new rule types')
     parser.add_argument('--gen-errors', action='store_true',
                        help='Generate prompts for games that pass spoiler tests but have generation errors')
+    parser.add_argument('--worldgen-gen-failures', action='store_true',
+                       help='Generate prompts for WorldGen worlds that fail at seed generation (Test Gen failures)')
+    parser.add_argument('--worldgen-spoiler-failures', action='store_true',
+                       help='Generate prompts for WorldGen worlds that fail spoiler tests (Test Spoiler failures)')
+    parser.add_argument('--worldgen-test-mode', type=str, choices=['canonical', 'random'], default='canonical',
+                       help='Which world generator test results to use (default: canonical)')
     parser.add_argument('--all-promptfiles', action='store_true',
                        help='Run all prompt-generating modes and output to separate files in CC/scripts/prompts/')
     parser.add_argument('--exclude-pattern', type=str,
@@ -939,6 +1290,18 @@ def main():
         print("Error: --gen-errors and --new-rule-types are mutually exclusive")
         sys.exit(1)
 
+    if args.worldgen_gen_failures and args.worldgen_spoiler_failures:
+        print("Error: --worldgen-gen-failures and --worldgen-spoiler-failures are mutually exclusive")
+        sys.exit(1)
+
+    if (args.worldgen_gen_failures or args.worldgen_spoiler_failures) and (args.multiclient or args.multiworld):
+        print("Error: --worldgen-* modes cannot be combined with --multiclient or --multiworld")
+        sys.exit(1)
+
+    if (args.worldgen_gen_failures or args.worldgen_spoiler_failures) and (args.basic_spoiler_debug or args.helper_export or args.new_rule_types or args.gen_errors):
+        print("Error: --worldgen-* modes cannot be combined with other debugging modes")
+        sys.exit(1)
+
     if args.include_pattern and args.exclude_pattern:
         print("Error: --include-pattern and --exclude-pattern are mutually exclusive")
         sys.exit(1)
@@ -971,8 +1334,89 @@ def main():
         return run_all_promptfiles(project_root)
 
     # Load world mapping (needed for filtering by custom code status)
-    # Used by: --basic-spoiler-debug, --helper-export, and normal mode (to exclude basic games)
+    # Used by: --basic-spoiler-debug, --helper-export, normal mode, and worldgen modes
     world_mapping = load_world_mapping(project_root)
+
+    # Handle worldgen modes - these iterate through failures, not templates
+    if args.worldgen_gen_failures or args.worldgen_spoiler_failures:
+        quiet_mode = (args.text or args.prompt or args.promptfile) and not args.loud
+        collected_prompts = [] if args.promptfile else None
+
+        if args.worldgen_gen_failures:
+            failures = get_worldgen_gen_failures(project_root, args.worldgen_test_mode)
+            if not quiet_mode:
+                print(f"Found {len(failures)} WorldGen Test Gen failures ({args.worldgen_test_mode} mode)")
+
+            for i, failure in enumerate(sorted(failures, key=lambda x: x['game_name'])):
+                game_name = failure['game_name']
+                template_file = failure['template']
+                error_msg = failure['error']
+
+                if not quiet_mode:
+                    print(f"\n{'='*60}")
+                    print(f"[{i+1}/{len(failures)}] {game_name}")
+                    print(f"Error: {error_msg[:80]}...")
+                    print('='*60)
+
+                prompt = generate_worldgen_gen_failure_prompt(
+                    game_name, template_file, error_msg, world_mapping, args.seed
+                )
+
+                if args.promptfile:
+                    collected_prompts.append(prompt)
+                else:
+                    print(prompt)
+                    if args.text or args.prompt:
+                        return 0
+
+                if args.max_files and (i + 1) >= args.max_files:
+                    if not quiet_mode:
+                        print(f"\n Reached maximum file limit ({args.max_files}), stopping...")
+                    break
+
+        elif args.worldgen_spoiler_failures:
+            failures = get_worldgen_spoiler_failures(project_root, args.worldgen_test_mode)
+            if not quiet_mode:
+                print(f"Found {len(failures)} WorldGen Test Spoiler failures ({args.worldgen_test_mode} mode)")
+
+            for i, failure in enumerate(sorted(failures, key=lambda x: x['game_name'])):
+                game_name = failure['game_name']
+                template_file = failure['template']
+
+                if not quiet_mode:
+                    print(f"\n{'='*60}")
+                    print(f"[{i+1}/{len(failures)}] {game_name}")
+                    print('='*60)
+
+                prompt = generate_worldgen_spoiler_failure_prompt(
+                    game_name, template_file, world_mapping, args.seed
+                )
+
+                if args.promptfile:
+                    collected_prompts.append(prompt)
+                else:
+                    print(prompt)
+                    if args.text or args.prompt:
+                        return 0
+
+                if args.max_files and (i + 1) >= args.max_files:
+                    if not quiet_mode:
+                        print(f"\n Reached maximum file limit ({args.max_files}), stopping...")
+                    break
+
+        # Write collected prompts to file if in --promptfile mode
+        if args.promptfile and collected_prompts:
+            output_file = Path(project_root) / 'CC' / 'scripts' / 'prompts.txt'
+            with open(output_file, 'w') as f:
+                for i, prompt in enumerate(collected_prompts):
+                    f.write(prompt)
+                    if i < len(collected_prompts) - 1:
+                        f.write("\n\n\n\n\n")
+                        f.write("=" * 80)
+                        f.write("\n\n\n\n\n")
+            print(f"Created {output_file} with {len(collected_prompts)} prompts")
+
+        return 0
     if not world_mapping:
         print("Warning: Could not load world mapping, will not filter by custom code status", file=sys.stderr)
 
