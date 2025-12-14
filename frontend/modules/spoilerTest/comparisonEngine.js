@@ -440,18 +440,24 @@ export class ComparisonEngine {
       (name) => !stateAccessibleSet.has(name)
     );
 
-    // Filter out dynamically-added regions from the comparison
-    // These regions were added after sphere calculation and won't appear in the log
+    // Filter out dynamically-added and placeholder regions from the comparison
+    // - dynamically_added: regions were added after sphere calculation and won't appear in the log
+    // - placeholder: terminal regions that don't exist at Python runtime (filtered out by world)
     const extraInState = [...stateAccessibleSet].filter(
       (name) => {
         if (logAccessibleSet.has(name)) return false;
 
-        // Check if this region is marked as dynamically_added
+        // Check if this region is marked as dynamically_added or placeholder
         // staticData.regions is always a Map after initialization
         const regionData = staticData.regions?.get(name);
 
         if (regionData && regionData.dynamically_added === true) {
           logger.info(`Skipping dynamically-added region from comparison: ${name}`);
+          return false;
+        }
+
+        if (regionData && regionData.placeholder === true) {
+          logger.info(`Skipping placeholder region from comparison: ${name}`);
           return false;
         }
 
