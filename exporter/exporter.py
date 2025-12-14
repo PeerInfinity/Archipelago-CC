@@ -1511,6 +1511,26 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                 logger.exception("Full traceback:")
                 continue
 
+        # Create missing regions that are referenced by exits but not defined
+        # This handles cases where terminal regions (with no locations or exits) get
+        # filtered out by the world but are still referenced as exit targets
+        exit_targets = set()
+        for region_data in regions_data.values():
+            for exit_data in region_data.get('exits', []):
+                target = exit_data.get('connected_region')
+                if target:
+                    exit_targets.add(target)
+
+        missing_regions = exit_targets - set(regions_data.keys())
+        for missing_region in missing_regions:
+            logger.debug(f"Creating placeholder for missing terminal region: {missing_region}")
+            regions_data[missing_region] = {
+                'name': missing_region,
+                'entrances': [],
+                'exits': [],
+                'locations': [],
+            }
+
         # Sort all rules for consistency
         regions_data = sort_rule_for_consistency(regions_data)
         dungeons_data = sort_rule_for_consistency(dungeons_data)
