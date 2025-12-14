@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-14T02:30:56.265383",
-    "last_updated": "2025-12-14T02:30:56.265389",
+    "last_updated": "2025-12-14T08:06:22.945791",
     "script_version": "1.0.0"
   },
   "results": {
@@ -4258,50 +4258,38 @@
     "shapez.yaml": {
       "analysis": {
         "error_count": 0,
-        "success": true,
+        "success": false,
         "warning_count": 0
-      },
-      "consistency_tests": {
-        "1": {
-          "new_rules_hash": "ee60b2990fe9ed9aba585af4d669e60bb8093f7faeb1422ebe328669da7a8560",
-          "new_sphere_log_hash": "21e18e3835641b6a7fef5e9c3c027688f72006e59c5b76ad3458d17ddb69bff1",
-          "original_rules_hash": "ee60b2990fe9ed9aba585af4d669e60bb8093f7faeb1422ebe328669da7a8560",
-          "original_sphere_log_hash": "21e18e3835641b6a7fef5e9c3c027688f72006e59c5b76ad3458d17ddb69bff1",
-          "rules_identical": true,
-          "seed": "1",
-          "spoilers_identical": true,
-          "timestamp": "2025-12-14T02:30:31.820543"
-        }
       },
       "game_name_from_filename": "shapez",
       "game_name_from_yaml": "shapez",
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 4.66,
+        "processing_time_seconds": 8.21,
         "return_code": 0,
         "success": true,
-        "warning_count": 1
+        "warning_count": 0
       },
       "rules_file": {
-        "path": "frontend/presets/shapez/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 138775,
-        "size_mb": 0.13
+        "path": null,
+        "size_bytes": 0,
+        "size_mb": 0.0
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
         "error_count": 0,
-        "pass_fail": "passed",
-        "processing_time_seconds": 6.7,
-        "return_code": 0,
-        "sphere_reached": 5.7,
-        "success": true,
-        "total_spheres": 5.7,
+        "pass_fail": "unknown",
+        "processing_time_seconds": 0,
+        "return_code": null,
+        "sphere_reached": 0,
+        "success": false,
+        "total_spheres": 0,
         "warning_count": 0
       },
       "template_filename": "shapez.yaml",
-      "timestamp": "2025-12-14T02:29:38.755873",
+      "timestamp": "2025-12-14T08:06:14.720352",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
