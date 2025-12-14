@@ -68,8 +68,7 @@ class KH2GameExportHandler(BaseGameExportHandler):
 
     def __init__(self, world=None):
         """Initialize with optional world reference."""
-        super().__init__()
-        self.world = world
+        super().__init__(world=world)
 
     def prepare_closure_vars(self, rule_func, closure_vars: Dict[str, Any]) -> Dict[str, Any]:
         """Inject KH2 module-level data structures into closure_vars for helper analysis.

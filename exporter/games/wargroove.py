@@ -23,8 +23,7 @@ class WargrooveGameExportHandler(GenericGameExportHandler):
 
     def __init__(self, world=None):
         """Initialize handler."""
-        super().__init__()
-        self.world = world
+        super().__init__(world=world)
         self.player = world.player if world and hasattr(world, 'player') else 1
         self.region_to_locations = None
         self.current_region = None

@@ -21,8 +21,7 @@ class InscryptionGameExportHandler(GenericGameExportHandler):
 
     def __init__(self, world=None):
         """Initialize with world object to access game-specific data."""
-        super().__init__()
-        self.world = world
+        super().__init__(world=world)
         self._required_epitaph_count = 9  # Default value
 
     def preprocess_world_data(self, world, export_data, player):

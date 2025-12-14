@@ -20,8 +20,8 @@ class FFMQGameExportHandler(GenericGameExportHandler):
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
 
-    def __init__(self, world):
-        self.world = world
+    def __init__(self, world=None):
+        super().__init__(world=world)
 
         # FFMQ has item groups that are commonly referenced
         self.item_groups = {}

@@ -47,8 +47,7 @@ class KH1GameExportHandler(BaseGameExportHandler):
 
     def __init__(self, world=None):
         """Initialize with optional world reference."""
-        super().__init__()
-        self.world = world
+        super().__init__(world=world)
         self.options_cache = {}
     
     def preprocess_world_data(self, world, export_data: Dict[str, Any], player: int) -> None:

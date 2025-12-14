@@ -27,8 +27,7 @@ class SMGameExportHandler(GenericGameExportHandler):
 
 
     def __init__(self, world=None):
-        super().__init__()  # Base class doesn't take arguments
-        self.world = world
+        super().__init__(world=world)
         self._simple_accessfrom_locations: Optional[Set[str]] = None
         self._all_accessfrom_info: Optional[Dict[str, Dict[str, str]]] = None
         self._varia_item_types: Optional[Dict[str, str]] = None

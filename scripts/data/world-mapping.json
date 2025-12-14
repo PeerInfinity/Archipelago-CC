@@ -118,7 +118,7 @@
   },
   "Blasphemous": {
     "exporter_path": "exporter/games/blasphemous.py",
-    "exporter_size": 48117,
+    "exporter_size": 48069,
     "game_logic_path": "frontend/modules/shared/gameLogic/blasphemous/blasphemousLogic.js",
     "game_logic_size": 53834,
     "has_custom_exporter": true,
@@ -199,7 +199,7 @@
   },
   "Celeste (Open World)": {
     "exporter_path": "exporter/games/celeste_open_world.py",
-    "exporter_size": 7299,
+    "exporter_size": 7283,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -397,7 +397,7 @@
   },
   "Factorio": {
     "exporter_path": "exporter/games/factorio.py",
-    "exporter_size": 12241,
+    "exporter_size": 12031,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -442,7 +442,7 @@
   },
   "Final Fantasy Mystic Quest": {
     "exporter_path": "exporter/games/ffmq.py",
-    "exporter_size": 7773,
+    "exporter_size": 7789,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -505,7 +505,7 @@
   },
   "Inscryption": {
     "exporter_path": "exporter/games/inscryption.py",
-    "exporter_size": 8267,
+    "exporter_size": 8251,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -532,7 +532,7 @@
   },
   "Jak and Daxter: The Precursor Legacy": {
     "exporter_path": "exporter/games/jakanddaxter.py",
-    "exporter_size": 22625,
+    "exporter_size": 22609,
     "game_logic_path": "frontend/modules/shared/gameLogic/jakanddaxter/jakanddaxterLogic.js",
     "game_logic_size": 4743,
     "has_custom_exporter": true,
@@ -541,7 +541,7 @@
   },
   "Kingdom Hearts": {
     "exporter_path": "exporter/games/kh1.py",
-    "exporter_size": 59855,
+    "exporter_size": 59839,
     "game_logic_path": "frontend/modules/shared/gameLogic/kh1/kh1Logic.js",
     "game_logic_size": 5572,
     "has_custom_exporter": true,
@@ -550,7 +550,7 @@
   },
   "Kingdom Hearts 2": {
     "exporter_path": "exporter/games/kh2.py",
-    "exporter_size": 33937,
+    "exporter_size": 33921,
     "game_logic_path": "frontend/modules/shared/gameLogic/kh2/kh2Logic.js",
     "game_logic_size": 107789,
     "has_custom_exporter": true,
@@ -892,7 +892,7 @@
   },
   "Pokemon Red and Blue": {
     "exporter_path": "exporter/games/pokemon_rb.py",
-    "exporter_size": 12535,
+    "exporter_size": 12519,
     "game_logic_path": "frontend/modules/shared/gameLogic/pokemon_rb/pokemon_rbLogic.js",
     "game_logic_size": 13309,
     "has_custom_exporter": true,
@@ -1099,7 +1099,7 @@
   },
   "Super Mario 64": {
     "exporter_path": "exporter/games/sm64ex.py",
-    "exporter_size": 14996,
+    "exporter_size": 14954,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1153,7 +1153,7 @@
   },
   "Super Metroid": {
     "exporter_path": "exporter/games/sm.py",
-    "exporter_size": 73767,
+    "exporter_size": 73714,
     "game_logic_path": "frontend/modules/shared/gameLogic/sm/smLogic.js",
     "game_logic_size": 117398,
     "has_custom_exporter": true,
@@ -1378,7 +1378,7 @@
   },
   "Wargroove": {
     "exporter_path": "exporter/games/wargroove.py",
-    "exporter_size": 9839,
+    "exporter_size": 9823,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,

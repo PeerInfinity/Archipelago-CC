@@ -26,8 +26,7 @@ class CelesteOpenWorldGameExportHandler(GenericGameExportHandler):
 
     def __init__(self, world=None):
         """Initialize with world instance to access options."""
-        super().__init__()
-        self.world = world
+        super().__init__(world=world)
 
     def override_rule_analysis(self, rule_func, rule_target_name: str = None) -> Optional[Dict[str, Any]]:
         """

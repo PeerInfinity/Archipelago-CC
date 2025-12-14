@@ -53,6 +53,7 @@ python scripts/test/test-all-templates.py --include-list "[GameName].yaml" --ful
 python scripts/test/test-all-templates.py --include-list "[GameName].yaml" --multiclient
 python scripts/test/test-all-templates.py --seed-range 1-10 -p                          # test multiple seeds
 python scripts/test/test-all-templates.py --retest --retest-continue 10 -p              # retest failures
+python scripts/test/test-all-templates.py --include-list "Game1.yaml" "Game2.yaml" -p   # test multiple games
 ```
 
 ### Spoiler Test

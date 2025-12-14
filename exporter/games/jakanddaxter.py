@@ -17,8 +17,7 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
 
 
     def __init__(self, world=None):
-        super().__init__()
-        self.world = world
+        super().__init__(world=world)
         self.item_id_to_name = {}
         # Build a mapping of item IDs to names
         # The item_table is a dict mapping item_id -> item_name
