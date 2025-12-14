@@ -110,7 +110,15 @@ export function executeHelper(manager, name, ...args) {
       const snapshotInterface = manager._createSelfSnapshotInterface();
 
       // Evaluate the helper body using the rule engine
-      return evaluateRule(helperDefinition.body, snapshotInterface, 0, helperScope);
+      const result = evaluateRule(helperDefinition.body, snapshotInterface, 0, helperScope);
+
+      // If definition evaluation succeeded (not undefined), use that result
+      // Otherwise, fall through to try JavaScript helpers as a fallback
+      // This handles cases where the exported Python helper relies on APIs not available in JS
+      if (result !== undefined) {
+        return result;
+      }
+      // Fall through to JavaScript helpers if definition returned undefined
     }
 
     // Fall back to JavaScript helper functions from game logic registry

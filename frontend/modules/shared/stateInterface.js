@@ -890,7 +890,15 @@ export function createStateSnapshotInterface(
         const helperScope = resolveHelperScope(helperDefinition, args, staticData, playerIdStr);
 
         // Evaluate the helper body with the resolved parameters
-        return evaluateRule(helperDefinition.body, finalSnapshotInterface, 0, helperScope);
+        const result = evaluateRule(helperDefinition.body, finalSnapshotInterface, 0, helperScope);
+
+        // If definition evaluation succeeded (not undefined), use that result
+        // Otherwise, fall through to try JavaScript helpers as a fallback
+        // This handles cases where the exported Python helper relies on APIs not available in JS
+        if (result !== undefined) {
+          return result;
+        }
+        // Fall through to JavaScript helpers if definition returned undefined
       }
 
       // Fall back to game-specific JavaScript helpers
