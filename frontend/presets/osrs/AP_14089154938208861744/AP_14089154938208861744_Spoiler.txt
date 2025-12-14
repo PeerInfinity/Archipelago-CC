@@ -401,10 +401,12 @@ Points: The Corsair Curse
    =>   Rimmington
 Points: The Knight's Sword
         Menu -> Start->Lumbridge
-   =>   Lumbridge -> Lumbridge->Al Kharid
-   =>   Al Kharid -> Al Kharid->Port Sarim
-   =>   Port Sarim -> Port Sarim->Falador Farms
-   =>   Falador Farms -> Falador Farms->Falador
+   =>   Lumbridge -> Lumbridge->South of Varrock
+   =>   South of Varrock -> South of Varrock->West Varrock
+   =>   West Varrock -> West Varrock->Wilderness
+   =>   Wilderness -> Wilderness->Goblin Village
+   =>   Goblin Village -> Goblin Village->Dwarven Mountain Pass
+   =>   Dwarven Mountain Pass -> Dwarven Mountain Pass->Falador
    =>   Falador
 Points: The Restless Ghost
         Menu -> Start->Lumbridge
