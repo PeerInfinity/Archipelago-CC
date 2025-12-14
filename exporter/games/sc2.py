@@ -6,9 +6,72 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# Import SC2 rating dictionaries for export
+try:
+    from worlds.sc2.rules import (
+        tvx_defense_ratings, tvz_defense_ratings, tvx_air_defense_ratings,
+        zvx_defense_ratings, zvx_air_defense_ratings,
+        pvx_defense_ratings, pvz_defense_ratings,
+        terran_passive_ratings, zerg_passive_ratings, protoss_passive_ratings,
+        soa_energy_ratings, soa_passive_ratings, soa_ultimate_ratings
+    )
+    SC2_RATING_DICTS_AVAILABLE = True
+except ImportError:
+    SC2_RATING_DICTS_AVAILABLE = False
+    logger.debug("Could not import SC2 rating dictionaries - static data export disabled")
+
+# Import SC2 item groups for kerrigan helpers
+try:
+    from worlds.sc2.item.item_groups import (
+        kerrigan_non_ulimates, kerrigan_logic_active_abilities,
+        kerrigan_abilities, kerrigan_passives, kerrigan_active_abilities
+    )
+    SC2_KERRIGAN_GROUPS_AVAILABLE = True
+except ImportError:
+    SC2_KERRIGAN_GROUPS_AVAILABLE = False
+    logger.debug("Could not import SC2 kerrigan item groups - kerrigan helper export disabled")
+
 class SC2GameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'Starcraft 2'
     """Export handler for Starcraft 2 game-specific rules and items."""
+    GAME_NAME = 'Starcraft 2'
+
+    # Enable automatic helper export
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+
+    # Module containing helper functions
+    HELPER_MODULES = ['worlds.sc2.rules']
+
+    # Helpers too complex for automatic export (loops, closures, complex calculations)
+    # NOTE: defense_rating helpers now work with game_info export for rating dictionaries
+    # power_rating helpers call soa_power_rating which has complex iteration with break statements
+    HELPERS_TO_EXPORT_BLACKLIST = {
+        # competent_comp helpers - complex conditional logic, but could work if dependencies are met
+        'terran_competent_comp', 'protoss_competent_comp', 'zerg_competent_comp',
+        # defense_rating helpers - now exported with game_info support
+        # 'terran_defense_rating', 'protoss_defense_rating', 'zerg_defense_rating',
+        # power_rating helpers - testing export (uses soa_power_rating with loops/break)
+        # 'terran_power_rating', 'protoss_power_rating', 'zerg_power_rating',
+        # Mission requirements that call power_rating or other complex helpers
+        'terran_havens_fall_requirement', 'terran_great_train_robbery_train_stopper',
+        'terran_welcome_to_the_jungle_requirement', 'zerg_welcome_to_the_jungle_requirement',
+        'protoss_welcome_to_the_jungle_requirement', 'terran_night_terrors_requirement',
+        'terran_engine_of_destruction_requirement', 'engine_of_destruction_requirement',
+        'terran_trouble_in_paradise_requirement', 'terran_media_blitz_requirement',
+        'terran_gates_of_hell_requirement', 'terran_all_in_requirement',
+        # Kerrigan helpers - kerrigan_levels uses get_full_item_list(), two_kerrigan_actives has a bug
+        'kerrigan_levels', 'two_kerrigan_actives',
+        # basic_kerrigan - testing if it can be exported (iterates over imported list)
+        # Helpers that call other blacklisted helpers
+        'terran_competent_ground_to_air', 'protoss_competent_ground_to_air',
+        'zerg_competent_ground_to_air', 'terran_beats_protoss_deathball',
+        'terran_base_trasher',  # calls terran_competent_comp
+        'terran_respond_to_colony_infestations',  # calls terran_havens_fall_requirement
+        # Simple helpers - now exported (just boolean logic):
+        # 'terran_can_rescue',  # just has_any + advanced_tactics
+        # 'terran_cliffjumper',  # just has/has_all
+        # 'terran_sustainable_mech_heal',  # just boolean logic
+        # 'terran_able_to_snipe_defiler',  # just has/has_any/has_all
+    }
 
     def _extract_closure_vars(self, rule_func: Callable) -> Dict[str, Any]:
         """Extract closure variables from a function."""
@@ -25,24 +88,6 @@ class SC2GameExportHandler(GenericGameExportHandler):
                             pass
         return closure_vars
 
-    # Complex helper methods that should be kept as helper calls rather than expanded
-    COMPLEX_HELPERS = {
-        'terran_competent_comp', 'protoss_competent_comp', 'zerg_competent_comp',
-        'terran_defense_rating', 'protoss_defense_rating', 'zerg_defense_rating',
-        'terran_power_rating', 'protoss_power_rating', 'zerg_power_rating',
-        'terran_havens_fall_requirement', 'terran_great_train_robbery_train_stopper',
-        'terran_welcome_to_the_jungle_requirement', 'zerg_welcome_to_the_jungle_requirement',
-        'protoss_welcome_to_the_jungle_requirement', 'terran_night_terrors_requirement',
-        'terran_engine_of_destruction_requirement', 'engine_of_destruction_requirement',
-        'terran_trouble_in_paradise_requirement', 'terran_media_blitz_requirement',
-        'terran_gates_of_hell_requirement', 'terran_all_in_requirement',
-        'basic_kerrigan', 'kerrigan_levels', 'two_kerrigan_actives',
-        'terran_competent_ground_to_air', 'protoss_competent_ground_to_air',
-        'zerg_competent_ground_to_air', 'terran_beats_protoss_deathball',
-        'terran_base_trasher', 'terran_can_rescue', 'terran_cliffjumper',
-        'terran_able_to_snipe_defiler', 'terran_respond_to_colony_infestations',
-        'terran_survives_rip_field', 'terran_sustainable_mech_heal',
-    }
 
     def override_rule_analysis(self, rule_func: Callable, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """
@@ -58,7 +103,7 @@ class SC2GameExportHandler(GenericGameExportHandler):
         logger.debug(f"[SC2] override_rule_analysis called for '{rule_target_name}' with func_name='{func_name}'")
 
         # Check if this is a complex helper method that should not be expanded
-        if func_name in self.COMPLEX_HELPERS:
+        if func_name in self.HELPERS_TO_EXPORT_BLACKLIST:
             logger.debug(f"[SC2] Converting complex helper method '{func_name}' to helper call")
             return {'type': 'helper', 'name': func_name, 'args': []}
 
@@ -249,7 +294,7 @@ class SC2GameExportHandler(GenericGameExportHandler):
             'conditions': handled_rules
         }
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """
         Recursively expand rule functions with SC2-specific logic pattern recognition.
 
@@ -279,9 +324,12 @@ class SC2GameExportHandler(GenericGameExportHandler):
                     # This is a logic.method_name() call - convert to helper
                     method_name = function.get('attr')
                     # Recursively process args first
-                    args = [self.expand_rule(arg) for arg in rule.get('args', [])]
+                    args = [self.expand_rule(arg, _depth + 1) for arg in rule.get('args', [])]
 
                     logger.debug(f"[SC2] Converting logic.{method_name}() to helper call")
+
+                    # Register the helper usage for automatic discovery
+                    self.register_helper_usage(method_name)
 
                     # Convert to helper format
                     converted_rule = {
@@ -291,11 +339,11 @@ class SC2GameExportHandler(GenericGameExportHandler):
                     }
 
                     # Continue expanding the converted rule
-                    return super().expand_rule(converted_rule)
+                    return super().expand_rule(converted_rule, _depth)
 
             # For other function_calls, recursively process args
             if 'args' in rule:
-                rule['args'] = [self.expand_rule(arg) for arg in rule['args']]
+                rule['args'] = [self.expand_rule(arg, _depth + 1) for arg in rule['args']]
 
         # Check for the pattern: attribute access on "logic" (not a function call)
         # This pattern looks like:
@@ -338,6 +386,9 @@ class SC2GameExportHandler(GenericGameExportHandler):
                     # This is a helper method accessed without parentheses
                     # Convert to a helper call
                     logger.debug(f"[SC2] Converting logic.{attr_name} to helper call (method accessed as attribute)")
+
+                    # Register the helper usage for automatic discovery
+                    self.register_helper_usage(attr_name)
 
                     converted_rule = {
                         'type': 'helper',
@@ -425,3 +476,46 @@ class SC2GameExportHandler(GenericGameExportHandler):
             logger.warning(f"Could not export SC2 logic properties: {e}")
 
         return settings_dict
+
+    def get_game_info(self, world) -> Dict[str, Any]:
+        """
+        Get SC2 game info including rating dictionaries.
+
+        Exports the defense/power rating dictionaries so they can be
+        used by helpers at runtime in the frontend.
+        """
+        game_info = super().get_game_info(world)
+
+        # Export rating dictionaries if available
+        if SC2_RATING_DICTS_AVAILABLE:
+            rating_dicts = {
+                'tvx_defense_ratings': dict(tvx_defense_ratings),
+                'tvz_defense_ratings': dict(tvz_defense_ratings),
+                'tvx_air_defense_ratings': dict(tvx_air_defense_ratings),
+                'zvx_defense_ratings': dict(zvx_defense_ratings),
+                'zvx_air_defense_ratings': dict(zvx_air_defense_ratings),
+                'pvx_defense_ratings': dict(pvx_defense_ratings),
+                'pvz_defense_ratings': dict(pvz_defense_ratings),
+                'terran_passive_ratings': dict(terran_passive_ratings),
+                'zerg_passive_ratings': dict(zerg_passive_ratings),
+                'protoss_passive_ratings': dict(protoss_passive_ratings),
+                'soa_energy_ratings': dict(soa_energy_ratings),
+                'soa_passive_ratings': dict(soa_passive_ratings),
+                'soa_ultimate_ratings': dict(soa_ultimate_ratings),
+            }
+            game_info['rating_tables'] = rating_dicts
+            logger.debug(f"[SC2] Exported {len(rating_dicts)} rating dictionaries to game_info")
+
+        # Export kerrigan item groups for kerrigan helpers
+        if SC2_KERRIGAN_GROUPS_AVAILABLE:
+            kerrigan_groups = {
+                'kerrigan_non_ulimates': list(kerrigan_non_ulimates),
+                'kerrigan_logic_active_abilities': list(kerrigan_logic_active_abilities),
+                'kerrigan_abilities': list(kerrigan_abilities),
+                'kerrigan_passives': list(kerrigan_passives),
+                'kerrigan_active_abilities': list(kerrigan_active_abilities),
+            }
+            game_info['kerrigan_groups'] = kerrigan_groups
+            logger.debug(f"[SC2] Exported {len(kerrigan_groups)} kerrigan item groups to game_info")
+
+        return game_info

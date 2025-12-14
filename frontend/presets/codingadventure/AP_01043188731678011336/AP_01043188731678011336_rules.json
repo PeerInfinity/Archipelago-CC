@@ -2133,6 +2133,71 @@
       "Vue": 1
     }
   },
+  "canonical_placements": {
+    "1": {
+      "Learn HTML": "HTML",
+      "Learn CSS": "CSS",
+      "Learn Design Systems": "Design Systems",
+      "Learn JavaScript": "JavaScript Basics",
+      "Learn DOM Manipulation": "DOM Manipulation",
+      "Learn Algorithms": "Algorithms",
+      "Choose Server Language": "Server Basics",
+      "Learn File I/O": "File I/O",
+      "Learn HTTP Basics": "HTTP Basics",
+      "Learn Git": "Git",
+      "Learn Command Line": "Command Line",
+      "Learn Package Managers": "Package Managers",
+      "Static Website Milestone": "Static Website Complete",
+      "Learn React": "React",
+      "React Components": "Frontend Framework",
+      "Redux": "State Management",
+      "Learn Vue": "Vue",
+      "Vue Components": "Frontend Framework",
+      "Vuex": "State Management",
+      "Advanced Vanilla JS": "Frontend Framework",
+      "Custom State System": "State Management",
+      "Learn Express": "Express",
+      "Build REST APIs": "REST APIs",
+      "MongoDB Integration": "Database Integration",
+      "Learn Django": "Django",
+      "Django REST Framework": "REST APIs",
+      "Django ORM": "Database Integration",
+      "Learn Flask": "Flask",
+      "Flask-RESTful": "REST APIs",
+      "SQLAlchemy": "Database Integration",
+      "UI/UX Principles": "UI/UX",
+      "Responsive Design": "Responsive Design",
+      "Accessibility": "Accessibility",
+      "Learn SQL": "SQL",
+      "PostgreSQL": "Database Basics",
+      "Query Optimization": "Query Optimization",
+      "Learn NoSQL": "NoSQL",
+      "MongoDB": "Database Basics",
+      "Indexing Strategies": "Query Optimization",
+      "Interactive App Milestone": "Interactive App Complete",
+      "Sessions": "Sessions",
+      "JWT": "JWT",
+      "OAuth": "Authentication",
+      "Caching": "Caching",
+      "CDN": "CDN",
+      "Load Balancing": "Performance",
+      "Unit Tests": "Unit Tests",
+      "Integration Tests": "Integration Tests",
+      "E2E Tests": "Testing",
+      "Docker": "Docker",
+      "CI/CD": "CI/CD",
+      "Monitoring": "DevOps",
+      "Full-Stack Integration Milestone": "Full-Stack Complete",
+      "HTTPS": "HTTPS",
+      "CORS": "CORS",
+      "Input Validation": "Security Complete",
+      "Horizontal Scaling": "Horizontal Scaling",
+      "Microservices": "Scaling Complete",
+      "Cloud Provider": "Cloud Provider",
+      "Domain Setup": "Domain",
+      "SSL Certificate": "Deployment Complete"
+    }
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -2143,7 +2208,21 @@
     "1": {
       "game": "WebDevJourney",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": 1,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      }
     }
   },
   "game_info": {
@@ -2151,7 +2230,9 @@
       "name": "WebDevJourney",
       "rule_format": {
         "version": "1.0"
-      }
+      },
+      "web_theme": "ocean",
+      "world_description": "WebDevJourney is an educational game that takes you through the complete journey\nof becoming a web developer, from learning HTML/CSS basics to deploying\nproduction-ready full-stack applications."
     }
   },
   "helpers": {}

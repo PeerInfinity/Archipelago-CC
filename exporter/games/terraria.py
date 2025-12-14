@@ -14,6 +14,13 @@ logger = logging.getLogger(__name__)
 class TerrariaGameExportHandler(BaseGameExportHandler):
     GAME_NAME = 'Terraria'
 
+    # Export settings at top level so they can be resolved by 'name' type rules
+    COMPUTED_SETTINGS = {
+        'calamity': lambda w, m, p: bool(w.options.calamity.value) if hasattr(w.options, 'calamity') else False,
+        'grindy_achievements': lambda w, m, p: bool(w.options.grindy_achievements.value) if hasattr(w.options, 'grindy_achievements') else False,
+        'getfixedboi': lambda w, m, p: bool(w.options.getfixedboi.value) if hasattr(w.options, 'getfixedboi') else False,
+    }
+
     def __init__(self):
         super().__init__()
         # Import Terraria-specific constants and types
@@ -234,14 +241,12 @@ class TerrariaGameExportHandler(BaseGameExportHandler):
         }
 
     def _create_setting_check(self, setting_name: str) -> Dict[str, Any]:
-        """Create a rule to check a game setting."""
-        return {
-            'type': 'helper',
-            'name': 'check_setting',
-            'args': [
-                {'type': 'constant', 'value': setting_name}
-            ]
-        }
+        """Create a rule to check a game setting.
+
+        Uses 'name' type rule which resolves from COMPUTED_SETTINGS export.
+        The setting value is exported at top level via COMPUTED_SETTINGS.
+        """
+        return {'type': 'name', 'name': setting_name}
 
     def _create_pickaxe_check(self, required_power: int) -> Dict[str, Any]:
         """Create a rule to check if player has a pickaxe with at least N power."""
@@ -313,3 +318,149 @@ class TerrariaGameExportHandler(BaseGameExportHandler):
                 {'type': 'constant', 'value': required_count}
             ]
         }
+
+    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
+        """Export Terraria-specific settings including minion equipment data."""
+        settings = super().get_settings_data(world, multiworld, player)
+
+        # Export armor minion data for has_minions helper
+        settings['armor_minions'] = dict(self.armor_minions)
+
+        # Export accessory minion data for has_minions helper
+        settings['accessory_minions'] = dict(self.accessory_minions)
+
+        return settings
+
+    def get_helper_definitions(self, world) -> Dict[str, Any]:
+        """Define computed helpers for Terraria.
+
+        Provides rule-based definitions for:
+        - has_n_from_list: Check if player has at least N items from a list
+        - has_minions: Check if player has at least N minion slots
+        """
+        helper_defs = super().get_helper_definitions(world)
+
+        # has_n_from_list(items, required_count)
+        # Logic: sum(1 for item in items if has(item)) >= required_count
+        helper_defs['has_n_from_list'] = {
+            'params': ['items', 'required_count'],
+            'body': {
+                'type': 'compare',
+                'op': '>=',
+                'left': {
+                    'type': 'sum_of',
+                    'iterator_info': {
+                        'target': {'type': 'name', 'name': 'item'},
+                        'iterator': {'type': 'name', 'name': 'items'},
+                        'condition': {
+                            'type': 'item_check',
+                            'item': {'type': 'name', 'name': 'item'}
+                        }
+                    },
+                    'element_rule': {'type': 'constant', 'value': 1}
+                },
+                'right': {'type': 'name', 'name': 'required_count'}
+            }
+        }
+
+        # has_minions(required_count)
+        # Logic: (1 + max(armor bonuses) + sum(accessory bonuses)) >= required_count
+        # Where:
+        #   max(armor bonuses) = max(bonus for armor, bonus in armor_minions.items() if has(armor))
+        #   sum(accessory bonuses) = sum(bonus for acc, bonus in accessory_minions.items() if has(acc))
+        helper_defs['has_minions'] = {
+            'params': ['required_count'],
+            'body': {
+                'type': 'compare',
+                'op': '>=',
+                'left': {
+                    'type': 'binary_op',
+                    'op': '+',
+                    'left': {
+                        'type': 'binary_op',
+                        'op': '+',
+                        'left': {'type': 'constant', 'value': 1},  # Base minion count
+                        'right': {
+                            # max(bonus for armor, bonus in armor_minions.items() if has(armor))
+                            # Use conditional to handle empty case (return 0 if no armor found)
+                            'type': 'conditional',
+                            'test': {
+                                # Check if any armor is owned: any(has(a) for a in armor_minions.keys())
+                                'type': 'any_of',
+                                'iterator_info': {
+                                    'target': {'type': 'name', 'name': 'armor'},
+                                    'iterator': {
+                                        'type': 'method_call',
+                                        'object': {'type': 'setting_value', 'setting': 'armor_minions'},
+                                        'method': 'keys',
+                                        'args': []
+                                    }
+                                },
+                                'element_rule': {
+                                    'type': 'item_check',
+                                    'item': {'type': 'name', 'name': 'armor'}
+                                }
+                            },
+                            'if_true': {
+                                # max of bonuses for owned armor
+                                'type': 'max',
+                                'iterable': {
+                                    'type': 'generator_expression',
+                                    'element': {'type': 'name', 'name': 'bonus'},
+                                    'comprehension': {
+                                        'target': {
+                                            'type': 'tuple',
+                                            'elements': [
+                                                {'type': 'name', 'name': 'armor'},
+                                                {'type': 'name', 'name': 'bonus'}
+                                            ]
+                                        },
+                                        'iterator': {
+                                            'type': 'method_call',
+                                            'object': {'type': 'setting_value', 'setting': 'armor_minions'},
+                                            'method': 'items',
+                                            'args': []
+                                        },
+                                        'conditions': [{
+                                            'type': 'item_check',
+                                            'item': {'type': 'name', 'name': 'armor'}
+                                        }]
+                                    }
+                                }
+                            },
+                            'if_false': {'type': 'constant', 'value': 0}
+                        }
+                    },
+                    'right': {
+                        # sum(bonus for acc, bonus in accessory_minions.items() if has(acc))
+                        'type': 'sum',
+                        'iterable': {
+                            'type': 'generator_expression',
+                            'element': {'type': 'name', 'name': 'bonus'},
+                            'comprehension': {
+                                'target': {
+                                    'type': 'tuple',
+                                    'elements': [
+                                        {'type': 'name', 'name': 'acc'},
+                                        {'type': 'name', 'name': 'bonus'}
+                                    ]
+                                },
+                                'iterator': {
+                                    'type': 'method_call',
+                                    'object': {'type': 'setting_value', 'setting': 'accessory_minions'},
+                                    'method': 'items',
+                                    'args': []
+                                },
+                                'conditions': [{
+                                    'type': 'item_check',
+                                    'item': {'type': 'name', 'name': 'acc'}
+                                }]
+                            }
+                        }
+                    }
+                },
+                'right': {'type': 'name', 'name': 'required_count'}
+            }
+        }
+
+        return helper_defs

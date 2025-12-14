@@ -1,10 +1,7 @@
 """Yacht Dice game-specific export handler."""
 
-from typing import Dict, Any
+from typing import Dict, Any, Set
 from .generic import GenericGameExportHandler
-import logging
-
-logger = logging.getLogger(__name__)
 
 
 class YachtDiceGameExportHandler(GenericGameExportHandler):
@@ -12,8 +9,16 @@ class YachtDiceGameExportHandler(GenericGameExportHandler):
 
     GAME_NAME = 'Yacht Dice'
 
-    # Inherit all default behavior from GenericGameExportHandler
-    # Only override methods when custom behavior is needed
+    # Enable automatic export of discovered helpers
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+
+    # dice_simulation_state_change is too complex to export because:
+    # 1. It uses state.prog_items which is not available in JavaScript
+    # 2. It has complex loops, probability distributions, and caching
+    # 3. The JavaScript helper function must be called directly
+    HELPERS_TO_EXPORT_BLACKLIST: Set[str] = {
+        'dice_simulation_state_change',
+    }
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """
@@ -33,26 +38,3 @@ class YachtDiceGameExportHandler(GenericGameExportHandler):
         settings_dict['add_sphere_items_upfront'] = True
 
         return settings_dict
-
-    def should_preserve_as_helper(self, func_name: str) -> bool:
-        """
-        Determine if a function should be preserved as a helper call rather than inlined.
-
-        For Yacht Dice, dice_simulation_state_change must be preserved as a helper because:
-        1. It uses state.prog_items which is not available in JavaScript
-        2. It performs complex caching and simulation logic
-        3. The JavaScript helper function needs to be called directly
-
-        Args:
-            func_name: The name of the function being called
-
-        Returns:
-            True if the function should be preserved as a helper, False otherwise
-        """
-        # Preserve dice_simulation_state_change as a helper function call
-        if func_name == 'dice_simulation_state_change':
-            logger.debug(f"Preserving {func_name} as helper function")
-            return True
-
-        # Use default behavior for other functions
-        return False

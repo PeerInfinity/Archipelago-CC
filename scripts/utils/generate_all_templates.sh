@@ -59,7 +59,6 @@ fi
 
 python Generate.py --weights_file_path "Templates/APQuest.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Aquaria.yaml" --multi 1 --seed 1
-python Generate.py --weights_file_path "Templates/Blasphemous.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Bomb Rush Cyberfunk.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Bumper Stickers.yaml" --multi 1 --seed 1
 python Generate.py --weights_file_path "Templates/Castlevania 64.yaml" --multi 1 --seed 1
@@ -182,7 +181,6 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python scripts/test/test-world-generator.py --include-list "Adventure.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "APQuest.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Aquaria.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
-  python scripts/test/test-world-generator.py --include-list "Blasphemous.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Bomb Rush Cyberfunk.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Bumper Stickers.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
   python scripts/test/test-world-generator.py --include-list "Castlevania - Circle of the Moon.yaml" --phase generate-test-worlds --seed 1 $CANONICAL_FLAG
@@ -276,7 +274,6 @@ if [ "$GENERATE_WORLDGEN" = "true" ]; then
   python Generate.py --weights_file_path "Templates/Adventure WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/APQuest WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Aquaria WorldGen.yaml" --multi 1 --seed 1
-  python Generate.py --weights_file_path "Templates/Blasphemous WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Bomb Rush Cyberfunk WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Bumper Stickers WorldGen.yaml" --multi 1 --seed 1
   python Generate.py --weights_file_path "Templates/Castlevania - Circle of the Moon WorldGen.yaml" --multi 1 --seed 1

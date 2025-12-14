@@ -6953,6 +6953,9 @@
       "World 6 Gate": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -6970,7 +6973,28 @@
       "BowserDoorMode": 0,
       "LuigiPiecesRequired": 25,
       "CastleClearCondition": 0,
-      "CastleOpenCondition": 5
+      "CastleOpenCondition": 5,
+      "game_logic": "Easy",
+      "midring_start": true,
+      "clouds_always_visible": true,
+      "consumable_logic": true,
+      "bowser_door": 0,
+      "luigi_pieces": 25,
+      "boss_order": [
+        "Burt The Bashful's Boss Room",
+        "Salvo The Slime's Boss Room",
+        "Bigger Boo's Boss Room",
+        "Roger The Ghost's Boss Room",
+        "Prince Froggy's Boss Room",
+        "Naval Piranha's Boss Room",
+        "Marching Milde's Boss Room",
+        "Hookbill The Koopa's Boss Room",
+        "Sluggy The Unshaven's Boss Room",
+        "Raphael The Raven's Boss Room",
+        "Tap-Tap The Red Nose's Boss Room"
+      ],
+      "castle_unlock": 5,
+      "boss_unlock": 0
     }
   },
   "game_info": {
@@ -6978,8 +7002,3230 @@
       "name": "Yoshi's Island",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "ocean",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Yoshi's Island randomizer and connecting to an Archipelago server.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Pink Switch"
+          ]
+        }
+      ],
+      "world_description": "Yoshi's Island is a 2D platforming game.\nDuring a delivery, Bowser's evil ward, Kamek, attacked the stork, kidnapping Luigi and dropping Mario onto Yoshi's Island.\nAs Yoshi, you must run, jump, and throw eggs to escort the baby Mario across the island to defeat Bowser and reunite the two brothers with their parents.",
+      "slot_data": {
+        "world_1": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "world_2": [
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21
+        ],
+        "world_3": [
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33
+        ],
+        "world_4": [
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45
+        ],
+        "world_5": [
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57
+        ],
+        "world_6": [
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69
+        ]
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "_14Boss": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "item_check",
+          "item": "Egg Plant"
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "item_check",
+            "item": "Egg Plant"
+          },
+          "if_false": {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Egg Capacity Upgrade",
+                "count": {
+                  "type": "constant",
+                  "value": 5
+                }
+              },
+              {
+                "type": "item_check",
+                "item": "Egg Plant"
+              }
+            ]
+          }
+        }
+      },
+      "_14CanFightBoss": {
+        "type": "conditional",
+        "test": {
+          "type": "state_method",
+          "method": "can_reach",
+          "args": [
+            {
+              "type": "subscript",
+              "value": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "boss_order"
+              },
+              "index": {
+                "type": "constant",
+                "value": 0
+              }
+            },
+            {
+              "type": "constant",
+              "value": "Location"
+            }
+          ]
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": null
+      },
+      "_14Clear": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "state_method",
+          "method": "has_all",
+          "args": [
+            {
+              "type": "constant",
+              "value": [
+                "Key",
+                "Spring Ball"
+              ]
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Key",
+                  "Spring Ball"
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Key",
+                  "Spring Ball"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "_17Game": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "item_check",
+          "item": "Key"
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "item_check",
+            "item": "Key"
+          },
+          "if_false": {
+            "type": "item_check",
+            "item": "Key"
+          }
+        }
+      },
+      "_18Boss": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "constant",
+            "value": true
+          }
+        }
+      },
+      "_18CanFightBoss": {
+        "type": "conditional",
+        "test": {
+          "type": "state_method",
+          "method": "can_reach",
+          "args": [
+            {
+              "type": "subscript",
+              "value": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "boss_order"
+              },
+              "index": {
+                "type": "constant",
+                "value": 1
+              }
+            },
+            {
+              "type": "constant",
+              "value": "Location"
+            }
+          ]
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": null
+      },
+      "_18Clear": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "state_method",
+          "method": "has_all",
+          "args": [
+            {
+              "type": "constant",
+              "value": [
+                "Arrow Wheel",
+                "Key"
+              ]
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Arrow Wheel",
+                  "Key"
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Arrow Wheel",
+                  "Key"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "_24Boss": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "constant",
+            "value": true
+          }
+        }
+      },
+      "_24CanFightBoss": {
+        "type": "conditional",
+        "test": {
+          "type": "state_method",
+          "method": "can_reach",
+          "args": [
+            {
+              "type": "subscript",
+              "value": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "boss_order"
+              },
+              "index": {
+                "type": "constant",
+                "value": 2
+              }
+            },
+            {
+              "type": "constant",
+              "value": "Location"
+            }
+          ]
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": null
+      },
+      "_24Clear": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "state_method",
+          "method": "has_all",
+          "args": [
+            {
+              "type": "constant",
+              "value": [
+                "! Switch",
+                "Dashed Stairs",
+                "Key"
+              ]
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "! Switch",
+                  "Dashed Stairs"
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "item_check",
+            "item": "! Switch"
+          }
+        }
+      },
+      "_26Game": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "state_method",
+          "method": "has_all",
+          "args": [
+            {
+              "type": "constant",
+              "value": [
+                "Key",
+                "Large Spring Ball"
+              ]
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Key",
+                  "Large Spring Ball"
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Key",
+                  "Large Spring Ball"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "_27Game": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "item_check",
+          "item": "Key"
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "item_check",
+            "item": "Key"
+          },
+          "if_false": {
+            "type": "item_check",
+            "item": "Key"
+          }
+        }
+      },
+      "_28Boss": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "constant",
+            "value": true
+          }
+        }
+      },
+      "_28CanFightBoss": {
+        "type": "conditional",
+        "test": {
+          "type": "state_method",
+          "method": "can_reach",
+          "args": [
+            {
+              "type": "subscript",
+              "value": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "boss_order"
+              },
+              "index": {
+                "type": "constant",
+                "value": 3
+              }
+            },
+            {
+              "type": "constant",
+              "value": "Location"
+            }
+          ]
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": null
+      },
+      "_28Clear": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Arrow Wheel",
+                    "Key"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "item_check",
+              "item": "Egg Capacity Upgrade",
+              "count": {
+                "type": "constant",
+                "value": 1
+              }
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Arrow Wheel",
+                  "Key"
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Arrow Wheel",
+                  "Key"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "_34Boss": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "item_check",
+          "item": "Giant Eggs"
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "constant",
+            "value": true
+          }
+        }
+      },
+      "_34CanFightBoss": {
+        "type": "conditional",
+        "test": {
+          "type": "state_method",
+          "method": "can_reach",
+          "args": [
+            {
+              "type": "subscript",
+              "value": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "boss_order"
+              },
+              "index": {
+                "type": "constant",
+                "value": 4
+              }
+            },
+            {
+              "type": "constant",
+              "value": "Location"
+            }
+          ]
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": null
+      },
+      "_34Clear": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "item_check",
+          "item": "Dashed Platform"
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Dashed Platform"
+              },
+              {
+                "type": "helper",
+                "name": "has_midring",
+                "args": []
+              }
+            ]
+          },
+          "if_false": {
+            "type": "constant",
+            "value": true
+          }
+        }
+      },
+      "_38Boss": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "constant",
+            "value": true
+          }
+        }
+      },
+      "_38CanFightBoss": {
+        "type": "conditional",
+        "test": {
+          "type": "state_method",
+          "method": "can_reach",
+          "args": [
+            {
+              "type": "subscript",
+              "value": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "boss_order"
+              },
+              "index": {
+                "type": "constant",
+                "value": 5
+              }
+            },
+            {
+              "type": "constant",
+              "value": "Location"
+            }
+          ]
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": null
+      },
+      "_38Clear": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "or",
+          "conditions": [
+            {
+              "type": "item_check",
+              "item": "Egg Capacity Upgrade",
+              "count": {
+                "type": "constant",
+                "value": 3
+              }
+            },
+            {
+              "type": "helper",
+              "name": "combat_item",
+              "args": []
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Egg Capacity Upgrade",
+                "count": {
+                  "type": "constant",
+                  "value": 1
+                }
+              },
+              {
+                "type": "helper",
+                "name": "combat_item",
+                "args": []
+              }
+            ]
+          },
+          "if_false": {
+            "type": "constant",
+            "value": true
+          }
+        }
+      },
+      "_44Boss": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "constant",
+            "value": true
+          }
+        }
+      },
+      "_44CanFightBoss": {
+        "type": "conditional",
+        "test": {
+          "type": "state_method",
+          "method": "can_reach",
+          "args": [
+            {
+              "type": "subscript",
+              "value": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "boss_order"
+              },
+              "index": {
+                "type": "constant",
+                "value": 6
+              }
+            },
+            {
+              "type": "constant",
+              "value": "Location"
+            }
+          ]
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": null
+      },
+      "_44Clear": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Arrow Wheel",
+                    "Bucket",
+                    "Dashed Stairs",
+                    "Key",
+                    "Vanishing Arrow Wheel"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Egg Capacity Upgrade",
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "combat_item",
+                  "args": []
+                }
+              ]
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Arrow Wheel",
+                  "Bucket",
+                  "Dashed Stairs",
+                  "Key",
+                  "Vanishing Arrow Wheel"
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Arrow Wheel",
+                  "Bucket",
+                  "Dashed Stairs",
+                  "Key",
+                  "Vanishing Arrow Wheel"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "_47Game": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "state_method",
+          "method": "has_all",
+          "args": [
+            {
+              "type": "constant",
+              "value": [
+                "Key",
+                "Large Spring Ball"
+              ]
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Key",
+                  "Large Spring Ball"
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Key",
+                  "Large Spring Ball"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "_48Boss": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "item_check",
+          "item": "Egg Capacity Upgrade",
+          "count": {
+            "type": "constant",
+            "value": 3
+          }
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "item_check",
+            "item": "Egg Capacity Upgrade",
+            "count": {
+              "type": "constant",
+              "value": 2
+            }
+          },
+          "if_false": {
+            "type": "item_check",
+            "item": "Egg Capacity Upgrade",
+            "count": {
+              "type": "constant",
+              "value": 1
+            }
+          }
+        }
+      },
+      "_48CanFightBoss": {
+        "type": "conditional",
+        "test": {
+          "type": "state_method",
+          "method": "can_reach",
+          "args": [
+            {
+              "type": "subscript",
+              "value": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "boss_order"
+              },
+              "index": {
+                "type": "constant",
+                "value": 7
+              }
+            },
+            {
+              "type": "constant",
+              "value": "Location"
+            }
+          ]
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": null
+      },
+      "_48Clear": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "state_method",
+          "method": "has_all",
+          "args": [
+            {
+              "type": "constant",
+              "value": [
+                "Dashed Stairs",
+                "Key",
+                "Large Spring Ball",
+                "Vanishing Arrow Wheel"
+              ]
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Dashed Stairs",
+                  "Key",
+                  "Large Spring Ball",
+                  "Vanishing Arrow Wheel"
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Key",
+                  "Large Spring Ball"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "_54Boss": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "item_check",
+              "item": "Egg Capacity Upgrade",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
+            },
+            {
+              "type": "item_check",
+              "item": "Egg Plant"
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Egg Capacity Upgrade",
+                    "count": {
+                      "type": "constant",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "type": "item_check",
+                    "item": "Egg Plant"
+                  }
+                ]
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Egg Capacity Upgrade",
+                    "count": {
+                      "type": "constant",
+                      "value": 5
+                    }
+                  },
+                  {
+                    "type": "helper",
+                    "name": "has_midring",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Egg Plant"
+              },
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Egg Capacity Upgrade",
+                    "count": {
+                      "type": "constant",
+                      "value": 3
+                    }
+                  },
+                  {
+                    "type": "helper",
+                    "name": "has_midring",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "_54CanFightBoss": {
+        "type": "conditional",
+        "test": {
+          "type": "state_method",
+          "method": "can_reach",
+          "args": [
+            {
+              "type": "subscript",
+              "value": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "boss_order"
+              },
+              "index": {
+                "type": "constant",
+                "value": 8
+              }
+            },
+            {
+              "type": "constant",
+              "value": "Location"
+            }
+          ]
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": null
+      },
+      "_54Clear": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "state_method",
+          "method": "has_all",
+          "args": [
+            {
+              "type": "constant",
+              "value": [
+                "Dashed Platform",
+                "Dashed Stairs",
+                "Platform Ghost"
+              ]
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Dashed Platform",
+                  "Dashed Stairs",
+                  "Platform Ghost"
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Dashed Stairs",
+                  "Platform Ghost"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "_58Boss": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "constant",
+            "value": true
+          }
+        }
+      },
+      "_58CanFightBoss": {
+        "type": "conditional",
+        "test": {
+          "type": "state_method",
+          "method": "can_reach",
+          "args": [
+            {
+              "type": "subscript",
+              "value": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "boss_order"
+              },
+              "index": {
+                "type": "constant",
+                "value": 9
+              }
+            },
+            {
+              "type": "constant",
+              "value": "Location"
+            }
+          ]
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": null
+      },
+      "_58Clear": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "state_method",
+          "method": "has_all",
+          "args": [
+            {
+              "type": "constant",
+              "value": [
+                "Arrow Wheel",
+                "Large Spring Ball"
+              ]
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Arrow Wheel",
+                  "Large Spring Ball"
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "state_method",
+            "method": "has_all",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Arrow Wheel",
+                  "Large Spring Ball"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "_64Boss": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "item_check",
+          "item": "Egg Plant"
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "item_check",
+            "item": "Egg Plant"
+          },
+          "if_false": {
+            "type": "constant",
+            "value": true
+          }
+        }
+      },
+      "_64CanFightBoss": {
+        "type": "conditional",
+        "test": {
+          "type": "state_method",
+          "method": "can_reach",
+          "args": [
+            {
+              "type": "subscript",
+              "value": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "boss_order"
+              },
+              "index": {
+                "type": "constant",
+                "value": 10
+              }
+            },
+            {
+              "type": "constant",
+              "value": "Location"
+            }
+          ]
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": null
+      },
+      "_64Clear": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Egg Plant",
+                    "Key",
+                    "Large Spring Ball",
+                    "Spring Ball"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "item_check",
+                  "item": "Egg Capacity Upgrade",
+                  "count": {
+                    "type": "constant",
+                    "value": 3
+                  }
+                },
+                {
+                  "type": "helper",
+                  "name": "combat_item",
+                  "args": []
+                }
+              ]
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "state_method",
+                "method": "has_all",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Egg Plant",
+                      "Key",
+                      "Large Spring Ball"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Egg Capacity Upgrade",
+                    "count": {
+                      "type": "constant",
+                      "value": 2
+                    }
+                  },
+                  {
+                    "type": "helper",
+                    "name": "combat_item",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "state_method",
+                "method": "has_all",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Egg Plant",
+                      "Key"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "item_check",
+                    "item": "Egg Capacity Upgrade",
+                    "count": {
+                      "type": "constant",
+                      "value": 1
+                    }
+                  },
+                  {
+                    "type": "helper",
+                    "name": "combat_item",
+                    "args": []
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "_68Clear": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "Egg Plant",
+                    "Giant Eggs",
+                    "Helicopter Morph"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "helper",
+              "name": "_68Route",
+              "args": []
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "state_method",
+                "method": "has_all",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Egg Plant",
+                      "Giant Eggs",
+                      "Helicopter Morph"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "_68Route",
+                "args": []
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "state_method",
+                "method": "has_all",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": [
+                      "Giant Eggs",
+                      "Helicopter Morph"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "helper",
+                "name": "_68Route",
+                "args": []
+              }
+            ]
+          }
+        }
+      },
+      "_68CollectibleRoute": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "bowser_door"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": 0
+          }
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "bowser_door"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": 1
+            }
+          },
+          "if_true": {
+            "type": "helper",
+            "name": "bowserdoor_1",
+            "args": []
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "bowser_door"
+              },
+              "op": "==",
+              "right": {
+                "type": "constant",
+                "value": 2
+              }
+            },
+            "if_true": {
+              "type": "helper",
+              "name": "bowserdoor_2",
+              "args": []
+            },
+            "if_false": {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "bowser_door"
+                },
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": 3
+                }
+              },
+              "if_true": {
+                "type": "constant",
+                "value": true
+              },
+              "if_false": {
+                "type": "conditional",
+                "test": {
+                  "type": "compare",
+                  "left": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "bowser_door"
+                  },
+                  "op": "==",
+                  "right": {
+                    "type": "constant",
+                    "value": 4
+                  }
+                },
+                "if_true": {
+                  "type": "constant",
+                  "value": true
+                },
+                "if_false": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "self"
+                      },
+                      "attr": "bowser_door"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": 5
+                    }
+                  },
+                  "if_true": {
+                    "type": "helper",
+                    "name": "bowserdoor_1",
+                    "args": []
+                  },
+                  "if_false": null
+                }
+              }
+            }
+          }
+        }
+      },
+      "_68Route": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "bowser_door"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": 0
+          }
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "bowser_door"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": 1
+            }
+          },
+          "if_true": {
+            "type": "helper",
+            "name": "bowserdoor_1",
+            "args": []
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "self"
+                },
+                "attr": "bowser_door"
+              },
+              "op": "==",
+              "right": {
+                "type": "constant",
+                "value": 2
+              }
+            },
+            "if_true": {
+              "type": "helper",
+              "name": "bowserdoor_2",
+              "args": []
+            },
+            "if_false": {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "self"
+                  },
+                  "attr": "bowser_door"
+                },
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": 3
+                }
+              },
+              "if_true": {
+                "type": "constant",
+                "value": true
+              },
+              "if_false": {
+                "type": "conditional",
+                "test": {
+                  "type": "compare",
+                  "left": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "bowser_door"
+                  },
+                  "op": "==",
+                  "right": {
+                    "type": "constant",
+                    "value": 4
+                  }
+                },
+                "if_true": {
+                  "type": "constant",
+                  "value": true
+                },
+                "if_false": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "self"
+                      },
+                      "attr": "bowser_door"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": 5
+                    }
+                  },
+                  "if_true": {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "helper",
+                        "name": "bowserdoor_1",
+                        "args": []
+                      },
+                      {
+                        "type": "helper",
+                        "name": "bowserdoor_2",
+                        "args": []
+                      },
+                      {
+                        "type": "helper",
+                        "name": "bowserdoor_3",
+                        "args": []
+                      }
+                    ]
+                  },
+                  "if_false": null
+                }
+              }
+            }
+          }
+        }
+      },
+      "bandit_bonus": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "item_check",
+            "item": "Bandit Consumables"
+          },
+          {
+            "type": "item_check",
+            "item": "Bandit Watermelons"
+          }
+        ]
+      },
+      "bowserdoor_1": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "state_method",
+              "method": "has_all",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": [
+                    "! Switch",
+                    "Egg Plant"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "item_check",
+              "item": "Egg Capacity Upgrade",
+              "count": {
+                "type": "constant",
+                "value": 2
+              }
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Egg Plant"
+              },
+              {
+                "type": "item_check",
+                "item": "Egg Capacity Upgrade",
+                "count": {
+                  "type": "constant",
+                  "value": 1
+                }
+              }
+            ]
+          },
+          "if_false": {
+            "type": "item_check",
+            "item": "Egg Plant"
+          }
+        }
+      },
+      "bowserdoor_2": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "or",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Egg Capacity Upgrade",
+                      "count": {
+                        "type": "constant",
+                        "value": 3
+                      }
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Egg Plant"
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "combat_item",
+                  "args": []
+                }
+              ]
+            },
+            {
+              "type": "item_check",
+              "item": "Key"
+            }
+          ]
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Egg Capacity Upgrade",
+                        "count": {
+                          "type": "constant",
+                          "value": 2
+                        }
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Egg Plant"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "helper",
+                    "name": "combat_item",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "type": "item_check",
+                "item": "Key"
+              }
+            ]
+          },
+          "if_false": {
+            "type": "and",
+            "conditions": [
+              {
+                "type": "or",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "item_check",
+                        "item": "Egg Capacity Upgrade",
+                        "count": {
+                          "type": "constant",
+                          "value": 1
+                        }
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Egg Plant"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "helper",
+                    "name": "combat_item",
+                    "args": []
+                  }
+                ]
+              },
+              {
+                "type": "item_check",
+                "item": "Key"
+              }
+            ]
+          }
+        }
+      },
+      "bowserdoor_3": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Normal"
+            }
+          },
+          "if_true": {
+            "type": "constant",
+            "value": true
+          },
+          "if_false": {
+            "type": "constant",
+            "value": true
+          }
+        }
+      },
+      "cansee_clouds": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "game_logic"
+          },
+          "op": "!=",
+          "right": {
+            "type": "constant",
+            "value": "Easy"
+          }
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "or",
+          "conditions": [
+            {
+              "type": "helper",
+              "name": "default_vis",
+              "args": []
+            },
+            {
+              "type": "item_check",
+              "item": "Secret Lens"
+            },
+            {
+              "type": "helper",
+              "name": "combat_item",
+              "args": []
+            }
+          ]
+        }
+      },
+      "castle_access": {
+        "type": "item_check",
+        "item": "Boss Clear",
+        "count": {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "self"
+          },
+          "attr": "castle_unlock"
+        }
+      },
+      "castle_clear": {
+        "type": "item_check",
+        "item": "Boss Clear",
+        "count": {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "self"
+          },
+          "attr": "boss_unlock"
+        }
+      },
+      "combat_item": {
+        "type": "conditional",
+        "test": {
+          "type": "not",
+          "condition": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "consumable_logic"
+          }
+        },
+        "if_true": {
+          "type": "constant",
+          "value": false
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Easy"
+            }
+          },
+          "if_true": {
+            "type": "helper",
+            "name": "item_bonus",
+            "args": []
+          },
+          "if_false": {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "helper",
+                "name": "bandit_bonus",
+                "args": []
+              },
+              {
+                "type": "helper",
+                "name": "item_bonus",
+                "args": []
+              }
+            ]
+          }
+        }
+      },
+      "default_vis": {
+        "type": "conditional",
+        "test": {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "self"
+          },
+          "attr": "clouds_always_visible"
+        },
+        "if_true": {
+          "type": "constant",
+          "value": true
+        },
+        "if_false": {
+          "type": "constant",
+          "value": false
+        }
+      },
+      "has_midring": {
+        "type": "or",
+        "conditions": [
+          {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "midring_start"
+          },
+          {
+            "type": "item_check",
+            "item": "Middle Ring"
+          }
+        ]
+      },
+      "item_bonus": {
+        "type": "item_check",
+        "item": "Bonus Consumables"
+      },
+      "melon_item": {
+        "type": "conditional",
+        "test": {
+          "type": "not",
+          "condition": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "self"
+            },
+            "attr": "consumable_logic"
+          }
+        },
+        "if_true": {
+          "type": "constant",
+          "value": false
+        },
+        "if_false": {
+          "type": "conditional",
+          "test": {
+            "type": "compare",
+            "left": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "self"
+              },
+              "attr": "game_logic"
+            },
+            "op": "==",
+            "right": {
+              "type": "constant",
+              "value": "Easy"
+            }
+          },
+          "if_true": {
+            "type": "helper",
+            "name": "item_bonus",
+            "args": []
+          },
+          "if_false": {
+            "type": "or",
+            "conditions": [
+              {
+                "type": "item_check",
+                "item": "Bandit Watermelons"
+              },
+              {
+                "type": "helper",
+                "name": "item_bonus",
+                "args": []
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
 }

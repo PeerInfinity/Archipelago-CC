@@ -838,24 +838,24 @@ class BlasphemousGameExportHandler(BaseGameExportHandler):
         # Default to preserving unknown helpers
         return None
         
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Recursively expand rule functions with Blasphemous-specific logic."""
         if not rule:
             return rule
-            
+
         # Handle analyzed functions that might contain game-specific logic
         if rule.get('type') == 'state_method' and rule.get('method') == '__analyzed_func__':
             return self._analyze_blasphemous_rule(rule)
-            
+
         # Standard helper expansion
         if rule['type'] == 'helper':
             expanded = self.expand_helper(rule['name'])
             return expanded if expanded else rule
-            
+
         # Recurse into compound rules
         if rule['type'] in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond) for cond in rule['conditions']]
-            
+            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule['conditions']]
+
         return rule
         
     def _analyze_blasphemous_rule(self, rule):

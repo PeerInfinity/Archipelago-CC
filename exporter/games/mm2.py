@@ -1,86 +1,62 @@
 """Mega Man 2 game-specific export handler."""
 
-from typing import Dict, Any
-from .generic import GenericGameExportHandler
 import logging
+from typing import Any, Callable, Dict
+
+from .generic import GenericGameExportHandler
 
 logger = logging.getLogger(__name__)
 
-# Weapon ID to name mapping (from worlds/mm2/rules.py)
-weapons_to_name = {
-    1: "Atomic Fire",
-    2: "Air Shooter",
-    3: "Leaf Shield",
-    4: "Bubble Lead",
-    5: "Quick Boomerang",
-    6: "Crash Bomber",
-    7: "Metal Blade",
-    8: "Time Stopper"
-}
 
 class MM2GameExportHandler(GenericGameExportHandler):
     """Export handler for Mega Man 2.
 
     Inherits all default behavior from GenericGameExportHandler.
-    Override methods only when custom behavior is needed.
+    Injects module-level variables needed for helper function analysis.
     """
     GAME_NAME = 'Mega Man 2'
+    # Enable automatic helper export
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
 
-    def get_settings_data(self, world, multiworld, player):
-        """Extract Mega Man 2 settings including wily_5 requirement and weapon data."""
-        # Get base settings
-        settings = super().get_settings_data(world, multiworld, player)
+    # No helpers blacklisted - can_defeat_enough_rbms is now supported with
+    # tuple unpacking in for loops and map() function support
+    HELPERS_TO_EXPORT_BLACKLIST = set()
 
-        settings['use_resolved_items'] = True
+    # Parameter name mappings for helpers whose parameter names don't match slot_data keys.
+    # Maps helper_name -> {param_name: slot_data_key}
+    # The frontend uses these mappings to resolve parameter values from slot_data/settings.
+    HELPER_PARAM_MAPPINGS = {
+        'can_defeat_enough_rbms': {
+            'required': 'wily_5_requirement',
+            'boss_requirements': 'wily_5_weapons',
+        },
+    }
 
-        # Add MM2-specific settings for wily_5 requirements
+    def prepare_closure_vars(self, rule_func: Callable, closure_vars: Dict[str, Any]) -> Dict[str, Any]:
+        """Inject MM2 module-level data structures into closure_vars for helper analysis.
+
+        This ensures that constants from rules.py (robot_masters, weapons_to_name)
+        are available during rule analysis, even when they're not in the function's
+        direct closure.
+        """
+        enhanced_closure = closure_vars.copy()
+
         try:
-            if hasattr(world, 'options') and hasattr(world.options, 'wily_5_requirement'):
-                settings['wily_5_requirement'] = int(world.options.wily_5_requirement.value)
-            else:
-                settings['wily_5_requirement'] = 8  # Default value
-        except Exception as e:
-            logger.error(f"Error extracting wily_5_requirement option: {e}")
-            settings['wily_5_requirement'] = 8
+            # Import MM2 rules module data
+            from worlds.mm2.rules import robot_masters, weapons_to_name
 
-        # Export wily_5_weapons - boss requirements for Wily Stage 5
-        try:
-            if hasattr(world, 'wily_5_weapons'):
-                # Convert weapon IDs to weapon names for easier JavaScript use
-                wily_5_weapons = {}
-                for boss_id, weapon_ids in world.wily_5_weapons.items():
-                    # Convert weapon IDs to weapon names
-                    weapon_names = []
-                    for weapon_id in weapon_ids:
-                        if weapon_id in weapons_to_name:
-                            weapon_names.append(weapons_to_name[weapon_id])
-                        elif weapon_id == 0:
-                            weapon_names.append("Mega Buster")
-                        else:
-                            logger.warning(f"Unknown weapon ID {weapon_id}")
-                    wily_5_weapons[str(boss_id)] = weapon_names
-
-                settings['wily_5_weapons'] = wily_5_weapons
-                logger.info(f"Exported wily_5_weapons: {wily_5_weapons}")
-            else:
-                logger.warning("World object has no wily_5_weapons attribute")
-                settings['wily_5_weapons'] = {}
-        except Exception as e:
-            logger.error(f"Error extracting wily_5_weapons: {e}")
-            settings['wily_5_weapons'] = {}
-
-        return settings
-
-    def _expand_common_helper(self, helper_name, args):
-        """Override common helper expansion to handle MM2-specific helpers."""
-        # Handle can_defeat_enough_rbms - preserve as helper for JavaScript evaluation
-        if helper_name == 'can_defeat_enough_rbms':
-            return {
-                'type': 'helper',
-                'name': helper_name,
-                'args': args,
-                'description': 'Requires defeating enough robot masters for Wily Stage 5'
+            # Inject module-level constants if not already present
+            module_vars = {
+                'robot_masters': robot_masters,
+                'weapons_to_name': weapons_to_name,
             }
 
-        # Let parent class handle other helpers
-        return super()._expand_common_helper(helper_name, args)
+            for name, value in module_vars.items():
+                if name not in enhanced_closure:
+                    enhanced_closure[name] = value
+                    logger.debug(f"Injected {name} into closure_vars for MM2 helper analysis")
+
+        except ImportError as e:
+            logger.warning(f"Could not import MM2 modules for closure injection: {e}")
+
+        return enhanced_closure

@@ -14,6 +14,23 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
     """
     GAME_NAME = "Yoshi's Island"
 
+    # Enable automatic helper export
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    AUTO_PRESERVE_LARGE_HELPERS = True
+
+    # Specify the modules containing helper class methods
+    HELPER_MODULES = [
+        'worlds.yoshisisland.level_logic',  # YoshiLogic class
+        'worlds.yoshisisland.setup_bosses'  # BossReqs class (castle_access, castle_clear)
+    ]
+
+    # Whitelist helpers that should always be exported
+    # These are from BossReqs class and called via bosses.method_name()
+    HELPERS_TO_EXPORT_WHITELIST = {
+        'castle_access',
+        'castle_clear',
+    }
+
     # Define Yoshi's Island-specific helpers that should NOT be auto-expanded
     YOSHI_HELPERS = {
         'has_midring',
@@ -157,28 +174,67 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
 
         # Yoshi's Island specific settings needed for helper functions
         if hasattr(world, 'options'):
-            # Stage Logic (needed for cansee_clouds, combat_item, etc.)
+            # Raw option values for backwards compatibility
             settings_dict['StageLogic'] = extract_option('stage_logic')
-
-            # Hidden Object Visibility (needed for cansee_clouds)
             settings_dict['HiddenObjectVisibility'] = extract_option('hidden_object_visibility')
-
-            # Shuffle Middle Rings (needed for has_midring)
             settings_dict['ShuffleMiddleRings'] = extract_option('shuffle_midrings')
-
-            # Item Logic / Consumable Logic (needed for combat_item, melon_item)
             settings_dict['ItemLogic'] = extract_option('item_logic')
-
-            # Bowser Door Mode (needed for bowser door helpers)
             settings_dict['BowserDoorMode'] = extract_option('bowser_door_mode')
-
-            # Luigi Pieces Required (needed for reconstitute_luigi)
             settings_dict['LuigiPiecesRequired'] = extract_option('luigi_pieces_required')
-
-            # Castle Clear Condition (needed for castle_clear)
             settings_dict['CastleClearCondition'] = extract_option('castle_clear_condition')
-
-            # Castle Open Condition (needed for castle_access)
             settings_dict['CastleOpenCondition'] = extract_option('castle_open_condition')
+
+            # Computed values that match YoshiLogic instance attributes
+            # These are referenced by exported helpers as self.attribute
+            stage_logic = extract_option('stage_logic')
+            if stage_logic == 0:  # StageLogic.option_strict
+                settings_dict['game_logic'] = "Easy"
+            elif stage_logic == 1:  # StageLogic.option_loose
+                settings_dict['game_logic'] = "Normal"
+            else:  # StageLogic.option_expert
+                settings_dict['game_logic'] = "Hard"
+
+            # midring_start = not shuffle_midrings
+            settings_dict['midring_start'] = not extract_option('shuffle_midrings')
+
+            # clouds_always_visible = hidden_object_visibility >= ObjectVis.option_clouds_only (2)
+            settings_dict['clouds_always_visible'] = extract_option('hidden_object_visibility') >= 2
+
+            # consumable_logic = not item_logic
+            settings_dict['consumable_logic'] = not extract_option('item_logic')
+
+            # bowser_door with special case for door_4 -> door_3
+            bowser_door = extract_option('bowser_door_mode')
+            if bowser_door == 4:  # BowserDoor.option_door_4
+                bowser_door = 3  # BowserDoor.option_door_3
+            settings_dict['bowser_door'] = bowser_door
+
+            # luigi_pieces from option
+            settings_dict['luigi_pieces'] = extract_option('luigi_pieces_required')
+
+            # Export boss_order list for _xxCanFightBoss helpers
+            # This is dynamically set during world setup based on boss shuffle option
+            if hasattr(world, 'boss_order') and world.boss_order:
+                settings_dict['boss_order'] = list(world.boss_order)
+            else:
+                # Default boss order if not shuffled
+                settings_dict['boss_order'] = [
+                    "Burt the Bashful's Boss Room",
+                    "Salvo the Slime's Boss Room",
+                    "Bigger Boo's Boss Room",
+                    "Roger the Potted Ghost's Boss Room",
+                    "Prince Froggy's Boss Room",
+                    "Naval Piranha's Boss Room",
+                    "Marching Milde's Boss Room",
+                    "Hookbill the Koopa's Boss Room",
+                    "Sluggy the Unshaven's Boss Room",
+                    "Raphael the Raven's Boss Room",
+                    "Tap-Tap the Red Nose's Boss Room"
+                ]
+
+            # Settings for BossReqs class (castle_access, castle_clear helpers)
+            # These use self.castle_unlock and self.boss_unlock which are from options
+            settings_dict['castle_unlock'] = extract_option('castle_open_condition')
+            settings_dict['boss_unlock'] = extract_option('castle_clear_condition')
 
         return settings_dict

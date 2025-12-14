@@ -9,6 +9,9 @@ logger = logging.getLogger(__name__)
 class Overcooked2GameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'Overcooked! 2'
 
+    # Enable automatic export of discovered helpers
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+
     def __init__(self):
         super().__init__()
         self.overworld_region_logic_mapping = {}
@@ -157,9 +160,8 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
 
     def expand_helper(self, helper_name: str):
         """Expand Overcooked! 2 helper functions."""
-        # For now, preserve helpers as-is - they'll be implemented in frontend
-        if helper_name in ['has_requirements_for_level_star', 'has_requirements_for_level_access',
-                          'meets_requirements', 'has_enough_stars']:
+        # Preserve level star requirements as helper - implemented in frontend JavaScript
+        if helper_name in ['has_requirements_for_level_star', 'has_requirements_for_level_access']:
             return None  # Keep as helper
 
         return super().expand_helper(helper_name)
@@ -269,7 +271,7 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
         # Return rule as-is for other types
         return rule
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Recursively expand rule functions with Overcooked! 2-specific handling."""
         if not rule:
             return rule
@@ -280,14 +282,13 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
         if rule_type == 'helper':
             helper_name = rule.get('name', '')
 
-            # Keep certain helpers as-is (don't let generic exporter convert them to items)
-            if helper_name in ['has_enough_stars', 'has_requirements_for_level_star',
-                              'has_requirements_for_level_access', 'meets_requirements']:
+            # Keep level star helpers as-is (implemented in frontend JavaScript)
+            if helper_name in ['has_requirements_for_level_star', 'has_requirements_for_level_access']:
                 # Don't call super().expand_rule() - this would convert has_* to items
                 # Just recursively process the args if any
                 if 'args' in rule:
                     rule = dict(rule)  # Make a copy
-                    rule['args'] = [self.expand_rule(arg) if isinstance(arg, dict) else arg
+                    rule['args'] = [self.expand_rule(arg, _depth + 1) if isinstance(arg, dict) else arg
                                    for arg in rule.get('args', [])]
                 return rule
 
@@ -299,12 +300,8 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
             if helper_name == 'has_requirements_for_level_star':
                 return self._expand_level_star_rule(rule)
 
-            # Handle meets_requirements
-            if helper_name == 'meets_requirements':
-                return self._expand_meets_requirements(rule)
-
         # Standard recursive processing
-        return super().expand_rule(rule)
+        return super().expand_rule(rule, _depth)
 
     def _expand_level_access_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """Expand has_requirements_for_level_access helper into explicit rules.
@@ -355,15 +352,18 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
 
         # 3. Star count requirement
         if required_stars and required_stars > 0:
-            # Note: Star and Bonus Star are different items, so we need to check if either has enough
-            # The original Python code does: state.count("Star", player) + state.count("Bonus Star", player)
-            # For now, use a helper that can handle this additive count logic
+            # Sum Star and Bonus Star counts using binary_op addition
+            # Original Python: state.count("Star", player) + state.count("Bonus Star", player)
             conditions.append({
-                'type': 'helper',
-                'name': 'has_enough_stars',
-                'args': [
-                    {'type': 'constant', 'value': required_stars}
-                ]
+                'type': 'compare',
+                'left': {
+                    'type': 'binary_op',
+                    'op': '+',
+                    'left': {'type': 'count_item', 'item': 'Star'},
+                    'right': {'type': 'count_item', 'item': 'Bonus Star'}
+                },
+                'op': '>=',
+                'right': {'type': 'constant', 'value': required_stars}
             })
 
         # 4. Previous level completion requirement
@@ -595,14 +595,6 @@ class Overcooked2GameExportHandler(GenericGameExportHandler):
         # The level_logic uses shortnames like "Story 1-1", not level numbers
         # We need to figure out the shortname from the level_id
         # For now, keep as helper - this would require more context
-        return rule
-
-    def _expand_meets_requirements(self, rule: Dict[str, Any]) -> Dict[str, Any]:
-        """Expand meets_requirements helper.
-
-        This checks the level_logic dictionary for specific requirements.
-        """
-        # Keep as helper for now - will be implemented in frontend
         return rule
 
     def _resolve_constant(self, rule: Dict[str, Any]) -> Any:

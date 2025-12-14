@@ -25,6 +25,7 @@ The handler will be automatically discovered and registered.
 
 from typing import Dict, Any, List
 from .base import BaseGameExportHandler
+from exporter.constants import MAX_RULE_EXPANSION_DEPTH
 import re
 import logging
 
@@ -40,34 +41,44 @@ class GenericGameExportHandler(BaseGameExportHandler):
     def expand_helper(self, helper_name: str):
         return None  # Preserve helper nodes as-is
         
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Recursively expand rule functions with intelligent analysis."""
+        if _depth > MAX_RULE_EXPANSION_DEPTH:
+            logging.error(f"GenericGameExportHandler.expand_rule: Max depth ({MAX_RULE_EXPANSION_DEPTH}) exceeded. "
+                         f"Rule type: {rule.get('type') if rule else 'None'}")
+            return {'type': 'error', 'message': f'Max expansion depth ({MAX_RULE_EXPANSION_DEPTH}) exceeded'}
+
         if not rule:
             return rule
-            
+
         # Special handling for __analyzed_func__ - try to extract meaningful information
         if rule.get('type') == 'state_method' and rule.get('method') == '__analyzed_func__':
             # Try to extract more detailed information from original rule if available
             if 'original' in rule:
                 return self._analyze_original_rule(rule['original'])
-                
+
             # Attempt to infer rule type from any available information
             return self._infer_rule_type(rule)
-            
+
         # Special handling for helper nodes with common pattern names
+        # Skip expansion if the helper should be preserved (game explicitly wants it as a helper call)
+        # Also skip if the helper was auto-preserved due to HELPER_INLINE_THRESHOLD
         if rule.get('type') == 'helper':
             helper_name = rule.get('name', '')
-            if self._is_common_helper_pattern(helper_name):
+            # Check if helper was auto-preserved or explicitly preserved
+            is_auto_preserved = (hasattr(self, 'is_auto_preserved_helper') and
+                                 self.is_auto_preserved_helper(helper_name))
+            if not is_auto_preserved and not self.should_preserve_as_helper(helper_name) and self._is_common_helper_pattern(helper_name):
                 return self._expand_common_helper(helper_name, rule.get('args', []))
-            
+
         # Standard processing from base class
         if rule['type'] == 'helper':
             expanded = self.expand_helper(rule['name'])
             return expanded if expanded else rule
-            
+
         if rule['type'] in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond) for cond in rule['conditions']]
-            
+            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule['conditions']]
+
         return rule
     
     def _analyze_original_rule(self, original_rule):

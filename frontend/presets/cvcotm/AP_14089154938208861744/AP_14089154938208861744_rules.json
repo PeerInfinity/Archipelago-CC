@@ -521,16 +521,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "compare",
-                  "left": {
-                    "type": "constant",
-                    "value": 0
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": 1
-                  }
+                  "type": "constant",
+                  "value": false
                 },
                 {
                   "type": "item_check",
@@ -1304,16 +1296,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "compare",
-                  "left": {
-                    "type": "constant",
-                    "value": 0
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": 1
-                  }
+                  "type": "constant",
+                  "value": false
                 },
                 {
                   "type": "item_check",
@@ -1665,16 +1649,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "compare",
-                  "left": {
-                    "type": "constant",
-                    "value": 0
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": 1
-                  }
+                  "type": "constant",
+                  "value": false
                 },
                 {
                   "type": "item_check",
@@ -2768,10 +2744,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 37
+        "max_count": 37,
+        "classification": "filler"
       },
       "HP Max Up": {
         "name": "HP Max Up",
@@ -2779,10 +2755,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 34
+        "max_count": 34,
+        "classification": "filler"
       },
       "MP Max Up": {
         "name": "MP Max Up",
@@ -2790,10 +2766,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "filler",
         "event": false,
         "type": null,
-        "max_count": 24
+        "max_count": 24,
+        "classification": "filler"
       },
       "Salamander Card": {
         "name": "Salamander Card",
@@ -2805,10 +2781,10 @@
           "DSS",
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Serpent Card": {
         "name": "Serpent Card",
@@ -2822,10 +2798,10 @@
           "Freeze",
           "Freeze Attribute"
         ],
-        "classification": "progression|useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Mandragora Card": {
         "name": "Mandragora Card",
@@ -2837,10 +2813,10 @@
           "DSS",
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Golem Card": {
         "name": "Golem Card",
@@ -2852,10 +2828,10 @@
           "DSS",
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Cockatrice Card": {
         "name": "Cockatrice Card",
@@ -2869,10 +2845,10 @@
           "Freeze",
           "Freeze Attribute"
         ],
-        "classification": "progression|useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Manticore Card": {
         "name": "Manticore Card",
@@ -2884,10 +2860,10 @@
           "DSS",
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Griffin Card": {
         "name": "Griffin Card",
@@ -2899,10 +2875,10 @@
           "DSS",
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Thunderbird Card": {
         "name": "Thunderbird Card",
@@ -2914,10 +2890,10 @@
           "DSS",
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Unicorn Card": {
         "name": "Unicorn Card",
@@ -2929,10 +2905,10 @@
           "DSS",
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Black Dog Card": {
         "name": "Black Dog Card",
@@ -2944,10 +2920,10 @@
           "DSS",
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Mercury Card": {
         "name": "Mercury Card",
@@ -2961,10 +2937,10 @@
           "Freeze",
           "Freeze Action"
         ],
-        "classification": "progression|useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Venus Card": {
         "name": "Venus Card",
@@ -2976,10 +2952,10 @@
           "DSS",
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Jupiter Card": {
         "name": "Jupiter Card",
@@ -2991,10 +2967,10 @@
           "DSS",
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Mars Card": {
         "name": "Mars Card",
@@ -3008,10 +2984,10 @@
           "Freeze",
           "Freeze Action"
         ],
-        "classification": "progression|useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Diana Card": {
         "name": "Diana Card",
@@ -3023,10 +2999,10 @@
           "DSS",
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Apollo Card": {
         "name": "Apollo Card",
@@ -3038,10 +3014,10 @@
           "DSS",
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Neptune Card": {
         "name": "Neptune Card",
@@ -3053,10 +3029,10 @@
           "DSS",
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Saturn Card": {
         "name": "Saturn Card",
@@ -3068,10 +3044,10 @@
           "DSS",
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Uranus Card": {
         "name": "Uranus Card",
@@ -3083,10 +3059,10 @@
           "DSS",
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Pluto Card": {
         "name": "Pluto Card",
@@ -3098,10 +3074,10 @@
           "DSS",
           "Everything"
         ],
-        "classification": "useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "useful"
       },
       "Double": {
         "name": "Double",
@@ -3109,10 +3085,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression|useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Tackle": {
         "name": "Tackle",
@@ -3120,10 +3096,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Kick Boots": {
         "name": "Kick Boots",
@@ -3131,10 +3107,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Heavy Ring": {
         "name": "Heavy Ring",
@@ -3142,10 +3118,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Cleansing": {
         "name": "Cleansing",
@@ -3153,10 +3129,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression"
       },
       "Roc Wing": {
         "name": "Roc Wing",
@@ -3164,10 +3140,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression|useful",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression|useful"
       },
       "Last Key": {
         "name": "Last Key",
@@ -3175,10 +3151,10 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression_skip_balancing",
         "event": false,
         "type": null,
-        "max_count": 1
+        "max_count": 1,
+        "classification": "progression_skip_balancing"
       },
       "Maiden Detonator": {
         "name": "Maiden Detonator",
@@ -3186,19 +3162,21 @@
         "groups": [
           "Everything"
         ],
-        "classification": "progression",
         "event": false,
         "type": null,
-        "max_count": 2
+        "max_count": 2,
+        "classification": "progression"
       },
       "The Count Downed": {
         "name": "The Count Downed",
         "id": null,
-        "groups": [],
-        "classification": "progression",
+        "groups": [
+          "Event"
+        ],
         "event": true,
-        "type": null,
-        "max_count": 1
+        "type": "Event",
+        "max_count": 1,
+        "classification": "progression"
       }
     }
   },
@@ -3252,6 +3230,9 @@
       "Venus Card": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -3263,6 +3244,44 @@
       "game": "Castlevania - Circle of the Moon",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "always_allow_speed_dash": 0,
+        "auto_run": 0,
+        "available_last_keys": 1,
+        "battle_arena_music": 0,
+        "buff_ranged_familiars": 0,
+        "buff_shooter_strength": 0,
+        "buff_sub_weapons": 0,
+        "completion_goal": 0,
+        "countdown": 0,
+        "death_link": 0,
+        "disable_battle_arena_mp_drain": 0,
+        "dss_patch": 0,
+        "early_escape_item": 1,
+        "exclude_locations": [],
+        "halve_dss_cards_placed": 0,
+        "ignore_cleansing": 0,
+        "iron_maiden_behavior": 0,
+        "item_drop_randomization": 1,
+        "item_links": [],
+        "local_items": [],
+        "nerf_roc_wing": 0,
+        "non_local_items": [],
+        "plando_items": [],
+        "pluto_griffin_air_speed": 0,
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "required_last_keys": 1,
+        "required_skirmishes": 0,
+        "skip_dialogues": 0,
+        "skip_tutorials": 0,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_inventory_from_pool": {},
+        "start_location_hints": [],
+        "sub_weapon_shuffle": 0
+      },
       "nerf_roc_wing": 0,
       "ignore_cleansing": 0,
       "iron_maiden_behavior": 0,
@@ -3275,8 +3294,152 @@
       "name": "Castlevania - Circle of the Moon",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "stone",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Archipelago Castlevania: Circle of the Moon randomizer on your computer and connecting it to a multiworld.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Liquid Cat"
+          ]
+        }
+      ],
+      "world_description": "Castlevania: Circle of the Moon is a launch title for the Game Boy Advance and the first of three Castlevania games\nreleased for the handheld in the \"Metroidvania\" format. As Nathan Graves, wielding the Hunter Whip and utilizing the\nDual Set-Up System for new possibilities, you must battle your way through Camilla's castle and rescue your master\nfrom a demonic ritual to restore the Count's power...",
+      "slot_data": {
+        "death_link": 0,
+        "iron_maiden_behavior": 0,
+        "ignore_cleansing": 0,
+        "skip_tutorials": 0,
+        "required_last_keys": 1,
+        "completion_goal": 0,
+        "nerf_roc_wing": 0
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "has_jump_level_1": {
+        "type": "state_method",
+        "method": "has_any",
+        "args": [
+          {
+            "type": "constant",
+            "value": [
+              "Double",
+              "Roc Wing"
+            ]
+          }
+        ]
+      },
+      "has_jump_level_2": {
+        "type": "item_check",
+        "item": {
+          "type": "constant",
+          "value": "Roc Wing"
+        }
+      },
+      "has_jump_level_3": {
+        "type": "item_check",
+        "item": {
+          "type": "constant",
+          "value": "Roc Wing"
+        }
+      },
+      "has_jump_level_4": {
+        "type": "item_check",
+        "item": {
+          "type": "constant",
+          "value": "Roc Wing"
+        }
+      },
+      "has_jump_level_5": {
+        "type": "item_check",
+        "item": {
+          "type": "constant",
+          "value": "Roc Wing"
+        }
+      },
+      "has_kick": {
+        "type": "item_check",
+        "item": {
+          "type": "constant",
+          "value": "Kick Boots"
+        }
+      },
+      "has_tackle": {
+        "type": "item_check",
+        "item": {
+          "type": "constant",
+          "value": "Tackle"
+        }
+      },
+      "has_push": {
+        "type": "item_check",
+        "item": {
+          "type": "constant",
+          "value": "Heavy Ring"
+        }
+      },
+      "has_ice_or_stone": {
+        "type": "and",
+        "conditions": [
+          {
+            "type": "state_method",
+            "method": "has_any",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Serpent Card",
+                  "Cockatrice Card"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "state_method",
+            "method": "has_any",
+            "args": [
+              {
+                "type": "constant",
+                "value": [
+                  "Mercury Card",
+                  "Mars Card"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "can_touch_water": {
+        "type": "item_check",
+        "item": {
+          "type": "constant",
+          "value": "Cleansing"
+        }
+      },
+      "broke_iron_maidens": {
+        "type": "item_check",
+        "item": {
+          "type": "constant",
+          "value": "Maiden Detonator"
+        }
+      },
+      "can_open_ceremonial_door": {
+        "type": "item_check",
+        "item": {
+          "type": "constant",
+          "value": "Last Key"
+        },
+        "count": {
+          "type": "constant",
+          "value": 1
+        }
+      }
+    }
+  }
 }

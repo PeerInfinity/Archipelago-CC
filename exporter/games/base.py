@@ -8,10 +8,14 @@ defaults for rule analysis, item data discovery, and common helper patterns.
 See exporter/games/generic.py for details on the enhanced functionality.
 """
 
-from typing import Dict, Any, List, Set, Optional
+from typing import Dict, Any, List, Set, Optional, Callable
 import collections
+import enum
 import importlib
+import inspect
 import logging
+
+from exporter.constants import MAX_RULE_EXPANSION_DEPTH, MAX_HELPER_DISCOVERY_ITERATIONS
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +26,12 @@ class BaseGameExportHandler:
 
     # List of module paths containing helper functions (e.g., ['worlds.shapez.regions'])
     HELPER_MODULES: List[str] = []
+
+    # Dict mapping setting names to callables that compute them
+    # Callable signature: (world, multiworld, player) -> value
+    # Example: {'floating': lambda w, m, p: w.options.allow_floating_layers.value}
+    # These settings are automatically added to the exported settings by get_settings_data
+    COMPUTED_SETTINGS: Dict[str, Callable] = {}
 
     # List of module paths containing item name constants (e.g., ['worlds.shapez.data.strings'])
     # The exporter will look for classes like ITEMS with attributes that map to item names
@@ -41,13 +51,41 @@ class BaseGameExportHandler:
     # These helpers are too complex and need JavaScript implementations
     HELPERS_TO_EXPORT_BLACKLIST: Set[str] = set()
 
+    # Parameter name mappings for helpers whose parameter names don't match slot_data keys.
+    # Maps helper_name -> {param_name: slot_data_key}
+    # The frontend uses these mappings to resolve parameter values from slot_data/settings.
+    # Example: {'my_helper': {'param1': 'slot_data_key1', 'param2': 'setting_key2'}}
+    HELPER_PARAM_MAPPINGS: Dict[str, Dict[str, str]] = {}
+
+    # Set of helper function names that should be preserved as helper calls
+    # during rule analysis (not inlined/expanded by generic pattern matching)
+    # This is used by should_preserve_as_helper() - games can set this instead
+    # of overriding the method
+    HELPERS_TO_PRESERVE: Set[str] = set()
+
+    # Enable automatic helper preservation based on size
+    # When enabled, helpers with more nodes than HELPER_INLINE_THRESHOLD will be
+    # preserved as helper calls instead of inlined, reducing rules.json size
+    AUTO_PRESERVE_LARGE_HELPERS: bool = True
+
+    # Threshold for automatic helper preservation (only used if AUTO_PRESERVE_LARGE_HELPERS is True)
+    # Helpers with more than this many nodes will be preserved as helper calls
+    HELPER_INLINE_THRESHOLD: int = 0
+
     def __init__(self):
         """Initialize the handler with an empty set of discovered helpers."""
         # Set of helper names discovered during rule analysis
         # Populated automatically by register_helper_usage()
         self._discovered_helpers: Set[str] = set()
+        # Dict mapping helper names to their source modules (auto-detected)
+        self._discovered_helper_modules: Dict[str, str] = {}
+        # Set of helper names that were auto-preserved due to HELPER_INLINE_THRESHOLD
+        # These helpers should not be expanded by common pattern matching
+        self._auto_preserved_helpers: Set[str] = set()
+        # Cache of analyzed helper definitions (for auto-preserved large helpers)
+        self._analyzed_helper_cache: Dict[str, Any] = {}
 
-    def register_helper_usage(self, helper_name: str) -> None:
+    def register_helper_usage(self, helper_name: str, helper_func: Any = None) -> None:
         """
         Register that a helper function is used in the rules.
 
@@ -57,10 +95,20 @@ class BaseGameExportHandler:
 
         Args:
             helper_name: The name of the helper function
+            helper_func: Optional - the actual function object (used to auto-detect module)
         """
         if not hasattr(self, '_discovered_helpers'):
             self._discovered_helpers = set()
+        if not hasattr(self, '_discovered_helper_modules'):
+            self._discovered_helper_modules = {}
         self._discovered_helpers.add(helper_name)
+
+        # Auto-detect the module from the function object
+        if helper_func is not None and hasattr(helper_func, '__module__'):
+            module_name = helper_func.__module__
+            if module_name and helper_name not in self._discovered_helper_modules:
+                self._discovered_helper_modules[helper_name] = module_name
+                logger.debug(f"Auto-detected module for helper '{helper_name}': {module_name}")
 
     def get_discovered_helpers(self) -> Set[str]:
         """
@@ -73,30 +121,151 @@ class BaseGameExportHandler:
             self._discovered_helpers = set()
         return self._discovered_helpers
 
+    def get_discovered_helper_modules(self) -> Dict[str, str]:
+        """
+        Return the dict mapping helper names to their auto-detected modules.
+
+        Returns:
+            Dict mapping helper function names to module paths
+        """
+        if not hasattr(self, '_discovered_helper_modules'):
+            self._discovered_helper_modules = {}
+        return self._discovered_helper_modules
+
+    def register_auto_preserved_helper(self, helper_name: str) -> None:
+        """
+        Register that a helper was auto-preserved due to HELPER_INLINE_THRESHOLD.
+
+        Auto-preserved helpers should not be expanded by common pattern matching
+        in expand_rule() because they will have proper definitions exported.
+
+        Args:
+            helper_name: The name of the helper function
+        """
+        if not hasattr(self, '_auto_preserved_helpers'):
+            self._auto_preserved_helpers = set()
+        self._auto_preserved_helpers.add(helper_name)
+
+    def is_auto_preserved_helper(self, helper_name: str) -> bool:
+        """
+        Check if a helper was auto-preserved due to HELPER_INLINE_THRESHOLD.
+
+        Args:
+            helper_name: The name of the helper function
+
+        Returns:
+            True if the helper was auto-preserved
+        """
+        if not hasattr(self, '_auto_preserved_helpers'):
+            self._auto_preserved_helpers = set()
+        return helper_name in self._auto_preserved_helpers
+
     def clear_discovered_helpers(self) -> None:
         """Clear the set of discovered helpers. Called between player exports."""
         self._discovered_helpers = set()
+        self._discovered_helper_modules = {}
+        self._auto_preserved_helpers = set()
+        self._analyzed_helper_cache = {}
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def cache_analyzed_helper(self, helper_name: str, definition: Dict[str, Any]) -> None:
+        """
+        Cache an analyzed helper definition for later export.
+
+        This is called by the analyzer when a helper is automatically preserved
+        due to exceeding HELPER_INLINE_THRESHOLD. The cached definition will be
+        used by get_helper_definitions() instead of re-analyzing the helper.
+
+        Args:
+            helper_name: The name of the helper function
+            definition: The analyzed rule definition for the helper
+        """
+        if not hasattr(self, '_analyzed_helper_cache'):
+            self._analyzed_helper_cache = {}
+        self._analyzed_helper_cache[helper_name] = definition
+
+    def get_cached_helper(self, helper_name: str) -> Optional[Dict[str, Any]]:
+        """
+        Get a cached helper definition if available.
+
+        Args:
+            helper_name: The name of the helper function
+
+        Returns:
+            The cached rule definition, or None if not cached
+        """
+        if not hasattr(self, '_analyzed_helper_cache'):
+            self._analyzed_helper_cache = {}
+        return self._analyzed_helper_cache.get(helper_name)
+
+    @staticmethod
+    def count_rule_nodes(rule: Dict[str, Any]) -> int:
+        """
+        Count the number of nodes in a rule tree.
+
+        This is used to decide whether to inline a helper or preserve it as a
+        helper call based on HELPER_INLINE_THRESHOLD.
+
+        Args:
+            rule: The rule structure to count nodes in
+
+        Returns:
+            The number of nodes in the rule tree
+        """
+        if not rule or not isinstance(rule, dict):
+            return 0
+
+        count = 1  # Count this node
+        rule_type = rule.get('type')
+
+        if rule_type in ['and', 'or']:
+            for condition in rule.get('conditions', []):
+                count += BaseGameExportHandler.count_rule_nodes(condition)
+        elif rule_type == 'not':
+            count += BaseGameExportHandler.count_rule_nodes(rule.get('condition'))
+        elif rule_type == 'conditional':
+            count += BaseGameExportHandler.count_rule_nodes(rule.get('test'))
+            count += BaseGameExportHandler.count_rule_nodes(rule.get('if_true'))
+            count += BaseGameExportHandler.count_rule_nodes(rule.get('if_false'))
+        elif rule_type == 'helper':
+            for arg in rule.get('args', []):
+                if isinstance(arg, dict):
+                    count += BaseGameExportHandler.count_rule_nodes(arg)
+        elif rule_type == 'state_method':
+            for arg in rule.get('args', []):
+                if isinstance(arg, dict):
+                    count += BaseGameExportHandler.count_rule_nodes(arg)
+        elif rule_type == 'block':
+            for stmt in rule.get('statements', []):
+                if isinstance(stmt, dict):
+                    count += BaseGameExportHandler.count_rule_nodes(stmt)
+
+        return count
+
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Recursively expand helper functions in a rule structure."""
+        if _depth > MAX_RULE_EXPANSION_DEPTH:
+            logging.error(f"Rule expansion exceeded maximum depth ({MAX_RULE_EXPANSION_DEPTH}). "
+                         f"This likely indicates a circular helper reference. Rule type: {rule.get('type') if rule else 'None'}")
+            return {'type': 'error', 'message': f'Max expansion depth ({MAX_RULE_EXPANSION_DEPTH}) exceeded'}
+
         if not rule or not isinstance(rule, dict):
             return rule
-            
+
         if rule.get('type') == 'helper':
             expanded = self.expand_helper(rule['name'], rule.get('args', []))
             if expanded:
-                return self.expand_rule(expanded)
-            
+                return self.expand_rule(expanded, _depth + 1)
+
         if rule.get('type') in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond) for cond in rule.get('conditions', [])]
-            
+            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
+
         if rule.get('type') == 'not':
-            rule['condition'] = self.expand_rule(rule.get('condition'))
+            rule['condition'] = self.expand_rule(rule.get('condition'), _depth + 1)
         if rule.get('type') == 'conditional':
-            rule['test'] = self.expand_rule(rule.get('test'))
-            rule['if_true'] = self.expand_rule(rule.get('if_true'))
-            rule['if_false'] = self.expand_rule(rule.get('if_false'))
-            
+            rule['test'] = self.expand_rule(rule.get('test'), _depth + 1)
+            rule['if_true'] = self.expand_rule(rule.get('if_true'), _depth + 1)
+            rule['if_false'] = self.expand_rule(rule.get('if_false'), _depth + 1)
+
         return rule
         
     def expand_helper(self, helper_name: str, args: List[Any] = None) -> Dict[str, Any]:
@@ -127,15 +296,18 @@ class BaseGameExportHandler:
         This prevents the analyzer from recursively analyzing closure variables that
         should remain as helper functions in the exported rules.
 
+        Games can either:
+        1. Set the HELPERS_TO_PRESERVE class attribute with a set of helper names
+        2. Override this method for custom logic
+
         Args:
             func_name: The name of the function being analyzed
 
         Returns:
             True if the function should be preserved as a helper, False otherwise
         """
-        # Default implementation: don't preserve any functions as helpers
-        # Games can override this to preserve specific helpers
-        return False
+        # Check the class attribute for preserved helpers
+        return func_name in self.HELPERS_TO_PRESERVE
 
     def should_process_multistatement_if_bodies(self) -> bool:
         """
@@ -228,6 +400,9 @@ class BaseGameExportHandler:
         Note: After the fill process, multiworld.itempool still contains all original items
         because distribute_items_restrictive operates on a sorted copy. We only count items
         that are actually placed in locations (plus precollected items) to get accurate counts.
+
+        In multiworld, items owned by a player can be placed in ANY player's locations, so we
+        must search all locations to find all items belonging to this player.
         """
         itempool_counts = collections.defaultdict(int)
 
@@ -236,10 +411,12 @@ class BaseGameExportHandler:
             for item in multiworld.precollected_items.get(player, []):
                 itempool_counts[item.name] += 1
 
-        # Count items placed in locations
+        # Count items placed in locations (across ALL locations in multiworld)
         # Note: We don't count from multiworld.itempool because after fill it still contains
         # the original items (fill operates on a copy), which would cause double-counting.
-        for location in multiworld.get_locations(player):
+        # In multiworld, a player's items may be placed in other players' locations,
+        # so we iterate over all filled locations and check if item.player matches.
+        for location in multiworld.get_filled_locations():
             if location.item and location.item.player == player:
                 itempool_counts[location.item.name] += 1
 
@@ -277,6 +454,37 @@ class BaseGameExportHandler:
         # Games that need resolved_items should override get_settings_data and set this to True
         settings_dict['use_resolved_items'] = False
 
+        # Export all game-specific options from the world
+        # This allows the world generator to recreate fill_slot_data behavior
+        if hasattr(world, 'options') and world.options:
+            options_dict = {}
+            for option_name in dir(world.options):
+                if option_name.startswith('_'):
+                    continue
+                try:
+                    option = getattr(world.options, option_name)
+                    # Check if it's an Option object with a value attribute
+                    if hasattr(option, 'value'):
+                        value = option.value
+                        # Only export simple types (int, bool, str, list, dict)
+                        if isinstance(value, (int, bool, str, list, dict)):
+                            options_dict[option_name] = value
+                        elif isinstance(value, set):
+                            options_dict[option_name] = sorted(value)
+                except Exception:
+                    pass
+            if options_dict:
+                settings_dict['options'] = options_dict
+
+        # Process computed settings from COMPUTED_SETTINGS class attribute
+        if self.COMPUTED_SETTINGS:
+            for setting_name, compute_func in self.COMPUTED_SETTINGS.items():
+                try:
+                    value = compute_func(world, multiworld, player)
+                    settings_dict[setting_name] = value
+                except Exception as e:
+                    logger.warning(f"Failed to compute setting '{setting_name}': {e}")
+
         return settings_dict
         
     def get_game_info(self, world) -> Dict[str, Any]:
@@ -306,6 +514,57 @@ class BaseGameExportHandler:
         if hasattr(world, 'prog_items_init') and world.prog_items_init:
             game_info['prog_items_init'] = world.prog_items_init
 
+        # Export base_id if available (used for ID allocation)
+        if hasattr(world, 'base_id') and world.base_id is not None:
+            game_info['base_id'] = world.base_id
+
+        # Export WebWorld metadata if available
+        if hasattr(world, 'web') and world.web:
+            web = world.web
+            # Theme
+            if hasattr(web, 'theme') and web.theme:
+                game_info['web_theme'] = web.theme
+            # Tutorials
+            if hasattr(web, 'tutorials') and web.tutorials:
+                tutorials_data = []
+                for tutorial in web.tutorials:
+                    tutorial_info = {}
+                    if hasattr(tutorial, 'tutorial_name'):
+                        tutorial_info['name'] = tutorial.tutorial_name
+                    if hasattr(tutorial, 'description'):
+                        tutorial_info['description'] = tutorial.description
+                    if hasattr(tutorial, 'language'):
+                        tutorial_info['language'] = tutorial.language
+                    if hasattr(tutorial, 'file_name'):
+                        tutorial_info['file_name'] = tutorial.file_name
+                    if hasattr(tutorial, 'link'):
+                        tutorial_info['link'] = tutorial.link
+                    if hasattr(tutorial, 'authors'):
+                        tutorial_info['authors'] = tutorial.authors
+                    if tutorial_info:
+                        tutorials_data.append(tutorial_info)
+                if tutorials_data:
+                    game_info['web_tutorials'] = tutorials_data
+
+        # Export world class docstring if available
+        world_class = world.__class__
+        if world_class.__doc__:
+            # Clean up the docstring (strip leading/trailing whitespace from each line)
+            docstring = world_class.__doc__
+            # Normalize whitespace
+            lines = [line.strip() for line in docstring.strip().split('\n')]
+            game_info['world_description'] = '\n'.join(lines)
+
+        # Export fill_slot_data return value if available
+        # This captures the data the world sends to the client
+        if hasattr(world, 'fill_slot_data') and callable(world.fill_slot_data):
+            try:
+                slot_data = world.fill_slot_data()
+                if slot_data and isinstance(slot_data, dict):
+                    game_info['slot_data'] = slot_data
+            except Exception as e:
+                logger.debug(f"Could not call fill_slot_data for {world.game}: {e}")
+
         return game_info
         
     def get_required_fields(self) -> List[str]:
@@ -328,7 +587,11 @@ class BaseGameExportHandler:
         return []
         
     def cleanup_settings(self, settings_dict: Dict[str, Any]) -> Dict[str, Any]:
-        """Perform game-specific cleanup/mapping on exported settings."""
+        """Perform game-specific cleanup/mapping on exported settings.
+
+        Converts numeric option values to string names to match how Python
+        helpers compare against option values.
+        """
         common_setting_mappings = {
             'accessibility': {0: 'items', 1: 'locations', 2: 'none'},
         }
@@ -479,18 +742,24 @@ class BaseGameExportHandler:
         # Determine which helpers to export based on AUTO_EXPORT_DISCOVERED_HELPERS
         # When False (default), only whitelisted helpers are exported
         # When True, discovered helpers are also exported (minus blacklist)
+        # Auto-preserved helpers (from AUTO_PRESERVE_LARGE_HELPERS) are always exported
+        auto_preserved = self._auto_preserved_helpers if hasattr(self, '_auto_preserved_helpers') else set()
         if self.AUTO_EXPORT_DISCOVERED_HELPERS:
             discovered = self.get_discovered_helpers()
-            helpers_to_export = discovered | whitelist
+            helpers_to_export = discovered | whitelist | auto_preserved
         else:
-            helpers_to_export = whitelist
+            helpers_to_export = whitelist | auto_preserved
 
-        if not helpers_to_export or not helper_modules:
+        # Collect modules to load - both manually specified and auto-discovered
+        auto_discovered_modules = set(self.get_discovered_helper_modules().values())
+        all_module_paths = set(helper_modules) | auto_discovered_modules
+
+        if not helpers_to_export or not all_module_paths:
             return helper_definitions
 
         # Load helper modules
         loaded_modules = []
-        for module_path in helper_modules:
+        for module_path in all_module_paths:
             try:
                 module = importlib.import_module(module_path)
                 loaded_modules.append(module)
@@ -504,15 +773,16 @@ class BaseGameExportHandler:
         # When analyzing a helper, it may call other helpers which get registered
         # Keep iterating until no new helpers are discovered
         processed_helpers: Set[str] = set()
-        max_iterations = 10  # Safety limit to prevent infinite loops
 
-        for iteration in range(max_iterations):
+        for iteration in range(MAX_HELPER_DISCOVERY_ITERATIONS):
             # Get current set of helpers to export (may grow as we discover new ones)
+            # Include auto-preserved helpers in each iteration (they may grow too)
+            auto_preserved = self._auto_preserved_helpers if hasattr(self, '_auto_preserved_helpers') else set()
             if self.AUTO_EXPORT_DISCOVERED_HELPERS:
                 discovered = self.get_discovered_helpers()
-                current_helpers = discovered | whitelist
+                current_helpers = discovered | whitelist | auto_preserved
             else:
-                current_helpers = whitelist
+                current_helpers = whitelist | auto_preserved
 
             # Find helpers that haven't been processed yet
             new_helpers = current_helpers - processed_helpers - blacklist
@@ -527,11 +797,62 @@ class BaseGameExportHandler:
                 processed_helpers.add(helper_name)
 
                 # Find the helper function in one of the loaded modules
+                # First check module-level functions, then class methods
                 helper_func = None
                 for module in loaded_modules:
+                    # Check module-level function
                     if hasattr(module, helper_name):
                         helper_func = getattr(module, helper_name)
                         break
+                    # Check methods in classes defined in the module
+                    for name, obj in vars(module).items():
+                        if isinstance(obj, type):  # It's a class
+                            if hasattr(obj, helper_name):
+                                method = getattr(obj, helper_name)
+                                # Get the underlying function from the method
+                                if callable(method):
+                                    helper_func = method
+                                    break
+                    if helper_func is not None:
+                        break
+
+                # Check if we have a cached definition (from auto-preservation due to size)
+                cached_def = self.get_cached_helper(helper_name)
+                if cached_def is not None:
+                    # Extract parameter names and defaults from the function (excluding state, player, world, self)
+                    params = []
+                    defaults = {}
+                    if helper_func and hasattr(helper_func, '__code__'):
+                        all_params = helper_func.__code__.co_varnames[:helper_func.__code__.co_argcount]
+                        params = [p for p in all_params if p not in ('state', 'player', 'world', 'self')]
+
+                        # Extract default values for parameters
+                        if hasattr(helper_func, '__defaults__') and helper_func.__defaults__:
+                            func_defaults = helper_func.__defaults__
+                            num_defaults = len(func_defaults)
+                            params_with_defaults = all_params[-num_defaults:]
+                            for param_name, default_value in zip(params_with_defaults, func_defaults):
+                                if param_name in params:
+                                    if isinstance(default_value, (bool, int, float, str, type(None))):
+                                        defaults[param_name] = default_value
+
+                    # Store with params if the helper has parameters
+                    if params:
+                        helper_def = {
+                            'params': params,
+                            'body': cached_def
+                        }
+                        if defaults:
+                            helper_def['defaults'] = defaults
+                        # Add param_mappings if defined for this helper
+                        if helper_name in self.HELPER_PARAM_MAPPINGS:
+                            helper_def['param_mappings'] = self.HELPER_PARAM_MAPPINGS[helper_name]
+                        helper_definitions[helper_name] = helper_def
+                        logger.debug(f"Using cached definition for helper '{helper_name}' with params {params}, defaults {defaults}")
+                    else:
+                        helper_definitions[helper_name] = cached_def
+                        logger.debug(f"Using cached definition for helper '{helper_name}': {cached_def}")
+                    continue
 
                 if helper_func is None:
                     # Not found in helper modules - this is normal for built-in helpers
@@ -539,21 +860,95 @@ class BaseGameExportHandler:
                     logger.debug(f"Helper function '{helper_name}' not found in helper modules (may be a built-in)")
                     continue
 
+                # Skip built-in functions (e.g., math.floor imported at module level)
+                # These can't be analyzed via source inspection and are typically
+                # handled directly by the frontend rule engine
+                if inspect.isbuiltin(helper_func):
+                    logger.debug(f"Helper '{helper_name}' is a built-in function, skipping analysis (handled by frontend)")
+                    continue
+
+                # Check if this is an enum class (e.g., Difficulty, HatType)
+                # Enum constructors like Difficulty(value) are essentially identity functions
+                # for rule purposes - they take a numeric value and return the enum member,
+                # but for comparisons we only care about the underlying numeric value.
+                if isinstance(helper_func, type) and issubclass(helper_func, enum.Enum):
+                    logger.debug(f"Helper '{helper_name}' is an enum class - exporting as identity function")
+                    # Export as a simple passthrough: takes one arg and returns it
+                    # This allows Difficulty(world.options.LogicDifficulty) to work correctly
+                    helper_definitions[helper_name] = {
+                        'params': ['value'],
+                        'body': {'type': 'name', 'name': 'value'}
+                    }
+                    continue
+
+                # Check if this is a regular class (non-enum)
+                # Classes like SMBool can't be analyzed via source inspection since they
+                # don't have __code__ attributes. These classes are typically constructors
+                # that the frontend implements directly.
+                if isinstance(helper_func, type):
+                    logger.debug(f"Helper '{helper_name}' is a class - skipping analysis (frontend-implemented)")
+                    continue
+
+                # Note: We previously checked for "dynamic for loops" here and blocked export.
+                # Now that for_iter with tuple unpacking, map(), and dict methods are supported,
+                # we allow the analysis to proceed. If the analyzer can't handle a specific case,
+                # it will return an error or unsupported result.
+
                 # Analyze the function to get its rule structure
                 # This may discover new helpers via register_helper_usage
+                # Use preserve_parameter_names=True so that default parameter values
+                # are kept as name references (not inlined) for runtime resolution
                 try:
                     rule = analyze_rule(
                         rule_func=helper_func,
                         game_handler=self,
-                        player_context=world.player if hasattr(world, 'player') else None
+                        player_context=world.player if hasattr(world, 'player') else None,
+                        preserve_parameter_names=True
                     )
 
                     # Clean up the rule - resolve item names, convert state methods to rule types
                     rule = self._clean_helper_rule(rule, world)
 
+                    # Expand helper calls in the rule (game-specific expansions)
+                    if hasattr(self, 'expand_rule') and callable(self.expand_rule):
+                        rule = self.expand_rule(rule)
+
                     if rule and rule.get('type') != 'error':
-                        helper_definitions[helper_name] = rule
-                        logger.debug(f"Exported helper '{helper_name}': {rule}")
+                        # Extract parameter names and defaults from the function (excluding state, player, world, self)
+                        params = []
+                        defaults = {}
+                        if hasattr(helper_func, '__code__'):
+                            all_params = helper_func.__code__.co_varnames[:helper_func.__code__.co_argcount]
+                            params = [p for p in all_params if p not in ('state', 'player', 'world', 'self')]
+
+                            # Extract default values for parameters
+                            if hasattr(helper_func, '__defaults__') and helper_func.__defaults__:
+                                func_defaults = helper_func.__defaults__
+                                # Defaults apply to the last N parameters
+                                num_defaults = len(func_defaults)
+                                params_with_defaults = all_params[-num_defaults:]
+                                for param_name, default_value in zip(params_with_defaults, func_defaults):
+                                    if param_name in params:  # Only include if it's not state/player/world
+                                        # Only include simple JSON-serializable defaults
+                                        if isinstance(default_value, (bool, int, float, str, type(None))):
+                                            defaults[param_name] = default_value
+
+                        # Store with params if the helper has parameters, otherwise just the rule
+                        if params:
+                            helper_def = {
+                                'params': params,
+                                'body': rule
+                            }
+                            if defaults:
+                                helper_def['defaults'] = defaults
+                            # Add param_mappings if defined for this helper
+                            if helper_name in self.HELPER_PARAM_MAPPINGS:
+                                helper_def['param_mappings'] = self.HELPER_PARAM_MAPPINGS[helper_name]
+                            helper_definitions[helper_name] = helper_def
+                            logger.debug(f"Exported helper '{helper_name}' with params {params}, defaults {defaults}: {rule}")
+                        else:
+                            helper_definitions[helper_name] = rule
+                            logger.debug(f"Exported helper '{helper_name}': {rule}")
                     else:
                         logger.warning(f"Failed to analyze helper '{helper_name}': {rule}")
                 except Exception as e:
@@ -561,7 +956,8 @@ class BaseGameExportHandler:
         else:
             logger.warning(f"Helper discovery reached max iterations ({max_iterations}), may have circular dependencies")
 
-        return helper_definitions
+        # Sort alphabetically for consistent output
+        return dict(sorted(helper_definitions.items()))
 
     def _clean_helper_rule(self, rule: Dict[str, Any], world) -> Dict[str, Any]:
         """

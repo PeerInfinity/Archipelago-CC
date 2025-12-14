@@ -32,7 +32,7 @@ class ASTVisitorMixin:
         - binary_op_processor: BinaryOpProcessor instance
     """
 
-    def _register_helper_usage(self, helper_name: str) -> None:
+    def _register_helper_usage(self, helper_name: str, helper_func: Any = None) -> None:
         """
         Register that a helper function is used, for automatic discovery.
 
@@ -41,11 +41,12 @@ class ASTVisitorMixin:
 
         Args:
             helper_name: The name of the helper function being used
+            helper_func: Optional - the actual function object (for auto-detecting module)
         """
         if (hasattr(self, 'game_handler') and
             self.game_handler is not None and
             hasattr(self.game_handler, 'register_helper_usage')):
-            self.game_handler.register_helper_usage(helper_name)
+            self.game_handler.register_helper_usage(helper_name, helper_func)
             logging.debug(f"Registered helper usage: {helper_name}")
 
     def visit_Module(self, node):
@@ -150,33 +151,94 @@ class ASTVisitorMixin:
         """
         Determine if a function body needs block mode (multi-statement) analysis.
         Returns True if the body contains:
-        - For loops
-        - Multiple assignments followed by a return
-        - AugAssign statements
+        - For loops (including inside If statements)
+        - Multiple assignments followed by a return (including returns inside If statements)
+        - AugAssign statements (including inside If statements)
         """
-        has_for = any(isinstance(n, ast.For) for n in body_nodes)
-        has_augassign = any(isinstance(n, ast.AugAssign) for n in body_nodes)
+        # Check for for loops recursively - they can be inside If statements' body or orelse
+        def has_for_recursive(nodes):
+            for node in nodes:
+                if isinstance(node, ast.For):
+                    return True
+                if isinstance(node, ast.If):
+                    if has_for_recursive(node.body):
+                        return True
+                    if has_for_recursive(node.orelse):
+                        return True
+            return False
 
-        # Count assignments followed by return
+        # Check for augmented assignments recursively
+        def has_augassign_recursive(nodes):
+            for node in nodes:
+                if isinstance(node, ast.AugAssign):
+                    return True
+                if isinstance(node, ast.If):
+                    if has_augassign_recursive(node.body):
+                        return True
+                    if has_augassign_recursive(node.orelse):
+                        return True
+                if isinstance(node, ast.For):
+                    if has_augassign_recursive(node.body):
+                        return True
+            return False
+
+        has_for = has_for_recursive(body_nodes)
+        has_augassign = has_augassign_recursive(body_nodes)
+
+        # Count assignments at the top level
         assign_count = sum(1 for n in body_nodes if isinstance(n, (ast.Assign, ast.AnnAssign)))
-        has_return = any(isinstance(n, ast.Return) for n in body_nodes)
+
+        # Check for return statements - both at top level and inside If statements
+        def has_return_recursive(nodes):
+            for node in nodes:
+                if isinstance(node, ast.Return):
+                    return True
+                if isinstance(node, ast.If):
+                    if has_return_recursive(node.body):
+                        return True
+                    if has_return_recursive(node.orelse):
+                        return True
+            return False
+
+        has_return = has_return_recursive(body_nodes)
 
         # Use block mode if we have for loops, augmented assignments,
-        # or multiple assignments before a return
+        # or any assignments before a return (need to capture variable bindings)
         if has_for or has_augassign:
             return True
-        if assign_count > 0 and has_return and len(body_nodes) > 2:
+        if assign_count > 0 and has_return:
             return True
         return False
 
     def visit_Lambda(self, node):
         try:
             logging.debug("\n--- Analyzing Lambda ---")
-            logging.debug(f"Lambda args: {[arg.arg for arg in node.args.args]}")
+            param_names = [arg.arg for arg in node.args.args]
+            logging.debug(f"Lambda args: {param_names}")
             logging.debug(f"Lambda body type: {type(node.body).__name__}")
-            
-            # Visit the lambda body and return its result
-            return self.visit(node.body)
+
+            # Visit the lambda body
+            body_result = self.visit(node.body)
+
+            # Determine if this is a "rule lambda" (access rule) or a "data lambda" (for map, etc.)
+            # Rule lambdas have 'state' as the first parameter and should return just the body
+            # Data lambdas (used in map(), filter(), etc.) should return the full lambda structure
+            # Note: Super Metroid uses 'sm' (SMSolver) instead of 'state' for its rule lambdas
+            is_rule_lambda = (
+                not param_names or  # No params - simple rule
+                (param_names and param_names[0] in ('state', 'self', 'sm'))
+            )
+
+            if is_rule_lambda:
+                # Rule lambda - return just the body (the actual rule)
+                return body_result
+            else:
+                # Data lambda (e.g., lambda x: transform(x)) - return full structure
+                return {
+                    'type': 'lambda',
+                    'params': param_names,
+                    'body': body_result
+                }
         except Exception as e:
             logging.error("Error in visit_Lambda", e)
             return None
@@ -185,16 +247,26 @@ class ASTVisitorMixin:
         try:
             logging.debug("\n--- Analyzing Return ---")
             logging.debug(f"Return value type: {type(node.value).__name__}")
-            
+
             if isinstance(node.value, ast.BoolOp):
                 logging.debug(f"BoolOp type: {type(node.value.op).__name__}")
                 logging.debug(f"BoolOp values count: {len(node.value.values)}")
-            
+
             # Visit the return value and return its result
             return self.visit(node.value)
         except Exception as e:
             logging.error("Error in visit_Return", e)
             return None
+
+    def visit_Break(self, node):
+        """Handle break statements - used to exit loops early."""
+        logging.debug("\n--- Analyzing Break ---")
+        return {'type': 'break'}
+
+    def visit_Continue(self, node):
+        """Handle continue statements - skip to next iteration."""
+        logging.debug("\n--- Analyzing Continue ---")
+        return {'type': 'continue'}
 
     def visit_Call(self, node):
         """
@@ -206,6 +278,13 @@ class ASTVisitorMixin:
         logging.debug(f"\nvisit_Call called:")
         logging.debug(f"Function: {ast.dump(node.func)}")
         logging.debug(f"Args: {[ast.dump(arg) for arg in node.args]}")
+
+        # *** Special handling for state.multiworld.get_region() pattern ***
+        # Check this early before visiting function node to avoid unnecessary processing
+        region_name = self._is_multiworld_get_region_call(node)
+        if region_name:
+            logging.debug(f"Detected state.multiworld.get_region pattern, region: {region_name}")
+            return {'type': 'region_reference', 'region': region_name}
 
         # Visit the function node to obtain its details.
         func_info = self.visit(node.func) # Get returned result
@@ -234,58 +313,60 @@ class ASTVisitorMixin:
 
             # Filter arguments for game handler and result creation
             filtered_args = self._filter_special_args(args_with_nodes)
-            
-            # Resolve variable references in arguments (e.g., lambda defaults)
-            resolved_args = []
-            for arg in filtered_args:
-                if arg and arg.get('type') == 'name':
-                    # Skip 'world' - it should have been filtered already but double-check
-                    if arg['name'] == 'world':
-                        logging.debug(f"Skipping resolution of 'world' argument")
-                        continue
 
-                    # Try to resolve the variable
-                    resolved_value = self.expression_resolver.resolve_variable(arg['name'])
-                    if resolved_value is not None and is_simple_value(resolved_value):
-                        # Only create constant for simple values
-                        # Handle enum values - extract the numeric value
-                        if hasattr(resolved_value, 'value'):
-                            final_value = resolved_value.value
+            # Resolve variable references in arguments (e.g., lambda defaults)
+            # Skip this when preserve_parameter_names is True - we want to keep params as name references
+            if not getattr(self, 'preserve_parameter_names', False):
+                resolved_args = []
+                for arg in filtered_args:
+                    if arg and arg.get('type') == 'name':
+                        # Skip 'world' - it should have been filtered already but double-check
+                        if arg['name'] == 'world':
+                            logging.debug(f"Skipping resolution of 'world' argument")
+                            continue
+
+                        # Try to resolve the variable
+                        resolved_value = self.expression_resolver.resolve_variable(arg['name'])
+                        if resolved_value is not None and is_simple_value(resolved_value):
+                            # Only create constant for simple values
+                            # Handle enum values - extract the numeric value
+                            if hasattr(resolved_value, 'value'):
+                                final_value = resolved_value.value
+                            else:
+                                final_value = resolved_value
+                            # Ensure the final value is JSON-serializable
+                            final_value = make_json_serializable(final_value)
+                            logging.debug(f"Resolved argument variable '{arg['name']}' to {final_value}")
+                            resolved_args.append({'type': 'constant', 'value': final_value})
+                        # Handle Region objects - extract the .name attribute
+                        elif resolved_value is not None and hasattr(resolved_value, 'name') and hasattr(resolved_value, 'entrances'):
+                            region_name = resolved_value.name
+                            logging.debug(f"Resolved argument variable '{arg['name']}' (Region object) to region name: {region_name}")
+                            resolved_args.append({'type': 'constant', 'value': region_name})
                         else:
-                            final_value = resolved_value
-                        # Ensure the final value is JSON-serializable
-                        final_value = make_json_serializable(final_value)
-                        logging.debug(f"Resolved argument variable '{arg['name']}' to {final_value}")
-                        resolved_args.append({'type': 'constant', 'value': final_value})
-                    # Handle Region objects - extract the .name attribute
-                    elif resolved_value is not None and hasattr(resolved_value, 'name') and hasattr(resolved_value, 'entrances'):
-                        region_name = resolved_value.name
-                        logging.debug(f"Resolved argument variable '{arg['name']}' (Region object) to region name: {region_name}")
-                        resolved_args.append({'type': 'constant', 'value': region_name})
-                    else:
-                        # Keep unresolved or complex objects as name references
-                        resolved_args.append(arg)
-                elif arg and arg.get('type') == 'attribute':
-                    # Try to resolve attribute expressions like HatType.BREWING
-                    resolved_value = self.expression_resolver.resolve_expression(arg)
-                    if resolved_value is not None and is_simple_value(resolved_value):
-                        # Only create constant for simple values
-                        # Handle enum values - extract the numeric value
-                        if hasattr(resolved_value, 'value'):
-                            final_value = resolved_value.value
+                            # Keep unresolved or complex objects as name references
+                            resolved_args.append(arg)
+                    elif arg and arg.get('type') == 'attribute':
+                        # Try to resolve attribute expressions like HatType.BREWING
+                        resolved_value = self.expression_resolver.resolve_expression(arg)
+                        if resolved_value is not None and is_simple_value(resolved_value):
+                            # Only create constant for simple values
+                            # Handle enum values - extract the numeric value
+                            if hasattr(resolved_value, 'value'):
+                                final_value = resolved_value.value
+                            else:
+                                final_value = resolved_value
+                            # Ensure the final value is JSON-serializable
+                            final_value = make_json_serializable(final_value)
+                            logging.debug(f"Resolved argument attribute to {final_value}")
+                            resolved_args.append({'type': 'constant', 'value': final_value})
                         else:
-                            final_value = resolved_value
-                        # Ensure the final value is JSON-serializable
-                        final_value = make_json_serializable(final_value)
-                        logging.debug(f"Resolved argument attribute to {final_value}")
-                        resolved_args.append({'type': 'constant', 'value': final_value})
+                            # Keep unresolved or complex objects as attribute references
+                            resolved_args.append(arg)
                     else:
-                        # Keep unresolved or complex objects as attribute references
                         resolved_args.append(arg)
-                else:
-                    resolved_args.append(arg)
-            
-            filtered_args = resolved_args
+
+                filtered_args = resolved_args
 
             # Check for game-specific special function calls
             if self.game_handler and hasattr(self.game_handler, 'handle_special_function_call'):
@@ -316,6 +397,40 @@ class ASTVisitorMixin:
                     # Recursive analysis logic for lambda default parameters (only if not preserving as helper)
                     if not should_preserve:
                         try:
+                            # Helper function to check if a function contains for loops over dynamic data
+                            def has_dynamic_for_loops_resolved(func):
+                                """Check if a function's body contains for loops over non-constant iterables."""
+                                try:
+                                    import inspect
+                                    source = inspect.getsource(func)
+                                    tree = ast.parse(source)
+                                    for n in ast.walk(tree):
+                                        if isinstance(n, ast.For):
+                                            # Check if iterator is a method call like .keys(), .values(), .items()
+                                            if isinstance(n.iter, ast.Call):
+                                                if isinstance(n.iter.func, ast.Attribute):
+                                                    method_name = n.iter.func.attr
+                                                    if method_name in ('keys', 'values', 'items'):
+                                                        return True
+                                            # Check if iterator is a name (variable)
+                                            elif isinstance(n.iter, ast.Name):
+                                                return True
+                                    return False
+                                except Exception:
+                                    return False
+
+                            # Check if function has dynamic for loops - if so, preserve as helper
+                            resolved_func_name = getattr(resolved_func, '__name__', func_name)
+                            if has_dynamic_for_loops_resolved(resolved_func):
+                                logging.debug(f"Function {resolved_func_name} has dynamic for loops, preserving as helper")
+                                if hasattr(self.game_handler, 'register_helper_usage'):
+                                    self.game_handler.register_helper_usage(resolved_func_name, resolved_func)
+                                return {
+                                    'type': 'helper',
+                                    'name': resolved_func_name,
+                                    'args': filtered_args
+                                }
+
                             # Check if 'state' is passed as an argument using original AST nodes
                             has_state_arg = any(isinstance(arg, ast.Name) and arg.id == 'state' for arg in node.args)
                             # Attempt recursion if state arg is present
@@ -338,6 +453,40 @@ class ASTVisitorMixin:
                                                               game_handler=self.game_handler,
                                                               player_context=self.player_context)
                                 if recursive_result.get('type') != 'error':
+                                    # Check if the result is too large to inline
+                                    # If so, discard the analyzed result and treat like manual preservation
+                                    # But only if we have a real function name (not <lambda>)
+                                    auto_preserve = getattr(self.game_handler, 'AUTO_PRESERVE_LARGE_HELPERS', False) if self.game_handler else False
+                                    threshold = getattr(self.game_handler, 'HELPER_INLINE_THRESHOLD', 0) if self.game_handler else 0
+                                    # Don't preserve lambdas - they have no useful name for export
+                                    if auto_preserve and actual_func_name and actual_func_name != '<lambda>':
+                                        from exporter.games.base import BaseGameExportHandler
+                                        size = BaseGameExportHandler.count_rule_nodes(recursive_result)
+                                        if size > threshold:
+                                            logging.debug(f"Helper {actual_func_name} has {size} nodes (threshold {threshold}), preserving as helper")
+                                            # Register the helper for export
+                                            if hasattr(self.game_handler, 'register_helper_usage'):
+                                                self.game_handler.register_helper_usage(actual_func_name, resolved_func)
+                                            if hasattr(self.game_handler, 'register_auto_preserved_helper'):
+                                                self.game_handler.register_auto_preserved_helper(actual_func_name)
+                                            # Only cache the analyzed result if the function has no extra parameters
+                                            # (besides state, player, world). If it takes parameters, the cached
+                                            # result would have specific argument values baked in, which is wrong.
+                                            if hasattr(self.game_handler, 'cache_analyzed_helper') and hasattr(resolved_func, '__code__'):
+                                                all_params = resolved_func.__code__.co_varnames[:resolved_func.__code__.co_argcount]
+                                                extra_params = [p for p in all_params if p not in ('state', 'player', 'world')]
+                                                if not extra_params:
+                                                    # No extra params - safe to cache the fully-resolved definition
+                                                    self.game_handler.cache_analyzed_helper(actual_func_name, recursive_result)
+                                                    logging.debug(f"Cached definition for parameterless helper {actual_func_name}")
+                                                else:
+                                                    logging.debug(f"Not caching {actual_func_name} - has params {extra_params}")
+                                            # Return a helper call with original args (like manual preservation)
+                                            return {
+                                                'type': 'helper',
+                                                'name': actual_func_name,
+                                                'args': filtered_args
+                                            }
                                     logging.debug(f"Recursive analysis successful for {func_name}. Result: {recursive_result}")
                                     return recursive_result
                                 else:
@@ -350,8 +499,48 @@ class ASTVisitorMixin:
             if func_name in self.closure_vars:
                  logging.debug(f"Identified call to known closure variable: {func_name}")
 
+                 # Get the actual function from the closure to check its name
+                 actual_func = self.closure_vars[func_name]
+                 closure_func_name = getattr(actual_func, '__name__', func_name)
+
+                 # Check if game handler wants to explicitly preserve this as a helper
+                 # (without recursive analysis - the JS implementation handles it)
+                 if self.game_handler and hasattr(self.game_handler, 'should_preserve_as_helper'):
+                     if closure_func_name and self.game_handler.should_preserve_as_helper(closure_func_name):
+                         logging.debug(f"Game handler requests preserving closure {closure_func_name} as helper, skipping recursive analysis")
+                         return {
+                             'type': 'helper',
+                             'name': closure_func_name,
+                             'args': filtered_args
+                         }
+
                  # --- Recursive analysis logic (enhanced for multiline lambdas) ---
                  try:
+                     # Helper function to check if a function contains for loops over dynamic data
+                     def has_dynamic_for_loops(func):
+                         """Check if a function's body contains for loops over non-constant iterables."""
+                         try:
+                             import inspect
+                             source = inspect.getsource(func)
+                             tree = ast.parse(source)
+                             for node in ast.walk(tree):
+                                 if isinstance(node, ast.For):
+                                     # Check if iterator is a method call like .keys(), .values(), .items()
+                                     if isinstance(node.iter, ast.Call):
+                                         if isinstance(node.iter.func, ast.Attribute):
+                                             method_name = node.iter.func.attr
+                                             if method_name in ('keys', 'values', 'items'):
+                                                 logging.debug(f"Function has for loop over .{method_name}()")
+                                                 return True
+                                     # Check if iterator is a name (variable) that's not a constant
+                                     elif isinstance(node.iter, ast.Name):
+                                         # Could be iterating over a variable - likely dynamic
+                                         logging.debug(f"Function has for loop over variable: {node.iter.id}")
+                                         return True
+                             return False
+                         except Exception:
+                             return False
+
                      # Helper function to check if an AST node references 'state'
                      def references_state(node):
                          """Check if an AST node references the name 'state' anywhere."""
@@ -369,14 +558,24 @@ class ASTVisitorMixin:
                                  return True
                          return False
 
+                     # Check if function has dynamic for loops - if so, preserve as helper
+                     if has_dynamic_for_loops(actual_func):
+                         logging.debug(f"Function {closure_func_name} has dynamic for loops, preserving as helper")
+                         if hasattr(self.game_handler, 'register_helper_usage'):
+                             self.game_handler.register_helper_usage(closure_func_name, actual_func)
+                         return {
+                             'type': 'helper',
+                             'name': closure_func_name,
+                             'args': filtered_args
+                         }
+
                      # Check if 'state' is passed as an argument (directly or indirectly)
                      has_state_arg = any(references_state(arg) for arg in node.args)
                      # Attempt recursion if state arg is present
                      if has_state_arg:
                           # Import analyze_rule locally to avoid forward reference issues
                           from .analysis import analyze_rule
-                          # Get the actual function from the closure
-                          actual_func = self.closure_vars[func_name]
+                          # actual_func and closure_func_name already set above
                           logging.debug(f"Recursively analyzing closure function: {func_name} -> {actual_func}")
 
                           # Build parameter mapping for function inlining
@@ -393,6 +592,41 @@ class ASTVisitorMixin:
                                                           game_handler=self.game_handler,
                                                           player_context=self.player_context)
                           if recursive_result.get('type') != 'error':
+                              # Check if the result is too large to inline
+                              # If so, discard the analyzed result and treat like manual preservation
+                              # But only if we have a real function name (not <lambda>)
+                              auto_preserve = getattr(self.game_handler, 'AUTO_PRESERVE_LARGE_HELPERS', False) if self.game_handler else False
+                              threshold = getattr(self.game_handler, 'HELPER_INLINE_THRESHOLD', 0) if self.game_handler else 0
+                              # closure_func_name already set above
+                              # Don't preserve lambdas - they have no useful name for export
+                              if auto_preserve and closure_func_name and closure_func_name != '<lambda>':
+                                  from exporter.games.base import BaseGameExportHandler
+                                  size = BaseGameExportHandler.count_rule_nodes(recursive_result)
+                                  if size > threshold:
+                                      logging.debug(f"Helper {closure_func_name} has {size} nodes (threshold {threshold}), preserving as helper")
+                                      # Register the helper for export
+                                      if hasattr(self.game_handler, 'register_helper_usage'):
+                                          self.game_handler.register_helper_usage(closure_func_name, actual_func)
+                                      if hasattr(self.game_handler, 'register_auto_preserved_helper'):
+                                          self.game_handler.register_auto_preserved_helper(closure_func_name)
+                                      # Only cache the analyzed result if the function has no extra parameters
+                                      # (besides state, player, world). If it takes parameters, the cached
+                                      # result would have specific argument values baked in, which is wrong.
+                                      if hasattr(self.game_handler, 'cache_analyzed_helper') and hasattr(actual_func, '__code__'):
+                                          all_params = actual_func.__code__.co_varnames[:actual_func.__code__.co_argcount]
+                                          extra_params = [p for p in all_params if p not in ('state', 'player', 'world')]
+                                          if not extra_params:
+                                              # No extra params - safe to cache the fully-resolved definition
+                                              self.game_handler.cache_analyzed_helper(closure_func_name, recursive_result)
+                                              logging.debug(f"Cached definition for parameterless helper {closure_func_name}")
+                                          else:
+                                              logging.debug(f"Not caching {closure_func_name} - has params {extra_params}")
+                                      # Return a helper call with original args (like manual preservation)
+                                      return {
+                                          'type': 'helper',
+                                          'name': closure_func_name,
+                                          'args': filtered_args
+                                      }
                               logging.debug(f"Recursive analysis successful for {func_name}. Result: {recursive_result}")
                               return recursive_result # Return the detailed analysis result
                           else:
@@ -492,9 +726,16 @@ class ASTVisitorMixin:
                                         return {'type': 'and', 'conditions': expanded_conditions}
 
                 # Represent this as a specific 'all_of' rule type
+                # For nested generator expressions, recursively convert inner generators to all_of
+                element_rule = gen_exp['element']
+                if element_rule.get('type') == 'generator_expression':
+                    # Recursively convert nested generator_expression to all_of
+                    element_rule = self._convert_generator_exp_to_all_of(element_rule)
+                    logging.debug(f"all(GeneratorExp): Converted nested generator_expression to all_of")
+
                 result = {
                     'type': 'all_of',
-                    'element_rule': gen_exp['element'],
+                    'element_rule': element_rule,
                     'iterator_info': iterator_info
                 }
                 logging.debug(f"Created 'all_of' result: {result}")
@@ -655,14 +896,113 @@ class ASTVisitorMixin:
                                         return {'type': 'or', 'conditions': expanded_conditions}
 
                 # If we couldn't resolve, represent this as a specific 'any_of' rule type
+                # For nested generator expressions, recursively convert inner generators to any_of
+                element_rule = gen_exp['element']
+                if element_rule.get('type') == 'generator_expression':
+                    # Recursively convert nested generator_expression to any_of
+                    element_rule = self._convert_generator_exp_to_any_of(element_rule)
+                    logging.debug(f"any(GeneratorExp): Converted nested generator_expression to any_of")
+
                 result = {
                     'type': 'any_of',
-                    'element_rule': gen_exp['element'],
+                    'element_rule': element_rule,
                     'iterator_info': iterator_info
                 }
                 logging.debug(f"Created 'any_of' result: {result}")
                 return result
             # *** END any() HANDLING ***
+
+            # *** Special handling for sum(GeneratorExp) or sum(ListComp) ***
+            if func_name == 'sum' and len(filtered_args) >= 1:
+                first_arg = filtered_args[0]
+                # Handle both generator expressions and list types (which may contain expanded comprehension results)
+                if first_arg.get('type') == 'generator_expression':
+                    logging.debug(f"Detected sum(GeneratorExp) pattern.")
+                    gen_exp = first_arg
+
+                    # Try to resolve the iterator if it's a name reference
+                    iterator_info = gen_exp['comprehension']
+                    iterator_type = iterator_info.get('iterator', {}).get('type')
+
+                    # Try to expand the comprehension if we can resolve the iterator
+                    if iterator_type == 'name':
+                        iterator_name = iterator_info['iterator']['name']
+                        logging.debug(f"sum(GeneratorExp): Attempting to resolve iterator '{iterator_name}'")
+
+                        resolved_value = self.expression_resolver.resolve_variable(iterator_name)
+
+                        # Convert frozensets/sets/tuples to lists for uniform handling
+                        if resolved_value is not None:
+                            if isinstance(resolved_value, (frozenset, set, tuple)):
+                                resolved_value = list(resolved_value)
+                                logging.debug(f"sum(GeneratorExp): Converted {type(resolved_value).__name__} to list")
+
+                        if resolved_value is not None and isinstance(resolved_value, list):
+                            logging.debug(f"sum(GeneratorExp): Resolved '{iterator_name}' to list with {len(resolved_value)} items")
+
+                            # Handle simple values - expand the comprehension
+                            target_name = iterator_info.get('target', {}).get('name')
+                            if target_name:
+                                element_rule = gen_exp['element']
+                                expanded_elements = []
+
+                                for value in resolved_value:
+                                    # Substitute the target variable with the current value in the element rule
+                                    substituted_rule = self._substitute_variable_in_rule(element_rule, target_name, value)
+                                    if substituted_rule:
+                                        expanded_elements.append(substituted_rule)
+                                    else:
+                                        logging.warning(f"sum(GeneratorExp): Failed to substitute {target_name}={value} in element rule")
+                                        expanded_elements = None
+                                        break
+
+                                if expanded_elements is not None:
+                                    logging.debug(f"sum(GeneratorExp): Successfully expanded to {len(expanded_elements)} elements")
+                                    if len(expanded_elements) == 0:
+                                        # Empty iterator - sum() of empty is 0
+                                        return {'type': 'constant', 'value': 0}
+                                    elif len(expanded_elements) == 1:
+                                        return expanded_elements[0]
+                                    else:
+                                        # Build a nested binary_op tree for addition
+                                        result = expanded_elements[0]
+                                        for elem in expanded_elements[1:]:
+                                            result = {
+                                                'type': 'binary_op',
+                                                'left': result,
+                                                'op': '+',
+                                                'right': elem
+                                            }
+                                        return result
+
+                    # If we couldn't expand, create a sum_of rule for runtime evaluation
+                    element_rule = gen_exp['element']
+                    result = {
+                        'type': 'sum_of',
+                        'element_rule': element_rule,
+                        'iterator_info': iterator_info
+                    }
+                    logging.debug(f"Created 'sum_of' result: {result}")
+                    return result
+
+                # Handle sum() with a list argument (e.g., sum([1 for x in items if condition]))
+                elif first_arg.get('type') == 'list':
+                    list_elements = first_arg.get('value', [])
+                    if list_elements:
+                        logging.debug(f"Detected sum(list) with {len(list_elements)} elements")
+                        # Build a nested binary_op tree for addition
+                        result = list_elements[0]
+                        for elem in list_elements[1:]:
+                            result = {
+                                'type': 'binary_op',
+                                'left': result,
+                                'op': '+',
+                                'right': elem
+                            }
+                        return result
+                    else:
+                        return {'type': 'constant', 'value': 0}
+            # *** END sum() HANDLING ***
 
             # *** Special handling for zip() function ***
             if func_name == 'zip':
@@ -681,6 +1021,75 @@ class ASTVisitorMixin:
                     logging.debug(f"Pre-processed len() to: {processed_result}")
                     return processed_result
                 # If can't pre-process, fall through to regular helper handling
+
+            # *** Special handling for min() function ***
+            # min(a, b, c) - multiple arguments
+            # min(iterable) - single iterable argument
+            if func_name == 'min' and len(filtered_args) >= 1:
+                logging.debug(f"Detected min() function call with {len(filtered_args)} args")
+                if len(filtered_args) == 1:
+                    # Single argument - treat as iterable
+                    result = {
+                        'type': 'min',
+                        'iterable': filtered_args[0]
+                    }
+                else:
+                    # Multiple arguments - explicit values
+                    result = {
+                        'type': 'min',
+                        'args': filtered_args
+                    }
+                logging.debug(f"Created min result: {result}")
+                return result
+
+            # *** Special handling for max() function ***
+            # max(a, b, c) - multiple arguments
+            # max(iterable) - single iterable argument
+            if func_name == 'max' and len(filtered_args) >= 1:
+                logging.debug(f"Detected max() function call with {len(filtered_args)} args")
+                if len(filtered_args) == 1:
+                    # Single argument - treat as iterable
+                    result = {
+                        'type': 'max',
+                        'iterable': filtered_args[0]
+                    }
+                else:
+                    # Multiple arguments - explicit values
+                    result = {
+                        'type': 'max',
+                        'args': filtered_args
+                    }
+                logging.debug(f"Created max result: {result}")
+                return result
+
+            # *** Special handling for sum() function ***
+            # sum() typically takes an iterable as its first argument
+            # sum([1, 2, 3]) or sum(generator_expr) or sum([...], start_value)
+            if func_name == 'sum' and len(filtered_args) >= 1:
+                logging.debug(f"Detected sum() function call with {len(filtered_args)} args")
+                result = {
+                    'type': 'sum',
+                    'iterable': filtered_args[0]
+                }
+                # Optional start value (second argument)
+                if len(filtered_args) >= 2:
+                    result['start'] = filtered_args[1]
+                logging.debug(f"Created sum result: {result}")
+                return result
+
+            # *** Special handling for map() function ***
+            # map(func, iterable) applies func to each element of iterable
+            if func_name == 'map' and len(filtered_args) >= 2:
+                logging.debug(f"Detected map() function call with {len(filtered_args)} args")
+                func_arg = filtered_args[0]
+                iterable_arg = filtered_args[1]
+                result = {
+                    'type': 'map',
+                    'function': func_arg,
+                    'iterable': iterable_arg
+                }
+                logging.debug(f"Created map result: {result}")
+                return result
 
             # Create helper result with filtered args (no state/player in JSON)
             result = {
@@ -911,6 +1320,19 @@ class ASTVisitorMixin:
                                 # Could not resolve to a constant value, keep as-is
                                 logging.debug(f"Found unresolved group count parameter: {second_arg}")
                                 result['count'] = second_arg
+                elif method == 'count_group' and len(filtered_args) >= 1:
+                    # state.count_group(group_name, player) -> returns the count of items in a group
+                    # Unwrap group name if it's a constant
+                    group_arg = filtered_args[0]
+                    if isinstance(group_arg, dict) and group_arg.get('type') == 'constant' and isinstance(group_arg.get('value'), str):
+                        group_value = group_arg.get('value')
+                    elif isinstance(group_arg, str):
+                        group_value = group_arg
+                    else:
+                        group_value = group_arg
+                    # Create a group_count rule that returns the count (not a boolean check)
+                    result = {'type': 'group_count', 'group': group_value}
+                    logging.debug(f"Converted count_group to group_count: {result}")
                 elif method == 'has_any' and len(filtered_args) >= 1 and isinstance(filtered_args[0], list):
                     # Unwrap each item if it's a constant
                     items = []
@@ -1175,17 +1597,413 @@ class ASTVisitorMixin:
         logging.debug(f"Fallback call result: {result}")
         return result # Return generic function call result
 
+    def _is_world_player_subscript(self, node):
+        """
+        Check if node is the pattern: state.multiworld.worlds[player]
+        Also matches self.multiworld.worlds[player] for class-based helpers (e.g., RaftLogic).
+        Returns True if matched, False otherwise.
+
+        AST structure:
+        Subscript
+          value=Attribute(attr='worlds')
+            value=Attribute(attr='multiworld')
+              value=Name(id='state', 'world', or 'self')
+          slice=Name(id='player')
+        """
+        if not isinstance(node, ast.Subscript):
+            return False
+        if not isinstance(node.slice, ast.Name) or node.slice.id != 'player':
+            return False
+
+        # Check .worlds
+        worlds_attr = node.value
+        if not isinstance(worlds_attr, ast.Attribute) or worlds_attr.attr != 'worlds':
+            return False
+
+        # Check .multiworld
+        multiworld_attr = worlds_attr.value
+        if not isinstance(multiworld_attr, ast.Attribute) or multiworld_attr.attr != 'multiworld':
+            return False
+
+        # Check state (or world, or self for class-based helpers like RaftLogic)
+        state_name = multiworld_attr.value
+        if not isinstance(state_name, ast.Name) or state_name.id not in ('state', 'world', 'self'):
+            return False
+
+        return True
+
+    def _is_world_options_pattern(self, node):
+        """
+        Detect patterns accessing world settings/attributes:
+        - state.multiworld.worlds[player].options.<setting>
+        - state.multiworld.worlds[player].<attr>
+        - state.multiworld.worlds[player].<attr1>.<attr2> (nested like difficulty_requirements.progressive_bottle_limit)
+        - self.world.options.<setting> (class-based helpers like KH2)
+        - world.options.<setting> (world as function parameter, like Paint helpers)
+        - self.multiworld.worlds[player].options.<setting> (class-based helpers like RaftLogic)
+
+        Returns the setting path as a dot-separated string if matched, None otherwise.
+
+        IMPORTANT: Does NOT match patterns ending with .value (e.g., self.world.options.X.value)
+        Those should be resolved by closure_vars to get the actual integer value.
+        """
+        if not isinstance(node, ast.Attribute):
+            return None
+
+        # Collect attribute chain from bottom up
+        attrs = [node.attr]
+        current = node.value
+
+        # Walk up the attribute chain until we hit the worlds[player] subscript or self.world
+        while isinstance(current, ast.Attribute):
+            attrs.append(current.attr)
+            current = current.value
+
+        # Reverse to get top-down order
+        attrs.reverse()
+
+        # Check if we've reached the world player subscript (state.multiworld.worlds[player])
+        if self._is_world_player_subscript(current):
+            # Handle different patterns:
+            # - ['options', 'setting_name'] -> 'setting_name'
+            # - ['attr_name'] -> 'attr_name'
+            # - ['difficulty_requirements', 'progressive_bottle_limit'] -> 'difficulty_requirements.progressive_bottle_limit'
+            if attrs[0] == 'options' and len(attrs) >= 2:
+                # Remove 'options' prefix for .options.<setting> pattern
+                return '.'.join(attrs[1:])
+            else:
+                # Direct attribute or nested attribute
+                return '.'.join(attrs)
+
+        # Check for self.world.options.<setting> pattern
+        # This handles class-based helpers like KH2's level_locking_unlock
+        # AST: self.world.options.Promise_Charm
+        # attrs would be: ['world', 'options', 'Promise_Charm']
+        # current would be: Name(id='self')
+        #
+        # IMPORTANT: Do NOT match if the pattern ends with '.value'
+        # e.g., self.world.options.LuckyEmblemsRequired.value should NOT match
+        # because the .value accessor should be resolved via closure_vars to get
+        # the actual integer value, not create a setting_value lookup.
+        if isinstance(current, ast.Name) and current.id == 'self':
+            # Check for self.world.options.<setting> pattern
+            if len(attrs) >= 3 and attrs[0] == 'world' and attrs[1] == 'options':
+                # Do NOT match if pattern ends with .value - let closure_vars resolve it
+                if attrs[-1] == 'value':
+                    return None
+                # Return the setting name (everything after 'options')
+                return '.'.join(attrs[2:])
+
+        # Check for world.options.<setting> pattern (world as function parameter)
+        # This handles helpers like Paint's calculate_paint_percent_available
+        # which take 'world' as a parameter and access world.options.<setting>
+        # AST: world.options.canvas_size_increment
+        # attrs would be: ['options', 'canvas_size_increment']
+        # current would be: Name(id='world')
+        if isinstance(current, ast.Name) and current.id == 'world':
+            if len(attrs) >= 2 and attrs[0] == 'options':
+                # Do NOT match if pattern ends with .value - let closure_vars resolve it
+                if attrs[-1] == 'value':
+                    return None
+                # Return the setting name (everything after 'options')
+                return '.'.join(attrs[1:])
+
+        return None
+
+    def _is_world_attribute_subscript_pattern(self, node):
+        """
+        Detect the pattern: state.multiworld.worlds[player].<attr>[index]
+        Returns (attr_name, index) tuple if matched, (None, None) otherwise.
+
+        This handles patterns like:
+        - state.multiworld.worlds[player].required_medallions[0]
+        - state.multiworld.worlds[player].some_array[1]
+
+        AST structure:
+        Subscript(slice=Constant(N))
+          value=Attribute(attr='<attr_name>')
+            value=Subscript
+              value=Attribute(attr='worlds')
+                value=Attribute(attr='multiworld')
+                  value=Name(id='state')
+              slice=Name(id='player')
+        """
+        if not isinstance(node, ast.Subscript):
+            return None, None
+
+        # Get the index
+        index_val = None
+        if isinstance(node.slice, ast.Constant):
+            index_val = node.slice.value
+        elif isinstance(node.slice, ast.Num):  # Python 3.7 compatibility
+            index_val = node.slice.n
+        else:
+            return None, None
+
+        # Check that the value being subscripted is an attribute
+        if not isinstance(node.value, ast.Attribute):
+            return None, None
+
+        attr_name = node.value.attr
+
+        # Check [player] subscript on worlds
+        subscript = node.value.value
+        if not isinstance(subscript, ast.Subscript):
+            return None, None
+        if not isinstance(subscript.slice, ast.Name) or subscript.slice.id != 'player':
+            return None, None
+
+        # Check .worlds
+        worlds_attr = subscript.value
+        if not isinstance(worlds_attr, ast.Attribute) or worlds_attr.attr != 'worlds':
+            return None, None
+
+        # Check .multiworld
+        multiworld_attr = worlds_attr.value
+        if not isinstance(multiworld_attr, ast.Attribute) or multiworld_attr.attr != 'multiworld':
+            return None, None
+
+        # Check state (or world)
+        state_name = multiworld_attr.value
+        if not isinstance(state_name, ast.Name) or state_name.id not in ('state', 'world'):
+            return None, None
+
+        return attr_name, index_val
+
+    def _is_prog_items_pattern(self, node):
+        """
+        Detect the pattern: state.prog_items[player][key]
+        Returns the key (e.g., " coins") if matched, None otherwise.
+
+        This handles DLCQuest and other games that use accumulator items
+        stored in state.prog_items.
+
+        AST structure:
+        Subscript(slice=Constant(" coins"))  <- outer node
+          value=Subscript(slice=Name("player"))
+            value=Attribute(attr='prog_items')
+              value=Name(id='state')
+        """
+        if not isinstance(node, ast.Subscript):
+            return None
+
+        # Get the key from the outer subscript slice
+        key = None
+        if isinstance(node.slice, ast.Constant):
+            key = node.slice.value
+        elif isinstance(node.slice, ast.Str):  # Python 3.7 compatibility
+            key = node.slice.s
+        else:
+            return None
+
+        # Check inner subscript: [player]
+        inner_subscript = node.value
+        if not isinstance(inner_subscript, ast.Subscript):
+            return None
+        if not isinstance(inner_subscript.slice, ast.Name) or inner_subscript.slice.id != 'player':
+            return None
+
+        # Check attribute: .prog_items
+        prog_items_attr = inner_subscript.value
+        if not isinstance(prog_items_attr, ast.Attribute) or prog_items_attr.attr != 'prog_items':
+            return None
+
+        # Check name: state
+        state_name = prog_items_attr.value
+        if not isinstance(state_name, ast.Name) or state_name.id != 'state':
+            return None
+
+        return key
+
+    def _is_multiworld_get_region_call(self, node):
+        """
+        Detect the pattern: state.multiworld.get_region('Region Name', player)
+        Returns the region name if matched, None otherwise.
+
+        AST structure:
+        Call
+          func=Attribute(attr='get_region')
+            value=Attribute(attr='multiworld')
+              value=Name(id='state')
+          args=[Constant('Region Name'), Name(id='player')]
+        """
+        if not isinstance(node, ast.Call):
+            return None
+
+        # Check func is an attribute access
+        func = node.func
+        if not isinstance(func, ast.Attribute) or func.attr != 'get_region':
+            return None
+
+        # Check the object is state.multiworld
+        multiworld_attr = func.value
+        if not isinstance(multiworld_attr, ast.Attribute) or multiworld_attr.attr != 'multiworld':
+            return None
+
+        # Check it's accessing 'state' or 'world'
+        state_name = multiworld_attr.value
+        if not isinstance(state_name, ast.Name) or state_name.id not in ('state', 'world'):
+            return None
+
+        # Get the region name from the first argument
+        if len(node.args) < 1:
+            return None
+
+        first_arg = node.args[0]
+        if isinstance(first_arg, ast.Constant):
+            return first_arg.value
+        elif isinstance(first_arg, ast.Str):  # Python 3.7 compatibility
+            return first_arg.s
+
+        return None
+
+    def _is_region_parameter_attribute(self, node, region_param_names=None):
+        """
+        Detect access to region parameter attributes like region.is_light_world.
+
+        This is used when a helper function takes a region as a parameter
+        and accesses its attributes within the function body.
+
+        Args:
+            node: The AST Attribute node
+            region_param_names: Set of parameter names that are known to be regions
+                              (e.g., {'region', 'cave'})
+
+        Returns:
+            Tuple of (param_name, attr_name) if matched, (None, None) otherwise.
+        """
+        if not isinstance(node, ast.Attribute):
+            return None, None
+
+        attr_name = node.attr
+
+        # Only handle known region attributes
+        if attr_name not in ('is_light_world', 'is_dark_world', 'name'):
+            return None, None
+
+        # Check if the object is a Name node (variable reference)
+        if not isinstance(node.value, ast.Name):
+            return None, None
+
+        param_name = node.value.id
+
+        # If we have a list of known region parameters, check against it
+        if region_param_names is not None:
+            if param_name not in region_param_names:
+                return None, None
+        else:
+            # Default known region parameter names
+            if param_name not in ('region', 'cave', 'r', 'reg'):
+                return None, None
+
+        return param_name, attr_name
+
     def visit_Attribute(self, node):
         try:
             attr_name = node.attr
             logging.debug(f"visit_Attribute: Trying to access .{attr_name} on object of type {type(node.value).__name__}")
+
+            # Special handling for self.world.options.<setting>.value pattern
+            # This resolves option values to constants at export time instead of runtime lookup
+            # e.g., self.world.options.LuckyEmblemsRequired.value → 35
+            if attr_name == 'value' and 'self' in self.closure_vars:
+                self_obj = self.closure_vars['self']
+                try:
+                    # Collect full attribute chain to see if it matches self.world.options.X.value
+                    chain = ['value']
+                    current = node.value
+                    while isinstance(current, ast.Attribute):
+                        chain.insert(0, current.attr)
+                        current = current.value
+                    if isinstance(current, ast.Name) and current.id == 'self':
+                        # We have self.X.Y.Z.value pattern
+                        # Try to resolve the full chain via closure_vars
+                        resolved = self_obj
+                        for attr in chain:
+                            resolved = getattr(resolved, attr, None)
+                            if resolved is None:
+                                break
+                        if resolved is not None and isinstance(resolved, (int, float, str, bool)):
+                            logging.debug(f"visit_Attribute: Resolved self.{'.' .join(chain)} to constant: {resolved}")
+                            return {'type': 'constant', 'value': resolved}
+                except (AttributeError, TypeError) as e:
+                    logging.debug(f"visit_Attribute: Failed to resolve self.*.value pattern: {e}")
+                    pass
+
+            # Check for state.multiworld.worlds[player].options.<setting> pattern
+            # Convert to setting_value rule type for frontend evaluation
+            setting_name = self._is_world_options_pattern(node)
+            if setting_name:
+                logging.debug(f"visit_Attribute: Detected world options pattern, setting: {setting_name}")
+                return {'type': 'setting_value', 'setting': setting_name}
+
+            # Check for region parameter attribute access (e.g., region.is_light_world)
+            # This handles helpers like is_not_bunny that take a region parameter
+            param_name, region_attr = self._is_region_parameter_attribute(node)
+            if param_name and region_attr:
+                logging.debug(f"visit_Attribute: Detected region parameter attribute: {param_name}.{region_attr}")
+                return {
+                    'type': 'region_attribute',
+                    'region': {'type': 'name', 'name': param_name},
+                    'attr': region_attr
+                }
+
+            # Handle self.player - convert to player_id reference
+            # This is used in class-based rule helpers like KH2's KH2Rules
+            if isinstance(node.value, ast.Name) and node.value.id == 'self' and attr_name == 'player':
+                logging.debug("visit_Attribute: Detected self.player, converting to player_id")
+                return {'type': 'player_id'}
+
+            # Handle self.<attr> patterns that map to settings
+            # This is used for patterns like self.fight_logic which is set from world.options.FightLogic
+            if isinstance(node.value, ast.Name) and node.value.id == 'self':
+                # Check if the game handler has a mapping for this attribute to a setting
+                if hasattr(self, 'game_handler') and self.game_handler is not None:
+                    setting_mapping = getattr(self.game_handler, 'SELF_ATTR_TO_SETTING', {})
+                    if attr_name in setting_mapping:
+                        setting_name = setting_mapping[attr_name]
+                        logging.debug(f"visit_Attribute: Detected self.{attr_name}, converting to setting_value '{setting_name}'")
+                        return {'type': 'setting_value', 'setting': setting_name}
+
+            # OPTIMIZATION: If the object is a simple Name node in closure_vars, try to resolve
+            # the attribute directly BEFORE visiting the object. This handles NamedTuples and
+            # other complex objects that would lose their attribute access capability when serialized.
+            if isinstance(node.value, ast.Name):
+                var_name = node.value.id
+                if var_name in self.closure_vars:
+                    obj_value = self.closure_vars[var_name]
+                    try:
+                        resolved_attr = getattr(obj_value, attr_name)
+                        # If the attribute resolves to a simple value, return it directly
+                        if isinstance(resolved_attr, (int, float, str, bool)):
+                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} to constant: {resolved_attr}")
+                            return {'type': 'constant', 'value': resolved_attr}
+                        elif resolved_attr is None:
+                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} to None")
+                            return {'type': 'constant', 'value': None}
+                        elif isinstance(resolved_attr, (list, tuple)):
+                            # Handle list/tuple values - convert to list for JSON serialization
+                            list_value = list(resolved_attr) if isinstance(resolved_attr, tuple) else resolved_attr
+                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} to list: {list_value}")
+                            return {'type': 'constant', 'value': list_value}
+                        elif isinstance(resolved_attr, dict):
+                            # Handle dict values - keep as dict for subscript access
+                            # The frontend's subscript handler can index into plain objects
+                            # For iteration (for_iter), the frontend will iterate over keys
+                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} (dict) keeping as dict with {len(resolved_attr)} entries")
+                            return {'type': 'constant', 'value': resolved_attr}
+                        elif isinstance(resolved_attr, (set, frozenset)):
+                            # Handle set/frozenset values - convert to list for JSON serialization
+                            list_value = list(resolved_attr)
+                            logging.debug(f"visit_Attribute: Direct resolution of {var_name}.{attr_name} (set) to list: {list_value}")
+                            return {'type': 'constant', 'value': list_value}
+                    except AttributeError:
+                        # If attribute doesn't exist, fall through to normal processing
+                        logging.debug(f"visit_Attribute: Could not directly resolve {var_name}.{attr_name}")
+                        pass
+
             logging.debug(f"visit_Attribute: Visiting object {type(node.value).__name__}")
             obj_result = self.visit(node.value) # Get returned result
-            # attr_name = node.attr # Moved up
-
-            # Specifically log if we are processing self.player
-            if isinstance(node.value, ast.Name) and node.value.id == 'self' and attr_name == 'player':
-                 logging.debug("visit_Attribute: Detected access to self.player")
 
             if obj_result:
                  # Try to resolve the attribute access to a constant value
@@ -1228,12 +2046,26 @@ class ASTVisitorMixin:
                 elif isinstance(value, (int, float, str, bool)):
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to constant value: {value}")
                     return {'type': 'constant', 'value': value}
+                # Handle NamedTuples - keep them as name references so attribute access still works
+                # The attributes will be resolved later in visit_Attribute
+                # IMPORTANT: This check MUST come BEFORE the tuple check since NamedTuples are tuples
+                elif hasattr(value, '_fields'):
+                    logging.debug(f"visit_Name: Found NamedTuple '{name}' in closure, keeping as name reference for attribute access")
+                    # Don't convert to list here - let attribute access resolve the fields
+                    pass
                 # Handle list/tuple values - resolve to constant for method calls like .index()
                 elif isinstance(value, (list, tuple)):
                     # Convert to list for JSON serialization
                     list_value = list(value) if isinstance(value, tuple) else value
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to constant list: {list_value}")
                     return {'type': 'constant', 'value': list_value}
+                # Handle dict values - resolve to constant for subscript access and .items() iteration
+                elif isinstance(value, dict):
+                    # Convert dict to JSON-serializable format
+                    # Keys must be strings for JSON, so convert int keys to strings
+                    json_dict = {str(k) if isinstance(k, int) else k: v for k, v in value.items()}
+                    logging.debug(f"visit_Name: Resolved '{name}' from closure to constant dict: {json_dict}")
+                    return {'type': 'constant', 'value': json_dict}
                 # Handle enum values by extracting their .value attribute
                 elif hasattr(value, 'value') and isinstance(value.value, (int, float, str, bool)):
                     logging.debug(f"visit_Name: Resolved '{name}' from closure to enum constant value: {value.value}")
@@ -1246,21 +2078,33 @@ class ASTVisitorMixin:
                     logging.debug(f"visit_Name: Found Region object '{name}' in closure, keeping as name reference for attribute access")
                     # Don't convert to string here - let attribute access or other operations handle it
                     pass
-                # Handle NamedTuples - keep them as name references so attribute access still works
-                # The attributes will be resolved later in visit_Attribute
-                elif hasattr(value, '_fields'):
-                    logging.debug(f"visit_Name: Found NamedTuple '{name}' in closure, keeping as name reference for attribute access")
-                    # Don't convert to list here - let attribute access resolve the fields
-                    pass
 
-            # Also check function defaults for lambda parameters
-            if name not in self.closure_vars:
+            # Also check function defaults and module globals
+            # When preserve_parameter_names is True, skip resolution for actual function parameters
+            # but still resolve module-level constants (like WORLDS, KEYBLADES, LOGIC_MINIMAL)
+            is_function_parameter = False
+            if getattr(self, 'preserve_parameter_names', False) and self.rule_func and hasattr(self.rule_func, '__code__'):
+                param_names = self.rule_func.__code__.co_varnames[:self.rule_func.__code__.co_argcount]
+                is_function_parameter = name in param_names
+
+            if name not in self.closure_vars and not is_function_parameter:
                 resolved_value = self.expression_resolver.resolve_variable(name)
                 if resolved_value is not None:
                     # Handle simple values
                     if isinstance(resolved_value, (int, float, str, bool)):
-                        logging.debug(f"visit_Name: Resolved '{name}' from function defaults to constant value: {resolved_value}")
+                        logging.debug(f"visit_Name: Resolved '{name}' from function defaults/globals to constant value: {resolved_value}")
                         return {'type': 'constant', 'value': resolved_value}
+                    # Handle list/tuple values - resolve to constant for iteration and subscript
+                    elif isinstance(resolved_value, (list, tuple)):
+                        list_value = list(resolved_value) if isinstance(resolved_value, tuple) else resolved_value
+                        logging.debug(f"visit_Name: Resolved '{name}' from globals to constant list: {list_value}")
+                        return {'type': 'constant', 'value': list_value}
+                    # Handle dict values - resolve to constant for subscript access and .items() iteration
+                    elif isinstance(resolved_value, dict):
+                        # Convert dict to JSON-serializable format
+                        json_dict = {str(k) if isinstance(k, int) else k: v for k, v in resolved_value.items()}
+                        logging.debug(f"visit_Name: Resolved '{name}' from globals to constant dict: {json_dict}")
+                        return {'type': 'constant', 'value': json_dict}
                     # Handle enum values by extracting their .value attribute
                     elif hasattr(resolved_value, 'value') and isinstance(resolved_value.value, (int, float, str, bool)):
                         logging.debug(f"visit_Name: Resolved '{name}' from function defaults to enum constant value: {resolved_value.value}")
@@ -1400,6 +2244,112 @@ class ASTVisitorMixin:
         logging.debug(f"\nvisit_Subscript called:")
         logging.debug(f"Value: {ast.dump(node.value)}")
         logging.debug(f"Slice: {ast.dump(node.slice)}")
+
+        # Check for state.multiworld.worlds[player].<attr>[index] pattern
+        # Convert to setting_value rule type for frontend evaluation
+        attr_name, index_val = self._is_world_attribute_subscript_pattern(node)
+        if attr_name is not None and index_val is not None:
+            logging.debug(f"visit_Subscript: Detected world attribute subscript pattern: {attr_name}[{index_val}]")
+            return {'type': 'setting_value', 'setting': attr_name, 'index': index_val}
+
+        # Check for state.prog_items[player][key] pattern
+        # Convert to prog_item_count rule type for frontend evaluation
+        # This handles DLCQuest and other games that use accumulator items
+        prog_items_key = self._is_prog_items_pattern(node)
+        if prog_items_key is not None:
+            logging.debug(f"visit_Subscript: Detected prog_items pattern: state.prog_items[player][{prog_items_key!r}]")
+            return {'type': 'prog_item_count', 'key': prog_items_key}
+
+        # OPTIMIZATION: Try direct resolution for attribute subscripts like world.dict[key]
+        # This avoids the dict-to-keys conversion that happens in visit_Attribute
+        # which would break subscript access (e.g., world.chapter_timepiece_costs[ChapterIndex.MAFIA])
+        if isinstance(node.value, ast.Attribute) and isinstance(node.value.value, ast.Name):
+            var_name = node.value.value.id
+            attr_name = node.value.attr
+            if var_name in self.closure_vars:
+                try:
+                    # Get the container directly from closure
+                    obj_value = self.closure_vars[var_name]
+                    container = getattr(obj_value, attr_name, None)
+                    if container is not None and isinstance(container, dict):
+                        # Try to resolve the index
+                        index_result = self.visit(node.slice)
+                        resolved_index = None
+                        if index_result and index_result.get('type') == 'constant':
+                            resolved_index = index_result['value']
+                        elif index_result and index_result.get('type') == 'name':
+                            resolved_index = self.expression_resolver.resolve_variable(index_result['name'])
+                        elif index_result and index_result.get('type') == 'attribute':
+                            resolved_index = self.expression_resolver.resolve_expression(index_result)
+
+                        if resolved_index is not None:
+                            try:
+                                subscript_result = container[resolved_index]
+                                logging.debug(f"visit_Subscript: Direct resolution {var_name}.{attr_name}[{resolved_index}] = {subscript_result}")
+                                if isinstance(subscript_result, (int, float, str, bool, type(None))):
+                                    return {'type': 'constant', 'value': subscript_result}
+                                elif hasattr(subscript_result, 'value') and isinstance(subscript_result.value, (int, float, str, bool)):
+                                    return {'type': 'constant', 'value': subscript_result.value}
+                            except (KeyError, IndexError, TypeError) as e:
+                                logging.debug(f"visit_Subscript: Direct resolution failed: {e}")
+                except Exception as e:
+                    logging.debug(f"visit_Subscript: Error in direct resolution optimization: {e}")
+
+        # Check if this is a slice expression (e.g., list[1:5])
+        if isinstance(node.slice, ast.Slice):
+            logging.debug(f"visit_Subscript: Detected slice expression")
+            value_info = self.visit(node.value)
+            if value_info is None:
+                logging.error(f"Error visiting value in slice subscript: {ast.dump(node)}")
+                return None
+
+            # Process slice components (lower, upper, step)
+            lower_info = self.visit(node.slice.lower) if node.slice.lower else None
+            upper_info = self.visit(node.slice.upper) if node.slice.upper else None
+            step_info = self.visit(node.slice.step) if node.slice.step else None
+
+            # Try to resolve at export time if all components are constants
+            resolved_value = None
+            resolved_lower = None
+            resolved_upper = None
+            resolved_step = None
+
+            if value_info.get('type') == 'name':
+                resolved_value = self.expression_resolver.resolve_variable(value_info['name'])
+            elif value_info.get('type') == 'constant':
+                resolved_value = value_info['value']
+            elif value_info.get('type') == 'attribute':
+                resolved_value = self.expression_resolver.resolve_expression(value_info)
+
+            if lower_info and lower_info.get('type') == 'constant':
+                resolved_lower = lower_info['value']
+            if upper_info and upper_info.get('type') == 'constant':
+                resolved_upper = upper_info['value']
+            if step_info and step_info.get('type') == 'constant':
+                resolved_step = step_info['value']
+
+            # If we can resolve the value at export time, perform the slice
+            if resolved_value is not None and isinstance(resolved_value, (list, tuple, str)):
+                try:
+                    slice_obj = slice(resolved_lower, resolved_upper, resolved_step)
+                    sliced_result = resolved_value[slice_obj]
+                    logging.debug(f"visit_Subscript: Resolved slice to constant: {sliced_result}")
+                    # Return as constant list/tuple
+                    if isinstance(sliced_result, (list, tuple)):
+                        return {'type': 'constant', 'value': list(sliced_result)}
+                    else:
+                        return {'type': 'constant', 'value': sliced_result}
+                except Exception as e:
+                    logging.debug(f"visit_Subscript: Could not resolve slice at export time: {e}")
+
+            # Return unresolved slice for frontend evaluation
+            return {
+                'type': 'slice',
+                'value': value_info,
+                'lower': lower_info,
+                'upper': upper_info,
+                'step': step_info
+            }
 
         # First visit the value (the object being subscripted)
         value_info = self.visit(node.value) # Get returned result
@@ -1593,7 +2543,25 @@ class ASTVisitorMixin:
                     return {'type': 'constant', 'value': result_value}
                 else:
                     return {'type': 'not', 'condition': operand_result}
-            # Add other unary ops (e.g., UAdd, USub) if needed for rules
+            elif isinstance(node.op, ast.USub):
+                # Unary minus (e.g., -1, -x)
+                if operand_result.get('type') == 'constant':
+                    constant_value = operand_result['value']
+                    if isinstance(constant_value, (int, float)):
+                        result_value = -constant_value
+                        logging.debug(f"Evaluated -{constant_value} = {result_value}")
+                        return {'type': 'constant', 'value': result_value}
+                # For non-constant operands, return a negation structure
+                return {'type': 'negate', 'operand': operand_result}
+            elif isinstance(node.op, ast.UAdd):
+                # Unary plus (e.g., +1, +x) - essentially a no-op for constants
+                if operand_result.get('type') == 'constant':
+                    constant_value = operand_result['value']
+                    if isinstance(constant_value, (int, float)):
+                        logging.debug(f"Evaluated +{constant_value} = {constant_value}")
+                        return {'type': 'constant', 'value': constant_value}
+                # For non-constant operands, just return the operand as-is
+                return operand_result
             else:
                 logging.error(f"Unhandled unary operator: {op_name}")
                 return None # Or a generic representation
@@ -1629,6 +2597,11 @@ class ASTVisitorMixin:
             }
             op_symbol = op_map.get(op_name, op_name) # Use original name if not in map
 
+            # Try constant folding - if both sides are constants, evaluate at export time
+            folded_result = self._try_fold_comparison(left_result, op_symbol, right_result)
+            if folded_result is not None:
+                return folded_result
+
             return {
                 'type': 'compare',
                 'left': left_result,
@@ -1638,6 +2611,70 @@ class ASTVisitorMixin:
 
         except Exception as e:
             logging.error("Error in visit_Compare", e)
+            return None
+
+    def _try_fold_comparison(self, left_result, op_symbol, right_result):
+        """
+        Try to fold a comparison at export time if both sides are constants.
+
+        This handles cases like `early_useful == OPTIONS.buildings_3` where both
+        values are known closure variables that can be resolved at export time.
+
+        Args:
+            left_result: The left operand result dict
+            op_symbol: The comparison operator ('==', '!=', '<', '>', etc.)
+            right_result: The right operand result dict
+
+        Returns:
+            A constant result dict if folding succeeded, None otherwise
+        """
+        try:
+            # Check if both sides are constants
+            if not (left_result and left_result.get('type') == 'constant' and
+                    right_result and right_result.get('type') == 'constant'):
+                return None
+
+            left_val = left_result.get('value')
+            right_val = right_result.get('value')
+
+            # Evaluate the comparison based on the operator
+            result = None
+            if op_symbol == '==':
+                result = left_val == right_val
+            elif op_symbol == '!=':
+                result = left_val != right_val
+            elif op_symbol == '<':
+                result = left_val < right_val
+            elif op_symbol == '<=':
+                result = left_val <= right_val
+            elif op_symbol == '>':
+                result = left_val > right_val
+            elif op_symbol == '>=':
+                result = left_val >= right_val
+            elif op_symbol == 'in':
+                # For 'in' operator, right side should be a collection
+                if isinstance(right_val, (list, tuple, set, str)):
+                    result = left_val in right_val
+            elif op_symbol == 'not in':
+                if isinstance(right_val, (list, tuple, set, str)):
+                    result = left_val not in right_val
+            elif op_symbol == 'is':
+                result = left_val is right_val
+            elif op_symbol == 'is not':
+                result = left_val is not right_val
+
+            if result is not None:
+                logging.debug(f"Folded comparison: {left_val!r} {op_symbol} {right_val!r} = {result}")
+                return {'type': 'constant', 'value': result}
+
+            return None
+
+        except (TypeError, ValueError) as e:
+            # Comparison not possible (e.g., comparing incompatible types)
+            logging.debug(f"Could not fold comparison: {e}")
+            return None
+        except Exception as e:
+            logging.warning(f"Error during comparison folding: {e}")
             return None
 
     def visit_Tuple(self, node: ast.Tuple):
@@ -1677,7 +2714,11 @@ class ASTVisitorMixin:
             return None
 
     def visit_Set(self, node: ast.Set):
-        """ Handle set literals. """
+        """ Handle set literals like {item1, item2} or {single_item}.
+
+        Returns a 'set_literal' type that the rule engine can handle for
+        mutation operations like .add() and eventual use in has_any().
+        """
         try:
             logging.debug(f"\n--- visit_Set ---")
             elements = []
@@ -1693,62 +2734,227 @@ class ASTVisitorMixin:
             if all(e.get('type') == 'constant' for e in elements):
                 elements.sort(key=lambda e: (str(type(e.get('value')).__name__), str(e.get('value'))))
 
-            # Represent as a list in the output JSON (consistent with tuple/list)
-            return {'type': 'list', 'value': elements}
+            # Represent as a set type in the output JSON
+            # This is used for set literals like {item1, item2} and helps track
+            # that this originated from a Python set (e.g., for has_any checks)
+            return {'type': 'set', 'elements': elements}
         except Exception as e:
             logging.error("Error in visit_Set", e)
             return None
 
-    def visit_GeneratorExp(self, node: ast.GeneratorExp):
-        """ Handle generator expressions. """
+    def visit_Dict(self, node: ast.Dict):
+        """ Handle dictionary literals. """
         try:
-            logging.debug(f"\n--- visit_GeneratorExp ---")
+            logging.debug(f"\n--- visit_Dict ---")
+            dict_data = {}
+            for key_node, value_node in zip(node.keys, node.values):
+                # Handle None key (dict unpacking like **kwargs) - skip for now
+                if key_node is None:
+                    logging.warning("Skipping dict unpacking in visit_Dict")
+                    continue
+
+                key_result = self.visit(key_node)
+                if key_result is None:
+                    logging.error(f"Failed to analyze key in Dict: {ast.dump(key_node)}")
+                    return None
+
+                value_result = self.visit(value_node)
+                if value_result is None:
+                    logging.error(f"Failed to analyze value in Dict: {ast.dump(value_node)}")
+                    return None
+
+                # Extract the key value if it's a constant
+                if key_result.get('type') == 'constant':
+                    key = key_result['value']
+                else:
+                    # For non-constant keys, use the string representation
+                    key = str(key_result)
+
+                # For constant values, extract the value; otherwise keep the structure
+                if value_result.get('type') == 'constant':
+                    dict_data[key] = value_result['value']
+                else:
+                    dict_data[key] = value_result
+
+            # Return dict as a constant with dict value for JSON serialization
+            return {'type': 'constant', 'value': dict_data}
+        except Exception as e:
+            logging.error(f"Error in visit_Dict: {e}")
+            return None
+
+    def visit_GeneratorExp(self, node: ast.GeneratorExp):
+        """ Handle generator expressions, including nested comprehensions.
+
+        For nested comprehensions like:
+            f(x, y) for x in A for y in B[x]
+
+        This is semantically equivalent to:
+            (f(x, y) for y in B[x]) for x in A
+
+        We transform this into nested generator_expression structures where
+        the inner generators become the element of outer generators.
+        """
+        try:
+            logging.debug(f"\n--- visit_GeneratorExp --- (generators: {len(node.generators)})")
+
             # Analyze the element expression
             elt_result = self.visit(node.elt)
             if elt_result is None:
                 logging.error(f"Failed to analyze element expression in GeneratorExp: {ast.dump(node.elt)}")
                 return None
 
-            # Analyze the comprehension generators
-            # NOTE: Currently only supports one comprehension generator like `for target in iter`
-            if len(node.generators) != 1:
-                logging.error(f"Unsupported number of generators in GeneratorExp: {len(node.generators)}")
+            # Handle single generator (simple case)
+            if len(node.generators) == 1:
+                comprehension_result = self.visit(node.generators[0])
+                if comprehension_result is None:
+                    logging.error(f"Failed to analyze comprehension in GeneratorExp")
+                    return None
+
+                return {
+                    'type': 'generator_expression',
+                    'element': elt_result,
+                    'comprehension': comprehension_result
+                }
+
+            # Handle multiple generators (nested comprehensions)
+            # Process from innermost (last) to outermost (first)
+            # e.g., for "f(x,y) for x in A for y in B[x]":
+            #   - Start with innermost: element=f(x,y), comprehension=for y in B[x]
+            #   - Wrap with outer: element=inner_gen_exp, comprehension=for x in A
+            logging.debug(f"Processing nested comprehension with {len(node.generators)} generators")
+
+            # Analyze all comprehension generators first
+            comprehension_results = []
+            for i, gen in enumerate(node.generators):
+                comp_result = self.visit(gen)
+                if comp_result is None:
+                    logging.error(f"Failed to analyze comprehension {i} in nested GeneratorExp")
+                    return None
+                comprehension_results.append(comp_result)
+                logging.debug(f"  Generator {i}: target={comp_result.get('target')}, iterator type={comp_result.get('iterator', {}).get('type')}")
+
+            # Build nested structure from inside out
+            # Start with the innermost generator and the original element
+            current_element = elt_result
+
+            # Process generators in reverse order (innermost first)
+            for i in range(len(comprehension_results) - 1, -1, -1):
+                current_element = {
+                    'type': 'generator_expression',
+                    'element': current_element,
+                    'comprehension': comprehension_results[i]
+                }
+                logging.debug(f"  Built nested level {len(comprehension_results) - i}: comprehension target={comprehension_results[i].get('target')}")
+
+            # The outermost wrapper is our final result
+            # But we need to unwrap one level since the loop creates one extra wrapper
+            # Actually, let me reconsider - we want the structure to be:
+            # gen_exp(element=gen_exp(element=f(x,y), comp=for y in B[x]), comp=for x in A)
+
+            # The current_element after the loop IS the correctly nested structure
+            logging.debug(f"Nested GeneratorExp complete: {len(node.generators)} levels")
+            return current_element
+
+        except Exception as e:
+            logging.error(f"Error in visit_GeneratorExp: {e}")
+            return None
+
+    def visit_ListComp(self, node: ast.ListComp):
+        """ Handle list comprehensions like [expr for x in items].
+
+        List comprehensions are treated similarly to generator expressions
+        for the purposes of analysis and can be used with sum(), all(), any(), etc.
+        """
+        try:
+            logging.debug(f"\n--- visit_ListComp --- (generators: {len(node.generators)})")
+
+            # Analyze the element expression
+            elt_result = self.visit(node.elt)
+            if elt_result is None:
+                logging.error(f"Failed to analyze element expression in ListComp: {ast.dump(node.elt)}")
                 return None
 
-            comprehension_result = self.visit(node.generators[0])
-            if comprehension_result is None:
-                 logging.error(f"Failed to analyze comprehension in GeneratorExp")
-                 return None
+            # Handle single generator (simple case)
+            if len(node.generators) == 1:
+                comprehension_result = self.visit(node.generators[0])
+                if comprehension_result is None:
+                    logging.error(f"Failed to analyze comprehension in ListComp")
+                    return None
 
-            # Combine results into a dedicated type
-            return {
-                'type': 'generator_expression',
-                'element': elt_result,
-                'comprehension': comprehension_result
-            }
+                # Return as generator_expression type - for sum()/all()/any() handling,
+                # list comprehensions and generator expressions are semantically equivalent
+                return {
+                    'type': 'generator_expression',
+                    'element': elt_result,
+                    'comprehension': comprehension_result
+                }
+
+            # Handle multiple generators (nested comprehensions)
+            logging.debug(f"Processing nested list comprehension with {len(node.generators)} generators")
+
+            # Analyze all comprehension generators first
+            comprehension_results = []
+            for i, gen in enumerate(node.generators):
+                comp_result = self.visit(gen)
+                if comp_result is None:
+                    logging.error(f"Failed to analyze comprehension {i} in nested ListComp")
+                    return None
+                comprehension_results.append(comp_result)
+                logging.debug(f"  Generator {i}: target={comp_result.get('target')}, iterator type={comp_result.get('iterator', {}).get('type')}")
+
+            # Build nested structure from inside out
+            current_element = elt_result
+
+            # Process generators in reverse order (innermost first)
+            for i in range(len(comprehension_results) - 1, -1, -1):
+                current_element = {
+                    'type': 'generator_expression',
+                    'element': current_element,
+                    'comprehension': comprehension_results[i]
+                }
+
+            logging.debug(f"Nested ListComp complete: {len(node.generators)} levels")
+            return current_element
+
         except Exception as e:
-            logging.error("Error in visit_GeneratorExp", e)
+            logging.error(f"Error in visit_ListComp: {e}")
             return None
 
     def visit_comprehension(self, node: ast.comprehension):
-        """ Handle the 'for target in iter' part of comprehensions/generators. """
+        """ Handle the 'for target in iter [if condition]' part of comprehensions/generators. """
         try:
             logging.debug(f"\n--- visit_comprehension ---")
             target_result = self.visit(node.target)
             iter_result = self.visit(node.iter)
-            # Note: Ignoring ifs for now (e.g., for x in y if z)
 
             if target_result is None or iter_result is None:
                  logging.error(f"Failed to analyze target or iterator in comprehension")
                  return None
 
+            # Handle if conditions (e.g., for x in y if z)
+            conditions = []
+            if node.ifs:
+                for if_node in node.ifs:
+                    condition_result = self.visit(if_node)
+                    if condition_result is None:
+                        logging.error(f"Failed to analyze if condition in comprehension: {ast.dump(if_node)}")
+                        return None
+                    conditions.append(condition_result)
+                logging.debug(f"visit_comprehension: Found {len(conditions)} if condition(s)")
+
             # Return details needed to understand the iteration
-            return {
+            result = {
                 'type': 'comprehension_details',
                 'target': target_result,
                 'iterator': iter_result
-                # 'conditions': [self.visit(if_node) for if_node in node.ifs] # Future enhancement
             }
+            if conditions:
+                # If there's a single condition, use it directly; otherwise combine with 'and'
+                if len(conditions) == 1:
+                    result['condition'] = conditions[0]
+                else:
+                    result['condition'] = {'type': 'and', 'conditions': conditions}
+            return result
         except Exception as e:
             logging.error("Error in visit_comprehension", e)
             return None
@@ -1984,35 +3190,101 @@ class ASTVisitorMixin:
 
     def visit_For(self, node: ast.For):
         """
-        Handle for loops, specifically for range() iterations.
-        Produces a for_range rule type for use in imperative helper evaluation.
+        Handle for loops.
+        Produces a for_range rule type for range() iterations,
+        or a for_iter rule type for iterating over arbitrary iterables.
         """
         try:
             logging.debug(f"\n--- visit_For ---")
             logging.debug(f"Target: {ast.dump(node.target)}")
             logging.debug(f"Iter: {ast.dump(node.iter)}")
 
-            # Get the loop variable name
+            # Get the loop variable name(s)
+            # Support both simple names and tuple unpacking (e.g., for k, v in dict.items())
             var_name = "_"
+            var_names = None  # Will be set if tuple unpacking is used
             if isinstance(node.target, ast.Name):
                 var_name = node.target.id
+            elif isinstance(node.target, ast.Tuple):
+                # Tuple unpacking: extract all variable names
+                var_names = []
+                for elt in node.target.elts:
+                    if isinstance(elt, ast.Name):
+                        var_names.append(elt.id)
+                    else:
+                        # Nested tuple or other complex pattern - use placeholder
+                        var_names.append("_")
+                logging.debug(f"visit_For: Tuple unpacking with vars: {var_names}")
+
+            # Analyze the loop body
+            body_results = []
+            for stmt in node.body:
+                stmt_result = self.visit_statement(stmt)
+                if stmt_result is not None:
+                    body_results.append(stmt_result)
 
             # Check if this is a range() call
-            if not (isinstance(node.iter, ast.Call) and
+            if (isinstance(node.iter, ast.Call) and
                     isinstance(node.iter.func, ast.Name) and
                     node.iter.func.id == 'range'):
-                logging.warning(f"visit_For: Only range() loops are supported, got: {ast.dump(node.iter)}")
-                return None
+                # Get the count argument for range()
+                if not node.iter.args:
+                    logging.error("visit_For: range() called without arguments")
+                    return None
 
-            # Get the count argument for range()
-            if not node.iter.args:
-                logging.error("visit_For: range() called without arguments")
-                return None
+                count_arg = node.iter.args[0]
+                count_result = self.visit(count_arg)
+                if count_result is None:
+                    logging.error(f"visit_For: Failed to analyze range count: {ast.dump(count_arg)}")
+                    return None
 
-            count_arg = node.iter.args[0]
-            count_result = self.visit(count_arg)
-            if count_result is None:
-                logging.error(f"visit_For: Failed to analyze range count: {ast.dump(count_arg)}")
+                result = {
+                    'type': 'for_range',
+                    'count': count_result,
+                    'body': body_results
+                }
+                # Use 'vars' for tuple unpacking, 'var' for simple variable
+                if var_names is not None:
+                    result['vars'] = var_names
+                else:
+                    result['var'] = var_name
+                return result
+            else:
+                # Handle iteration over arbitrary iterables (for_iter)
+                iterable_result = self.visit(node.iter)
+                if iterable_result is None:
+                    logging.error(f"visit_For: Failed to analyze iterable: {ast.dump(node.iter)}")
+                    return None
+
+                logging.debug(f"visit_For: Creating for_iter with iterable: {iterable_result}")
+                result = {
+                    'type': 'for_iter',
+                    'iterable': iterable_result,
+                    'body': body_results
+                }
+                # Use 'vars' for tuple unpacking, 'var' for simple variable
+                if var_names is not None:
+                    result['vars'] = var_names
+                else:
+                    result['var'] = var_name
+                return result
+        except Exception as e:
+            logging.error(f"Error in visit_For: {e}")
+            return None
+
+    def visit_While(self, node: ast.While):
+        """
+        Handle while loops.
+        Produces a while_loop rule type with condition and body.
+        """
+        try:
+            logging.debug(f"\n--- visit_While ---")
+            logging.debug(f"Test: {ast.dump(node.test)}")
+
+            # Analyze the condition
+            condition_result = self.visit(node.test)
+            if condition_result is None:
+                logging.error(f"visit_While: Failed to analyze condition: {ast.dump(node.test)}")
                 return None
 
             # Analyze the loop body
@@ -2022,14 +3294,27 @@ class ASTVisitorMixin:
                 if stmt_result is not None:
                     body_results.append(stmt_result)
 
-            return {
-                'type': 'for_range',
-                'var': var_name,
-                'count': count_result,
+            # Handle else clause if present (rarely used)
+            orelse_results = []
+            if node.orelse:
+                for stmt in node.orelse:
+                    stmt_result = self.visit_statement(stmt)
+                    if stmt_result is not None:
+                        orelse_results.append(stmt_result)
+
+            result = {
+                'type': 'while_loop',
+                'condition': condition_result,
                 'body': body_results
             }
+
+            if orelse_results:
+                result['orelse'] = orelse_results
+
+            logging.debug(f"visit_While: Created while_loop rule: {result}")
+            return result
         except Exception as e:
-            logging.error(f"Error in visit_For: {e}")
+            logging.error(f"Error in visit_While: {e}")
             return None
 
     def visit_AugAssign(self, node: ast.AugAssign):
@@ -2104,17 +3389,275 @@ class ASTVisitorMixin:
                 return self.visit_AugAssign(node)
             elif isinstance(node, ast.For):
                 return self.visit_For(node)
+            elif isinstance(node, ast.While):
+                return self.visit_While(node)
             elif isinstance(node, ast.If):
-                return self.visit_If(node)
+                # Check if this is an if/elif/else that assigns to a single variable
+                assign_result = self._try_convert_if_to_assign(node)
+                if assign_result is not None:
+                    return assign_result
+                # Use statement-based if handling for imperative contexts
+                return self._visit_If_statement(node)
             elif isinstance(node, ast.Expr):
                 # Expression statement - just evaluate it
                 return self.visit(node.value)
+            elif isinstance(node, ast.Break):
+                # Break statement - used to exit loops early
+                return {'type': 'break'}
+            elif isinstance(node, ast.Continue):
+                # Continue statement - skip to next iteration
+                return {'type': 'continue'}
+            elif isinstance(node, ast.Pass):
+                # Pass statement - explicit no-op, safe to ignore
+                return None
+            elif isinstance(node, ast.AnnAssign):
+                # Annotated assignment (e.g., x: int = 5)
+                if isinstance(node.target, ast.Name):
+                    var_name = node.target.id
+                    if node.value is not None:
+                        value_result = self.visit(node.value)
+                        if value_result is not None:
+                            return {
+                                'type': 'assign',
+                                'name': var_name,
+                                'value': value_result
+                            }
+                # If no value or failed to analyze, just ignore (type annotation only)
+                return None
             else:
                 logging.warning(f"visit_statement: Unsupported statement type: {type(node).__name__}")
                 return None
         except Exception as e:
             logging.error(f"Error in visit_statement: {e}")
             return None
+
+    def _visit_If_statement(self, node: ast.If) -> Optional[Dict[str, Any]]:
+        """
+        Handle If statements in imperative/statement context.
+        Produces an if_statement rule type that can contain break/continue/return.
+        """
+        try:
+            logging.debug(f"\n--- _visit_If_statement ---")
+            test_result = self.visit(node.test)
+            if test_result is None:
+                logging.error(f"_visit_If_statement: Failed to analyze test: {ast.dump(node.test)}")
+                return None
+
+            # Analyze the if-body as statements
+            body_results = []
+            for stmt in node.body:
+                stmt_result = self.visit_statement(stmt)
+                if stmt_result is not None:
+                    body_results.append(stmt_result)
+
+            # Analyze the else-body as statements (if present)
+            orelse_results = []
+            if node.orelse:
+                for stmt in node.orelse:
+                    stmt_result = self.visit_statement(stmt)
+                    if stmt_result is not None:
+                        orelse_results.append(stmt_result)
+
+            result = {
+                'type': 'if_statement',
+                'test': test_result,
+                'body': body_results
+            }
+
+            if orelse_results:
+                result['orelse'] = orelse_results
+
+            return result
+        except Exception as e:
+            logging.error(f"Error in _visit_If_statement: {e}")
+            return None
+
+    def _try_convert_if_to_assign(self, node: ast.If) -> Optional[Dict[str, Any]]:
+        """
+        Try to convert an If statement that assigns to a single variable in all branches
+        into an assign statement with a conditional value.
+
+        Pattern: if cond: var = val1; elif cond2: var = val2; ...
+        Also handles nested: if cond: if cond2: var = val1; ...
+
+        Converts to: {"type": "assign", "name": "var", "value": {"type": "conditional", ...}}
+
+        Returns None if the pattern doesn't match.
+        """
+        def get_assign_target(body):
+            """Get the variable name if the body is a single assignment, None otherwise."""
+            if len(body) == 1 and isinstance(body[0], ast.Assign):
+                if len(body[0].targets) == 1 and isinstance(body[0].targets[0], ast.Name):
+                    return body[0].targets[0].id
+            return None
+
+        def get_nested_assign_target(body):
+            """Get the variable name, handling both direct assignments and nested If assignments."""
+            # First try direct assignment
+            target = get_assign_target(body)
+            if target is not None:
+                return target
+            # Check if body is a single If statement that assigns to a variable
+            if len(body) == 1 and isinstance(body[0], ast.If):
+                return get_nested_assign_target(body[0].body)
+            return None
+
+        def get_assign_value_ast(body):
+            """Get the assignment value AST node if the body is a single assignment."""
+            if len(body) == 1 and isinstance(body[0], ast.Assign):
+                return body[0].value
+            return None
+
+        def build_conditional_value(if_node, expected_var):
+            """
+            Recursively build a conditional rule for the value of an if/elif/else chain.
+            Returns (conditional_rule, success) where success indicates all branches match.
+            """
+            # Check if body directly assigns to expected_var
+            body_var = get_assign_target(if_node.body)
+
+            # Visit the test condition
+            test_result = self.visit(if_node.test)
+            if test_result is None:
+                return None, False
+
+            if body_var == expected_var:
+                # Direct assignment in body
+                body_value_ast = get_assign_value_ast(if_node.body)
+                if_true_result = self.visit(body_value_ast)
+                if if_true_result is None:
+                    return None, False
+            elif len(if_node.body) == 1 and isinstance(if_node.body[0], ast.If):
+                # Nested If statement - recursively process it
+                nested_if = if_node.body[0]
+                nested_var = get_nested_assign_target(nested_if.body)
+                if nested_var != expected_var:
+                    return None, False
+                if_true_result, success = build_conditional_value(nested_if, expected_var)
+                if not success:
+                    return None, False
+            else:
+                return None, False
+
+            # Handle orelse (else or elif)
+            if_false_result = None
+            if if_node.orelse:
+                if len(if_node.orelse) == 1 and isinstance(if_node.orelse[0], ast.If):
+                    # This is an elif - recursively process
+                    if_false_result, success = build_conditional_value(if_node.orelse[0], expected_var)
+                    if not success:
+                        return None, False
+                elif len(if_node.orelse) == 1 and isinstance(if_node.orelse[0], ast.Assign):
+                    # This is a simple else assignment
+                    else_var = get_assign_target(if_node.orelse)
+                    if else_var != expected_var:
+                        return None, False
+                    else_value_ast = get_assign_value_ast(if_node.orelse)
+                    if_false_result = self.visit(else_value_ast)
+                    if if_false_result is None:
+                        return None, False
+                else:
+                    # Complex else branch - don't convert
+                    return None, False
+            else:
+                # No else branch - use the variable's current value
+                if_false_result = {'type': 'name', 'name': expected_var}
+
+            return {
+                'type': 'conditional',
+                'test': test_result,
+                'if_true': if_true_result,
+                'if_false': if_false_result
+            }, True
+
+        # Check if the if-body assigns to a variable (directly or via nested if)
+        target_var = get_nested_assign_target(node.body)
+        if target_var is None:
+            return None
+
+        # Try to build the conditional value
+        conditional_value, success = build_conditional_value(node, target_var)
+        if not success:
+            return None
+
+        logging.debug(f"_try_convert_if_to_assign: Converted if-assign chain for variable '{target_var}'")
+        return {
+            'type': 'assign',
+            'name': target_var,
+            'value': conditional_value
+        }
+
+    def _convert_generator_exp_to_all_of(self, gen_exp: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert a generator_expression to an all_of rule structure.
+
+        This is used to handle nested comprehensions like:
+            all(f(x, y) for x in A for y in B[x])
+
+        Which becomes nested all_of structures:
+            all_of(element=all_of(element=f(x,y), iterator=B[x]), iterator=A)
+
+        Args:
+            gen_exp: A generator_expression rule structure
+
+        Returns:
+            An all_of rule structure
+        """
+        if gen_exp.get('type') != 'generator_expression':
+            logging.warning(f"_convert_generator_exp_to_all_of: Expected generator_expression, got {gen_exp.get('type')}")
+            return gen_exp
+
+        element_rule = gen_exp.get('element')
+        comprehension = gen_exp.get('comprehension')
+
+        # Recursively convert nested generator_expressions
+        if element_rule and element_rule.get('type') == 'generator_expression':
+            element_rule = self._convert_generator_exp_to_all_of(element_rule)
+            logging.debug(f"_convert_generator_exp_to_all_of: Recursively converted nested generator_expression")
+
+        result = {
+            'type': 'all_of',
+            'element_rule': element_rule,
+            'iterator_info': comprehension
+        }
+        logging.debug(f"_convert_generator_exp_to_all_of: Created all_of with iterator target={comprehension.get('target')}")
+        return result
+
+    def _convert_generator_exp_to_any_of(self, gen_exp: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert a generator_expression to an any_of rule structure.
+
+        This is used to handle nested comprehensions like:
+            any(f(x, y) for x in A for y in B[x])
+
+        Which becomes nested any_of structures:
+            any_of(element=any_of(element=f(x,y), iterator=B[x]), iterator=A)
+
+        Args:
+            gen_exp: A generator_expression rule structure
+
+        Returns:
+            An any_of rule structure
+        """
+        if gen_exp.get('type') != 'generator_expression':
+            logging.warning(f"_convert_generator_exp_to_any_of: Expected generator_expression, got {gen_exp.get('type')}")
+            return gen_exp
+
+        element_rule = gen_exp.get('element')
+        comprehension = gen_exp.get('comprehension')
+
+        # Recursively convert nested generator_expressions
+        if element_rule and element_rule.get('type') == 'generator_expression':
+            element_rule = self._convert_generator_exp_to_any_of(element_rule)
+            logging.debug(f"_convert_generator_exp_to_any_of: Recursively converted nested generator_expression")
+
+        result = {
+            'type': 'any_of',
+            'element_rule': element_rule,
+            'iterator_info': comprehension
+        }
+        logging.debug(f"_convert_generator_exp_to_any_of: Created any_of with iterator target={comprehension.get('target')}")
+        return result
 
     def _substitute_variable_in_rule(self, rule: Dict[str, Any], var_name: str, value: Any) -> Optional[Dict[str, Any]]:
         """

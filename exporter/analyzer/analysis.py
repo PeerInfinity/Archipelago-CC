@@ -14,6 +14,21 @@ from typing import Optional, Callable, Dict, Any
 from .rule_analyzer import RuleAnalyzer
 from .source_extraction import _clean_source
 from .utils import make_json_serializable
+from exporter.constants import MAX_ANALYZE_RULE_CALLS
+
+# Global counter for detecting infinite loops
+_analyze_rule_call_count = 0
+
+
+def reset_analyze_rule_counter():
+    """Reset the global analyze_rule call counter.
+
+    Call this before processing a new player to prevent counter accumulation
+    across multiple players in a multiworld, which could cause false positive
+    infinite loop detection.
+    """
+    global _analyze_rule_call_count
+    _analyze_rule_call_count = 0
 
 
 def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
@@ -22,7 +37,8 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
                  ast_node: Optional[ast.AST] = None,
                  game_handler=None,
                  player_context: Optional[int] = None,
-                 context_info: Optional[str] = None) -> Dict[str, Any]:
+                 context_info: Optional[str] = None,
+                 preserve_parameter_names: bool = False) -> Dict[str, Any]:
     """
     Analyzes a rule function or an AST node representing a rule.
 
@@ -43,6 +59,11 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
     Returns:
         A dictionary representing the structured rule, or an error structure.
     """
+    global _analyze_rule_call_count
+    _analyze_rule_call_count += 1
+    if _analyze_rule_call_count > MAX_ANALYZE_RULE_CALLS:
+        raise RuntimeError(f"analyze_rule called {_analyze_rule_call_count} times - likely infinite loop. Context: {context_info}")
+
     logging.debug("\n--- Starting Rule Analysis ---")
 
     # Initialize seen_funcs dict if not provided
@@ -104,7 +125,6 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
                     free_vars = rule_func.__code__.co_freevars
                     for var_name, cell in zip(free_vars, closure_cells):
                         try:
-                            # Add to local copy, overwriting if necessary
                             local_closure_vars[var_name] = cell.cell_contents
                         except ValueError:
                             # Cell is empty, skip
@@ -122,23 +142,28 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
 
             # Extract default parameter values and add to closure vars
             # This handles cases like: lambda state, loc=q_loc: (loc.can_reach(state))
-            try:
-                if hasattr(rule_func, '__defaults__') and rule_func.__defaults__:
-                    if hasattr(rule_func, '__code__'):
-                        arg_names = rule_func.__code__.co_varnames[:rule_func.__code__.co_argcount]
-                        defaults = rule_func.__defaults__
+            # When preserve_parameter_names is True (for helper export), we skip this
+            # to keep parameters as name references that get resolved at runtime
+            if not preserve_parameter_names:
+                try:
+                    if hasattr(rule_func, '__defaults__') and rule_func.__defaults__:
+                        if hasattr(rule_func, '__code__'):
+                            arg_names = rule_func.__code__.co_varnames[:rule_func.__code__.co_argcount]
+                            defaults = rule_func.__defaults__
 
-                        # Map default values to parameter names (defaults apply to last N parameters)
-                        if len(defaults) > 0:
-                            default_start = len(arg_names) - len(defaults)
-                            for i, default_value in enumerate(defaults):
-                                param_name = arg_names[default_start + i]
-                                # Don't override existing closure vars and skip state/player
-                                if param_name not in local_closure_vars and param_name not in ('state', 'player'):
-                                    local_closure_vars[param_name] = default_value
-                                    logging.debug(f"Added default parameter '{param_name}' to closure vars: {default_value}")
-            except Exception as def_err:
-                logging.warning(f"Error extracting default parameters: {def_err}")
+                            # Map default values to parameter names (defaults apply to last N parameters)
+                            if len(defaults) > 0:
+                                default_start = len(arg_names) - len(defaults)
+                                for i, default_value in enumerate(defaults):
+                                    param_name = arg_names[default_start + i]
+                                    # Don't override existing closure vars and skip state/player
+                                    if param_name not in local_closure_vars and param_name not in ('state', 'player'):
+                                        local_closure_vars[param_name] = default_value
+                                        logging.debug(f"Added default parameter '{param_name}' to closure vars: {default_value}")
+                except Exception as def_err:
+                    logging.warning(f"Error extracting default parameters: {def_err}")
+            else:
+                logging.debug("preserve_parameter_names is True, skipping default parameter extraction")
 
             # Clean the source
             cleaned_source = _clean_source(rule_func)
@@ -167,7 +192,8 @@ def analyze_rule(rule_func: Optional[Callable[[Any], bool]] = None,
                     seen_funcs=seen_funcs,
                     game_handler=game_handler,
                     rule_func=rule_func,
-                    player_context=player_context
+                    player_context=player_context,
+                    preserve_parameter_names=preserve_parameter_names
                 )
 
                 # Check if cleaned_source contains "Bridge"

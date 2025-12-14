@@ -17078,6 +17078,9 @@
       "XRay": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {
       "ProgressiveSword": {
@@ -17231,6 +17234,33 @@
       "game": "SMZ3",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
+      "options": {
+        "accessibility": 1,
+        "energy_beep": 1,
+        "exclude_locations": [],
+        "ganon_vulnerable": 7,
+        "goal": 0,
+        "heart_beep_speed": 3,
+        "heart_color": 0,
+        "item_links": [],
+        "key_shuffle": 0,
+        "local_items": [],
+        "morph_location": 0,
+        "non_local_items": [],
+        "open_tourian": 4,
+        "open_tower": 7,
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "quick_swap": 0,
+        "sm_logic": 0,
+        "spin_jumps_animation": 0,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_inventory_from_pool": {},
+        "start_location_hints": [],
+        "sword_location": 0
+      },
       "allow_regressive_accessibility_mismatches": true,
       "count_non_advancement_items": true,
       "reward_regions": {
@@ -17302,6 +17332,28 @@
       "name": "SMZ3",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "grass",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Archipelago Super Metroid and A Link to the Past Crossover randomizer on your computer. This guide covers single-player, multiworld, and related software.",
+          "language": "English",
+          "file_name": "multiworld_en.md",
+          "link": "multiworld/en",
+          "authors": [
+            "lordlou"
+          ]
+        }
+      ],
+      "world_description": "A python port of Super Metroid & A Link To The Past Crossover Item Randomizer based on v11.2 of Total's SMZ3.\nThis is allowed as long as we keep features and logic as close as possible as the original.",
+      "slot_data": {
+        "goal": 0,
+        "open_tower": 7,
+        "ganon_vulnerable": 7,
+        "open_tourian": 4,
+        "sm_logic": 0,
+        "key_shuffle": 0
       }
     }
   },

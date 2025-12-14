@@ -1,6 +1,6 @@
 """Paint game-specific export handler."""
 
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Set
 from .generic import GenericGameExportHandler
 import logging
 import re
@@ -21,6 +21,20 @@ class PaintGameExportHandler(GenericGameExportHandler):
     """
 
     GAME_NAME = 'Paint'
+
+    # Enable auto-export for discovered helpers.
+    # calculate_paint_percent_available can now be exported thanks to support for:
+    # - world.options.<setting> pattern (converted to setting_value)
+    # - sqrt() function (handled as helper type)
+    # - if_statement with multiple assignments in body
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+
+    # Blacklist paint_percent_available - it has caching logic with state mutation
+    # (state.paint_percent_stale) that doesn't translate to the pure function model.
+    # Location rules will call calculate_paint_percent_available directly instead.
+    HELPERS_TO_EXPORT_BLACKLIST: Set[str] = {
+        'paint_percent_available'
+    }
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Export Paint-specific settings including canvas_size_increment and logic_percent."""
@@ -48,7 +62,7 @@ class PaintGameExportHandler(GenericGameExportHandler):
     def override_rule_analysis(self, rule_func, rule_target_name: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """Override rule analysis for Paint location access rules.
 
-        Paint locations have a custom access_rule method that compares paint_percent_available
+        Paint locations have a custom access_rule method that compares paint percentage
         to a threshold derived from the location address.
 
         Example location: "Similarity: 1.0%" at address 198604
@@ -59,7 +73,7 @@ class PaintGameExportHandler(GenericGameExportHandler):
             rule_target_name: The name of the location (e.g., "Similarity: 1.0%")
 
         Returns:
-            A rule dict that compares paint_percent_available to the threshold
+            A rule dict that compares calculate_paint_percent_available to the threshold
         """
         # Check if this is a Paint location access rule
         if rule_target_name and rule_target_name.startswith("Similarity: "):
@@ -69,12 +83,22 @@ class PaintGameExportHandler(GenericGameExportHandler):
             if match:
                 threshold_percent = float(match.group(1))
 
+                # Register the helper for auto-export
+                # Import the function to pass to register_helper_usage for module detection
+                try:
+                    from worlds.paint.rules import calculate_paint_percent_available
+                    self.register_helper_usage('calculate_paint_percent_available', calculate_paint_percent_available)
+                except ImportError:
+                    self.register_helper_usage('calculate_paint_percent_available')
+
                 # Create the rule structure
+                # Use calculate_paint_percent_available directly (auto-exported helper)
+                # instead of paint_percent_available (which has caching logic)
                 return {
                     'type': 'compare',
                     'left': {
                         'type': 'helper',
-                        'name': 'paint_percent_available',
+                        'name': 'calculate_paint_percent_available',
                         'args': []
                     },
                     'op': '>=',
@@ -99,11 +123,11 @@ class PaintGameExportHandler(GenericGameExportHandler):
         """
         logger.info("Paint: Post-processing regions to set unique access rules on locations")
 
-        # Import the paint_percent_available function
+        # Import the calculate_paint_percent_available function (not the caching wrapper)
         try:
-            from worlds.paint.rules import paint_percent_available
+            from worlds.paint.rules import calculate_paint_percent_available
         except ImportError:
-            logger.error("Paint: Could not import paint_percent_available from worlds.paint.rules")
+            logger.error("Paint: Could not import calculate_paint_percent_available from worlds.paint.rules")
             return
 
         # Get the player's regions
@@ -120,8 +144,9 @@ class PaintGameExportHandler(GenericGameExportHandler):
                         # Create a unique lambda for this location with the threshold captured
                         # This ensures each location has a different cache key in the exporter
                         # Note: we need to capture 'player' and 'threshold' in the lambda's defaults
+                        # Use calculate_paint_percent_available directly (auto-exported)
                         location.access_rule = lambda state, p=player, t=threshold_percent: \
-                            paint_percent_available(state, state.multiworld.worlds[p], p) >= t
+                            calculate_paint_percent_available(state, state.multiworld.worlds[p], p) >= t
 
                         location_count += 1
 

@@ -12,85 +12,17 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
 
     Super Mario Land 2 uses custom helper functions for pipe traversal,
     auto-scroll checks, level progression, and zone-specific logic.
-    We inherit from GenericGameExportHandler to preserve these helpers.
     """
     GAME_NAME = 'Super Mario Land 2'
 
-    # Functions that should be exported as helper calls rather than analyzed
-    HELPER_FUNCTIONS = {
-        'is_auto_scroll',
-        'has_pipe_right',
-        'has_pipe_left',
-        'has_pipe_down',
-        'has_pipe_up',
-        'has_level_progression',
-        'pumpkin_zone_1_midway_bell',
-        'pumpkin_zone_1_normal_exit',
-        'not_blocked_by_sharks',
-        'turtle_zone_1_normal_exit',
-        'mario_zone_1_normal_exit',
-        'mario_zone_1_midway_bell',
-        'macro_zone_1_normal_exit',
-        'macro_zone_1_midway_bell',
-        'tree_zone_2_normal_exit',
-        'tree_zone_2_secret_exit',
-        'tree_zone_2_midway_bell',
-        'tree_zone_3_normal_exit',
-        'tree_zone_4_normal_exit',
-        'tree_zone_4_midway_bell',
-        'tree_zone_5_boss',
-        'pumpkin_zone_2_normal_exit',
-        'pumpkin_zone_2_secret_exit',
-        'pumpkin_zone_3_secret_exit',
-        'pumpkin_zone_4_boss',
-        'mario_zone_1_secret_exit',
-        'mario_zone_2_normal_exit',
-        'mario_zone_2_secret_exit',
-        'mario_zone_3_secret_exit',
-        'mario_zone_4_boss',
-        'turtle_zone_2_normal_exit',
-        'turtle_zone_2_midway_bell',
-        'turtle_zone_secret_course_normal_exit',
-        'space_zone_1_normal_exit',
-        'space_zone_1_secret_exit',
-        'space_zone_2_midway_bell',
-        'space_zone_2_normal_exit',
-        'space_zone_2_secret_exit',
-        'space_zone_3_boss',
-        'macro_zone_1_secret_exit',
-        'macro_zone_2_normal_exit',
-        'macro_zone_2_midway_bell',
-        'macro_zone_3_boss',
-        'mushroom_zone_coins',
-        'tree_zone_1_coins',
-        'tree_zone_2_coins',
-        'tree_zone_3_coins',
-        'tree_zone_4_coins',
-        'tree_zone_5_coins',
-        'pumpkin_zone_1_coins',
-        'pumpkin_zone_2_coins',
-        'pumpkin_zone_secret_course_1_coins',
-        'pumpkin_zone_3_coins',
-        'pumpkin_zone_4_coins',
-        'mario_zone_1_coins',
-        'mario_zone_2_coins',
-        'mario_zone_3_coins',
-        'mario_zone_4_coins',
-        'turtle_zone_1_coins',
-        'turtle_zone_2_coins',
-        'turtle_zone_secret_course_coins',
-        'space_zone_1_coins',
-        'space_zone_2_coins',
-        'space_zone_3_coins',
-        'macro_zone_1_coins',
-        'macro_zone_2_coins',
-        'macro_zone_3_coins',
-        'hippo_zone_coins'
-    }
+    # Enable automatic helper export
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    AUTO_PRESERVE_LARGE_HELPERS = False
 
-    def should_preserve_as_helper(self, func_name: str) -> bool:
-        """Check if a function should be preserved as a helper call."""
-        return func_name in self.HELPER_FUNCTIONS
+    # All helpers are now exported to rules.json - no JavaScript implementations needed.
+    # Runtime data (auto_scroll_levels, sprite_data) is exported via get_settings_data.
+    HELPERS_TO_PRESERVE = set()
+    HELPERS_TO_EXPORT_BLACKLIST = set()
 
     def should_process_multistatement_if_bodies(self) -> bool:
         """
@@ -160,7 +92,7 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
 
         return item_data
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """
         Override expand_rule to prevent auto-expansion of our helper functions
         and to resolve self.options.* references to constant values.
@@ -264,49 +196,49 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
         if rule.get('type') in ('or', 'and'):
             conditions = rule.get('conditions', [])
             if conditions:
-                rule['conditions'] = [self.expand_rule(cond) if isinstance(cond, dict) and 'type' in cond else cond for cond in conditions]
+                rule['conditions'] = [self.expand_rule(cond, _depth + 1) if isinstance(cond, dict) and 'type' in cond else cond for cond in conditions]
             return rule
 
         # For 'conditional' rules, recursively expand test, if_true, and if_false
         if rule.get('type') == 'conditional':
             test = rule.get('test')
             if test and isinstance(test, dict):
-                rule['test'] = self.expand_rule(test)
+                rule['test'] = self.expand_rule(test, _depth + 1)
             if_true = rule.get('if_true')
             if if_true and isinstance(if_true, dict):
-                rule['if_true'] = self.expand_rule(if_true)
+                rule['if_true'] = self.expand_rule(if_true, _depth + 1)
             if_false = rule.get('if_false')
             if if_false and isinstance(if_false, dict):
-                rule['if_false'] = self.expand_rule(if_false)
+                rule['if_false'] = self.expand_rule(if_false, _depth + 1)
             return rule
 
         # For 'not' rules, recursively expand the condition
         if rule.get('type') == 'not':
             condition = rule.get('condition')
             if condition and isinstance(condition, dict):
-                rule['condition'] = self.expand_rule(condition)
+                rule['condition'] = self.expand_rule(condition, _depth + 1)
             return rule
 
         # For state_method rules, recursively expand args to catch nested attribute access
         if rule.get('type') == 'state_method':
             args = rule.get('args', [])
             if args:
-                rule['args'] = [self.expand_rule(arg) if isinstance(arg, dict) and 'type' in arg else arg for arg in args]
+                rule['args'] = [self.expand_rule(arg, _depth + 1) if isinstance(arg, dict) and 'type' in arg else arg for arg in args]
             # Continue with parent processing
-            return super().expand_rule(rule)
+            return super().expand_rule(rule, _depth)
 
-        # For our helper functions, preserve them without expansion
+        # For preserved helper functions, don't expand them - keep as helper calls for JavaScript
         if rule.get('type') == 'helper':
             helper_name = rule.get('name', '')
-            if helper_name in self.HELPER_FUNCTIONS:
+            if helper_name in self.HELPERS_TO_PRESERVE:
                 # Recursively expand any arguments, but preserve the helper itself
                 args = rule.get('args', [])
                 if args:
-                    rule['args'] = [self.expand_rule(arg) if isinstance(arg, dict) and 'type' in arg else arg for arg in args]
+                    rule['args'] = [self.expand_rule(arg, _depth + 1) if isinstance(arg, dict) and 'type' in arg else arg for arg in args]
                 return rule
 
         # For all other rules, use the parent's expansion logic
-        return super().expand_rule(rule)
+        return super().expand_rule(rule, _depth)
 
     def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
         """Extract Super Mario Land 2 settings including player options."""
@@ -334,5 +266,14 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
                 value = getattr(shuffle_midway, 'value', shuffle_midway)
                 settings_dict['shuffle_midway_bells'] = value
                 self._cached_options['shuffle_midway_bells'] = value
+
+        # Export runtime data needed by helpers (generated in generate_early)
+        # auto_scroll_levels: list of auto-scroll states per level (0=none, 1=on, 2=cancel item, 3=trap)
+        if hasattr(world, 'auto_scroll_levels'):
+            settings_dict['auto_scroll_levels'] = world.auto_scroll_levels
+
+        # sprite_data: dict of level -> sprite configurations (needed for not_blocked_by_sharks)
+        if hasattr(world, 'sprite_data'):
+            settings_dict['sprite_data'] = world.sprite_data
 
         return settings_dict

@@ -17,6 +17,14 @@ class SMGameExportHandler(GenericGameExportHandler):
     helper calls that the frontend can execute.
     """
     GAME_NAME = 'Super Metroid'
+    # Note: AUTO_EXPORT_DISCOVERED_HELPERS has limited effect for SM because:
+    # 1. Helpers are methods on SMBoolManager class, not standalone functions
+    # 2. Helper calls are created in expand_rule post-processing, not during analysis
+    # 3. The VARIA logic system (SMBool with difficulty) requires JS implementations
+    # The JavaScript helpers in smLogic.js remain necessary for rule evaluation.
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
 
     def __init__(self, world=None):
         super().__init__()  # Base class doesn't take arguments
@@ -907,7 +915,7 @@ class SMGameExportHandler(GenericGameExportHandler):
             logger.error(f"SM: Error parsing traverse lambda for '{source_ap_name}': {e}", exc_info=True)
             return None
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Recursively expand and transform Super Metroid rules.
 
         Transforms self.evalSMBool() function calls into direct helper calls
@@ -1013,7 +1021,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                 # First arg is 'sm', second is the boss name
                 if len(args) >= 2:
                     boss_arg = args[1]  # Second arg is the boss name
-                    expanded_boss_arg = self.expand_rule(boss_arg)
+                    expanded_boss_arg = self.expand_rule(boss_arg, _depth + 1)
                     logger.debug(f"SM: Converted Bosses.bossDead to helper call with boss={expanded_boss_arg}")
                     return {'type': 'helper', 'name': 'bossDead', 'args': [expanded_boss_arg]}
 
@@ -1031,7 +1039,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                     logger.debug("SM: Found AND rule with accessFrom, checking Available part")
 
                     # Recursively expand the second condition (the Available part)
-                    expanded = self.expand_rule(second)
+                    expanded = self.expand_rule(second, _depth + 1)
 
                     # Check if the Available part is just evalSMBool(SMBool(True), ...)
                     if self._is_always_true_smbool(expanded):
@@ -1103,7 +1111,7 @@ class SMGameExportHandler(GenericGameExportHandler):
             if 'args' in rule:
                 expanded_args = []
                 for i, arg in enumerate(rule['args']):
-                    expanded_arg = self.expand_rule(arg)
+                    expanded_arg = self.expand_rule(arg, _depth + 1)
                     # The second argument is typically maxDiff (state.smbm[player].maxDiff)
                     # Replace complex attribute access patterns with the actual maxDiff value (50 = hardcore)
                     if i == 1 and self._is_maxdiff_reference(expanded_arg):
@@ -1126,14 +1134,14 @@ class SMGameExportHandler(GenericGameExportHandler):
                 if obj.get('type') == 'name' and obj.get('name') == 'self' and attr == 'evalSMBool':
                     # Convert to helper call and expand arguments
                     # Don't simplify SMBool(True) - preserve the structure
-                    expanded_args = [self.expand_rule(arg) for arg in rule.get('args', [])]
+                    expanded_args = [self.expand_rule(arg, _depth + 1) for arg in rule.get('args', [])]
                     return {'type': 'helper', 'name': 'evalSMBool', 'args': expanded_args}
 
                 # Transform sm.methodName(...) into helper calls
                 # These are VARIA logic methods like sm.wor, sm.wand, sm.haveItem, etc.
                 if obj.get('type') == 'name' and obj.get('name') == 'sm':
                     # Convert to helper call
-                    expanded_args = [self.expand_rule(arg) for arg in rule.get('args', [])]
+                    expanded_args = [self.expand_rule(arg, _depth + 1) for arg in rule.get('args', [])]
 
                     # Special handling for canHellRun with no args - add default arguments
                     if attr == 'canHellRun' and not expanded_args:
@@ -1218,11 +1226,11 @@ class SMGameExportHandler(GenericGameExportHandler):
 
         # Recursively process nested structures
         if rule_type == 'and' or rule_type == 'or':
-            rule['conditions'] = [self.expand_rule(cond) for cond in rule.get('conditions', [])]
+            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
 
         if rule_type == 'not':
             if 'condition' in rule:
-                rule['condition'] = self.expand_rule(rule['condition'])
+                rule['condition'] = self.expand_rule(rule['condition'], _depth + 1)
 
         # Process helper arguments
         if rule_type == 'helper':
@@ -1309,17 +1317,17 @@ class SMGameExportHandler(GenericGameExportHandler):
                     {'type': 'constant', 'value': minE}
                 ]
             elif 'args' in rule:
-                rule['args'] = [self.expand_rule(arg) for arg in rule['args']]
+                rule['args'] = [self.expand_rule(arg, _depth + 1) for arg in rule['args']]
 
         # Process function_call arguments (for other function calls)
         if rule_type == 'function_call':
             if 'args' in rule:
-                rule['args'] = [self.expand_rule(arg) for arg in rule['args']]
+                rule['args'] = [self.expand_rule(arg, _depth + 1) for arg in rule['args']]
 
         # Process generator expressions
         if rule_type == 'generator_expression':
             if 'element' in rule:
-                rule['element'] = self.expand_rule(rule['element'])
+                rule['element'] = self.expand_rule(rule['element'], _depth + 1)
 
         # Process binary operations
         if rule_type == 'binary_op' or rule_type == 'compare':
@@ -1329,7 +1337,7 @@ class SMGameExportHandler(GenericGameExportHandler):
                 self._is_getDmgReduction_reference(rule.get('right'))):
                 numerator = rule.get('left', {'type': 'constant', 'value': 1})
                 # Recursively expand the numerator first
-                numerator = self.expand_rule(numerator)
+                numerator = self.expand_rule(numerator, _depth + 1)
                 return {
                     'type': 'helper',
                     'name': 'divideByDmgReduction',
@@ -1337,30 +1345,30 @@ class SMGameExportHandler(GenericGameExportHandler):
                 }
 
             if 'left' in rule:
-                rule['left'] = self.expand_rule(rule['left'])
+                rule['left'] = self.expand_rule(rule['left'], _depth + 1)
             if 'right' in rule:
-                rule['right'] = self.expand_rule(rule['right'])
+                rule['right'] = self.expand_rule(rule['right'], _depth + 1)
 
         # Process conditionals
         if rule_type == 'conditional':
             if 'test' in rule:
-                rule['test'] = self.expand_rule(rule['test'])
+                rule['test'] = self.expand_rule(rule['test'], _depth + 1)
             if 'if_true' in rule and rule['if_true'] is not None:
-                rule['if_true'] = self.expand_rule(rule['if_true'])
+                rule['if_true'] = self.expand_rule(rule['if_true'], _depth + 1)
             if 'if_false' in rule and rule['if_false'] is not None:
-                rule['if_false'] = self.expand_rule(rule['if_false'])
+                rule['if_false'] = self.expand_rule(rule['if_false'], _depth + 1)
 
         # Process any_of and all_of (list comprehensions)
         if rule_type == 'any_of' or rule_type == 'all_of':
             if 'element_rule' in rule:
-                rule['element_rule'] = self.expand_rule(rule['element_rule'])
+                rule['element_rule'] = self.expand_rule(rule['element_rule'], _depth + 1)
             # Also expand iterator_info if present
             if 'iterator_info' in rule:
                 iterator_info = rule['iterator_info']
                 if 'iterator' in iterator_info:
-                    iterator_info['iterator'] = self.expand_rule(iterator_info['iterator'])
+                    iterator_info['iterator'] = self.expand_rule(iterator_info['iterator'], _depth + 1)
                 if 'target' in iterator_info:
-                    iterator_info['target'] = self.expand_rule(iterator_info['target'])
+                    iterator_info['target'] = self.expand_rule(iterator_info['target'], _depth + 1)
 
         return rule
 

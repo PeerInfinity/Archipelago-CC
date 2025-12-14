@@ -2081,16 +2081,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "compare",
-                  "left": {
-                    "type": "constant",
-                    "value": 1
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": 2
-                  }
+                  "type": "constant",
+                  "value": false
                 },
                 {
                   "type": "helper",
@@ -2198,16 +2190,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "compare",
-                  "left": {
-                    "type": "constant",
-                    "value": 1
-                  },
-                  "op": "==",
-                  "right": {
-                    "type": "constant",
-                    "value": 2
-                  }
+                  "type": "constant",
+                  "value": false
                 },
                 {
                   "type": "helper",
@@ -3135,16 +3119,8 @@
                       "name": "int",
                       "args": [
                         {
-                          "type": "compare",
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": ">",
-                          "right": {
-                            "type": "constant",
-                            "value": 1
-                          }
+                          "type": "constant",
+                          "value": false
                         }
                       ]
                     },
@@ -3218,16 +3194,8 @@
                       "name": "int",
                       "args": [
                         {
-                          "type": "compare",
-                          "left": {
-                            "type": "constant",
-                            "value": 0
-                          },
-                          "op": ">",
-                          "right": {
-                            "type": "constant",
-                            "value": 1
-                          }
+                          "type": "constant",
+                          "value": false
                         }
                       ]
                     },
@@ -34432,6 +34400,9 @@
       "Zubat": 26
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -34443,6 +34414,117 @@
       "game": "Pokemon Red and Blue",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
+      "options": {
+        "accessibility": 1,
+        "all_elevators_locked": 1,
+        "all_pokemon_seen": 0,
+        "area_1_to_1_mapping": 1,
+        "badges_needed_for_hm_moves": 1,
+        "badgesanity": 0,
+        "better_shops": 0,
+        "bicycle_gate_skips": 0,
+        "blind_trainers": 0,
+        "catch_em_all": 0,
+        "cerulean_cave_badges_condition": 4,
+        "cerulean_cave_key_items_condition": 50,
+        "confine_transform_to_ditto": 1,
+        "dark_rock_tunnel_logic": 1,
+        "death_link": 0,
+        "dexsanity": 0,
+        "door_shuffle": 0,
+        "elite_four_badges_condition": 8,
+        "elite_four_key_items_condition": 0,
+        "elite_four_pokedex_condition": 0,
+        "exclude_locations": [],
+        "exp_all": 1,
+        "exp_modifier": 16,
+        "extra_key_items": 0,
+        "extra_strength_boulders": 0,
+        "fire_trap_weight": 3,
+        "fix_combat_bugs": 1,
+        "fossil_check_item_types": 0,
+        "free_fly_location": 1,
+        "game_version": 0,
+        "hm_normal_type_compatibility": -1,
+        "hm_other_type_compatibility": -1,
+        "hm_same_type_compatibility": -1,
+        "ice_trap_weight": 0,
+        "immunity_matchups": 6,
+        "inherit_tm_hm_compatibility": 0,
+        "item_links": [],
+        "key_items_only": 0,
+        "level_scaling": 3,
+        "local_items": [],
+        "lose_money_on_blackout": 1,
+        "master_ball_price": 5000,
+        "minimum_catch_rate": 3,
+        "minimum_steps_between_encounters": 3,
+        "move_balancing": 0,
+        "non_local_items": [],
+        "normal_matchups": 143,
+        "normalize_encounter_chances": 0,
+        "not_very_effective_matchups": 38,
+        "oaks_aide_rt_11": 20,
+        "oaks_aide_rt_15": 30,
+        "oaks_aide_rt_2": 10,
+        "old_man": 1,
+        "paralyze_trap_weight": 3,
+        "plando_items": [],
+        "poison_trap_weight": 3,
+        "poke_doll_skip": 0,
+        "priority_locations": [],
+        "prizesanity": 0,
+        "progression_balancing": 50,
+        "randomize_hidden_items": 0,
+        "randomize_legendary_pokemon": 0,
+        "randomize_move_types": 0,
+        "randomize_pokedex": 0,
+        "randomize_pokemon_catch_rates": 0,
+        "randomize_pokemon_movesets": 0,
+        "randomize_pokemon_palettes": 0,
+        "randomize_pokemon_stats": 0,
+        "randomize_pokemon_types": 0,
+        "randomize_rock_tunnel": 0,
+        "randomize_starter_pokemon": 0,
+        "randomize_static_pokemon": 0,
+        "randomize_tm_moves": 0,
+        "randomize_trainer_parties": 0,
+        "randomize_type_chart": 0,
+        "randomize_wild_pokemon": 0,
+        "require_item_finder": 0,
+        "require_pokedex": 1,
+        "reusable_tms": 0,
+        "rival_name": -1,
+        "robbed_house_officer": 1,
+        "route_22_gate_condition": 7,
+        "route_3_condition": 1,
+        "safari_zone_normal_battles": 0,
+        "same_type_attack_bonus": 1,
+        "second_fossil_check_condition": 3,
+        "secondary_type_chance": -1,
+        "sleep_trap_weight": 3,
+        "split_card_key": 0,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "start_with_four_moves": 0,
+        "starting_money": 3000,
+        "stonesanity": 0,
+        "super_effective_matchups": 38,
+        "tea": 0,
+        "tm_normal_type_compatibility": -1,
+        "tm_other_type_compatibility": -1,
+        "tm_same_type_compatibility": -1,
+        "town_map_fly_location": 0,
+        "trainer_legendaries": 0,
+        "trainer_name": -1,
+        "trainersanity": 0,
+        "trap_percentage": 0,
+        "type_chart_seed": "random",
+        "victory_road_condition": 7,
+        "viridian_gym_condition": 7,
+        "warp_tile_shuffle": 0
+      },
       "route_3_condition": 1,
       "tea": 0,
       "extra_key_items": 0,
@@ -34485,6 +34567,486 @@
       "name": "Pokemon Red and Blue",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "grass",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to playing Pok\u00e9mon Red and Blue with Archipelago.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Alchav"
+          ]
+        },
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to playing Pok\u00e9mon Red and Blue with Archipelago.",
+          "language": "Espa\u00f1ol",
+          "file_name": "setup_es.md",
+          "link": "setup/es",
+          "authors": [
+            "Shiny"
+          ]
+        }
+      ],
+      "world_description": "Pok\u00e9mon Red and Pok\u00e9mon Blue are the original monster-collecting turn-based RPGs.  Explore the Kanto region with\nyour Pok\u00e9mon, catch more than 150 unique creatures, earn badges from the region's Gym Leaders, and challenge the\nElite Four to become the champion!",
+      "slot_data": {
+        "second_fossil_check_condition": 3,
+        "require_item_finder": 0,
+        "randomize_hidden_items": 0,
+        "badges_needed_for_hm_moves": 1,
+        "oaks_aide_rt_2": 10,
+        "oaks_aide_rt_11": 20,
+        "oaks_aide_rt_15": 30,
+        "extra_key_items": 0,
+        "extra_strength_boulders": 0,
+        "tea": 0,
+        "old_man": 1,
+        "elite_four_badges_condition": 8,
+        "elite_four_key_items_condition": 0,
+        "elite_four_pokedex_condition": 0,
+        "victory_road_condition": 7,
+        "route_22_gate_condition": 7,
+        "route_3_condition": 1,
+        "robbed_house_officer": 1,
+        "viridian_gym_condition": 7,
+        "cerulean_cave_badges_condition": 4,
+        "cerulean_cave_key_items_condition": 12,
+        "free_fly_map": 9,
+        "town_map_fly_map": 0,
+        "extra_badges": {},
+        "randomize_pokedex": 0,
+        "trainersanity": 0,
+        "death_link": 0,
+        "prizesanity": 0,
+        "key_items_only": 0,
+        "poke_doll_skip": 0,
+        "bicycle_gate_skips": 0,
+        "stonesanity": 0,
+        "door_shuffle": 0,
+        "warp_tile_shuffle": 0,
+        "dark_rock_tunnel_logic": 1,
+        "split_card_key": 0,
+        "all_elevators_locked": 1,
+        "require_pokedex": 1,
+        "area_1_to_1_mapping": 1,
+        "blind_trainers": 0,
+        "game_version": 0,
+        "exp_all": 1,
+        "type_chart": [
+          [
+            "Water",
+            "Fire",
+            20
+          ],
+          [
+            "Fire",
+            "Grass",
+            20
+          ],
+          [
+            "Fire",
+            "Ice",
+            20
+          ],
+          [
+            "Grass",
+            "Water",
+            20
+          ],
+          [
+            "Electric",
+            "Water",
+            20
+          ],
+          [
+            "Water",
+            "Rock",
+            20
+          ],
+          [
+            "Ghost",
+            "Ghost",
+            20
+          ],
+          [
+            "Fire",
+            "Bug",
+            20
+          ],
+          [
+            "Water",
+            "Ground",
+            20
+          ],
+          [
+            "Electric",
+            "Flying",
+            20
+          ],
+          [
+            "Grass",
+            "Ground",
+            20
+          ],
+          [
+            "Grass",
+            "Rock",
+            20
+          ],
+          [
+            "Ice",
+            "Grass",
+            20
+          ],
+          [
+            "Ice",
+            "Ground",
+            20
+          ],
+          [
+            "Ice",
+            "Flying",
+            20
+          ],
+          [
+            "Fighting",
+            "Normal",
+            20
+          ],
+          [
+            "Fighting",
+            "Rock",
+            20
+          ],
+          [
+            "Fighting",
+            "Ice",
+            20
+          ],
+          [
+            "Poison",
+            "Grass",
+            20
+          ],
+          [
+            "Poison",
+            "Bug",
+            20
+          ],
+          [
+            "Ground",
+            "Fire",
+            20
+          ],
+          [
+            "Ground",
+            "Electric",
+            20
+          ],
+          [
+            "Ground",
+            "Rock",
+            20
+          ],
+          [
+            "Ground",
+            "Poison",
+            20
+          ],
+          [
+            "Flying",
+            "Fighting",
+            20
+          ],
+          [
+            "Flying",
+            "Bug",
+            20
+          ],
+          [
+            "Flying",
+            "Grass",
+            20
+          ],
+          [
+            "Psychic",
+            "Fighting",
+            20
+          ],
+          [
+            "Psychic",
+            "Poison",
+            20
+          ],
+          [
+            "Bug",
+            "Grass",
+            20
+          ],
+          [
+            "Bug",
+            "Psychic",
+            20
+          ],
+          [
+            "Bug",
+            "Poison",
+            20
+          ],
+          [
+            "Rock",
+            "Fire",
+            20
+          ],
+          [
+            "Rock",
+            "Flying",
+            20
+          ],
+          [
+            "Rock",
+            "Bug",
+            20
+          ],
+          [
+            "Rock",
+            "Ice",
+            20
+          ],
+          [
+            "Ice",
+            "Dragon",
+            20
+          ],
+          [
+            "Dragon",
+            "Dragon",
+            20
+          ],
+          [
+            "Water",
+            "Water",
+            5
+          ],
+          [
+            "Fire",
+            "Fire",
+            5
+          ],
+          [
+            "Electric",
+            "Electric",
+            5
+          ],
+          [
+            "Ice",
+            "Ice",
+            5
+          ],
+          [
+            "Grass",
+            "Grass",
+            5
+          ],
+          [
+            "Psychic",
+            "Psychic",
+            5
+          ],
+          [
+            "Fire",
+            "Water",
+            5
+          ],
+          [
+            "Grass",
+            "Fire",
+            5
+          ],
+          [
+            "Water",
+            "Grass",
+            5
+          ],
+          [
+            "Electric",
+            "Grass",
+            5
+          ],
+          [
+            "Normal",
+            "Rock",
+            5
+          ],
+          [
+            "Fire",
+            "Rock",
+            5
+          ],
+          [
+            "Grass",
+            "Bug",
+            5
+          ],
+          [
+            "Grass",
+            "Poison",
+            5
+          ],
+          [
+            "Grass",
+            "Flying",
+            5
+          ],
+          [
+            "Ice",
+            "Water",
+            5
+          ],
+          [
+            "Fighting",
+            "Poison",
+            5
+          ],
+          [
+            "Fighting",
+            "Flying",
+            5
+          ],
+          [
+            "Fighting",
+            "Psychic",
+            5
+          ],
+          [
+            "Fighting",
+            "Bug",
+            5
+          ],
+          [
+            "Poison",
+            "Poison",
+            5
+          ],
+          [
+            "Poison",
+            "Ground",
+            5
+          ],
+          [
+            "Poison",
+            "Rock",
+            5
+          ],
+          [
+            "Poison",
+            "Ghost",
+            5
+          ],
+          [
+            "Ground",
+            "Grass",
+            5
+          ],
+          [
+            "Ground",
+            "Bug",
+            5
+          ],
+          [
+            "Flying",
+            "Electric",
+            5
+          ],
+          [
+            "Flying",
+            "Rock",
+            5
+          ],
+          [
+            "Bug",
+            "Fire",
+            5
+          ],
+          [
+            "Bug",
+            "Fighting",
+            5
+          ],
+          [
+            "Bug",
+            "Flying",
+            5
+          ],
+          [
+            "Bug",
+            "Ghost",
+            5
+          ],
+          [
+            "Rock",
+            "Fighting",
+            5
+          ],
+          [
+            "Rock",
+            "Ground",
+            5
+          ],
+          [
+            "Fire",
+            "Dragon",
+            5
+          ],
+          [
+            "Water",
+            "Dragon",
+            5
+          ],
+          [
+            "Electric",
+            "Dragon",
+            5
+          ],
+          [
+            "Grass",
+            "Dragon",
+            5
+          ],
+          [
+            "Ground",
+            "Flying",
+            0
+          ],
+          [
+            "Normal",
+            "Ghost",
+            0
+          ],
+          [
+            "Electric",
+            "Ground",
+            0
+          ],
+          [
+            "Fighting",
+            "Ghost",
+            0
+          ],
+          [
+            "Ghost",
+            "Normal",
+            0
+          ],
+          [
+            "Ghost",
+            "Psychic",
+            0
+          ]
+        ]
       },
       "extra_badges": {},
       "local_poke_data": {

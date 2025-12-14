@@ -122,7 +122,8 @@ import { DEFAULT_PLAYER_ID } from './playerIdUtils.js';
  * - state_method: Calls StateManager methods (can_reach, etc.)
  * - item_check: Checks if player has item
  * - count_check: Checks item quantity
- * - group_check: Checks item group count
+ * - group_check: Checks item group count (returns boolean)
+ * - group_count: Returns item group count (returns number)
  * - location_check: Checks if location is accessible
  * - locations_checked: Checks total locations checked
  * - total_items_count: Checks total items collected
@@ -153,6 +154,63 @@ import { DEFAULT_PLAYER_ID } from './playerIdUtils.js';
  */
 
 // frontend/modules/shared/ruleEngine.js
+
+/**
+ * Resolves helper function parameters from arguments, slot_data, or settings.
+ * This is the shared logic used by both stateInterface.js and ruleEvaluator.js
+ * when evaluating helper definitions exported from Python to rules.json.
+ *
+ * Parameter resolution order:
+ * 1. Use provided argument if available
+ * 2. Try exact parameter name match in slot_data
+ * 3. Try exact parameter name match in settings
+ * 4. Try mapped name from helperDefinition.param_mappings (exported from Python)
+ *
+ * @param {Object} helperDefinition - The helper definition from rules.json
+ * @param {Array} args - Arguments passed to the helper call
+ * @param {Object} staticData - Static game data containing settings and slot_data
+ * @param {string} playerIdStr - Player ID as string for lookup
+ * @returns {Object} The resolved helper scope with parameter values
+ */
+export function resolveHelperScope(helperDefinition, args, staticData, playerIdStr) {
+  const helperScope = {};
+
+  if (!helperDefinition.params || !Array.isArray(helperDefinition.params)) {
+    return helperScope;
+  }
+
+  const playerSettings = staticData?.settings?.[playerIdStr] || {};
+  const playerSlotData = staticData?.game_info?.[playerIdStr]?.slot_data || {};
+  const playerOptions = playerSettings.options || playerSettings;
+  // Get param_mappings from the helper definition (exported from Python game handler)
+  const paramMappings = helperDefinition.param_mappings || {};
+
+  helperDefinition.params.forEach((paramName, index) => {
+    if (index < args.length) {
+      // Use provided argument
+      helperScope[paramName] = args[index];
+    } else {
+      // Try to resolve from slot_data or settings
+      if (playerSlotData[paramName] !== undefined) {
+        helperScope[paramName] = playerSlotData[paramName];
+      } else if (playerOptions[paramName] !== undefined) {
+        helperScope[paramName] = playerOptions[paramName];
+      } else {
+        // Try mapped parameter name from helper definition
+        const mappedName = paramMappings[paramName];
+        if (mappedName) {
+          if (playerSlotData[mappedName] !== undefined) {
+            helperScope[paramName] = playerSlotData[mappedName];
+          } else if (playerOptions[mappedName] !== undefined) {
+            helperScope[paramName] = playerOptions[mappedName];
+          }
+        }
+      }
+    }
+  });
+
+  return helperScope;
+}
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -301,25 +359,60 @@ function isBossDefeatCheck(rule, stateSnapshotInterface) {
 
 /**
  * Creates a new context with bound iterator variables for all_of/any_of comprehensions.
+ * Supports both simple names and tuple unpacking (for dict.items() patterns).
  * @param {object} context - The original context
  * @param {object} iterator_info - Iterator information with target and iterator
  * @param {any} value - The value to bind to the iterator variable
  * @returns {object} - A new context with the variable binding
  */
 function createBoundContext(context, iterator_info, value) {
-  if (!iterator_info || !iterator_info.target || !iterator_info.target.name) {
+  if (!iterator_info || !iterator_info.target) {
     // No variable to bind, return original context
     return context;
   }
 
-  const varName = iterator_info.target.name;
-  const boundVariables = { [varName]: value };
+  const boundVariables = {};
+  const target = iterator_info.target;
+
+  // Handle tuple unpacking (e.g., for key, value in dict.items())
+  if (target.type === 'tuple' && target.elements && Array.isArray(target.elements)) {
+    // Value should be an array [key, value] for dict items
+    if (Array.isArray(value)) {
+      target.elements.forEach((element, index) => {
+        if (element.type === 'name' && element.name) {
+          boundVariables[element.name] = value[index];
+        }
+      });
+    }
+  }
+  // Handle list type (alternative format for tuple unpacking)
+  else if (target.type === 'list' && Array.isArray(target.value) && Array.isArray(value)) {
+    for (let i = 0; i < target.value.length && i < value.length; i++) {
+      const targetElem = target.value[i];
+      if (targetElem && targetElem.type === 'name' && targetElem.name) {
+        boundVariables[targetElem.name] = value[i];
+      }
+    }
+  }
+  // Handle simple name binding
+  else if (target.type === 'name' && target.name) {
+    boundVariables[target.name] = value;
+  }
+  // Fallback for direct name property (legacy format)
+  else if (target.name) {
+    boundVariables[target.name] = value;
+  }
+
+  // If no variables were bound, return original context
+  if (Object.keys(boundVariables).length === 0) {
+    return context;
+  }
 
   // Create a wrapper context that intercepts resolveName calls
   return {
     ...context,
     resolveName: function(name) {
-      // Check if this is the bound variable
+      // Check if this is one of the bound variables
       if (name in boundVariables) {
         return boundVariables[name];
       }
@@ -363,6 +456,13 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
     return undefined;
   }
 
+  // Detect Rule Builder format: has 'rule' key but no 'type' key
+  // Rule Builder format: {"rule": "Has", "options": [], "args": {"item_name": "Sword"}}
+  // CC format: {"type": "item_check", "item": "Sword"}
+  if (rule.rule && !rule.type) {
+    return evaluateRuleBuilderRule(rule, context, depth, localScope);
+  }
+
   let result;
   let ruleType = rule?.type;
 
@@ -375,14 +475,48 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         if (typeof context?.getStaticData === 'function') {
           const staticData = context.getStaticData();
           const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
-          const helperDefinition = staticData?.helpers?.[playerId]?.[rule.name];
+          // Convert playerId to string for JSON key lookup (JSON keys are always strings)
+          const playerIdKey = String(playerId);
+          const helperDefinition = staticData?.helpers?.[playerIdKey]?.[rule.name];
 
           if (helperDefinition) {
             // Found a helper definition in rules.json - evaluate it recursively
-            log('debug', `[evaluateRule] Using exported helper definition for '${rule.name}'`);
-            result = evaluateRule(helperDefinition, context, depth + 1);
-            break;
+            // Helper definitions may have params and body, or just be a rule directly
+            const params = helperDefinition.params || [];
+            const defaults = helperDefinition.defaults || {};
+            const body = helperDefinition.body || helperDefinition;
+            const args = rule.args || [];
+
+            // Create localScope mapping parameter names to evaluated argument values
+            let helperLocalScope = localScope ? { ...localScope } : {};
+
+            // First, apply default values for all parameters that have defaults
+            for (const paramName of params) {
+              if (paramName in defaults) {
+                helperLocalScope[paramName] = defaults[paramName];
+              }
+            }
+
+            // Then, override with actual argument values
+            for (let i = 0; i < params.length && i < args.length; i++) {
+              helperLocalScope[params[i]] = evaluateRule(args[i], context, depth + 1, localScope);
+            }
+
+            result = evaluateRule(body, context, depth + 1, helperLocalScope);
+
+            // Unwrap return marker if present (from block with return statement)
+            if (result && typeof result === 'object' && result.__isReturn) {
+              result = result.value;
+            }
+            // If definition evaluation succeeded (not undefined), use that result
+            // Otherwise, fall through to try JavaScript helpers as a fallback
+            if (result !== undefined) {
+              break;
+            }
+            log('debug', `[evaluateRule] Helper definition for '${rule.name}' returned undefined, trying JavaScript fallback`);
           }
+        } else {
+          // No static data available for helper lookup
         }
 
         // Handle Python built-in functions
@@ -420,6 +554,243 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           } else {
             const evalArgs = rule.args.map(arg => evaluateRule(arg, context, depth + 1));
             result = evalArgs.every(val => val === true);
+          }
+          break;
+        }
+
+        if (rule.name === 'min') {
+          // Python's min() returns the minimum of the arguments
+          if (!rule.args || rule.args.length === 0) {
+            result = undefined;
+            break;
+          }
+          const evalArgs = rule.args.map(arg => evaluateRule(arg, context, depth + 1, localScope));
+          if (evalArgs.some(val => val === undefined)) {
+            result = undefined;
+          } else {
+            result = Math.min(...evalArgs);
+          }
+          break;
+        }
+
+        if (rule.name === 'max') {
+          // Python's max() returns the maximum of the arguments
+          if (!rule.args || rule.args.length === 0) {
+            result = undefined;
+            break;
+          }
+          const evalArgs = rule.args.map(arg => evaluateRule(arg, context, depth + 1, localScope));
+          if (evalArgs.some(val => val === undefined)) {
+            result = undefined;
+          } else {
+            result = Math.max(...evalArgs);
+          }
+          break;
+        }
+
+        if (rule.name === 'set') {
+          // Python's set() converts an iterable to a set (deduplicates)
+          // For our purposes, just return the evaluated argument as an array with unique values
+          if (!rule.args || rule.args.length === 0) {
+            result = [];
+            break;
+          }
+          const setArg = evaluateRule(rule.args[0], context, depth + 1, localScope);
+          // If result is an array, deduplicate it (like Python set)
+          if (Array.isArray(setArg)) {
+            result = [...new Set(setArg)];
+          } else {
+            // If not an array, just return it as-is
+            result = setArg;
+          }
+          break;
+        }
+
+        // Handle can_buy and can_buy_unlimited using shop_items data
+        // TODO: This is ALttP-specific logic that should be moved to a game-specific module.
+        // Find a more generic solution (e.g., game-specific helper registry or exported helper definitions).
+        if (rule.name === 'can_buy' || rule.name === 'can_buy_unlimited') {
+          const itemName = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (itemName === undefined) {
+            result = undefined;
+            break;
+          }
+          // Get shop_items from settings
+          const shopItems = context.getSetting?.('shop_items');
+          if (!shopItems || !shopItems[itemName]) {
+            log('debug', `[evaluateRule] ${rule.name}: item '${itemName}' not found in shop_items`);
+            result = false;
+            break;
+          }
+          // Get the regions where this item can be bought
+          const regionsKey = rule.name === 'can_buy_unlimited' ? 'unlimited' : 'limited';
+          const regions = shopItems[itemName][regionsKey] || [];
+          if (regions.length === 0) {
+            result = false;
+            break;
+          }
+          // Check if ANY of the regions are reachable
+          if (typeof context.isRegionReachable !== 'function') {
+            log('warn', `[evaluateRule] ${rule.name}: context.isRegionReachable not available`);
+            result = undefined;
+            break;
+          }
+          result = regions.some(regionName => context.isRegionReachable(regionName));
+          break;
+        }
+
+        // Handle built-in Python functions
+        if (rule.name === 'set') {
+          // Python's set() function - convert iterable to set
+          // In JS context, we just return the array as-is since has_all/has_any work with arrays
+          const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (Array.isArray(value)) {
+            result = value;
+          } else if (value && typeof value === 'object') {
+            // Handle object (like dict keys) - convert to array
+            result = Object.keys(value);
+          } else {
+            result = value;
+          }
+          break;
+        }
+
+        if (rule.name === 'list') {
+          // Python's list() function - convert iterable to list
+          const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (Array.isArray(value)) {
+            result = value;
+          } else if (value && typeof value === 'object') {
+            result = Object.values(value);
+          } else if (typeof value === 'string') {
+            result = value.split('');
+          } else {
+            result = value ? [value] : [];
+          }
+          break;
+        }
+
+        if (rule.name === 'int') {
+          // Python's int() function - truncate a float to an integer
+          const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (typeof value === 'number') {
+            result = Math.trunc(value);
+          } else {
+            result = undefined;
+          }
+          break;
+        }
+
+        if (rule.name === 'sqrt') {
+          // Python's math.sqrt() function - square root
+          const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (typeof value === 'number' && value >= 0) {
+            result = Math.sqrt(value);
+          } else {
+            result = undefined;
+          }
+          break;
+        }
+
+        if (rule.name === 'len') {
+          // Python's len() function - get length of a sequence or collection
+          const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (Array.isArray(value)) {
+            result = value.length;
+          } else if (typeof value === 'string') {
+            result = value.length;
+          } else if (value && typeof value === 'object') {
+            // For objects (dict-like), return number of keys
+            result = Object.keys(value).length;
+          } else if (value === null || value === undefined) {
+            result = undefined;
+          } else {
+            log('warn', '[evaluateRule] len() called on non-sequence type', { value, rule });
+            result = undefined;
+          }
+          break;
+        }
+
+        if (rule.name === 'bool') {
+          // Python's bool() function - convert value to boolean
+          const value = rule.args?.[0] ? evaluateRule(rule.args[0], context, depth + 1, localScope) : undefined;
+          if (value === undefined) {
+            result = undefined;
+          } else {
+            // Python bool() rules: false for 0, None, empty collections, empty string
+            // true for everything else
+            result = Boolean(value);
+          }
+          break;
+        }
+
+        if (rule.name === 'iter') {
+          // Python's iter() function - create an iterator from an iterable
+          // We wrap the result in an iterator object that tracks position
+          if (!rule.args || rule.args.length === 0) {
+            result = { __isIterator: true, items: [], position: 0 };
+            break;
+          }
+
+          const iterArg = rule.args[0];
+          let items;
+          if (iterArg && iterArg.type === 'generator_expression') {
+            // Evaluate generator expression to get all values as an array
+            items = evaluateRule(iterArg, context, depth + 1, localScope);
+            // Generator expression should return an array
+            if (!Array.isArray(items)) {
+              items = items !== undefined ? [items] : [];
+            }
+          } else {
+            // Evaluate the argument - should be an iterable (array)
+            const value = evaluateRule(iterArg, context, depth + 1, localScope);
+            if (Array.isArray(value)) {
+              items = value;
+            } else if (value && typeof value === 'object') {
+              // Convert object keys to array (like Python's iter(dict) returns keys)
+              items = Object.keys(value);
+            } else if (typeof value === 'string') {
+              items = value.split('');
+            } else {
+              items = [];
+            }
+          }
+          // Return an iterator object that tracks position
+          result = { __isIterator: true, items: items, position: 0 };
+          break;
+        }
+
+        if (rule.name === 'next') {
+          // Python's next() function - get next item from iterator
+          // next(iterator) or next(iterator, default)
+          // Iterator is an object with { __isIterator, items, position }
+          if (!rule.args || rule.args.length === 0) {
+            result = undefined;
+            break;
+          }
+
+          const iteratorArg = evaluateRule(rule.args[0], context, depth + 1, localScope);
+          const defaultValue = rule.args.length > 1
+            ? evaluateRule(rule.args[1], context, depth + 1, localScope)
+            : undefined;
+
+          // Handle iterator object
+          if (iteratorArg && iteratorArg.__isIterator) {
+            if (iteratorArg.position < iteratorArg.items.length) {
+              result = iteratorArg.items[iteratorArg.position];
+              iteratorArg.position++; // Advance the iterator
+            } else {
+              result = defaultValue;
+            }
+          } else if (Array.isArray(iteratorArg)) {
+            // Legacy: treat plain array as iterator (returns first, doesn't advance)
+            if (iteratorArg.length > 0) {
+              result = iteratorArg[0];
+            } else {
+              result = defaultValue;
+            }
+          } else {
+            result = defaultValue;
           }
           break;
         }
@@ -551,7 +922,14 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         let hasSMBool = false;
         let totalDifficulty = 0;
         for (const condition of rule.conditions || []) {
-          const conditionResult = evaluateRule(condition, context, depth + 1);
+          let conditionResult = evaluateRule(condition, context, depth + 1, localScope);
+
+          // Unwrap __isReturn markers from block rules
+          // This is needed because blocks with return statements produce markers
+          // that need to be unwrapped before checking truthiness
+          if (conditionResult && typeof conditionResult === 'object' && conditionResult.__isReturn) {
+            conditionResult = conditionResult.value;
+          }
 
           // Handle SMBool objects from Super Metroid
           // Track difficulty to properly check against maxDiff at depth 0
@@ -591,7 +969,14 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         let hasSMBool = false;
         let minDifficulty = Infinity;
         for (const condition of rule.conditions || []) {
-          const conditionResult = evaluateRule(condition, context, depth + 1);
+          let conditionResult = evaluateRule(condition, context, depth + 1, localScope);
+
+          // Unwrap __isReturn markers from block rules
+          // This is needed because blocks with return statements produce markers
+          // that need to be unwrapped before checking truthiness
+          if (conditionResult && typeof conditionResult === 'object' && conditionResult.__isReturn) {
+            conditionResult = conditionResult.value;
+          }
 
           // Handle SMBool objects from Super Metroid
           // Track minimum difficulty among passing conditions for proper maxDiff check
@@ -632,17 +1017,17 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       case 'conditional': {
         // Conditional expression (ternary) - evaluates test and returns if_true or if_false branch
         // Pattern: test ? if_true : if_false
-        const testResult = evaluateRule(rule.test, context, depth + 1);
+        const testResult = evaluateRule(rule.test, context, depth + 1, localScope);
 
         // If test result is undefined, we can't determine which branch to take
         if (testResult === undefined) {
           result = undefined;
         } else if (testResult) {
           // Test is truthy - evaluate if_true branch
-          result = evaluateRule(rule.if_true, context, depth + 1);
+          result = evaluateRule(rule.if_true, context, depth + 1, localScope);
         } else {
           // Test is falsy - evaluate if_false branch
-          result = evaluateRule(rule.if_false, context, depth + 1);
+          result = evaluateRule(rule.if_false, context, depth + 1, localScope);
         }
         break;
       }
@@ -669,7 +1054,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         let undefinedCount = 0;
 
         for (const condition of conditions) {
-          const conditionResult = evaluateRule(condition, context, depth + 1);
+          const conditionResult = evaluateRule(condition, context, depth + 1, localScope);
           if (conditionResult === true) {
             trueCount++;
           } else if (conditionResult === undefined) {
@@ -712,7 +1097,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           const operandResult = evaluateRule(
             conditionToNegate,
             context,
-            depth + 1
+            depth + 1,
+            localScope
           );
           // Negation of undefined is undefined
           result = operandResult === undefined ? undefined : !operandResult;
@@ -752,7 +1138,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'attribute': {
-        const baseObject = evaluateRule(rule.object, context, depth + 1);
+        const baseObject = evaluateRule(rule.object, context, depth + 1, localScope);
 
         // Special case: if baseObject is undefined and the object was "self",
         // try to resolve from game settings (self in Python rules = world/rules class instance with options)
@@ -807,7 +1193,33 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           return undefined;
         }
 
+        // Special case: if baseObject is undefined and the object was "settings",
+        // return the setting value from the player's settings object
+        // This allows exported helpers to reference settings.door_reqs, settings.item_by_door, etc.
+        if (baseObject === undefined && rule.object && rule.object.type === 'name' && rule.object.name === 'settings') {
+          if (context.getStaticData) {
+            const staticData = context.getStaticData();
+            const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
+
+            if (staticData?.settings && staticData.settings[playerId]) {
+              const settingValue = staticData.settings[playerId][rule.attr];
+              if (settingValue !== undefined) {
+                return settingValue;
+              }
+            }
+          }
+          return undefined;
+        }
+
         if (baseObject && typeof baseObject === 'object') {
+          // Special handling for region reference objects
+          // When we access .can_reach on a region reference, return a special marker
+          // that the function_call handler will recognize
+          if (baseObject.__regionRef && rule.attr === 'can_reach') {
+            // Return a marker that indicates this is a region reachability check
+            return { __regionCanReach: true, regionName: baseObject.regionName };
+          }
+
           // Special handling for parent_region attribute on location objects
           if (rule.attr === 'parent_region' && baseObject.parent_region_name) {
             // Dynamically resolve the parent region from the context
@@ -864,6 +1276,22 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           // First try direct property access
           let attrValue = baseObject[rule.attr];
 
+          // If not found and baseObject is an array, try Python-to-JavaScript method mapping
+          // Python list methods have different names in JavaScript
+          if (attrValue === undefined && Array.isArray(baseObject)) {
+            const pythonToJsArrayMethods = {
+              'index': 'indexOf',      // list.index(x) -> array.indexOf(x)
+              'append': 'push',         // list.append(x) -> array.push(x)
+              'remove': 'splice',       // list.remove(x) needs custom handling, but map for now
+              'count': null,            // Needs custom implementation
+              '__contains__': 'includes', // 'x in list' -> array.includes(x)
+            };
+            const jsMethodName = pythonToJsArrayMethods[rule.attr];
+            if (jsMethodName) {
+              attrValue = baseObject[jsMethodName];
+            }
+          }
+
           // If not found, try resolveAttribute for mapping/transformation
           if (
             attrValue === undefined &&
@@ -889,6 +1317,13 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
           return attrValue;
         } else {
+          // Special case: Python Option objects use .value to get the actual value
+          // In JSON rules, settings are already resolved to their raw values, so accessing .value
+          // on a primitive (number, string, boolean) should just return the primitive itself
+          // This handles patterns like: setting_value("some_option").value -> already resolved to 15
+          if (rule.attr === 'value' && baseObject !== undefined && baseObject !== null) {
+            return baseObject;
+          }
           return undefined;
         }
       }
@@ -903,7 +1338,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
           const methodName = rule.function.attr;
           const args = (rule.args || []).map(
-            (arg) => evaluateRule(arg, context, depth + 1)
+            (arg) => evaluateRule(arg, context, depth + 1, localScope)
           );
 
           // If any argument evaluation results in undefined, return undefined
@@ -940,6 +1375,59 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           }
         }
 
+        // Special handling for math module functions (math.sqrt, math.pow, etc.)
+        // Python's math module functions need to be mapped to JavaScript Math equivalents
+        if (
+          rule.function?.type === 'attribute' &&
+          rule.function.object?.type === 'name' &&
+          rule.function.object.name === 'math'
+        ) {
+          const mathFunc = rule.function.attr;
+          const args = (rule.args || []).map(arg => evaluateRule(arg, context, depth + 1, localScope));
+
+          switch (mathFunc) {
+            case 'sqrt':
+              if (typeof args[0] === 'number' && args[0] >= 0) {
+                result = Math.sqrt(args[0]);
+              } else {
+                result = undefined;
+              }
+              break;
+            case 'pow':
+              if (typeof args[0] === 'number' && typeof args[1] === 'number') {
+                result = Math.pow(args[0], args[1]);
+              } else {
+                result = undefined;
+              }
+              break;
+            case 'floor':
+              if (typeof args[0] === 'number') {
+                result = Math.floor(args[0]);
+              } else {
+                result = undefined;
+              }
+              break;
+            case 'ceil':
+              if (typeof args[0] === 'number') {
+                result = Math.ceil(args[0]);
+              } else {
+                result = undefined;
+              }
+              break;
+            case 'abs':
+              if (typeof args[0] === 'number') {
+                result = Math.abs(args[0]);
+              } else {
+                result = undefined;
+              }
+              break;
+            default:
+              log('warn', `[evaluateRule] Unknown math function: math.${mathFunc}`);
+              result = undefined;
+          }
+          break;
+        }
+
         // Special handling for state.multiworld.get_location() calls
         // These are used in location access rules to reference the location's parent_region
         if (rule.function?.type === 'attribute' &&
@@ -947,7 +1435,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             rule.function.object?.type === 'attribute' &&
             rule.function.object.attr === 'multiworld') {
           
-          const args = rule.args ? rule.args.map(arg => evaluateRule(arg, context, depth + 1)) : [];
+          const args = rule.args ? rule.args.map(arg => evaluateRule(arg, context, depth + 1, localScope)) : [];
           const locationName = args[0];
           
           // If we're evaluating a rule for the same location, return the current location
@@ -993,7 +1481,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             rule.function.object?.type === 'attribute' &&
             rule.function.object.attr === 'multiworld') {
           
-          const args = rule.args ? rule.args.map(arg => evaluateRule(arg, context, depth + 1)) : [];
+          const args = rule.args ? rule.args.map(arg => evaluateRule(arg, context, depth + 1, localScope)) : [];
           const exitName = args[0];
           
           // When evaluating an exit rule, the context has parent_region set
@@ -1069,17 +1557,44 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             const bossObject = evaluateRule(
               rule.function.object,
               context,
-              depth + 1
+              depth + 1,
+              localScope
             );
 
             if (bossObject && bossObject.defeat_rule) {
-              result = evaluateRule(bossObject.defeat_rule, context, depth + 1);
+              result = evaluateRule(bossObject.defeat_rule, context, depth + 1, localScope);
               break;
             } else {
               result = undefined;
               break;
             }
           }
+        }
+
+        // Special handling for variable.can_reach() calls where variable is a region reference
+        // This handles patterns like: cave.can_reach(state) where cave was assigned from get_region
+        if (
+          rule.function?.type === 'attribute' &&
+          rule.function.attr === 'can_reach' &&
+          rule.function.object?.type === 'name'
+        ) {
+          const varName = rule.function.object.name;
+          // Try to resolve the variable from local scope or context
+          let regionRef = localScope?.[varName];
+
+          if (regionRef && regionRef.__regionRef) {
+            // This is a region reference - check if the region is reachable
+            const regionName = regionRef.regionName;
+            if (typeof context.isRegionReachable === 'function') {
+              result = context.isRegionReachable(regionName);
+              break;
+            } else {
+              log('warn', `[evaluateRule] Cannot check region reachability for '${regionName}' - context.isRegionReachable not available`);
+              result = undefined;
+              break;
+            }
+          }
+          // If not a region reference, fall through to other handlers
         }
 
         // Special handling for self.method_name() calls (e.g., self.explore_score())
@@ -1091,7 +1606,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         ) {
           const helperName = rule.function.attr;
           const args = (rule.args || []).map(
-            (arg) => evaluateRule(arg, context, depth + 1)
+            (arg) => evaluateRule(arg, context, depth + 1, localScope)
           );
 
           // If any argument evaluation results in undefined, return undefined
@@ -1124,10 +1639,152 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           }
         }
 
-        const func = evaluateRule(rule.function, context, depth + 1);
+        // Special handling for dict.get(key, default) pattern
+        // Python dicts have a .get() method, but JavaScript plain objects don't
+        // This converts obj.get(key, default) to obj[key] ?? default
+        if (
+          rule.function?.type === 'attribute' &&
+          rule.function.attr === 'get' &&
+          rule.function.object
+        ) {
+          const obj = evaluateRule(rule.function.object, context, depth + 1, localScope);
+          if (obj && typeof obj === 'object' && !Array.isArray(obj) && !(obj instanceof Map)) {
+            // This is a plain object - handle .get() as property access with default
+            const args = (rule.args || []).map(arg => evaluateRule(arg, context, depth + 1, localScope));
+            const key = args[0];
+            const defaultValue = args.length > 1 ? args[1] : undefined;
+
+            if (key !== undefined && Object.prototype.hasOwnProperty.call(obj, key)) {
+              result = obj[key];
+            } else {
+              result = defaultValue;
+            }
+            break;
+          }
+        }
+
+        // Special handling for dict.items(), dict.keys(), dict.values() patterns
+        // Python dicts have these methods, JavaScript objects don't
+        if (
+          rule.function?.type === 'attribute' &&
+          ['items', 'keys', 'values'].includes(rule.function.attr) &&
+          rule.function.object
+        ) {
+          const obj = evaluateRule(rule.function.object, context, depth + 1, localScope);
+          if (obj && typeof obj === 'object' && !Array.isArray(obj) && !(obj instanceof Map)) {
+            // This is a plain object - handle Python dict methods
+            switch (rule.function.attr) {
+              case 'items':
+                // dict.items() returns list of [key, value] tuples
+                result = Object.entries(obj);
+                break;
+              case 'keys':
+                // dict.keys() returns list of keys
+                result = Object.keys(obj);
+                break;
+              case 'values':
+                // dict.values() returns list of values
+                result = Object.values(obj);
+                break;
+            }
+            break;
+          }
+        }
+
+        // Special handling for Python array/list methods like .count()
+        // These are exported as function_call with attribute, e.g., arr.count(value)
+        if (
+          rule.function?.type === 'attribute' &&
+          rule.function.attr === 'count' &&
+          rule.function.object
+        ) {
+          const obj = evaluateRule(rule.function.object, context, depth + 1, localScope);
+          if (Array.isArray(obj)) {
+            const args = (rule.args || []).map(arg => evaluateRule(arg, context, depth + 1, localScope));
+            const searchValue = args[0];
+            // Python list.count(value) returns the number of occurrences
+            result = obj.filter(x => x === searchValue).length;
+            break;
+          }
+        }
+
+        // Special handling for Python string methods (capitalize, upper, lower, strip, etc.)
+        // These are exported as function_call with attribute, e.g., color.capitalize()
+        if (
+          rule.function?.type === 'attribute' &&
+          rule.function.object
+        ) {
+          const strMethodName = rule.function.attr;
+          const pythonStringMethods = ['capitalize', 'upper', 'lower', 'strip', 'lstrip', 'rstrip',
+                                       'startswith', 'endswith', 'replace', 'split', 'join'];
+
+          if (pythonStringMethods.includes(strMethodName)) {
+            const obj = evaluateRule(rule.function.object, context, depth + 1, localScope);
+
+            if (typeof obj === 'string') {
+              const args = (rule.args || []).map(arg => evaluateRule(arg, context, depth + 1, localScope));
+
+              switch (strMethodName) {
+                case 'capitalize':
+                  // Python's capitalize: first char uppercase, rest lowercase
+                  result = obj.length > 0 ? obj.charAt(0).toUpperCase() + obj.slice(1).toLowerCase() : '';
+                  break;
+                case 'upper':
+                  result = obj.toUpperCase();
+                  break;
+                case 'lower':
+                  result = obj.toLowerCase();
+                  break;
+                case 'strip':
+                  result = obj.trim();
+                  break;
+                case 'lstrip':
+                  result = obj.trimStart();
+                  break;
+                case 'rstrip':
+                  result = obj.trimEnd();
+                  break;
+                case 'startswith':
+                  result = obj.startsWith(args[0]);
+                  break;
+                case 'endswith':
+                  result = obj.endsWith(args[0]);
+                  break;
+                case 'replace':
+                  result = obj.replace(args[0], args[1] || '');
+                  break;
+                case 'split':
+                  result = args[0] ? obj.split(args[0]) : obj.split('');
+                  break;
+                case 'join':
+                  // In Python, separator.join(iterable) - obj is the separator
+                  result = Array.isArray(args[0]) ? args[0].join(obj) : String(args[0]);
+                  break;
+                default:
+                  result = undefined;
+              }
+              break;
+            }
+          }
+        }
+
+        const func = evaluateRule(rule.function, context, depth + 1, localScope);
 
         if (typeof func === 'undefined') {
           result = undefined;
+          break;
+        }
+
+        // Special case: If func is a __regionCanReach marker from attribute access on region reference
+        // This handles patterns like: cave.can_reach() where cave is a region_reference
+        if (func && typeof func === 'object' && func.__regionCanReach) {
+          const regionName = func.regionName;
+          if (typeof context.isRegionReachable === 'function') {
+            result = context.isRegionReachable(regionName);
+          } else {
+            log('warn', `[evaluateRule] Cannot check region reachability for '${regionName}' - context.isRegionReachable not available`);
+            result = undefined;
+          }
           break;
         }
 
@@ -1141,7 +1798,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           typeof func.type === 'string'
         ) {
           // Evaluate the rule object directly
-          result = evaluateRule(func, context, depth + 1);
+          result = evaluateRule(func, context, depth + 1, localScope);
           break;
         }
 
@@ -1155,8 +1812,82 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
 
+        // Special case: Dynamic function dispatch
+        // If func is a string, it's a helper function name from a dictionary lookup
+        // This handles patterns like: ability_map[copy_abilities[enemy]](state, player)
+        // where the subscript evaluates to a helper function name like "can_reach_burning"
+        if (typeof func === 'string') {
+          const helperName = func;
+          const callArgs = (rule.args || []).map(
+            (arg) => evaluateRule(arg, context, depth + 1, localScope)
+          );
+
+          // If any argument evaluation results in undefined, return undefined
+          if (callArgs.some((arg) => arg === undefined)) {
+            result = undefined;
+            break;
+          }
+
+          // First, check for a JSON helper definition in rules.json
+          if (typeof context?.getStaticData === 'function') {
+            const staticData = context.getStaticData();
+            const playerId = context.playerId || context.getPlayerId?.() || context.getPlayerSlot?.() || DEFAULT_PLAYER_ID;
+            const playerIdKey = String(playerId);
+            const helperDefinition = staticData?.helpers?.[playerIdKey]?.[helperName];
+
+            if (helperDefinition) {
+              // Found a helper definition - evaluate it recursively
+              const params = helperDefinition.params || [];
+              const defaults = helperDefinition.defaults || {};
+              const body = helperDefinition.body || helperDefinition;
+
+              // Create localScope with parameter bindings
+              let helperLocalScope = localScope ? { ...localScope } : {};
+
+              // Apply default values first
+              for (const paramName of params) {
+                if (paramName in defaults) {
+                  helperLocalScope[paramName] = defaults[paramName];
+                }
+              }
+
+              // Override with actual argument values
+              for (let i = 0; i < params.length && i < callArgs.length; i++) {
+                helperLocalScope[params[i]] = callArgs[i];
+              }
+
+              result = evaluateRule(body, context, depth + 1, helperLocalScope);
+
+              // Unwrap return marker if present
+              if (result && typeof result === 'object' && result.__isReturn) {
+                result = result.value;
+              }
+
+              if (result !== undefined) {
+                log('debug', `[evaluateRule] Dynamic helper (JSON) '${helperName}' returned: ${result}`);
+                break;
+              }
+            }
+          }
+
+          // Fallback: Call the helper function through context.executeHelper (JavaScript helpers)
+          if (context.executeHelper) {
+            try {
+              result = context.executeHelper(helperName, ...callArgs);
+              log('debug', `[evaluateRule] Dynamic helper (JS) '${helperName}' returned: ${result}`);
+            } catch (error) {
+              log('error', `[evaluateRule] Failed to execute dynamic helper '${helperName}':`, error);
+              result = undefined;
+            }
+          } else {
+            log('warn', `[evaluateRule] No executeHelper method in context for dynamic helper '${helperName}'`);
+            result = undefined;
+          }
+          break;
+        }
+
         const args = (rule.args || []).map(
-          (arg) => evaluateRule(arg, context, depth + 1) // Evaluate args recursively
+          (arg) => evaluateRule(arg, context, depth + 1, localScope) // Evaluate args recursively
         );
 
         // If any argument evaluation results in undefined, the function call result is undefined
@@ -1228,14 +1959,23 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'subscript': {
-        const list = evaluateRule(rule.value, context, depth + 1);
-        const index = evaluateRule(rule.index, context, depth + 1);
+        // Pass localScope to resolve parameter references like buildings[index]
+        const list = evaluateRule(rule.value, context, depth + 1, localScope);
+        const index = evaluateRule(rule.index, context, depth + 1, localScope);
 
         if (list === undefined || index === undefined) {
           result = undefined; // If array/object or index is unknown, result is unknown
         } else if (list && typeof list === 'object') {
           result = list[index]; // Access property/index
           // If list[index] itself is undefined (property doesn't exist), result remains undefined.
+
+          // If the result is itself a rule object (has a 'type' property), evaluate it recursively.
+          // This handles patterns like dict[setting_value] where dict values are rules.
+          // Example: {"easy": <rule1>, "normal": <rule2>}[fight_logic] should evaluate the selected rule.
+          if (result && typeof result === 'object' && result.type && typeof result.type === 'string') {
+            log('debug', `[evaluateRule] Subscript result is a rule object (type: ${result.type}), evaluating recursively`);
+            result = evaluateRule(result, context, depth + 1, localScope);
+          }
         } else {
           log(
             'warn',
@@ -1243,6 +1983,76 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             { rule, list }
           );
           result = undefined;
+        }
+        break;
+      }
+
+      case 'slice': {
+        // Python slice operation: list[start:stop:step]
+        // Returns a subset of the list/array
+        const sliceValue = evaluateRule(rule.value, context, depth + 1, localScope);
+
+        if (sliceValue === undefined) {
+          result = undefined;
+          break;
+        }
+
+        if (!Array.isArray(sliceValue) && typeof sliceValue !== 'string') {
+          log('warn', '[evaluateRule] Slice applied to non-array/non-string value', { rule, sliceValue });
+          result = undefined;
+          break;
+        }
+
+        // Evaluate slice bounds (any can be null/undefined for open-ended slices)
+        const lower = rule.lower !== null && rule.lower !== undefined
+          ? evaluateRule(rule.lower, context, depth + 1, localScope)
+          : undefined;
+        const upper = rule.upper !== null && rule.upper !== undefined
+          ? evaluateRule(rule.upper, context, depth + 1, localScope)
+          : undefined;
+        const step = rule.step !== null && rule.step !== undefined
+          ? evaluateRule(rule.step, context, depth + 1, localScope)
+          : undefined;
+
+        // Python-style slicing
+        const len = sliceValue.length;
+
+        // Handle negative indices (Python allows negative indices)
+        let start = lower !== undefined ? (lower < 0 ? Math.max(0, len + lower) : lower) : 0;
+        let stop = upper !== undefined ? (upper < 0 ? Math.max(0, len + upper) : upper) : len;
+        const stepVal = step !== undefined ? step : 1;
+
+        // Clamp values
+        start = Math.max(0, Math.min(len, start));
+        stop = Math.max(0, Math.min(len, stop));
+
+        if (stepVal === 0) {
+          log('warn', '[evaluateRule] Slice step cannot be 0');
+          result = undefined;
+          break;
+        }
+
+        // Perform the slice
+        if (stepVal === 1) {
+          // Simple slice with step 1
+          result = Array.isArray(sliceValue) ? sliceValue.slice(start, stop) : sliceValue.slice(start, stop);
+        } else if (stepVal > 0) {
+          // Forward slice with step > 1
+          result = [];
+          for (let i = start; i < stop; i += stepVal) {
+            result.push(sliceValue[i]);
+          }
+        } else {
+          // Negative step (reverse)
+          // For negative step, Python swaps start/stop semantics
+          const actualStart = lower !== undefined ? lower : len - 1;
+          const actualStop = upper !== undefined ? upper : -len - 1;
+          result = [];
+          for (let i = actualStart; i > actualStop; i += stepVal) {
+            if (i >= 0 && i < len) {
+              result.push(sliceValue[i]);
+            }
+          }
         }
         break;
       }
@@ -1256,7 +2066,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
         // If left is an item_check without a count field, get the item count directly
         if (left && left.type === 'item_check' && left.count === undefined) {
-          const itemName = evaluateRule(left.item, context, depth + 1);
+          const itemName = evaluateRule(left.item, context, depth + 1, localScope);
           if (itemName === undefined) {
             left = undefined;
           } else if (typeof context.countItem === 'function') {
@@ -1266,12 +2076,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             left = undefined;
           }
         } else {
-          left = evaluateRule(left, context, depth + 1);
+          left = evaluateRule(left, context, depth + 1, localScope);
         }
 
         // If right is an item_check without a count field, get the item count directly
         if (right && right.type === 'item_check' && right.count === undefined) {
-          const itemName = evaluateRule(right.item, context, depth + 1);
+          const itemName = evaluateRule(right.item, context, depth + 1, localScope);
           if (itemName === undefined) {
             right = undefined;
           } else if (typeof context.countItem === 'function') {
@@ -1281,7 +2091,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             right = undefined;
           }
         } else {
-          right = evaluateRule(right, context, depth + 1);
+          right = evaluateRule(right, context, depth + 1, localScope);
         }
 
         const op = rule.op;
@@ -1447,12 +2257,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'item_check': {
-        const itemName = evaluateRule(rule.item, context, depth + 1);
+        const itemName = evaluateRule(rule.item, context, depth + 1, localScope);
         if (itemName === undefined) {
           result = undefined;
         } else if (rule.count !== undefined) {
           // If there's a count field, use count-based checking
-          const requiredCount = evaluateRule(rule.count, context, depth + 1);
+          const requiredCount = evaluateRule(rule.count, context, depth + 1, localScope);
           if (requiredCount === undefined) {
             result = undefined;
           } else if (typeof context.countItem === 'function') {
@@ -1492,6 +2302,76 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         } else {
           log('warn', '[evaluateRule] context.isLocationAccessible is not a function for location_check.');
           result = undefined;
+        }
+        break;
+      }
+
+      case 'location_rule_ref': {
+        // Evaluate another location's access rule directly
+        // Used for export-time resolution of helpers that reference location rules
+        // Format: { type: 'location_rule_ref', location: 'Act Completion (Down with the Mafia!)' }
+        const locationName = typeof rule.location === 'string'
+          ? rule.location
+          : evaluateRule(rule.location, context, depth + 1, localScope);
+
+        if (typeof locationName !== 'string') {
+          log('warn', '[evaluateRule] location_rule_ref: location did not evaluate to string', { rule, locationName });
+          result = undefined;
+          break;
+        }
+
+        if (typeof context.getStaticData !== 'function') {
+          log('warn', '[evaluateRule] location_rule_ref: context.getStaticData not available');
+          result = undefined;
+          break;
+        }
+
+        const staticData = context.getStaticData();
+        const regionsData = staticData?.regions;
+
+        if (!regionsData) {
+          log('warn', '[evaluateRule] location_rule_ref: no regions data in staticData');
+          result = undefined;
+          break;
+        }
+
+        // Search all regions for this location
+        let locationData = null;
+        if (regionsData instanceof Map) {
+          for (const [regionName, regionData] of regionsData.entries()) {
+            if (regionData.locations) {
+              const loc = regionData.locations.find(l => l.name === locationName);
+              if (loc) {
+                locationData = loc;
+                break;
+              }
+            }
+          }
+        } else {
+          // Plain object
+          for (const regionData of Object.values(regionsData)) {
+            if (regionData.locations) {
+              const loc = regionData.locations.find(l => l.name === locationName);
+              if (loc) {
+                locationData = loc;
+                break;
+              }
+            }
+          }
+        }
+
+        if (!locationData) {
+          log('debug', `[evaluateRule] location_rule_ref: location '${locationName}' not found`);
+          result = undefined;
+          break;
+        }
+
+        // Evaluate the location's access rule
+        if (locationData.access_rule) {
+          result = evaluateRule(locationData.access_rule, context, depth + 1, localScope);
+        } else {
+          // No access rule means the location has no item requirements (always accessible from region)
+          result = true;
         }
         break;
       }
@@ -1541,11 +2421,11 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'group_check': {
-        const groupName = evaluateRule(rule.group, context, depth + 1);
+        const groupName = evaluateRule(rule.group, context, depth + 1, localScope);
         // Default count to 1 if not specified
         const requiredCount =
           rule.count !== undefined
-            ? evaluateRule(rule.count, context, depth + 1)
+            ? evaluateRule(rule.count, context, depth + 1, localScope)
             : 1;
 
         if (groupName === undefined || requiredCount === undefined) {
@@ -1567,11 +2447,140 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'group_count': {
+        // Returns the count of items in a group (unlike group_check which returns a boolean)
+        const groupName = evaluateRule(rule.group, context, depth + 1, localScope);
+
+        if (groupName === undefined) {
+          result = undefined;
+        } else if (typeof context.countGroup === 'function') {
+          const currentCount = context.countGroup(groupName);
+          result = currentCount === undefined ? 0 : currentCount;
+        } else {
+          log(
+            'warn',
+            '[evaluateRule SnapshotIF] context.countGroup is not a function for group_count.'
+          );
+          result = undefined;
+        }
+        break;
+      }
+
+      case 'counts': {
+        // COUNTS: check if total count of any items in list >= required amount
+        // Used by LADX for instrument count requirements (e.g., need 3 of 8 instruments)
+        const countItems = rule.items || [];
+        const requiredCount = evaluateRule(rule.count, context, depth + 1, localScope);
+
+        if (requiredCount === undefined) {
+          result = undefined;
+          break;
+        }
+
+        let totalItemCount = 0;
+        let hasUndefined = false;
+
+        for (const item of countItems) {
+          // Items can be strings or rule structures
+          const itemName = typeof item === 'string' ? item : evaluateRule(item, context, depth + 1, localScope);
+          if (itemName === undefined) {
+            hasUndefined = true;
+            break;
+          }
+          const itemCount = typeof context.countItem === 'function'
+            ? (context.countItem(itemName) ?? 0)
+            : 0;
+          totalItemCount += itemCount;
+        }
+
+        if (hasUndefined) {
+          result = undefined;
+        } else {
+          result = totalItemCount >= requiredCount;
+        }
+        break;
+      }
+
+      case 'prog_item_count': {
+        // Return the count of a progression item from state.prog_items[player][key]
+        // This handles DLCQuest and other games that use accumulator items
+        // (e.g., " coins", " coins freemium", "rep", "RUPEES")
+        const progKey = rule.key;
+        if (progKey === undefined) {
+          log('warn', '[evaluateRule] prog_item_count: missing key');
+          result = undefined;
+        } else if (typeof context.countProgItem === 'function') {
+          // Use dedicated function if available
+          result = context.countProgItem(progKey) ?? 0;
+        } else {
+          // Fallback: check prog_items directly from snapshot
+          const snapshot = context.snapshot || context;
+          const playerId = context.playerId || context.getPlayerId?.() || 1;
+
+          // Try multiple key formats for player ID
+          const progItems = snapshot?.prog_items;
+          const count =
+            progItems?.[playerId]?.[progKey] ??
+            progItems?.[String(playerId)]?.[progKey] ??
+            progItems?.[parseInt(playerId)]?.[progKey] ??
+            0;
+          result = count;
+        }
+        break;
+      }
+
+      case 'player_id': {
+        // Return the current player ID
+        // This is used for self.player references in class-based rule helpers (like KH2)
+        if (typeof context.getPlayerId === 'function') {
+          result = context.getPlayerId();
+        } else if (context.playerId !== undefined) {
+          result = context.playerId;
+        } else if (typeof context.getPlayerSlot === 'function') {
+          result = context.getPlayerSlot();
+        } else {
+          log('debug', '[evaluateRule] player_id: No player ID available in context, defaulting to 1');
+          result = 1; // Default to player 1 for single-player scenarios
+        }
+        break;
+      }
+
       case 'setting_value': {
         // Retrieve a setting value (e.g. for self.world.options.difficulty)
+        // Supports dot notation for nested access (e.g. "difficulty_requirements.progressive_bottle_limit")
+        // Note: Choice options in Python use 0 for "off"/"none" states, which are exported
+        // as strings like 'off', 'none', 'false'. These should be treated as falsy in JS.
         let settingName = rule.setting;
         if (typeof settingName === 'string') {
-          result = context.getSetting(settingName);
+          let rawValue;
+          // Handle dot notation for nested property access
+          if (settingName.includes('.')) {
+            const parts = settingName.split('.');
+            rawValue = context.getSetting(parts[0]);
+            // Traverse the path for nested properties
+            for (let i = 1; i < parts.length && rawValue !== undefined; i++) {
+              rawValue = rawValue?.[parts[i]];
+            }
+          } else {
+            rawValue = context.getSetting(settingName);
+          }
+          // If an index is provided, subscript the array value
+          if (rule.index !== undefined && rawValue !== undefined) {
+            if (Array.isArray(rawValue)) {
+              result = rawValue[rule.index];
+            } else {
+              log('warn', '[evaluateRule] setting_value has index but value is not an array', {
+                rule,
+                rawValue,
+              });
+              result = undefined;
+            }
+          } else {
+            // Normalize certain string values to be falsy
+            // This handles Choice options where 0='off'/'none' etc.
+            // The normalization of 'off'/'none' strings is now handled in stateInterface.getSetting
+            result = rawValue;
+          }
         } else {
           log('warn', '[evaluateRule] Invalid setting name for setting_value', {
             rule,
@@ -1592,6 +2601,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
         // Build the string by evaluating each part
         let resultStr = '';
+        let hasError = false;
         for (const part of rule.parts) {
           if (part.type === 'constant') {
             resultStr += part.value;
@@ -1600,21 +2610,19 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             const value = evaluateRule(part.value, context, depth + 1);
             if (value === undefined) {
               log('warn', '[evaluateRule] f_string formatted_value evaluated to undefined', { part });
-              result = undefined;
+              hasError = true;
               break;
             }
             resultStr += String(value);
           } else {
             log('warn', '[evaluateRule] Unknown f_string part type', { part });
-            result = undefined;
+            hasError = true;
             break;
           }
         }
 
-        // If we successfully built the string, return it
-        if (result !== undefined) {
-          result = resultStr;
-        }
+        // If we successfully built the string, return it; otherwise undefined
+        result = hasError ? undefined : resultStr;
         break;
       }
 
@@ -1661,7 +2669,7 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           const settingValue = staticData?.settings?.[playerId]?.[rule.name];
           if (settingValue !== undefined) {
             result = settingValue;
-            log('debug', `[evaluateRule] Resolved name '${rule.name}' from settings: ${result}`);
+            log('debug', `[evaluateRule] Resolved name '${rule.name}' from settings: ${typeof result === 'object' ? 'object' : result}`);
           }
         }
 
@@ -1704,8 +2712,8 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'binary_op': {
-        const left = evaluateRule(rule.left, context, depth + 1);
-        const right = evaluateRule(rule.right, context, depth + 1);
+        const left = evaluateRule(rule.left, context, depth + 1, localScope);
+        const right = evaluateRule(rule.right, context, depth + 1, localScope);
         const op = rule.op;
 
         if (left === undefined || right === undefined) {
@@ -1764,12 +2772,251 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           case 'or':
             result = left || right;
             break;
+          case '**':
+            // Python power operator
+            result = Math.pow(left, right);
+            break;
+          case '%':
+            // Python modulo operator
+            result = right !== 0 ? left % right : undefined;
+            break;
+          case '&':
+            // Python bitwise AND operator (also used for boolean AND in some contexts)
+            // For booleans: True & False = False, True & True = True
+            // For integers: performs bitwise AND
+            if (typeof left === 'boolean' && typeof right === 'boolean') {
+              result = left && right;
+            } else if (typeof left === 'number' && typeof right === 'number') {
+              result = left & right;
+            } else {
+              // Mixed types: convert to boolean
+              result = Boolean(left) && Boolean(right);
+            }
+            break;
+          case '|':
+            // Python bitwise OR operator (also used for boolean OR in some contexts)
+            // For booleans: True | False = True, False | False = False
+            // For integers: performs bitwise OR
+            if (typeof left === 'boolean' && typeof right === 'boolean') {
+              result = left || right;
+            } else if (typeof left === 'number' && typeof right === 'number') {
+              result = left | right;
+            } else {
+              // Mixed types: convert to boolean
+              result = Boolean(left) || Boolean(right);
+            }
+            break;
+          case '^':
+            // Python bitwise XOR operator
+            if (typeof left === 'number' && typeof right === 'number') {
+              result = left ^ right;
+            } else {
+              // For booleans: XOR (exactly one true)
+              result = Boolean(left) !== Boolean(right);
+            }
+            break;
           default:
             log('warn', `[evaluateRule] Unknown binary_op operator: ${op}`, {
               rule,
             });
             result = undefined;
         }
+        break;
+      }
+
+      case 'min': {
+        // Return the minimum of evaluated arguments or iterable
+        // Supports both: min(a, b, c) via args, and min(iterable) via iterable
+        if (rule.iterable) {
+          // Iterable form: min(generator) or min(list)
+          const minIterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
+          if (minIterable === undefined) {
+            result = undefined;
+          } else if (Array.isArray(minIterable)) {
+            if (minIterable.length === 0) {
+              // Empty iterable - return undefined (Python would raise ValueError)
+              log('debug', '[evaluateRule] min called on empty iterable', { rule });
+              result = undefined;
+            } else if (minIterable.some((v) => v === undefined)) {
+              result = undefined;
+            } else {
+              result = Math.min(...minIterable);
+            }
+          } else if (typeof minIterable === 'number') {
+            // Single number - just return it
+            result = minIterable;
+          } else {
+            log('warn', '[evaluateRule] min iterable is not an array or number', { minIterable, rule });
+            result = undefined;
+          }
+          break;
+        }
+        // Explicit args form: min(a, b, c)
+        if (!rule.args || rule.args.length === 0) {
+          log('warn', '[evaluateRule] min rule has no arguments or iterable', { rule });
+          result = undefined;
+          break;
+        }
+        const minArgs = rule.args.map((arg) =>
+          evaluateRule(arg, context, depth + 1, localScope)
+        );
+        if (minArgs.some((arg) => arg === undefined)) {
+          result = undefined;
+          break;
+        }
+        result = Math.min(...minArgs);
+        break;
+      }
+
+      case 'max': {
+        // Return the maximum of evaluated arguments or iterable
+        // Supports both: max(a, b, c) via args, and max(iterable) via iterable
+        if (rule.iterable) {
+          // Iterable form: max(generator) or max(list)
+          const maxIterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
+          if (maxIterable === undefined) {
+            result = undefined;
+          } else if (Array.isArray(maxIterable)) {
+            if (maxIterable.length === 0) {
+              // Empty iterable - return undefined (Python would raise ValueError)
+              log('debug', '[evaluateRule] max called on empty iterable', { rule });
+              result = undefined;
+            } else if (maxIterable.some((v) => v === undefined)) {
+              result = undefined;
+            } else {
+              result = Math.max(...maxIterable);
+            }
+          } else if (typeof maxIterable === 'number') {
+            // Single number - just return it
+            result = maxIterable;
+          } else {
+            log('warn', '[evaluateRule] max iterable is not an array or number', { maxIterable, rule });
+            result = undefined;
+          }
+          break;
+        }
+        // Explicit args form: max(a, b, c)
+        if (!rule.args || rule.args.length === 0) {
+          log('warn', '[evaluateRule] max rule has no arguments or iterable', { rule });
+          result = undefined;
+          break;
+        }
+        const maxArgs = rule.args.map((arg) =>
+          evaluateRule(arg, context, depth + 1, localScope)
+        );
+        if (maxArgs.some((arg) => arg === undefined)) {
+          result = undefined;
+          break;
+        }
+        result = Math.max(...maxArgs);
+        break;
+      }
+
+      case 'sum': {
+        // Sum the values in an iterable
+        // Rule structure: { type: 'sum', iterable: <rule>, start?: <rule> }
+        if (!rule.iterable) {
+          log('warn', '[evaluateRule] sum rule has no iterable', { rule });
+          result = 0;
+          break;
+        }
+        const sumIterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
+        const startValue = rule.start !== undefined
+          ? evaluateRule(rule.start, context, depth + 1, localScope)
+          : 0;
+
+        if (sumIterable === undefined) {
+          result = undefined;
+          break;
+        }
+        if (startValue === undefined) {
+          result = undefined;
+          break;
+        }
+        if (Array.isArray(sumIterable)) {
+          // Check if any element is undefined
+          if (sumIterable.some((v) => v === undefined)) {
+            result = undefined;
+            break;
+          }
+          // Sum all numeric values
+          result = sumIterable.reduce((acc, val) => {
+            if (typeof val === 'number') {
+              return acc + val;
+            } else if (typeof val === 'boolean') {
+              // Python sum() treats True as 1, False as 0
+              return acc + (val ? 1 : 0);
+            }
+            return acc;
+          }, startValue);
+        } else if (typeof sumIterable === 'number') {
+          // Single number - just return it plus start
+          result = sumIterable + startValue;
+        } else {
+          log('warn', '[evaluateRule] sum iterable is not an array or number', { sumIterable, rule });
+          result = undefined;
+        }
+        break;
+      }
+
+      case 'map': {
+        // Apply a function (lambda) to each element of an iterable
+        // Rule structure: { type: 'map', function: <lambda>, iterable: <rule> }
+        if (!rule.function || !rule.iterable) {
+          log('warn', '[evaluateRule] map rule missing function or iterable', { rule });
+          result = undefined;
+          break;
+        }
+
+        const mapIterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
+
+        if (mapIterable === undefined) {
+          result = undefined;
+          break;
+        }
+
+        if (!Array.isArray(mapIterable)) {
+          log('warn', '[evaluateRule] map iterable is not an array', { mapIterable, rule });
+          result = undefined;
+          break;
+        }
+
+        // Apply the function to each element
+        const mapFunc = rule.function;
+        const mappedResults = [];
+
+        for (const item of mapIterable) {
+          // Create a new scope with the lambda parameter bound to the current item
+          const lambdaScope = localScope ? { ...localScope } : {};
+
+          if (mapFunc.type === 'lambda' && mapFunc.params && mapFunc.params.length > 0) {
+            // Bind the first parameter to the item
+            lambdaScope[mapFunc.params[0]] = item;
+            // Evaluate the lambda body with the bound parameter
+            const mappedValue = evaluateRule(mapFunc.body, context, depth + 1, lambdaScope);
+            mappedResults.push(mappedValue);
+          } else {
+            // If it's not a proper lambda, try to evaluate it directly
+            log('warn', '[evaluateRule] map function is not a lambda with params', { mapFunc });
+            mappedResults.push(undefined);
+          }
+        }
+
+        // If any mapped result is undefined, the whole map result is undefined
+        if (mappedResults.some((v) => v === undefined)) {
+          result = undefined;
+        } else {
+          result = mappedResults;
+        }
+        break;
+      }
+
+      case 'lambda': {
+        // Lambda expressions - these are typically evaluated in context (e.g., by map)
+        // If we encounter a lambda directly, it's likely being used as a value
+        // Return a representation that can be used by other constructs
+        log('debug', '[evaluateRule] Lambda encountered directly - returning function representation');
+        result = rule; // Return the rule itself as a function representation
         break;
       }
 
@@ -1794,6 +3041,30 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'set': {
+        // Set literal - evaluate elements and return as array (JS doesn't have set literals)
+        // The 'set' type indicates this came from a Python set, but for evaluation purposes
+        // it behaves like a list/array (used in has_any, iteration, etc.)
+        if (!Array.isArray(rule.elements)) {
+          log(
+            'warn',
+            '[evaluateRule] Set rule does not have an elements array:',
+            rule
+          );
+          result = undefined;
+          break;
+        }
+        const evaluatedSet = rule.elements.map((itemRule) =>
+          evaluateRule(itemRule, context, depth + 1)
+        );
+        // Remove duplicates (set semantics)
+        const uniqueSet = [...new Set(evaluatedSet)];
+        result = evaluatedSet.some((item) => item === undefined)
+          ? undefined
+          : uniqueSet;
+        break;
+      }
+
       case 'all_of': {
         // all_of evaluates an element_rule against all items from an iterator
         if (!rule.element_rule) {
@@ -1803,13 +3074,14 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         // Extract iterator information
+        // NOTE: Pass localScope so that helper parameters can be resolved
         let iterable;
         if (rule.iterator_info && rule.iterator_info.iterator) {
           // Get the iterator from the iterator_info
-          iterable = evaluateRule(rule.iterator_info.iterator, context, depth + 1);
+          iterable = evaluateRule(rule.iterator_info.iterator, context, depth + 1, localScope);
         } else if (rule.iterable) {
           // Fallback for direct iterable field
-          iterable = evaluateRule(rule.iterable, context, depth + 1);
+          iterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
         } else {
           log('warn', '[evaluateRule] all_of rule missing iterator information', { rule });
           result = undefined;
@@ -1850,13 +3122,14 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         // Extract iterator information
+        // NOTE: Pass localScope so that helper parameters (like 'item' in can_buy) can be resolved
         let iterable;
         if (rule.iterator_info && rule.iterator_info.iterator) {
           // Get the iterator from the iterator_info
-          iterable = evaluateRule(rule.iterator_info.iterator, context, depth + 1);
+          iterable = evaluateRule(rule.iterator_info.iterator, context, depth + 1, localScope);
         } else if (rule.iterable) {
           // Fallback for direct iterable field
-          iterable = evaluateRule(rule.iterable, context, depth + 1);
+          iterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
         } else {
           log('warn', '[evaluateRule] any_of rule missing iterator information', { rule });
           result = undefined;
@@ -1897,19 +3170,148 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'sum_of': {
+        // sum_of evaluates an element_rule against items from an iterator and sums the results
+        // This is used for patterns like: sum([state.count(item, player) for item in items])
+        // Also supports conditional comprehensions: sum([1 for item in items if condition])
+        if (!rule.element_rule) {
+          log('warn', '[evaluateRule] sum_of rule missing element_rule', { rule });
+          result = undefined;
+          break;
+        }
+
+        // Extract iterator information
+        let iterable;
+        if (rule.iterator_info && rule.iterator_info.iterator) {
+          iterable = evaluateRule(rule.iterator_info.iterator, context, depth + 1, localScope);
+        } else if (rule.iterable) {
+          iterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
+        } else {
+          log('warn', '[evaluateRule] sum_of rule missing iterator information', { rule });
+          result = undefined;
+          break;
+        }
+
+        // Handle both arrays and objects (dictionaries)
+        // In Python, iterating over a dict yields its keys
+        if (!Array.isArray(iterable)) {
+          if (iterable && typeof iterable === 'object') {
+            // Convert object keys to array for iteration (like Python's dict iteration)
+            iterable = Object.keys(iterable);
+            log('debug', '[evaluateRule] sum_of: converted object to keys array', { keys: iterable });
+          } else {
+            log('warn', '[evaluateRule] sum_of iterator is not an array or object', { rule, iterable });
+            result = 0;
+            break;
+          }
+        }
+
+        // If the iterable is empty, sum_of should return 0
+        if (iterable.length === 0) {
+          result = 0;
+          break;
+        }
+
+        // Check if there's a condition (if clause in comprehension)
+        const hasCondition = rule.iterator_info && rule.iterator_info.condition;
+
+        result = 0;
+        let sumHasUndefined = false;
+        for (const item of iterable) {
+          // Create a new context with the iterator variable bound
+          const boundContext = createBoundContext(context, rule.iterator_info, item);
+
+          // If there's a condition, evaluate it first
+          if (hasCondition) {
+            const conditionResult = evaluateRule(rule.iterator_info.condition, boundContext, depth + 1);
+            if (conditionResult === undefined) {
+              sumHasUndefined = true;
+              continue;
+            }
+            // Skip this item if condition is false
+            if (!conditionResult) {
+              continue;
+            }
+          }
+
+          const itemResult = evaluateRule(rule.element_rule, boundContext, depth + 1);
+          if (itemResult === undefined) {
+            sumHasUndefined = true;
+          } else if (typeof itemResult === 'number') {
+            result += itemResult;
+          } else {
+            // Non-numeric result - treat as 0 or log warning
+            log('debug', '[evaluateRule] sum_of element returned non-numeric value', { item, itemResult });
+          }
+        }
+        // If any item returned undefined, result should be undefined
+        if (sumHasUndefined) {
+          result = undefined;
+        }
+        break;
+      }
+
       case 'generator_expression': {
         // generator_expression represents a Python generator expression
-        // It has an element and potentially filters/conditions
+        // It has an element, a comprehension target/iterator, and optional conditions
+        // Example: (1 for item_list in list_of_items if condition)
         if (!rule.element) {
           log('warn', '[evaluateRule] generator_expression rule missing element', { rule });
           result = undefined;
           break;
         }
-        
-        // For now, evaluate the element directly
-        // This is a simplified implementation - real generator expressions would need
-        // proper iteration and filtering support
-        result = evaluateRule(rule.element, context, depth + 1);
+
+        // Check if we have comprehension details for proper iteration
+        if (rule.comprehension && rule.comprehension.iterator) {
+          const comp = rule.comprehension;
+          const targetName = comp.target?.name;
+          const iteratorRule = comp.iterator;
+          // Handle both singular 'condition' and plural 'conditions'
+          let conditions = comp.conditions || [];
+          if (!Array.isArray(conditions) && comp.condition) {
+            conditions = [comp.condition];
+          }
+
+          // Evaluate the iterator (should be an array from localScope or context)
+          const iteratorValue = evaluateRule(iteratorRule, context, depth + 1, localScope);
+
+          if (!Array.isArray(iteratorValue)) {
+            log('debug', '[evaluateRule] generator_expression iterator is not an array', { iteratorValue, rule });
+            result = [];
+            break;
+          }
+
+          // Build result array by iterating and filtering
+          const generatedValues = [];
+          for (const item of iteratorValue) {
+            // Create new localScope with the target variable bound
+            const iterationScope = localScope ? { ...localScope } : {};
+            if (targetName) {
+              iterationScope[targetName] = item;
+            }
+
+            // Check all conditions
+            let conditionsPassed = true;
+            for (const condRule of conditions) {
+              const condResult = evaluateRule(condRule, context, depth + 1, iterationScope);
+              if (condResult !== true) {
+                conditionsPassed = false;
+                break;
+              }
+            }
+
+            // If conditions pass, evaluate and yield the element
+            if (conditionsPassed) {
+              const elementValue = evaluateRule(rule.element, context, depth + 1, iterationScope);
+              generatedValues.push(elementValue);
+            }
+          }
+
+          result = generatedValues;
+        } else {
+          // Fallback: just evaluate the element directly (legacy behavior)
+          result = evaluateRule(rule.element, context, depth + 1, localScope);
+        }
         break;
       }
 
@@ -1988,6 +3390,220 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         } else {
           // No access rule means the entrance is accessible if the region is reachable
           result = true;
+        }
+        break;
+      }
+
+      case 'region_reference': {
+        // Returns a region reference object that can be used to access region attributes
+        // or passed to helpers that take a region parameter
+        // Format: { type: 'region_reference', region: 'Region Name' }
+        const regionName = rule.region;
+        if (!regionName) {
+          log('warn', '[evaluateRule] region_reference rule missing region name', { rule });
+          result = undefined;
+          break;
+        }
+        // Return an object with the region name that can be used later
+        // to look up region attributes or check reachability
+        result = { __regionRef: true, regionName };
+        break;
+      }
+
+      case 'region_attribute': {
+        // Access an attribute of a region (e.g., region.is_light_world)
+        // Used by helpers like is_not_bunny that take a region parameter
+        // Format: { type: 'region_attribute', region: {...}, attr: 'is_light_world' }
+        const regionExpr = evaluateRule(rule.region, context, depth + 1, localScope);
+        const attrName = rule.attr;
+
+        if (regionExpr === undefined) {
+          log('debug', '[evaluateRule] region_attribute: region evaluated to undefined', { rule });
+          result = undefined;
+          break;
+        }
+
+        if (!attrName) {
+          log('warn', '[evaluateRule] region_attribute rule missing attr', { rule });
+          result = undefined;
+          break;
+        }
+
+        // Get the region name from the expression
+        let regionName;
+        if (typeof regionExpr === 'string') {
+          regionName = regionExpr;
+        } else if (regionExpr?.__regionRef) {
+          regionName = regionExpr.regionName;
+        } else {
+          log('warn', '[evaluateRule] region_attribute: cannot determine region name', { regionExpr, rule });
+          result = undefined;
+          break;
+        }
+
+        // Look up the region in static data
+        if (typeof context.getStaticData !== 'function') {
+          log('warn', '[evaluateRule] region_attribute: context.getStaticData not available');
+          result = undefined;
+          break;
+        }
+
+        const staticData = context.getStaticData();
+        const regionsData = staticData?.regions;
+
+        if (!regionsData) {
+          log('warn', '[evaluateRule] region_attribute: no regions data in staticData');
+          result = undefined;
+          break;
+        }
+
+        // Regions can be a Map or plain object
+        let regionData;
+        if (regionsData instanceof Map) {
+          regionData = regionsData.get(regionName);
+        } else {
+          regionData = regionsData[regionName];
+        }
+
+        if (!regionData) {
+          log('debug', `[evaluateRule] region_attribute: region '${regionName}' not found`);
+          result = undefined;
+          break;
+        }
+
+        // Get the attribute value
+        result = regionData[attrName];
+        if (result === undefined) {
+          log('debug', `[evaluateRule] region_attribute: attribute '${attrName}' not found on region '${regionName}'`);
+        }
+        break;
+      }
+
+      case 'placement_lookup': {
+        // Look up what item is placed at a specific location
+        // Used by location_item_name helper to check item placements
+        // Format: { type: 'placement_lookup', location: {...} }
+        // Returns: [itemName, player] tuple or null if not found
+        const locationName = evaluateRule(rule.location, context, depth + 1, localScope);
+
+        if (typeof locationName !== 'string') {
+          log('warn', '[evaluateRule] placement_lookup: location did not evaluate to string', { rule, locationName });
+          result = null;
+          break;
+        }
+
+        if (typeof context.getStaticData !== 'function') {
+          log('warn', '[evaluateRule] placement_lookup: context.getStaticData not available');
+          result = null;
+          break;
+        }
+
+        const staticData = context.getStaticData();
+
+        // Try locationItems Map first (this is the primary source)
+        if (staticData?.locationItems) {
+          const itemData = staticData.locationItems instanceof Map
+            ? staticData.locationItems.get(locationName)
+            : staticData.locationItems[locationName];
+
+          if (itemData && itemData.name) {
+            // Return as [itemName, player] tuple like Python's location_item_name
+            result = [itemData.name, itemData.player || 1];
+            break;
+          }
+        }
+
+        // Fallback: search through regions for location data
+        const regionsData = staticData?.regions;
+        if (regionsData) {
+          const regions = regionsData instanceof Map
+            ? Array.from(regionsData.values())
+            : Object.values(regionsData);
+
+          for (const region of regions) {
+            if (region?.locations) {
+              const loc = region.locations.find(l => l.name === locationName);
+              if (loc?.item?.name) {
+                result = [loc.item.name, loc.item.player || 1];
+                break;
+              }
+            }
+          }
+          if (result) break;
+        }
+
+        // Location not found or no item placed
+        log('debug', `[evaluateRule] placement_lookup: no item found at location '${locationName}'`);
+        result = null;
+        break;
+      }
+
+      case 'placement_search': {
+        // Search for an item across multiple locations
+        // Used by item_name_in_location_names to check if an item is at any of the given locations
+        // Format: { type: 'placement_search', item: {...}, player: {...}, locations: [...] }
+        // Returns: true if item is found at any location, false otherwise
+        const searchItem = evaluateRule(rule.item, context, depth + 1, localScope);
+        const searchPlayer = evaluateRule(rule.player, context, depth + 1, localScope);
+        const locations = evaluateRule(rule.locations, context, depth + 1, localScope);
+
+        if (typeof searchItem !== 'string') {
+          log('warn', '[evaluateRule] placement_search: item did not evaluate to string', { rule, searchItem });
+          result = false;
+          break;
+        }
+
+        if (!Array.isArray(locations)) {
+          log('warn', '[evaluateRule] placement_search: locations is not an array', { rule, locations });
+          result = false;
+          break;
+        }
+
+        if (typeof context.getStaticData !== 'function') {
+          log('warn', '[evaluateRule] placement_search: context.getStaticData not available');
+          result = false;
+          break;
+        }
+
+        const staticData = context.getStaticData();
+        result = false;
+
+        // Search through locations
+        for (const locPair of locations) {
+          if (!Array.isArray(locPair) || locPair.length < 2) continue;
+          const [locName, locPlayer] = locPair;
+          if (typeof locName !== 'string') continue;
+
+          // Look up item at this location
+          let itemData = null;
+          if (staticData?.locationItems) {
+            itemData = staticData.locationItems instanceof Map
+              ? staticData.locationItems.get(locName)
+              : staticData.locationItems[locName];
+          }
+
+          // Fallback: search regions
+          if (!itemData?.name && staticData?.regions) {
+            const regions = staticData.regions instanceof Map
+              ? Array.from(staticData.regions.values())
+              : Object.values(staticData.regions);
+
+            for (const region of regions) {
+              if (region?.locations) {
+                const loc = region.locations.find(l => l.name === locName);
+                if (loc?.item?.name) {
+                  itemData = { name: loc.item.name, player: loc.item.player || 1 };
+                  break;
+                }
+              }
+            }
+          }
+
+          // Check if this is the item we're looking for
+          if (itemData?.name === searchItem && itemData?.player === locPlayer) {
+            result = true;
+            break;
+          }
         }
         break;
       }
@@ -2074,6 +3690,136 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         break;
       }
 
+      case 'min': {
+        // Return the minimum of evaluated arguments or iterable (block scope version)
+        if (rule.iterable) {
+          const minIterableBlock = evaluateRule(rule.iterable, context, depth + 1, localScope);
+          if (minIterableBlock === undefined) {
+            result = undefined;
+          } else if (Array.isArray(minIterableBlock)) {
+            if (minIterableBlock.length === 0) {
+              result = undefined;
+            } else if (minIterableBlock.some((v) => v === undefined)) {
+              result = undefined;
+            } else {
+              result = Math.min(...minIterableBlock);
+            }
+          } else if (typeof minIterableBlock === 'number') {
+            result = minIterableBlock;
+          } else {
+            result = undefined;
+          }
+          break;
+        }
+        if (!rule.args || rule.args.length === 0) {
+          result = undefined;
+          break;
+        }
+        const minArgsBlock = rule.args.map((arg) =>
+          evaluateRule(arg, context, depth + 1, localScope)
+        );
+        if (minArgsBlock.some((arg) => arg === undefined)) {
+          result = undefined;
+          break;
+        }
+        result = Math.min(...minArgsBlock);
+        break;
+      }
+
+      case 'max': {
+        // Return the maximum of evaluated arguments or iterable (block scope version)
+        if (rule.iterable) {
+          const maxIterableBlock = evaluateRule(rule.iterable, context, depth + 1, localScope);
+          if (maxIterableBlock === undefined) {
+            result = undefined;
+          } else if (Array.isArray(maxIterableBlock)) {
+            if (maxIterableBlock.length === 0) {
+              result = undefined;
+            } else if (maxIterableBlock.some((v) => v === undefined)) {
+              result = undefined;
+            } else {
+              result = Math.max(...maxIterableBlock);
+            }
+          } else if (typeof maxIterableBlock === 'number') {
+            result = maxIterableBlock;
+          } else {
+            result = undefined;
+          }
+          break;
+        }
+        if (!rule.args || rule.args.length === 0) {
+          result = undefined;
+          break;
+        }
+        const maxArgsBlock = rule.args.map((arg) =>
+          evaluateRule(arg, context, depth + 1, localScope)
+        );
+        if (maxArgsBlock.some((arg) => arg === undefined)) {
+          result = undefined;
+          break;
+        }
+        result = Math.max(...maxArgsBlock);
+        break;
+      }
+
+      case 'sum': {
+        // Sum the values in an iterable (block scope version)
+        // Rule structure: { type: 'sum', iterable: <rule>, start?: <rule> }
+        if (!rule.iterable) {
+          log('warn', '[evaluateRule] sum rule has no iterable', { rule });
+          result = 0;
+          break;
+        }
+        const sumIterableBlock = evaluateRule(rule.iterable, context, depth + 1, localScope);
+        const startValueBlock = rule.start !== undefined
+          ? evaluateRule(rule.start, context, depth + 1, localScope)
+          : 0;
+
+        if (sumIterableBlock === undefined) {
+          result = undefined;
+          break;
+        }
+        if (startValueBlock === undefined) {
+          result = undefined;
+          break;
+        }
+        if (Array.isArray(sumIterableBlock)) {
+          if (sumIterableBlock.some((v) => v === undefined)) {
+            result = undefined;
+            break;
+          }
+          result = sumIterableBlock.reduce((acc, val) => {
+            if (typeof val === 'number') {
+              return acc + val;
+            } else if (typeof val === 'boolean') {
+              return acc + (val ? 1 : 0);
+            }
+            return acc;
+          }, startValueBlock);
+        } else if (typeof sumIterableBlock === 'number') {
+          result = sumIterableBlock + startValueBlock;
+        } else {
+          log('warn', '[evaluateRule] sum iterable is not an array or number', { sumIterableBlock, rule });
+          result = undefined;
+        }
+        break;
+      }
+
+      case 'negate': {
+        // Unary minus operation: -value
+        // Generated by Python exporter for non-constant negation
+        const operand = evaluateRule(rule.operand, context, depth + 1, localScope);
+        if (operand === undefined) {
+          result = undefined;
+        } else if (typeof operand === 'number') {
+          result = -operand;
+        } else {
+          log('warn', '[evaluateRule] negate operand is not a number:', { operand, rule });
+          result = undefined;
+        }
+        break;
+      }
+
       case 'count_item': {
         // Get item count as a number (for use in arithmetic)
         // Unlike count_check which returns boolean, this returns the actual count
@@ -2105,9 +3851,12 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         // Create a new scope for this block (inheriting from parent scope)
-        const blockScope = localScope !== null ? { ...localScope } : {};
+        // Track if this is a top-level block (localScope was null)
+        const isTopLevelBlock = localScope === null;
+        const blockScope = isTopLevelBlock ? {} : { ...localScope };
 
-        for (const stmt of rule.statements) {
+        for (let i = 0; i < rule.statements.length; i++) {
+          const stmt = rule.statements[i];
           const stmtResult = evaluateRule(stmt, context, depth + 1, blockScope);
 
           // Check for early return (marked with __isReturn)
@@ -2117,13 +3866,21 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           }
           result = stmtResult;
         }
+
+        // If this is a top-level block, unwrap the return value
+        // Nested blocks keep the marker so outer blocks can propagate
+        if (isTopLevelBlock && result && typeof result === 'object' && result.__isReturn) {
+          result = result.value;
+        }
         break;
       }
 
       case 'assign': {
         // Assign a value to a local variable
         // Supports simple assignment and compound operators (+=, -=, *=, /=)
-        if (!rule.name) {
+        // Accepts both 'var' (from analyzer) and 'name' (legacy) for variable name
+        const varName = rule.var || rule.name;
+        if (!varName) {
           result = undefined;
           break;
         }
@@ -2139,21 +3896,21 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
         if (rule.op && rule.op !== '=') {
           // Compound assignment
-          const currentVal = localScope[rule.name] || 0;
+          const currentVal = localScope[varName] || 0;
           switch (rule.op) {
-            case '+=': localScope[rule.name] = currentVal + value; break;
-            case '-=': localScope[rule.name] = currentVal - value; break;
-            case '*=': localScope[rule.name] = currentVal * value; break;
-            case '/=': localScope[rule.name] = currentVal / value; break;
+            case '+=': localScope[varName] = currentVal + value; break;
+            case '-=': localScope[varName] = currentVal - value; break;
+            case '*=': localScope[varName] = currentVal * value; break;
+            case '/=': localScope[varName] = currentVal / value; break;
             default:
               log('warn', `[evaluateRule] Unknown assignment operator: ${rule.op}`);
-              localScope[rule.name] = value;
+              localScope[varName] = value;
           }
         } else {
           // Simple assignment
-          localScope[rule.name] = value;
+          localScope[varName] = value;
         }
-        result = localScope[rule.name];
+        result = localScope[varName];
         break;
       }
 
@@ -2167,12 +3924,30 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
       case 'for_range': {
         // Execute a loop body a specified number of times
-        // count can be a number or a rule that evaluates to a number
-        const count = typeof rule.count === 'number'
-          ? rule.count
-          : evaluateRule(rule.count, context, depth + 1, localScope);
+        // Supports two formats:
+        // 1. count-based: { count: N } - iterates 0 to N-1
+        // 2. range-based: { start: S, end: E } - iterates S to E-1 (Python range style)
+        let startVal = 0;
+        let endVal;
 
-        if (typeof count !== 'number' || count < 0 || !Number.isFinite(count)) {
+        if (rule.start !== undefined && rule.end !== undefined) {
+          // Range-based format (from Python analyzer)
+          startVal = typeof rule.start === 'number'
+            ? rule.start
+            : evaluateRule(rule.start, context, depth + 1, localScope);
+          endVal = typeof rule.end === 'number'
+            ? rule.end
+            : evaluateRule(rule.end, context, depth + 1, localScope);
+        } else {
+          // Count-based format (legacy)
+          const count = typeof rule.count === 'number'
+            ? rule.count
+            : evaluateRule(rule.count, context, depth + 1, localScope);
+          endVal = count;
+        }
+
+        if (typeof startVal !== 'number' || typeof endVal !== 'number' ||
+            !Number.isFinite(startVal) || !Number.isFinite(endVal)) {
           result = undefined;
           break;
         }
@@ -2185,12 +3960,14 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
         }
 
         // Limit iterations to prevent infinite loops
-        const maxIterations = Math.min(count, 1000);
-        if (count > 1000) {
-          log('warn', `[evaluateRule] for_range count ${count} limited to 1000`);
+        const iterations = endVal - startVal;
+        const maxIterations = Math.min(iterations, 1000);
+        if (iterations > 1000) {
+          log('warn', `[evaluateRule] for_range iterations ${iterations} limited to 1000`);
         }
 
-        for (let i = 0; i < maxIterations; i++) {
+        let breakLoop = false;
+        for (let i = startVal; i < startVal + maxIterations && !breakLoop; i++) {
           // Set loop variable if specified (and not '_')
           if (rule.var && rule.var !== '_') {
             localScope[rule.var] = i;
@@ -2204,19 +3981,218 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
               // Check for early return
               if (stmtResult && typeof stmtResult === 'object' && stmtResult.__isReturn) {
                 result = stmtResult;
+                breakLoop = true;
                 break;
               }
+              // Check for break
+              if (stmtResult && typeof stmtResult === 'object' && stmtResult.__isBreak) {
+                breakLoop = true;
+                break;
+              }
+              // Check for continue
+              if (stmtResult && typeof stmtResult === 'object' && stmtResult.__isContinue) {
+                break; // break inner loop, continue outer loop
+              }
             }
-          }
-
-          // If we got an early return, exit the loop
-          if (result && typeof result === 'object' && result.__isReturn) {
-            break;
           }
         }
 
         // for loops don't return a value unless there was an early return
         if (!(result && typeof result === 'object' && result.__isReturn)) {
+          result = undefined;
+        }
+        break;
+      }
+
+      case 'for_iter': {
+        // Execute a loop body for each item in an iterable
+        const iterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
+
+        if (!Array.isArray(iterable)) {
+          log('warn', `[evaluateRule] for_iter: iterable is not an array: ${typeof iterable}`);
+          result = undefined;
+          break;
+        }
+
+        // Ensure we have a scope
+        if (localScope === null) {
+          log('warn', '[evaluateRule] for_iter used without local scope');
+          result = undefined;
+          break;
+        }
+
+        // Limit iterations to prevent infinite loops
+        const maxIterations = Math.min(iterable.length, 1000);
+        if (iterable.length > 1000) {
+          log('warn', `[evaluateRule] for_iter iterable length ${iterable.length} limited to 1000`);
+        }
+
+        let breakIterLoop = false;
+        for (let i = 0; i < maxIterations && !breakIterLoop; i++) {
+          const item = iterable[i];
+
+          // Set loop variable(s) - support both single var and tuple unpacking (vars)
+          if (rule.vars && Array.isArray(rule.vars)) {
+            // Tuple unpacking: item should be an array [val1, val2, ...]
+            // This handles patterns like: for key, value in dict.items()
+            if (Array.isArray(item)) {
+              rule.vars.forEach((varName, idx) => {
+                if (varName !== '_') {
+                  localScope[varName] = item[idx];
+                }
+              });
+            } else {
+              // If item is not an array but we expected tuple unpacking, log warning
+              log('warn', `[evaluateRule] for_iter: expected array item for tuple unpacking, got ${typeof item}`);
+            }
+          } else if (rule.var && rule.var !== '_') {
+            localScope[rule.var] = item;
+          }
+
+          // Execute body statements
+          if (Array.isArray(rule.body)) {
+            for (const stmt of rule.body) {
+              const stmtResult = evaluateRule(stmt, context, depth + 1, localScope);
+
+              // Check for early return
+              if (stmtResult && typeof stmtResult === 'object' && stmtResult.__isReturn) {
+                result = stmtResult;
+                breakIterLoop = true;
+                break;
+              }
+              // Check for break
+              if (stmtResult && typeof stmtResult === 'object' && stmtResult.__isBreak) {
+                breakIterLoop = true;
+                break;
+              }
+              // Check for continue
+              if (stmtResult && typeof stmtResult === 'object' && stmtResult.__isContinue) {
+                break; // break inner loop, continue outer loop
+              }
+            }
+          }
+        }
+
+        // for loops don't return a value unless there was an early return
+        if (!(result && typeof result === 'object' && result.__isReturn)) {
+          result = undefined;
+        }
+        break;
+      }
+
+      case 'while_loop': {
+        // Execute a loop body while condition is true
+        // Similar to for_iter but with a condition check instead of iteration
+
+        // Ensure we have a scope
+        if (localScope === null) {
+          log('warn', '[evaluateRule] while_loop used without local scope');
+          result = undefined;
+          break;
+        }
+
+        // Limit iterations to prevent infinite loops
+        const maxWhileIterations = 1000;
+        let whileIterCount = 0;
+        let breakWhileLoop = false;
+
+        while (!breakWhileLoop && whileIterCount < maxWhileIterations) {
+          // Evaluate condition each iteration
+          const conditionResult = evaluateRule(rule.condition, context, depth + 1, localScope);
+
+          // If condition is false or undefined, exit loop
+          if (!conditionResult) {
+            break;
+          }
+
+          whileIterCount++;
+
+          // Execute body statements
+          if (Array.isArray(rule.body)) {
+            for (const stmt of rule.body) {
+              const stmtResult = evaluateRule(stmt, context, depth + 1, localScope);
+
+              // Check for early return
+              if (stmtResult && typeof stmtResult === 'object' && stmtResult.__isReturn) {
+                result = stmtResult;
+                breakWhileLoop = true;
+                break;
+              }
+              // Check for break
+              if (stmtResult && typeof stmtResult === 'object' && stmtResult.__isBreak) {
+                breakWhileLoop = true;
+                break;
+              }
+              // Check for continue
+              if (stmtResult && typeof stmtResult === 'object' && stmtResult.__isContinue) {
+                break; // break inner loop, continue outer while loop
+              }
+            }
+          }
+        }
+
+        if (whileIterCount >= maxWhileIterations) {
+          log('warn', `[evaluateRule] while_loop exceeded max iterations (${maxWhileIterations})`);
+        }
+
+        // Handle orelse clause (Python's else on while loop - runs if loop completes normally)
+        if (!breakWhileLoop && Array.isArray(rule.orelse)) {
+          for (const stmt of rule.orelse) {
+            const stmtResult = evaluateRule(stmt, context, depth + 1, localScope);
+            if (stmtResult && typeof stmtResult === 'object' && stmtResult.__isReturn) {
+              result = stmtResult;
+              break;
+            }
+          }
+        }
+
+        // while loops don't return a value unless there was an early return
+        if (!(result && typeof result === 'object' && result.__isReturn)) {
+          result = undefined;
+        }
+        break;
+      }
+
+      case 'break': {
+        // Signal to break out of the enclosing loop
+        result = { __isBreak: true };
+        break;
+      }
+
+      case 'continue': {
+        // Signal to continue to next iteration of the enclosing loop
+        result = { __isContinue: true };
+        break;
+      }
+
+      case 'if_statement': {
+        // Execute body or orelse statements based on test condition
+        const testResult = evaluateRule(rule.test, context, depth + 1, localScope);
+
+        if (testResult === undefined) {
+          result = undefined;
+          break;
+        }
+
+        const statementsToExecute = testResult ? rule.body : rule.orelse;
+
+        if (Array.isArray(statementsToExecute)) {
+          for (const stmt of statementsToExecute) {
+            const stmtResult = evaluateRule(stmt, context, depth + 1, localScope);
+
+            // Propagate control flow signals
+            if (stmtResult && typeof stmtResult === 'object') {
+              if (stmtResult.__isReturn || stmtResult.__isBreak || stmtResult.__isContinue) {
+                result = stmtResult;
+                break;
+              }
+            }
+          }
+        }
+
+        // if_statement doesn't return a value unless there was a control flow signal
+        if (!(result && typeof result === 'object' &&
+              (result.__isReturn || result.__isBreak || result.__isContinue))) {
           result = undefined;
         }
         break;
@@ -2283,12 +4259,58 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
             case '__contains__':
               result = obj.includes(args[0]);
               break;
+            case 'capitalize':
+              // Python's capitalize: first char uppercase, rest lowercase
+              result = obj.length > 0 ? obj.charAt(0).toUpperCase() + obj.slice(1).toLowerCase() : '';
+              break;
+            case 'upper':
+              result = obj.toUpperCase();
+              break;
+            case 'lower':
+              result = obj.toLowerCase();
+              break;
+            case 'strip':
+              result = obj.trim();
+              break;
+            case 'startswith':
+              result = obj.startsWith(args[0]);
+              break;
+            case 'endswith':
+              result = obj.endsWith(args[0]);
+              break;
             default:
               log('warn', `[evaluateRule] Unknown string method: ${rule.method}`);
               result = undefined;
           }
+        } else if (typeof obj === 'object' && obj !== null && !Array.isArray(obj)) {
+          // Handle dict/object methods
+          switch (rule.method) {
+            case 'items':
+              // dict.items() - returns array of [key, value] pairs
+              result = Object.entries(obj);
+              break;
+            case 'keys':
+              // dict.keys() - returns array of keys
+              result = Object.keys(obj);
+              break;
+            case 'values':
+              // dict.values() - returns array of values
+              result = Object.values(obj);
+              break;
+            case 'get':
+              // dict.get(key, default) - get value with optional default
+              result = obj.hasOwnProperty(args[0]) ? obj[args[0]] : (args[1] !== undefined ? args[1] : null);
+              break;
+            case '__contains__':
+              // key in dict
+              result = Object.prototype.hasOwnProperty.call(obj, args[0]);
+              break;
+            default:
+              log('warn', `[evaluateRule] Unknown dict method: ${rule.method}`);
+              result = undefined;
+          }
         } else {
-          log('warn', `[evaluateRule] method_call on non-array/string: ${typeof obj}`);
+          log('warn', `[evaluateRule] method_call on unsupported type: ${typeof obj}`);
           result = undefined;
         }
         break;
@@ -2311,6 +4333,14 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
     result = undefined;
   }
 
+  // At depth 0 (top-level rule), unwrap return markers from block rules
+  // Block rules with return statements produce {__isReturn: true, value: X}
+  // which needs to be unwrapped to get the actual value
+  // Note: This MUST only happen at depth 0 to preserve nested block return behavior
+  if (depth === 0 && result && typeof result === 'object' && result.__isReturn) {
+    result = result.value;
+  }
+
   // At depth 0 (top-level rule), convert SMBool to boolean with difficulty check
   // This ensures difficulty is properly checked against maxDiff for SM games
   // when the top-level rule is 'and', 'or', or any rule type returning SMBool
@@ -2328,6 +4358,227 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
 
   return result;
 };
+
+/**
+ * Evaluate a rule in Rule Builder format.
+ *
+ * Rule Builder format uses {"rule": "RuleName", "options": [], "args": {...}} or
+ * {"rule": "And/Or", "options": [], "children": [...]} for composite rules.
+ *
+ * This provides native support for Rule Builder rules without converting to CC format.
+ *
+ * @param {Object} rule - Rule in Rule Builder format
+ * @param {Object} context - The snapshot interface for evaluation
+ * @param {number} depth - Current recursion depth
+ * @param {Object|null} localScope - Local scope for parameter resolution
+ * @returns {*} The evaluation result (typically boolean)
+ */
+function evaluateRuleBuilderRule(rule, context, depth, localScope) {
+  const ruleName = rule.rule;
+  const args = rule.args || {};
+  const children = rule.children || [];
+  const child = rule.child;
+
+  // Log at debug level
+  if (depth < 3) {
+    log('debug', `[evaluateRuleBuilderRule] Evaluating ${ruleName}`, { args, childCount: children.length });
+  }
+
+  switch (ruleName) {
+    // Boolean literals
+    case 'True_':
+      return true;
+
+    case 'False_':
+      return false;
+
+    // Item check: Has(item_name, count)
+    case 'Has': {
+      const itemName = args.item_name;
+      const count = args.count ?? 1;
+      if (!itemName) {
+        log('warn', '[evaluateRuleBuilderRule] Has rule missing item_name');
+        return undefined;
+      }
+      // Delegate to CC format evaluation
+      return evaluateRule({ type: 'item_check', item: itemName, count }, context, depth + 1, localScope);
+    }
+
+    // HasAll: all items required (AND of Has checks)
+    case 'HasAll': {
+      const items = args.item_names || children.map(c => c.args?.item_name).filter(Boolean);
+      if (!items || items.length === 0) {
+        return true; // Empty AND is true
+      }
+      for (const item of items) {
+        const result = evaluateRule({ type: 'item_check', item, count: 1 }, context, depth + 1, localScope);
+        if (result === false) return false;
+        if (result === undefined) return undefined;
+      }
+      return true;
+    }
+
+    // HasAny: any item required (OR of Has checks)
+    case 'HasAny': {
+      const items = args.item_names || children.map(c => c.args?.item_name).filter(Boolean);
+      if (!items || items.length === 0) {
+        return false; // Empty OR is false
+      }
+      let hasUndefined = false;
+      for (const item of items) {
+        const result = evaluateRule({ type: 'item_check', item, count: 1 }, context, depth + 1, localScope);
+        if (result === true) return true;
+        if (result === undefined) hasUndefined = true;
+      }
+      return hasUndefined ? undefined : false;
+    }
+
+    // HasAllCounts: all items with specific counts
+    case 'HasAllCounts': {
+      const itemCounts = args.item_counts || {};
+      for (const [item, count] of Object.entries(itemCounts)) {
+        const result = evaluateRule({ type: 'item_check', item, count }, context, depth + 1, localScope);
+        if (result === false) return false;
+        if (result === undefined) return undefined;
+      }
+      return true;
+    }
+
+    // HasAnyCount: any item with specific count
+    case 'HasAnyCount': {
+      const itemCounts = args.item_counts || {};
+      let hasUndefined = false;
+      for (const [item, count] of Object.entries(itemCounts)) {
+        const result = evaluateRule({ type: 'item_check', item, count }, context, depth + 1, localScope);
+        if (result === true) return true;
+        if (result === undefined) hasUndefined = true;
+      }
+      return hasUndefined ? undefined : false;
+    }
+
+    // HasFromList: N items from a list
+    case 'HasFromList': {
+      const items = args.item_names || [];
+      const count = args.count ?? 1;
+      let found = 0;
+      let hasUndefined = false;
+      for (const item of items) {
+        const result = evaluateRule({ type: 'item_check', item, count: 1 }, context, depth + 1, localScope);
+        if (result === true) {
+          found++;
+          if (found >= count) return true;
+        } else if (result === undefined) {
+          hasUndefined = true;
+        }
+      }
+      // If we have undefined results, we can't be sure
+      if (hasUndefined && found < count) return undefined;
+      return found >= count;
+    }
+
+    // HasFromListUnique: N unique items from a list
+    case 'HasFromListUnique': {
+      const items = args.item_names || [];
+      const count = args.count ?? 1;
+      let found = 0;
+      let hasUndefined = false;
+      for (const item of items) {
+        const result = evaluateRule({ type: 'item_check', item, count: 1 }, context, depth + 1, localScope);
+        if (result === true) {
+          found++;
+          if (found >= count) return true;
+        } else if (result === undefined) {
+          hasUndefined = true;
+        }
+      }
+      if (hasUndefined && found < count) return undefined;
+      return found >= count;
+    }
+
+    // HasGroup: items from an item group
+    case 'HasGroup': {
+      const groupName = args.item_name_group;
+      const count = args.count ?? 1;
+      return evaluateRule({ type: 'group_check', group: groupName, count }, context, depth + 1, localScope);
+    }
+
+    // HasGroupUnique: unique items from an item group
+    case 'HasGroupUnique': {
+      const groupName = args.item_name_group;
+      const count = args.count ?? 1;
+      // For unique, we use the same group_check - the semantics are handled by the group logic
+      return evaluateRule({ type: 'group_check', group: groupName, count }, context, depth + 1, localScope);
+    }
+
+    // Composite rules: And
+    case 'And': {
+      if (children.length === 0) return true;
+      let hasUndefined = false;
+      for (const childRule of children) {
+        const result = evaluateRule(childRule, context, depth + 1, localScope);
+        if (result === false) return false;
+        if (result === undefined) hasUndefined = true;
+      }
+      return hasUndefined ? undefined : true;
+    }
+
+    // Composite rules: Or
+    case 'Or': {
+      if (children.length === 0) return false;
+      let hasUndefined = false;
+      for (const childRule of children) {
+        const result = evaluateRule(childRule, context, depth + 1, localScope);
+        if (result === true) return true;
+        if (result === undefined) hasUndefined = true;
+      }
+      return hasUndefined ? undefined : false;
+    }
+
+    // Wrapper rules: Not (inverts child)
+    case 'Not': {
+      if (!child) {
+        log('warn', '[evaluateRuleBuilderRule] Not rule missing child');
+        return undefined;
+      }
+      const result = evaluateRule(child, context, depth + 1, localScope);
+      if (result === undefined) return undefined;
+      return !result;
+    }
+
+    // Reachability rules
+    case 'CanReachRegion': {
+      const regionName = args.region_name;
+      return evaluateRule({ type: 'can_reach', region: regionName }, context, depth + 1, localScope);
+    }
+
+    case 'CanReachLocation': {
+      const locationName = args.location_name;
+      return evaluateRule({ type: 'location_check', location: locationName }, context, depth + 1, localScope);
+    }
+
+    case 'CanReachEntrance': {
+      const entranceName = args.entrance_name;
+      return evaluateRule({ type: 'can_reach_entrance', entrance: entranceName }, context, depth + 1, localScope);
+    }
+
+    // Wrapper rule with filter (option-based filtering)
+    case 'Filtered': {
+      // For now, just evaluate the child - option filtering is typically world-level
+      if (!child) {
+        log('warn', '[evaluateRuleBuilderRule] Filtered rule missing child');
+        return undefined;
+      }
+      return evaluateRule(child, context, depth + 1, localScope);
+    }
+
+    // Unknown rule type - try to find as a custom helper
+    default: {
+      log('debug', `[evaluateRuleBuilderRule] Unknown Rule Builder type '${ruleName}', checking helpers`);
+      // Try evaluating as a CC helper
+      return evaluateRule({ type: 'helper', name: ruleName, args: Object.values(args) }, context, depth + 1, localScope);
+    }
+  }
+}
 
 // Debugging helper function for visualizing rule structures in console
 export function debugRule(rule, indent = 0) {

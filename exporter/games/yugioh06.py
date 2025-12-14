@@ -14,9 +14,14 @@ class Yugioh06GameExportHandler(GenericGameExportHandler):
     """
 
     GAME_NAME = 'Yu-Gi-Oh! 2006'
+    # Disable automatic helper export (use old behavior)
+    AUTO_EXPORT_DISCOVERED_HELPERS = False
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
 
     # List of custom helper functions defined in worlds/yugioh06/rules.py and fusions.py
     CUSTOM_HELPERS = {
+        'yugioh06_difficulty',  # Wraps has_from_list with core_booster
         'only_light',
         'only_dark',
         'only_earth',

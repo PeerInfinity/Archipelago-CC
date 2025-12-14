@@ -12,8 +12,10 @@ from typing import Any, Dict, List, Set, Optional, Tuple
 from collections import defaultdict
 
 import Utils
-from .analyzer import analyze_rule
-from .games import get_game_export_handler
+from .analyzer import analyze_rule, reset_analyze_rule_counter
+from .analyzer.cache import clear_caches as clear_analyzer_caches
+from .games import get_game_export_handler, clear_handler_cache
+from .constants import MAX_RULE_SIZE_KB, MAX_EXPORT_SIZE_MB
 from BaseClasses import ItemClassification
 
 logger = logging.getLogger(__name__)
@@ -659,7 +661,7 @@ def write_field_by_field(export_data, filepath):
     fields_written = []
     
     # Try each field separately
-    for field in ["regions", "items", "item_groups", "progression_mapping", "settings", "start_regions", "game_info", "itempool_counts"]:
+    for field in ["regions", "helpers", "items", "item_groups", "progression_mapping", "settings", "start_regions", "game_info", "itempool_counts"]:
         if field in export_data:
             try:
                 serializable_field = make_serializable(export_data[field])
@@ -711,6 +713,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         "world_classes": {player: multiworld.worlds[player].__class__.__name__
                            for player in multiworld.player_ids}, # Player ID -> World Class Name mapping
         'regions': {},  # Full region graph
+        'helpers': {},  # Helper function definitions by player
         'items': {},    # Item data by player
         'item_groups': {},  # Item groups by player
         'progression_mapping': {},  # Progressive item info
@@ -719,7 +722,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
         'itempool_counts': {},  # Complete itempool counts by player
         'game_info': {},  # Game-specific information for frontend
         'starting_items': {}, # Starting items by player
-        'helpers': {},  # Helper function definitions by player
+        'canonical_placements': {},  # Canonical item placements by player (vanilla/original locations)
     }
     
     # Dungeons will only be added if there's data to include
@@ -736,7 +739,11 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
 
     for player in multiworld.player_ids:
         player_str = str(player) # Use player_str consistently
-        
+
+        # Reset the analyze_rule counter for each player to prevent accumulation
+        # across players in a multiworld which can cause false infinite loop detection
+        reset_analyze_rule_counter()
+
         # Get game name, world, and handler
         game_name = multiworld.game[player]
         world = multiworld.worlds[player]
@@ -769,7 +776,7 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
                 'error': error_msg,
                 'details': "Failed to read itempool counts. Check logs for more information."
             }
-        
+
         # Process items and groups, passing the itempool counts
         export_data['items'][player_str] = process_items(multiworld, player, itempool_counts)
         export_data['item_groups'][player_str] = process_item_groups(multiworld, player)
@@ -925,6 +932,24 @@ def prepare_export_data(multiworld) -> Dict[str, Any]:
             logger.error(f"Error processing starting items for player {player}: {str(e)}")
             export_data['starting_items'][player_str] = {'error': f"Failed to process starting items: {str(e)}"}
 
+        # Process canonical_placements - vanilla/original item locations
+        # This is read from a class attribute on the world, if it exists
+        try:
+            canonical_placements = {}
+            # Check for canonical_placements class attribute
+            if hasattr(world.__class__, 'canonical_placements'):
+                canonical_placements = dict(world.__class__.canonical_placements)
+                logger.debug(f"Found {len(canonical_placements)} canonical placements for player {player}")
+            # Also check instance attribute (in case it's set dynamically)
+            elif hasattr(world, 'canonical_placements'):
+                canonical_placements = dict(world.canonical_placements)
+                logger.debug(f"Found {len(canonical_placements)} canonical placements (instance) for player {player}")
+
+            export_data['canonical_placements'][player_str] = canonical_placements
+        except Exception as e:
+            logger.error(f"Error processing canonical_placements for player {player}: {str(e)}")
+            export_data['canonical_placements'][player_str] = {}
+
     # Add raw spoiler entrances data for debugging
     #if hasattr(multiworld, 'spoiler') and multiworld.spoiler and hasattr(multiworld.spoiler, 'entrances'):
     #    export_data['debug_spoiler_entrances'] = {}
@@ -988,17 +1013,14 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
             # Check if this is a Rule Builder Resolved rule with native serialization
             # Rule Builder rules have a to_dict() method that provides native JSON serialization
+            # The frontend now supports Rule Builder format natively, so we output it directly
             if hasattr(rule_func, 'to_dict') and callable(rule_func.to_dict):
                 try:
                     rb_dict = rule_func.to_dict()
-                    # Convert Rule Builder format to Archipelago-CC format for frontend compatibility
-                    from exporter.converter import convert_rule_builder_to_cc
-                    cc_dict, warnings = convert_rule_builder_to_cc(rb_dict)
-                    for warning in warnings:
-                        logger.debug(f"Rule Builder conversion warning for {target_type} '{rule_target_name}': {warning}")
-                    # Cache and return the converted CC format
-                    _rule_analysis_cache[cache_key] = cc_dict
-                    return cc_dict
+                    # Cache and return Rule Builder format directly (frontend supports it natively)
+                    _rule_analysis_cache[cache_key] = rb_dict
+                    logger.debug(f"Exported Rule Builder format for {target_type} '{rule_target_name}': {rb_dict.get('rule', 'unknown')}")
+                    return rb_dict
                 except Exception as e:
                     logger.warning(f"Rule Builder to_dict() failed for {target_type} '{rule_target_name}': {e}")
                     # Fall through to AST analysis as fallback
@@ -1064,6 +1086,19 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                 # Resolve any attribute nodes in item_check rules
                 if expanded:
                     expanded = resolve_attribute_nodes_in_rule(expanded, world)
+
+                # Size check on individual rule to catch runaway expansion
+                if expanded:
+                    try:
+                        rule_size = len(json.dumps(expanded, default=str))
+                        rule_size_kb = rule_size / 1024
+                        if rule_size_kb > MAX_RULE_SIZE_KB:
+                            logger.error(f"Rule for {target_type} '{rule_target_name}' is too large "
+                                        f"({rule_size_kb:.1f} KB > {MAX_RULE_SIZE_KB} KB). "
+                                        f"This likely indicates a rule analysis loop. Returning None.")
+                            return None
+                    except (TypeError, ValueError):
+                        pass  # If serialization fails, continue anyway
 
                 # Cache the result before returning
                 if expanded:
@@ -1171,8 +1206,10 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                     dungeons_data[dungeon_name] = dungeon_data
 
         # Second pass - process all regions
+        region_count = 0
         for region in player_regions:
             try:
+                region_count += 1
                 region_name = getattr(region, 'name', 'Unknown')
                 region_hint = getattr(region, 'hint_text', region_name)
 
@@ -1454,6 +1491,21 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
 
                 regions_data[region.name] = region_data
 
+                # Size check every 10 regions to catch runaway data growth
+                if region_count % 10 == 0:
+                    try:
+                        current_size = len(json.dumps(regions_data, default=str))
+                        current_size_mb = current_size / (1024 * 1024)
+                        if current_size_mb > MAX_EXPORT_SIZE_MB:
+                            error_msg = (f"Export data size ({current_size_mb:.1f} MB) exceeded limit "
+                                        f"({MAX_EXPORT_SIZE_MB} MB) after processing region '{region_name}'. "
+                                        f"This likely indicates a rule analysis loop. Aborting export.")
+                            logger.error(error_msg)
+                            raise RuntimeError(error_msg)
+                    except (TypeError, ValueError) as e:
+                        # If serialization fails, just log and continue
+                        logger.warning(f"Could not check export size: {e}")
+
             except Exception as e:
                 logger.error(f"Error processing region {getattr(region, 'name', 'Unknown')}: {str(e)}")
                 logger.exception("Full traceback:")
@@ -1471,7 +1523,13 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
         raise
 
 def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> Dict[str, Any]:
-    """Process item data including progression flags and capacity information."""
+    """Process item data including progression flags and capacity information.
+
+    Args:
+        multiworld: The multiworld object
+        player: The player ID
+        itempool_counts: Item counts for this player's pool (used for itempool_counts export)
+    """
     items_data = {}
     world = multiworld.worlds[player]
     game_name = multiworld.game[player]
@@ -1518,7 +1576,8 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
             }
         else:
             # Ensure the ID from the world map is added if missing
-            if items_data[item_name].get('id') is None:
+            # BUT don't overwrite if the item is marked as an event (game handler intentionally set id=None)
+            if items_data[item_name].get('id') is None and not items_data[item_name].get('event'):
                 items_data[item_name]['id'] = item_id
         
         # Add groups from world.item_name_groups if they aren't already present
@@ -1638,16 +1697,36 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
     except Exception as e:
         logger.error(f"Error getting game-specific max counts for {game_name}: {e}")
 
-    # Correct max_count for stackable items using itempool_counts
-    if itempool_counts and 'error' not in itempool_counts:
-        for item_name, item_data in items_data.items():
-            # If the item's max_count is the default of 1...
-            if item_data.get('max_count') == 1:
-                pool_count = itempool_counts.get(item_name)
-                # ... and the item appears more than once in the pool...
-                if pool_count and pool_count > 1:
-                    # ... then update max_count to match the pool count.
-                    item_data['max_count'] = pool_count
+    # Correct max_count for stackable items using actual item placements
+    # In multiworld, a player can receive more items than their pool contributes
+    # because items are distributed across all players' locations.
+    # Count items placed FOR this player across ALL locations in the multiworld.
+    placement_counts = {}
+    try:
+        for location in multiworld.get_locations():
+            if location.item and location.item.player == player:
+                item_name = location.item.name
+                placement_counts[item_name] = placement_counts.get(item_name, 0) + 1
+    except Exception as e:
+        logger.warning(f"Could not count item placements for player {player}: {e}")
+
+    # Also count starting items (precollected_items) since they contribute to max_count
+    # This is important for games like Paint where progressive items start with 1 copy
+    try:
+        for starting_item in multiworld.precollected_items.get(player, []):
+            if hasattr(starting_item, 'name'):
+                item_name = starting_item.name
+                placement_counts[item_name] = placement_counts.get(item_name, 0) + 1
+    except Exception as e:
+        logger.warning(f"Could not count starting items for player {player}: {e}")
+
+    # Update max_count based on actual placements (use max of current max_count and placements)
+    for item_name, item_data in items_data.items():
+        placement_count = placement_counts.get(item_name, 0)
+        current_max = item_data.get('max_count', 1)
+        # If there are more placements than current max_count, update it
+        if placement_count > current_max:
+            item_data['max_count'] = placement_count
 
     # 5. Add groups from item_name_groups to ALL items (including events)
     # This ensures event items and other items not in item_id_to_name get their groups
@@ -1690,6 +1769,56 @@ def process_progression_mapping(multiworld, player: int) -> Dict[str, Any]:
         logger.error(f"Error getting progression mapping for game '{game_name}': {e}")
         logger.exception("Traceback:")
         return {} # Return empty on error
+
+
+def sort_lists_for_consistency(data, key_name=None):
+    """
+    Recursively sort lists of simple types (strings, numbers) for consistent JSON output.
+
+    Uses a whitelist approach: only sorts lists under specific keys known to be safe.
+    This prevents accidentally breaking game logic where list order is semantically
+    meaningful (e.g., hat_craft_order in A Hat in Time, level_logic tuples in Overcooked).
+
+    Args:
+        data: The data structure to process
+        key_name: The key name from the parent dict (used to determine if sorting is safe)
+
+    Returns:
+        The data structure with whitelisted lists sorted
+    """
+    # Keys where sorting is safe (order is not semantically meaningful)
+    SAFE_TO_SORT_KEYS = {
+        'exclude_locations',
+        'allowed_legendary_hunt_encounters',
+        'move_rando_actions',
+        'enabled_filler_buffs',
+        'goal',
+        'disabled_entities',
+    }
+
+    if data is None or isinstance(data, (bool, int, float, str)):
+        return data
+
+    if isinstance(data, list):
+        # First, recursively process all items
+        processed = [sort_lists_for_consistency(item) for item in data]
+
+        # Only sort if this key is in the whitelist
+        if key_name in SAFE_TO_SORT_KEYS:
+            # Only sort if all items are simple comparable types (str, int, float)
+            if processed and all(isinstance(item, (str, int, float)) for item in processed):
+                try:
+                    return sorted(processed)
+                except TypeError:
+                    # If comparison fails, return unsorted
+                    return processed
+        return processed
+
+    if isinstance(data, dict):
+        return {k: sort_lists_for_consistency(v, key_name=k) for k, v in data.items()}
+
+    return data
+
 
 def cleanup_export_data(data):
     """
@@ -1756,7 +1885,13 @@ def cleanup_export_data(data):
                         if 'progress_type' in location and isinstance(location['progress_type'], str):
                             if location['progress_type'].isdigit():
                                 location['progress_type'] = int(location['progress_type'])
-    
+
+    # Sort lists in game_info (including slot_data) for consistent output
+    # This handles cases like Terraria's goal list and Witness's disabled_entities
+    if 'game_info' in data:
+        for player_id, game_info in data['game_info'].items():
+            data['game_info'][player_id] = sort_lists_for_consistency(game_info)
+
     return data
 
 # --- Helper for Field Exclusion ---
@@ -1830,6 +1965,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         'items',
         'item_groups',
         'itempool_counts',
+        'canonical_placements',
         'progression_mapping',
         'starting_items',
         'settings',
@@ -1840,8 +1976,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     # Player-specific keys contain data nested under player IDs
     player_specific_keys = [
         'regions', 'dungeons', 'items', 'item_groups', 'progression_mapping',
-        'settings', 'start_regions', 'itempool_counts', 'game_info',
-        'starting_items', 'metamath_data'
+        'settings', 'start_regions', 'itempool_counts', 'canonical_placements',
+        'game_info', 'starting_items', 'metamath_data'
     ]
 
     # Prepare the combined export data for all players using the helper
@@ -2171,8 +2307,106 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     clear_rule_cache()
     from .games import clear_handler_cache
     clear_handler_cache()
+    from .analyzer import clear_caches as clear_analyzer_caches
+    clear_analyzer_caches()
+
+    # Clear circular references in multiworld to allow garbage collection
+    # This is necessary because Region, World, Spoiler, and CollectionState
+    # all hold references to multiworld, creating reference cycles
+    _clear_multiworld_references(multiworld)
 
     return results
+
+
+def _clear_multiworld_references(multiworld) -> None:
+    """Clear circular references in multiworld to allow proper garbage collection.
+
+    The MultiWorld object has circular references with:
+    - Regions (each region.multiworld points to multiworld)
+    - Entrances (connected to regions)
+    - Locations (parent_region points to regions)
+    - Worlds (world.multiworld points to multiworld)
+    - Spoiler (spoiler.multiworld points to multiworld)
+    - CollectionState (state.multiworld points to multiworld)
+
+    Additionally, the exporter has module-level caches that hold references:
+    - _handler_cache: Game export handlers that store world references
+    - _rule_analysis_cache: Cached rule analysis results
+    - Analyzer caches: File content and AST caches
+
+    This function breaks these cycles and clears caches so the garbage collector
+    can free the memory.
+    """
+    try:
+        # Clear exporter caches first (they hold references to world objects)
+        clear_handler_cache()
+        clear_rule_cache()
+        clear_analyzer_caches()
+
+        # Clear region references
+        if hasattr(multiworld, 'regions') and hasattr(multiworld.regions, 'region_cache'):
+            for player_regions in multiworld.regions.region_cache.values():
+                for region in list(player_regions.values()):
+                    region.multiworld = None
+                    for exit in region.exits:
+                        exit.parent_region = None
+                        exit.connected_region = None
+                        # Clear access rules which may have closures capturing multiworld
+                        if hasattr(exit, 'access_rule'):
+                            exit.access_rule = None
+                        if hasattr(exit, 'access_rules'):
+                            exit.access_rules = []
+                    for loc in region.locations:
+                        loc.parent_region = None
+                        # Clear location access rules as well
+                        if hasattr(loc, 'access_rule'):
+                            loc.access_rule = None
+                        if hasattr(loc, 'item_rule'):
+                            loc.item_rule = None
+                    region.exits = []
+                    region.locations = []
+                player_regions.clear()
+
+        # Clear world references and world-specific objects (like dungeons)
+        if hasattr(multiworld, 'worlds'):
+            for player, world in list(multiworld.worlds.items()):
+                # Clear dungeon references (ALttP has dungeons dict that hold multiworld refs)
+                if hasattr(world, 'dungeons') and isinstance(world.dungeons, dict):
+                    dungeon_count = 0
+                    for dungeon in list(world.dungeons.values()):
+                        if hasattr(dungeon, 'multiworld'):
+                            dungeon.multiworld = None
+                            dungeon_count += 1
+                        if hasattr(dungeon, 'regions'):
+                            dungeon.regions = []
+                        # Clear other dungeon attributes that might hold references
+                        if hasattr(dungeon, 'bosses'):
+                            dungeon.bosses.clear()
+                        if hasattr(dungeon, 'big_key'):
+                            dungeon.big_key = None
+                        if hasattr(dungeon, 'small_keys'):
+                            dungeon.small_keys = []
+                        if hasattr(dungeon, 'dungeon_items'):
+                            dungeon.dungeon_items = []
+                    # Clear the dungeons dict
+                    world.dungeons.clear()
+                    logger.debug(f"Cleared {dungeon_count} dungeon multiworld refs for player {player}")
+                if hasattr(world, 'multiworld'):
+                    world.multiworld = None
+            multiworld.worlds.clear()
+
+        # Clear spoiler reference
+        if hasattr(multiworld, 'spoiler') and multiworld.spoiler:
+            if hasattr(multiworld.spoiler, 'multiworld'):
+                multiworld.spoiler.multiworld = None
+
+        # Clear collection state reference
+        if hasattr(multiworld, 'state') and multiworld.state:
+            if hasattr(multiworld.state, 'multiworld'):
+                multiworld.state.multiworld = None
+
+    except Exception as e:
+        logger.warning(f"Error clearing multiworld references: {e}")
 
 # --- Field Exclusion Processing ---
 def process_field_exclusions(data, context_excluded_fields=None, global_excluded_fields=None, context_path=None):

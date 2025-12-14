@@ -162,10 +162,10 @@ class CelesteOpenWorldGameExportHandler(GenericGameExportHandler):
             'conditions': conditions
         }
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Recursively expand rule functions with Celeste Open World-specific analysis."""
         if not rule:
             return rule
 
         # Let the base class handle most of the expansion
-        return super().expand_rule(rule)
+        return super().expand_rule(rule, _depth)

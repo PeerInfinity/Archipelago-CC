@@ -205317,6 +205317,9 @@
       "Yam Seeds": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -205330,7 +205333,93 @@
     "1": {
       "game": "Stardew Valley",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "arcade_machine_locations": 3,
+        "backpack_progression": 2,
+        "booksanity": 2,
+        "building_progression": 3,
+        "bundle_plando": [],
+        "bundle_price": 0,
+        "bundle_randomization": 3,
+        "chefsanity": 0,
+        "cooksanity": 0,
+        "craftsanity": 0,
+        "cropsanity": 1,
+        "death_link": 0,
+        "debris_multiplier": 1,
+        "elevator_progression": 2,
+        "enabled_filler_buffs": [
+          "Bite Rate",
+          "Defense",
+          "Luck"
+        ],
+        "entrance_randomization": 0,
+        "exclude_ginger_island": 0,
+        "exclude_locations": [],
+        "experience_multiplier": 200,
+        "farm_type": 3,
+        "festival_locations": 1,
+        "fishsanity": 0,
+        "friendsanity": 0,
+        "friendsanity_heart_size": 4,
+        "friendship_multiplier": 200,
+        "gifting": 1,
+        "goal": 0,
+        "item_links": [],
+        "local_items": [],
+        "mods": [],
+        "monstersanity": 1,
+        "movement_buff_number": 4,
+        "multiple_day_sleep_cost": 0,
+        "multiple_day_sleep_enabled": 1,
+        "museumsanity": 1,
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "profit_margin": 100,
+        "progression_balancing": 50,
+        "quest_locations": 7,
+        "quick_start": 1,
+        "season_randomization": 1,
+        "shipsanity": 0,
+        "skill_progression": 2,
+        "special_order_locations": 5,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "starting_money": 5000,
+        "tool_progression": 1,
+        "trap_difficulty": 2,
+        "trap_distribution": {
+          "Babies Trap": 100,
+          "Bark Trap": 100,
+          "Benjamin Budton Trap": 100,
+          "Bomb Trap": 100,
+          "Burnt Trap": 100,
+          "Darkness Trap": 100,
+          "Debris Trap": 100,
+          "Drought Trap": 100,
+          "Frozen Trap": 100,
+          "Inflation Trap": 100,
+          "Jinxed Trap": 100,
+          "Meow Trap": 100,
+          "Monsters Trap": 100,
+          "Nauseated Trap": 100,
+          "Nudge Trap": 100,
+          "Pariah Trap": 100,
+          "Random Teleport Trap": 100,
+          "Shuffle Trap": 100,
+          "Slimed Trap": 100,
+          "Taxes Trap": 100,
+          "The Crows Trap": 100,
+          "Time Flies Trap": 100,
+          "Weakness Trap": 100
+        },
+        "trap_items": "",
+        "walnutsanity": []
+      }
     }
   },
   "game_info": {
@@ -205338,6 +205427,374 @@
       "name": "Stardew Valley",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "dirt",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to playing Stardew Valley with Archipelago.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "Exempt-Medic (Proofreading)",
+            "Jouramie",
+            "KaitoKid",
+            "Witchybun (Mod Support)"
+          ]
+        },
+        {
+          "name": "Guide de configuration MultiWorld",
+          "description": "Un guide pour configurer Stardew Valley sur Archipelago",
+          "language": "Fran\u00e7ais",
+          "file_name": "setup_fr.md",
+          "link": "setup/fr",
+          "authors": [
+            "Eindall"
+          ]
+        }
+      ],
+      "world_description": "Stardew Valley is an open-ended country-life RPG. You can farm, fish, mine, fight, complete quests,\nbefriend villagers, and uncover dark secrets.",
+      "slot_data": {
+        "goal": 0,
+        "farm_type": 3,
+        "bundle_price": 0,
+        "entrance_randomization": 0,
+        "season_randomization": 1,
+        "cropsanity": 1,
+        "backpack_progression": 2,
+        "tool_progression": 1,
+        "skill_progression": 2,
+        "building_progression": 3,
+        "festival_locations": 1,
+        "elevator_progression": 2,
+        "arcade_machine_locations": 3,
+        "special_order_locations": 5,
+        "quest_locations": 7,
+        "fishsanity": 0,
+        "museumsanity": 1,
+        "monstersanity": 1,
+        "shipsanity": 0,
+        "cooksanity": 0,
+        "chefsanity": 0,
+        "craftsanity": 0,
+        "friendsanity": 0,
+        "friendsanity_heart_size": 4,
+        "booksanity": 2,
+        "walnutsanity": [],
+        "exclude_ginger_island": 0,
+        "quick_start": 1,
+        "starting_money": 5000,
+        "profit_margin": 100,
+        "experience_multiplier": 200,
+        "friendship_multiplier": 200,
+        "debris_multiplier": 1,
+        "trap_difficulty": 2,
+        "trap_distribution": {
+          "Babies Trap": 100,
+          "Bark Trap": 100,
+          "Benjamin Budton Trap": 100,
+          "Bomb Trap": 100,
+          "Burnt Trap": 100,
+          "Darkness Trap": 100,
+          "Debris Trap": 100,
+          "Drought Trap": 100,
+          "Frozen Trap": 100,
+          "Inflation Trap": 100,
+          "Jinxed Trap": 100,
+          "Meow Trap": 100,
+          "Monsters Trap": 100,
+          "Nauseated Trap": 100,
+          "Nudge Trap": 100,
+          "Pariah Trap": 100,
+          "Random Teleport Trap": 100,
+          "Shuffle Trap": 100,
+          "Slimed Trap": 100,
+          "Taxes Trap": 100,
+          "The Crows Trap": 100,
+          "Time Flies Trap": 100,
+          "Weakness Trap": 100
+        },
+        "multiple_day_sleep_enabled": 1,
+        "multiple_day_sleep_cost": 0,
+        "gifting": 1,
+        "mods": [],
+        "bundle_plando": [],
+        "death_link": 0,
+        "trap_items": "",
+        "ut_seed": 9783613927619360491,
+        "seed": 437057968,
+        "randomized_entrances": {},
+        "modified_bundles": {
+          "Pantry": {
+            "Slime Farmer Bundle": {
+              "number_required": 3,
+              "0": "Petrified Slime|10|Basic Crop",
+              "1": "Tiger Slime Egg|1|Basic Crop",
+              "2": "Slime|99|Basic Crop",
+              "3": "Red Slime Egg|1|Basic Crop"
+            },
+            "Quality Crops Bundle": {
+              "number_required": 3,
+              "0": "Radish|5|Gold Crop",
+              "1": "Wheat|5|Gold Crop",
+              "2": "Sunflower|5|Gold Crop",
+              "3": "Unmilled Rice|5|Gold Crop"
+            },
+            "Fall Crops Bundle": {
+              "number_required": 4,
+              "0": "Pumpkin|1|Basic Crop",
+              "1": "Amaranth|1|Basic Crop",
+              "2": "Bok Choy|1|Basic Crop",
+              "3": "Sunflower|1|Basic Crop"
+            },
+            "Rare Crops Bundle": {
+              "number_required": 2,
+              "0": "Ancient Fruit|1|Basic Crop",
+              "1": "Sweet Gem Berry|1|Basic Crop"
+            },
+            "Brewer's Bundle": {
+              "number_required": 4,
+              "0": "Beer|1|Basic Crop",
+              "1": "Green Tea|1|Basic Crop",
+              "2": "Mead|1|Basic Crop",
+              "3": "Pale Ale|1|Basic Crop",
+              "4": "Wine|1|Basic Crop"
+            },
+            "Garden Bundle": {
+              "number_required": 4,
+              "0": "Poppy|1|Basic Crop",
+              "1": "Sunflower|1|Basic Crop",
+              "2": "Fairy Rose|1|Basic Crop",
+              "3": "Blue Jazz|1|Basic Crop",
+              "4": "Summer Spangle|1|Basic Crop"
+            }
+          },
+          "Crafts Room": {
+            "Exotic Foraging Bundle": {
+              "number_required": 5,
+              "0": "Clam|1|Basic Crop",
+              "1": "Seaweed|1|Basic Crop",
+              "2": "Red Mushroom|1|Basic Crop",
+              "3": "Oyster|1|Basic Crop",
+              "4": "Mussel|1|Basic Crop",
+              "5": "Cave Carrot|1|Basic Crop",
+              "6": "Oak Resin|1|Basic Crop",
+              "7": "Cactus Fruit|1|Basic Crop",
+              "8": "Maple Syrup|1|Basic Crop"
+            },
+            "Winter Foraging Bundle": {
+              "number_required": 4,
+              "0": "Crystal Fruit|1|Basic Crop",
+              "1": "Holly|1|Basic Crop",
+              "2": "Crocus|1|Basic Crop",
+              "3": "Snow Yam|1|Basic Crop"
+            },
+            "Desert Foraging Bundle": {
+              "number_required": 2,
+              "0": "Cactus Fruit|1|Gold Forage",
+              "1": "Coconut|1|Gold Forage"
+            },
+            "Sticky Bundle": {
+              "number_required": 1,
+              "0": "Sap|500|Basic Crop"
+            },
+            "Fall Foraging Bundle": {
+              "number_required": 4,
+              "0": "Wild Plum|1|Basic Crop",
+              "1": "Hazelnut|1|Basic Crop",
+              "2": "Chanterelle|1|Basic Crop",
+              "3": "Common Mushroom|1|Basic Crop"
+            },
+            "Green Rain Bundle": {
+              "number_required": 3,
+              "0": "Mossy Seed|20|Basic Crop",
+              "1": "Fiddlehead Fern|10|Basic Crop",
+              "2": "Moss|200|Basic Crop",
+              "3": "Fiber|200|Basic Crop"
+            }
+          },
+          "Fish Tank": {
+            "Spring Fishing Bundle": {
+              "number_required": 4,
+              "0": "Legend|1|Basic Crop",
+              "1": "Shad|1|Basic Crop",
+              "2": "Sardine|1|Basic Crop",
+              "3": "Halibut|1|Basic Crop"
+            },
+            "River Fish Bundle": {
+              "number_required": 4,
+              "0": "Dorado|1|Basic Crop",
+              "1": "Smallmouth Bass|1|Basic Crop",
+              "2": "Salmon|1|Basic Crop",
+              "3": "Bream|1|Basic Crop"
+            },
+            "Summer Fishing Bundle": {
+              "number_required": 4,
+              "0": "Tilapia|1|Basic Crop",
+              "1": "Rainbow Trout|1|Basic Crop",
+              "2": "Halibut|1|Basic Crop",
+              "3": "Crimsonfish|1|Basic Crop"
+            },
+            "Fall Fishing Bundle": {
+              "number_required": 4,
+              "0": "Smallmouth Bass|1|Basic Crop",
+              "1": "Super Cucumber|1|Basic Crop",
+              "2": "Shad|1|Basic Crop",
+              "3": "Anchovy|1|Basic Crop"
+            },
+            "Quality Fish Bundle": {
+              "number_required": 3,
+              "0": "Halibut|2|Gold Fish",
+              "1": "Chub|2|Gold Fish",
+              "2": "Octopus|2|Gold Fish",
+              "3": "Tilapia|2|Gold Fish"
+            },
+            "Night Fishing Bundle": {
+              "number_required": 3,
+              "0": "Super Cucumber|1|Basic Crop",
+              "1": "Walleye|1|Basic Crop",
+              "2": "Eel|1|Basic Crop"
+            }
+          },
+          "Boiler Room": {
+            "Demolition Bundle": {
+              "number_required": 3,
+              "0": "Cherry Bomb|5|Basic Crop",
+              "1": "Explosive Ammo|5|Basic Crop",
+              "2": "Bomb|2|Basic Crop"
+            },
+            "Recycling Bundle": {
+              "number_required": 4,
+              "0": "Refined Quartz|1|Basic Crop",
+              "1": "Wood|99|Basic Crop",
+              "2": "Cloth|1|Basic Crop",
+              "3": "Stone|99|Basic Crop"
+            },
+            "Engineer's Bundle": {
+              "number_required": 3,
+              "0": "Diamond|1|Basic Crop",
+              "1": "Battery Pack|1|Basic Crop",
+              "2": "Refined Quartz|5|Basic Crop"
+            }
+          },
+          "Bulletin Board": {
+            "Dye Bundle": {
+              "number_required": 6,
+              "0": "Red Cabbage|1|Basic Crop",
+              "1": "Duck Feather|1|Basic Crop",
+              "2": "Winter Root|1|Basic Crop",
+              "3": "Sunflower|1|Basic Crop",
+              "4": "Aquamarine|1|Basic Crop",
+              "5": "Cranberries|1|Basic Crop"
+            },
+            "Bartender's Bundle": {
+              "number_required": 3,
+              "0": "Cranberry Candy|1|Basic Crop",
+              "1": "Pina Colada|1|Basic Crop",
+              "2": "Pale Ale|1|Basic Crop"
+            },
+            "Home Cook's Bundle": {
+              "number_required": 3,
+              "0": "Rhubarb Pie|1|Basic Crop",
+              "1": "Pancakes|1|Basic Crop",
+              "2": "Sugar|100|Basic Crop"
+            },
+            "Forager's Bundle": {
+              "number_required": 2,
+              "0": "Snow Yam|20|Basic Crop",
+              "1": "Blackberry|50|Basic Crop",
+              "2": "Spring Onion|20|Basic Crop"
+            },
+            "Enchanter's Bundle": {
+              "number_required": 4,
+              "0": "Pomegranate|1|Basic Crop",
+              "1": "Fire Quartz|1|Basic Crop",
+              "2": "Void Essence|1|Basic Crop",
+              "3": "Purple Mushroom|1|Basic Crop"
+            }
+          },
+          "Vault": {
+            "Carnival Bundle": {
+              "number_required": 1,
+              "0": "Star Token|2500|Basic Crop"
+            },
+            "Gambler's Bundle": {
+              "number_required": 1,
+              "0": "Qi Coin|10000|Basic Crop"
+            },
+            "Qi's Helper Bundle": {
+              "number_required": 1,
+              "0": "Qi Gem|25|Basic Crop"
+            },
+            "10,000g Bundle": {
+              "number_required": 1,
+              "0": "Money|10000|Basic Crop"
+            }
+          },
+          "Abandoned Joja Mart": {
+            "The Missing Bundle": {
+              "number_required": 5,
+              "0": "Cloth|1|Basic Crop",
+              "1": "Tea Leaves|5|Basic Crop",
+              "2": "Scorpion Carp|1|Gold Fish",
+              "3": "Diamond|1|Basic Crop",
+              "4": "Void Salmon|1|Gold Fish",
+              "5": "Ancient Fruit|1|Gold Crop"
+            }
+          },
+          "Raccoon Requests": {
+            "Raccoon Request 1": {
+              "number_required": 2,
+              "0": "Smoked Fish [Bullhead]|1|Basic Crop",
+              "1": "Smoked Fish [Midnight Carp]|1|Basic Crop",
+              "2": "Clam|5|Basic Crop"
+            },
+            "Raccoon Request 2": {
+              "number_required": 2,
+              "0": "Diamond|1|Basic Crop",
+              "1": "Bug Meat|10|Basic Crop",
+              "2": "Slime|99|Basic Crop"
+            },
+            "Raccoon Request 3": {
+              "number_required": 2,
+              "0": "Frozen Geode|5|Basic Crop",
+              "1": "Diamond|1|Basic Crop",
+              "2": "Rusty Spoon|1|Basic Crop"
+            },
+            "Raccoon Request 4": {
+              "number_required": 2,
+              "0": "Pickles [Taro Root]|1|Basic Crop",
+              "1": "Jelly [Melon]|1|Basic Crop",
+              "2": "Juice [Kale]|1|Basic Crop"
+            },
+            "Raccoon Request 5": {
+              "number_required": 2,
+              "0": "Green Algae|10|Basic Crop",
+              "1": "Dried Mushrooms [Common Mushroom]|1|Basic Crop",
+              "2": "Egg|5|Basic Crop"
+            },
+            "Raccoon Request 6": {
+              "number_required": 2,
+              "0": "Dried Fruit [Apple]|1|Basic Crop",
+              "1": "Jelly [Spice Berry]|1|Basic Crop",
+              "2": "Pickles [Tea Leaves]|1|Basic Crop"
+            },
+            "Raccoon Request 7": {
+              "number_required": 2,
+              "0": "Green Algae|10|Basic Crop",
+              "1": "Dried Mushrooms [Purple Mushroom]|1|Basic Crop",
+              "2": "Dried Mushrooms [Magma Cap]|1|Basic Crop"
+            },
+            "Raccoon Request 8": {
+              "number_required": 2,
+              "0": "Egg (Brown)|5|Basic Crop",
+              "1": "Large Egg|2|Basic Crop",
+              "2": "Dried Mushrooms [Magma Cap]|1|Basic Crop"
+            }
+          }
+        },
+        "client_version": "6.0.0"
       },
       "total_progression_items": 322
     }

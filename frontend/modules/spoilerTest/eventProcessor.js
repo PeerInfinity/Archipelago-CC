@@ -100,8 +100,33 @@ export class EventProcessor {
     this.playerId = Number(playerId); // Ensure numeric type for consistency
     this.playerIdKey = String(this.playerId); // String version for accessing JSON objects with string keys
 
+    // Calculate the sphere-only index (excludes non-state_update events like metadata)
+    // This is needed because sphereState.sphereData only contains state_update events,
+    // but currentLogIndex counts ALL events in the log file.
+    this.currentSphereIndex = this._calculateSphereIndex(currentLogIndex);
+
     // Check if we're in focused mode (from sphereState)
     this._updateFocusedMode();
+  }
+
+  /**
+   * Calculate the sphere index by counting only state_update events up to and including the current log index.
+   * This handles the case where metadata or other non-sphere events are present in the log.
+   * @param {number} logIndex - The current position in the full log
+   * @returns {number} The index into sphereState.sphereData
+   * @private
+   */
+  _calculateSphereIndex(logIndex) {
+    if (!this.spoilerLogData) return 0;
+
+    let sphereIndex = 0;
+    for (let i = 0; i < logIndex; i++) {
+      const event = this.spoilerLogData[i];
+      if (event && event.type === 'state_update') {
+        sphereIndex++;
+      }
+    }
+    return sphereIndex;
   }
 
   /**
@@ -193,7 +218,7 @@ export class EventProcessor {
     switch (eventType) {
       case 'state_update': {
         // Get sphere data from sphereState (which handles both verbose and incremental formats)
-        const sphereData = this._getSphereDataFromSphereState(this.currentLogIndex);
+        const sphereData = this._getSphereDataFromSphereState(this.currentSphereIndex);
 
         if (!sphereData) {
           this.logCallback(
@@ -224,8 +249,34 @@ export class EventProcessor {
 
         this.logCallback('info', `[Sphere ${event.sphere_index}] inventory_from_log: ${JSON.stringify(inventory_from_log)}`)
 
+        // Get accumulator targets from game_info (e.g., "RUPEES" for LADX)
+        // These are computed values in the sphere log's resolved_items that should NOT be added
+        // as inventory items. The actual source items (like "50 Rupees") will be added via
+        // location checks or addItemsUpfront, and the accumulator rules will update prog_items.
+        const gameInfo = staticData?.game_info?.[this.playerIdKey] || {};
+        const accumulatorTargets = new Set();
+        if (gameInfo.accumulator_rules) {
+          for (const rule of gameInfo.accumulator_rules) {
+            if (rule.target) {
+              accumulatorTargets.add(rule.target);
+            }
+          }
+        }
+
         // Find newly added items by comparing with previous inventory
-        newlyAddedItems = this.findNewlyAddedItems(this.previousInventory, inventory_from_log);
+        let rawNewlyAddedItems = this.findNewlyAddedItems(this.previousInventory, inventory_from_log);
+
+        // If using resolved_items, filter out accumulator targets from items to add
+        // The accumulator rules will automatically update prog_items when source items are added
+        if (useResolvedItems && accumulatorTargets.size > 0) {
+          newlyAddedItems = rawNewlyAddedItems.filter(itemName => !accumulatorTargets.has(itemName));
+          if (this.verboseMode && newlyAddedItems.length < rawNewlyAddedItems.length) {
+            const filtered = rawNewlyAddedItems.filter(itemName => accumulatorTargets.has(itemName));
+            this.logCallback('debug', `Filtered accumulator targets from newlyAddedItems: ${JSON.stringify(filtered)}`);
+          }
+        } else {
+          newlyAddedItems = rawNewlyAddedItems;
+        }
 
         this.logCallback('info', `[Sphere ${event.sphere_index}] newlyAddedItems: ${JSON.stringify(newlyAddedItems)}`);
 
@@ -792,7 +843,7 @@ export class EventProcessor {
 
     // Update previous inventory for next comparison
     if (eventType === 'state_update') {
-      const sphereData = this._getSphereDataFromSphereState(this.currentLogIndex);
+      const sphereData = this._getSphereDataFromSphereState(this.currentSphereIndex);
       if (sphereData) {
         const staticData = stateManager.getStaticData();
         const useResolvedItems = staticData?.settings?.[this.playerIdKey]?.use_resolved_items || false;
@@ -1095,12 +1146,14 @@ export class EventProcessor {
           // deltaCount is the number of this item added in this sphere
           if (deltaCount > 0) {
             this.logCallback('info', `  [Player ${this.playerId}] Adding ${deltaCount}x virtual/event item: "${itemName}" (from resolved_items)`);
-            for (let i = 0; i < deltaCount; i++) {
-              await stateManager.addItemToInventory(itemName, 1);
-            }
+            // Use quantity parameter instead of looping - more efficient and avoids race conditions
+            await stateManager.addItemToInventory(itemName, deltaCount);
           }
         }
       }
+      // After adding resolved_items, sync with the worker to ensure all items are processed
+      // getFullSnapshot waits for a response, forcing synchronization
+      await stateManager.getFullSnapshot();
     } else {
       // New logic (default): Skip resolved_items processing
       // For most games, resolved_items contains progressive item resolutions (e.g., "Titans Mitts")

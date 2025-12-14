@@ -6,45 +6,52 @@ This guide explains how to minimize custom JavaScript code for game exporters by
 
 Many games use helper functions in their access rules (e.g., `can_cut_half`, `has_sword`). Previously, each helper required a corresponding JavaScript implementation in the frontend. With automatic helper export, the Python analyzer extracts helper function logic and exports it as rule definitions that the frontend can evaluate directly.
 
+### Goal: Complete Removal
+
+The ultimate goal is to **completely remove** all game-specific files:
+
+1. **Custom exporter** (`exporter/games/<game>.py`) - Delete entirely, letting the system fall back to `GenericGameExportHandler`
+2. **JavaScript helpers** (`frontend/modules/shared/gameLogic/<game>/helpers.js`) - Delete entirely
+3. **Game logic module** (`frontend/modules/shared/gameLogic/<game>/`) - Delete the entire directory
+4. **Registry entry** (`gameLogicRegistry.js`) - Remove the game from the registry
+
+When all four are removed, the game uses only generic infrastructure with rules fully inlined in `rules.json`.
+
 ## How It Works
 
-1. **During rule analysis**: When the analyzer encounters a helper function call, it registers the helper name
+1. **During rule analysis**: When the analyzer encounters a helper function call, it registers the helper name and automatically detects its module path
 2. **After analysis**: The exporter analyzes each registered helper function and converts it to a rule structure
 3. **In rules.json**: Helper definitions are stored in the `helpers` section, keyed by player ID
 4. **At runtime**: The frontend rule engine looks up helper definitions before falling back to JavaScript
 
-## Configuring a Game Exporter
+## Testing Helper Export
 
-### Step 1: Set Module Paths
+To test helper export for a specific game, generate a multiworld and check the output:
 
-In your game's exporter class, specify where to find helper functions and item name constants:
-
-```python
-class MyGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'mygame'
-
-    # Module paths containing helper functions
-    HELPER_MODULES = ['worlds.mygame.regions']
-
-    # Module paths containing item name classes (e.g., ITEMS.sword)
-    ITEM_NAME_MODULES = ['worlds.mygame.data.strings']
+```bash
+source .venv/bin/activate
+python Generate.py --weights_file_path "Templates/shapez.yaml" --multi 1 --seed 1
 ```
 
-### Step 2: Enable Automatic Export
+Replace `shapez.yaml` with the template file for your game. The generated `rules.json` will contain the exported helper definitions.
+
+## Configuring a Game Exporter
+
+### Step 1: Enable Automatic Export
 
 Set `AUTO_EXPORT_DISCOVERED_HELPERS = True` to export discovered helpers:
 
 ```python
 class MyGameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'mygame'
-    HELPER_MODULES = ['worlds.mygame.regions']
-    ITEM_NAME_MODULES = ['worlds.mygame.data.strings']
 
-    # Enable automatic helper export
+    # Enable automatic helper export (defaults to False)
     AUTO_EXPORT_DISCOVERED_HELPERS = True
 ```
 
-### Step 3: Blacklist Complex Helpers
+Module paths (`HELPER_MODULES` and `ITEM_NAME_MODULES`) are automatically detected during rule analysis. When the analyzer encounters a helper function call, it extracts the module path from the function object. You only need to specify these manually if helpers are defined in modules not referenced during normal rule analysis.
+
+### Step 2: Blacklist Complex Helpers
 
 Some helpers are too complex to analyze (loops, closures, dynamic logic). Add them to the blacklist:
 
@@ -58,7 +65,7 @@ HELPERS_TO_EXPORT_BLACKLIST = {
 
 These helpers will remain as helper calls in the rules, requiring JavaScript implementations.
 
-### Step 4: Export Required Settings (If Needed)
+### Step 3: Export Required Settings (If Needed)
 
 If a helper uses settings/options that aren't already exported, override `get_settings_data`:
 
@@ -86,8 +93,15 @@ Helpers that work well:
 Helpers that need blacklisting:
 - **Loops**: `for item in items: if state.has(item)...`
 - **Complex math**: Float calculations, counters with non-trivial logic
-- **Closure variables**: Helpers that capture variables from their call site
 - **Dynamic data**: Logic that depends on runtime state beyond items/settings
+
+### Closure Functions
+
+Closure functions (functions defined inside other functions that capture variables from their scope) are automatically handled:
+
+- **Parameterless closures** (e.g., `def basement_key_rule(state): ...` inside another function): These are analyzed during rule analysis with their captured variables already resolved, and the result is cached for export. The exported definition is "fully resolved" with concrete values.
+
+- **Closures with parameters**: These cannot be cached because different call sites may pass different arguments. They must either be defined at module level (so they can be re-analyzed) or fall back to JavaScript implementations.
 
 ## Frontend Requirements
 
@@ -96,6 +110,38 @@ The frontend infrastructure is already set up. When you enable helper export:
 1. Helper definitions are stored in `rules.json` under `helpers[playerId][helperName]`
 2. The rule engine checks for definitions before calling JavaScript
 3. Settings are available for resolving `name` nodes in helper definitions
+
+### Generic `has` and `count` Functions
+
+The generic `has` and `count` functions in `frontend/modules/shared/gameLogic/generic/genericLogic.js` combine patterns from multiple game implementations to work universally:
+
+```javascript
+has(snapshot, staticData, itemName) {
+  // 1. Check flags (events, checked locations, etc.)
+  if (snapshot?.flags?.includes(itemName)) return true;
+
+  // 2. Check events
+  if (snapshot?.events?.includes(itemName)) return true;
+
+  // 3. Check inventory
+  if (snapshot?.inventory?.[itemName] > 0) return true;
+
+  // 4. Check progression_mapping for progressive items
+  // (e.g., "Fighter Sword" resolves from "Progressive Sword" at level 1)
+  // ...
+}
+```
+
+**Patterns combined from different games:**
+
+| Pattern | Source Games | Purpose |
+|---------|--------------|---------|
+| Check `flags` array | AHIT, KDL3, Pokemon Emerald, SM, Yugioh06 | Event items stored as flags |
+| Check `events` array | AHIT, KDL3, Pokemon Emerald, SM, Yugioh06 | Game events/triggers |
+| Check `inventory` | All games | Standard item counts |
+| Check `progression_mapping` | ALTTP | Progressive items (e.g., Progressive Sword → Fighter Sword) |
+
+This unified implementation means most games can use `genericLogic.helperFunctions` without needing custom `has`/`count` implementations. Games with truly unique requirements can still provide custom implementations in their game logic module.
 
 ### Removing JavaScript Helpers
 
@@ -119,14 +165,116 @@ Example of what to keep vs remove for shapez:
 - `has_logic_list_building` - Blacklisted (uses closures)
 - `can_cut_half`, `can_stack`, etc. - Called by `has_logic_list_building`
 
-## Testing
+## Testing Procedure
 
-After enabling helper export:
+Follow this iterative procedure when enabling helper export for a game:
 
-1. Regenerate the game's preset files
-2. Run the spoiler test: `npm test --mode=test-spoilers --game=mygame --seed=1`
-3. Check for mismatches between Python and frontend evaluation
-4. If helpers fail, add them to the blacklist and keep their JavaScript
+### Step 1: Establish Baseline (Before Changes)
+
+First, confirm tests pass with the existing implementation:
+
+```bash
+# Generate multiworld with current code
+source .venv/bin/activate
+python Generate.py --weights_file_path "Templates/GameName.yaml" --multi 1 --seed 1
+
+# Run spoiler test to confirm baseline passes
+npm test -- --mode=test-spoilers --game=gamename --seed=1
+```
+
+If the baseline test fails, fix those issues before proceeding.
+
+### Step 2: Make Experimental Changes
+
+Enable helper export in the game's exporter:
+
+```python
+AUTO_EXPORT_DISCOVERED_HELPERS = True
+```
+
+### Step 3: Test Changes
+
+Regenerate and run tests:
+
+```bash
+# Regenerate with helper export enabled
+python Generate.py --weights_file_path "Templates/GameName.yaml" --multi 1 --seed 1
+
+# Run spoiler test
+npm test -- --mode=test-spoilers --game=gamename --seed=1
+```
+
+### Step 4: Iterate
+
+If tests fail:
+1. Check which helpers caused mismatches
+2. Add problematic helpers to `HELPERS_TO_EXPORT_BLACKLIST`
+3. Re-run tests
+4. Repeat until tests pass
+
+### Step 4b: Add Support for New Rule Types (Alternative)
+
+If progress is stalled because blacklisting would require excluding too many helpers (defeating the purpose of automatic export), consider adding support for the missing rule type instead. This is a one-time infrastructure improvement that benefits all games.
+
+**Identifying the missing rule type:**
+1. Run the spoiler test and check browser console for: `[evaluateRule] Unknown rule type: <type>`
+2. Or examine the generated `rules.json` to find rule structures with unfamiliar `type` values
+3. Compare helper definitions in `rules.json` to the original Python code to understand what pattern isn't being handled
+
+**Files to modify (in order):**
+
+| File | Purpose |
+|------|---------|
+| `exporter/analyzer/ast_visitors.py` | Convert Python AST pattern to rule JSON |
+| `frontend/modules/shared/ruleEngine.js` | Evaluate the rule type at runtime |
+
+**Example: Adding `group_count` support (from commit c859b4cfe)**
+
+1. **Analyzer** - Handle `state.count_group(group_name, player)`:
+```python
+elif method == 'count_group' and len(filtered_args) >= 1:
+    group_arg = filtered_args[0]
+    if isinstance(group_arg, dict) and group_arg.get('type') == 'constant':
+        group_value = group_arg.get('value')
+    elif isinstance(group_arg, str):
+        group_value = group_arg
+    else:
+        group_value = group_arg
+    result = {'type': 'group_count', 'group': group_value}
+```
+
+2. **Frontend Rule Engine** - Evaluate the new type:
+```javascript
+case 'group_count': {
+  const groupName = evaluateRule(rule.group, context, depth + 1);
+  if (groupName === undefined) {
+    result = undefined;
+  } else if (typeof context.countGroup === 'function') {
+    result = context.countGroup(groupName) ?? 0;
+  } else {
+    result = undefined;
+  }
+  break;
+}
+```
+
+**Recent examples of rule type additions:**
+- `c859b4cfe` - Add `group_count` for `state.count_group()` method
+- `d14f7433d` - Add `block`, `assign`, `return`, `for_range` for imperative code
+- `84a156ebb` - Add Entrance type support to `can_reach` method
+
+After adding rule type support, return to Step 3 and re-test.
+
+### Step 5: Remove JavaScript Helpers
+
+Only after tests pass:
+1. Remove or simplify the game's `helpers.js` file
+2. Keep only blacklisted helpers and their dependencies
+3. Run tests again to confirm
+
+### Step 6: Commit
+
+Only commit when all tests pass. Never commit failing changes.
 
 ## Example: Complete Configuration
 
@@ -138,12 +286,6 @@ from .generic import GenericGameExportHandler
 class MyGameExportHandler(GenericGameExportHandler):
     """Export handler for My Game."""
     GAME_NAME = 'mygame'
-
-    # Where to find helper functions
-    HELPER_MODULES = ['worlds.mygame.regions', 'worlds.mygame.rules']
-
-    # Where to find item name constants (ITEMS.sword, etc.)
-    ITEM_NAME_MODULES = ['worlds.mygame.data.items']
 
     # Enable automatic export of discovered helpers
     AUTO_EXPORT_DISCOVERED_HELPERS = True
@@ -165,12 +307,65 @@ class MyGameExportHandler(GenericGameExportHandler):
         return settings
 ```
 
+Note: `HELPER_MODULES` and `ITEM_NAME_MODULES` are omitted because they are automatically detected. Only specify them if helpers are in modules not referenced during rule analysis.
+
+## Default Settings
+
+The base class (`BaseGameExportHandler`) defines these defaults:
+
+```python
+# Module paths - empty by default (auto-detected during analysis)
+HELPER_MODULES: List[str] = []
+ITEM_NAME_MODULES: List[str] = []
+
+# Auto-export configuration
+AUTO_EXPORT_DISCOVERED_HELPERS: bool = False  # Must enable explicitly
+HELPERS_TO_EXPORT_WHITELIST: Set[str] = set()  # Manual whitelist (always exported)
+HELPERS_TO_EXPORT_BLACKLIST: Set[str] = set()  # Manual blacklist (never exported)
+
+# Helper preservation
+HELPERS_TO_PRESERVE: Set[str] = set()        # Preserve as helper calls
+AUTO_PRESERVE_LARGE_HELPERS: bool = True     # Auto-preserve large helpers (default: True)
+HELPER_INLINE_THRESHOLD: int = 0             # Node count threshold
+
+# Computed settings - game-specific option mappings
+COMPUTED_SETTINGS: Dict[str, Callable] = {}
+```
+
+## Success Stories
+
+The following games have achieved **complete removal** of all game-specific files (custom exporter, JavaScript helpers, game logic directory, and registry entry):
+
+- **A Link to the Past** - Complex helper functions (can_buy, can_defeat_boss, etc.) exported with imperative block support
+- **Adventure** - Classic Atari game rules exported
+- **Bumper Stickers** - Puzzle game logic exported
+- **ChecksFinder** - All rules exported
+- **DOOM 1993** - FPS game logic exported
+- **DOOM II** - FPS game logic exported
+- **Donkey Kong Country 3** - Platformer rules exported
+- **Faxanadu** - Action RPG rules exported
+- **Metamath** - Mathematical puzzle logic exported
+- **shapez** - Complex shape-building logic now fully exported
+- **Shivers** - Ixupi capture helpers inlined as has_all patterns
+- **Sonic Adventure 2 Battle** - Platform game rules exported
+- **Super Mario World** - Platformer rules exported
+- **Timespinner** - Time-manipulation game rules exported
+- **Undertale** - RPG game rules exported
+
+These games use only the generic infrastructure. No custom Python exporter, no JavaScript helper files, no game logic directory, and no entry in the game logic registry.
+
+**Benefits achieved:**
+- Removed maintenance burden of keeping Python and JavaScript in sync
+- Automatic discovery of helpers eliminates manual module configuration
+- Frontend rule evaluation is consistent with Python logic
+- New helpers are automatically exported without code changes
+
 ## Troubleshooting
 
 ### "Helper function X NOT FOUND in snapshotInterface"
 The helper definition lookup failed. Check:
 1. Is `AUTO_EXPORT_DISCOVERED_HELPERS = True`?
-2. Is the helper in `HELPER_MODULES`?
+2. Is the helper called during rule analysis? (auto-detection requires the helper to be referenced)
 3. Is it blacklisted? (should be if complex)
 4. Is `helpers` in `getStaticGameData()` in statePersistence.js?
 

@@ -13,6 +13,7 @@ from typing import Dict, Any, Optional, Callable
 from .expression_resolver import ExpressionResolver
 from .binary_ops import BinaryOpProcessor
 from .ast_visitors import ASTVisitorMixin
+from exporter.constants import MAX_ANALYZER_OPERATIONS
 
 
 class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
@@ -32,7 +33,8 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
     """
 
     def __init__(self, closure_vars=None, seen_funcs=None,
-                 game_handler=None, rule_func=None, player_context=None):
+                 game_handler=None, rule_func=None, player_context=None,
+                 preserve_parameter_names=False):
         """
         Initialize the RuleAnalyzer.
 
@@ -42,20 +44,36 @@ class RuleAnalyzer(ASTVisitorMixin, ast.NodeVisitor):
             game_handler: Game-specific handler for name replacements and expansions
             rule_func: The rule function being analyzed (for accessing defaults/globals)
             player_context: The player number context for this analysis
+            preserve_parameter_names: If True, keep function parameters as name references
+                                     instead of resolving to default values
         """
         self.closure_vars = closure_vars or {}
         self.seen_funcs = seen_funcs or {}
         self.game_handler = game_handler
         self.rule_func = rule_func
         self.player_context = player_context
+        self.preserve_parameter_names = preserve_parameter_names
         self.debug_log = []
         self.error_log = []
+
+        # Operation counter to detect infinite loops
+        self.operation_count = 0
 
         # Initialize helper components
         self.expression_resolver = ExpressionResolver(
             self.closure_vars, self.rule_func, self.player_context
         )
         self.binary_op_processor = BinaryOpProcessor(self.expression_resolver, self.game_handler)
+
+    def visit(self, node):
+        """Override visit to add operation counting and loop detection."""
+        self.operation_count += 1
+        if self.operation_count > MAX_ANALYZER_OPERATIONS:
+            raise RuntimeError(
+                f"Rule analysis exceeded maximum operations ({MAX_ANALYZER_OPERATIONS}). "
+                f"This likely indicates an infinite loop in rule expansion."
+            )
+        return super().visit(node)
 
     def log_debug(self, message: str):
         """

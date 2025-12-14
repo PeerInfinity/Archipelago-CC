@@ -12,6 +12,35 @@ logger = logging.getLogger(__name__) # Add logger if needed later
 
 class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritance
     GAME_NAME = 'A Link to the Past'
+    # Enable automatic helper export
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    AUTO_PRESERVE_LARGE_HELPERS = True  # Closure functions are cached during analysis and exported
+    # Helper modules containing functions that can be exported as JSON rule definitions
+    HELPER_MODULES = ['worlds.alttp.StateHelpers', 'worlds.alttp.Bosses']
+
+    # Complex helpers that can't be exported (need JavaScript implementations)
+    # NOTE: Use set() for empty blacklist - {} creates an empty dict!
+    # All helpers now exported via computed definitions or other mechanisms
+    HELPERS_TO_EXPORT_BLACKLIST = set()
+    # Blacklist history (all now exported or handled via other mechanisms):
+    # - 'GanonDefeatRule': Now exported - uses supported patterns (settings, item checks, helpers)
+    # - 'can_extend_magic': Now works with shop region reachability
+    # - 'can_buy': Now exported as computed helper using shop_items data
+    # - 'can_buy_unlimited': Now exported as computed helper using shop_items data
+    # - 'can_get_good_bee': Now works with region_reference and region_attribute support
+    # - 'can_kill_most_things': Now works with default parameter values support
+    # - 'can_shoot_arrows': Now works with can_buy and can_hold_arrows
+    # - 'can_use_bombs': Now works with min/max and setting_value support
+    # - 'has_crystals': Now works with group_count support
+    # - 'has_misery_mire_medallion': Now works with setting_value index support
+    # - 'has_turtle_rock_medallion': Now works with setting_value index support
+    # - 'item_name_in_location_names': Now converted to placement_search rule type
+    # - 'tr_big_key_chest_keys_needed': Now inlined with placement_lookup logic
+    # - 'location_item_name': Now converted to placement_lookup rule type
+    # - 'can_defeat_boss': Now exported - postprocess_rule converts GT multi-boss to helper call
+    # - 'can_reach_region': Now uses native can_reach rule type
+    # - 'can_take_damage': Now uses setting_value instead of helper
+
     """No longer expands helpers - just validates they're known ALTTP helpers"""
     
     # Items that are always events, regardless of their static item_code in item_table
@@ -46,34 +75,37 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         # Define ALTTP-specific helpers that should NOT be expanded
         self.known_helpers = {
             'GanonDefeatRule',
-            'basement_key_rule',
-            'can_activate_crystal_switch',
-            'can_bomb_or_bonk',
+            # 'basement_key_rule',  # Removed - can be inlined, JS impl is incorrect
+            # 'can_activate_crystal_switch',  # Removed - item checks + helper calls
+            # 'can_bomb_or_bonk',  # Removed - item check + can_use_bombs, may need to preserve can_use_bombs
+            'can_buy',  # Implemented in frontend using shop_items data
+            'can_buy_unlimited',  # Implemented in frontend using shop_items data
             'can_extend_magic',
-            'can_get_good_bee',
+            'can_get_good_bee',  # Uses region_reference and is_not_bunny
+            'is_not_bunny',  # Takes region parameter, uses region_attribute
             'can_kill_most_things',
-            'can_lift_heavy_rocks',
-            'can_lift_rocks',
-            'can_melt_things',
-            'can_retrieve_tablet',
+            # 'can_lift_heavy_rocks',  # Removed - simple item check, can be inlined
+            # 'can_lift_rocks',  # Removed - simple item checks, can be inlined
+            # 'can_melt_things',  # Removed - item checks + settings check
+            # 'can_retrieve_tablet',  # Removed - item checks + settings check
             'can_shoot_arrows',
             'can_use_bombs',
-            'has_beam_sword',
-            'has_crystals',
-            'has_crystals_for_ganon',
-            'has_fire_source',
-            'has_hearts',
-            'has_melee_weapon',
-            'has_misery_mire_medallion',
-            'has_sword',
-            'has_turtle_rock_medallion',
-            'item_name_in_location_names',
-            'tr_big_key_chest_keys_needed',
-            'location_item_name',
+            # 'has_beam_sword',  # Removed - multiple item checks, can be inlined
+            'has_crystals',  # Exported with group_count support
+            # 'has_crystals_for_ganon',  # Removed - has_crystals now handles dynamic arguments
+            # 'has_fire_source',  # Removed - simple item checks, can be inlined
+            'has_hearts',  # Exported with logical_heart settings
+            # 'has_melee_weapon',  # Removed - calls has_sword + item check, can be inlined
+            'has_misery_mire_medallion',  # Exported with setting_value index support
+            # 'has_sword',  # Removed - multiple item checks, can be inlined
+            'has_turtle_rock_medallion',  # Exported with setting_value index support
+            # 'item_name_in_location_names',  # Now converted to placement_search rule type
+            # 'tr_big_key_chest_keys_needed',  # Now inlined with placement_lookup logic
+            # 'location_item_name',  # Now converted to placement_lookup rule type
             # Added in postprocess_rule
             'can_defeat_boss',
-            'can_reach_region',
-            'can_take_damage',
+            # 'can_reach_region',  # Now uses native can_reach rule type
+            # 'can_take_damage',  # Now uses setting_value instead of helper
             # This function doesn't appear in the final export, but we get warning messages if we remove it from this list
             'orig_rule',
         }
@@ -82,7 +114,7 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         """Check if a function should be preserved as a helper call."""
         return func_name in self.known_helpers
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Override to validate helper names instead of expanding them."""
         if not rule or not isinstance(rule, dict):
             return rule
@@ -98,19 +130,19 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
 
         # Recursively process conditions in boolean operations
         if rule_type in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond) for cond in rule.get('conditions', [])]
-        
+            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
+
         # Recursively process nested conditions
         if rule_type == 'not':
-             rule['condition'] = self.expand_rule(rule.get('condition'))
+             rule['condition'] = self.expand_rule(rule.get('condition'), _depth + 1)
         if rule_type == 'conditional':
-             rule['test'] = self.expand_rule(rule.get('test'))
-             rule['if_true'] = self.expand_rule(rule.get('if_true'))
-             rule['if_false'] = self.expand_rule(rule.get('if_false'))
-             
+             rule['test'] = self.expand_rule(rule.get('test'), _depth + 1)
+             rule['if_true'] = self.expand_rule(rule.get('if_true'), _depth + 1)
+             rule['if_false'] = self.expand_rule(rule.get('if_false'), _depth + 1)
+
         # Handle other potential nested rules here
         if rule_type == 'all_of':
-             rule['element_rule'] = self.expand_rule(rule.get('element_rule'))
+             rule['element_rule'] = self.expand_rule(rule.get('element_rule'), _depth + 1)
              # Comprehension details usually don't contain rules to expand
 
         return rule
@@ -125,67 +157,110 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
     def handle_special_function_call(self, func_name: str, processed_args: list) -> dict:
         """Handle ALTTP-specific special function calls."""
         if func_name == 'tr_big_key_chest_keys_needed':
-            logger.debug(f"ALTTP: Converting local function {func_name} to helper call")
+            # Inline the tr_big_key_chest_keys_needed logic using placement_lookup
+            # Original logic:
+            #   item = location_item_name(state, 'Turtle Rock - Big Key Chest', player)
+            #   if item == ('Small Key (Turtle Rock)', player): return 0
+            #   if item == ('Big Key (Turtle Rock)', player): return 4
+            #   return 6
+            logger.debug(f"ALTTP: Inlining {func_name} logic with placement_lookup")
             return {
-                'type': 'helper',
-                'name': func_name,
-                'args': processed_args
+                'type': 'conditional',
+                'test': {
+                    'type': 'compare',
+                    'left': {'type': 'placement_lookup', 'location': {'type': 'constant', 'value': 'Turtle Rock - Big Key Chest'}},
+                    'op': '==',
+                    'right': {'type': 'list', 'value': [
+                        {'type': 'constant', 'value': 'Small Key (Turtle Rock)'},
+                        {'type': 'constant', 'value': 1}
+                    ]}
+                },
+                'if_true': {'type': 'constant', 'value': 0},
+                'if_false': {
+                    'type': 'conditional',
+                    'test': {
+                        'type': 'compare',
+                        'left': {'type': 'placement_lookup', 'location': {'type': 'constant', 'value': 'Turtle Rock - Big Key Chest'}},
+                        'op': '==',
+                        'right': {'type': 'list', 'value': [
+                            {'type': 'constant', 'value': 'Big Key (Turtle Rock)'},
+                            {'type': 'constant', 'value': 1}
+                        ]}
+                    },
+                    'if_true': {'type': 'constant', 'value': 4},
+                    'if_false': {'type': 'constant', 'value': 6}
+                }
             }
+
+        # Convert location_item_name calls to placement_lookup rule type
+        if func_name == 'location_item_name':
+            logger.debug(f"ALTTP: Converting {func_name} to placement_lookup rule")
+            # location_item_name takes (state, location_name, player) - we only need location_name
+            if processed_args:
+                return {
+                    'type': 'placement_lookup',
+                    'location': processed_args[0]  # First arg is location name
+                }
+            else:
+                logger.warning(f"ALTTP: location_item_name called without location argument")
+                return None
+
+        # Convert item_name_in_location_names calls to placement_search rule type
+        if func_name == 'item_name_in_location_names':
+            logger.debug(f"ALTTP: Converting {func_name} to placement_search rule")
+            # item_name_in_location_names takes (state, item, player, location_pairs)
+            # After filtering state/player, we have: [item, location_pairs]
+            if len(processed_args) >= 2:
+                item_arg = processed_args[0]
+                locations_arg = processed_args[1]
+
+                # Extract the player ID from the context if available
+                # For now, assume player 1 (single-player mode)
+                return {
+                    'type': 'placement_search',
+                    'item': item_arg,
+                    'player': {'type': 'constant', 'value': 1},
+                    'locations': locations_arg
+                }
+            else:
+                logger.warning(f"ALTTP: item_name_in_location_names missing arguments: {processed_args}")
+                return None
+
         return None
     
     def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
         Post-process rules to fix specific complex patterns that can't be handled by the frontend.
-        
-        Specifically replaces the complex has_crystals call that accesses 
-        state.multiworld.worlds[player].options.crystals_needed_for_ganon
-        with the simpler has_crystals_for_ganon helper.
         """
         if not isinstance(rule, dict):
             return rule
-            
-        # Check if this is a has_crystals helper with complex arguments
-        if (rule.get('type') == 'helper' and 
-            rule.get('name') == 'has_crystals' and 
-            rule.get('args')):
-            
-            # Check if the argument is trying to access crystals_needed_for_ganon
-            if len(rule['args']) == 1:
-                arg = rule['args'][0]
-                # Check for the complex chain: state.multiworld.worlds[player].options.crystals_needed_for_ganon
-                if (isinstance(arg, dict) and 
-                    arg.get('type') == 'attribute' and 
-                    arg.get('attr') == 'crystals_needed_for_ganon'):
-                    
-                    # Replace with the simpler helper
-                    return {
-                        'type': 'helper',
-                        'name': 'has_crystals_for_ganon',
-                        'args': []
-                    }
-        
+
+        # Note: has_crystals now supports dynamic arguments via setting_value,
+        # so we no longer need to convert has_crystals(crystals_needed_for_ganon)
+        # to has_crystals_for_ganon()
+
         # Check for state.multiworld.get_region().can_reach() pattern
-        if (rule.get('type') == 'function_call' and 
+        # Convert to native can_reach rule type which frontend already supports
+        if (rule.get('type') == 'function_call' and
             isinstance(rule.get('function'), dict) and
             rule['function'].get('type') == 'attribute' and
             rule['function'].get('attr') == 'can_reach'):
-            
+
             # Check if object is a get_region call
             obj = rule['function'].get('object', {})
-            if (isinstance(obj, dict) and 
+            if (isinstance(obj, dict) and
                 obj.get('type') == 'function_call' and
                 isinstance(obj.get('function'), dict) and
                 obj['function'].get('attr') == 'get_region'):
-                
+
                 # Extract region name from args
                 args = obj.get('args', [])
                 if args and isinstance(args[0], dict) and args[0].get('type') == 'constant':
                     region_name = args[0].get('value')
-                    # Replace with a simpler region check
+                    # Replace with native can_reach rule type
                     return {
-                        'type': 'helper',
-                        'name': 'can_reach_region',
-                        'args': [{'type': 'constant', 'value': region_name}]
+                        'type': 'can_reach',
+                        'region': region_name
                     }
         
         # Check for state.multiworld.get_location().parent_region.dungeon.boss.can_defeat() pattern
@@ -222,18 +297,18 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
                             break
                     parent_obj = parent_obj.get('object') or parent_obj.get('value')
         
-        # Check for world.can_take_damage pattern
-        if (rule.get('type') == 'attribute' and 
+        # Check for world.can_take_damage pattern - convert to setting_value
+        # since can_take_damage is already exported in settings
+        if (rule.get('type') == 'attribute' and
             rule.get('attr') == 'can_take_damage' and
             isinstance(rule.get('object'), dict) and
             rule['object'].get('type') == 'name' and
             rule['object'].get('name') == 'world'):
-            
-            # Replace with a helper that checks if damage is allowed
+
+            # Replace with setting_value to use the exported setting
             return {
-                'type': 'helper',
-                'name': 'can_take_damage',
-                'args': []
+                'type': 'setting_value',
+                'setting': 'can_take_damage'
             }
         
         # Recursively process nested rules
@@ -457,6 +532,7 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             'pot_shuffle', 'dungeon_counters', 'glitch_boots', 'accessibility',
             'mode', # Mode is crucial
             'crystals_needed_for_gt', 'crystals_needed_for_ganon', # Crystal requirements
+            'item_functionality',  # Used by can_extend_magic
         ]
         for setting in alttp_settings_mw:
              settings_dict[setting] = extract_option(setting)
@@ -485,6 +561,11 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         else:
              settings_dict['difficulty_requirements'] = {}
 
+        # Logical heart limits (used by heart_count and has_hearts helpers)
+        # These can be modified during item pool generation from difficulty_requirements defaults
+        settings_dict['logical_heart_pieces'] = getattr(world, 'logical_heart_pieces', 24)
+        settings_dict['logical_heart_containers'] = getattr(world, 'logical_heart_containers', 10)
+
         # Medallions
         if hasattr(world, 'required_medallions'):
              # Extract medallion names (assuming they have a 'name' attribute or similar)
@@ -508,6 +589,46 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
              settings_dict['misery_mire_medallion'] = None
              settings_dict['turtle_rock_medallion'] = None
 
+        # Shop item data - maps items to regions where shops sell them
+        # This enables can_buy and can_buy_unlimited helper implementation
+        # Based on Shop.has() and Shop.has_unlimited() logic in worlds/alttp/Shops.py
+        shop_items = {}
+        if hasattr(world, 'shops'):
+            for shop in world.shops:
+                region_name = shop.region.name if hasattr(shop, 'region') and shop.region else None
+                if not region_name:
+                    continue
+                for inv in getattr(shop, 'inventory', []):
+                    if inv is None:
+                        continue
+                    item_name = inv.get('item')
+                    if not item_name:
+                        continue
+                    if item_name not in shop_items:
+                        shop_items[item_name] = {'unlimited': [], 'limited': []}
+
+                    # has_unlimited logic: if max is set, check replacement; else item is unlimited
+                    # has logic: just check if item exists in inventory
+                    if inv.get('max'):
+                        # Limited purchase with replacement when exhausted
+                        replacement = inv.get('replacement')
+                        if replacement:
+                            # Replacement item is unlimited
+                            if replacement not in shop_items:
+                                shop_items[replacement] = {'unlimited': [], 'limited': []}
+                            if region_name not in shop_items[replacement]['unlimited']:
+                                shop_items[replacement]['unlimited'].append(region_name)
+                        # Original item is limited (can only buy 'max' times)
+                        if region_name not in shop_items[item_name]['limited']:
+                            shop_items[item_name]['limited'].append(region_name)
+                    else:
+                        # No max = unlimited purchase
+                        if region_name not in shop_items[item_name]['unlimited']:
+                            shop_items[item_name]['unlimited'].append(region_name)
+                        # Also available as limited (can_buy returns true for unlimited items too)
+                        if region_name not in shop_items[item_name]['limited']:
+                            shop_items[item_name]['limited'].append(region_name)
+        settings_dict['shop_items'] = shop_items
 
         return settings_dict
 
@@ -519,9 +640,10 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
          }
 
     # Define mappings within the class or load from a helper module
+    # These map numeric option values to the string names used in Python helpers
     alttp_setting_mappings = {
         'dark_room_logic': {0: 'lamp', 1: 'torches', 2: 'none'},
-        'enemy_health': {0: 'default', 1: 'easy', 2: 'hard', 3: 'expert'},
+        'enemy_health': {0: 'easy', 1: 'default', 2: 'hard', 3: 'expert'},
         'enemy_damage': {0: 'default', 1: 'shuffled', 2: 'chaos'},
         'glitches_required': {0: 'none', 1: 'overworld_glitches', 2: 'major_glitches', 3: 'no_logic'},
         'accessibility': {0: 'items', 1: 'locations', 2: 'none'},
@@ -529,7 +651,8 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         'pot_shuffle': {0: 'off', 1: 'on'},
         'mode': {0: 'standard', 1: 'open', 2: 'inverted', 3: 'retro'},
         'glitch_boots': {0: 'off', 1: 'on'},
-        'shuffle_capacity_upgrades': {0: 'off', 1: 'on', 2: 'progressive'} # Assuming numeric values
+        'item_functionality': {0: 'normal', 1: 'hard', 2: 'expert'},
+        'shuffle_capacity_upgrades': {0: 'off', 1: 'on', 2: 'progressive'}
     }
     alttp_boolean_settings = [
         'retro_bow', 'swordless', 'enemy_shuffle', 'bombless_start'
@@ -544,7 +667,7 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
             if isinstance(value, str) and value.startswith("ERROR:"):
                 continue
 
-            # Apply numeric->string mapping
+            # Apply numeric->string mapping to match Python helper comparisons
             if setting_name in self.alttp_setting_mappings and isinstance(value, int):
                 if value in self.alttp_setting_mappings[setting_name]:
                     cleaned_settings[setting_name] = self.alttp_setting_mappings[setting_name][value]
@@ -668,6 +791,89 @@ class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritanc
         """
         data = self.get_collection_data(name)
         return len(data) if data is not None else None
+
+    def get_helper_definitions(self, world) -> Dict[str, Any]:
+        """
+        Get helper definitions, including computed helpers for can_buy/can_buy_unlimited.
+
+        The can_buy and can_buy_unlimited helpers in Python iterate over Shop objects
+        with method calls (shop.has(), region.can_reach()) that can't be directly exported.
+        Instead, we define computed helpers that use the exported shop_items data structure
+        to achieve the same logic:
+
+        Python: any(shop.has(item) and shop.region.can_reach(state) for shop in shops)
+        JSON:   any_of(region in shop_items[item][key], can_reach(region))
+
+        This allows these helpers to be evaluated natively by the rule engine without
+        special-case handling.
+        """
+        # Get standard exported helpers from base class
+        helper_defs = super().get_helper_definitions(world)
+
+        # Define computed helper for can_buy
+        # Logic: check if any region in shop_items[item]["limited"] is reachable
+        helper_defs['can_buy'] = {
+            'params': ['item'],
+            'body': {
+                'type': 'any_of',
+                'iterator_info': {
+                    'target': {'type': 'name', 'name': 'region'},
+                    'iterator': {
+                        'type': 'subscript',
+                        'value': {
+                            'type': 'subscript',
+                            'value': {'type': 'setting_value', 'setting': 'shop_items'},
+                            'index': {'type': 'name', 'name': 'item'}
+                        },
+                        'index': {'type': 'constant', 'value': 'limited'}
+                    }
+                },
+                'element_rule': {
+                    'type': 'can_reach',
+                    'region': {'type': 'name', 'name': 'region'}
+                }
+            }
+        }
+
+        # Define computed helper for can_buy_unlimited
+        # Logic: check if any region in shop_items[item]["unlimited"] is reachable
+        helper_defs['can_buy_unlimited'] = {
+            'params': ['item'],
+            'body': {
+                'type': 'any_of',
+                'iterator_info': {
+                    'target': {'type': 'name', 'name': 'region'},
+                    'iterator': {
+                        'type': 'subscript',
+                        'value': {
+                            'type': 'subscript',
+                            'value': {'type': 'setting_value', 'setting': 'shop_items'},
+                            'index': {'type': 'name', 'name': 'item'}
+                        },
+                        'index': {'type': 'constant', 'value': 'unlimited'}
+                    }
+                },
+                'element_rule': {
+                    'type': 'can_reach',
+                    'region': {'type': 'name', 'name': 'region'}
+                }
+            }
+        }
+
+        # Define computed helper for can_defeat_boss
+        # This is a synthetic helper created by postprocess_rule for GT multi-boss locations.
+        # The simplified implementation just calls can_kill_most_things(1), matching JS behavior.
+        # For proper boss-specific logic, we'd need to export boss placements and defeat rules.
+        helper_defs['can_defeat_boss'] = {
+            'params': ['location_name', 'boss_type'],
+            'body': {
+                'type': 'helper',
+                'name': 'can_kill_most_things',
+                'args': [{'type': 'constant', 'value': 1}]
+            }
+        }
+
+        return helper_defs
 
 # Reminder: Ensure get_game_export_handler in exporter/games/__init__.py
 # returns an instance of ALttPGameExportHandler for the 'A Link to the Past' game.

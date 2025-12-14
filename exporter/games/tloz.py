@@ -10,6 +10,10 @@ class TLoZGameExportHandler(GenericGameExportHandler):
     """Export handler for The Legend of Zelda."""
 
     GAME_NAME = 'The Legend of Zelda'
+    # Enable automatic helper export
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -21,7 +25,7 @@ class TLoZGameExportHandler(GenericGameExportHandler):
         self._current_location_name = location_name
         logger.debug(f"Set context to location: {location_name}")
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Expand rules with special handling for f_string rules and can_reach patterns."""
         if not rule or not isinstance(rule, dict):
             return rule
@@ -61,7 +65,7 @@ class TLoZGameExportHandler(GenericGameExportHandler):
 
         # Recursively process nested rules
         if rule.get('type') in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond) for cond in rule.get('conditions', [])]
+            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
             # Simplify 'and' conditions by removing True constants
             if rule.get('type') == 'and':
                 rule['conditions'] = [c for c in rule['conditions']
@@ -74,7 +78,7 @@ class TLoZGameExportHandler(GenericGameExportHandler):
                     return {'type': 'constant', 'value': True}
         elif rule.get('type') == 'not':
             if 'condition' in rule:
-                rule['condition'] = self.expand_rule(rule['condition'])
+                rule['condition'] = self.expand_rule(rule['condition'], _depth + 1)
         elif rule.get('type') == 'item_check':
             # If the item name is an f_string, resolve it
             if isinstance(rule.get('item'), dict) and rule['item'].get('type') == 'f_string':
@@ -83,14 +87,14 @@ class TLoZGameExportHandler(GenericGameExportHandler):
                     rule['item'] = resolved
         elif rule.get('type') == 'conditional':
             if 'test' in rule:
-                rule['test'] = self.expand_rule(rule['test'])
+                rule['test'] = self.expand_rule(rule['test'], _depth + 1)
             if 'if_true' in rule:
-                rule['if_true'] = self.expand_rule(rule['if_true'])
+                rule['if_true'] = self.expand_rule(rule['if_true'], _depth + 1)
             if 'if_false' in rule:
-                rule['if_false'] = self.expand_rule(rule['if_false'])
+                rule['if_false'] = self.expand_rule(rule['if_false'], _depth + 1)
 
         # Call parent expand_rule for additional processing
-        return super().expand_rule(rule)
+        return super().expand_rule(rule, _depth)
 
     def _resolve_f_string(self, f_string_rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """

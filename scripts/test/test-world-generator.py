@@ -4,9 +4,9 @@ World Generator Round-Trip Test Script.
 
 This script tests the world generator by:
 1. Generating seeds for original worlds
-2. Converting the rules.json to _test worlds using the world generator
-3. Running spoiler tests on both original and _test worlds
-4. Cross-validating by testing _test worlds with original sphere logs
+2. Converting the rules.json to _worldgen worlds using the world generator
+3. Running spoiler tests on both original and _worldgen worlds
+4. Cross-validating by testing _worldgen worlds with original sphere logs
 
 Usage:
     python scripts/test/test-world-generator.py [options]
@@ -234,7 +234,10 @@ def run_generation(
     ]
 
     start_time = time.time()
-    return_code, stdout, stderr = run_command(cmd, cwd=project_root, timeout=600)
+    # Use SKIP_REQUIREMENTS_UPDATE to prevent interactive prompts for missing dependencies
+    env = os.environ.copy()
+    env['SKIP_REQUIREMENTS_UPDATE'] = '1'
+    return_code, stdout, stderr = run_command(cmd, cwd=project_root, timeout=600, env=env)
     result['processing_time_seconds'] = round(time.time() - start_time, 2)
 
     if return_code != 0:
@@ -274,7 +277,7 @@ def run_world_generator(
     project_root: str,
     canonical_seed1: bool = False
 ) -> Dict:
-    """Run the world generator to create a _test world."""
+    """Run the world generator to create a _worldgen world."""
     result = {
         'success': False,
         'world_dir': output_dir,
@@ -444,8 +447,8 @@ def process_template(
         print("  Skipped (--skip-spoiler-test)")
         template_result['original']['spoiler_test']['note'] = 'Skipped'
 
-    # Step 3: Generate _test world from rules.json
-    print(f"\n[3/6] Generating _test world from rules.json...")
+    # Step 3: Generate _worldgen world from rules.json
+    print(f"\n[3/6] Generating _worldgen world from rules.json...")
     rules_path = template_result['original']['generation'].get('rules_path')
 
     if not rules_path or not os.path.exists(rules_path):
@@ -509,11 +512,11 @@ def run_test_world_tests(
             continue
 
         print(f"\n{'='*60}")
-        print(f"Testing _test world: {test_game_name}")
+        print(f"Testing _worldgen world: {test_game_name}")
         print('='*60)
 
-        # Step 4: Generate seed for _test world
-        print(f"\n[4/6] Generating seed for _test world...")
+        # Step 4: Generate seed for _worldgen world
+        print(f"\n[4/6] Generating seed for _worldgen world...")
         gen_result = run_generation(test_template_name, project_root, seed)
         result['test_world']['seed_generation'] = gen_result
 
@@ -524,8 +527,8 @@ def run_test_world_tests(
 
         print(f"  OK (seed_id: {gen_result['seed_id']})")
 
-        # Step 5: Run spoiler test on _test world
-        print(f"\n[5/6] Running spoiler test on _test world...")
+        # Step 5: Run spoiler test on _worldgen world
+        print(f"\n[5/6] Running spoiler test on _worldgen world...")
         if not skip_spoiler_test:
             spoiler_result = run_spoiler_test(test_template_name, project_root, seed)
             result['test_world']['spoiler_test'] = spoiler_result
@@ -569,10 +572,10 @@ def run_test_world_tests(
                     result['test_world']['cross_validation'] = cross_result
 
                     if cross_result['pass_fail'] == 'pass':
-                        print(f"  PASS - Original sphere log validates against _test world")
+                        print(f"  PASS - Original sphere log validates against _worldgen world")
                     else:
                         print(f"  FAIL - Original sphere log does not validate")
-                        result['errors']['testing'].append("Cross-validation failed: original sphere log incompatible with _test world")
+                        result['errors']['testing'].append("Cross-validation failed: original sphere log incompatible with _worldgen world")
 
                     # Restore test sphere log
                     if os.path.exists(test_sphere_log_backup):
@@ -676,7 +679,7 @@ def main():
     )
     parser.add_argument(
         '--skip-cleanup', action='store_true',
-        help='Skip cleanup of _test worlds after testing'
+        help='Skip cleanup of _worldgen worlds after testing'
     )
     parser.add_argument(
         '--skip-generation', action='store_true',
@@ -745,7 +748,7 @@ def main():
         print("PHASE: Setup - Cleaning existing test artifacts")
         print("="*60)
 
-        print("\nDeleting _test worlds...")
+        print("\nDeleting _worldgen worlds...")
         cleanup_test_worlds(project_root)
 
         print("\nDeleting _test templates...")
@@ -810,10 +813,10 @@ def main():
             else:
                 results['metadata']['failed_test_worlds'] += 1
 
-    # Phase: Regenerate templates (to include _test worlds)
+    # Phase: Regenerate templates (to include _worldgen worlds)
     if args.phase in ['regenerate-templates', 'all']:
         print("\n" + "="*60)
-        print("PHASE: Regenerating templates to include _test worlds")
+        print("PHASE: Regenerating templates to include _worldgen worlds")
         print("="*60)
 
         if not generate_yaml_templates(project_root):
@@ -922,7 +925,7 @@ def main():
                     template_result['original']['spoiler_test']['note'] = 'Skipped'
 
                 # Generate seed for test world
-                print(f"\n[2/4] Generating seed for _test world...")
+                print(f"\n[2/4] Generating seed for _worldgen world...")
                 gen_result = run_generation(test_template, project_root, args.seed)
                 template_result['test_world']['seed_generation'] = gen_result
 
@@ -930,7 +933,7 @@ def main():
                     print(f"  OK (seed_id: {gen_result['seed_id']})")
 
                     # Run spoiler test on test world
-                    print(f"\n[3/4] Running spoiler test on _test world...")
+                    print(f"\n[3/4] Running spoiler test on _worldgen world...")
                     if not args.skip_spoiler_test:
                         spoiler_result = run_spoiler_test(test_template, project_root, args.seed)
                         template_result['test_world']['spoiler_test'] = spoiler_result
@@ -964,7 +967,7 @@ def main():
                                 template_result['test_world']['cross_validation'] = cross_result
 
                                 if cross_result['pass_fail'] == 'pass':
-                                    print(f"  PASS - Original sphere log validates against _test world")
+                                    print(f"  PASS - Original sphere log validates against _worldgen world")
                                 else:
                                     print(f"  FAIL - Original sphere log does not validate")
                                     template_result['errors']['testing'].append("Cross-validation failed")
@@ -1000,7 +1003,7 @@ def main():
                         result['original']['spoiler_test'] = spoiler_result
                         print(f"  Result: {spoiler_result['pass_fail']}")
 
-            # Run tests on _test worlds
+            # Run tests on _worldgen worlds
             run_test_world_tests(
                 results['results'], project_root, args.seed,
                 skip_spoiler_test=args.skip_spoiler_test
@@ -1025,7 +1028,7 @@ def main():
         print("PHASE: Cleanup")
         print("="*60)
 
-        print("\nDeleting _test worlds...")
+        print("\nDeleting _worldgen worlds...")
         cleanup_test_worlds(project_root)
 
         print("\nDeleting _test templates...")

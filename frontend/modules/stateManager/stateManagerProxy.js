@@ -30,7 +30,7 @@ if (!isWorkerContext && window.logger) {
 import { evaluateRule } from '../shared/ruleEngine.js';
 // Legacy GameSnapshotHelpers import removed - using agnostic helpers directly
 import { STATE_MANAGER_COMMANDS } from './stateManagerCommands.js'; // Import shared commands
-import { helperFunctions as alttpLogic } from '../shared/gameLogic/alttp/alttpLogic.js';
+// alttpLogic import removed - helpers now exported to rules.json
 import { helperFunctions as genericLogic } from '../shared/gameLogic/generic/genericLogic.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 
@@ -1514,6 +1514,23 @@ export class StateManagerProxy {
       StateManagerProxy.COMMANDS.REMOVE_ITEM_FROM_INVENTORY,
       { item, quantity },
       false // Match addItemToInventory - no response expected, snapshot update provides confirmation
+    );
+  }
+
+  /**
+   * Sets a prog_item value directly.
+   * Used by spoiler tests to set accumulator values (e.g., RUPEES) from sphere log data.
+   *
+   * @param {string} itemName - Name of the prog_item (e.g., "RUPEES")
+   * @param {number} value - Value to set
+   * @param {number|string} playerId - Optional player ID (defaults to current player)
+   * @returns {Promise<void>}
+   */
+  async setProgItem(itemName, value, playerId = undefined) {
+    return this._sendCommand(
+      StateManagerProxy.COMMANDS.SET_PROG_ITEM,
+      { itemName, value, playerId },
+      false // No response expected, snapshot update provides confirmation
     );
   }
 

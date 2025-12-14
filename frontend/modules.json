@@ -32,9 +32,19 @@
       "path": "./modules/inventory/index.js",
       "enabled": true
     },
+    "editorCore": {
+      "path": "./modules/editorCore/index.js",
+      "enabled": true
+    },
     "editor": {
       "path": "./modules/editor/index.js",
-      "enabled": true
+      "enabled": true,
+      "requires": ["editorCore"]
+    },
+    "editorCodeMirror6": {
+      "path": "./modules/editorCodeMirror6/index.js",
+      "enabled": true,
+      "requires": ["editorCore"]
     },
     "settings": {
       "path": "./modules/settings/index.js",
@@ -171,6 +181,10 @@
       "path": "./modules/windowManagerPanel/index.js",
       "enabled": true,
       "requires": ["windowAdapter", "windowPanel"]
+    },
+    "ruleConverter": {
+      "path": "./modules/ruleConverter/index.js",
+      "enabled": true
     }
   },
   "loadPriority": [
@@ -182,7 +196,9 @@
     "timer",
     "timerPanel",
     "inventory",
+    "editorCore",
     "editor",
+    "editorCodeMirror6",
     "settings",
     "commonUI",
     "locations",
@@ -212,6 +228,7 @@
     "iframeManagerPanel",
     "windowAdapter",
     "windowPanel",
-    "windowManagerPanel"
+    "windowManagerPanel",
+    "ruleConverter"
   ]
 }

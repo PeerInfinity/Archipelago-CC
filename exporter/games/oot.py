@@ -398,7 +398,7 @@ class OOTGameExportHandler(GenericGameExportHandler):
 
         return location_data
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Expand OOT-specific rules, handling special closure variables."""
         if not rule:
             return rule
@@ -417,7 +417,7 @@ class OOTGameExportHandler(GenericGameExportHandler):
         if rule.get('type') == 'and':
             conditions = rule.get('conditions', [])
             # Expand each condition first
-            expanded_conditions = [self.expand_rule(cond) for cond in conditions]
+            expanded_conditions = [self.expand_rule(cond, _depth + 1) for cond in conditions]
             # Filter out constant True values (they don't affect AND logic)
             filtered_conditions = [
                 cond for cond in expanded_conditions
@@ -435,7 +435,7 @@ class OOTGameExportHandler(GenericGameExportHandler):
         # Handle 'or' conditions
         if rule.get('type') == 'or':
             conditions = rule.get('conditions', [])
-            expanded_conditions = [self.expand_rule(cond) for cond in conditions]
+            expanded_conditions = [self.expand_rule(cond, _depth + 1) for cond in conditions]
             # If any condition is constant False, remove it (doesn't affect OR logic)
             filtered_conditions = [
                 cond for cond in expanded_conditions
@@ -450,15 +450,15 @@ class OOTGameExportHandler(GenericGameExportHandler):
         # Handle 'not' conditions
         if rule.get('type') == 'not':
             if 'condition' in rule:
-                rule['condition'] = self.expand_rule(rule['condition'])
+                rule['condition'] = self.expand_rule(rule['condition'], _depth + 1)
             if 'conditions' in rule:
-                rule['conditions'] = [self.expand_rule(cond) for cond in rule['conditions']]
+                rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule['conditions']]
 
         # Handle function_call nodes - recursively expand the function and args
         if rule.get('type') == 'function_call':
             if 'function' in rule:
-                rule['function'] = self.expand_rule(rule['function'])
+                rule['function'] = self.expand_rule(rule['function'], _depth + 1)
             if 'args' in rule:
-                rule['args'] = [self.expand_rule(arg) for arg in rule['args']]
+                rule['args'] = [self.expand_rule(arg, _depth + 1) for arg in rule['args']]
 
-        return super().expand_rule(rule)
+        return super().expand_rule(rule, _depth)

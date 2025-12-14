@@ -15918,6 +15918,9 @@
       "X-Ray Scope": 1
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -15929,6 +15932,73 @@
       "game": "Super Metroid",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "allow_grey_doors": 0,
+        "animals": 0,
+        "area_layout": 0,
+        "area_randomization": 0,
+        "boss_randomization": 0,
+        "custom_objective": 0,
+        "custom_objective_count": 4,
+        "custom_objective_list": [
+          "random"
+        ],
+        "custom_preset": {
+          "controller": {},
+          "knows": {},
+          "settings": {}
+        },
+        "death_link": 0,
+        "doors_colors_rando": 0,
+        "elevators_speed": 1,
+        "energy_qty": 3,
+        "escape_rando": 0,
+        "exclude_locations": [],
+        "fast_doors": 1,
+        "fun_combat": 0,
+        "fun_movement": 0,
+        "fun_suits": 0,
+        "gravity_behaviour": 1,
+        "hide_items": 0,
+        "hud": 0,
+        "infinite_space_jump": 0,
+        "item_links": [],
+        "layout_patches": 1,
+        "local_items": [],
+        "max_difficulty": 4,
+        "minor_qty": 100,
+        "missile_qty": 30,
+        "morph_placement": 0,
+        "nerfed_charge": 0,
+        "no_music": 0,
+        "non_local_items": [],
+        "objective": [
+          "kill all G4"
+        ],
+        "plando_items": [],
+        "power_bomb_qty": 10,
+        "preset": 2,
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "rando_speed": 0,
+        "random_music": 0,
+        "refill_before_save": 0,
+        "relaxed_round_robin_cf": 0,
+        "remote_items": 0,
+        "remove_escape_enemies": 0,
+        "spin_jump_restart": 0,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_inventory_removes_from_pool": 0,
+        "start_location": 1,
+        "start_location_hints": [],
+        "strict_minors": 0,
+        "super_qty": 20,
+        "tourian": 0,
+        "varia_custom_preset": [],
+        "varia_tweaks": 0
+      },
       "count_non_advancement_items": true,
       "hardRooms": {
         "X-Ray": [
@@ -16390,6 +16460,659 @@
       "name": "Super Metroid",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "grass",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Super Metroid Client on your computer. This guide covers single-player, multiworld, and related software.",
+          "language": "English",
+          "file_name": "multiworld_en.md",
+          "link": "multiworld/en",
+          "authors": [
+            "Farrak Kilhn"
+          ]
+        }
+      ],
+      "world_description": "This is Very Adaptive Randomizer of Items and Areas for Super Metroid (VARIA SM). It supports\na wide range of options to randomize Item locations, required skills and even the connections\nbetween the main Areas!",
+      "slot_data": {
+        "start_location": 1,
+        "max_difficulty": 4,
+        "area_randomization": 0,
+        "doors_colors_rando": 0,
+        "boss_randomization": 0,
+        "Preset": {
+          "Knows": {
+            "WallJump": [
+              false,
+              0
+            ],
+            "ShineSpark": [
+              false,
+              0
+            ],
+            "MidAirMorph": [
+              false,
+              0
+            ],
+            "CrouchJump": [
+              false,
+              0
+            ],
+            "UnequipItem": [
+              true,
+              1
+            ],
+            "Mockball": [
+              true,
+              1
+            ],
+            "SimpleShortCharge": [
+              true,
+              1
+            ],
+            "InfiniteBombJump": [
+              true,
+              5
+            ],
+            "GreenGateGlitch": [
+              true,
+              5
+            ],
+            "ShortCharge": [
+              false,
+              0
+            ],
+            "GravityJump": [
+              true,
+              10
+            ],
+            "SpringBallJump": [
+              true,
+              10
+            ],
+            "SpringBallJumpFromWall": [
+              false,
+              0
+            ],
+            "GetAroundWallJump": [
+              true,
+              10
+            ],
+            "DraygonGrappleKill": [
+              true,
+              5
+            ],
+            "DraygonSparkKill": [
+              false,
+              0
+            ],
+            "MicrowaveDraygon": [
+              true,
+              1
+            ],
+            "MicrowavePhantoon": [
+              true,
+              5
+            ],
+            "LowAmmoCroc": [
+              false,
+              0
+            ],
+            "LowStuffBotwoon": [
+              false,
+              0
+            ],
+            "LowStuffGT": [
+              false,
+              0
+            ],
+            "IceZebSkip": [
+              false,
+              0
+            ],
+            "SpeedZebSkip": [
+              false,
+              0
+            ],
+            "HiJumpMamaTurtle": [
+              false,
+              0
+            ],
+            "MaridiaWallJumps": [
+              true,
+              5
+            ],
+            "MtEverestGravJump": [
+              false,
+              0
+            ],
+            "GravLessLevel1": [
+              true,
+              50
+            ],
+            "GravLessLevel2": [
+              false,
+              0
+            ],
+            "GravLessLevel3": [
+              false,
+              0
+            ],
+            "CeilingDBoost": [
+              true,
+              1
+            ],
+            "BillyMays": [
+              true,
+              1
+            ],
+            "AlcatrazEscape": [
+              true,
+              25
+            ],
+            "ReverseGateGlitch": [
+              true,
+              5
+            ],
+            "ReverseGateGlitchHiJumpLess": [
+              false,
+              0
+            ],
+            "EarlyKraid": [
+              true,
+              1
+            ],
+            "XrayDboost": [
+              false,
+              0
+            ],
+            "XrayIce": [
+              true,
+              10
+            ],
+            "RedTowerClimb": [
+              true,
+              25
+            ],
+            "RonPopeilScrew": [
+              false,
+              0
+            ],
+            "OldMBWithSpeed": [
+              false,
+              0
+            ],
+            "Moondance": [
+              false,
+              0
+            ],
+            "HiJumpLessGauntletAccess": [
+              true,
+              50
+            ],
+            "HiJumpGauntletAccess": [
+              true,
+              25
+            ],
+            "LowGauntlet": [
+              false,
+              0
+            ],
+            "IceEscape": [
+              false,
+              0
+            ],
+            "WallJumpCathedralExit": [
+              true,
+              5
+            ],
+            "BubbleMountainWallJump": [
+              true,
+              5
+            ],
+            "DoubleChamberWallJump": [
+              true,
+              1
+            ],
+            "NovaBoost": [
+              false,
+              0
+            ],
+            "NorfairReserveDBoost": [
+              false,
+              0
+            ],
+            "CrocPBsDBoost": [
+              false,
+              0
+            ],
+            "CrocPBsIce": [
+              false,
+              0
+            ],
+            "IceMissileFromCroc": [
+              false,
+              0
+            ],
+            "FrogSpeedwayWithoutSpeed": [
+              false,
+              0
+            ],
+            "LavaDive": [
+              true,
+              50
+            ],
+            "LavaDiveNoHiJump": [
+              false,
+              0
+            ],
+            "WorstRoomIceCharge": [
+              false,
+              0
+            ],
+            "WorstRoomWallJump": [
+              false,
+              0
+            ],
+            "ScrewAttackExit": [
+              false,
+              0
+            ],
+            "ScrewAttackExitWithoutScrew": [
+              false,
+              0
+            ],
+            "FirefleasWalljump": [
+              true,
+              25
+            ],
+            "DodgeLowerNorfairEnemies": [
+              false,
+              0
+            ],
+            "ContinuousWallJump": [
+              false,
+              0
+            ],
+            "DiagonalBombJump": [
+              false,
+              0
+            ],
+            "MockballWs": [
+              false,
+              0
+            ],
+            "SpongeBathBombJump": [
+              false,
+              0
+            ],
+            "SpongeBathHiJump": [
+              true,
+              1
+            ],
+            "SpongeBathSpeed": [
+              true,
+              5
+            ],
+            "TediousMountEverest": [
+              false,
+              0
+            ],
+            "DoubleSpringBallJump": [
+              false,
+              0
+            ],
+            "BotwoonToDraygonWithIce": [
+              false,
+              0
+            ],
+            "WestSandHoleSuitlessWallJumps": [
+              false,
+              0
+            ],
+            "DraygonRoomGrappleExit": [
+              false,
+              0
+            ],
+            "DraygonRoomCrystalFlash": [
+              false,
+              0
+            ],
+            "PreciousRoomXRayExit": [
+              false,
+              0
+            ],
+            "PreciousRoomGravJumpExit": [
+              false,
+              0
+            ],
+            "MochtroidClip": [
+              true,
+              5
+            ],
+            "PuyoClip": [
+              false,
+              0
+            ],
+            "PuyoClipXRay": [
+              false,
+              0
+            ],
+            "SnailClip": [
+              false,
+              0
+            ],
+            "SuitlessPuyoClip": [
+              false,
+              0
+            ],
+            "CrystalFlashClip": [
+              false,
+              0
+            ],
+            "SuitlessCrystalFlashClip": [
+              false,
+              0
+            ],
+            "KillPlasmaPiratesWithSpark": [
+              false,
+              0
+            ],
+            "KillPlasmaPiratesWithCharge": [
+              true,
+              5
+            ],
+            "AccessSpringBallWithHiJump": [
+              true,
+              1
+            ],
+            "AccessSpringBallWithSpringBallBombJumps": [
+              true,
+              10
+            ],
+            "AccessSpringBallWithBombJumps": [
+              false,
+              0
+            ],
+            "AccessSpringBallWithSpringBallJump": [
+              false,
+              0
+            ],
+            "AccessSpringBallWithXRayClimb": [
+              false,
+              0
+            ],
+            "AccessSpringBallWithGravJump": [
+              false,
+              0
+            ],
+            "AccessSpringBallWithFlatley": [
+              false,
+              0
+            ]
+          },
+          "Settings": {
+            "hardRooms": {
+              "X-Ray": [
+                [
+                  8,
+                  10
+                ],
+                [
+                  10,
+                  5
+                ],
+                [
+                  14,
+                  1
+                ]
+              ],
+              "Gauntlet": [
+                [
+                  1,
+                  25
+                ],
+                [
+                  2,
+                  10
+                ],
+                [
+                  5,
+                  5
+                ],
+                [
+                  10,
+                  1
+                ]
+              ]
+            },
+            "bossesDifficulty": {
+              "Kraid": {
+                "Rate": 0.015,
+                "Energy": {
+                  "0.5": 10,
+                  "1.5": 5,
+                  "2.5": 1
+                }
+              },
+              "Phantoon": {
+                "Rate": 0.015,
+                "Energy": {
+                  "0.5": 400,
+                  "1": 100,
+                  "2": 50,
+                  "4": 25,
+                  "5": 10,
+                  "6": 5,
+                  "10": 1
+                }
+              },
+              "Draygon": {
+                "Rate": 0.05,
+                "Energy": {
+                  "0.5": 400,
+                  "1": 100,
+                  "6": 50,
+                  "8": 25,
+                  "11": 10,
+                  "14": 5,
+                  "20": 1
+                }
+              },
+              "Ridley": {
+                "Rate": 0.12,
+                "Energy": {
+                  "0.5": 400,
+                  "1": 100,
+                  "6": 50,
+                  "8": 25,
+                  "12": 10,
+                  "20": 5,
+                  "36": 1
+                }
+              },
+              "MotherBrain": {
+                "Rate": 0.25,
+                "Energy": {
+                  "2": 800,
+                  "4": 100,
+                  "8": 50,
+                  "12": 25,
+                  "16": 10,
+                  "20": 5,
+                  "24": 1
+                }
+              }
+            },
+            "hellRuns": {
+              "Ice": [
+                [
+                  4,
+                  50
+                ],
+                [
+                  5,
+                  25
+                ],
+                [
+                  6,
+                  10
+                ],
+                [
+                  10,
+                  5
+                ]
+              ],
+              "MainUpperNorfair": [
+                [
+                  5,
+                  100
+                ],
+                [
+                  6,
+                  50
+                ],
+                [
+                  8,
+                  25
+                ],
+                [
+                  10,
+                  10
+                ],
+                [
+                  14,
+                  5
+                ]
+              ],
+              "LowerNorfair": null
+            }
+          },
+          "Controller": {
+            "A": "Jump",
+            "B": "Dash",
+            "X": "Shoot",
+            "Y": "Item Cancel",
+            "L": "Angle Down",
+            "R": "Angle Up",
+            "Select": "Item Select",
+            "Moonwalk": false
+          }
+        },
+        "InterAreaTransitions": {
+          "KraidRoomOut": "KraidRoomIn",
+          "KraidRoomIn": "KraidRoomOut",
+          "PhantoonRoomOut": "PhantoonRoomIn",
+          "PhantoonRoomIn": "PhantoonRoomOut",
+          "DraygonRoomOut": "DraygonRoomIn",
+          "DraygonRoomIn": "DraygonRoomOut",
+          "RidleyRoomOut": "RidleyRoomIn",
+          "RidleyRoomIn": "RidleyRoomOut",
+          "Lower Mushrooms Left": "Green Brinstar Elevator",
+          "Green Brinstar Elevator": "Lower Mushrooms Left",
+          "Morph Ball Room Left": "Green Hill Zone Top Right",
+          "Green Hill Zone Top Right": "Morph Ball Room Left",
+          "Moat Right": "West Ocean Left",
+          "West Ocean Left": "Moat Right",
+          "Keyhunter Room Bottom": "Red Brinstar Elevator",
+          "Red Brinstar Elevator": "Keyhunter Room Bottom",
+          "Noob Bridge Right": "Red Tower Top Left",
+          "Red Tower Top Left": "Noob Bridge Right",
+          "Crab Maze Left": "Le Coude Right",
+          "Le Coude Right": "Crab Maze Left",
+          "Kronic Boost Room Bottom Left": "Lava Dive Right",
+          "Lava Dive Right": "Kronic Boost Room Bottom Left",
+          "Crocomire Speedway Bottom": "Crocomire Room Top",
+          "Crocomire Room Top": "Crocomire Speedway Bottom",
+          "Three Muskateers Room Left": "Single Chamber Top Right",
+          "Single Chamber Top Right": "Three Muskateers Room Left",
+          "Warehouse Entrance Left": "East Tunnel Right",
+          "East Tunnel Right": "Warehouse Entrance Left",
+          "East Tunnel Top Right": "Crab Hole Bottom Left",
+          "Crab Hole Bottom Left": "East Tunnel Top Right",
+          "Caterpillar Room Top Right": "Red Fish Room Left",
+          "Red Fish Room Left": "Caterpillar Room Top Right",
+          "Glass Tunnel Top": "Main Street Bottom",
+          "Main Street Bottom": "Glass Tunnel Top",
+          "Green Pirates Shaft Bottom Right": "Golden Four",
+          "Golden Four": "Green Pirates Shaft Bottom Right",
+          "Warehouse Entrance Right": "Warehouse Zeela Room Left",
+          "Warehouse Zeela Room Left": "Warehouse Entrance Right",
+          "Crab Shaft Right": "Aqueduct Top Left",
+          "Aqueduct Top Left": "Crab Shaft Right"
+        },
+        "Doors": {
+          "LandingSiteRight": "green",
+          "LandingSiteTopRight": "yellow",
+          "KihunterBottom": "yellow",
+          "KihunterRight": "yellow",
+          "FlywayRight": "red",
+          "GreenPiratesShaftBottomRight": "red",
+          "RedBrinstarElevatorTop": "blue",
+          "ClimbRight": "yellow",
+          "ConstructionZoneRight": "blue",
+          "GreenHillZoneTopRight": "yellow",
+          "NoobBridgeRight": "green",
+          "MainShaftRight": "red",
+          "MainShaftBottomRight": "red",
+          "EarlySupersRight": "red",
+          "EtecoonEnergyTankLeft": "green",
+          "BigPinkTopRight": "red",
+          "BigPinkRight": "yellow",
+          "BigPinkBottomRight": "green",
+          "BigPinkBottomLeft": "red",
+          "RedTowerLeft": "yellow",
+          "RedBrinstarFirefleaLeft": "red",
+          "RedTowerElevatorTopLeft": "green",
+          "RedTowerElevatorLeft": "yellow",
+          "RedTowerElevatorBottomLeft": "green",
+          "BelowSpazerTopRight": "green",
+          "WestOceanRight": "green",
+          "LeCoudeBottom": "yellow",
+          "WreckedShipMainShaftBottom": "green",
+          "ElectricDeathRoomTopLeft": "red",
+          "BusinessCenterTopLeft": "green",
+          "BusinessCenterBottomLeft": "red",
+          "CathedralEntranceRight": "red",
+          "CathedralRight": "green",
+          "BubbleMountainTopRight": "green",
+          "BubbleMountainTopLeft": "green",
+          "SpeedBoosterHallRight": "red",
+          "SingleChamberRight": "red",
+          "DoubleChamberRight": "red",
+          "KronicBoostBottomLeft": "yellow",
+          "CrocomireSpeedwayBottom": "green",
+          "PostCrocomireUpperLeft": "red",
+          "PostCrocomireShaftRight": "red",
+          "RedKihunterShaftBottom": "yellow",
+          "WastelandLeft": "green",
+          "MainStreetBottomRight": "red",
+          "FishTankRight": "red",
+          "CrabShaftRight": "green",
+          "ColosseumBottomRight": "green",
+          "PlasmaSparkBottom": "green",
+          "OasisTop": "green",
+          "GreenBrinstarSaveStation": "red",
+          "MaridiaBottomSaveStation": "red",
+          "MaridiaAqueductSaveStation": "red",
+          "ForgottenHighwaySaveStation": "red",
+          "DraygonSaveRefillStation": "red",
+          "KraidRefillStation": "green",
+          "RedBrinstarEnergyRefill": "green",
+          "GreenBrinstarMissileRefill": "red"
+        },
+        "RomPatches": [
+          22,
+          1000,
+          41,
+          23,
+          20,
+          21,
+          30,
+          31,
+          10
+        ]
       },
       "doors": {
         "LandingSiteRight": "green",

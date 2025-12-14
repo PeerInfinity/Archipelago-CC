@@ -24,8 +24,10 @@ class FactorioGameExportHandler(BaseGameExportHandler):
         # Get base settings
         settings = super().get_settings_data(world, multiworld, player)
 
-        # Factorio uses base settings, no special overrides needed
-        # Event items should be added naturally when checking locations
+        # Factorio rules use resolved technology names (e.g., "steel-processing", "military-2")
+        # which come from progressive items (e.g., "progressive-processing", "progressive-military").
+        # The test must use resolved_items to match these technology names in inventory checks.
+        settings['use_resolved_items'] = True
 
         return settings
 
@@ -48,7 +50,7 @@ class FactorioGameExportHandler(BaseGameExportHandler):
             }
         }
 
-    def expand_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
         """Recursively expand rule functions with Factorio-specific logic."""
         if not rule:
             return rule
@@ -59,7 +61,7 @@ class FactorioGameExportHandler(BaseGameExportHandler):
             return expanded if expanded else rule
 
         if rule.get('type') in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond) for cond in rule.get('conditions', [])]
+            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
 
         # Handle all_of rules that iterate over required_technologies
         # The Python code uses: all(state.has(technology.name, player) for technology in required_technologies[ingredient])
@@ -70,24 +72,32 @@ class FactorioGameExportHandler(BaseGameExportHandler):
             iterator = iterator_info.get('iterator', {})
 
             # Check if this is iterating over required_technologies[something]
-            if (iterator.get('type') == 'subscript' and
+            # Case 1: required_technologies is still a name reference
+            is_required_tech_name = (iterator.get('type') == 'subscript' and
                 iterator.get('value', {}).get('type') == 'name' and
-                iterator.get('value', {}).get('name') == 'required_technologies'):
+                iterator.get('value', {}).get('name') == 'required_technologies')
 
+            # Case 2: required_technologies has been inlined as a constant dictionary
+            # This happens when the analyzer resolves the variable at export time
+            is_required_tech_constant = (iterator.get('type') == 'subscript' and
+                iterator.get('value', {}).get('type') == 'constant' and
+                isinstance(iterator.get('value', {}).get('value'), dict))
+
+            if is_required_tech_name or is_required_tech_constant:
                 # The iterator is required_technologies[X], which yields Technology objects in Python
                 # but yields name strings in the exported JSON
                 # Simplify the element_rule to remove .name attribute access
                 element_rule = rule.get('element_rule', {})
                 simplified_element = self._simplify_technology_name_access(element_rule, iterator_info.get('target', {}).get('name'))
                 if simplified_element:
-                    rule['element_rule'] = self.expand_rule(simplified_element)
+                    rule['element_rule'] = self.expand_rule(simplified_element, _depth + 1)
                     logger.info(f"[Factorio Exporter] Simplified technology.name access in all_of rule")
                 else:
                     # No simplification needed, just recursively expand
-                    rule['element_rule'] = self.expand_rule(element_rule)
+                    rule['element_rule'] = self.expand_rule(element_rule, _depth + 1)
             else:
                 # Not a required_technologies iterator, just recursively expand
-                rule['element_rule'] = self.expand_rule(rule.get('element_rule', {}))
+                rule['element_rule'] = self.expand_rule(rule.get('element_rule', {}), _depth + 1)
 
         return rule
 

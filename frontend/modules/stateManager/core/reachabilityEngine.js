@@ -591,10 +591,9 @@ export function isLocationAccessible(sm, location) {
 
   // Use the *injected* evaluateRule engine
   try {
-    const snapshotInterface = sm._createSelfSnapshotInterface();
-    // Add the current location to the context so rules can access it
-    snapshotInterface.currentLocation = location;
-    snapshotInterface.location = location; // Also set as 'location' for resolveName()
+    // Pass location via contextVariables so it's available to resolveName() for boss defeat rules
+    const snapshotInterface = sm._createSelfSnapshotInterface({ location, currentLocation: location });
+
     return sm.evaluateRuleFromEngine(
       location.access_rule,
       snapshotInterface

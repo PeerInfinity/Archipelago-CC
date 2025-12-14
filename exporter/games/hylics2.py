@@ -8,6 +8,10 @@ logger = logging.getLogger(__name__)
 
 class Hylics2GameExportHandler(GenericGameExportHandler):
     GAME_NAME = 'Hylics 2'
+    # Enable automatic helper export
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    AUTO_PRESERVE_LARGE_HELPERS = False
+
     """Export handler for Hylics 2.
 
     Inherits from GenericGameExportHandler to get automatic item data discovery,

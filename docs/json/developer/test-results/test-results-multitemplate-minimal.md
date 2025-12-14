@@ -4,7 +4,7 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-**Generated:** 2025-12-06 12:14:32
+**Generated:** 2025-12-14 01:47:29
 
 **Source Data Created:** 2025-12-06T11:17:16.335490
 
@@ -20,8 +20,7 @@
 
 ## A Link to the Past
 
-**Results:** 168/203 passed (82.8%)  
-**Base Exporter:** ⚫ No | **Base GameLogic:** ⚫ No
+**Results:** 168/203 passed (82.8%)
 
 | Template | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress |
 |----------|-------------|------------|----------------|-------------|----------|
@@ -243,11 +242,6 @@
 - **Sphere Reached:** The logical sphere the test reached before completion/failure
 - **Max Spheres:** Total logical spheres available in the game
 - **Progress:** Percentage of logical spheres completed
-
-### Game Information
-
-- **Base Exporter:** Whether the game uses generic exporter (✅ Yes) or has a custom Python exporter script (⚫ No)
-- **Base GameLogic:** Whether the game uses generic logic (✅ Yes) or has custom JavaScript game logic (⚫ No)
 
 **Pass Criteria:** Generation errors = 0, Max spheres > 0, Spoiler test completed successfully
 

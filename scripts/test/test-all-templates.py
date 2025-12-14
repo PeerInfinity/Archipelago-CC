@@ -146,6 +146,16 @@ def main():
         help='List of template files to test (if specified, only these files will be tested, overrides skip-list)'
     )
     parser.add_argument(
+        '--include-pattern',
+        type=str,
+        help='Only include template files matching this pattern (e.g., "WorldGen" to only test WorldGen templates)'
+    )
+    parser.add_argument(
+        '--exclude-pattern',
+        type=str,
+        help='Exclude template files matching this pattern (e.g., "WorldGen" to exclude WorldGen templates)'
+    )
+    parser.add_argument(
         '--export-only',
         action='store_true',
         help='Only run the generation (export) step, skip spoiler tests'
@@ -197,9 +207,9 @@ def main():
         help='Keep existing templates in Multiworld directory (do not clear or add new templates)'
     )
     parser.add_argument(
-        '--multiworld-skip-prerequisites',
+        '--multiworld-require-prerequisites',
         action='store_true',
-        help='Skip prerequisite checks and test all templates regardless of other test results'
+        help='Only test templates that passed spoiler-minimal, spoiler-full, and multiclient tests (default: test all templates)'
     )
     parser.add_argument(
         '--multiworld-test-all-players',
@@ -216,6 +226,12 @@ def main():
         '--multiworld-bisect-failures',
         action='store_true',
         help='When a multiworld test fails, run bisection tests to find which specific template pair causes the failure'
+    )
+    parser.add_argument(
+        '--retry-failed-players',
+        type=int,
+        default=0,
+        help='Number of times to retry a failed multiworld player test (default: 0). Tests that pass on retry are recorded as intermittent failures.'
     )
     parser.add_argument(
         '--multiworld-second-pass',
@@ -352,6 +368,14 @@ def main():
         print("Error: --multiworld-second-pass can only be used with --multiworld")
         sys.exit(1)
 
+    if args.retry_failed_players and not args.multiworld:
+        print("Error: --retry-failed-players can only be used with --multiworld")
+        sys.exit(1)
+
+    if args.retry_failed_players and args.retry_failed_players < 0:
+        print("Error: --retry-failed-players must be a non-negative integer")
+        sys.exit(1)
+
     if args.multitemplate and not args.templates_dir:
         print("Error: --multitemplate requires --templates-dir to be specified")
         sys.exit(1)
@@ -384,6 +408,11 @@ def main():
         print("Error: --retest-seed-specific can only be used with --retest")
         sys.exit(1)
 
+    if args.retest and args.multiworld:
+        print("Error: --retest cannot be used with --multiworld")
+        print("For multiworld tests, use --retry-failed-players instead to retry failed player tests immediately.")
+        sys.exit(1)
+
     if args.retest_seed_specific and args.seed_range:
         print("Error: --retest-seed-specific cannot be used with --seed-range (it requires a single --seed)")
         sys.exit(1)
@@ -406,6 +435,10 @@ def main():
 
     if args.test_consistency and args.export_only:
         print("Error: --test-consistency cannot be used with --export-only")
+        sys.exit(1)
+
+    if args.include_pattern and args.exclude_pattern:
+        print("Error: --include-pattern and --exclude-pattern are mutually exclusive")
         sys.exit(1)
 
     # Determine project root early (needed for setup scripts)
@@ -643,7 +676,7 @@ def main():
                 print("Error: --retest-seed-specific requires a valid seed number")
                 sys.exit(1)
 
-        failed_templates = get_failed_templates(existing_results['results'], args.multiclient, specific_seed)
+        failed_templates = get_failed_templates(existing_results['results'], args.multiclient, specific_seed, args.multiworld)
 
         # If --retest-continue is specified, also include templates that haven't been tested up to that threshold
         templates_to_test = set(failed_templates)
@@ -683,7 +716,7 @@ def main():
         # Build a dictionary mapping template to seed info for retest
         retest_seed_info = {}
         for template in templates_to_test:
-            seed_info = get_failing_seed_info(template, existing_results['results'], args.multiclient)
+            seed_info = get_failing_seed_info(template, existing_results['results'], args.multiclient, args.multiworld)
             retest_seed_info[template] = seed_info
 
         # Filter to only include templates that exist in the templates directory
@@ -768,12 +801,34 @@ def main():
         # Skip list mode: exclude specified files
         yaml_files = [f for f in all_yaml_files if f not in args.skip_list]
         skipped_files = [f for f in all_yaml_files if f in args.skip_list]
-        
+
         if not yaml_files:
             print(f"Error: No testable YAML files found after filtering (all files are in skip list)")
             sys.exit(1)
-        
+
         filter_description = f"skip list ({len(args.skip_list)} excluded)"
+
+    # Apply --include-pattern filtering if specified
+    if args.include_pattern:
+        before_pattern_filter = len(yaml_files)
+        yaml_files = [f for f in yaml_files if args.include_pattern in f]
+        pattern_excluded = before_pattern_filter - len(yaml_files)
+        if pattern_excluded > 0:
+            print(f"Pattern filter: included {len(yaml_files)} templates matching '{args.include_pattern}' (excluded {pattern_excluded})")
+        if not yaml_files:
+            print(f"Error: No testable YAML files found after pattern filtering (no files match '{args.include_pattern}')")
+            sys.exit(1)
+
+    # Apply --exclude-pattern filtering if specified
+    if args.exclude_pattern:
+        before_pattern_filter = len(yaml_files)
+        yaml_files = [f for f in yaml_files if args.exclude_pattern not in f]
+        pattern_excluded = before_pattern_filter - len(yaml_files)
+        if pattern_excluded > 0:
+            print(f"Pattern filter: excluded {pattern_excluded} templates matching '{args.exclude_pattern}' ({len(yaml_files)} remaining)")
+        if not yaml_files:
+            print(f"Error: No testable YAML files found after pattern filtering (all files match '{args.exclude_pattern}')")
+            sys.exit(1)
 
     # Initialize intermittent failures if not already done (non-retest mode)
     if not args.retest:
@@ -782,7 +837,8 @@ def main():
     yaml_files.sort()
 
     # Apply --every-nth and --skip-first filtering if specified
-    if args.every_nth:
+    # Skip this filtering in retest mode since we're already working with a filtered list of failures
+    if args.every_nth and not args.retest:
         # First skip the specified number of templates
         if args.skip_first > 0:
             if args.skip_first >= len(yaml_files):
@@ -1161,10 +1217,12 @@ def main():
                         test_only=args.test_only, headed=args.headed,
                         keep_templates=args.multiworld_keep_templates,
                         test_all_players=args.multiworld_test_all_players,
-                        require_prerequisites=not args.multiworld_skip_prerequisites,
+                        require_prerequisites=args.multiworld_require_prerequisites,
                         include_error_details=args.include_error_details,
                         max_templates=args.multiworld_max_templates,
-                        dry_run=args.dry_run
+                        dry_run=args.dry_run,
+                        retry_failed_players=args.retry_failed_players,
+                        split_number=args.skip_first + 1 if args.every_nth else None
                     )
                 else:
                     # Single seed in multiworld mode
@@ -1175,10 +1233,12 @@ def main():
                         test_only=args.test_only, headed=args.headed,
                         keep_templates=args.multiworld_keep_templates,
                         test_all_players=args.multiworld_test_all_players,
-                        require_prerequisites=not args.multiworld_skip_prerequisites,
+                        require_prerequisites=args.multiworld_require_prerequisites,
                         include_error_details=args.include_error_details,
                         max_templates=args.multiworld_max_templates,
-                        dry_run=args.dry_run
+                        dry_run=args.dry_run,
+                        retry_failed_players=args.retry_failed_players,
+                        split_number=args.skip_first + 1 if args.every_nth else None
                     )
 
                 # After multiworld test, synchronize player count with actual templates in directory
@@ -1265,10 +1325,10 @@ def main():
 
             # In retest mode, check if this test is now passing and record intermittent failures
             if args.retest:
-                test_passed = is_test_passing(yaml_file, results['results'], args.multiclient)
+                test_passed = is_test_passing(yaml_file, results['results'], args.multiclient, args.multiworld)
 
                 # Check if this was previously failing and is now passing (intermittent failure)
-                was_failing = not is_test_passing(yaml_file, existing_results.get('results', {}), args.multiclient)
+                was_failing = not is_test_passing(yaml_file, existing_results.get('results', {}), args.multiclient, args.multiworld)
 
                 if test_passed and was_failing:
                     # Record intermittent failure with detailed information
@@ -1286,12 +1346,21 @@ def main():
                         except (ValueError, TypeError):
                             failing_seed = template_result['seed']
 
+                    # Determine the test type for the intermittent failure entry
+                    if args.multiworld:
+                        test_type = 'multiworld'
+                    elif args.multiclient:
+                        test_type = 'multiclient'
+                    else:
+                        test_type = 'spoiler'
+
                     intermittent_entry = {
                         'template': yaml_file,
                         'seed': failing_seed,
                         'timestamp': datetime.now().isoformat(),
                         'previously_failed': True,
-                        'now_passing': True
+                        'now_passing': True,
+                        'test_type': test_type
                     }
                     intermittent_failures.append(intermittent_entry)
                     print(f"✅ {yaml_file} is now passing (was previously failing)! Recording intermittent failure. Continuing to next failed test...")
@@ -1322,10 +1391,10 @@ def main():
 
             # In retest mode, check if we should stop
             if args.retest:
-                test_passed = is_test_passing(yaml_file, results['results'], args.multiclient)
+                test_passed = is_test_passing(yaml_file, results['results'], args.multiclient, args.multiworld)
 
                 if test_passed:
-                    was_failing = not is_test_passing(yaml_file, existing_results.get('results', {}), args.multiclient)
+                    was_failing = not is_test_passing(yaml_file, existing_results.get('results', {}), args.multiclient, args.multiworld)
                     if not was_failing:
                         print(f"✅ {yaml_file} is now passing! Continuing to next failed test...")
                 else:
@@ -1428,15 +1497,53 @@ def main():
                         include_error_details=args.include_error_details,
                         max_templates=args.multiworld_max_templates,
                         dry_run=args.dry_run,
-                        is_second_pass=True
+                        is_second_pass=True,
+                        retry_failed_players=args.retry_failed_players,
+                        split_number=args.skip_first + 1 if args.every_nth else None
                     )
 
                     # Store second pass result
                     # Merge into existing result, preserving first pass data
+                    second_pass_test_result = second_pass_result.get('multiworld_test', {})
                     if yaml_file in results['results']:
-                        results['results'][yaml_file]['second_pass'] = second_pass_result.get('multiworld_test', {})
+                        results['results'][yaml_file]['second_pass'] = second_pass_test_result
                     else:
                         results['results'][yaml_file] = second_pass_result
+
+                    # If bisection is enabled and the second pass test failed, run bisection tests
+                    if args.multiworld_bisect_failures and not second_pass_test_result.get('success', True):
+                        # Get the list of templates that were in the multiworld (excluding the current one)
+                        templates_in_multiworld = second_pass_test_result.get('templates_in_multiworld', {})
+                        other_templates = [t for t in templates_in_multiworld.values() if t != yaml_file]
+
+                        if other_templates:
+                            print(f"\n=== Running bisection tests for {yaml_file} (second pass) ===")
+                            bisection_result = test_template_multiworld_bisect(
+                                yaml_file, templates_dir, project_root, world_mapping,
+                                str(seed_list[0]), multiworld_dir, other_templates,
+                                headed=args.headed,
+                                include_error_details=args.include_error_details
+                            )
+                            results['results'][yaml_file]['second_pass']['bisection_results'] = bisection_result
+
+                            # After bisection, restore the multiworld directory to its previous state
+                            print(f"\nRestoring multiworld directory after bisection...")
+                            for f in os.listdir(multiworld_dir):
+                                if f.endswith('.yaml'):
+                                    try:
+                                        os.remove(os.path.join(multiworld_dir, f))
+                                    except Exception as e:
+                                        print(f"  Warning: Could not remove {f}: {e}")
+
+                            for other_template in other_templates:
+                                try:
+                                    source_path = os.path.join(templates_dir, other_template)
+                                    dest_path = os.path.join(multiworld_dir, other_template)
+                                    shutil.copy2(source_path, dest_path)
+                                except Exception as e:
+                                    print(f"  Warning: Could not restore {other_template}: {e}")
+                        else:
+                            print(f"\n=== Skipping bisection for {yaml_file} (no other templates to test with) ===")
 
                     # Save results incrementally
                     templates_tested_so_far = list(results['results'].keys())
@@ -1586,7 +1693,7 @@ def main():
                 passed = sum(1 for r in results['results'].values()
                             if r.get('multiworld_test', {}).get('success', False))
                 skipped = sum(1 for r in results['results'].values()
-                            if not r.get('prerequisite_check', {}).get('all_prerequisites_passed', False))
+                            if r.get('multiworld_test', {}).get('skip_reason'))
                 failed = len(yaml_files) - passed - skipped
                 print(f"Multiworld Test Summary: {passed} passed, {failed} failed, {skipped} skipped (prerequisites not met)")
             elif args.multiclient:
@@ -1610,7 +1717,7 @@ def main():
                 passed = sum(1 for r in results['results'].values()
                             if r.get('multiworld_test', {}).get('success', False))
                 skipped = sum(1 for r in results['results'].values()
-                            if not r.get('prerequisite_check', {}).get('all_prerequisites_passed', False))
+                            if r.get('multiworld_test', {}).get('skip_reason'))
                 failed = len(yaml_files) - passed - skipped
                 print(f"Single Seed Test Summary: {passed} passed, {failed} failed, {skipped} skipped")
                 print(f"\nMultiworld Details:")
