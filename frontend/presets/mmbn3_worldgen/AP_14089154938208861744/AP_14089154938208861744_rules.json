@@ -601,9 +601,17 @@
             "name": "Numberman Code 09",
             "id": 11735253,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Spreader *",
@@ -617,9 +625,17 @@
             "name": "Numberman Code 10",
             "id": 11735254,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "SloGauge *",
@@ -633,9 +649,17 @@
             "name": "Numberman Code 11",
             "id": 11735255,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "MiniEnrg",
@@ -649,9 +673,17 @@
             "name": "Numberman Code 12",
             "id": 11735256,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "HPMemory",
@@ -665,9 +697,17 @@
             "name": "Numberman Code 13",
             "id": 11735257,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "CACDCPas",
@@ -681,9 +721,17 @@
             "name": "Numberman Code 14",
             "id": 11735258,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Unlocker",
@@ -697,9 +745,17 @@
             "name": "Numberman Code 15",
             "id": 11735259,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Unlocker",
@@ -713,9 +769,17 @@
             "name": "Numberman Code 16",
             "id": 11735260,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 2
+              }
             },
             "item": {
               "name": "Punk P",
@@ -729,9 +793,17 @@
             "name": "Numberman Code 17",
             "id": 11735261,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 4
+              }
             },
             "item": {
               "name": "HPMemory",
@@ -745,9 +817,17 @@
             "name": "Numberman Code 18",
             "id": 11735262,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 4
+              }
             },
             "item": {
               "name": "Fountain *",
@@ -761,9 +841,17 @@
             "name": "Numberman Code 19",
             "id": 11735263,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 4
+              }
             },
             "item": {
               "name": "HPMemory",
@@ -777,9 +865,17 @@
             "name": "Numberman Code 20",
             "id": 11735264,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 4
+              }
             },
             "item": {
               "name": "Navi+40 *",
@@ -793,9 +889,17 @@
             "name": "Numberman Code 21",
             "id": 11735265,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 4
+              }
             },
             "item": {
               "name": "AirShot3 *",
@@ -809,9 +913,17 @@
             "name": "Numberman Code 22",
             "id": 11735266,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 4
+              }
             },
             "item": {
               "name": "Aura F",
@@ -825,9 +937,17 @@
             "name": "Numberman Code 23",
             "id": 11735267,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 4
+              }
             },
             "item": {
               "name": "30000z",
@@ -841,9 +961,17 @@
             "name": "Numberman Code 24",
             "id": 11735268,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 4
+              }
             },
             "item": {
               "name": "HiCannon *",
@@ -857,9 +985,17 @@
             "name": "Numberman Code 25",
             "id": 11735269,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 8
+              }
             },
             "item": {
               "name": "CYokaPas",
@@ -873,9 +1009,17 @@
             "name": "Numberman Code 26",
             "id": 11735270,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 8
+              }
             },
             "item": {
               "name": "Recov120 *",
@@ -889,9 +1033,17 @@
             "name": "Numberman Code 27",
             "id": 11735271,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 8
+              }
             },
             "item": {
               "name": "HPMemory",
@@ -905,9 +1057,17 @@
             "name": "Numberman Code 28",
             "id": 11735272,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 8
+              }
             },
             "item": {
               "name": "HPMemory",
@@ -921,9 +1081,17 @@
             "name": "Numberman Code 29",
             "id": 11735273,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 10
+              }
             },
             "item": {
               "name": "BlckMnd",
@@ -937,9 +1105,17 @@
             "name": "Numberman Code 30",
             "id": 11735274,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 10
+              }
             },
             "item": {
               "name": "Geddon1 *",
@@ -953,9 +1129,17 @@
             "name": "Numberman Code 31",
             "id": 11735275,
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "compare",
+              "left": {
+                "type": "helper",
+                "name": "_megamanbattlenetwork3worldgen_explore_score",
+                "args": []
+              },
+              "op": ">",
+              "right": {
+                "type": "constant",
+                "value": 10
+              }
             },
             "item": {
               "name": "DynaWave V",
@@ -1971,12 +2155,26 @@
             "name": "Yoka Overworld -> Secret Area",
             "connected_region": "Secret Area",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Hammer",
-                "count": 1
-              }
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "compare",
+                  "left": {
+                    "type": "helper",
+                    "name": "_megamanbattlenetwork3worldgen_explore_score",
+                    "args": []
+                  },
+                  "op": ">",
+                  "right": {
+                    "type": "constant",
+                    "value": 12
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Hammer"
+                }
+              ]
             }
           }
         ],
@@ -3791,12 +3989,26 @@
             "name": "Beach Cyberworld -> Undernet",
             "connected_region": "Undernet",
             "access_rule": {
-              "rule": "Has",
-              "options": [],
-              "args": {
-                "item_name": "Press",
-                "count": 1
-              }
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "compare",
+                  "left": {
+                    "type": "helper",
+                    "name": "_megamanbattlenetwork3worldgen_explore_score",
+                    "args": []
+                  },
+                  "op": ">",
+                  "right": {
+                    "type": "constant",
+                    "value": 8
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Press"
+                }
+              ]
             }
           }
         ],
@@ -7849,5 +8061,366 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "_megamanbattlenetwork3worldgen_explore_score": {
+        "type": "conditional",
+        "test": {
+          "type": "compare",
+          "left": {
+            "type": "state_method",
+            "method": "can_reach",
+            "args": [
+              {
+                "type": "constant",
+                "value": "WWW Island"
+              },
+              {
+                "type": "constant",
+                "value": "Region"
+              }
+            ]
+          },
+          "op": "==",
+          "right": {
+            "type": "constant",
+            "value": true
+          }
+        },
+        "if_true": {
+          "type": "constant",
+          "value": 999
+        },
+        "if_false": {
+          "type": "binary_op",
+          "left": {
+            "type": "binary_op",
+            "left": {
+              "type": "binary_op",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "conditional",
+                          "test": {
+                            "type": "compare",
+                            "left": {
+                              "type": "state_method",
+                              "method": "can_reach",
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": "SciLab Overworld"
+                                },
+                                {
+                                  "type": "constant",
+                                  "value": "Region"
+                                }
+                              ]
+                            },
+                            "op": "==",
+                            "right": {
+                              "type": "constant",
+                              "value": true
+                            }
+                          },
+                          "if_true": {
+                            "type": "constant",
+                            "value": 3
+                          },
+                          "if_false": {
+                            "type": "constant",
+                            "value": 0
+                          }
+                        },
+                        "op": "+",
+                        "right": {
+                          "type": "conditional",
+                          "test": {
+                            "type": "compare",
+                            "left": {
+                              "type": "state_method",
+                              "method": "can_reach",
+                              "args": [
+                                {
+                                  "type": "constant",
+                                  "value": "SciLab Cyberworld"
+                                },
+                                {
+                                  "type": "constant",
+                                  "value": "Region"
+                                }
+                              ]
+                            },
+                            "op": "==",
+                            "right": {
+                              "type": "constant",
+                              "value": true
+                            }
+                          },
+                          "if_true": {
+                            "type": "constant",
+                            "value": 1
+                          },
+                          "if_false": {
+                            "type": "constant",
+                            "value": 0
+                          }
+                        }
+                      },
+                      "op": "+",
+                      "right": {
+                        "type": "conditional",
+                        "test": {
+                          "type": "compare",
+                          "left": {
+                            "type": "state_method",
+                            "method": "can_reach",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": "Yoka Overworld"
+                              },
+                              {
+                                "type": "constant",
+                                "value": "Region"
+                              }
+                            ]
+                          },
+                          "op": "==",
+                          "right": {
+                            "type": "constant",
+                            "value": true
+                          }
+                        },
+                        "if_true": {
+                          "type": "constant",
+                          "value": 2
+                        },
+                        "if_false": {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      }
+                    },
+                    "op": "+",
+                    "right": {
+                      "type": "conditional",
+                      "test": {
+                        "type": "compare",
+                        "left": {
+                          "type": "state_method",
+                          "method": "can_reach",
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": "Yoka Cyberworld"
+                            },
+                            {
+                              "type": "constant",
+                              "value": "Region"
+                            }
+                          ]
+                        },
+                        "op": "==",
+                        "right": {
+                          "type": "constant",
+                          "value": true
+                        }
+                      },
+                      "if_true": {
+                        "type": "constant",
+                        "value": 1
+                      },
+                      "if_false": {
+                        "type": "constant",
+                        "value": 0
+                      }
+                    }
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "compare",
+                      "left": {
+                        "type": "state_method",
+                        "method": "can_reach",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": "Beach Overworld"
+                          },
+                          {
+                            "type": "constant",
+                            "value": "Region"
+                          }
+                        ]
+                      },
+                      "op": "==",
+                      "right": {
+                        "type": "constant",
+                        "value": true
+                      }
+                    },
+                    "if_true": {
+                      "type": "constant",
+                      "value": 3
+                    },
+                    "if_false": {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  }
+                },
+                "op": "+",
+                "right": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "state_method",
+                      "method": "can_reach",
+                      "args": [
+                        {
+                          "type": "constant",
+                          "value": "Beach Cyberworld"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Region"
+                        }
+                      ]
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": true
+                    }
+                  },
+                  "if_true": {
+                    "type": "constant",
+                    "value": 1
+                  },
+                  "if_false": {
+                    "type": "constant",
+                    "value": 0
+                  }
+                }
+              },
+              "op": "+",
+              "right": {
+                "type": "conditional",
+                "test": {
+                  "type": "compare",
+                  "left": {
+                    "type": "state_method",
+                    "method": "can_reach",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Undernet"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Region"
+                      }
+                    ]
+                  },
+                  "op": "==",
+                  "right": {
+                    "type": "constant",
+                    "value": true
+                  }
+                },
+                "if_true": {
+                  "type": "constant",
+                  "value": 2
+                },
+                "if_false": {
+                  "type": "constant",
+                  "value": 0
+                }
+              }
+            },
+            "op": "+",
+            "right": {
+              "type": "conditional",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "state_method",
+                  "method": "can_reach",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Deep Undernet"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Region"
+                    }
+                  ]
+                },
+                "op": "==",
+                "right": {
+                  "type": "constant",
+                  "value": true
+                }
+              },
+              "if_true": {
+                "type": "constant",
+                "value": 1
+              },
+              "if_false": {
+                "type": "constant",
+                "value": 0
+              }
+            }
+          },
+          "op": "+",
+          "right": {
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "state_method",
+                "method": "can_reach",
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "Secret Area"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Region"
+                  }
+                ]
+              },
+              "op": "==",
+              "right": {
+                "type": "constant",
+                "value": true
+              }
+            },
+            "if_true": {
+              "type": "constant",
+              "value": 1
+            },
+            "if_false": {
+              "type": "constant",
+              "value": 0
+            }
+          }
+        }
+      }
+    }
+  }
 }

@@ -25929,7 +25929,65 @@
                 "args": [
                   {
                     "type": "constant",
+                    "value": "(TT3) Underground Concourse Mythril Gem"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            },
+            "args": []
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
                     "value": "(LoD2) Storm Rider Bonus: Sora Slot 1"
+                  }
+                ]
+              },
+              "attr": "can_reach"
+            },
+            "args": []
+          },
+          {
+            "type": "function_call",
+            "function": {
+              "type": "attribute",
+              "object": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "self"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "constant",
+                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
                   }
                 ]
               },
@@ -25988,64 +26046,6 @@
                   {
                     "type": "constant",
                     "value": "Roxas Event Location"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            },
-            "args": []
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "(BC2) Xaldin Bonus: Sora Slot 1"
-                  }
-                ]
-              },
-              "attr": "can_reach"
-            },
-            "args": []
-          },
-          {
-            "type": "function_call",
-            "function": {
-              "type": "attribute",
-              "object": {
-                "type": "function_call",
-                "function": {
-                  "type": "attribute",
-                  "object": {
-                    "type": "attribute",
-                    "object": {
-                      "type": "name",
-                      "name": "self"
-                    },
-                    "attr": "multiworld"
-                  },
-                  "attr": "get_location"
-                },
-                "args": [
-                  {
-                    "type": "constant",
-                    "value": "(TT3) Underground Concourse Mythril Gem"
                   }
                 ]
               },

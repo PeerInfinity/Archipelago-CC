@@ -1852,8 +1852,8 @@
             "label": "addassi",
             "expression": "|- ( ( A + B ) + C ) = ( A + ( B + C ) )",
             "dependencies": [
-              1,
-              2
+              2,
+              1
             ],
             "full_text": "addassi: Associative law for addition.  (Contributed by NM, 23-Nov-1994.) (|- ( ( A + B ) + C ) = ( A + ( B + C ) ))"
           },
@@ -1888,8 +1888,8 @@
             "expression": "|- A = D",
             "dependencies": [
               6,
-              7,
-              3
+              3,
+              7
             ],
             "full_text": "3eqtri: Register '=' as an equality for its type (class). $) $( $j equality 'wceq' from 'eqid' 'eqcomi' 'eqtri'; $) ${ 3eqtri.1 $e |- A = B $. 3eqtri.2 $e |- B = C $. 3eqtri.3 $e |- C = D $. $( An inference from three chained equalities.  (Contributed by NM, 29-Aug-1993.) (|- A = D)"
           },
