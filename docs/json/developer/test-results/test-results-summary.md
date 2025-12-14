@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-14 01:47:29
+**Generated:** 2025-12-14 03:03:19
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -18,39 +18,39 @@ Additional test results:
 
 ### Individual Test Results
 
-- **Minimal Test:** 72/73 passed (98.6%)
-- **Full Test:** 72/73 passed (98.6%)
-- **Multiclient Test:** 72/73 passed (98.6%)
-- **Multiworld Test:** 72/73 passed (98.6%)
+- **Minimal Test:** 73/73 passed (100.0%)
+- **Full Test:** 73/73 passed (100.0%)
+- **Multiclient Test:** 73/73 passed (100.0%)
+- **Multiworld Test:** 73/73 passed (100.0%)
 
 ### Intermittent Failures
 
-- **Minimal Spoilers Test:** 1 game(s), 1 total failure(s)
-- **Full Spoilers Test:** 0 game(s), 0 total failure(s)
+- **Minimal Spoilers Test:** 0 game(s), 0 total failure(s)
+- **Full Spoilers Test:** 1 game(s), 1 total failure(s)
 - **Multiclient Test:** 0 game(s), 0 total failure(s)
 - **Multiworld Test:** 0 game(s), 0 total failure(s)
 
 ### Combined Test Results
 
-- **Templates passing all 4 tests:** 72/73 (98.6%)
+- **Templates passing all 4 tests:** 73/73 (100.0%)
 - **Templates passing 3 tests:** 0/73 (0.0%)
 - **Templates passing 2 tests:** 0/73 (0.0%)
 - **Templates passing 1 test:** 0/73 (0.0%)
-- **Templates passing 0 tests:** 1/73 (1.4%)
+- **Templates passing 0 tests:** 0/73 (0.0%)
 
 ### Generic Exporter/Logic Statistics
 
-Of the 72 templates passing all 4 tests:
+Of the 73 templates passing all 4 tests:
 
-- **Passing with Generic Exporter:** 29/72 (40.3%)
-- **Passing with Generic Logic:** 62/72 (86.1%)
-- **Passing with Both Generic:** 29/72 (40.3%)
+- **Passing with Generic Exporter:** 29/73 (39.7%)
+- **Passing with Generic Logic:** 64/73 (87.7%)
+- **Passing with Both Generic:** 29/73 (39.7%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 643.9KB
-- **Total Game Logic Code:** 677.7KB
-- **Combined Total:** 1321.5KB
+- **Total Exporter Code:** 652.4KB
+- **Total Game Logic Code:** 679.4KB
+- **Combined Total:** 1331.8KB
 
 ## Test Results
 
@@ -85,7 +85,7 @@ Of the 72 templates passing all 4 tests:
 | Inscryption | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 8.1KB | ✅ | 83.1KB |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 58.5KB | 5.4KB | 702.7KB |
 | Kingdom Hearts 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 33.1KB | 105.3KB | 448.3KB |
-| Kirby's Dream Land 3 | ❌ Failed | ❌ Failed | ❌ Failed | ❌ Failed | ✅ | ✅ | 13.5KB | ✅ | 570.1KB |
+| Kirby's Dream Land 3 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 13.6KB | 9.0KB | 570.1KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 16.4KB | ✅ | 242.0KB |
 | Lingo | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 33.7KB | 10.7KB | 720.6KB |
 | Links Awakening DX | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 17.9KB | ✅ | 655.2KB |
@@ -119,12 +119,12 @@ Of the 72 templates passing all 4 tests:
 | Terraria | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 19.2KB | ✅ | 289.1KB |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 7.0KB | ✅ | 713.9KB |
 | The Messenger | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 12.6KB | ✅ | 232.2KB |
-| The Wind Waker | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.8KB | 4.6KB | 158.3KB |
+| The Wind Waker | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 9.3KB | ✅ | 158.3KB |
 | The Witness | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 28.9KB | ✅ | 329.2KB |
 | Timespinner | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 4.1KB | ✅ | 244.6KB |
 | Undertale | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 64.1KB |
 | VVVVVV | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.4KB | ✅ | 31.0KB |
-| Wargroove | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 5.7KB | 2.6KB | 56.9KB |
+| Wargroove | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 9.6KB | ✅ | 56.9KB |
 | WebDevJourney | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 55.2KB |
 | Yacht Dice | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 1.6KB | 285.0KB | 179.5KB |
 | Yoshi's Island | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 10.8KB | ✅ | 258.1KB |
