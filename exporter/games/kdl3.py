@@ -46,6 +46,20 @@ class KDL3GameExportHandler(BaseGameExportHandler):
     # Preserve these helpers as helper calls (don't inline them - use JavaScript instead)
     HELPERS_TO_PRESERVE = set()
 
+    # Map parameter names used in inlined functions to actual setting names
+    # When can_reach_boss is inlined, it uses parameter name 'ow_boss_req' but the
+    # setting is exported as 'ow_boss_requirement'
+    NAME_REMAPPING = {
+        'ow_boss_req': 'ow_boss_requirement',
+    }
+
+    # Setting names that should be converted from 'name' type to 'setting_value' type
+    # This ensures they are looked up via getSetting which checks options.* path
+    SETTINGS_TO_CONVERT = {
+        'open_world',
+        'ow_boss_requirement',
+    }
+
     def __init__(self):
         """Initialize the KDL3 export handler and load location_name module."""
         super().__init__()
@@ -99,19 +113,48 @@ class KDL3GameExportHandler(BaseGameExportHandler):
         if not rule:
             return rule
 
+        # Handle name remapping and conversion to setting_value type
+        if rule.get('type') == 'name':
+            name = rule.get('name', '')
+            # First apply any name remapping
+            if name in self.NAME_REMAPPING:
+                name = self.NAME_REMAPPING[name]
+                logger.debug(f"Remapped name '{rule.get('name')}' to '{name}'")
+
+            # Convert known setting names to setting_value type
+            # This ensures they are looked up via getSetting which properly checks options.*
+            if name in self.SETTINGS_TO_CONVERT:
+                logger.debug(f"Converting name '{name}' to setting_value type")
+                return {'type': 'setting_value', 'setting': name}
+
+            # Otherwise just update the name and return
+            rule['name'] = name
+            return rule
+
         # Handle f_string conversion
         if rule.get('type') == 'f_string':
             return self._convert_f_string(rule)
 
-        # Handle item_check with f_string item names
+        # Handle item_check with f_string item names - recursively process item
         if rule.get('type') == 'item_check' and isinstance(rule.get('item'), dict):
-            if rule['item'].get('type') == 'f_string':
-                rule['item'] = self._convert_f_string(rule['item'])
+            rule['item'] = self.expand_rule(rule['item'], _depth + 1)
+        # Also process count if it's a dict
+        if rule.get('type') == 'item_check' and isinstance(rule.get('count'), dict):
+            rule['count'] = self.expand_rule(rule['count'], _depth + 1)
 
-        # Recursively process nested rules
+        # Recursively process nested rules for 'and' and 'or'
         if rule.get('type') in ['and', 'or']:
             if 'conditions' in rule:
                 rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule['conditions']]
+
+        # Handle conditional rules with if_true/if_false branches
+        if rule.get('type') == 'conditional':
+            if 'test' in rule and isinstance(rule['test'], dict):
+                rule['test'] = self.expand_rule(rule['test'], _depth + 1)
+            if 'if_true' in rule and isinstance(rule['if_true'], dict):
+                rule['if_true'] = self.expand_rule(rule['if_true'], _depth + 1)
+            if 'if_false' in rule and isinstance(rule['if_false'], dict):
+                rule['if_false'] = self.expand_rule(rule['if_false'], _depth + 1)
 
         # Process other nested structures
         for key in ['access_rule', 'rule', 'condition']:
