@@ -4,9 +4,7 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-[View WorldGen Template Results](./test-results-multiworld-worldgen.md)
-
-**Generated:** 2025-12-14 01:47:29
+**Generated:** 2025-12-14 04:20:57
 
 ## Summary
 
@@ -59,7 +57,7 @@
 | Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 8.1KB | ✅ |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | 3 | 3 | 58.5KB | 5.4KB |
 | Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 3 | 3 | 33.1KB | 105.3KB |
-| Kirby's Dream Land 3 | ❌ Failed | — | 3 | 3 | 13.5KB | ✅ |
+| Kirby's Dream Land 3 | ❌ Failed | — | 3 | 3 | 13.6KB | 9.0KB |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | 4 | 4 | 16.4KB | ✅ |
 | Lingo | ✅ Passed | ✅ Passed | 4 | 4 | 33.7KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | ✅ Passed | 4 | 4 | 17.9KB | ✅ |
@@ -93,12 +91,12 @@
 | Terraria | ✅ Passed | ✅ Passed | 7 | 7 | 19.2KB | ✅ |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | 7.0KB | ✅ |
 | The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 12.6KB | ✅ |
-| The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 4.8KB | 4.6KB |
+| The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 9.3KB | ✅ |
 | The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 28.9KB | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | 7 | 7 | 4.1KB | ✅ |
 | Undertale | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | VVVVVV | ✅ Passed | ✅ Passed | 7 | 7 | 5.4KB | ✅ |
-| Wargroove | ✅ Passed | ✅ Passed | 7 | 7 | 5.7KB | 2.6KB |
+| Wargroove | ✅ Passed | ✅ Passed | 7 | 7 | 9.6KB | ✅ |
 | WebDevJourney | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Yacht Dice | ✅ Passed | ✅ Passed | 8 | 8 | 1.6KB | 285.0KB |
 | Yoshi's Island | ✅ Passed | ✅ Passed | 8 | 8 | 10.8KB | ✅ |

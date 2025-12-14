@@ -1,0 +1,4276 @@
+{
+  "metadata": {
+    "combination_note": "Results combined from parallel seed tests",
+    "combined_from": 10,
+    "created": "2025-12-14T04:20:56.597400",
+    "last_updated": "2025-12-14T04:20:56.597407",
+    "script_version": "1.0.0"
+  },
+  "results": {
+    "A Hat in Time WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "2ce2a09e293a610f3e40941c135fe9a0d4a5cdb3c56f8740253c4e00ae711af1",
+          "new_sphere_log_hash": "cf182c30035ea6960299cd95730e7f9e8a30ec45ba0e6cca08ec191bb2982c55",
+          "original_rules_hash": "2ce2a09e293a610f3e40941c135fe9a0d4a5cdb3c56f8740253c4e00ae711af1",
+          "original_sphere_log_hash": "cf182c30035ea6960299cd95730e7f9e8a30ec45ba0e6cca08ec191bb2982c55",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:24.481309"
+        }
+      },
+      "game_name_from_filename": "ahit_worldgen",
+      "game_name_from_yaml": "A Hat in Time WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.33,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/ahit_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 162861,
+        "size_mb": 0.16
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 16,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.31,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 1.14,
+        "warning_count": 0
+      },
+      "template_filename": "A Hat in Time WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:38.365322",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "ahit_worldgen",
+        "game_name_from_yaml": "A Hat in Time WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "ahit_worldgen"
+      }
+    },
+    "A Link to the Past WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "4512a3df0840db1f19583011839cf0f561d78c9f02076a2d8a1c308b855a8412",
+          "new_sphere_log_hash": "4ad7429ec4aa4f540de412c53c1b9f26ff88c4037945a71ca209f791b471a78b",
+          "original_rules_hash": "4512a3df0840db1f19583011839cf0f561d78c9f02076a2d8a1c308b855a8412",
+          "original_sphere_log_hash": "4ad7429ec4aa4f540de412c53c1b9f26ff88c4037945a71ca209f791b471a78b",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:04:42.852626"
+        }
+      },
+      "game_name_from_filename": "alttp_worldgen",
+      "game_name_from_yaml": "A Link to the Past WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.24,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/alttp_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 337025,
+        "size_mb": 0.32
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 48,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.4,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 6.6,
+        "warning_count": 0
+      },
+      "template_filename": "A Link to the Past WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:20.728230",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "alttp_worldgen",
+        "game_name_from_yaml": "A Link to the Past WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "alttp_worldgen"
+      }
+    },
+    "A Short Hike WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "3011c07dc867d9cf888f67029250fcc03f2439abedba92f4a249c28ae0fa2042",
+          "new_sphere_log_hash": "30f2051a9f2024ce486062e4d83deca4182ea2f759637ac2634b86e9bcb4691e",
+          "original_rules_hash": "3011c07dc867d9cf888f67029250fcc03f2439abedba92f4a249c28ae0fa2042",
+          "original_sphere_log_hash": "30f2051a9f2024ce486062e4d83deca4182ea2f759637ac2634b86e9bcb4691e",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:03:52.439135"
+        }
+      },
+      "game_name_from_filename": "shorthike_worldgen",
+      "game_name_from_yaml": "A Short Hike WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.26,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/shorthike_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 75305,
+        "size_mb": 0.07
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 10,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.28,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 3.1,
+        "warning_count": 0
+      },
+      "template_filename": "A Short Hike WorldGen.yaml",
+      "timestamp": "2025-12-14T04:02:33.570730",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "shorthike_worldgen",
+        "game_name_from_yaml": "A Short Hike WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "shorthike_worldgen"
+      }
+    },
+    "APQuest WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": false,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "error": "Original rules file not found",
+          "rules_identical": null,
+          "seed": "1",
+          "spoilers_identical": null,
+          "timestamp": "2025-12-14T04:05:03.595324"
+        }
+      },
+      "game_name_from_filename": "apquest_worldgen",
+      "game_name_from_yaml": "APQuest WorldGen",
+      "generation": {
+        "error_count": 3,
+        "error_type": "FillError",
+        "processing_time_seconds": 3.05,
+        "return_code": 1,
+        "success": false,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": null,
+        "size_bytes": 0,
+        "size_mb": 0.0
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "unknown",
+        "processing_time_seconds": 0,
+        "return_code": null,
+        "sphere_reached": 0,
+        "success": false,
+        "total_spheres": 0,
+        "warning_count": 0
+      },
+      "template_filename": "APQuest WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:24.340722",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "apquest_worldgen",
+        "game_name_from_yaml": "APQuest WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "apquest_worldgen"
+      }
+    },
+    "Adventure WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "26a4771389180d64366b3c559191df3a8cc2d618acf331af7626813b2a7ac874",
+          "new_sphere_log_hash": "b97a376f0a48d6b9690429edda5bddef3acb2525536e70ac32ded7f826684cab",
+          "original_rules_hash": "26a4771389180d64366b3c559191df3a8cc2d618acf331af7626813b2a7ac874",
+          "original_sphere_log_hash": "b97a376f0a48d6b9690429edda5bddef3acb2525536e70ac32ded7f826684cab",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:04:33.201802"
+        }
+      },
+      "game_name_from_filename": "adventure_worldgen",
+      "game_name_from_yaml": "Adventure WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.17,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/adventure_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 24450,
+        "size_mb": 0.02
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 12,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.24,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 6.1,
+        "warning_count": 0
+      },
+      "template_filename": "Adventure WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:10.299891",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "adventure_worldgen",
+        "game_name_from_yaml": "Adventure WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "adventure_worldgen"
+      }
+    },
+    "Aquaria WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "5db7504c6ed00133993c164c43a8a0bffe773564fb03670cc6c43924e2c04630",
+          "new_sphere_log_hash": "04d0485e4067d0955f796b2e772df72b76f03d7e9dd0df0077bdc9ca185f9c9c",
+          "original_rules_hash": "5db7504c6ed00133993c164c43a8a0bffe773564fb03670cc6c43924e2c04630",
+          "original_sphere_log_hash": "04d0485e4067d0955f796b2e772df72b76f03d7e9dd0df0077bdc9ca185f9c9c",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:41.237381"
+        }
+      },
+      "game_name_from_filename": "aquaria_worldgen",
+      "game_name_from_yaml": "Aquaria WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.18,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/aquaria_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 292449,
+        "size_mb": 0.28
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 10,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.18,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 5.2,
+        "warning_count": 0
+      },
+      "template_filename": "Aquaria WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:49.559070",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "aquaria_worldgen",
+        "game_name_from_yaml": "Aquaria WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "aquaria_worldgen"
+      }
+    },
+    "Bomb Rush Cyberfunk WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "bfbfff204d1f4a8d52eb7642ba84c7c281f251815869f6d5d10275685e48b8db",
+          "new_sphere_log_hash": "ee43f2eeb245827b925c12a7b8212a9fed43d4bb045683100bae83823efe5d53",
+          "original_rules_hash": "bfbfff204d1f4a8d52eb7642ba84c7c281f251815869f6d5d10275685e48b8db",
+          "original_sphere_log_hash": "ee43f2eeb245827b925c12a7b8212a9fed43d4bb045683100bae83823efe5d53",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:27.916215"
+        }
+      },
+      "game_name_from_filename": "bomb_rush_cyberfunk_worldgen",
+      "game_name_from_yaml": "Bomb Rush Cyberfunk WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.57,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/bomb_rush_cyberfunk_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 190956,
+        "size_mb": 0.18
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 19.59,
+        "return_code": 0,
+        "sphere_reached": 1.16,
+        "success": true,
+        "total_spheres": 1.16,
+        "warning_count": 0
+      },
+      "template_filename": "Bomb Rush Cyberfunk WorldGen.yaml",
+      "timestamp": "2025-12-14T04:00:00.066865",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "bomb_rush_cyberfunk_worldgen",
+        "game_name_from_yaml": "Bomb Rush Cyberfunk WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "bomb_rush_cyberfunk_worldgen"
+      }
+    },
+    "Bumper Stickers WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "86fcc940fefd5d6f01a128b8b2d54caac0191ac83ffb3a7cb799306c01310b53",
+          "new_sphere_log_hash": "4dc76e673ccdbbbf56c5bf26b5f854e0b1246cf41691701de6fe5bce2928ef77",
+          "original_rules_hash": "86fcc940fefd5d6f01a128b8b2d54caac0191ac83ffb3a7cb799306c01310b53",
+          "original_sphere_log_hash": "4dc76e673ccdbbbf56c5bf26b5f854e0b1246cf41691701de6fe5bce2928ef77",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:03:33.806105"
+        }
+      },
+      "game_name_from_filename": "bumpstik_worldgen",
+      "game_name_from_yaml": "Bumper Stickers WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.39,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/bumpstik_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 52357,
+        "size_mb": 0.05
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 10.38,
+        "return_code": 0,
+        "sphere_reached": 8.2,
+        "success": true,
+        "total_spheres": 8.2,
+        "warning_count": 0
+      },
+      "template_filename": "Bumper Stickers WorldGen.yaml",
+      "timestamp": "2025-12-14T03:59:53.230235",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "bumpstik_worldgen",
+        "game_name_from_yaml": "Bumper Stickers WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "bumpstik_worldgen"
+      }
+    },
+    "Castlevania - Circle of the Moon WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": false,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "error": "Original rules file not found",
+          "rules_identical": null,
+          "seed": "1",
+          "spoilers_identical": null,
+          "timestamp": "2025-12-14T04:03:57.480962"
+        }
+      },
+      "game_name_from_filename": "cvcotm_worldgen",
+      "game_name_from_yaml": "Castlevania - Circle of the Moon WorldGen",
+      "generation": {
+        "error_count": 3,
+        "error_type": "FillError",
+        "processing_time_seconds": 3.41,
+        "return_code": 1,
+        "success": false,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": null,
+        "size_bytes": 0,
+        "size_mb": 0.0
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "unknown",
+        "processing_time_seconds": 0,
+        "return_code": null,
+        "sphere_reached": 0,
+        "success": false,
+        "total_spheres": 0,
+        "warning_count": 0
+      },
+      "template_filename": "Castlevania - Circle of the Moon WorldGen.yaml",
+      "timestamp": "2025-12-14T04:02:53.192440",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "cvcotm_worldgen",
+        "game_name_from_yaml": "Castlevania - Circle of the Moon WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "cvcotm_worldgen"
+      }
+    },
+    "Castlevania 64 WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "9a976e58539e47c66233f41272232b0cb147a9bce42574cec0f4f9260e24dc25",
+          "new_sphere_log_hash": "eef4c67bde875db15d47a2dcb83b0120d600e4546348cd0d490c089c6f752f2d",
+          "original_rules_hash": "9a976e58539e47c66233f41272232b0cb147a9bce42574cec0f4f9260e24dc25",
+          "original_sphere_log_hash": "eef4c67bde875db15d47a2dcb83b0120d600e4546348cd0d490c089c6f752f2d",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:20:13.503833"
+        }
+      },
+      "game_name_from_filename": "cv64_worldgen",
+      "game_name_from_yaml": "Castlevania 64 WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.39,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/cv64_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 121777,
+        "size_mb": 0.12
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 10,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.49,
+        "return_code": 1,
+        "sphere_reached": 1.3,
+        "success": false,
+        "total_spheres": 4.1,
+        "warning_count": 0
+      },
+      "template_filename": "Castlevania 64 WorldGen.yaml",
+      "timestamp": "2025-12-14T04:13:28.061189",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "cv64_worldgen",
+        "game_name_from_yaml": "Castlevania 64 WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "cv64_worldgen"
+      }
+    },
+    "Celeste (Open World) WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "5fa44a8016a2ce8d8992d77b9196ed82d55d14325af373e7fec489b97efa6e8a",
+          "new_sphere_log_hash": "4a9fc539d95ef17648763ebed544557b32dc3cfe22e080d3f5fa036acfac1d40",
+          "original_rules_hash": "5fa44a8016a2ce8d8992d77b9196ed82d55d14325af373e7fec489b97efa6e8a",
+          "original_sphere_log_hash": "4a9fc539d95ef17648763ebed544557b32dc3cfe22e080d3f5fa036acfac1d40",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:28.735001"
+        }
+      },
+      "game_name_from_filename": "celeste_open_world_worldgen",
+      "game_name_from_yaml": "Celeste (Open World) WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 4.21,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/celeste_open_world_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 1143256,
+        "size_mb": 1.09
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 12,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.53,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 16.2,
+        "warning_count": 0
+      },
+      "template_filename": "Celeste (Open World) WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:56.995826",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "celeste_open_world_worldgen",
+        "game_name_from_yaml": "Celeste (Open World) WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "celeste_open_world_worldgen"
+      }
+    },
+    "Celeste 64 WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "35dc3d97e07858e951c2110656b30037a6c3aa58bbf5b79dae370c74856a2510",
+          "new_sphere_log_hash": "8651ac55094dd9d320bc1f4359819cc2938466fa3410ed0e149fc0361da40f02",
+          "original_rules_hash": "35dc3d97e07858e951c2110656b30037a6c3aa58bbf5b79dae370c74856a2510",
+          "original_sphere_log_hash": "8651ac55094dd9d320bc1f4359819cc2938466fa3410ed0e149fc0361da40f02",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:04:46.018464"
+        }
+      },
+      "game_name_from_filename": "celeste64_worldgen",
+      "game_name_from_yaml": "Celeste 64 WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.13,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/celeste64_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 36968,
+        "size_mb": 0.04
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 7.6,
+        "return_code": 0,
+        "sphere_reached": 0.38,
+        "success": true,
+        "total_spheres": 0.38,
+        "warning_count": 0
+      },
+      "template_filename": "Celeste 64 WorldGen.yaml",
+      "timestamp": "2025-12-14T04:00:30.149967",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "celeste64_worldgen",
+        "game_name_from_yaml": "Celeste 64 WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "celeste64_worldgen"
+      }
+    },
+    "ChecksFinder WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "d51e3d12f06685a4c80e725f2d98d2b22e3eb132af91403a6fe0e118ab10eb17",
+          "new_sphere_log_hash": "b23510acace8de934737b9cc5bccee164c70ba8cd1c6759af96bf7097e18f701",
+          "original_rules_hash": "d51e3d12f06685a4c80e725f2d98d2b22e3eb132af91403a6fe0e118ab10eb17",
+          "original_sphere_log_hash": "b23510acace8de934737b9cc5bccee164c70ba8cd1c6759af96bf7097e18f701",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:03:55.662538"
+        }
+      },
+      "game_name_from_filename": "checksfinder_worldgen",
+      "game_name_from_yaml": "ChecksFinder WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.24,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/checksfinder_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 16371,
+        "size_mb": 0.02
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 10,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.24,
+        "return_code": 1,
+        "sphere_reached": 0.1,
+        "success": false,
+        "total_spheres": 4.5,
+        "warning_count": 0
+      },
+      "template_filename": "ChecksFinder WorldGen.yaml",
+      "timestamp": "2025-12-14T04:02:52.120134",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "checksfinder_worldgen",
+        "game_name_from_yaml": "ChecksFinder WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "checksfinder_worldgen"
+      }
+    },
+    "ChocolateChipCookies WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "4025e690eade1156dfb6e4beecb8f8c07aded94158548cdaf2640bfb45b42ce6",
+          "new_sphere_log_hash": "50278265a6026bf7c965e9a62b5f47f20d3fdf4242901dd80c39d818d028c231",
+          "original_rules_hash": "4025e690eade1156dfb6e4beecb8f8c07aded94158548cdaf2640bfb45b42ce6",
+          "original_sphere_log_hash": "50278265a6026bf7c965e9a62b5f47f20d3fdf4242901dd80c39d818d028c231",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:06.822581"
+        }
+      },
+      "game_name_from_filename": "bakingadventure_worldgen",
+      "game_name_from_yaml": "ChocolateChipCookies WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.25,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/bakingadventure_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 19235,
+        "size_mb": 0.02
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 12,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.15,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 8.1,
+        "warning_count": 0
+      },
+      "template_filename": "ChocolateChipCookies WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:28.134227",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "bakingadventure_worldgen",
+        "game_name_from_yaml": "ChocolateChipCookies WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "bakingadventure_worldgen"
+      }
+    },
+    "Choo-Choo Charles WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "a3183948b474f4e4d28fbafc26e7cce500c8e7c5b2e94a22b49c9fb33c6cb2d3",
+          "new_sphere_log_hash": "6049e46154df27e622b9c918970ef96873999eb25298e1edb5e46c482b1158bc",
+          "original_rules_hash": "a3183948b474f4e4d28fbafc26e7cce500c8e7c5b2e94a22b49c9fb33c6cb2d3",
+          "original_sphere_log_hash": "6049e46154df27e622b9c918970ef96873999eb25298e1edb5e46c482b1158bc",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:04:36.466167"
+        }
+      },
+      "game_name_from_filename": "cccharles_worldgen",
+      "game_name_from_yaml": "Choo-Choo Charles WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.25,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/cccharles_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 312370,
+        "size_mb": 0.3
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 10,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.32,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 4.1,
+        "warning_count": 0
+      },
+      "template_filename": "Choo-Choo Charles WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:28.714114",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "cccharles_worldgen",
+        "game_name_from_yaml": "Choo-Choo Charles WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "cccharles_worldgen"
+      }
+    },
+    "Civilization VI WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "83d3f8e3aee2b550d5513b46c4704567ca1a416756f2f3c5f3a6f4d74c1ec65f",
+          "new_sphere_log_hash": "ebcafde15f4b92fea83fb33373ce880d2db8294cff3e38d782ea7d244dff5e47",
+          "original_rules_hash": "83d3f8e3aee2b550d5513b46c4704567ca1a416756f2f3c5f3a6f4d74c1ec65f",
+          "original_sphere_log_hash": "ebcafde15f4b92fea83fb33373ce880d2db8294cff3e38d782ea7d244dff5e47",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:44.416853"
+        }
+      },
+      "game_name_from_filename": "civ_6_worldgen",
+      "game_name_from_yaml": "Civilization VI WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.15,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/civ_6_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 118164,
+        "size_mb": 0.11
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 12,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.26,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 8.2,
+        "warning_count": 0
+      },
+      "template_filename": "Civilization VI WorldGen.yaml",
+      "timestamp": "2025-12-14T04:04:07.927357",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "civ_6_worldgen",
+        "game_name_from_yaml": "Civilization VI WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "civ_6_worldgen"
+      }
+    },
+    "DLCQuest WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "81cea0591d4585886385242733cdcf9c88440f694877813e7dbe9677b6527eef",
+          "new_sphere_log_hash": "1cdfbb236dfc0e56d4b39dc3b101bafacaf4226ec83a09c5c0d8c5495e93be77",
+          "original_rules_hash": "81cea0591d4585886385242733cdcf9c88440f694877813e7dbe9677b6527eef",
+          "original_sphere_log_hash": "1cdfbb236dfc0e56d4b39dc3b101bafacaf4226ec83a09c5c0d8c5495e93be77",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:31.147946"
+        }
+      },
+      "game_name_from_filename": "dlcquest_worldgen",
+      "game_name_from_yaml": "DLCQuest WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.2,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/dlcquest_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 44215,
+        "size_mb": 0.04
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 10,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.36,
+        "return_code": 1,
+        "sphere_reached": 3.1,
+        "success": false,
+        "total_spheres": 5.1,
+        "warning_count": 0
+      },
+      "template_filename": "DLCQuest WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:44.692527",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "dlcquest_worldgen",
+        "game_name_from_yaml": "DLCQuest WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "dlcquest_worldgen"
+      }
+    },
+    "DOOM 1993 WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "5692af2126509fc18398a736370e6aa48e30ce965ab3725701608c8d22f3f0d6",
+          "new_sphere_log_hash": "8b30e8e4e51e96b8aa0f2a86f0566e4ff670bd6c0d12b523e911bd6a03c0f7a4",
+          "original_rules_hash": "5692af2126509fc18398a736370e6aa48e30ce965ab3725701608c8d22f3f0d6",
+          "original_sphere_log_hash": "8b30e8e4e51e96b8aa0f2a86f0566e4ff670bd6c0d12b523e911bd6a03c0f7a4",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:03:37.055671"
+        }
+      },
+      "game_name_from_filename": "doom_1993_worldgen",
+      "game_name_from_yaml": "DOOM 1993 WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.24,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/doom_1993_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 297719,
+        "size_mb": 0.28
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 30,
+        "pass_fail": "failed",
+        "processing_time_seconds": 15.97,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 18.2,
+        "warning_count": 0
+      },
+      "template_filename": "DOOM 1993 WorldGen.yaml",
+      "timestamp": "2025-12-14T04:02:43.548364",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "doom_1993_worldgen",
+        "game_name_from_yaml": "DOOM 1993 WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "doom_1993_worldgen"
+      }
+    },
+    "DOOM II WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "fa5bfed55a4cb2489ff92b90b32fcaab66a2de8d9f9a6dd191ed4f5d0f7b0732",
+          "new_sphere_log_hash": "a77c7e8346c2a6e501b7eb41d4bf323e80b834dee62121aa7684ca98538c0eaa",
+          "original_rules_hash": "fa5bfed55a4cb2489ff92b90b32fcaab66a2de8d9f9a6dd191ed4f5d0f7b0732",
+          "original_sphere_log_hash": "a77c7e8346c2a6e501b7eb41d4bf323e80b834dee62121aa7684ca98538c0eaa",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:04:01.082753"
+        }
+      },
+      "game_name_from_filename": "doom_ii_worldgen",
+      "game_name_from_yaml": "DOOM II WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.52,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/doom_ii_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 350613,
+        "size_mb": 0.33
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 18,
+        "pass_fail": "failed",
+        "processing_time_seconds": 15.66,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 21.2,
+        "warning_count": 0
+      },
+      "template_filename": "DOOM II WorldGen.yaml",
+      "timestamp": "2025-12-14T04:02:57.459721",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "doom_ii_worldgen",
+        "game_name_from_yaml": "DOOM II WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "doom_ii_worldgen"
+      }
+    },
+    "Dark Souls III WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "1a1edfb3dfa8056f9d339cb16057f4f3effaea1af6cd3b1a40c9203831d48f81",
+          "new_sphere_log_hash": "3021116bd0a0766d86bc25b4ff80fb2c9988692d2248b36974037be6e2dd966a",
+          "original_rules_hash": "1a1edfb3dfa8056f9d339cb16057f4f3effaea1af6cd3b1a40c9203831d48f81",
+          "original_sphere_log_hash": "3021116bd0a0766d86bc25b4ff80fb2c9988692d2248b36974037be6e2dd966a",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:20:17.157786"
+        }
+      },
+      "game_name_from_filename": "dark_souls_3_worldgen",
+      "game_name_from_yaml": "Dark Souls III WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.64,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/dark_souls_3_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 964086,
+        "size_mb": 0.92
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 90,
+        "pass_fail": "failed",
+        "processing_time_seconds": 15.03,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 5.1,
+        "warning_count": 0
+      },
+      "template_filename": "Dark Souls III WorldGen.yaml",
+      "timestamp": "2025-12-14T04:13:46.939584",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "dark_souls_3_worldgen",
+        "game_name_from_yaml": "Dark Souls III WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "dark_souls_3_worldgen"
+      }
+    },
+    "Donkey Kong Country 3 WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "d5aed2a55c83a98b9475bed85c2390c10e42cf34efbffd1b863a4b6e266386fa",
+          "new_sphere_log_hash": "1245b03551b963e29c28b2db3d5a9baa19b9d0576f2324a2013b5e2a957e1707",
+          "original_rules_hash": "d5aed2a55c83a98b9475bed85c2390c10e42cf34efbffd1b863a4b6e266386fa",
+          "original_sphere_log_hash": "1245b03551b963e29c28b2db3d5a9baa19b9d0576f2324a2013b5e2a957e1707",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:31.990501"
+        }
+      },
+      "game_name_from_filename": "dkc3_worldgen",
+      "game_name_from_yaml": "Donkey Kong Country 3 WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.22,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/dkc3_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 104900,
+        "size_mb": 0.1
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 13.71,
+        "return_code": 0,
+        "sphere_reached": 3.1,
+        "success": true,
+        "total_spheres": 3.1,
+        "warning_count": 0
+      },
+      "template_filename": "Donkey Kong Country 3 WorldGen.yaml",
+      "timestamp": "2025-12-14T04:00:36.167061",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "dkc3_worldgen",
+        "game_name_from_yaml": "Donkey Kong Country 3 WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "dkc3_worldgen"
+      }
+    },
+    "Factorio WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": false,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "error": "Original rules file not found",
+          "rules_identical": null,
+          "seed": "1",
+          "spoilers_identical": null,
+          "timestamp": "2025-12-14T04:04:46.034608"
+        }
+      },
+      "game_name_from_filename": "factorio_worldgen",
+      "game_name_from_yaml": "Factorio WorldGen",
+      "generation": {
+        "error_count": 3,
+        "error_type": "FillError",
+        "processing_time_seconds": 2.95,
+        "return_code": 1,
+        "success": false,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": null,
+        "size_bytes": 0,
+        "size_mb": 0.0
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "unknown",
+        "processing_time_seconds": 0,
+        "return_code": null,
+        "sphere_reached": 0,
+        "success": false,
+        "total_spheres": 0,
+        "warning_count": 0
+      },
+      "template_filename": "Factorio WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:39.346898",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "factorio_worldgen",
+        "game_name_from_yaml": "Factorio WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "factorio_worldgen"
+      }
+    },
+    "Faxanadu WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "0523d65511c0747c20a72e4fde72eda50d0ae9916baf9bde1e43aa98aa753542",
+          "new_sphere_log_hash": "c914a3fa39b68263015ec0471b98bf4bfb27766b9922054a5e9f710b65803343",
+          "original_rules_hash": "0523d65511c0747c20a72e4fde72eda50d0ae9916baf9bde1e43aa98aa753542",
+          "original_sphere_log_hash": "c914a3fa39b68263015ec0471b98bf4bfb27766b9922054a5e9f710b65803343",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:03:58.927986"
+        }
+      },
+      "game_name_from_filename": "faxanadu_worldgen",
+      "game_name_from_yaml": "Faxanadu WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.21,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/faxanadu_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 72477,
+        "size_mb": 0.07
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 10,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.27,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 9.1,
+        "warning_count": 0
+      },
+      "template_filename": "Faxanadu WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:10.560834",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "faxanadu_worldgen",
+        "game_name_from_yaml": "Faxanadu WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "faxanadu_worldgen"
+      }
+    },
+    "Final Fantasy Mystic Quest WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "947e80c56fe845de25eebf358e070834b4890a52a5b37225cfafec87d3dd63c3",
+          "new_sphere_log_hash": "d8a256813915f623031bc028c84d8aae8f14eb24645bc4997d98037c6d34c962",
+          "original_rules_hash": "947e80c56fe845de25eebf358e070834b4890a52a5b37225cfafec87d3dd63c3",
+          "original_sphere_log_hash": "d8a256813915f623031bc028c84d8aae8f14eb24645bc4997d98037c6d34c962",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:10.145216"
+        }
+      },
+      "game_name_from_filename": "ffmq_worldgen",
+      "game_name_from_yaml": "Final Fantasy Mystic Quest WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.36,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/ffmq_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 362020,
+        "size_mb": 0.35
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 20,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.18,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 18.2,
+        "warning_count": 0
+      },
+      "template_filename": "Final Fantasy Mystic Quest WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:46.431243",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "ffmq_worldgen",
+        "game_name_from_yaml": "Final Fantasy Mystic Quest WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "ffmq_worldgen"
+      }
+    },
+    "Heretic WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "a2b2b38d6e90d44f751120d4318c36e94a199e2950c20b88abc5fd3f8e69c9ce",
+          "new_sphere_log_hash": "1a4781fb46e2c5a24ab3d65b2d803eea4ee12cb01964a27812746bcdaa6abcd0",
+          "original_rules_hash": "a2b2b38d6e90d44f751120d4318c36e94a199e2950c20b88abc5fd3f8e69c9ce",
+          "original_sphere_log_hash": "1a4781fb46e2c5a24ab3d65b2d803eea4ee12cb01964a27812746bcdaa6abcd0",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:04:39.711667"
+        }
+      },
+      "game_name_from_filename": "heretic_worldgen",
+      "game_name_from_yaml": "Heretic WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.47,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/heretic_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 392556,
+        "size_mb": 0.37
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 22,
+        "pass_fail": "failed",
+        "processing_time_seconds": 15.16,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 24.1,
+        "warning_count": 0
+      },
+      "template_filename": "Heretic WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:47.297402",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "heretic_worldgen",
+        "game_name_from_yaml": "Heretic WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "heretic_worldgen"
+      }
+    },
+    "Hylics 2 WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "6011ebf7cdd36ac290e6e90eb6eee8b726b623dce520c941ef9f3d1652e3dde2",
+          "new_sphere_log_hash": "530a65f0f1c556705e859ce31ff25fdd90b720676d3df978c7b2d4abeb4bbaf4",
+          "original_rules_hash": "6011ebf7cdd36ac290e6e90eb6eee8b726b623dce520c941ef9f3d1652e3dde2",
+          "original_sphere_log_hash": "530a65f0f1c556705e859ce31ff25fdd90b720676d3df978c7b2d4abeb4bbaf4",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:47.594514"
+        }
+      },
+      "game_name_from_filename": "hylics2_worldgen",
+      "game_name_from_yaml": "Hylics 2 WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.15,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/hylics2_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 101515,
+        "size_mb": 0.1
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 60,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.29,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 7.2,
+        "warning_count": 0
+      },
+      "template_filename": "Hylics 2 WorldGen.yaml",
+      "timestamp": "2025-12-14T04:04:26.328469",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "hylics2_worldgen",
+        "game_name_from_yaml": "Hylics 2 WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "hylics2_worldgen"
+      }
+    },
+    "Inscryption WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "d354f76d3a8c4616194980a2cb37ba567ac78bebaecaef23d77e83cd6e801b99",
+          "new_sphere_log_hash": "444a5b654c947beb45ba27fd6360178c43f22aa264dcca664e59d2f1fb6bd470",
+          "original_rules_hash": "d354f76d3a8c4616194980a2cb37ba567ac78bebaecaef23d77e83cd6e801b99",
+          "original_sphere_log_hash": "444a5b654c947beb45ba27fd6360178c43f22aa264dcca664e59d2f1fb6bd470",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:34.361147"
+        }
+      },
+      "game_name_from_filename": "inscryption_worldgen",
+      "game_name_from_yaml": "Inscryption WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.18,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/inscryption_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 79777,
+        "size_mb": 0.08
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 12,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.21,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 9.2,
+        "warning_count": 0
+      },
+      "template_filename": "Inscryption WorldGen.yaml",
+      "timestamp": "2025-12-14T04:04:03.247749",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "inscryption_worldgen",
+        "game_name_from_yaml": "Inscryption WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "inscryption_worldgen"
+      }
+    },
+    "Kingdom Hearts 2 WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "51ea9818c66004c314b3b6220d328b66ee1cf7b2ee421a0465ed87b3b01a629f",
+          "new_sphere_log_hash": "d36d9b0dc94a10f9f124d1328a1f3cc3bf47ef2dd1e05f660c6f278b982bd29a",
+          "original_rules_hash": "51ea9818c66004c314b3b6220d328b66ee1cf7b2ee421a0465ed87b3b01a629f",
+          "original_sphere_log_hash": "d36d9b0dc94a10f9f124d1328a1f3cc3bf47ef2dd1e05f660c6f278b982bd29a",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:03:40.438952"
+        }
+      },
+      "game_name_from_filename": "kh2_worldgen",
+      "game_name_from_yaml": "Kingdom Hearts 2 WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.36,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/kh2_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 439731,
+        "size_mb": 0.42
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 46.89,
+        "return_code": 0,
+        "sphere_reached": 1.8,
+        "success": true,
+        "total_spheres": 1.8,
+        "warning_count": 0
+      },
+      "template_filename": "Kingdom Hearts 2 WorldGen.yaml",
+      "timestamp": "2025-12-14T04:00:28.521186",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "kh2_worldgen",
+        "game_name_from_yaml": "Kingdom Hearts 2 WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "kh2_worldgen"
+      }
+    },
+    "Kingdom Hearts WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "779bfec863f422cbb75e1cee67a05db9d0f374caf0cc0ee30b46a46a73cee245",
+          "new_sphere_log_hash": "558e255317a98d381016ff02ca89499a465ca755c3984055bec92998b60e807c",
+          "original_rules_hash": "779bfec863f422cbb75e1cee67a05db9d0f374caf0cc0ee30b46a46a73cee245",
+          "original_sphere_log_hash": "558e255317a98d381016ff02ca89499a465ca755c3984055bec92998b60e807c",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:04:04.817497"
+        }
+      },
+      "game_name_from_filename": "kh1_worldgen",
+      "game_name_from_yaml": "Kingdom Hearts WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.77,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/kh1_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 446724,
+        "size_mb": 0.43
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 20,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.98,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 9.1,
+        "warning_count": 0
+      },
+      "template_filename": "Kingdom Hearts WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:17.731112",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "kh1_worldgen",
+        "game_name_from_yaml": "Kingdom Hearts WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "kh1_worldgen"
+      }
+    },
+    "Kirby's Dream Land 3 WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "e3181faabad9fe0a3828840aa8654057ed8f3fd989bf29e29a0878c1fe2423db",
+          "new_sphere_log_hash": "cde4d4f8a76f5f72a0dfbe6cb56ac2d4f48516c97bead9830a014255042601c0",
+          "original_rules_hash": "e3181faabad9fe0a3828840aa8654057ed8f3fd989bf29e29a0878c1fe2423db",
+          "original_sphere_log_hash": "cde4d4f8a76f5f72a0dfbe6cb56ac2d4f48516c97bead9830a014255042601c0",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:20:20.896933"
+        }
+      },
+      "game_name_from_filename": "kdl3_worldgen",
+      "game_name_from_yaml": "Kirby's Dream Land 3 WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.72,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/kdl3_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 462931,
+        "size_mb": 0.44
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 90,
+        "pass_fail": "failed",
+        "processing_time_seconds": 300.02,
+        "return_code": -1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 9.2,
+        "warning_count": 0
+      },
+      "template_filename": "Kirby's Dream Land 3 WorldGen.yaml",
+      "timestamp": "2025-12-14T04:14:06.587567",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "kdl3_worldgen",
+        "game_name_from_yaml": "Kirby's Dream Land 3 WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "kdl3_worldgen"
+      }
+    },
+    "Landstalker - The Treasures of King Nole WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "c15a80b913121d9f381535029e1ead101450529e0fde001898d79978c23e773e",
+          "new_sphere_log_hash": "887a164d884b7220f72c56604603e8e15e56b6ef88487ef8a9a9ab028a58c31a",
+          "original_rules_hash": "c15a80b913121d9f381535029e1ead101450529e0fde001898d79978c23e773e",
+          "original_sphere_log_hash": "887a164d884b7220f72c56604603e8e15e56b6ef88487ef8a9a9ab028a58c31a",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:35.340856"
+        }
+      },
+      "game_name_from_filename": "landstalker_worldgen",
+      "game_name_from_yaml": "Landstalker - The Treasures of King Nole WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.28,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/landstalker_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 191012,
+        "size_mb": 0.18
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 10,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.29,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 6.8,
+        "warning_count": 0
+      },
+      "template_filename": "Landstalker - The Treasures of King Nole WorldGen.yaml",
+      "timestamp": "2025-12-14T04:04:16.756770",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "landstalker_worldgen",
+        "game_name_from_yaml": "Landstalker - The Treasures of King Nole WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "landstalker_worldgen"
+      }
+    },
+    "Lingo WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "d22e4107a7fa41c0507a652ac3d18e8969443265a83f21455486333d4d021355",
+          "new_sphere_log_hash": "4cdb8932b165e07886f458d58f9fe90c20d4041c5b8bac8c7a9c01c35747112a",
+          "original_rules_hash": "d22e4107a7fa41c0507a652ac3d18e8969443265a83f21455486333d4d021355",
+          "original_sphere_log_hash": "4cdb8932b165e07886f458d58f9fe90c20d4041c5b8bac8c7a9c01c35747112a",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:04:49.277124"
+        }
+      },
+      "game_name_from_filename": "lingo_worldgen",
+      "game_name_from_yaml": "Lingo WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.2,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/lingo_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 300652,
+        "size_mb": 0.29
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 5.61,
+        "return_code": 0,
+        "sphere_reached": 0.6,
+        "success": true,
+        "total_spheres": 0.6,
+        "warning_count": 0
+      },
+      "template_filename": "Lingo WorldGen.yaml",
+      "timestamp": "2025-12-14T04:00:45.635027",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "lingo_worldgen",
+        "game_name_from_yaml": "Lingo WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "lingo_worldgen"
+      }
+    },
+    "Links Awakening DX WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": false,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "error": "Original rules file not found",
+          "rules_identical": null,
+          "seed": "1",
+          "spoilers_identical": null,
+          "timestamp": "2025-12-14T04:03:58.965889"
+        }
+      },
+      "game_name_from_filename": "ladx_worldgen",
+      "game_name_from_yaml": "Links Awakening DX WorldGen",
+      "generation": {
+        "error_count": 3,
+        "error_type": "FillError",
+        "processing_time_seconds": 3.09,
+        "return_code": 1,
+        "success": false,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": null,
+        "size_bytes": 0,
+        "size_mb": 0.0
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "unknown",
+        "processing_time_seconds": 0,
+        "return_code": null,
+        "sphere_reached": 0,
+        "success": false,
+        "total_spheres": 0,
+        "warning_count": 0
+      },
+      "template_filename": "Links Awakening DX WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:29.025709",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "ladx_worldgen",
+        "game_name_from_yaml": "Links Awakening DX WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "ladx_worldgen"
+      }
+    },
+    "Lufia II Ancient Cave WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "e647107e9b14fe67b5118c51bde839e8d5f6b5f36b86af130b47ed2a8c46c6d2",
+          "new_sphere_log_hash": "3b7d49d164874fb437aa30a14ddef2abe0c16eec5731f36f00eafa91fd4a832c",
+          "original_rules_hash": "e647107e9b14fe67b5118c51bde839e8d5f6b5f36b86af130b47ed2a8c46c6d2",
+          "original_sphere_log_hash": "3b7d49d164874fb437aa30a14ddef2abe0c16eec5731f36f00eafa91fd4a832c",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:13.377387"
+        }
+      },
+      "game_name_from_filename": "lufia2ac_worldgen",
+      "game_name_from_yaml": "Lufia II Ancient Cave WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.13,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/lufia2ac_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 126478,
+        "size_mb": 0.12
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 5.57,
+        "return_code": 0,
+        "sphere_reached": 4.11,
+        "success": true,
+        "total_spheres": 4.11,
+        "warning_count": 0
+      },
+      "template_filename": "Lufia II Ancient Cave WorldGen.yaml",
+      "timestamp": "2025-12-14T04:00:38.864950",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "lufia2ac_worldgen",
+        "game_name_from_yaml": "Lufia II Ancient Cave WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "lufia2ac_worldgen"
+      }
+    },
+    "Mario & Luigi Superstar Saga WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "b92669527cfb852c9f261ea19a86741b472e881c2b24d46ef29209cd492b4455",
+          "new_sphere_log_hash": "d512059102e0cfd3cdda22db09b1a67d966089cd40f280b24acb071c58d5c724",
+          "original_rules_hash": "b92669527cfb852c9f261ea19a86741b472e881c2b24d46ef29209cd492b4455",
+          "original_sphere_log_hash": "d512059102e0cfd3cdda22db09b1a67d966089cd40f280b24acb071c58d5c724",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:04:42.967472"
+        }
+      },
+      "game_name_from_filename": "mlss_worldgen",
+      "game_name_from_yaml": "Mario & Luigi Superstar Saga WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.23,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/mlss_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 290938,
+        "size_mb": 0.28
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 9.66,
+        "return_code": 0,
+        "sphere_reached": 0.38,
+        "success": true,
+        "total_spheres": 0.38,
+        "warning_count": 0
+      },
+      "template_filename": "Mario & Luigi Superstar Saga WorldGen.yaml",
+      "timestamp": "2025-12-14T04:01:02.869807",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "mlss_worldgen",
+        "game_name_from_yaml": "Mario & Luigi Superstar Saga WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "mlss_worldgen"
+      }
+    },
+    "MathProof2p2e4 WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "d1544aa7f17248050c2eddd2a86c4b4c5d4aa192bc741b879abee0cb333e4f10",
+          "new_sphere_log_hash": "6864f11a61cad07f2c1d9d2b6ddcccf23eb02fa07a426c063e3cd1092d583400",
+          "original_rules_hash": "d1544aa7f17248050c2eddd2a86c4b4c5d4aa192bc741b879abee0cb333e4f10",
+          "original_sphere_log_hash": "6864f11a61cad07f2c1d9d2b6ddcccf23eb02fa07a426c063e3cd1092d583400",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:50.704576"
+        }
+      },
+      "game_name_from_filename": "mathadventure_worldgen",
+      "game_name_from_yaml": "MathProof2p2e4 WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.09,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/mathadventure_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 12984,
+        "size_mb": 0.01
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 3,
+        "pass_fail": "failed",
+        "processing_time_seconds": 11.49,
+        "return_code": 1,
+        "sphere_reached": 0,
+        "success": false,
+        "total_spheres": 4.1,
+        "warning_count": 4
+      },
+      "template_filename": "MathProof2p2e4 WorldGen.yaml",
+      "timestamp": "2025-12-14T04:04:44.747184",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "mathadventure_worldgen",
+        "game_name_from_yaml": "MathProof2p2e4 WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "mathadventure_worldgen"
+      }
+    },
+    "Mega Man 2 WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": false,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "error": "Original rules file not found",
+          "rules_identical": null,
+          "seed": "1",
+          "spoilers_identical": null,
+          "timestamp": "2025-12-14T04:05:34.401271"
+        }
+      },
+      "game_name_from_filename": "mm2_worldgen",
+      "game_name_from_yaml": "Mega Man 2 WorldGen",
+      "generation": {
+        "error_count": 3,
+        "error_type": "FillError",
+        "processing_time_seconds": 2.99,
+        "return_code": 1,
+        "success": false,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": null,
+        "size_bytes": 0,
+        "size_mb": 0.0
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "unknown",
+        "processing_time_seconds": 0,
+        "return_code": null,
+        "sphere_reached": 0,
+        "success": false,
+        "total_spheres": 0,
+        "warning_count": 0
+      },
+      "template_filename": "Mega Man 2 WorldGen.yaml",
+      "timestamp": "2025-12-14T04:04:21.638149",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "mm2_worldgen",
+        "game_name_from_yaml": "Mega Man 2 WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "mm2_worldgen"
+      }
+    },
+    "MegaMan Battle Network 3 WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "127b85466ebc1f1636a1f3667a65e18cd19ec137e84f8d6e27ac8ad7cf2e7370",
+          "new_sphere_log_hash": "15375175b7f2b51e683c647c1282ab65be2aa850e3718589e29b12277a6d8aa9",
+          "original_rules_hash": "127b85466ebc1f1636a1f3667a65e18cd19ec137e84f8d6e27ac8ad7cf2e7370",
+          "original_sphere_log_hash": "15375175b7f2b51e683c647c1282ab65be2aa850e3718589e29b12277a6d8aa9",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:03:43.713432"
+        }
+      },
+      "game_name_from_filename": "mmbn3_worldgen",
+      "game_name_from_yaml": "MegaMan Battle Network 3 WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.21,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/mmbn3_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 186739,
+        "size_mb": 0.18
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 10,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.28,
+        "return_code": 1,
+        "sphere_reached": 0.7,
+        "success": false,
+        "total_spheres": 5.1,
+        "warning_count": 0
+      },
+      "template_filename": "MegaMan Battle Network 3 WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:03.739051",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "mmbn3_worldgen",
+        "game_name_from_yaml": "MegaMan Battle Network 3 WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "mmbn3_worldgen"
+      }
+    },
+    "Meritous WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "e46d69dac81856f62b7f63f6eb129be0ba462fa9625f59fb0f1faa46efe39a02",
+          "new_sphere_log_hash": "39c3feef8545638fafcff4068bde0069b37faff148866585f9f5d90ad6e11e59",
+          "original_rules_hash": "e46d69dac81856f62b7f63f6eb129be0ba462fa9625f59fb0f1faa46efe39a02",
+          "original_sphere_log_hash": "39c3feef8545638fafcff4068bde0069b37faff148866585f9f5d90ad6e11e59",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:04:08.428566"
+        }
+      },
+      "game_name_from_filename": "meritous_worldgen",
+      "game_name_from_yaml": "Meritous WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.52,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/meritous_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 58890,
+        "size_mb": 0.06
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 10,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.59,
+        "return_code": 1,
+        "sphere_reached": 0.2,
+        "success": false,
+        "total_spheres": 7.2,
+        "warning_count": 0
+      },
+      "template_filename": "Meritous WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:37.532565",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "meritous_worldgen",
+        "game_name_from_yaml": "Meritous WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "meritous_worldgen"
+      }
+    },
+    "Metamath WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "f33ff3455a8a13bd38d6dfab1ba908dd0d5a3dd505b4f2ba04abe3632081c730",
+          "new_sphere_log_hash": "5ddaf9a267b5b2698cdee7924146f00f4a3655fa11c6ed9e2be1bc695ab5ac4b",
+          "original_rules_hash": "f33ff3455a8a13bd38d6dfab1ba908dd0d5a3dd505b4f2ba04abe3632081c730",
+          "original_sphere_log_hash": "5ddaf9a267b5b2698cdee7924146f00f4a3655fa11c6ed9e2be1bc695ab5ac4b",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:20:24.350647"
+        }
+      },
+      "game_name_from_filename": "metamath_worldgen",
+      "game_name_from_yaml": "Metamath WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 4.24,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/metamath_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 41573,
+        "size_mb": 0.04
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 24,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.58,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 3.1,
+        "warning_count": 0
+      },
+      "template_filename": "Metamath WorldGen.yaml",
+      "timestamp": "2025-12-14T04:19:11.376879",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "metamath_worldgen",
+        "game_name_from_yaml": "Metamath WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "metamath_worldgen"
+      }
+    },
+    "Muse Dash WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": false,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "error": "Original rules file not found",
+          "rules_identical": null,
+          "seed": "1",
+          "spoilers_identical": null,
+          "timestamp": "2025-12-14T04:05:35.375041"
+        }
+      },
+      "game_name_from_filename": "musedash_worldgen",
+      "game_name_from_yaml": "Muse Dash WorldGen",
+      "generation": {
+        "error_count": 3,
+        "error_type": "FillError",
+        "processing_time_seconds": 3.04,
+        "return_code": 1,
+        "success": false,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": null,
+        "size_bytes": 0,
+        "size_mb": 0.0
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "unknown",
+        "processing_time_seconds": 0,
+        "return_code": null,
+        "sphere_reached": 0,
+        "success": false,
+        "total_spheres": 0,
+        "warning_count": 0
+      },
+      "template_filename": "Muse Dash WorldGen.yaml",
+      "timestamp": "2025-12-14T04:04:35.340593",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "musedash_worldgen",
+        "game_name_from_yaml": "Muse Dash WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "musedash_worldgen"
+      }
+    },
+    "Noita WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "cae235b55daad6f8f85f7c8d17d4d8573ecadb869e16171e50357aa50fe223c3",
+          "new_sphere_log_hash": "3fef1829e70e608f221ef1eed19be8fde9d4c99bdc4b0e8b50d2b840b0d4aeaf",
+          "original_rules_hash": "cae235b55daad6f8f85f7c8d17d4d8573ecadb869e16171e50357aa50fe223c3",
+          "original_sphere_log_hash": "3fef1829e70e608f221ef1eed19be8fde9d4c99bdc4b0e8b50d2b840b0d4aeaf",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:04:52.493212"
+        }
+      },
+      "game_name_from_filename": "noita_worldgen",
+      "game_name_from_yaml": "Noita WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.15,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/noita_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 76471,
+        "size_mb": 0.07
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 5.62,
+        "return_code": 0,
+        "sphere_reached": 0.8,
+        "success": true,
+        "total_spheres": 0.8,
+        "warning_count": 0
+      },
+      "template_filename": "Noita WorldGen.yaml",
+      "timestamp": "2025-12-14T04:00:55.442249",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "noita_worldgen",
+        "game_name_from_yaml": "Noita WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "noita_worldgen"
+      }
+    },
+    "Old School Runescape WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": false,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "error": "Original rules file not found",
+          "rules_identical": null,
+          "seed": "1",
+          "spoilers_identical": null,
+          "timestamp": "2025-12-14T04:03:58.970832"
+        }
+      },
+      "game_name_from_filename": "osrs_worldgen",
+      "game_name_from_yaml": "Old School Runescape WorldGen",
+      "generation": {
+        "error_count": 2,
+        "error_type": null,
+        "processing_time_seconds": 3.0,
+        "return_code": 1,
+        "success": false,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": null,
+        "size_bytes": 0,
+        "size_mb": 0.0
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "unknown",
+        "processing_time_seconds": 0,
+        "return_code": null,
+        "sphere_reached": 0,
+        "success": false,
+        "total_spheres": 0,
+        "warning_count": 0
+      },
+      "template_filename": "Old School Runescape WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:32.894864",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "osrs_worldgen",
+        "game_name_from_yaml": "Old School Runescape WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "osrs_worldgen"
+      }
+    },
+    "Overcooked! 2 WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "9f350549642f85e0183ada6a5cd84ec78c9155ba8c3714f2786a96ca412903f9",
+          "new_sphere_log_hash": "c772a542bda5f814b8edf1c8fc96b91ea7ab3aafb5dc41fee153a80471b34f2c",
+          "original_rules_hash": "9f350549642f85e0183ada6a5cd84ec78c9155ba8c3714f2786a96ca412903f9",
+          "original_sphere_log_hash": "c772a542bda5f814b8edf1c8fc96b91ea7ab3aafb5dc41fee153a80471b34f2c",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:16.709520"
+        }
+      },
+      "game_name_from_filename": "overcooked2_worldgen",
+      "game_name_from_yaml": "Overcooked! 2 WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.28,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/overcooked2_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 149978,
+        "size_mb": 0.14
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 194,
+        "pass_fail": "failed",
+        "processing_time_seconds": 16.99,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 10.2,
+        "warning_count": 0
+      },
+      "template_filename": "Overcooked! 2 WorldGen.yaml",
+      "timestamp": "2025-12-14T04:04:04.874279",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "overcooked2_worldgen",
+        "game_name_from_yaml": "Overcooked! 2 WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "overcooked2_worldgen"
+      }
+    },
+    "Paint WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "ead285f8d519be2e327202fde33a1c369bd162ad6b79bd3efb77b280618ce689",
+          "new_sphere_log_hash": "175919ce08e4a11a2d6d4417d04e8ed0f50917c6c1006132a7a3806a6de48fc3",
+          "original_rules_hash": "ead285f8d519be2e327202fde33a1c369bd162ad6b79bd3efb77b280618ce689",
+          "original_sphere_log_hash": "175919ce08e4a11a2d6d4417d04e8ed0f50917c6c1006132a7a3806a6de48fc3",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:04:46.137130"
+        }
+      },
+      "game_name_from_filename": "paint_worldgen",
+      "game_name_from_yaml": "Paint WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.1,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/paint_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 64905,
+        "size_mb": 0.06
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 6.63,
+        "return_code": 0,
+        "sphere_reached": 0.26,
+        "success": true,
+        "total_spheres": 0.26,
+        "warning_count": 0
+      },
+      "template_filename": "Paint WorldGen.yaml",
+      "timestamp": "2025-12-14T04:01:16.709420",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "paint_worldgen",
+        "game_name_from_yaml": "Paint WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "paint_worldgen"
+      }
+    },
+    "Raft WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "0d9dce746a5ef6c9517e6cf8a05dd3e1cfa136f5a355709461c85bd8fb5cec61",
+          "new_sphere_log_hash": "93948a4111c5b80d6bfa06c0d2cdceba8437c26eece918ccd59fc65e655bbf08",
+          "original_rules_hash": "0d9dce746a5ef6c9517e6cf8a05dd3e1cfa136f5a355709461c85bd8fb5cec61",
+          "original_sphere_log_hash": "93948a4111c5b80d6bfa06c0d2cdceba8437c26eece918ccd59fc65e655bbf08",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:53.893506"
+        }
+      },
+      "game_name_from_filename": "raft_worldgen",
+      "game_name_from_yaml": "Raft WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.15,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/raft_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 160511,
+        "size_mb": 0.15
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 7.62,
+        "return_code": 0,
+        "sphere_reached": 0.37,
+        "success": true,
+        "total_spheres": 0.37,
+        "warning_count": 0
+      },
+      "template_filename": "Raft WorldGen.yaml",
+      "timestamp": "2025-12-14T04:01:09.074548",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "raft_worldgen",
+        "game_name_from_yaml": "Raft WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "raft_worldgen"
+      }
+    },
+    "Risk of Rain 2 WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "8106883e6a64a8b6b00dffa6db6c5b6c22f595d4904af0002a308e871b7b22ef",
+          "new_sphere_log_hash": "62663cad28de645bcf6b15fdaf067217a5117bf44bba8f941e2d1f37a8f8e651",
+          "original_rules_hash": "8106883e6a64a8b6b00dffa6db6c5b6c22f595d4904af0002a308e871b7b22ef",
+          "original_sphere_log_hash": "62663cad28de645bcf6b15fdaf067217a5117bf44bba8f941e2d1f37a8f8e651",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:37.587201"
+        }
+      },
+      "game_name_from_filename": "ror2_worldgen",
+      "game_name_from_yaml": "Risk of Rain 2 WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.19,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/ror2_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 144568,
+        "size_mb": 0.14
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 14,
+        "pass_fail": "failed",
+        "processing_time_seconds": 17.35,
+        "return_code": 1,
+        "sphere_reached": 4.2,
+        "success": false,
+        "total_spheres": 8.3,
+        "warning_count": 0
+      },
+      "template_filename": "Risk of Rain 2 WorldGen.yaml",
+      "timestamp": "2025-12-14T04:04:25.428345",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "ror2_worldgen",
+        "game_name_from_yaml": "Risk of Rain 2 WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "ror2_worldgen"
+      }
+    },
+    "Saving Princess WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": false,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "error": "Original rules file not found",
+          "rules_identical": null,
+          "seed": "1",
+          "spoilers_identical": null,
+          "timestamp": "2025-12-14T04:03:43.744014"
+        }
+      },
+      "game_name_from_filename": "saving_princess_worldgen",
+      "game_name_from_yaml": "Saving Princess WorldGen",
+      "generation": {
+        "error_count": 3,
+        "error_type": "FillError",
+        "processing_time_seconds": 2.98,
+        "return_code": 1,
+        "success": false,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": null,
+        "size_bytes": 0,
+        "size_mb": 0.0
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "unknown",
+        "processing_time_seconds": 0,
+        "return_code": null,
+        "sphere_reached": 0,
+        "success": false,
+        "total_spheres": 0,
+        "warning_count": 0
+      },
+      "template_filename": "Saving Princess WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:22.229137",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "saving_princess_worldgen",
+        "game_name_from_yaml": "Saving Princess WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "saving_princess_worldgen"
+      }
+    },
+    "Secret of Evermore WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "b0d1c007d7a71185b3f30acb6e16d44daa25d2d8365a9c3dbe35eeea36f6f4e5",
+          "new_sphere_log_hash": "2f79f6dd0a4cd2cb16d99257f52de60d89b22332978ff8dcbe45ffec28dfede5",
+          "original_rules_hash": "b0d1c007d7a71185b3f30acb6e16d44daa25d2d8365a9c3dbe35eeea36f6f4e5",
+          "original_sphere_log_hash": "2f79f6dd0a4cd2cb16d99257f52de60d89b22332978ff8dcbe45ffec28dfede5",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:04:12.013229"
+        }
+      },
+      "game_name_from_filename": "soe_worldgen",
+      "game_name_from_yaml": "Secret of Evermore WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.63,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/soe_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 192928,
+        "size_mb": 0.18
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 6.77,
+        "return_code": 0,
+        "sphere_reached": 0.19,
+        "success": true,
+        "total_spheres": 0.19,
+        "warning_count": 0
+      },
+      "template_filename": "Secret of Evermore WorldGen.yaml",
+      "timestamp": "2025-12-14T04:01:11.300596",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "soe_worldgen",
+        "game_name_from_yaml": "Secret of Evermore WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "soe_worldgen"
+      }
+    },
+    "Shivers WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "2b149bc698b8e4158194540b966ca1f86d9012ab88a53f601d577587f72e18f9",
+          "new_sphere_log_hash": "d7eda703f400e360590e77fb4b11369157bb7d9a21ade9d9d63bed51966e299a",
+          "original_rules_hash": "2b149bc698b8e4158194540b966ca1f86d9012ab88a53f601d577587f72e18f9",
+          "original_sphere_log_hash": "d7eda703f400e360590e77fb4b11369157bb7d9a21ade9d9d63bed51966e299a",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:20:27.761993"
+        }
+      },
+      "game_name_from_filename": "shivers_worldgen",
+      "game_name_from_yaml": "Shivers WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.39,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/shivers_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 138585,
+        "size_mb": 0.13
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 18,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.51,
+        "return_code": 1,
+        "sphere_reached": 0.5,
+        "success": false,
+        "total_spheres": 16.1,
+        "warning_count": 0
+      },
+      "template_filename": "Shivers WorldGen.yaml",
+      "timestamp": "2025-12-14T04:19:31.183909",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "shivers_worldgen",
+        "game_name_from_yaml": "Shivers WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "shivers_worldgen"
+      }
+    },
+    "Sonic Adventure 2 Battle WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "2cd211dad4475258a495d0abaa6e96c49d6bbe9c65fb65a37cc2fb156f00811c",
+          "new_sphere_log_hash": "a79753841c10a1f326240b885b6075492ef9549c0867f8af405cb5eda7693076",
+          "original_rules_hash": "2cd211dad4475258a495d0abaa6e96c49d6bbe9c65fb65a37cc2fb156f00811c",
+          "original_sphere_log_hash": "a79753841c10a1f326240b885b6075492ef9549c0867f8af405cb5eda7693076",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:38.639042"
+        }
+      },
+      "game_name_from_filename": "sa2b_worldgen",
+      "game_name_from_yaml": "Sonic Adventure 2 Battle WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.3,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/sa2b_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 164396,
+        "size_mb": 0.16
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 20,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.29,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 5.6,
+        "warning_count": 0
+      },
+      "template_filename": "Sonic Adventure 2 Battle WorldGen.yaml",
+      "timestamp": "2025-12-14T04:04:39.182903",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "sa2b_worldgen",
+        "game_name_from_yaml": "Sonic Adventure 2 Battle WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "sa2b_worldgen"
+      }
+    },
+    "Starcraft 2 WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "fb089a6718c9108ca9d9971600174c12b2c0ff4bf2f1149517d655f8da032a68",
+          "new_sphere_log_hash": "1dbb94ae47ccf619b96876d72c3fad9881189bbc649fd831d767fd54a5334063",
+          "original_rules_hash": "fb089a6718c9108ca9d9971600174c12b2c0ff4bf2f1149517d655f8da032a68",
+          "original_sphere_log_hash": "1dbb94ae47ccf619b96876d72c3fad9881189bbc649fd831d767fd54a5334063",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:04:55.955952"
+        }
+      },
+      "game_name_from_filename": "sc2_worldgen",
+      "game_name_from_yaml": "Starcraft 2 WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.4,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/sc2_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 845942,
+        "size_mb": 0.81
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 30,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.45,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 1.43,
+        "warning_count": 0
+      },
+      "template_filename": "Starcraft 2 WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:43.137173",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "sc2_worldgen",
+        "game_name_from_yaml": "Starcraft 2 WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "sc2_worldgen"
+      }
+    },
+    "Stardew Valley WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": false,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "error": "Original rules file not found",
+          "rules_identical": null,
+          "seed": "1",
+          "spoilers_identical": null,
+          "timestamp": "2025-12-14T04:03:58.976885"
+        }
+      },
+      "game_name_from_filename": "stardew_valley_worldgen",
+      "game_name_from_yaml": "Stardew Valley WorldGen",
+      "generation": {
+        "error_count": 3,
+        "error_type": "FillError",
+        "processing_time_seconds": 3.24,
+        "return_code": 1,
+        "success": false,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": null,
+        "size_bytes": 0,
+        "size_mb": 0.0
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "unknown",
+        "processing_time_seconds": 0,
+        "return_code": null,
+        "sphere_reached": 0,
+        "success": false,
+        "total_spheres": 0,
+        "warning_count": 0
+      },
+      "template_filename": "Stardew Valley WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:36.679418",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "stardew_valley_worldgen",
+        "game_name_from_yaml": "Stardew Valley WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "stardew_valley_worldgen"
+      }
+    },
+    "Subnautica WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "b89ab3bba2949f65e7cbd751f0e521e74a7601d1772ad60bff62f82a907af840",
+          "new_sphere_log_hash": "e2e097b00beaeba9e27621d4ccf99c3272361f5265337d7b894a51e83cbd3f86",
+          "original_rules_hash": "b89ab3bba2949f65e7cbd751f0e521e74a7601d1772ad60bff62f82a907af840",
+          "original_sphere_log_hash": "e2e097b00beaeba9e27621d4ccf99c3272361f5265337d7b894a51e83cbd3f86",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:19.936014"
+        }
+      },
+      "game_name_from_filename": "subnautica_worldgen",
+      "game_name_from_yaml": "Subnautica WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.23,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/subnautica_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 91662,
+        "size_mb": 0.09
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 10,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.15,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 1.1,
+        "warning_count": 0
+      },
+      "template_filename": "Subnautica WorldGen.yaml",
+      "timestamp": "2025-12-14T04:04:26.055394",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "subnautica_worldgen",
+        "game_name_from_yaml": "Subnautica WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "subnautica_worldgen"
+      }
+    },
+    "Super Mario 64 WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "a034c5b4780dd0d11dbea19577eb5d53b19b960e47ca26abd168028e9bec2cb4",
+          "new_sphere_log_hash": "fa8169eb9645790f78a18b0d62411fea5d503bfc80223391728684a0c2c40787",
+          "original_rules_hash": "a034c5b4780dd0d11dbea19577eb5d53b19b960e47ca26abd168028e9bec2cb4",
+          "original_sphere_log_hash": "fa8169eb9645790f78a18b0d62411fea5d503bfc80223391728684a0c2c40787",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:04:49.380914"
+        }
+      },
+      "game_name_from_filename": "sm64ex_worldgen",
+      "game_name_from_yaml": "Super Mario 64 WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.18,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/sm64ex_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 92293,
+        "size_mb": 0.09
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 10,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.19,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 5.2,
+        "warning_count": 0
+      },
+      "template_filename": "Super Mario 64 WorldGen.yaml",
+      "timestamp": "2025-12-14T04:04:06.925930",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "sm64ex_worldgen",
+        "game_name_from_yaml": "Super Mario 64 WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "sm64ex_worldgen"
+      }
+    },
+    "Super Mario Land 2 WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "df27f0772e7729edac545ef10a87ad379749ecdc112bb4acc3aa073d5885230e",
+          "new_sphere_log_hash": "48dc71ef305d2ae1188a02ec6160cdf66f242fab11d59b9b89cca7dcf3b51bd1",
+          "original_rules_hash": "df27f0772e7729edac545ef10a87ad379749ecdc112bb4acc3aa073d5885230e",
+          "original_sphere_log_hash": "48dc71ef305d2ae1188a02ec6160cdf66f242fab11d59b9b89cca7dcf3b51bd1",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:57.144867"
+        }
+      },
+      "game_name_from_filename": "marioland2_worldgen",
+      "game_name_from_yaml": "Super Mario Land 2 WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.22,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/marioland2_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 705497,
+        "size_mb": 0.67
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 14,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.4,
+        "return_code": 1,
+        "sphere_reached": 0.1,
+        "success": false,
+        "total_spheres": 2.5,
+        "warning_count": 0
+      },
+      "template_filename": "Super Mario Land 2 WorldGen.yaml",
+      "timestamp": "2025-12-14T04:05:00.312104",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "marioland2_worldgen",
+        "game_name_from_yaml": "Super Mario Land 2 WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "marioland2_worldgen"
+      }
+    },
+    "Super Mario World WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "a18e113c8ca1c7264cc2f4ff7fe8b1545a23c7838176b61a30074c0c9e628412",
+          "new_sphere_log_hash": "5070d88e700e31c036e70c4562437cbd9d1cb9d099379cef7a47edc0c4c8fcdb",
+          "original_rules_hash": "a18e113c8ca1c7264cc2f4ff7fe8b1545a23c7838176b61a30074c0c9e628412",
+          "original_sphere_log_hash": "5070d88e700e31c036e70c4562437cbd9d1cb9d099379cef7a47edc0c4c8fcdb",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:40.842329"
+        }
+      },
+      "game_name_from_filename": "smw_worldgen",
+      "game_name_from_yaml": "Super Mario World WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.21,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/smw_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 184325,
+        "size_mb": 0.18
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 10,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.27,
+        "return_code": 1,
+        "sphere_reached": 1.1,
+        "success": false,
+        "total_spheres": 8.2,
+        "warning_count": 0
+      },
+      "template_filename": "Super Mario World WorldGen.yaml",
+      "timestamp": "2025-12-14T04:04:46.994293",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "smw_worldgen",
+        "game_name_from_yaml": "Super Mario World WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "smw_worldgen"
+      }
+    },
+    "Super Metroid WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": false,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "error": "Original rules file not found",
+          "rules_identical": null,
+          "seed": "1",
+          "spoilers_identical": null,
+          "timestamp": "2025-12-14T04:03:43.758597"
+        }
+      },
+      "game_name_from_filename": "sm_worldgen",
+      "game_name_from_yaml": "Super Metroid WorldGen",
+      "generation": {
+        "error_count": 2,
+        "error_type": null,
+        "processing_time_seconds": 2.98,
+        "return_code": 1,
+        "success": false,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": null,
+        "size_bytes": 0,
+        "size_mb": 0.0
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "unknown",
+        "processing_time_seconds": 0,
+        "return_code": null,
+        "sphere_reached": 0,
+        "success": false,
+        "total_spheres": 0,
+        "warning_count": 0
+      },
+      "template_filename": "Super Metroid WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:26.038836",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "sm_worldgen",
+        "game_name_from_yaml": "Super Metroid WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "sm_worldgen"
+      }
+    },
+    "TOEM original WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "add9a0eed0419f247fc7eaf2d782d2b2eef1081e04e779a6b5f9e45911a99734",
+          "new_sphere_log_hash": "1c597b3456fb023890a0208d091e4754be097f5259770f640f8a2877778ee37f",
+          "original_rules_hash": "add9a0eed0419f247fc7eaf2d782d2b2eef1081e04e779a6b5f9e45911a99734",
+          "original_sphere_log_hash": "1c597b3456fb023890a0208d091e4754be097f5259770f640f8a2877778ee37f",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:04:15.640922"
+        }
+      },
+      "game_name_from_filename": "toem_original_worldgen",
+      "game_name_from_yaml": "TOEM original WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.45,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/toem_original_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 108646,
+        "size_mb": 0.1
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 9.81,
+        "return_code": 0,
+        "sphere_reached": 3.24,
+        "success": true,
+        "total_spheres": 3.24,
+        "warning_count": 0
+      },
+      "template_filename": "TOEM original WorldGen.yaml",
+      "timestamp": "2025-12-14T04:01:22.684066",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "toem_original_worldgen",
+        "game_name_from_yaml": "TOEM original WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "toem_original_worldgen"
+      }
+    },
+    "TOEM rule builder WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "1e680d5d194d70d3db79a5ca08ae9ae15431c676a0177d221f982477005f2cc5",
+          "new_sphere_log_hash": "c56f428a7d21be0e10882b177b42166e4cde19da6d99383eba3e2a3d897b6e8b",
+          "original_rules_hash": "1e680d5d194d70d3db79a5ca08ae9ae15431c676a0177d221f982477005f2cc5",
+          "original_sphere_log_hash": "c56f428a7d21be0e10882b177b42166e4cde19da6d99383eba3e2a3d897b6e8b",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:20:31.237396"
+        }
+      },
+      "game_name_from_filename": "toem_rule_builder_worldgen",
+      "game_name_from_yaml": "TOEM rule builder WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.13,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/toem_rule_builder_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 108941,
+        "size_mb": 0.1
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 8.63,
+        "return_code": 0,
+        "sphere_reached": 3.24,
+        "success": true,
+        "total_spheres": 3.24,
+        "warning_count": 0
+      },
+      "template_filename": "TOEM rule builder WorldGen.yaml",
+      "timestamp": "2025-12-14T04:06:20.043797",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "toem_rule_builder_worldgen",
+        "game_name_from_yaml": "TOEM rule builder WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "toem_rule_builder_worldgen"
+      }
+    },
+    "Terraria WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "afae6c742f71e30e2d1adf2facd58710e66e58b2ddb4b1bbb1603661c021d921",
+          "new_sphere_log_hash": "f4d004d685ff7b3f8c4d876c605e6f7af2d2b7df88f24ca53914d6bf3767cd71",
+          "original_rules_hash": "afae6c742f71e30e2d1adf2facd58710e66e58b2ddb4b1bbb1603661c021d921",
+          "original_sphere_log_hash": "f4d004d685ff7b3f8c4d876c605e6f7af2d2b7df88f24ca53914d6bf3767cd71",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:41.971085"
+        }
+      },
+      "game_name_from_filename": "terraria_worldgen",
+      "game_name_from_yaml": "Terraria WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.29,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/terraria_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 231963,
+        "size_mb": 0.22
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 106,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.48,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 9.2,
+        "warning_count": 0
+      },
+      "template_filename": "Terraria WorldGen.yaml",
+      "timestamp": "2025-12-14T04:04:57.791097",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "terraria_worldgen",
+        "game_name_from_yaml": "Terraria WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "terraria_worldgen"
+      }
+    },
+    "The Legend of Zelda WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "c436f2eaef4e62cc13f8e2f5eef68449d2666405513f8abbc00b2b8dfab61a12",
+          "new_sphere_log_hash": "cc56055d09651f9971d1074129535fc953067a88b9d4cdcb98a781fd72a483c9",
+          "original_rules_hash": "c436f2eaef4e62cc13f8e2f5eef68449d2666405513f8abbc00b2b8dfab61a12",
+          "original_sphere_log_hash": "cc56055d09651f9971d1074129535fc953067a88b9d4cdcb98a781fd72a483c9",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:04:59.232250"
+        }
+      },
+      "game_name_from_filename": "tloz_worldgen",
+      "game_name_from_yaml": "The Legend of Zelda WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.22,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/tloz_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 385418,
+        "size_mb": 0.37
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 50,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.31,
+        "return_code": 1,
+        "sphere_reached": 0.1,
+        "success": false,
+        "total_spheres": 10.1,
+        "warning_count": 0
+      },
+      "template_filename": "The Legend of Zelda WorldGen.yaml",
+      "timestamp": "2025-12-14T04:04:01.960390",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "tloz_worldgen",
+        "game_name_from_yaml": "The Legend of Zelda WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "tloz_worldgen"
+      }
+    },
+    "The Messenger WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": false,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "error": "Original rules file not found",
+          "rules_identical": null,
+          "seed": "1",
+          "spoilers_identical": null,
+          "timestamp": "2025-12-14T04:03:59.001477"
+        }
+      },
+      "game_name_from_filename": "messenger_worldgen",
+      "game_name_from_yaml": "The Messenger WorldGen",
+      "generation": {
+        "error_count": 3,
+        "error_type": "FillError",
+        "processing_time_seconds": 3.07,
+        "return_code": 1,
+        "success": false,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": null,
+        "size_bytes": 0,
+        "size_mb": 0.0
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "unknown",
+        "processing_time_seconds": 0,
+        "return_code": null,
+        "sphere_reached": 0,
+        "success": false,
+        "total_spheres": 0,
+        "warning_count": 0
+      },
+      "template_filename": "The Messenger WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:40.724384",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "messenger_worldgen",
+        "game_name_from_yaml": "The Messenger WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "messenger_worldgen"
+      }
+    },
+    "The Wind Waker WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "c7d89f5aa50eb06cea0d720c50880d4315868942fe817ee941b484cb99b7bce0",
+          "new_sphere_log_hash": "b7e464615b9287892bccf77c268a53844ca4806dc567859877758ddd7784117d",
+          "original_rules_hash": "c7d89f5aa50eb06cea0d720c50880d4315868942fe817ee941b484cb99b7bce0",
+          "original_sphere_log_hash": "b7e464615b9287892bccf77c268a53844ca4806dc567859877758ddd7784117d",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:23.231762"
+        }
+      },
+      "game_name_from_filename": "tww_worldgen",
+      "game_name_from_yaml": "The Wind Waker WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.28,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/tww_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 118636,
+        "size_mb": 0.11
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 44,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.25,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 4.1,
+        "warning_count": 0
+      },
+      "template_filename": "The Wind Waker WorldGen.yaml",
+      "timestamp": "2025-12-14T04:04:44.381418",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "tww_worldgen",
+        "game_name_from_yaml": "The Wind Waker WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "tww_worldgen"
+      }
+    },
+    "The Witness WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": false,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "error": "Original rules file not found",
+          "rules_identical": null,
+          "seed": "1",
+          "spoilers_identical": null,
+          "timestamp": "2025-12-14T04:04:49.407614"
+        }
+      },
+      "game_name_from_filename": "witness_worldgen",
+      "game_name_from_yaml": "The Witness WorldGen",
+      "generation": {
+        "error_count": 3,
+        "error_type": "FillError",
+        "processing_time_seconds": 3.07,
+        "return_code": 1,
+        "success": false,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": null,
+        "size_bytes": 0,
+        "size_mb": 0.0
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "unknown",
+        "processing_time_seconds": 0,
+        "return_code": null,
+        "sphere_reached": 0,
+        "success": false,
+        "total_spheres": 0,
+        "warning_count": 0
+      },
+      "template_filename": "The Witness WorldGen.yaml",
+      "timestamp": "2025-12-14T04:04:25.314783",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "witness_worldgen",
+        "game_name_from_yaml": "The Witness WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "witness_worldgen"
+      }
+    },
+    "Timespinner WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "fc334853fa9a30e3cc214ca2b6c464a4197f4843787b4cdf7caf19e68afd641f",
+          "new_sphere_log_hash": "7fbee4dff8582ba3408f2b3f63db6e731f42d8a0a0c1eebfa7c6c137e837cf61",
+          "original_rules_hash": "fc334853fa9a30e3cc214ca2b6c464a4197f4843787b4cdf7caf19e68afd641f",
+          "original_sphere_log_hash": "7fbee4dff8582ba3408f2b3f63db6e731f42d8a0a0c1eebfa7c6c137e837cf61",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:06:00.281012"
+        }
+      },
+      "game_name_from_filename": "timespinner_worldgen",
+      "game_name_from_yaml": "Timespinner WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.15,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/timespinner_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 188517,
+        "size_mb": 0.18
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 14,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.21,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 6.1,
+        "warning_count": 0
+      },
+      "template_filename": "Timespinner WorldGen.yaml",
+      "timestamp": "2025-12-14T04:05:18.905496",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "timespinner_worldgen",
+        "game_name_from_yaml": "Timespinner WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "timespinner_worldgen"
+      }
+    },
+    "Undertale WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "4043dc2b33bec5916ef4a24b26767ab6b27856a9ef05345681ca0645990e6972",
+          "new_sphere_log_hash": "01fdf597f989f97df024cf4abf24e1ad242ccc124d733e6b06dc51416e782a63",
+          "original_rules_hash": "4043dc2b33bec5916ef4a24b26767ab6b27856a9ef05345681ca0645990e6972",
+          "original_sphere_log_hash": "01fdf597f989f97df024cf4abf24e1ad242ccc124d733e6b06dc51416e782a63",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:44.022606"
+        }
+      },
+      "game_name_from_filename": "undertale_worldgen",
+      "game_name_from_yaml": "Undertale WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.17,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/undertale_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 51598,
+        "size_mb": 0.05
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 10,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.27,
+        "return_code": 1,
+        "sphere_reached": 3.2,
+        "success": false,
+        "total_spheres": 4.3,
+        "warning_count": 0
+      },
+      "template_filename": "Undertale WorldGen.yaml",
+      "timestamp": "2025-12-14T04:05:05.438722",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "undertale_worldgen",
+        "game_name_from_yaml": "Undertale WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "undertale_worldgen"
+      }
+    },
+    "VVVVVV WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "43f7eb38d4f0add2df404f1122531de6df3b9890b92c350a7ee9a403f755ff46",
+          "new_sphere_log_hash": "19306b9f9cd5b4802436ff9ceaf6c0df190ad19a66d74d2b9a80ba519f1529e3",
+          "original_rules_hash": "43f7eb38d4f0add2df404f1122531de6df3b9890b92c350a7ee9a403f755ff46",
+          "original_sphere_log_hash": "19306b9f9cd5b4802436ff9ceaf6c0df190ad19a66d74d2b9a80ba519f1529e3",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:03:47.004629"
+        }
+      },
+      "game_name_from_filename": "v6_worldgen",
+      "game_name_from_yaml": "VVVVVV WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.14,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/v6_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 16360,
+        "size_mb": 0.02
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 5.6,
+        "return_code": 0,
+        "sphere_reached": 0.12,
+        "success": true,
+        "total_spheres": 0.12,
+        "warning_count": 0
+      },
+      "template_filename": "VVVVVV WorldGen.yaml",
+      "timestamp": "2025-12-14T04:01:45.823224",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "v6_worldgen",
+        "game_name_from_yaml": "VVVVVV WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "v6_worldgen"
+      }
+    },
+    "Wargroove WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "d40cf78a5e6b348f50fe7c35640605c27d927ea76528905d505eac6659dfeb52",
+          "new_sphere_log_hash": "6412619fd8c3a2444bfe6044b659e7f2209022fafd7a39355c2d5bec9578c535",
+          "original_rules_hash": "d40cf78a5e6b348f50fe7c35640605c27d927ea76528905d505eac6659dfeb52",
+          "original_sphere_log_hash": "6412619fd8c3a2444bfe6044b659e7f2209022fafd7a39355c2d5bec9578c535",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:04:19.103755"
+        }
+      },
+      "game_name_from_filename": "wargroove_worldgen",
+      "game_name_from_yaml": "Wargroove WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.47,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/wargroove_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 35061,
+        "size_mb": 0.03
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "passed",
+        "processing_time_seconds": 6.72,
+        "return_code": 0,
+        "sphere_reached": 0.2,
+        "success": true,
+        "total_spheres": 0.2,
+        "warning_count": 0
+      },
+      "template_filename": "Wargroove WorldGen.yaml",
+      "timestamp": "2025-12-14T04:01:36.968903",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "wargroove_worldgen",
+        "game_name_from_yaml": "Wargroove WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "wargroove_worldgen"
+      }
+    },
+    "WebDevJourney WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "840028b0bbb4c3335ce56ae65cfce158f05c7baaf8bfa6951f6e88c5e435631c",
+          "new_sphere_log_hash": "ebef087544d9920fa1c9e969649f9e1de1149888d80387f6734017259c1c18bb",
+          "original_rules_hash": "840028b0bbb4c3335ce56ae65cfce158f05c7baaf8bfa6951f6e88c5e435631c",
+          "original_sphere_log_hash": "ebef087544d9920fa1c9e969649f9e1de1149888d80387f6734017259c1c18bb",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:20:34.748013"
+        }
+      },
+      "game_name_from_filename": "codingadventure_worldgen",
+      "game_name_from_yaml": "WebDevJourney WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.38,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/codingadventure_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 59954,
+        "size_mb": 0.06
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 10,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.89,
+        "return_code": 1,
+        "sphere_reached": 1.2,
+        "success": false,
+        "total_spheres": 10.1,
+        "warning_count": 0
+      },
+      "template_filename": "WebDevJourney WorldGen.yaml",
+      "timestamp": "2025-12-14T04:19:50.086293",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "codingadventure_worldgen",
+        "game_name_from_yaml": "WebDevJourney WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "codingadventure_worldgen"
+      }
+    },
+    "Yacht Dice WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": false,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "error": "Original rules file not found",
+          "rules_identical": null,
+          "seed": "1",
+          "spoilers_identical": null,
+          "timestamp": "2025-12-14T04:05:41.988413"
+        }
+      },
+      "game_name_from_filename": "yachtdice_worldgen",
+      "game_name_from_yaml": "Yacht Dice WorldGen",
+      "generation": {
+        "error_count": 2,
+        "error_type": null,
+        "processing_time_seconds": 3.02,
+        "return_code": 1,
+        "success": false,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": null,
+        "size_bytes": 0,
+        "size_mb": 0.0
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "unknown",
+        "processing_time_seconds": 0,
+        "return_code": null,
+        "sphere_reached": 0,
+        "success": false,
+        "total_spheres": 0,
+        "warning_count": 0
+      },
+      "template_filename": "Yacht Dice WorldGen.yaml",
+      "timestamp": "2025-12-14T04:05:16.552344",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "yachtdice_worldgen",
+        "game_name_from_yaml": "Yacht Dice WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "yachtdice_worldgen"
+      }
+    },
+    "Yoshi's Island WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": true,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "new_rules_hash": "5119e2388c725b2ac2a7344e9e77edafd5edbf6ddc0b90feba9e90afcd6f9ced",
+          "new_sphere_log_hash": "a33c655c039c1e577e73892536954ee50bfca529d7d4b2797615df620563dcb7",
+          "original_rules_hash": "5119e2388c725b2ac2a7344e9e77edafd5edbf6ddc0b90feba9e90afcd6f9ced",
+          "original_sphere_log_hash": "a33c655c039c1e577e73892536954ee50bfca529d7d4b2797615df620563dcb7",
+          "rules_identical": true,
+          "seed": "1",
+          "spoilers_identical": true,
+          "timestamp": "2025-12-14T04:05:02.458366"
+        }
+      },
+      "game_name_from_filename": "yoshisisland_worldgen",
+      "game_name_from_yaml": "Yoshi's Island WorldGen",
+      "generation": {
+        "error_count": 0,
+        "error_type": null,
+        "processing_time_seconds": 3.15,
+        "return_code": 0,
+        "success": true,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": "frontend/presets/yoshisisland_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+        "size_bytes": 152117,
+        "size_mb": 0.15
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 28,
+        "pass_fail": "failed",
+        "processing_time_seconds": 14.2,
+        "return_code": 1,
+        "sphere_reached": 0.0,
+        "success": false,
+        "total_spheres": 11.1,
+        "warning_count": 0
+      },
+      "template_filename": "Yoshi's Island WorldGen.yaml",
+      "timestamp": "2025-12-14T04:04:20.491450",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "yoshisisland_worldgen",
+        "game_name_from_yaml": "Yoshi's Island WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "yoshisisland_worldgen"
+      }
+    },
+    "shapez WorldGen.yaml": {
+      "analysis": {
+        "error_count": 0,
+        "success": false,
+        "warning_count": 0
+      },
+      "consistency_tests": {
+        "1": {
+          "error": "Original rules file not found",
+          "rules_identical": null,
+          "seed": "1",
+          "spoilers_identical": null,
+          "timestamp": "2025-12-14T04:03:59.009864"
+        }
+      },
+      "game_name_from_filename": "shapez_worldgen",
+      "game_name_from_yaml": "shapez WorldGen",
+      "generation": {
+        "error_count": 2,
+        "error_type": "KeyError",
+        "processing_time_seconds": 3.03,
+        "return_code": 1,
+        "success": false,
+        "warning_count": 1
+      },
+      "rules_file": {
+        "path": null,
+        "size_bytes": 0,
+        "size_mb": 0.0
+      },
+      "seed": "1",
+      "seed_id": "AP_14089154938208861744",
+      "spoiler_test": {
+        "error_count": 0,
+        "pass_fail": "unknown",
+        "processing_time_seconds": 0,
+        "return_code": null,
+        "sphere_reached": 0,
+        "success": false,
+        "total_spheres": 0,
+        "warning_count": 0
+      },
+      "template_filename": "shapez WorldGen.yaml",
+      "timestamp": "2025-12-14T04:03:44.593399",
+      "world_info": {
+        "exporter_path": null,
+        "exporter_size": 0,
+        "game_logic_path": null,
+        "game_logic_size": 0,
+        "game_name_from_filename": "shapez_worldgen",
+        "game_name_from_yaml": "shapez WorldGen",
+        "has_custom_exporter": false,
+        "has_custom_game_logic": false,
+        "world_directory": "shapez_worldgen"
+      }
+    }
+  }
+}
