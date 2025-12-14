@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-14T02:30:56.265383",
-    "last_updated": "2025-12-14T08:06:22.945791",
+    "last_updated": "2025-12-14T08:10:54.485393",
     "script_version": "1.0.0"
   },
   "results": {
@@ -4266,7 +4266,7 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 8.21,
+        "processing_time_seconds": 8.45,
         "return_code": 0,
         "success": true,
         "warning_count": 0
@@ -4289,7 +4289,7 @@
         "warning_count": 0
       },
       "template_filename": "shapez.yaml",
-      "timestamp": "2025-12-14T08:06:14.720352",
+      "timestamp": "2025-12-14T08:10:46.029467",
       "world_info": {
         "exporter_path": null,
         "exporter_size": 0,
