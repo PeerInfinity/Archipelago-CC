@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-14 21:09:29
+**Generated:** 2025-12-14 23:17:45
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 73 (100.0%)
-- **Failed:** 0 (0.0%)
+- **Passed:** 70 (95.9%)
+- **Failed:** 3 (4.1%)
 - **Skipped (Prerequisites):** 0 (0.0%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 - **Second Pass Tested:** 73
-- **Second Pass Passed:** 73
-- **Second Pass Failed:** 0
+- **Second Pass Passed:** 70
+- **Second Pass Failed:** 3
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 29/73 (39.7% of passed)
-- **Passing with Generic Logic:** 64/73 (87.7% of passed)
-- **Passing with Both Generic:** 29/73 (39.7% of passed)
+- **Passing with Generic Exporter:** 28/70 (40.0% of passed)
+- **Passing with Generic Logic:** 61/70 (87.1% of passed)
+- **Passing with Both Generic:** 28/70 (40.0% of passed)
 
 ## Test Results
 
@@ -82,7 +82,7 @@
 | Shivers | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 24.1KB | 86.3KB |
-| Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 20.7KB | 10.7KB |
+| Stardew Valley | ✅ Passed | ❌ Failed | 6 | 6 | 20.7KB | 10.7KB |
 | Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 6.0KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 14.6KB | ✅ |
 | Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | 14.0KB | ✅ |
@@ -92,7 +92,7 @@
 | TOEM rule builder | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Terraria | ✅ Passed | ✅ Passed | 7 | 7 | 19.2KB | ✅ |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | 7.0KB | ✅ |
-| The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 12.6KB | ✅ |
+| The Messenger | ✅ Passed | ❌ Failed | 7 | 7 | 12.6KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 9.3KB | ✅ |
 | The Witness | ✅ Passed | ✅ Passed | 7 | 7 | 28.9KB | ✅ |
 | Timespinner | ✅ Passed | ✅ Passed | 7 | 7 | 4.1KB | ✅ |
@@ -102,7 +102,7 @@
 | WebDevJourney | ✅ Passed | ✅ Passed | 7 | 7 | ✅ | ✅ |
 | Yacht Dice | ✅ Passed | ✅ Passed | 8 | 8 | 1.6KB | 285.0KB |
 | Yoshi's Island | ✅ Passed | ✅ Passed | 8 | 8 | 10.8KB | ✅ |
-| shapez | ✅ Passed | ✅ Passed | 8 | 8 | ✅ | ✅ |
+| shapez | ✅ Passed | ❌ Failed | 8 | 8 | ✅ | ✅ |
 
 ## Templates in Multiworld
 
@@ -836,7 +836,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | Shivers | 5 | 7 | 5 | ✅ Passed |
 | Sonic Adventure 2 Battle | 6 | 8 | 6 | ✅ Passed |
 | Starcraft 2 | 6 | 8 | 6 | ✅ Passed |
-| Stardew Valley | 6 | 8 | 6 | ✅ Passed |
+| Stardew Valley | 6 | 8 | 6 | ❌ Failed |
 | Subnautica | 6 | 7 | 6 | ✅ Passed |
 | Super Mario 64 | 6 | 7 | 6 | ✅ Passed |
 | Super Mario Land 2 | 6 | 7 | 6 | ✅ Passed |
@@ -846,7 +846,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | TOEM rule builder | 6 | 7 | 6 | ✅ Passed |
 | Terraria | 7 | 8 | 7 | ✅ Passed |
 | The Legend of Zelda | 7 | 8 | 7 | ✅ Passed |
-| The Messenger | 7 | 8 | 7 | ✅ Passed |
+| The Messenger | 7 | 7 | 6 | ❌ Failed |
 | The Wind Waker | 7 | 7 | 7 | ✅ Passed |
 | The Witness | 7 | 7 | 7 | ✅ Passed |
 | Timespinner | 7 | 7 | 7 | ✅ Passed |
@@ -856,7 +856,7 @@ Templates tested in the first pass with fewer than the maximum number of players
 | WebDevJourney | 7 | 7 | 7 | ✅ Passed |
 | Yacht Dice | 8 | 8 | 8 | ✅ Passed |
 | Yoshi's Island | 8 | 8 | 8 | ✅ Passed |
-| shapez | 8 | 8 | 8 | ✅ Passed |
+| shapez | 8 | 6 | 6 | ❌ Failed |
 
 ### Second Pass Templates in Multiworld
 
@@ -1503,7 +1503,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | The Legend of Zelda.yaml |
 | 8 | Yoshi's Island.yaml |
 
-#### Stardew Valley ✅ (Split 3)
+#### Stardew Valley ❌ (Split 3)
 
 | Player # | Template |
 |----------|----------|
@@ -1626,7 +1626,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | The Legend of Zelda.yaml |
 | 8 | Yoshi's Island.yaml |
 
-#### The Messenger ✅ (Split 3)
+#### The Messenger ❌ (Split 3)
 
 | Player # | Template |
 |----------|----------|
@@ -1635,9 +1635,8 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Faxanadu.yaml |
 | 4 | Links Awakening DX.yaml |
 | 5 | Old School Runescape.yaml |
-| 6 | Stardew Valley.yaml |
-| 7 | The Messenger.yaml |
-| 8 | shapez.yaml |
+| 6 | The Messenger.yaml |
+| 7 | shapez.yaml |
 
 #### The Wind Waker ✅ (Split 4)
 
@@ -1749,7 +1748,7 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 7 | The Legend of Zelda.yaml |
 | 8 | Yoshi's Island.yaml |
 
-#### shapez ✅ (Split 3)
+#### shapez ❌ (Split 3)
 
 | Player # | Template |
 |----------|----------|
@@ -1758,9 +1757,50 @@ Shows which templates were in the multiworld when each game was tested in the se
 | 3 | Faxanadu.yaml |
 | 4 | Links Awakening DX.yaml |
 | 5 | Old School Runescape.yaml |
-| 6 | Stardew Valley.yaml |
-| 7 | The Messenger.yaml |
-| 8 | shapez.yaml |
+| 6 | shapez.yaml |
+
+### Second Pass Bisection Results
+
+When a second pass multiworld test fails, bisection tests each pair of templates to find which specific combination causes the failure.
+
+#### Stardew Valley (Stardew Valley.yaml)
+
+**Failing pairs found:** 1
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| A Short Hike.yaml | ✅ | ✅ | ✅ | ✅ |
+| ChecksFinder.yaml | ✅ | ✅ | ✅ | ✅ |
+| Faxanadu.yaml | ✅ | ✅ | ✅ | ✅ |
+| Links Awakening DX.yaml | ✅ | ✅ | ✅ | ✅ |
+| Old School Runescape.yaml | ✅ | ✅ | ✅ | ✅ |
+| The Messenger.yaml | ✅ | ✅ | ✅ | ✅ |
+| shapez.yaml | ❌ | ✅ | ❌ | ✅ |
+
+#### The Messenger (The Messenger.yaml)
+
+**Failing pairs found:** 1
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| A Short Hike.yaml | ✅ | ✅ | ✅ | ✅ |
+| ChecksFinder.yaml | ✅ | ✅ | ✅ | ✅ |
+| Faxanadu.yaml | ✅ | ✅ | ✅ | ✅ |
+| Links Awakening DX.yaml | ✅ | ✅ | ✅ | ✅ |
+| Old School Runescape.yaml | ✅ | ✅ | ✅ | ✅ |
+| shapez.yaml | ❌ | ✅ | ❌ | ✅ |
+
+#### shapez (shapez.yaml)
+
+**Failing pairs found:** 5
+
+| Partner Template | Result | Generation | Player 1 | Player 2 |
+|------------------|--------|------------|----------|----------|
+| A Short Hike.yaml | ❌ | ✅ | ✅ | ❌ |
+| ChecksFinder.yaml | ❌ | ✅ | ✅ | ❌ |
+| Faxanadu.yaml | ❌ | ✅ | ✅ | ❌ |
+| Links Awakening DX.yaml | ❌ | ✅ | ✅ | ❌ |
+| Old School Runescape.yaml | ❌ | ✅ | ✅ | ❌ |
 
 
 ## Notes

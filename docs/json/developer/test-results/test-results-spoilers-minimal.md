@@ -6,32 +6,32 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-14 21:09:29
+**Generated:** 2025-12-14 23:17:45
 
-**Source Data Created:** 2025-12-14T07:17:20.233362
+**Source Data Created:** 2025-12-14T21:52:12.152987
 
-**Source Data Last Updated:** 2025-12-14T07:17:20.233368
+**Source Data Last Updated:** 2025-12-14T21:52:12.152993
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 70 (95.9%)
-- **Failed:** 3 (4.1%)
-- **Games with Intermittent Failures:** 5
-- **Total Intermittent Failures:** 5
+- **Passed:** 72 (98.6%)
+- **Failed:** 1 (1.4%)
+- **Games with Intermittent Failures:** 4
+- **Total Intermittent Failures:** 4
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 28/70 (40.0% of passed)
-- **Passing with Generic Logic:** 62/70 (88.6% of passed)
-- **Passing with Both Generic:** 28/70 (40.0% of passed)
+- **Passing with Generic Exporter:** 28/72 (38.9% of passed)
+- **Passing with Generic Logic:** 63/72 (87.5% of passed)
+- **Passing with Both Generic:** 28/72 (38.9% of passed)
 
 ## Test Results
 
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time | ✅ Passed seeds 1-10 | 0 | 5.11 | 5.11 | 🟢 Complete | 12.2KB | ✅ |
-| A Link to the Past | ❌ Failed seed 9 | 0 | 22.1 | 23.1 | 🟡 95.7% | 39.1KB | ✅ |
+| A Link to the Past | ✅ Passed seeds 1-10 | 0 | 22.1 | 22.1 | 🟢 Complete | 39.1KB | ✅ |
 | A Short Hike | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
@@ -39,7 +39,7 @@
 | Bomb Rush Cyberfunk | ✅ Passed seeds 1-10 | 0 | 10.9 | 10.9 | 🟢 Complete | 1.6KB | 40.3KB |
 | Bumper Stickers | ✅ Passed seeds 1-10 | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
 | Castlevania - Circle of the Moon | ✅ Passed seeds 1-10 | 0 | 4.4 | 4.4 | 🟢 Complete | 15.2KB | ✅ |
-| Castlevania 64 | ❌ Failed seed 10 | 0 | 1.7 | 4.1 | 🟡 41.5% | ✅ | ✅ |
+| Castlevania 64 | ✅ Passed seeds 1-10 | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ✅ |
 | Celeste (Open World) | ✅ Passed seeds 1-10 | 0 | 16.2 | 16.2 | 🟢 Complete | 7.1KB | ✅ |
 | Celeste 64 | ✅ Passed seeds 1-10 | 0 | 5.2 | 5.2 | 🟢 Complete | 9.5KB | ✅ |
 | ChecksFinder | ✅ Passed seeds 1-10 | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ✅ |
@@ -81,7 +81,7 @@
 | Secret of Evermore | ✅ Passed seeds 1-10 | 0 | 5.2 | 5.2 | 🟢 Complete | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed seeds 1-10 | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ❌ Failed seed 8 | 0 | 17.3 | 19.9 | 🟡 86.9% | 24.1KB | 86.3KB |
+| Starcraft 2 | ✅ Passed seeds 1-10 | 0 | 15.5 | 15.5 | 🟢 Complete | 24.1KB | 86.3KB |
 | Stardew Valley | ✅ Passed seeds 1-10 | 0 | 44.1 | 44.1 | 🟢 Complete | 20.7KB | 10.7KB |
 | Subnautica | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | 6.0KB | ✅ |
 | Super Mario 64 | ✅ Passed seeds 1-10 | 0 | 5.4 | 5.4 | 🟢 Complete | 14.6KB | ✅ |
@@ -102,7 +102,7 @@
 | WebDevJourney | ✅ Passed seeds 1-10 | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Yacht Dice | ✅ Passed seeds 1-10 | 0 | 21.1 | 21.1 | 🟢 Complete | 1.6KB | 285.0KB |
 | Yoshi's Island | ✅ Passed seeds 1-10 | 0 | 12.4 | 12.4 | 🟢 Complete | 10.8KB | ✅ |
-| shapez | ✅ Passed seeds 1-10 | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
+| shapez | ❌ Failed seed 1 | 0 | 1.2 | 5.7 | 🟡 21.1% | ✅ | ✅ |
 
 ## Intermittent Failures
 
@@ -110,11 +110,10 @@ These seeds were previously failing but passed during a retest run:
 
 | Template | Seed | Timestamp | Notes |
 |----------|------|-----------|-------|
-| Hylics 2 | 2 | 2025-12-14 07:07 | Previously failed, now passing |
-| Kingdom Hearts 2 | 3 | 2025-12-14 07:09 | Previously failed, now passing |
-| Landstalker - The Treasures of King Nole | 7 | 2025-12-14 07:07 | Previously failed, now passing |
-| The Witness | 7 | 2025-12-14 07:07 | Previously failed, now passing |
-| WebDevJourney | 4 | 2025-12-14 07:07 | Previously failed, now passing |
+| Old School Runescape | 1 | 2025-12-14 21:43 | Previously failed, now passing |
+| Sonic Adventure 2 Battle | 2 | 2025-12-14 21:43 | Previously failed, now passing |
+| Subnautica | 8 | 2025-12-14 21:44 | Previously failed, now passing |
+| Yacht Dice | 4 | 2025-12-14 21:44 | Previously failed, now passing |
 
 
 ## Notes
