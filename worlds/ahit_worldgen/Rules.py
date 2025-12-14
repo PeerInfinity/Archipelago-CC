@@ -21,17 +21,17 @@ def _ahatintimeworldgen_Difficulty(state: "CollectionState", player: int, value)
 
 
 def _ahatintimeworldgen_can_clear_required_act(state: "CollectionState", player: int, act_entrance) -> bool:
-    entrance = world.multiworld.get_entrance(act_entrance)
+    entrance = state.multiworld.worlds[player].multiworld.get_entrance(act_entrance)
     if not (state.can_reach('', "Region", player)):
         return False
     if ('Free Roam' in entrance.connected_region.name):
         return True
     name = True
-    return world.multiworld.get_location(name).access_rule()
+    return state.multiworld.worlds[player].multiworld.get_location(name).access_rule()
 
 
 def _ahatintimeworldgen_can_use_hat(state: "CollectionState", player: int, hat) -> bool:
-    return (state.has('', player) if True else (True if (world.hat_yarn_costs[hat] <= 0) else state.has('Yarn', player)))
+    return (state.has({0: 'Sprint Hat', 1: 'Brewing Hat', 2: 'Ice Hat', 3: 'Dweller Mask', 4: 'Time Stop Hat'}[hat], player) if True else (True if (state.multiworld.worlds[player].hat_yarn_costs[hat] <= 0) else state.has('Yarn', player, _ahatintimeworldgen_get_hat_cost(state, player, hat))))
 
 
 def _ahatintimeworldgen_get_difficulty(state: "CollectionState", player: int) -> bool:
@@ -40,19 +40,19 @@ def _ahatintimeworldgen_get_difficulty(state: "CollectionState", player: int) ->
 
 def _ahatintimeworldgen_get_hat_cost(state: "CollectionState", player: int, hat) -> bool:
     cost = 0
-    for h in world.hat_craft_order:
-        cost += world.hat_yarn_costs[h]
+    for h in state.multiworld.worlds[player].hat_craft_order:
+        cost += state.multiworld.worlds[player].hat_yarn_costs[h]
         if (h == hat):
             break
     return cost
 
 
 def _ahatintimeworldgen_has_relic_combo(state: "CollectionState", player: int, relic) -> bool:
-    return state.has_group('', player)
+    return state.has_group(relic, player, len(state.multiworld.worlds[player].item_name_groups[relic]))
 
 
 def _ahatintimeworldgen_painting_logic(state: "CollectionState", player: int) -> bool:
-    return _ahatintimeworldgen_bool(state, player, True)
+    return bool(True)
 
 
 def set_rules(world: "World") -> None:
