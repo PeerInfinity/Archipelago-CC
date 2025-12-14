@@ -233,6 +233,25 @@ export function executeStateMethod(manager, method, ...args) {
       return uniqueItemsFound;
     }
 
+    // 2d. Handle has_from_list_unique - counts unique items from a list (ignores duplicates)
+    // Used by Super Mario Land 2 for golden coin collection
+    if (method === 'has_from_list_unique' && args.length >= 2) {
+      const items = args[0];
+      const count = args[1];
+      if (!Array.isArray(items)) return false;
+      if (typeof count !== 'number' || count < 0) return false;
+
+      // Count unique items from the list (items with count > 0)
+      let uniqueItemsFound = 0;
+      for (const itemName of items) {
+        const itemCount = manager.inventory[itemName] || 0;
+        if (itemCount > 0) {
+          uniqueItemsFound++;
+        }
+      }
+      return uniqueItemsFound >= count;
+    }
+
     // 3. Check for game-specific state methods (e.g., has_from_list_unique for Mario Land 2)
     if (manager.stateMethods && typeof manager.stateMethods[method] === 'function') {
       const snapshot = manager.getSnapshot();
