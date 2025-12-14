@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiworld-worldgen.md)
 
-**Generated:** 2025-12-13 22:27:08
+**Generated:** 2025-12-14 01:47:29
 
 ## Summary
 
@@ -23,7 +23,7 @@
 ### Generic Exporter/Logic Statistics
 
 - **Passing with Generic Exporter:** 29/72 (40.3% of passed)
-- **Passing with Generic Logic:** 59/72 (81.9% of passed)
+- **Passing with Generic Logic:** 62/72 (86.1% of passed)
 - **Passing with Both Generic:** 29/72 (40.3% of passed)
 
 ## Test Results
@@ -59,7 +59,7 @@
 | Inscryption | ✅ Passed | ✅ Passed | 3 | 3 | 8.1KB | ✅ |
 | Kingdom Hearts | ✅ Passed | ✅ Passed | 3 | 3 | 58.5KB | 5.4KB |
 | Kingdom Hearts 2 | ✅ Passed | ✅ Passed | 3 | 3 | 33.1KB | 105.3KB |
-| Kirby's Dream Land 3 | ❌ Failed | — | 3 | 3 | 11.4KB | ✅ |
+| Kirby's Dream Land 3 | ❌ Failed | — | 3 | 3 | 13.5KB | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | ✅ Passed | 4 | 4 | 16.4KB | ✅ |
 | Lingo | ✅ Passed | ✅ Passed | 4 | 4 | 33.7KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | ✅ Passed | 4 | 4 | 17.9KB | ✅ |
@@ -81,16 +81,16 @@
 | Secret of Evermore | ✅ Passed | ✅ Passed | 5 | 5 | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | ✅ Passed | 4 | 4 | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 19.8KB | 86.3KB |
+| Starcraft 2 | ✅ Passed | ✅ Passed | 6 | 6 | 23.9KB | 86.3KB |
 | Stardew Valley | ✅ Passed | ✅ Passed | 6 | 6 | 20.7KB | 10.7KB |
-| Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 2.4KB | 14.7KB |
+| Subnautica | ✅ Passed | ✅ Passed | 6 | 6 | 6.0KB | ✅ |
 | Super Mario 64 | ✅ Passed | ✅ Passed | 6 | 6 | 14.6KB | ✅ |
-| Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | 13.9KB | 4.9KB |
+| Super Mario Land 2 | ✅ Passed | ✅ Passed | 6 | 6 | 14.0KB | ✅ |
 | Super Mario World | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | Super Metroid | ✅ Passed | ✅ Passed | 6 | 6 | 72.0KB | 114.6KB |
 | TOEM original | ✅ Passed | ✅ Passed | 6 | 6 | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | ✅ Passed | 5 | 5 | ✅ | ✅ |
-| Terraria | ✅ Passed | ✅ Passed | 7 | 7 | 12.3KB | 4.3KB |
+| Terraria | ✅ Passed | ✅ Passed | 7 | 7 | 19.2KB | ✅ |
 | The Legend of Zelda | ✅ Passed | ✅ Passed | 7 | 7 | 7.0KB | ✅ |
 | The Messenger | ✅ Passed | ✅ Passed | 7 | 7 | 12.6KB | ✅ |
 | The Wind Waker | ✅ Passed | ✅ Passed | 7 | 7 | 4.8KB | 4.6KB |

@@ -6,25 +6,25 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-13 22:27:08
+**Generated:** 2025-12-14 01:47:29
 
-**Source Data Created:** 2025-12-13T21:50:02.896956
+**Source Data Created:** 2025-12-14T00:56:22.253321
 
-**Source Data Last Updated:** 2025-12-13T21:50:02.896962
+**Source Data Last Updated:** 2025-12-14T00:56:22.253326
 
 ## Summary
 
 - **Total Games:** 73
-- **Passed:** 71 (97.3%)
-- **Failed:** 2 (2.7%)
-- **Games with Intermittent Failures:** 0
-- **Total Intermittent Failures:** 0
+- **Passed:** 72 (98.6%)
+- **Failed:** 1 (1.4%)
+- **Games with Intermittent Failures:** 1
+- **Total Intermittent Failures:** 1
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 29/71 (40.8% of passed)
-- **Passing with Generic Logic:** 59/71 (83.1% of passed)
-- **Passing with Both Generic:** 29/71 (40.8% of passed)
+- **Passing with Generic Exporter:** 29/72 (40.3% of passed)
+- **Passing with Generic Logic:** 62/72 (86.1% of passed)
+- **Passing with Both Generic:** 29/72 (40.3% of passed)
 
 ## Test Results
 
@@ -59,7 +59,7 @@
 | Inscryption | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | 8.1KB | ✅ |
 | Kingdom Hearts | ✅ Passed | 0 | 10.3 | 10.3 | 🟢 Complete | 58.5KB | 5.4KB |
 | Kingdom Hearts 2 | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 33.1KB | 105.3KB |
-| Kirby's Dream Land 3 | ❌ Failed | 0 | 1.2 | 11.1 | 🟡 10.8% | 11.4KB | ✅ |
+| Kirby's Dream Land 3 | ❌ Failed | 0 | 8.5 | 11.1 | 🟡 76.6% | 13.5KB | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 16.4KB | ✅ |
 | Lingo | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | 33.7KB | 10.7KB |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 17.9KB | ✅ |
@@ -81,16 +81,16 @@
 | Secret of Evermore | ✅ Passed | 0 | 5.2 | 5.2 | 🟢 Complete | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 19.8KB | 86.3KB |
+| Starcraft 2 | ✅ Passed | 0 | 15.5 | 15.5 | 🟢 Complete | 23.9KB | 86.3KB |
 | Stardew Valley | ✅ Passed | 0 | 44.1 | 44.1 | 🟢 Complete | 20.7KB | 10.7KB |
-| Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.4KB | 14.7KB |
+| Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 6.0KB | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 14.6KB | ✅ |
-| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 13.9KB | 4.9KB |
+| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 14.0KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
-| Super Metroid | ❌ Failed | 1 | 8.3 | 8.3 | 🟡 100.0% | 72.0KB | 114.6KB |
+| Super Metroid | ✅ Passed | 0 | 8.3 | 8.3 | 🟢 Complete | 72.0KB | 114.6KB |
 | TOEM original | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
-| Terraria | ✅ Passed | 0 | 9.5 | 9.5 | 🟢 Complete | 12.3KB | 4.3KB |
+| Terraria | ✅ Passed | 0 | 9.5 | 9.5 | 🟢 Complete | 19.2KB | ✅ |
 | The Legend of Zelda | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 7.0KB | ✅ |
 | The Messenger | ✅ Passed | 0 | 6.3 | 6.3 | 🟢 Complete | 12.6KB | ✅ |
 | The Wind Waker | ✅ Passed | 0 | 18.1 | 18.1 | 🟢 Complete | 4.8KB | 4.6KB |
@@ -103,6 +103,15 @@
 | Yacht Dice | ✅ Passed | 0 | 21.1 | 21.1 | 🟢 Complete | 1.6KB | 285.0KB |
 | Yoshi's Island | ✅ Passed | 0 | 12.4 | 12.4 | 🟢 Complete | 10.8KB | ✅ |
 | shapez | ✅ Passed | 0 | 5.7 | 5.7 | 🟢 Complete | ✅ | ✅ |
+
+## Intermittent Failures
+
+These seeds were previously failing but passed during a retest run:
+
+| Template | Seed | Timestamp | Notes |
+|----------|------|-----------|-------|
+| Super Metroid | 1 | 2025-12-14 00:50 | Previously failed, now passing |
+
 
 ## Notes
 
