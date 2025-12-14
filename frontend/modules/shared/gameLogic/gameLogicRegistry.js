@@ -219,7 +219,7 @@ import { hkStateModule } from './hk/hkLogic.js';
 import * as jakanddaxterLogic from './jakanddaxter/jakanddaxterLogic.js';
 import { kh1Logic } from './kh1/kh1Logic.js';
 import { helperFunctions as kh2HelperFunctions } from './kh2/kh2Logic.js';
-// kdl3Logic removed - using generic helpers with JSON rule definitions
+import { helperFunctions as kdl3HelperFunctions } from './kdl3/kdl3Logic.js';
 // LADX now uses generic helpers - RUPEES is set in prog_items from sphere log
 import { helperFunctions as lingoHelperFunctions } from './lingo/lingoLogic.js';
 // marioland2Logic removed - all helpers now exported to rules.json
@@ -245,8 +245,8 @@ import * as stardewValleyLogic from './stardew_valley/stardewValleyLogic.js';
 import { stardewValleyStateModule } from './stardew_valley/stardewValleyLogic.js';
 // terrariaLogic removed - helpers now exported to rules.json
 // timespinnerLogic removed - helpers now exported to rules.json
-import * as twwLogic from './tww/twwLogic.js';
-import * as wargrooveLogic from './wargroove/wargrooveLogic.js';
+// twwLogic removed - state methods now converted to setting_value lookups in exporter
+// wargrooveLogic removed - state methods now expanded inline in rules.json export
 // yoshisisland helpers have been exported to rules.json - no JavaScript needed
 import * as yugioh06Logic from './yugioh06/yugioh06Logic.js';
 // osrs helpers have been exported to rules.json - no JavaScript needed
@@ -317,7 +317,7 @@ const GAME_REGISTRY = {
   },
   "Kirby's Dream Land 3": {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: genericLogic.helperFunctions,  // All helpers now exported as JSON rules
+    helperFunctions: kdl3HelperFunctions,  // Complex helpers (can_assemble_rob, can_fix_angel_wings) need JS
     worldClasses: ['KDL3World'],
     aliases: ["Kirby's Dream Land 3", 'KDL3']
   },
@@ -439,16 +439,14 @@ const GAME_REGISTRY = {
     aliases: ['Timespinner']
   },
   'The Wind Waker': {
-    logicModule: genericLogic.genericStateModule, // Using generic state module for now
-    helperFunctions: twwLogic.default,
-    stateMethods: twwLogic.stateMethods,
+    logicModule: genericLogic.genericStateModule,
+    // Helper functions and state methods now exported to rules.json - no JavaScript needed
     worldClasses: ['TWWWorld'],
     aliases: ['The Wind Waker', 'TWW', 'Wind Waker']
   },
   'Wargroove': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: wargrooveLogic.helperFunctions,
-    stateMethods: wargrooveLogic.stateMethods,
+    // State methods now expanded inline during rules.json export - no JavaScript needed
     worldClasses: ['WargrooveWorld'],
     aliases: ['Wargroove', 'wargroove']
   },

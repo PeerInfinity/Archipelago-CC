@@ -40,11 +40,11 @@ class KDL3GameExportHandler(BaseGameExportHandler):
     # Blacklist helpers that have loops or complex logic (don't export as definitions)
     # These helpers use dynamic function dispatch (ability_map[copy_abilities[enemy]])
     # which requires runtime resolution of nested dict lookups - handled via JS fallback
-    # Note: Empty set() is needed because {} with no items is a dict
-    HELPERS_TO_EXPORT_BLACKLIST = set()
+    HELPERS_TO_EXPORT_BLACKLIST = {'can_assemble_rob', 'can_fix_angel_wings'}
 
     # Preserve these helpers as helper calls (don't inline them - use JavaScript instead)
-    HELPERS_TO_PRESERVE = set()
+    # These helpers have loops/iterators that can't be evaluated by the frontend rule engine
+    HELPERS_TO_PRESERVE = {'can_assemble_rob', 'can_fix_angel_wings'}
 
     # Map parameter names used in inlined functions to actual setting names
     # When can_reach_boss is inlined, it uses parameter name 'ow_boss_req' but the

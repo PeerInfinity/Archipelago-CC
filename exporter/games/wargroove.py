@@ -1,4 +1,9 @@
-"""Wargroove game-specific export handler."""
+"""Wargroove game-specific export handler.
+
+Wargroove uses LogicMixin methods (_wargroove_has_item, _wargroove_has_region,
+_wargroove_has_item_and_region) that are expanded inline to their underlying
+rule types during export.
+"""
 
 from typing import Dict, Any, Optional
 from .generic import GenericGameExportHandler
@@ -7,8 +12,14 @@ import logging
 logger = logging.getLogger(__name__)
 
 class WargrooveGameExportHandler(GenericGameExportHandler):
+    """Export handler for Wargroove.
+
+    Wargroove's LogicMixin methods are expanded inline during export:
+    - _wargroove_has_item(player, item) -> item_check
+    - _wargroove_has_region(player, region) -> can_reach
+    - _wargroove_has_item_and_region(player, item, region) -> and(item_check, can_reach)
+    """
     GAME_NAME = 'Wargroove'
-    """Export handler for Wargroove."""
 
     def __init__(self, world=None):
         """Initialize handler."""
@@ -116,3 +127,76 @@ class WargrooveGameExportHandler(GenericGameExportHandler):
         # Start with generic expansion
         # Will add game-specific helpers as we discover them during testing
         return super().expand_helper(helper_name)
+
+    def expand_rule(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
+        """Expand Wargroove rules, inlining LogicMixin helper methods.
+
+        Transforms state_method calls to Wargroove's LogicMixin methods into
+        their underlying rule types:
+        - _wargroove_has_item(player, item) -> item_check
+        - _wargroove_has_region(player, region) -> can_reach
+        - _wargroove_has_item_and_region(player, item, region) -> and(item_check, can_reach)
+        """
+        if not rule or not isinstance(rule, dict):
+            return rule
+
+        rule_type = rule.get('type')
+
+        # Handle state_method calls to Wargroove's LogicMixin helpers
+        if rule_type == 'state_method':
+            method = rule.get('method')
+            args = rule.get('args', [])
+
+            # _wargroove_has_item(player, item) -> item_check
+            if method == '_wargroove_has_item' and len(args) >= 1:
+                item_arg = args[0]
+                # Extract the item name from the constant
+                if isinstance(item_arg, dict) and item_arg.get('type') == 'constant':
+                    item_name = item_arg.get('value')
+                else:
+                    item_name = item_arg
+                logger.debug(f"Expanding _wargroove_has_item to item_check: {item_name}")
+                return {'type': 'item_check', 'item': item_name}
+
+            # _wargroove_has_region(player, region) -> can_reach
+            if method == '_wargroove_has_region' and len(args) >= 1:
+                region_arg = args[0]
+                # Extract the region name from the constant
+                if isinstance(region_arg, dict) and region_arg.get('type') == 'constant':
+                    region_name = region_arg.get('value')
+                else:
+                    region_name = region_arg
+                logger.debug(f"Expanding _wargroove_has_region to can_reach: {region_name}")
+                return {'type': 'can_reach', 'region': region_name}
+
+            # _wargroove_has_item_and_region(player, item, region) -> and(item_check, can_reach)
+            if method == '_wargroove_has_item_and_region' and len(args) >= 2:
+                item_arg = args[0]
+                region_arg = args[1]
+                # Extract the item name
+                if isinstance(item_arg, dict) and item_arg.get('type') == 'constant':
+                    item_name = item_arg.get('value')
+                else:
+                    item_name = item_arg
+                # Extract the region name
+                if isinstance(region_arg, dict) and region_arg.get('type') == 'constant':
+                    region_name = region_arg.get('value')
+                else:
+                    region_name = region_arg
+                logger.debug(f"Expanding _wargroove_has_item_and_region: item={item_name}, region={region_name}")
+                return {
+                    'type': 'and',
+                    'conditions': [
+                        {'type': 'item_check', 'item': item_name},
+                        {'type': 'can_reach', 'region': region_name}
+                    ]
+                }
+
+        # For compound types (and, or), recursively expand children
+        if rule_type in ('and', 'or'):
+            conditions = rule.get('conditions', [])
+            expanded_conditions = [self.expand_rule(c, _depth + 1) for c in conditions]
+            return {'type': rule_type, 'conditions': expanded_conditions}
+
+        # For other types, delegate to parent
+        return super().expand_rule(rule, _depth)
