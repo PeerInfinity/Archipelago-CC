@@ -19,20 +19,10 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
 
-    # Helpers that access runtime data and need JavaScript implementations.
-    # These are preserved as helper calls (not inlined) so JavaScript can evaluate them.
-    # Only helpers that are actually called in access rules need to be here.
-    HELPERS_TO_PRESERVE = {
-        # Accesses runtime auto_scroll_levels data
-        'is_auto_scroll',
-        # Accesses runtime sprite_data
-        'not_blocked_by_sharks',
-        # Uses count math with x2 variants
-        'has_level_progression',
-    }
-
-    # Same helpers also go in blacklist to prevent automatic export
-    HELPERS_TO_EXPORT_BLACKLIST = HELPERS_TO_PRESERVE
+    # All helpers are now exported to rules.json - no JavaScript implementations needed.
+    # Runtime data (auto_scroll_levels, sprite_data) is exported via get_settings_data.
+    HELPERS_TO_PRESERVE = set()
+    HELPERS_TO_EXPORT_BLACKLIST = set()
 
     def should_process_multistatement_if_bodies(self) -> bool:
         """

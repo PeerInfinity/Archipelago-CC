@@ -222,7 +222,7 @@ import { helperFunctions as kh2HelperFunctions } from './kh2/kh2Logic.js';
 // kdl3Logic removed - using generic helpers with JSON rule definitions
 // LADX now uses generic helpers - RUPEES is set in prog_items from sphere log
 import { helperFunctions as lingoHelperFunctions } from './lingo/lingoLogic.js';
-import * as marioland2Logic from './marioland2/marioland2Logic.js';
+// marioland2Logic removed - all helpers now exported to rules.json
 import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
 import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 import * as pokemon_emeraldLogic from './pokemon_emerald/pokemon_emeraldLogic.js';
@@ -386,8 +386,7 @@ const GAME_REGISTRY = {
   },
   'Super Mario Land 2': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: marioland2Logic.helperFunctions,
-    stateMethods: marioland2Logic.stateMethods,
+    // All helpers now exported to rules.json - no JavaScript needed
     worldClasses: ['MarioLand2World'],
     aliases: ['Super Mario Land 2', 'SML2', 'marioland2']
   },

@@ -59,12 +59,82 @@
                     {
                       "type": "not",
                       "condition": {
-                        "type": "helper",
-                        "name": "is_auto_scroll",
-                        "args": [
+                        "type": "block",
+                        "statements": [
                           {
-                            "type": "constant",
-                            "value": "Hippo Zone"
+                            "type": "assign",
+                            "name": "level_id",
+                            "value": {
+                              "type": "constant",
+                              "value": 17
+                            }
+                          },
+                          {
+                            "type": "if_statement",
+                            "test": {
+                              "type": "state_method",
+                              "method": "has_any",
+                              "args": [
+                                {
+                                  "type": "list",
+                                  "value": [
+                                    {
+                                      "type": "constant",
+                                      "value": "Cancel Auto Scroll"
+                                    },
+                                    {
+                                      "type": "f_string",
+                                      "parts": [
+                                        {
+                                          "type": "constant",
+                                          "value": "Cancel Auto Scroll - "
+                                        },
+                                        {
+                                          "type": "formatted_value",
+                                          "value": {
+                                            "type": "constant",
+                                            "value": "Hippo Zone"
+                                          }
+                                        }
+                                      ],
+                                      "all_simple": true,
+                                      "value": "Cancel Auto Scroll - Hippo Zone"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            "body": [
+                              {
+                                "type": "return",
+                                "value": {
+                                  "type": "constant",
+                                  "value": false
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "compare",
+                              "left": {
+                                "type": "subscript",
+                                "value": {
+                                  "type": "setting_value",
+                                  "setting": "auto_scroll_levels"
+                                },
+                                "index": {
+                                  "type": "name",
+                                  "name": "level_id"
+                                }
+                              },
+                              "op": ">",
+                              "right": {
+                                "type": "constant",
+                                "value": 0
+                              }
+                            }
                           }
                         ]
                       }
@@ -206,14 +276,44 @@
             "name": "Tree Zone 1 -> Tree Zone 2",
             "connected_region": "Tree Zone 2",
             "access_rule": {
-              "type": "helper",
-              "name": "has_level_progression",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Tree Zone Progression"
+              "type": "compare",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Tree Zone Progression"
+                    }
+                  ]
+                },
+                "op": "+",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Tree Zone Progression x2"
+                      }
+                    ]
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "constant",
+                    "value": 2
+                  }
                 }
-              ]
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 1
+              }
             }
           }
         ],
@@ -257,18 +357,44 @@
             "name": "Tree Zone 2 -> Tree Zone 3",
             "connected_region": "Tree Zone 3",
             "access_rule": {
-              "type": "helper",
-              "name": "has_level_progression",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Tree Zone Progression"
+              "type": "compare",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Tree Zone Progression"
+                    }
+                  ]
                 },
-                {
-                  "type": "constant",
-                  "value": 2
+                "op": "+",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Tree Zone Progression x2"
+                      }
+                    ]
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "constant",
+                    "value": 2
+                  }
                 }
-              ]
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 2
+              }
             }
           },
           {
@@ -401,12 +527,82 @@
             "access_rule": {
               "type": "not",
               "condition": {
-                "type": "helper",
-                "name": "is_auto_scroll",
-                "args": [
+                "type": "block",
+                "statements": [
                   {
-                    "type": "constant",
-                    "value": "Tree Zone 3"
+                    "type": "assign",
+                    "name": "level_id",
+                    "value": {
+                      "type": "constant",
+                      "value": 4
+                    }
+                  },
+                  {
+                    "type": "if_statement",
+                    "test": {
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "list",
+                          "value": [
+                            {
+                              "type": "constant",
+                              "value": "Cancel Auto Scroll"
+                            },
+                            {
+                              "type": "f_string",
+                              "parts": [
+                                {
+                                  "type": "constant",
+                                  "value": "Cancel Auto Scroll - "
+                                },
+                                {
+                                  "type": "formatted_value",
+                                  "value": {
+                                    "type": "constant",
+                                    "value": "Tree Zone 3"
+                                  }
+                                }
+                              ],
+                              "all_simple": true,
+                              "value": "Cancel Auto Scroll - Tree Zone 3"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "body": [
+                      {
+                        "type": "return",
+                        "value": {
+                          "type": "constant",
+                          "value": false
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "return",
+                    "value": {
+                      "type": "compare",
+                      "left": {
+                        "type": "subscript",
+                        "value": {
+                          "type": "setting_value",
+                          "setting": "auto_scroll_levels"
+                        },
+                        "index": {
+                          "type": "name",
+                          "name": "level_id"
+                        }
+                      },
+                      "op": ">",
+                      "right": {
+                        "type": "constant",
+                        "value": 0
+                      }
+                    }
                   }
                 ]
               }
@@ -428,18 +624,44 @@
             "name": "Tree Zone 4 -> Tree Zone 5",
             "connected_region": "Tree Zone 5",
             "access_rule": {
-              "type": "helper",
-              "name": "has_level_progression",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Tree Zone Progression"
+              "type": "compare",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Tree Zone Progression"
+                    }
+                  ]
                 },
-                {
-                  "type": "constant",
-                  "value": 3
+                "op": "+",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Tree Zone Progression x2"
+                      }
+                    ]
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "constant",
+                    "value": 2
+                  }
                 }
-              ]
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 3
+              }
             }
           }
         ],
@@ -675,12 +897,82 @@
                     {
                       "type": "not",
                       "condition": {
-                        "type": "helper",
-                        "name": "is_auto_scroll",
-                        "args": [
+                        "type": "block",
+                        "statements": [
                           {
-                            "type": "constant",
-                            "value": "Hippo Zone"
+                            "type": "assign",
+                            "name": "level_id",
+                            "value": {
+                              "type": "constant",
+                              "value": 17
+                            }
+                          },
+                          {
+                            "type": "if_statement",
+                            "test": {
+                              "type": "state_method",
+                              "method": "has_any",
+                              "args": [
+                                {
+                                  "type": "list",
+                                  "value": [
+                                    {
+                                      "type": "constant",
+                                      "value": "Cancel Auto Scroll"
+                                    },
+                                    {
+                                      "type": "f_string",
+                                      "parts": [
+                                        {
+                                          "type": "constant",
+                                          "value": "Cancel Auto Scroll - "
+                                        },
+                                        {
+                                          "type": "formatted_value",
+                                          "value": {
+                                            "type": "constant",
+                                            "value": "Hippo Zone"
+                                          }
+                                        }
+                                      ],
+                                      "all_simple": true,
+                                      "value": "Cancel Auto Scroll - Hippo Zone"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            "body": [
+                              {
+                                "type": "return",
+                                "value": {
+                                  "type": "constant",
+                                  "value": false
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "compare",
+                              "left": {
+                                "type": "subscript",
+                                "value": {
+                                  "type": "setting_value",
+                                  "setting": "auto_scroll_levels"
+                                },
+                                "index": {
+                                  "type": "name",
+                                  "name": "level_id"
+                                }
+                              },
+                              "op": ">",
+                              "right": {
+                                "type": "constant",
+                                "value": 0
+                              }
+                            }
                           }
                         ]
                       }
@@ -731,14 +1023,44 @@
             "name": "Space Zone 1 -> Space Zone 2",
             "connected_region": "Space Zone 2",
             "access_rule": {
-              "type": "helper",
-              "name": "has_level_progression",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Space Zone Progression"
+              "type": "compare",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Space Zone Progression"
+                    }
+                  ]
+                },
+                "op": "+",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Space Zone Progression x2"
+                      }
+                    ]
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "constant",
+                    "value": 2
+                  }
                 }
-              ]
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 1
+              }
             }
           }
         ],
@@ -776,12 +1098,82 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "helper",
-                    "name": "is_auto_scroll",
-                    "args": [
+                    "type": "block",
+                    "statements": [
                       {
-                        "type": "constant",
-                        "value": "Space Zone 1"
+                        "type": "assign",
+                        "name": "level_id",
+                        "value": {
+                          "type": "constant",
+                          "value": 18
+                        }
+                      },
+                      {
+                        "type": "if_statement",
+                        "test": {
+                          "type": "state_method",
+                          "method": "has_any",
+                          "args": [
+                            {
+                              "type": "list",
+                              "value": [
+                                {
+                                  "type": "constant",
+                                  "value": "Cancel Auto Scroll"
+                                },
+                                {
+                                  "type": "f_string",
+                                  "parts": [
+                                    {
+                                      "type": "constant",
+                                      "value": "Cancel Auto Scroll - "
+                                    },
+                                    {
+                                      "type": "formatted_value",
+                                      "value": {
+                                        "type": "constant",
+                                        "value": "Space Zone 1"
+                                      }
+                                    }
+                                  ],
+                                  "all_simple": true,
+                                  "value": "Cancel Auto Scroll - Space Zone 1"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "body": [
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "constant",
+                              "value": false
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "return",
+                        "value": {
+                          "type": "compare",
+                          "left": {
+                            "type": "subscript",
+                            "value": {
+                              "type": "setting_value",
+                              "setting": "auto_scroll_levels"
+                            },
+                            "index": {
+                              "type": "name",
+                              "name": "level_id"
+                            }
+                          },
+                          "op": ">",
+                          "right": {
+                            "type": "constant",
+                            "value": 0
+                          }
+                        }
                       }
                     ]
                   }
@@ -998,14 +1390,44 @@
             "name": "Macro Zone 1 -> Macro Zone 2",
             "connected_region": "Macro Zone 2",
             "access_rule": {
-              "type": "helper",
-              "name": "has_level_progression",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Macro Zone Progression"
+              "type": "compare",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Macro Zone Progression"
+                    }
+                  ]
+                },
+                "op": "+",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Macro Zone Progression x2"
+                      }
+                    ]
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "constant",
+                    "value": 2
+                  }
                 }
-              ]
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 1
+              }
             }
           },
           {
@@ -1148,18 +1570,44 @@
             "name": "Macro Zone 2 -> Macro Zone 3",
             "connected_region": "Macro Zone 3",
             "access_rule": {
-              "type": "helper",
-              "name": "has_level_progression",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Macro Zone Progression"
+              "type": "compare",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Macro Zone Progression"
+                    }
+                  ]
                 },
-                {
-                  "type": "constant",
-                  "value": 2
+                "op": "+",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Macro Zone Progression x2"
+                      }
+                    ]
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "constant",
+                    "value": 2
+                  }
                 }
-              ]
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 2
+              }
             }
           }
         ],
@@ -1173,12 +1621,82 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "helper",
-                    "name": "is_auto_scroll",
-                    "args": [
+                    "type": "block",
+                    "statements": [
                       {
-                        "type": "constant",
-                        "value": "Macro Zone 2"
+                        "type": "assign",
+                        "name": "level_id",
+                        "value": {
+                          "type": "constant",
+                          "value": 21
+                        }
+                      },
+                      {
+                        "type": "if_statement",
+                        "test": {
+                          "type": "state_method",
+                          "method": "has_any",
+                          "args": [
+                            {
+                              "type": "list",
+                              "value": [
+                                {
+                                  "type": "constant",
+                                  "value": "Cancel Auto Scroll"
+                                },
+                                {
+                                  "type": "f_string",
+                                  "parts": [
+                                    {
+                                      "type": "constant",
+                                      "value": "Cancel Auto Scroll - "
+                                    },
+                                    {
+                                      "type": "formatted_value",
+                                      "value": {
+                                        "type": "constant",
+                                        "value": "Macro Zone 2"
+                                      }
+                                    }
+                                  ],
+                                  "all_simple": true,
+                                  "value": "Cancel Auto Scroll - Macro Zone 2"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "body": [
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "constant",
+                              "value": false
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "return",
+                        "value": {
+                          "type": "compare",
+                          "left": {
+                            "type": "subscript",
+                            "value": {
+                              "type": "setting_value",
+                              "setting": "auto_scroll_levels"
+                            },
+                            "index": {
+                              "type": "name",
+                              "name": "level_id"
+                            }
+                          },
+                          "op": ">",
+                          "right": {
+                            "type": "constant",
+                            "value": 0
+                          }
+                        }
                       }
                     ]
                   }
@@ -1283,18 +1801,44 @@
             "name": "Macro Zone 3 -> Macro Zone 4",
             "connected_region": "Macro Zone 4",
             "access_rule": {
-              "type": "helper",
-              "name": "has_level_progression",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Macro Zone Progression"
+              "type": "compare",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Macro Zone Progression"
+                    }
+                  ]
                 },
-                {
-                  "type": "constant",
-                  "value": 3
+                "op": "+",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Macro Zone Progression x2"
+                      }
+                    ]
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "constant",
+                    "value": 2
+                  }
                 }
-              ]
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 3
+              }
             }
           }
         ],
@@ -1494,14 +2038,44 @@
             "name": "Pumpkin Zone 1 -> Pumpkin Zone 2",
             "connected_region": "Pumpkin Zone 2",
             "access_rule": {
-              "type": "helper",
-              "name": "has_level_progression",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Pumpkin Zone Progression"
+              "type": "compare",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Pumpkin Zone Progression"
+                    }
+                  ]
+                },
+                "op": "+",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Pumpkin Zone Progression x2"
+                      }
+                    ]
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "constant",
+                    "value": 2
+                  }
                 }
-              ]
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 1
+              }
             }
           }
         ],
@@ -1518,12 +2092,82 @@
                     {
                       "type": "not",
                       "condition": {
-                        "type": "helper",
-                        "name": "is_auto_scroll",
-                        "args": [
+                        "type": "block",
+                        "statements": [
                           {
-                            "type": "constant",
-                            "value": "Pumpkin Zone 1"
+                            "type": "assign",
+                            "name": "level_id",
+                            "value": {
+                              "type": "constant",
+                              "value": 6
+                            }
+                          },
+                          {
+                            "type": "if_statement",
+                            "test": {
+                              "type": "state_method",
+                              "method": "has_any",
+                              "args": [
+                                {
+                                  "type": "list",
+                                  "value": [
+                                    {
+                                      "type": "constant",
+                                      "value": "Cancel Auto Scroll"
+                                    },
+                                    {
+                                      "type": "f_string",
+                                      "parts": [
+                                        {
+                                          "type": "constant",
+                                          "value": "Cancel Auto Scroll - "
+                                        },
+                                        {
+                                          "type": "formatted_value",
+                                          "value": {
+                                            "type": "constant",
+                                            "value": "Pumpkin Zone 1"
+                                          }
+                                        }
+                                      ],
+                                      "all_simple": true,
+                                      "value": "Cancel Auto Scroll - Pumpkin Zone 1"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            "body": [
+                              {
+                                "type": "return",
+                                "value": {
+                                  "type": "constant",
+                                  "value": false
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "compare",
+                              "left": {
+                                "type": "subscript",
+                                "value": {
+                                  "type": "setting_value",
+                                  "setting": "auto_scroll_levels"
+                                },
+                                "index": {
+                                  "type": "name",
+                                  "name": "level_id"
+                                }
+                              },
+                              "op": ">",
+                              "right": {
+                                "type": "constant",
+                                "value": 0
+                              }
+                            }
                           }
                         ]
                       }
@@ -1569,12 +2213,82 @@
                     {
                       "type": "not",
                       "condition": {
-                        "type": "helper",
-                        "name": "is_auto_scroll",
-                        "args": [
+                        "type": "block",
+                        "statements": [
                           {
-                            "type": "constant",
-                            "value": "Pumpkin Zone 1"
+                            "type": "assign",
+                            "name": "level_id",
+                            "value": {
+                              "type": "constant",
+                              "value": 6
+                            }
+                          },
+                          {
+                            "type": "if_statement",
+                            "test": {
+                              "type": "state_method",
+                              "method": "has_any",
+                              "args": [
+                                {
+                                  "type": "list",
+                                  "value": [
+                                    {
+                                      "type": "constant",
+                                      "value": "Cancel Auto Scroll"
+                                    },
+                                    {
+                                      "type": "f_string",
+                                      "parts": [
+                                        {
+                                          "type": "constant",
+                                          "value": "Cancel Auto Scroll - "
+                                        },
+                                        {
+                                          "type": "formatted_value",
+                                          "value": {
+                                            "type": "constant",
+                                            "value": "Pumpkin Zone 1"
+                                          }
+                                        }
+                                      ],
+                                      "all_simple": true,
+                                      "value": "Cancel Auto Scroll - Pumpkin Zone 1"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            "body": [
+                              {
+                                "type": "return",
+                                "value": {
+                                  "type": "constant",
+                                  "value": false
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "compare",
+                              "left": {
+                                "type": "subscript",
+                                "value": {
+                                  "type": "setting_value",
+                                  "setting": "auto_scroll_levels"
+                                },
+                                "index": {
+                                  "type": "name",
+                                  "name": "level_id"
+                                }
+                              },
+                              "op": ">",
+                              "right": {
+                                "type": "constant",
+                                "value": 0
+                              }
+                            }
                           }
                         ]
                       }
@@ -1617,18 +2331,44 @@
             "name": "Pumpkin Zone 2 -> Pumpkin Zone 3",
             "connected_region": "Pumpkin Zone 3",
             "access_rule": {
-              "type": "helper",
-              "name": "has_level_progression",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Pumpkin Zone Progression"
+              "type": "compare",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Pumpkin Zone Progression"
+                    }
+                  ]
                 },
-                {
-                  "type": "constant",
-                  "value": 2
+                "op": "+",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Pumpkin Zone Progression x2"
+                      }
+                    ]
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "constant",
+                    "value": 2
+                  }
                 }
-              ]
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 2
+              }
             }
           },
           {
@@ -1650,12 +2390,82 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "helper",
-                    "name": "is_auto_scroll",
-                    "args": [
+                    "type": "block",
+                    "statements": [
                       {
-                        "type": "constant",
-                        "value": "Pumpkin Zone 2"
+                        "type": "assign",
+                        "name": "level_id",
+                        "value": {
+                          "type": "constant",
+                          "value": 7
+                        }
+                      },
+                      {
+                        "type": "if_statement",
+                        "test": {
+                          "type": "state_method",
+                          "method": "has_any",
+                          "args": [
+                            {
+                              "type": "list",
+                              "value": [
+                                {
+                                  "type": "constant",
+                                  "value": "Cancel Auto Scroll"
+                                },
+                                {
+                                  "type": "f_string",
+                                  "parts": [
+                                    {
+                                      "type": "constant",
+                                      "value": "Cancel Auto Scroll - "
+                                    },
+                                    {
+                                      "type": "formatted_value",
+                                      "value": {
+                                        "type": "constant",
+                                        "value": "Pumpkin Zone 2"
+                                      }
+                                    }
+                                  ],
+                                  "all_simple": true,
+                                  "value": "Cancel Auto Scroll - Pumpkin Zone 2"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "body": [
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "constant",
+                              "value": false
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "return",
+                        "value": {
+                          "type": "compare",
+                          "left": {
+                            "type": "subscript",
+                            "value": {
+                              "type": "setting_value",
+                              "setting": "auto_scroll_levels"
+                            },
+                            "index": {
+                              "type": "name",
+                              "name": "level_id"
+                            }
+                          },
+                          "op": ">",
+                          "right": {
+                            "type": "constant",
+                            "value": 0
+                          }
+                        }
                       }
                     ]
                   }
@@ -1725,12 +2535,82 @@
                     {
                       "type": "not",
                       "condition": {
-                        "type": "helper",
-                        "name": "is_auto_scroll",
-                        "args": [
+                        "type": "block",
+                        "statements": [
                           {
-                            "type": "constant",
-                            "value": "Pumpkin Zone 2"
+                            "type": "assign",
+                            "name": "level_id",
+                            "value": {
+                              "type": "constant",
+                              "value": 7
+                            }
+                          },
+                          {
+                            "type": "if_statement",
+                            "test": {
+                              "type": "state_method",
+                              "method": "has_any",
+                              "args": [
+                                {
+                                  "type": "list",
+                                  "value": [
+                                    {
+                                      "type": "constant",
+                                      "value": "Cancel Auto Scroll"
+                                    },
+                                    {
+                                      "type": "f_string",
+                                      "parts": [
+                                        {
+                                          "type": "constant",
+                                          "value": "Cancel Auto Scroll - "
+                                        },
+                                        {
+                                          "type": "formatted_value",
+                                          "value": {
+                                            "type": "constant",
+                                            "value": "Pumpkin Zone 2"
+                                          }
+                                        }
+                                      ],
+                                      "all_simple": true,
+                                      "value": "Cancel Auto Scroll - Pumpkin Zone 2"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            "body": [
+                              {
+                                "type": "return",
+                                "value": {
+                                  "type": "constant",
+                                  "value": false
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "compare",
+                              "left": {
+                                "type": "subscript",
+                                "value": {
+                                  "type": "setting_value",
+                                  "setting": "auto_scroll_levels"
+                                },
+                                "index": {
+                                  "type": "name",
+                                  "name": "level_id"
+                                }
+                              },
+                              "op": ">",
+                              "right": {
+                                "type": "constant",
+                                "value": 0
+                              }
+                            }
                           }
                         ]
                       }
@@ -1827,18 +2707,44 @@
             "name": "Pumpkin Zone 3 -> Pumpkin Zone 4",
             "connected_region": "Pumpkin Zone 4",
             "access_rule": {
-              "type": "helper",
-              "name": "has_level_progression",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Pumpkin Zone Progression"
+              "type": "compare",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Pumpkin Zone Progression"
+                    }
+                  ]
                 },
-                {
-                  "type": "constant",
-                  "value": 3
+                "op": "+",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Pumpkin Zone Progression x2"
+                      }
+                    ]
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "constant",
+                    "value": 2
+                  }
                 }
-              ]
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 3
+              }
             }
           },
           {
@@ -1992,14 +2898,44 @@
             "name": "Mario Zone 1 -> Mario Zone 2",
             "connected_region": "Mario Zone 2",
             "access_rule": {
-              "type": "helper",
-              "name": "has_level_progression",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Mario Zone Progression"
+              "type": "compare",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Mario Zone Progression"
+                    }
+                  ]
+                },
+                "op": "+",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Mario Zone Progression x2"
+                      }
+                    ]
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "constant",
+                    "value": 2
+                  }
                 }
-              ]
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 1
+              }
             }
           }
         ],
@@ -2016,12 +2952,82 @@
                     {
                       "type": "not",
                       "condition": {
-                        "type": "helper",
-                        "name": "is_auto_scroll",
-                        "args": [
+                        "type": "block",
+                        "statements": [
                           {
-                            "type": "constant",
-                            "value": "Mario Zone 1"
+                            "type": "assign",
+                            "name": "level_id",
+                            "value": {
+                              "type": "constant",
+                              "value": 10
+                            }
+                          },
+                          {
+                            "type": "if_statement",
+                            "test": {
+                              "type": "state_method",
+                              "method": "has_any",
+                              "args": [
+                                {
+                                  "type": "list",
+                                  "value": [
+                                    {
+                                      "type": "constant",
+                                      "value": "Cancel Auto Scroll"
+                                    },
+                                    {
+                                      "type": "f_string",
+                                      "parts": [
+                                        {
+                                          "type": "constant",
+                                          "value": "Cancel Auto Scroll - "
+                                        },
+                                        {
+                                          "type": "formatted_value",
+                                          "value": {
+                                            "type": "constant",
+                                            "value": "Mario Zone 1"
+                                          }
+                                        }
+                                      ],
+                                      "all_simple": true,
+                                      "value": "Cancel Auto Scroll - Mario Zone 1"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            "body": [
+                              {
+                                "type": "return",
+                                "value": {
+                                  "type": "constant",
+                                  "value": false
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "compare",
+                              "left": {
+                                "type": "subscript",
+                                "value": {
+                                  "type": "setting_value",
+                                  "setting": "auto_scroll_levels"
+                                },
+                                "index": {
+                                  "type": "name",
+                                  "name": "level_id"
+                                }
+                              },
+                              "op": ">",
+                              "right": {
+                                "type": "constant",
+                                "value": 0
+                              }
+                            }
                           }
                         ]
                       }
@@ -2127,18 +3133,44 @@
             "name": "Mario Zone 2 -> Mario Zone 3",
             "connected_region": "Mario Zone 3",
             "access_rule": {
-              "type": "helper",
-              "name": "has_level_progression",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Mario Zone Progression"
+              "type": "compare",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Mario Zone Progression"
+                    }
+                  ]
                 },
-                {
-                  "type": "constant",
-                  "value": 2
+                "op": "+",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Mario Zone Progression x2"
+                      }
+                    ]
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "constant",
+                    "value": 2
+                  }
                 }
-              ]
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 2
+              }
             }
           }
         ],
@@ -2182,18 +3214,44 @@
             "name": "Mario Zone 3 -> Mario Zone 4",
             "connected_region": "Mario Zone 4",
             "access_rule": {
-              "type": "helper",
-              "name": "has_level_progression",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Mario Zone Progression"
+              "type": "compare",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Mario Zone Progression"
+                    }
+                  ]
                 },
-                {
-                  "type": "constant",
-                  "value": 3
+                "op": "+",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Mario Zone Progression x2"
+                      }
+                    ]
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "constant",
+                    "value": 2
+                  }
                 }
-              ]
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 3
+              }
             }
           }
         ],
@@ -2282,14 +3340,44 @@
             "name": "Turtle Zone 1 -> Turtle Zone 2",
             "connected_region": "Turtle Zone 2",
             "access_rule": {
-              "type": "helper",
-              "name": "has_level_progression",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Turtle Zone Progression"
+              "type": "compare",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Turtle Zone Progression"
+                    }
+                  ]
+                },
+                "op": "+",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Turtle Zone Progression x2"
+                      }
+                    ]
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "constant",
+                    "value": 2
+                  }
                 }
-              ]
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 1
+              }
             }
           }
         ],
@@ -2298,9 +3386,169 @@
             "name": "Turtle Zone 1 - Normal Exit",
             "id": 52,
             "access_rule": {
-              "type": "helper",
-              "name": "not_blocked_by_sharks",
-              "args": []
+              "type": "block",
+              "statements": [
+                {
+                  "type": "assign",
+                  "name": "sharks",
+                  "value": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "generator_expression",
+                        "element": {
+                          "type": "subscript",
+                          "value": {
+                            "type": "subscript",
+                            "value": {
+                              "type": "setting_value",
+                              "setting": "sprite_data",
+                              "index": "Turtle Zone 1"
+                            },
+                            "index": {
+                              "type": "name",
+                              "name": "i"
+                            }
+                          },
+                          "index": {
+                            "type": "constant",
+                            "value": "sprite"
+                          }
+                        },
+                        "comprehension": {
+                          "type": "comprehension_details",
+                          "target": {
+                            "type": "name",
+                            "name": "i"
+                          },
+                          "iterator": {
+                            "type": "list",
+                            "value": [
+                              {
+                                "type": "constant",
+                                "value": 27
+                              },
+                              {
+                                "type": "constant",
+                                "value": 28
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "attr": "count"
+                    },
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Shark"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "not",
+                        "condition": {
+                          "type": "name",
+                          "name": "sharks"
+                        }
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Carrot"
+                      }
+                    ]
+                  },
+                  "body": [
+                    {
+                      "type": "return",
+                      "value": {
+                        "type": "constant",
+                        "value": true
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "name",
+                      "name": "sharks"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": 2
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "return",
+                      "value": {
+                        "type": "state_method",
+                        "method": "has_all",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Fire Flower",
+                              "Mushroom"
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "name",
+                      "name": "sharks"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "constant",
+                      "value": 1
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "return",
+                      "value": {
+                        "type": "state_method",
+                        "method": "has_any",
+                        "args": [
+                          {
+                            "type": "constant",
+                            "value": [
+                              "Fire Flower",
+                              "Mushroom"
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": false
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Super Star Duration Increase",
@@ -2334,18 +3582,44 @@
             "name": "Turtle Zone 2 -> Turtle Zone 3",
             "connected_region": "Turtle Zone 3",
             "access_rule": {
-              "type": "helper",
-              "name": "has_level_progression",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": "Turtle Zone Progression"
+              "type": "compare",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Turtle Zone Progression"
+                    }
+                  ]
                 },
-                {
-                  "type": "constant",
-                  "value": 2
+                "op": "+",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "state_method",
+                    "method": "count",
+                    "args": [
+                      {
+                        "type": "constant",
+                        "value": "Turtle Zone Progression x2"
+                      }
+                    ]
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "constant",
+                    "value": 2
+                  }
                 }
-              ]
+              },
+              "op": ">=",
+              "right": {
+                "type": "constant",
+                "value": 2
+              }
             }
           },
           {
@@ -2367,12 +3641,82 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "helper",
-                    "name": "is_auto_scroll",
-                    "args": [
+                    "type": "block",
+                    "statements": [
                       {
-                        "type": "constant",
-                        "value": "Turtle Zone 2"
+                        "type": "assign",
+                        "name": "level_id",
+                        "value": {
+                          "type": "constant",
+                          "value": 15
+                        }
+                      },
+                      {
+                        "type": "if_statement",
+                        "test": {
+                          "type": "state_method",
+                          "method": "has_any",
+                          "args": [
+                            {
+                              "type": "list",
+                              "value": [
+                                {
+                                  "type": "constant",
+                                  "value": "Cancel Auto Scroll"
+                                },
+                                {
+                                  "type": "f_string",
+                                  "parts": [
+                                    {
+                                      "type": "constant",
+                                      "value": "Cancel Auto Scroll - "
+                                    },
+                                    {
+                                      "type": "formatted_value",
+                                      "value": {
+                                        "type": "constant",
+                                        "value": "Turtle Zone 2"
+                                      }
+                                    }
+                                  ],
+                                  "all_simple": true,
+                                  "value": "Cancel Auto Scroll - Turtle Zone 2"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "body": [
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "constant",
+                              "value": false
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "return",
+                        "value": {
+                          "type": "compare",
+                          "left": {
+                            "type": "subscript",
+                            "value": {
+                              "type": "setting_value",
+                              "setting": "auto_scroll_levels"
+                            },
+                            "index": {
+                              "type": "name",
+                              "name": "level_id"
+                            }
+                          },
+                          "op": ">",
+                          "right": {
+                            "type": "constant",
+                            "value": 0
+                          }
+                        }
                       }
                     ]
                   }
@@ -2452,12 +3796,82 @@
                 {
                   "type": "not",
                   "condition": {
-                    "type": "helper",
-                    "name": "is_auto_scroll",
-                    "args": [
+                    "type": "block",
+                    "statements": [
                       {
-                        "type": "constant",
-                        "value": "Turtle Zone 2"
+                        "type": "assign",
+                        "name": "level_id",
+                        "value": {
+                          "type": "constant",
+                          "value": 15
+                        }
+                      },
+                      {
+                        "type": "if_statement",
+                        "test": {
+                          "type": "state_method",
+                          "method": "has_any",
+                          "args": [
+                            {
+                              "type": "list",
+                              "value": [
+                                {
+                                  "type": "constant",
+                                  "value": "Cancel Auto Scroll"
+                                },
+                                {
+                                  "type": "f_string",
+                                  "parts": [
+                                    {
+                                      "type": "constant",
+                                      "value": "Cancel Auto Scroll - "
+                                    },
+                                    {
+                                      "type": "formatted_value",
+                                      "value": {
+                                        "type": "constant",
+                                        "value": "Turtle Zone 2"
+                                      }
+                                    }
+                                  ],
+                                  "all_simple": true,
+                                  "value": "Cancel Auto Scroll - Turtle Zone 2"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "body": [
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "constant",
+                              "value": false
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "return",
+                        "value": {
+                          "type": "compare",
+                          "left": {
+                            "type": "subscript",
+                            "value": {
+                              "type": "setting_value",
+                              "setting": "auto_scroll_levels"
+                            },
+                            "index": {
+                              "type": "name",
+                              "name": "level_id"
+                            }
+                          },
+                          "op": ">",
+                          "right": {
+                            "type": "constant",
+                            "value": 0
+                          }
+                        }
                       }
                     ]
                   }
@@ -2501,12 +3915,82 @@
                     {
                       "type": "not",
                       "condition": {
-                        "type": "helper",
-                        "name": "is_auto_scroll",
-                        "args": [
+                        "type": "block",
+                        "statements": [
                           {
-                            "type": "constant",
-                            "value": "Turtle Zone 2"
+                            "type": "assign",
+                            "name": "level_id",
+                            "value": {
+                              "type": "constant",
+                              "value": 15
+                            }
+                          },
+                          {
+                            "type": "if_statement",
+                            "test": {
+                              "type": "state_method",
+                              "method": "has_any",
+                              "args": [
+                                {
+                                  "type": "list",
+                                  "value": [
+                                    {
+                                      "type": "constant",
+                                      "value": "Cancel Auto Scroll"
+                                    },
+                                    {
+                                      "type": "f_string",
+                                      "parts": [
+                                        {
+                                          "type": "constant",
+                                          "value": "Cancel Auto Scroll - "
+                                        },
+                                        {
+                                          "type": "formatted_value",
+                                          "value": {
+                                            "type": "constant",
+                                            "value": "Turtle Zone 2"
+                                          }
+                                        }
+                                      ],
+                                      "all_simple": true,
+                                      "value": "Cancel Auto Scroll - Turtle Zone 2"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            "body": [
+                              {
+                                "type": "return",
+                                "value": {
+                                  "type": "constant",
+                                  "value": false
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "type": "return",
+                            "value": {
+                              "type": "compare",
+                              "left": {
+                                "type": "subscript",
+                                "value": {
+                                  "type": "setting_value",
+                                  "setting": "auto_scroll_levels"
+                                },
+                                "index": {
+                                  "type": "name",
+                                  "name": "level_id"
+                                }
+                              },
+                              "op": ">",
+                              "right": {
+                                "type": "constant",
+                                "value": 0
+                              }
+                            }
                           }
                         ]
                       }
@@ -2890,7 +4374,7 @@
       },
       "Tree Coin": {
         "name": "Tree Coin",
-        "id": 19,
+        "id": null,
         "groups": [
           "Event",
           "Everything",
@@ -2903,7 +4387,7 @@
       },
       "Space Coin": {
         "name": "Space Coin",
-        "id": 20,
+        "id": null,
         "groups": [
           "Event",
           "Everything",
@@ -2916,7 +4400,7 @@
       },
       "Macro Coin": {
         "name": "Macro Coin",
-        "id": 21,
+        "id": null,
         "groups": [
           "Event",
           "Everything",
@@ -2929,7 +4413,7 @@
       },
       "Pumpkin Coin": {
         "name": "Pumpkin Coin",
-        "id": 22,
+        "id": null,
         "groups": [
           "Event",
           "Everything",
@@ -2942,7 +4426,7 @@
       },
       "Mario Coin": {
         "name": "Mario Coin",
-        "id": 23,
+        "id": null,
         "groups": [
           "Event",
           "Everything",
@@ -2955,7 +4439,7 @@
       },
       "Turtle Coin": {
         "name": "Turtle Coin",
-        "id": 24,
+        "id": null,
         "groups": [
           "Event",
           "Everything",
