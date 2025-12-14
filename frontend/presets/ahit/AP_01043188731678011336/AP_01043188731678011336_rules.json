@@ -33,44 +33,85 @@
             "name": "Telescope -> Mafia Town",
             "connected_region": "Mafia Town",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "type": "item_check",
+              "item": "Time Piece",
+              "count": {
+                "type": "constant",
+                "value": 0
+              }
             }
           },
           {
             "name": "Telescope -> Battle of the Birds",
             "connected_region": "Battle of the Birds",
             "access_rule": {
-              "type": "count_check",
+              "type": "item_check",
               "item": "Time Piece",
-              "count": 5
+              "count": {
+                "type": "constant",
+                "value": 5
+              }
             }
           },
           {
             "name": "Telescope -> Subcon Forest",
             "connected_region": "Subcon Forest",
             "access_rule": {
-              "type": "count_check",
+              "type": "item_check",
               "item": "Time Piece",
-              "count": 17
+              "count": {
+                "type": "constant",
+                "value": 17
+              }
             }
           },
           {
             "name": "Telescope -> Alpine Skyline",
             "connected_region": "Alpine Skyline",
             "access_rule": {
-              "type": "count_check",
+              "type": "item_check",
               "item": "Time Piece",
-              "count": 13
+              "count": {
+                "type": "constant",
+                "value": 13
+              }
             }
           },
           {
             "name": "Telescope -> Time's End",
             "connected_region": "Time's End",
             "access_rule": {
-              "type": "count_check",
-              "item": "Time Piece",
-              "count": 35
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "helper",
+                  "name": "can_use_hat",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "helper",
+                  "name": "can_use_hat",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": 3
+                    }
+                  ]
+                },
+                {
+                  "type": "item_check",
+                  "item": "Time Piece",
+                  "count": {
+                    "type": "constant",
+                    "value": 35
+                  }
+                }
+              ]
             }
           },
           {
@@ -317,13 +358,15 @@
             "name": "Time Rift - Bazaar Portal - Entrance 1",
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 6"
+                  "type": "can_reach",
+                  "region": "The Subcon Well"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Subcon Well)"
                 }
               ]
             }
@@ -332,13 +375,15 @@
             "name": "Time Rift - Sewers Portal - Entrance 1",
             "connected_region": "Time Rift - Gallery",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 4"
+                  "type": "can_reach",
+                  "region": "The Big Parade"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Big Parade)"
                 }
               ]
             }
@@ -422,13 +467,15 @@
             "name": "Time Rift - Bazaar Portal - Entrance 2",
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 6"
+                  "type": "can_reach",
+                  "region": "The Subcon Well"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Subcon Well)"
                 }
               ]
             }
@@ -437,13 +484,15 @@
             "name": "Time Rift - Sewers Portal - Entrance 2",
             "connected_region": "Time Rift - Gallery",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 4"
+                  "type": "can_reach",
+                  "region": "The Big Parade"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Big Parade)"
                 }
               ]
             }
@@ -512,13 +561,15 @@
             "name": "Time Rift - Bazaar Portal - Entrance 3",
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 6"
+                  "type": "can_reach",
+                  "region": "The Subcon Well"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Subcon Well)"
                 }
               ]
             }
@@ -527,13 +578,15 @@
             "name": "Time Rift - Sewers Portal - Entrance 3",
             "connected_region": "Time Rift - Gallery",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 4"
+                  "type": "can_reach",
+                  "region": "The Big Parade"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Big Parade)"
                 }
               ]
             }
@@ -602,13 +655,15 @@
             "name": "Time Rift - Bazaar Portal - Entrance 4",
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 6"
+                  "type": "can_reach",
+                  "region": "The Subcon Well"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Subcon Well)"
                 }
               ]
             }
@@ -617,13 +672,15 @@
             "name": "Time Rift - Sewers Portal - Entrance 4",
             "connected_region": "Time Rift - Gallery",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 4"
+                  "type": "can_reach",
+                  "region": "The Big Parade"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Big Parade)"
                 }
               ]
             }
@@ -750,13 +807,15 @@
             "name": "Time Rift - Bazaar Portal - Entrance 6",
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 6"
+                  "type": "can_reach",
+                  "region": "The Subcon Well"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Subcon Well)"
                 }
               ]
             }
@@ -765,13 +824,15 @@
             "name": "Time Rift - Sewers Portal - Entrance 6",
             "connected_region": "Time Rift - Gallery",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 4"
+                  "type": "can_reach",
+                  "region": "The Big Parade"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Big Parade)"
                 }
               ]
             }
@@ -908,13 +969,15 @@
             "name": "Time Rift - Bazaar Portal - Entrance 5",
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 6"
+                  "type": "can_reach",
+                  "region": "The Subcon Well"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Subcon Well)"
                 }
               ]
             }
@@ -923,13 +986,15 @@
             "name": "Time Rift - Sewers Portal - Entrance 5",
             "connected_region": "Time Rift - Gallery",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 4"
+                  "type": "can_reach",
+                  "region": "The Big Parade"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Big Parade)"
                 }
               ]
             }
@@ -1056,13 +1121,15 @@
             "name": "Time Rift - Bazaar Portal - Entrance 7",
             "connected_region": "Time Rift - The Twilight Bell",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 6"
+                  "type": "can_reach",
+                  "region": "The Subcon Well"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Subcon Well)"
                 }
               ]
             }
@@ -1071,13 +1138,15 @@
             "name": "Time Rift - Sewers Portal - Entrance 7",
             "connected_region": "Time Rift - Gallery",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Mafia Town - Act 4"
+                  "type": "can_reach",
+                  "region": "The Big Parade"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (The Big Parade)"
                 }
               ]
             }
@@ -1239,9 +1308,8 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_use_hookshot",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Hookshot Badge"
                 }
               ]
             }
@@ -1290,24 +1358,28 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_clear_required_act",
-                  "description": "Checks if a specific act can be completed",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": "Battle of the Birds - Act 2"
+                      "type": "can_reach",
+                      "region": "Barrel Battle"
+                    },
+                    {
+                      "type": "location_rule_ref",
+                      "location": "Act Completion (Barrel Battle)"
                     }
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_clear_required_act",
-                  "description": "Checks if a specific act can be completed",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": "Battle of the Birds - Act 3"
+                      "type": "can_reach",
+                      "region": "Down with the Mafia!"
+                    },
+                    {
+                      "type": "location_rule_ref",
+                      "location": "Act Completion (Down with the Mafia!)"
                     }
                   ]
                 }
@@ -1515,24 +1587,28 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_clear_required_act",
-                  "description": "Checks if a specific act can be completed",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": "Battle of the Birds - Act 4"
+                      "type": "can_reach",
+                      "region": "Dead Bird Studio"
+                    },
+                    {
+                      "type": "location_rule_ref",
+                      "location": "Act Completion (Dead Bird Studio)"
                     }
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_clear_required_act",
-                  "description": "Checks if a specific act can be completed",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": "Battle of the Birds - Act 5"
+                      "type": "can_reach",
+                      "region": "Train Rush"
+                    },
+                    {
+                      "type": "location_rule_ref",
+                      "location": "Act Completion (Train Rush)"
                     }
                   ]
                 }
@@ -1634,9 +1710,8 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_use_hookshot",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Hookshot Badge"
                 }
               ]
             }
@@ -1647,9 +1722,8 @@
             "name": "Act Completion (Train Rush)",
             "id": 2000312481,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "Relic (Burger Cushion)",
@@ -1671,24 +1745,28 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_clear_required_act",
-                  "description": "Checks if a specific act can be completed",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": "Battle of the Birds - Act 4"
+                      "type": "can_reach",
+                      "region": "Dead Bird Studio"
+                    },
+                    {
+                      "type": "location_rule_ref",
+                      "location": "Act Completion (Dead Bird Studio)"
                     }
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_clear_required_act",
-                  "description": "Checks if a specific act can be completed",
-                  "args": [
+                  "type": "and",
+                  "conditions": [
                     {
-                      "type": "constant",
-                      "value": "Battle of the Birds - Act 5"
+                      "type": "can_reach",
+                      "region": "Train Rush"
+                    },
+                    {
+                      "type": "location_rule_ref",
+                      "location": "Act Completion (Train Rush)"
                     }
                   ]
                 }
@@ -1799,9 +1877,8 @@
                       "value": true
                     },
                     {
-                      "type": "helper",
-                      "name": "can_use_hookshot",
-                      "args": []
+                      "type": "item_check",
+                      "item": "Hookshot Badge"
                     }
                   ]
                 },
@@ -1818,9 +1895,8 @@
             "name": "Dead Bird Studio Basement - Window Platform",
             "id": 2000305432,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "Health Pon",
@@ -1834,9 +1910,8 @@
             "name": "Dead Bird Studio Basement - Cardboard Conductor",
             "id": 2000305059,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "Yarn",
@@ -1850,9 +1925,8 @@
             "name": "Dead Bird Studio Basement - Above Conductor Sign",
             "id": 2000305057,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "Time Piece",
@@ -1881,9 +1955,8 @@
             "name": "Dead Bird Studio Basement - Disco Room",
             "id": 2000305061,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "Random Cosmetic",
@@ -1927,9 +2000,8 @@
             "name": "Dead Bird Studio Basement - Tightrope",
             "id": 2000305058,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "Health Pon",
@@ -1943,9 +2015,8 @@
             "name": "Dead Bird Studio Basement - Cameras",
             "id": 2000305431,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "100 Pons",
@@ -1959,9 +2030,8 @@
             "name": "Dead Bird Studio Basement - Locked Room",
             "id": 2000305819,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "Time Piece",
@@ -1975,9 +2045,8 @@
             "name": "Act Completion (Dead Bird Studio Basement)",
             "id": 2000312253,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "Time Piece",
@@ -2418,13 +2487,15 @@
             "name": "Time Rift - Pipe Portal - Entrance 1",
             "connected_region": "Time Rift - The Moon",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Subcon Forest - Act 2"
+                  "type": "can_reach",
+                  "region": "Murder on the Owl Express"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Murder on the Owl Express)"
                 }
               ]
             }
@@ -2447,13 +2518,15 @@
             "name": "Time Rift - Village Portal - Entrance 1",
             "connected_region": "Time Rift - The Owl Express",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Subcon Forest - Act 4"
+                  "type": "can_reach",
+                  "region": "Cheating the Race"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Cheating the Race)"
                 }
               ]
             }
@@ -2472,9 +2545,8 @@
                       "value": true
                     },
                     {
-                      "type": "helper",
-                      "name": "can_use_hookshot",
-                      "args": []
+                      "type": "item_check",
+                      "item": "Hookshot Badge"
                     }
                   ]
                 },
@@ -2549,13 +2621,15 @@
             "name": "Time Rift - Pipe Portal - Entrance 2",
             "connected_region": "Time Rift - The Moon",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Subcon Forest - Act 2"
+                  "type": "can_reach",
+                  "region": "Murder on the Owl Express"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Murder on the Owl Express)"
                 }
               ]
             }
@@ -2578,13 +2652,15 @@
             "name": "Time Rift - Village Portal - Entrance 2",
             "connected_region": "Time Rift - The Owl Express",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Subcon Forest - Act 4"
+                  "type": "can_reach",
+                  "region": "Cheating the Race"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Cheating the Race)"
                 }
               ]
             }
@@ -2603,9 +2679,8 @@
                       "value": true
                     },
                     {
-                      "type": "helper",
-                      "name": "can_use_hookshot",
-                      "args": []
+                      "type": "item_check",
+                      "item": "Hookshot Badge"
                     }
                   ]
                 },
@@ -2652,9 +2727,8 @@
             "name": "Subcon Well - On Pipe",
             "id": 2000324311,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "Yarn",
@@ -2683,9 +2757,8 @@
             "name": "Act Completion (The Subcon Well)",
             "id": 2000311160,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "Random Cosmetic",
@@ -2712,13 +2785,15 @@
             "name": "Time Rift - Pipe Portal - Entrance 3",
             "connected_region": "Time Rift - The Moon",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Subcon Forest - Act 2"
+                  "type": "can_reach",
+                  "region": "Murder on the Owl Express"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Murder on the Owl Express)"
                 }
               ]
             }
@@ -2741,13 +2816,15 @@
             "name": "Time Rift - Village Portal - Entrance 3",
             "connected_region": "Time Rift - The Owl Express",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Subcon Forest - Act 4"
+                  "type": "can_reach",
+                  "region": "Cheating the Race"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Cheating the Race)"
                 }
               ]
             }
@@ -2761,29 +2838,113 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_hit",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "can_use_hookshot",
-                  "args": []
-                },
-                {
-                  "type": "helper",
-                  "name": "has_paintings",
-                  "description": "Checks if player has enough painting unlocks",
-                  "args": [
-                    {
-                      "type": "constant",
-                      "value": 1
-                    },
-                    {
-                      "type": "constant",
-                      "value": false
+                  "type": "conditional",
+                  "test": {
+                    "type": "not",
+                    "condition": {
+                      "type": "helper",
+                      "name": "painting_logic",
+                      "args": []
                     }
-                  ]
+                  },
+                  "if_true": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "if_false": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "constant",
+                          "value": false
+                        },
+                        {
+                          "type": "not",
+                          "condition": {
+                            "type": "setting_value",
+                            "setting": "NoPaintingSkips"
+                          }
+                        }
+                      ]
+                    },
+                    "if_true": {
+                      "type": "conditional",
+                      "test": {
+                        "type": "compare",
+                        "left": {
+                          "type": "helper",
+                          "name": "get_difficulty",
+                          "args": []
+                        },
+                        "op": ">=",
+                        "right": {
+                          "type": "constant",
+                          "value": 0
+                        }
+                      },
+                      "if_true": {
+                        "type": "constant",
+                        "value": true
+                      },
+                      "if_false": null
+                    },
+                    "if_false": {
+                      "type": "item_check",
+                      "item": "Progressive Painting Unlock",
+                      "count": {
+                        "type": "constant",
+                        "value": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "conditional",
+                  "test": {
+                    "type": "not",
+                    "condition": {
+                      "type": "setting_value",
+                      "setting": "UmbrellaLogic"
+                    }
+                  },
+                  "if_true": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "if_false": {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "and",
+                        "conditions": [
+                          {
+                            "type": "constant",
+                            "value": true
+                          },
+                          {
+                            "type": "helper",
+                            "name": "can_use_hat",
+                            "args": [
+                              {
+                                "type": "constant",
+                                "value": 1
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "item_check",
+                        "item": "Umbrella"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "item_check",
+                  "item": "Hookshot Badge"
                 }
               ]
             },
@@ -2828,13 +2989,15 @@
             "name": "Time Rift - Pipe Portal - Entrance 4",
             "connected_region": "Time Rift - The Moon",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Subcon Forest - Act 2"
+                  "type": "can_reach",
+                  "region": "Murder on the Owl Express"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Murder on the Owl Express)"
                 }
               ]
             }
@@ -2857,13 +3020,15 @@
             "name": "Time Rift - Village Portal - Entrance 4",
             "connected_region": "Time Rift - The Owl Express",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Subcon Forest - Act 4"
+                  "type": "can_reach",
+                  "region": "Cheating the Race"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Cheating the Race)"
                 }
               ]
             }
@@ -2882,9 +3047,8 @@
                       "value": true
                     },
                     {
-                      "type": "helper",
-                      "name": "can_use_hookshot",
-                      "args": []
+                      "type": "item_check",
+                      "item": "Hookshot Badge"
                     }
                   ]
                 },
@@ -2989,13 +3153,15 @@
             "name": "Time Rift - Pipe Portal - Entrance 5",
             "connected_region": "Time Rift - The Moon",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Subcon Forest - Act 2"
+                  "type": "can_reach",
+                  "region": "Murder on the Owl Express"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Murder on the Owl Express)"
                 }
               ]
             }
@@ -3018,13 +3184,15 @@
             "name": "Time Rift - Village Portal - Entrance 5",
             "connected_region": "Time Rift - The Owl Express",
             "access_rule": {
-              "type": "helper",
-              "name": "can_clear_required_act",
-              "description": "Checks if a specific act can be completed",
-              "args": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "constant",
-                  "value": "Subcon Forest - Act 4"
+                  "type": "can_reach",
+                  "region": "Cheating the Race"
+                },
+                {
+                  "type": "location_rule_ref",
+                  "location": "Act Completion (Cheating the Race)"
                 }
               ]
             }
@@ -3190,9 +3358,8 @@
             "name": "AFR -> Alpine Skyline Area",
             "connected_region": "Alpine Skyline Area",
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             }
           },
           {
@@ -3213,14 +3380,50 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "can_hit",
-                      "args": []
+                      "type": "conditional",
+                      "test": {
+                        "type": "not",
+                        "condition": {
+                          "type": "setting_value",
+                          "setting": "UmbrellaLogic"
+                        }
+                      },
+                      "if_true": {
+                        "type": "constant",
+                        "value": true
+                      },
+                      "if_false": {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": true
+                              },
+                              {
+                                "type": "helper",
+                                "name": "can_use_hat",
+                                "args": [
+                                  {
+                                    "type": "constant",
+                                    "value": 1
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Umbrella"
+                          }
+                        ]
+                      }
                     },
                     {
-                      "type": "helper",
-                      "name": "can_use_hookshot",
-                      "args": []
+                      "type": "item_check",
+                      "item": "Hookshot Badge"
                     }
                   ]
                 },
@@ -3361,9 +3564,8 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_use_hookshot",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Hookshot Badge"
                 }
               ]
             }
@@ -3372,18 +3574,16 @@
             "name": "-> The Lava Cake",
             "connected_region": "The Lava Cake",
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             }
           },
           {
             "name": "-> The Windmill",
             "connected_region": "The Windmill",
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             }
           },
           {
@@ -3403,9 +3603,8 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_use_hookshot",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Hookshot Badge"
                 }
               ]
             }
@@ -3569,30 +3768,60 @@
                   "type": "and",
                   "conditions": [
                     {
-                      "type": "helper",
-                      "name": "can_hit",
-                      "args": [
-                        {
-                          "type": "constant",
-                          "value": true
+                      "type": "conditional",
+                      "test": {
+                        "type": "not",
+                        "condition": {
+                          "type": "setting_value",
+                          "setting": "UmbrellaLogic"
                         }
-                      ]
-                    },
-                    {
-                      "type": "helper",
-                      "name": "can_use_hookshot",
-                      "args": []
+                      },
+                      "if_true": {
+                        "type": "constant",
+                        "value": true
+                      },
+                      "if_false": {
+                        "type": "or",
+                        "conditions": [
+                          {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "constant",
+                                "value": false
+                              },
+                              {
+                                "type": "helper",
+                                "name": "can_use_hat",
+                                "args": [
+                                  {
+                                    "type": "constant",
+                                    "value": 1
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "item_check",
+                            "item": "Umbrella"
+                          }
+                        ]
+                      }
                     },
                     {
                       "type": "item_check",
                       "item": "AFR Access"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Hookshot Badge"
                     }
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_use_hookshot",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Hookshot Badge"
                 }
               ]
             },
@@ -3608,9 +3837,8 @@
             "name": "Alpine Skyline - Bird Pass Fork",
             "id": 2000335911,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "Random Cosmetic",
@@ -3637,9 +3865,8 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_use_hookshot",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Hookshot Badge"
                 }
               ]
             },
@@ -3655,9 +3882,8 @@
             "name": "Alpine Skyline - Ember Summit",
             "id": 2000336311,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "Health Pon",
@@ -3671,9 +3897,8 @@
             "name": "Alpine Skyline - Goat Outpost Horn",
             "id": 2000334760,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "Yarn",
@@ -3687,9 +3912,8 @@
             "name": "Alpine Skyline - Windy Passage",
             "id": 2000334776,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "Yarn",
@@ -4126,9 +4350,8 @@
             "name": "Act Completion (The Illness has Spread)",
             "id": 2000312022,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "Item Magnet Badge",
@@ -5080,13 +5303,12 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_use_hookshot",
-                  "args": []
+                  "type": "item_check",
+                  "item": "HUMT Access"
                 },
                 {
                   "type": "item_check",
-                  "item": "HUMT Access"
+                  "item": "Hookshot Badge"
                 }
               ]
             },
@@ -5132,9 +5354,8 @@
             "name": "Mafia Town - Clock Tower Chest",
             "id": 2000303481,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "Yarn",
@@ -5148,9 +5369,8 @@
             "name": "Mafia Town - Top of Lighthouse",
             "id": 2000304213,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "Health Pon",
@@ -5494,19 +5714,67 @@
             "name": "SF Area -> SF Behind Boss Firewall",
             "connected_region": "Subcon Forest Behind Boss Firewall",
             "access_rule": {
-              "type": "helper",
-              "name": "has_paintings",
-              "description": "Checks if player has enough painting unlocks",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": 1
-                },
-                {
-                  "type": "constant",
-                  "value": false
+              "type": "conditional",
+              "test": {
+                "type": "not",
+                "condition": {
+                  "type": "helper",
+                  "name": "painting_logic",
+                  "args": []
                 }
-              ]
+              },
+              "if_true": {
+                "type": "constant",
+                "value": true
+              },
+              "if_false": {
+                "type": "conditional",
+                "test": {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "constant",
+                      "value": false
+                    },
+                    {
+                      "type": "not",
+                      "condition": {
+                        "type": "setting_value",
+                        "setting": "NoPaintingSkips"
+                      }
+                    }
+                  ]
+                },
+                "if_true": {
+                  "type": "conditional",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "helper",
+                      "name": "get_difficulty",
+                      "args": []
+                    },
+                    "op": ">=",
+                    "right": {
+                      "type": "constant",
+                      "value": 0
+                    }
+                  },
+                  "if_true": {
+                    "type": "constant",
+                    "value": true
+                  },
+                  "if_false": null
+                },
+                "if_false": {
+                  "type": "item_check",
+                  "item": "Progressive Painting Unlock",
+                  "count": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                }
+              }
             }
           },
           {
@@ -5844,9 +6112,8 @@
             "name": "Subcon Forest - Noose Treehouse",
             "id": 2000324856,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "Health Pon",
@@ -6082,9 +6349,8 @@
             "name": "Subcon Forest - Tall Tree Hookshot Swing",
             "id": 2000324766,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "Random Cosmetic",
@@ -6151,9 +6417,8 @@
               "type": "and",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "can_use_hookshot",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Hookshot Badge"
                 },
                 {
                   "type": "item_check",
@@ -6387,9 +6652,8 @@
             "name": "Act Completion (Time Rift - Pipe)",
             "id": 2000313069,
             "access_rule": {
-              "type": "helper",
-              "name": "can_use_hookshot",
-              "args": []
+              "type": "item_check",
+              "item": "Hookshot Badge"
             },
             "item": {
               "name": "Time Piece",
@@ -6623,9 +6887,8 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_use_hookshot",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Hookshot Badge"
                 }
               ]
             },
@@ -6654,9 +6917,8 @@
                   ]
                 },
                 {
-                  "type": "helper",
-                  "name": "can_use_hookshot",
-                  "args": []
+                  "type": "item_check",
+                  "item": "Hookshot Badge"
                 }
               ]
             },
@@ -6686,762 +6948,744 @@
       "Yarn": {
         "name": "Yarn",
         "id": 2000300001,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 50,
-        "classification": "progression_skip_balancing"
+        "max_count": 50
       },
       "Time Piece": {
         "name": "Time Piece",
         "id": 2000300002,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 40,
-        "classification": "progression"
+        "max_count": 40
       },
       "Sprint Hat": {
         "name": "Sprint Hat",
         "id": 2000300049,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Brewing Hat": {
         "name": "Brewing Hat",
         "id": 2000300050,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Ice Hat": {
         "name": "Ice Hat",
         "id": 2000300051,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Dweller Mask": {
         "name": "Dweller Mask",
         "id": 2000300052,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Time Stop Hat": {
         "name": "Time Stop Hat",
         "id": 2000300053,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Projectile Badge": {
         "name": "Projectile Badge",
         "id": 2000300024,
+        "classification": "useful",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Fast Hatter Badge": {
         "name": "Fast Hatter Badge",
         "id": 2000300025,
+        "classification": "useful",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Hover Badge": {
         "name": "Hover Badge",
         "id": 2000300026,
+        "classification": "useful",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Hookshot Badge": {
         "name": "Hookshot Badge",
         "id": 2000300027,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Item Magnet Badge": {
         "name": "Item Magnet Badge",
         "id": 2000300028,
+        "classification": "useful",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "No Bonk Badge": {
         "name": "No Bonk Badge",
         "id": 2000300029,
+        "classification": "useful",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Compass Badge": {
         "name": "Compass Badge",
         "id": 2000300030,
+        "classification": "useful",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "Scooter Badge": {
         "name": "Scooter Badge",
         "id": 2000300031,
+        "classification": "useful",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "useful"
+        "max_count": 1
       },
       "One-Hit Hero Badge": {
         "name": "One-Hit Hero Badge",
         "id": 2000300038,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Camera Badge": {
         "name": "Camera Badge",
         "id": 2000300042,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Relic (Burger Patty)": {
         "name": "Relic (Burger Patty)",
         "id": 2000300006,
+        "classification": "progression",
         "groups": [
           "Burger",
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Relic (Burger Cushion)": {
         "name": "Relic (Burger Cushion)",
         "id": 2000300007,
+        "classification": "progression",
         "groups": [
           "Burger",
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Relic (Mountain Set)": {
         "name": "Relic (Mountain Set)",
         "id": 2000300008,
+        "classification": "progression",
         "groups": [
           "Everything",
           "Train"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Relic (Train)": {
         "name": "Relic (Train)",
         "id": 2000300009,
+        "classification": "progression",
         "groups": [
           "Everything",
           "Train"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Relic (UFO)": {
         "name": "Relic (UFO)",
         "id": 2000300010,
+        "classification": "progression",
         "groups": [
           "Everything",
           "UFO"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Relic (Cow)": {
         "name": "Relic (Cow)",
         "id": 2000300011,
+        "classification": "progression",
         "groups": [
           "Everything",
           "UFO"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Relic (Cool Cow)": {
         "name": "Relic (Cool Cow)",
         "id": 2000300012,
+        "classification": "progression",
         "groups": [
           "Everything",
           "UFO"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Relic (Tin-foil Hat Cow)": {
         "name": "Relic (Tin-foil Hat Cow)",
         "hint_text": "Relic (Tin foil Hat Cow)",
         "id": 2000300013,
+        "classification": "progression",
         "groups": [
           "Everything",
           "UFO"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Relic (Crayon Box)": {
         "name": "Relic (Crayon Box)",
         "id": 2000300014,
+        "classification": "progression",
         "groups": [
           "Crayon",
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Relic (Red Crayon)": {
         "name": "Relic (Red Crayon)",
         "id": 2000300015,
+        "classification": "progression",
         "groups": [
           "Crayon",
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Relic (Blue Crayon)": {
         "name": "Relic (Blue Crayon)",
         "id": 2000300016,
+        "classification": "progression",
         "groups": [
           "Crayon",
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Relic (Green Crayon)": {
         "name": "Relic (Green Crayon)",
         "id": 2000300017,
+        "classification": "progression",
         "groups": [
           "Crayon",
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Relic (Cake Stand)": {
         "name": "Relic (Cake Stand)",
         "id": 2000300018,
+        "classification": "progression",
         "groups": [
           "Cake",
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Relic (Shortcake)": {
         "name": "Relic (Shortcake)",
         "id": 2000300019,
+        "classification": "progression",
         "groups": [
           "Cake",
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Relic (Chocolate Cake Slice)": {
         "name": "Relic (Chocolate Cake Slice)",
         "id": 2000300020,
+        "classification": "progression",
         "groups": [
           "Cake",
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Relic (Chocolate Cake)": {
         "name": "Relic (Chocolate Cake)",
         "id": 2000300021,
+        "classification": "progression",
         "groups": [
           "Cake",
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Relic (Necklace Bust)": {
         "name": "Relic (Necklace Bust)",
         "id": 2000300022,
+        "classification": "progression",
         "groups": [
           "Everything",
           "Necklace"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Relic (Necklace)": {
         "name": "Relic (Necklace)",
         "id": 2000300023,
+        "classification": "progression",
         "groups": [
           "Everything",
           "Necklace"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "25 Pons": {
         "name": "25 Pons",
         "id": 2000300034,
+        "classification": "filler",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 39,
-        "classification": "filler"
+        "max_count": 39
       },
       "50 Pons": {
         "name": "50 Pons",
         "id": 2000300035,
+        "classification": "filler",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 12,
-        "classification": "filler"
+        "max_count": 12
       },
       "100 Pons": {
         "name": "100 Pons",
         "id": 2000300036,
+        "classification": "filler",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 5,
-        "classification": "filler"
+        "max_count": 5
       },
       "Health Pon": {
         "name": "Health Pon",
         "id": 2000300037,
+        "classification": "filler",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 31,
-        "classification": "filler"
+        "max_count": 31
       },
       "Random Cosmetic": {
         "name": "Random Cosmetic",
         "id": 2000300044,
+        "classification": "filler",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 24,
-        "classification": "filler"
+        "max_count": 24
       },
       "Baby Trap": {
         "name": "Baby Trap",
         "id": 2000300039,
+        "classification": "trap",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "trap"
+        "max_count": 1
       },
       "Laser Trap": {
         "name": "Laser Trap",
         "id": 2000300040,
+        "classification": "trap",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "trap"
+        "max_count": 1
       },
       "Parade Trap": {
         "name": "Parade Trap",
         "id": 2000300041,
+        "classification": "trap",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "trap"
+        "max_count": 1
       },
       "Badge Pin": {
         "name": "Badge Pin",
         "id": 2000300043,
+        "classification": "useful",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 2,
-        "classification": "useful"
+        "max_count": 2
       },
       "Umbrella": {
         "name": "Umbrella",
         "id": 2000300033,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Progressive Painting Unlock": {
         "name": "Progressive Painting Unlock",
         "id": 2000300003,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Metro Ticket - Yellow": {
         "name": "Metro Ticket - Yellow",
         "id": 2000300045,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Metro Ticket - Green": {
         "name": "Metro Ticket - Green",
         "id": 2000300046,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Metro Ticket - Blue": {
         "name": "Metro Ticket - Blue",
         "id": 2000300047,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Metro Ticket - Pink": {
         "name": "Metro Ticket - Pink",
         "id": 2000300048,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Snatcher's Contract - The Subcon Well": {
         "name": "Snatcher's Contract - The Subcon Well",
         "hint_text": "Snatcher's Contract   The Subcon Well",
         "id": 2000300200,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Snatcher's Contract - Toilet of Doom": {
         "name": "Snatcher's Contract - Toilet of Doom",
         "hint_text": "Snatcher's Contract   Toilet of Doom",
         "id": 2000300201,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Snatcher's Contract - Queen Vanessa's Manor": {
         "name": "Snatcher's Contract - Queen Vanessa's Manor",
         "hint_text": "Snatcher's Contract   Queen Vanessa's Manor",
         "id": 2000300202,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Snatcher's Contract - Mail Delivery Service": {
         "name": "Snatcher's Contract - Mail Delivery Service",
         "hint_text": "Snatcher's Contract   Mail Delivery Service",
         "id": 2000300203,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Zipline Unlock - The Birdhouse Path": {
         "name": "Zipline Unlock - The Birdhouse Path",
         "id": 2000300204,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Zipline Unlock - The Lava Cake Path": {
         "name": "Zipline Unlock - The Lava Cake Path",
         "id": 2000300205,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Zipline Unlock - The Windmill Path": {
         "name": "Zipline Unlock - The Windmill Path",
         "id": 2000300206,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "Zipline Unlock - The Twilight Bell Path": {
         "name": "Zipline Unlock - The Twilight Bell Path",
         "id": 2000300207,
+        "classification": "progression",
         "groups": [
           "Everything"
         ],
         "event": false,
         "type": null,
-        "max_count": 1,
-        "classification": "progression"
+        "max_count": 1
       },
       "HUMT Access": {
         "name": "HUMT Access",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "type": null,
+        "max_count": 1
       },
       "TOD Access": {
         "name": "TOD Access",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "type": null,
+        "max_count": 1
       },
       "AFR Access": {
         "name": "AFR Access",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "type": null,
+        "max_count": 1
       },
       "TIHS Access": {
         "name": "TIHS Access",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "type": null,
+        "max_count": 1
       },
       "Birdhouse Cleared": {
         "name": "Birdhouse Cleared",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "type": null,
+        "max_count": 1
       },
       "Lava Cake Cleared": {
         "name": "Lava Cake Cleared",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "type": null,
+        "max_count": 1
       },
       "Windmill Cleared": {
         "name": "Windmill Cleared",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "type": null,
+        "max_count": 1
       },
       "Twilight Bell Cleared": {
         "name": "Twilight Bell Cleared",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "type": null,
+        "max_count": 1
       },
       "Time Piece Cluster": {
         "name": "Time Piece Cluster",
         "id": null,
-        "groups": [
-          "Event"
-        ],
+        "groups": [],
+        "classification": "progression",
         "event": true,
-        "type": "Event",
-        "max_count": 1,
-        "classification": "progression"
+        "type": null,
+        "max_count": 1
       }
     }
   },
@@ -7502,6 +7746,9 @@
       "Yarn": 50
     }
   },
+  "canonical_placements": {
+    "1": {}
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -7515,6 +7762,86 @@
       "game": "A Hat in Time",
       "assume_bidirectional_exits": false,
       "use_resolved_items": false,
+      "options": {
+        "ActBlacklist": {},
+        "ActPlando": {},
+        "ActRandomizer": 1,
+        "BabyTrapWeight": 40,
+        "BadgeSellerMaxItems": 8,
+        "BadgeSellerMinItems": 4,
+        "BaseballBat": 0,
+        "CTRLogic": 0,
+        "ChapterCostIncrement": 4,
+        "ChapterCostMinDifference": 4,
+        "CompassBadgeMode": 1,
+        "DWAutoCompleteBonuses": 1,
+        "DWEnableBonus": 0,
+        "DWExcludeAnnoyingBonuses": 1,
+        "DWExcludeAnnoyingContracts": 1,
+        "DWExcludeCandles": 1,
+        "DWShuffle": 0,
+        "DWShuffleCountMax": 25,
+        "DWShuffleCountMin": 18,
+        "DWTimePieceRequirement": 15,
+        "DeathWishOnly": 0,
+        "EnableDLC1": 0,
+        "EnableDLC2": 0,
+        "EnableDeathWish": 0,
+        "EndGoal": 1,
+        "ExcludeTour": 0,
+        "FinalChapterMaxCost": 35,
+        "FinalChapterMinCost": 30,
+        "FinaleShuffle": 0,
+        "HatItems": 0,
+        "HighestChapterCost": 25,
+        "LaserTrapWeight": 40,
+        "LogicDifficulty": -1,
+        "LowestChapterCost": 5,
+        "MaxExtraTimePieces": 16,
+        "MaxPonCost": 300,
+        "MetroMaxPonCost": 200,
+        "MetroMinPonCost": 50,
+        "MinExtraYarn": 10,
+        "MinPonCost": 75,
+        "NoPaintingSkips": 0,
+        "NoTicketSkips": 0,
+        "NyakuzaThugMaxShopItems": 4,
+        "NyakuzaThugMinShopItems": 2,
+        "ParadeTrapWeight": 20,
+        "RandomizeHatOrder": 1,
+        "ShipShapeCustomTaskGoal": 0,
+        "ShuffleActContracts": 1,
+        "ShuffleAlpineZiplines": 0,
+        "ShuffleStorybookPages": 1,
+        "ShuffleSubconPaintings": 0,
+        "StartWithCompassBadge": 1,
+        "StartingChapter": 1,
+        "Tasksanity": 0,
+        "TasksanityCheckCount": 18,
+        "TasksanityTaskStep": 1,
+        "TimePieceBalancePercent": 35,
+        "TrapChance": 0,
+        "UmbrellaLogic": 0,
+        "YarnAvailable": 50,
+        "YarnBalancePercent": 20,
+        "YarnCostMax": 8,
+        "YarnCostMin": 4,
+        "accessibility": 0,
+        "death_link": 0,
+        "death_link_amnesty": 0,
+        "dw_death_link_amnesty": 5,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_inventory_from_pool": {},
+        "start_location_hints": []
+      },
       "HatItems": false,
       "UmbrellaLogic": false,
       "ShuffleSubconPaintings": false,
@@ -7648,5 +7975,391 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "Difficulty": {
+        "params": [
+          "value"
+        ],
+        "body": {
+          "type": "name",
+          "name": "value"
+        }
+      },
+      "can_clear_required_act": {
+        "params": [
+          "act_entrance"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "entrance",
+              "value": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "world"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_entrance"
+                },
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "act_entrance"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "not",
+                "condition": {
+                  "type": "state_method",
+                  "method": "can_reach",
+                  "args": [
+                    {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "entrance"
+                      },
+                      "attr": "connected_region"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Region"
+                    }
+                  ]
+                }
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": false
+                  }
+                }
+              ]
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "constant",
+                  "value": "Free Roam"
+                },
+                "op": "in",
+                "right": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "entrance"
+                    },
+                    "attr": "connected_region"
+                  },
+                  "attr": "name"
+                }
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": true
+                  }
+                }
+              ]
+            },
+            {
+              "type": "assign",
+              "name": "name",
+              "value": {
+                "type": "f_string",
+                "parts": [
+                  {
+                    "type": "constant",
+                    "value": "Act Completion ("
+                  },
+                  {
+                    "type": "formatted_value",
+                    "value": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "entrance"
+                        },
+                        "attr": "connected_region"
+                      },
+                      "attr": "name"
+                    }
+                  },
+                  {
+                    "type": "constant",
+                    "value": ")"
+                  }
+                ],
+                "all_simple": true,
+                "value": "Act Completion ({...})"
+              }
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "function_call",
+                    "function": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "attribute",
+                        "object": {
+                          "type": "name",
+                          "name": "world"
+                        },
+                        "attr": "multiworld"
+                      },
+                      "attr": "get_location"
+                    },
+                    "args": [
+                      {
+                        "type": "name",
+                        "name": "name"
+                      }
+                    ]
+                  },
+                  "attr": "access_rule"
+                },
+                "args": []
+              }
+            }
+          ]
+        }
+      },
+      "can_use_hat": {
+        "params": [
+          "hat"
+        ],
+        "body": {
+          "type": "conditional",
+          "test": {
+            "type": "setting_value",
+            "setting": "HatItems"
+          },
+          "if_true": {
+            "type": "item_check",
+            "item": {
+              "type": "subscript",
+              "value": {
+                "type": "constant",
+                "value": {
+                  "0": "Sprint Hat",
+                  "1": "Brewing Hat",
+                  "2": "Ice Hat",
+                  "3": "Dweller Mask",
+                  "4": "Time Stop Hat"
+                }
+              },
+              "index": {
+                "type": "name",
+                "name": "hat"
+              }
+            }
+          },
+          "if_false": {
+            "type": "conditional",
+            "test": {
+              "type": "compare",
+              "left": {
+                "type": "subscript",
+                "value": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "world"
+                  },
+                  "attr": "hat_yarn_costs"
+                },
+                "index": {
+                  "type": "name",
+                  "name": "hat"
+                }
+              },
+              "op": "<=",
+              "right": {
+                "type": "constant",
+                "value": 0
+              }
+            },
+            "if_true": {
+              "type": "constant",
+              "value": true
+            },
+            "if_false": {
+              "type": "item_check",
+              "item": "Yarn",
+              "count": {
+                "type": "helper",
+                "name": "get_hat_cost",
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "hat"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "get_difficulty": {
+        "type": "helper",
+        "name": "Difficulty",
+        "args": [
+          {
+            "type": "setting_value",
+            "setting": "LogicDifficulty"
+          }
+        ]
+      },
+      "get_hat_cost": {
+        "params": [
+          "hat"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "cost",
+              "value": {
+                "type": "constant",
+                "value": 0
+              }
+            },
+            {
+              "type": "for_iter",
+              "iterable": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "world"
+                },
+                "attr": "hat_craft_order"
+              },
+              "body": [
+                {
+                  "type": "assign",
+                  "name": "cost",
+                  "op": "+=",
+                  "value": {
+                    "type": "subscript",
+                    "value": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "world"
+                      },
+                      "attr": "hat_yarn_costs"
+                    },
+                    "index": {
+                      "type": "name",
+                      "name": "h"
+                    }
+                  }
+                },
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "compare",
+                    "left": {
+                      "type": "name",
+                      "name": "h"
+                    },
+                    "op": "==",
+                    "right": {
+                      "type": "name",
+                      "name": "hat"
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "break"
+                    }
+                  ]
+                }
+              ],
+              "var": "h"
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "name",
+                "name": "cost"
+              }
+            }
+          ]
+        }
+      },
+      "has_relic_combo": {
+        "params": [
+          "relic"
+        ],
+        "body": {
+          "type": "group_check",
+          "group": {
+            "type": "name",
+            "name": "relic"
+          },
+          "count": {
+            "type": "helper",
+            "name": "len",
+            "args": [
+              {
+                "type": "subscript",
+                "value": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "world"
+                  },
+                  "attr": "item_name_groups"
+                },
+                "index": {
+                  "type": "name",
+                  "name": "relic"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "painting_logic": {
+        "type": "helper",
+        "name": "bool",
+        "args": [
+          {
+            "type": "setting_value",
+            "setting": "ShuffleSubconPaintings"
+          }
+        ]
+      }
+    }
+  }
 }

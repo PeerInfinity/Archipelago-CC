@@ -4711,16 +4711,8 @@
         "start_inventory": {},
         "start_inventory_from_pool": {},
         "start_location_hints": []
-      }
-    }
-  },
-  "game_info": {
-    "1": {
-      "name": "Civilization VI",
-      "rule_format": {
-        "version": "1.0"
       },
-      "era_required_non_progressive_items": {
+      "era_non_progressive_items": {
         "ERA_ANCIENT": [
           "Mining",
           "Irrigation",
@@ -4761,7 +4753,7 @@
         ],
         "ERA_FUTURE": []
       },
-      "era_required_progressive_items_counts": {
+      "era_progressive_item_counts": {
         "ERA_ANCIENT": {
           "Progressive Encampment": 1,
           "Progressive Holy Site": 1,
@@ -4861,17 +4853,37 @@
           "Progressive Aerodrome": 2,
           "Progressive Space Port": 4
         }
+      }
+    }
+  },
+  "game_info": {
+    "1": {
+      "name": "Civilization VI",
+      "rule_format": {
+        "version": "1.0"
       },
-      "era_required_progressive_era_counts": {
-        "ERA_ANCIENT": 1,
-        "ERA_CLASSICAL": 2,
-        "ERA_MEDIEVAL": 3,
-        "ERA_RENAISSANCE": 4,
-        "ERA_INDUSTRIAL": 5,
-        "ERA_MODERN": 6,
-        "ERA_ATOMIC": 7,
-        "ERA_INFORMATION": 0,
-        "ERA_FUTURE": 0
+      "web_theme": "ocean",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up Civilization VI for MultiWorld.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "hesto2"
+          ]
+        }
+      ],
+      "world_description": "Civilization VI is a turn-based strategy video game in which one or more players compete alongside computer-controlled opponents to grow their individual civilization from a small tribe to control the entire planet across several periods of development.",
+      "slot_data": {
+        "progression_style": 0,
+        "death_link": 0,
+        "research_cost_multiplier": 100,
+        "death_link_effect": [
+          "Unit Killed"
+        ],
+        "death_link_effect_percent": 20
       }
     }
   },

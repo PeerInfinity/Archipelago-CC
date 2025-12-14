@@ -29,7 +29,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Overworld 4", player),
-        (Has("DK Coin", 30)) & (Has("Progressive Boat Upgrade", 3))
+        (Has("DK Coin")) & (Has("Progressive Boat Upgrade", 3))
     )
 
     world.set_rule(
@@ -49,27 +49,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Stampede Sprint", player),
-        Has("Bonus Coin", 15)
+        Has("Bonus Coin")
     )
 
     world.set_rule(
         multiworld.get_entrance("Criss Kross Cliffs", player),
-        Has("Bonus Coin", 30)
+        Has("Bonus Coin")
     )
 
     world.set_rule(
         multiworld.get_entrance("Tyrant Twin Tussle", player),
-        Has("Bonus Coin", 45)
+        Has("Bonus Coin")
     )
 
     world.set_rule(
         multiworld.get_entrance("Swoopy Salvo", player),
-        Has("Bonus Coin", 60)
+        Has("Bonus Coin")
     )
 
     world.set_rule(
         multiworld.get_entrance("Rocket Rush", player),
-        Has("Bonus Coin", 75)
+        Has("Bonus Coin")
     )
 
     world.set_rule(

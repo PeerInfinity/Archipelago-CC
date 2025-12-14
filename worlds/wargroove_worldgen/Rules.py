@@ -7,7 +7,7 @@ The world class must inherit from RuleWorldMixin to use these rules.
 
 from typing import TYPE_CHECKING
 
-from rule_builder import True_, False_
+from rule_builder import True_, False_, CanReachRegion, Has
 
 if TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -24,200 +24,200 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Surrounded", player),
-        True_()
+        Has("Mage")
     )
 
     world.set_rule(
         multiworld.get_entrance("Darkest Knight", player),
-        True_()
+        Has("Mage")
     )
 
     world.set_rule(
         multiworld.get_entrance("Robbed", player),
-        (True_()) | (True_()) | (True_())
+        (Has("Barge")) | (Has("Merfolk")) | (Has("Warship"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Open Season", player),
-        (True_()) | (True_())
+        (Has("Dragon")) | (Has("Harpy"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Foolish Canal: Mage Mayhem Entrance", player),
-        (True_()) | (True_())
+        (Has("Dragon")) | (Has("Harpy"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Doggo Mountain", player),
-        ((True_()) | (True_()) | (True_())) & (True_())
+        ((Has("Dragon")) | (Has("Harpy")) | (Has("Spearman"))) & (Has("Eastern Bridges"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Foolish Canal: Endless Knight Entrance", player),
-        ((True_()) | (True_()) | (True_())) & (True_())
+        ((Has("Dragon")) | (Has("Harpy")) | (Has("Spearman"))) & (Has("Eastern Bridges"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Tenri's Fall", player),
-        (True_()) | (True_())
+        (Has("Spearman")) | (Has("Spearman"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Rebel Village", player),
-        ((True_()) | (True_())) & (True_())
+        ((Has("Merfolk")) | (Has("Turtle"))) & (Has("Harpoon Ship"))
     )
 
     world.set_rule(
         multiworld.get_entrance("A Ballista's Revenge", player),
-        True_()
+        Has("Archer")
     )
 
     world.set_rule(
         multiworld.get_entrance("Master of the Lake", player),
-        (True_()) & (True_())
+        (Has("Knight")) & (Has("Southern Walls"))
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Dragon Freeway: Victory", player),
-        True_()
+        Has("Mage")
     )
 
     world.set_rule(
         multiworld.get_location("Deep Thicket: Find Sedge", player),
-        True_()
+        Has("Mage")
     )
 
     world.set_rule(
         multiworld.get_location("Deep Thicket: Victory", player),
-        True_()
+        Has("Mage")
     )
 
     world.set_rule(
         multiworld.get_location("Corrupted Inlet: Victory", player),
-        (True_()) | (True_()) | (True_())
+        (Has("Barge")) | (Has("Merfolk")) | (Has("Warship"))
     )
 
     world.set_rule(
         multiworld.get_location("Mage Mayhem: Caesar", player),
-        (True_()) | (True_())
+        (Has("Dragon")) | (Has("Harpy"))
     )
 
     world.set_rule(
         multiworld.get_location("Mage Mayhem: Victory", player),
-        (True_()) | (True_())
+        (Has("Dragon")) | (Has("Harpy"))
     )
 
     world.set_rule(
         multiworld.get_location("Endless Knight: Victory", player),
-        ((True_()) | (True_()) | (True_())) & (True_())
+        ((Has("Dragon")) | (Has("Harpy")) | (Has("Spearman"))) & (Has("Eastern Bridges"))
     )
 
     world.set_rule(
         multiworld.get_location("Ambushed in the Middle: Victory (Blue)", player),
-        True_()
+        Has("Spearman")
     )
 
     world.set_rule(
         multiworld.get_location("Ambushed in the Middle: Victory (Green)", player),
-        True_()
+        Has("Spearman")
     )
 
     world.set_rule(
         multiworld.get_location("The Churning Sea: Victory", player),
-        ((True_()) | (True_())) & (True_())
+        ((Has("Merfolk")) | (Has("Turtle"))) & (Has("Harpoon Ship"))
     )
 
     world.set_rule(
         multiworld.get_location("Frigid Archery: Light the Torch", player),
-        (True_()) & (True_())
+        (Has("Archer")) & (Has("Southern Walls"))
     )
 
     world.set_rule(
         multiworld.get_location("Frigid Archery: Victory", player),
-        True_()
+        Has("Archer")
     )
 
     world.set_rule(
         multiworld.get_location("Archery Lessons: Chest", player),
-        (True_()) & (True_())
+        (Has("Knight")) & (Has("Southern Walls"))
     )
 
     world.set_rule(
         multiworld.get_location("Archery Lessons: Victory", player),
-        (True_()) & (True_())
+        (Has("Knight")) & (Has("Southern Walls"))
     )
 
     world.set_rule(
         multiworld.get_location("Surrounded: Caesar", player),
-        True_()
+        (CanReachRegion("Surrounded")) & (Has("Knight"))
     )
 
     world.set_rule(
         multiworld.get_location("Surrounded: Victory", player),
-        True_()
+        (CanReachRegion("Surrounded")) & (Has("Knight"))
     )
 
     world.set_rule(
         multiworld.get_location("Darkest Knight: Victory", player),
-        True_()
+        (CanReachRegion("Darkest Knight")) & (Has("Spearman"))
     )
 
     world.set_rule(
         multiworld.get_location("Robbed: Victory", player),
-        (True_()) & (True_())
+        ((CanReachRegion("Robbed")) & (Has("Thief"))) & (Has("Rifleman"))
     )
 
     world.set_rule(
         multiworld.get_location("Open Season: Caesar", player),
-        (True_()) & (True_())
+        ((CanReachRegion("Open Season")) & (Has("Mage"))) & (Has("Knight"))
     )
 
     world.set_rule(
         multiworld.get_location("Open Season: Victory", player),
-        (True_()) & (True_())
+        ((CanReachRegion("Open Season")) & (Has("Mage"))) & (Has("Knight"))
     )
 
     world.set_rule(
         multiworld.get_location("Doggo Mountain: Find all the Dogs", player),
-        True_()
+        (CanReachRegion("Doggo Mountain")) & (Has("Knight"))
     )
 
     world.set_rule(
         multiworld.get_location("Doggo Mountain: Victory", player),
-        True_()
+        (CanReachRegion("Doggo Mountain")) & (Has("Knight"))
     )
 
     world.set_rule(
         multiworld.get_location("Tenri's Fall: Victory", player),
-        (True_()) & (True_())
+        ((CanReachRegion("Tenri's Fall")) & (Has("Mage"))) & (Has("Thief"))
     )
 
     world.set_rule(
         multiworld.get_location("Foolish Canal: Victory", player),
-        (True_()) & (True_())
+        ((CanReachRegion("Foolish Canal")) & (Has("Mage"))) & (Has("Spearman"))
     )
 
     world.set_rule(
         multiworld.get_location("Master of the Lake: Victory", player),
-        True_()
+        (CanReachRegion("Master of the Lake")) & (Has("Warship"))
     )
 
     world.set_rule(
         multiworld.get_location("A Ballista's Revenge: Victory", player),
-        True_()
+        (CanReachRegion("A Ballista's Revenge")) & (Has("Ballista"))
     )
 
     world.set_rule(
         multiworld.get_location("Rebel Village: Victory (Pink)", player),
-        True_()
+        (CanReachRegion("Rebel Village")) & (Has("Spearman"))
     )
 
     world.set_rule(
         multiworld.get_location("Rebel Village: Victory (Red)", player),
-        True_()
+        (CanReachRegion("Rebel Village")) & (Has("Spearman"))
     )
 
     world.set_rule(
         multiworld.get_location("Wargroove Finale: Victory", player),
-        (True_()) & (True_()) & (True_())
+        (Has("Final Bridges")) & (Has("Final Sickle")) & (Has("Final Walls"))
     )

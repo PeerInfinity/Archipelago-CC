@@ -19,15 +19,24 @@
             "name": "To Meridian",
             "connected_region": "Meridian",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "group_check",
-                  "group": "Important Artifacts"
+                  "rule": "HasGroup",
+                  "options": [],
+                  "args": {
+                    "group": "Important Artifacts",
+                    "count": 1
+                  }
                 },
                 {
-                  "type": "group_check",
-                  "group": "PSI Keys"
+                  "rule": "HasGroup",
+                  "options": [],
+                  "args": {
+                    "group": "PSI Keys",
+                    "count": 1
+                  }
                 }
               ]
             }
@@ -418,17 +427,24 @@
             "name": "To Ataraxia",
             "connected_region": "Ataraxia",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "group_check",
-                  "group": "Important Artifacts",
-                  "count": 2
+                  "rule": "HasGroup",
+                  "options": [],
+                  "args": {
+                    "group": "Important Artifacts",
+                    "count": 2
+                  }
                 },
                 {
-                  "type": "group_check",
-                  "group": "PSI Keys",
-                  "count": 2
+                  "rule": "HasGroup",
+                  "options": [],
+                  "args": {
+                    "group": "PSI Keys",
+                    "count": 2
+                  }
                 }
               ]
             }
@@ -819,17 +835,24 @@
             "name": "To Merodach",
             "connected_region": "Merodach",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "group_check",
-                  "group": "Important Artifacts",
-                  "count": 3
+                  "rule": "HasGroup",
+                  "options": [],
+                  "args": {
+                    "group": "Important Artifacts",
+                    "count": 3
+                  }
                 },
                 {
-                  "type": "group_check",
-                  "group": "PSI Keys",
-                  "count": 3
+                  "rule": "HasGroup",
+                  "options": [],
+                  "args": {
+                    "group": "PSI Keys",
+                    "count": 3
+                  }
                 }
               ]
             }
@@ -1220,25 +1243,26 @@
             "name": "Back to the entrance",
             "connected_region": "Final Boss",
             "access_rule": {
-              "type": "item_check",
-              "item": "Cursed Seal"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Cursed Seal",
+                "count": 1
+              }
             }
           },
           {
             "name": "Back to the entrance with the Knife",
             "connected_region": "True Final Boss",
             "access_rule": {
-              "type": "state_method",
-              "method": "has_all",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Agate Knife",
-                    "Cursed Seal"
-                  ]
-                }
-              ]
+              "rule": "HasAll",
+              "options": [],
+              "args": {
+                "items": [
+                  "Agate Knife",
+                  "Cursed Seal"
+                ]
+              }
             }
           }
         ],
@@ -1666,8 +1690,12 @@
             "name": "To Second Quarter",
             "connected_region": "Second Quarter",
             "access_rule": {
-              "type": "item_check",
-              "item": "Meridian Defeated"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Meridian Defeated",
+                "count": 1
+              }
             }
           }
         ],
@@ -1711,8 +1739,12 @@
             "name": "To Third Quarter",
             "connected_region": "Third Quarter",
             "access_rule": {
-              "type": "item_check",
-              "item": "Ataraxia Defeated"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Ataraxia Defeated",
+                "count": 1
+              }
             }
           }
         ],
@@ -1756,8 +1788,12 @@
             "name": "To Last Quarter",
             "connected_region": "Last Quarter",
             "access_rule": {
-              "type": "item_check",
-              "item": "Merodach Defeated"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Merodach Defeated",
+                "count": 1
+              }
             }
           }
         ],
@@ -2221,6 +2257,119 @@
       "Victory": 1
     }
   },
+  "canonical_placements": {
+    "1": {
+      "Alpha Cache 1": "Ethereal Monocle",
+      "Alpha Cache 2": "Reflect Shield upgrade",
+      "Alpha Cache 3": "PSI Key 3",
+      "Alpha Cache 4": "Circuit Charge upgrade",
+      "Alpha Cache 5": "Crystals x500",
+      "Alpha Cache 6": "Crystals x2000",
+      "Beta Cache 1": "Circuit Charge upgrade",
+      "Beta Cache 2": "Reflect Shield upgrade",
+      "Beta Cache 3": "Circuit Charge upgrade",
+      "Beta Cache 4": "Circuit Refill upgrade",
+      "Beta Cache 5": "Reflect Shield upgrade",
+      "Beta Cache 6": "Crystals x1000",
+      "Gamma Cache 1": "Circuit Refill upgrade",
+      "Gamma Cache 2": "Reflect Shield upgrade",
+      "Gamma Cache 3": "Circuit Charge upgrade",
+      "Gamma Cache 4": "Circuit Refill upgrade",
+      "Gamma Cache 5": "Circuit Refill upgrade",
+      "Gamma Cache 6": "Circuit Refill upgrade",
+      "Reward Chest 1": "Reflect Shield upgrade",
+      "Reward Chest 2": "Circuit Charge upgrade",
+      "Reward Chest 3": "Reflect Shield upgrade",
+      "Reward Chest 4": "Reflect Shield upgrade",
+      "Reward Chest 5": "Reflect Shield upgrade",
+      "Reward Chest 6": "Reflect Shield upgrade",
+      "PSI Key Storage 1": "Circuit Booster",
+      "Alpha Cache 7": "Circuit Charge upgrade",
+      "Alpha Cache 8": "Circuit Charge upgrade",
+      "Alpha Cache 9": "Reflect Shield upgrade",
+      "Alpha Cache 10": "Crystals x2000",
+      "Alpha Cache 11": "Circuit Refill upgrade",
+      "Alpha Cache 12": "Reflect Shield upgrade",
+      "Beta Cache 7": "Circuit Refill upgrade",
+      "Beta Cache 8": "PSI Key 2",
+      "Beta Cache 9": "Reflect Shield upgrade",
+      "Beta Cache 10": "Crystals x500",
+      "Beta Cache 11": "Reflect Shield upgrade",
+      "Beta Cache 12": "Crystals x1000",
+      "Gamma Cache 7": "Crystals x1000",
+      "Gamma Cache 8": "Circuit Charge upgrade",
+      "Gamma Cache 9": "Circuit Refill upgrade",
+      "Gamma Cache 10": "Reflect Shield upgrade",
+      "Gamma Cache 11": "Circuit Refill upgrade",
+      "Gamma Cache 12": "Dodge Enhancer",
+      "Reward Chest 7": "Portable Compass",
+      "Reward Chest 8": "Metabolism",
+      "Reward Chest 9": "Crystals x1000",
+      "Reward Chest 10": "Reflect Shield upgrade",
+      "Reward Chest 11": "Crystal Efficiency",
+      "Reward Chest 12": "Circuit Refill upgrade",
+      "PSI Key Storage 2": "Circuit Refill upgrade",
+      "Alpha Cache 13": "Shield Boost",
+      "Alpha Cache 14": "Circuit Charge upgrade",
+      "Alpha Cache 15": "Circuit Charge upgrade",
+      "Alpha Cache 16": "Circuit Charge upgrade",
+      "Alpha Cache 17": "Map",
+      "Alpha Cache 18": "Circuit Charge upgrade",
+      "Beta Cache 13": "Circuit Refill upgrade",
+      "Beta Cache 14": "Circuit Refill upgrade",
+      "Beta Cache 15": "Circuit Refill upgrade",
+      "Beta Cache 16": "Circuit Refill upgrade",
+      "Beta Cache 17": "Reflect Shield upgrade",
+      "Beta Cache 18": "Reflect Shield upgrade",
+      "Gamma Cache 13": "Reflect Shield upgrade",
+      "Gamma Cache 14": "Circuit Charge upgrade",
+      "Gamma Cache 15": "Reflect Shield upgrade",
+      "Gamma Cache 16": "Crystals x2000",
+      "Gamma Cache 17": "Circuit Charge upgrade",
+      "Gamma Cache 18": "PSI Key 1",
+      "Reward Chest 13": "Circuit Refill upgrade",
+      "Reward Chest 14": "Circuit Charge upgrade",
+      "Reward Chest 15": "Crystal Gatherer",
+      "Reward Chest 16": "Circuit Charge upgrade",
+      "Reward Chest 17": "Crystals x500",
+      "Reward Chest 18": "Circuit Charge upgrade",
+      "PSI Key Storage 3": "Reflect Shield upgrade",
+      "Alpha Cache 19": "Circuit Refill upgrade",
+      "Alpha Cache 20": "Circuit Charge upgrade",
+      "Alpha Cache 21": "Circuit Charge upgrade",
+      "Alpha Cache 22": "Crystals x2000",
+      "Alpha Cache 23": "Circuit Refill upgrade",
+      "Alpha Cache 24": "Crystals x500",
+      "Beta Cache 19": "Circuit Refill upgrade",
+      "Beta Cache 20": "Circuit Charge upgrade",
+      "Beta Cache 21": "Reflect Shield upgrade",
+      "Beta Cache 22": "Crystals x1000",
+      "Beta Cache 23": "Reflect Shield upgrade",
+      "Beta Cache 24": "Circuit Refill upgrade",
+      "Gamma Cache 19": "Circuit Charge upgrade",
+      "Gamma Cache 20": "Reflect Shield upgrade",
+      "Gamma Cache 21": "Circuit Refill upgrade",
+      "Gamma Cache 22": "Crystals x2000",
+      "Gamma Cache 23": "Circuit Charge upgrade",
+      "Gamma Cache 24": "Circuit Charge upgrade",
+      "Reward Chest 19": "Crystals x500",
+      "Reward Chest 20": "Reflect Shield upgrade",
+      "Reward Chest 21": "Circuit Refill upgrade",
+      "Reward Chest 22": "Crystals x500",
+      "Reward Chest 23": "Reflect Shield upgrade",
+      "Reward Chest 24": "Crystals x500",
+      "Place of Power": "Cursed Seal",
+      "The Last Place You'll Look": "Agate Knife",
+      "Meridian": "Evolution Trap",
+      "Meridian Defeat": "Meridian Defeated",
+      "Ataraxia": "Evolution Trap",
+      "Ataraxia Defeat": "Ataraxia Defeated",
+      "Merodach": "Evolution Trap",
+      "Merodach Defeat": "Merodach Defeated",
+      "Wervyn Anixil": "Victory",
+      "Wervyn Anixil?": "Full Victory"
+    }
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -2231,7 +2380,21 @@
     "1": {
       "game": "Meritous WorldGen",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": false,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      }
     }
   },
   "game_info": {
@@ -2239,6 +2402,29 @@
       "name": "Meritous WorldGen",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "ice",
+      "web_tutorials": [
+        {
+          "name": "Meritous Setup Guide",
+          "description": "A guide to setting up the Archipelago Meritous software on your computer.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "KewlioMZX"
+          ]
+        }
+      ],
+      "world_description": "Meritous Gaiden is a procedurally generated bullet-hell dungeon crawl game.\nFive generations after the Orcus Dome incident, strange experiments conducted in a new\nstructure on the moon are tearing at the very fabric of reality...",
+      "slot_data": {
+        "goal": 0,
+        "cost_scale": [
+          80,
+          5,
+          4
+        ],
+        "death_link": 0
       }
     }
   },

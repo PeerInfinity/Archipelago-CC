@@ -236,12 +236,10 @@ Playthrough:
   SL: Snowman's Big Head: Power Star
   SL: Whirl from the Freezing Pond: Power Star
   SSL: Bob-omb Buddy: Cannon Unlock SSL
-  SSL: Free Flying for 8 Red Coins: Power Star
   SSL: In the Talons of the Big Bird: Power Star
   SSL: Inside the Ancient Pyramid: Power Star
   SSL: Pyramid Puzzle: Power Star
   SSL: Shining Atop the Pyramid: Power Star
-  SSL: Stand Tall on the Four Pillars: Power Star
   THI: Bob-omb Buddy: Cannon Unlock THI
   THI: Five Itty Bitty Secrets: Power Star
   THI: Make Wiggler Squirm: Power Star
@@ -274,7 +272,6 @@ Playthrough:
   Cavern of the Metal Cap Red Coins: Power Star
   DDD: Board Bowser's Sub: Power Star
   DDD: Chests in the Current: Power Star
-  DDD: Collect the Caps...: Power Star
   DDD: Pole-Jumping for Red Coins: Power Star
   DDD: The Manta Ray's Reward: Power Star
   DDD: Through the Jet Stream: Power Star
@@ -299,6 +296,7 @@ Playthrough:
 }
 5: {
   BBH: Eye to Eye in the Secret Room: Power Star
+  DDD: Collect the Caps...: Power Star
   RR: Somewhere Over the Rainbow: Power Star
   SL: Into the Igloo: Power Star
   Vanish Cap Under the Moat Red Coins: Power Star
@@ -306,5 +304,7 @@ Playthrough:
 }
 6: {
   BoB: Mario Wings to the Sky: Power Star
+  SSL: Free Flying for 8 Red Coins: Power Star
+  SSL: Stand Tall on the Four Pillars: Power Star
   Wing Mario Over the Rainbow Red Coins: Power Star
 }

@@ -29,12 +29,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Menu -> Act 3", player),
-        ((Has("Camera Replica")) & (Has("Pile Of Meat"))) & (Has("Epitaph Piece", 9)) & (Has("Film Roll")) & (Has("Monocle"))
+        (HasAll('Camera Replica', 'Pile Of Meat')) & (Has("Epitaph Piece", 9)) & (Has("Film Roll")) & (Has("Monocle"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Menu -> Epilogue", player),
-        ((Has("Camera Replica")) & (Has("Epitaph Piece", 9)) & (Has("Film Roll")) & (Has("Monocle")) & (Has("Pile Of Meat"))) & ((Has("Gems Module")) & (Has("Inspectometer Battery")) & (Has("Quill")))
+        ((HasAll('Camera Replica', 'Pile Of Meat')) & (Has("Epitaph Piece", 9)) & (Has("Film Roll")) & (Has("Monocle"))) & (HasAll('Gems Module', 'Inspectometer Battery', 'Quill'))
     )
     # Location rules
     world.set_rule(
@@ -89,7 +89,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 2 - Boss Magnificus", player),
-        (((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))) & (Has("Monocle"))
+        ((HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))) & (Has("Monocle"))
     )
 
     world.set_rule(
@@ -99,7 +99,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 2 - Boss P03", player),
-        ((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))
+        (HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))
     )
 
     world.set_rule(
@@ -119,32 +119,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 2 - Battle Goobert", player),
-        (((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))) & (Has("Monocle"))
+        ((HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))) & (Has("Monocle"))
     )
 
     world.set_rule(
         multiworld.get_location("Act 2 - Battle Pike Mage", player),
-        (((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))) & (Has("Monocle"))
+        ((HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))) & (Has("Monocle"))
     )
 
     world.set_rule(
         multiworld.get_location("Act 2 - Battle Lonely Wizard", player),
-        (((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))) & (Has("Monocle"))
+        ((HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))) & (Has("Monocle"))
     )
 
     world.set_rule(
         multiworld.get_location("Act 2 - Battle Inspector", player),
-        ((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))
+        (HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))
     )
 
     world.set_rule(
         multiworld.get_location("Act 2 - Battle Melter", player),
-        ((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))
+        (HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))
     )
 
     world.set_rule(
         multiworld.get_location("Act 2 - Battle Dredger", player),
-        ((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))
+        (HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))
     )
 
     world.set_rule(
@@ -154,62 +154,62 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 2 - Tower Chest 1", player),
-        ((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))
+        (HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))
     )
 
     world.set_rule(
         multiworld.get_location("Act 2 - Tower Chest 2", player),
-        (((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))) & (Has("Monocle"))
+        ((HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))) & (Has("Monocle"))
     )
 
     world.set_rule(
         multiworld.get_location("Act 2 - Tower Chest 3", player),
-        (((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))) & (Has("Monocle"))
+        ((HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))) & (Has("Monocle"))
     )
 
     world.set_rule(
         multiworld.get_location("Act 2 - Tentacle", player),
-        (((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))) & (Has("Monocle"))
+        ((HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))) & (Has("Monocle"))
     )
 
     world.set_rule(
         multiworld.get_location("Act 2 - Factory Trash Can", player),
-        ((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))
+        (HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))
     )
 
     world.set_rule(
         multiworld.get_location("Act 2 - Factory Drawer 1", player),
-        ((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))
+        (HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))
     )
 
     world.set_rule(
         multiworld.get_location("Act 2 - Factory Drawer 2", player),
-        ((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))
+        (HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))
     )
 
     world.set_rule(
         multiworld.get_location("Act 2 - Factory Chest 1", player),
-        ((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))
+        (HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))
     )
 
     world.set_rule(
         multiworld.get_location("Act 2 - Factory Chest 2", player),
-        ((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))
+        (HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))
     )
 
     world.set_rule(
         multiworld.get_location("Act 2 - Factory Chest 3", player),
-        ((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))
+        (HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))
     )
 
     world.set_rule(
         multiworld.get_location("Act 2 - Factory Chest 4", player),
-        ((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))
+        (HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))
     )
 
     world.set_rule(
         multiworld.get_location("Act 2 - Ancient Obol", player),
-        (((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))) & (Has("Monocle"))
+        ((HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))) & (Has("Monocle"))
     )
 
     world.set_rule(
@@ -229,12 +229,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 2 - Mycologists Holo Key", player),
-        (((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))) & (Has("Monocle"))
+        ((HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))) & (Has("Monocle"))
     )
 
     world.set_rule(
         multiworld.get_location("Act 2 - Monocle", player),
-        ((Has("Camera Replica")) & (Has("Pile Of Meat"))) | (Has("Epitaph Piece", 9))
+        (HasAll('Camera Replica', 'Pile Of Meat')) | (Has("Epitaph Piece", 9))
     )
 
     world.set_rule(
@@ -259,7 +259,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - Boss Mycologists", player),
-        ((Has("Gems Module")) & (Has("Inspectometer Battery")) & (Has("Quill"))) & (Has("Mycologists Holo Key"))
+        (HasAll('Gems Module', 'Inspectometer Battery', 'Quill')) & (Has("Mycologists Holo Key"))
     )
 
     world.set_rule(
@@ -294,27 +294,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - Trader 1", player),
-        ((Has("Gems Module")) & (Has("Inspectometer Battery"))) & (Has("Holo Pelt"))
+        (HasAll('Gems Module', 'Inspectometer Battery')) & (Has("Holo Pelt"))
     )
 
     world.set_rule(
         multiworld.get_location("Act 3 - Trader 2", player),
-        ((Has("Gems Module")) & (Has("Inspectometer Battery"))) & (Has("Holo Pelt", 2))
+        (HasAll('Gems Module', 'Inspectometer Battery')) & (Has("Holo Pelt", 2))
     )
 
     world.set_rule(
         multiworld.get_location("Act 3 - Trader 3", player),
-        ((Has("Gems Module")) & (Has("Inspectometer Battery"))) & (Has("Holo Pelt", 3))
+        (HasAll('Gems Module', 'Inspectometer Battery')) & (Has("Holo Pelt", 3))
     )
 
     world.set_rule(
         multiworld.get_location("Act 3 - Trader 4", player),
-        ((Has("Gems Module")) & (Has("Inspectometer Battery"))) & (Has("Holo Pelt", 4))
+        (HasAll('Gems Module', 'Inspectometer Battery')) & (Has("Holo Pelt", 4))
     )
 
     world.set_rule(
         multiworld.get_location("Act 3 - Trader 5", player),
-        ((Has("Gems Module")) & (Has("Inspectometer Battery"))) & (Has("Holo Pelt", 5))
+        (HasAll('Gems Module', 'Inspectometer Battery')) & (Has("Holo Pelt", 5))
     )
 
     world.set_rule(
@@ -354,7 +354,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - Luke's File Entry 4", player),
-        ((Has("Gems Module")) & (Has("Inspectometer Battery"))) & (Has("Quill"))
+        (HasAll('Gems Module', 'Inspectometer Battery')) & (Has("Quill"))
     )
 
     world.set_rule(
@@ -364,7 +364,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act 3 - The Great Transcendence", player),
-        ((Has("Gems Module")) & (Has("Inspectometer Battery"))) & (Has("Quill"))
+        (HasAll('Gems Module', 'Inspectometer Battery')) & (Has("Quill"))
     )
 
     world.set_rule(

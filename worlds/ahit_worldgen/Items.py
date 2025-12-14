@@ -23,8 +23,8 @@ class ItemData:
 
 
 item_table: Dict[str, ItemData] = {
-    "Yarn": ItemData(2000300001, ItemClassification.progression_skip_balancing),
-    "Time Piece": ItemData(2000300002, ItemClassification.progression_skip_balancing),
+    "Yarn": ItemData(2000300001, ItemClassification.progression),
+    "Time Piece": ItemData(2000300002, ItemClassification.progression),
     "Sprint Hat": ItemData(2000300049, ItemClassification.progression),
     "Brewing Hat": ItemData(2000300050, ItemClassification.progression),
     "Ice Hat": ItemData(2000300051, ItemClassification.progression),

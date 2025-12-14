@@ -17,9 +17,6 @@ Priority Locations:
 Item Links:                      
 Plando Items:                    
 Randomize Items:                 Yes
-Proof Complexity:                Normal
-Hint Complexity:                 Basic
-Require All Proofs:              No
 
 
 Locations:

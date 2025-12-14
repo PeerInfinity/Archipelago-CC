@@ -159,6 +159,7 @@ Playthrough:
 6: {
   #3 Lemmy's Castle - Boss: Boss Token
   #4 Ludwig's Castle - Boss: Boss Token
+  Bowser: The Princess
   Vanilla Dome 2 - Normal Exit: Progressive Powerup
 }
 7: {
@@ -179,6 +180,5 @@ Playthrough:
   Valley Fortress - Boss: Boss Token
 }
 9: {
-  Bowser: The Princess
   Gnarly - Normal Exit: Special Zone Clear
 }

@@ -67,18 +67,9 @@
             "name": "Eolis Key Jack",
             "id": 400101,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Deluge",
-                    "Progressive Sword",
-                    "Ring of Elf"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_buy_in_eolis",
+              "args": []
             },
             "item": {
               "name": "Elixir",
@@ -92,18 +83,9 @@
             "name": "Eolis Hand Dagger",
             "id": 400102,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Deluge",
-                    "Progressive Sword",
-                    "Ring of Elf"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_buy_in_eolis",
+              "args": []
             },
             "item": {
               "name": "Key King",
@@ -117,18 +99,9 @@
             "name": "Eolis Red Potion",
             "id": 400103,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Deluge",
-                    "Progressive Sword",
-                    "Ring of Elf"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_buy_in_eolis",
+              "args": []
             },
             "item": {
               "name": "Key Jack",
@@ -142,18 +115,9 @@
             "name": "Eolis Elixir",
             "id": 400104,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Deluge",
-                    "Progressive Sword",
-                    "Ring of Elf"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_buy_in_eolis",
+              "args": []
             },
             "item": {
               "name": "Black Onyx",
@@ -167,18 +131,9 @@
             "name": "Eolis Deluge",
             "id": 400105,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Deluge",
-                    "Progressive Sword",
-                    "Ring of Elf"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "can_buy_in_eolis",
+              "args": []
             },
             "item": {
               "name": "Wingboots",
@@ -1115,20 +1070,9 @@
             "name": "Misty Doctor Office",
             "id": 400148,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Death",
-                    "Deluge",
-                    "Fire",
-                    "Thunder",
-                    "Tilte"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "has_any_magic",
+              "args": []
             },
             "item": {
               "name": "Red Potion",
@@ -1996,20 +1940,9 @@
             "name": "Dartmoor Castle Hidden Red Potion",
             "id": 400192,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Death",
-                    "Deluge",
-                    "Fire",
-                    "Thunder",
-                    "Tilte"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "has_any_magic",
+              "args": []
             },
             "item": {
               "name": "Ring of Elf",
@@ -2095,20 +2028,9 @@
             "name": "Fraternal Castle Shop Hidden Ointment",
             "id": 400197,
             "access_rule": {
-              "type": "state_method",
-              "method": "has_any",
-              "args": [
-                {
-                  "type": "constant",
-                  "value": [
-                    "Death",
-                    "Deluge",
-                    "Fire",
-                    "Thunder",
-                    "Tilte"
-                  ]
-                }
-              ]
+              "type": "helper",
+              "name": "has_any_magic",
+              "args": []
             },
             "item": {
               "name": "Red Potion",
@@ -2825,5 +2747,38 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "can_buy_in_eolis": {
+        "type": "state_method",
+        "method": "has_any",
+        "args": [
+          {
+            "type": "constant",
+            "value": [
+              "Deluge",
+              "Progressive Sword",
+              "Ring of Elf"
+            ]
+          }
+        ]
+      },
+      "has_any_magic": {
+        "type": "state_method",
+        "method": "has_any",
+        "args": [
+          {
+            "type": "constant",
+            "value": [
+              "Death",
+              "Deluge",
+              "Fire",
+              "Thunder",
+              "Tilte"
+            ]
+          }
+        ]
+      }
+    }
+  }
 }

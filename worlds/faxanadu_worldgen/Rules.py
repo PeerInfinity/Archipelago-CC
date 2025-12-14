@@ -7,7 +7,7 @@ The world class must inherit from RuleWorldMixin to use these rules.
 
 from typing import TYPE_CHECKING
 
-from rule_builder import True_, False_, Has, HasAll, HasAny
+from rule_builder import True_, False_, Has, HasAll
 
 if TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -104,27 +104,27 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Eolis Key Jack", player),
-        HasAny('Deluge', 'Progressive Sword', 'Ring of Elf')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Eolis Hand Dagger", player),
-        HasAny('Deluge', 'Progressive Sword', 'Ring of Elf')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Eolis Red Potion", player),
-        HasAny('Deluge', 'Progressive Sword', 'Ring of Elf')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Eolis Elixir", player),
-        HasAny('Deluge', 'Progressive Sword', 'Ring of Elf')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Eolis Deluge", player),
-        HasAny('Deluge', 'Progressive Sword', 'Ring of Elf')
+        True_()
     )
 
     world.set_rule(
@@ -179,7 +179,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Misty Doctor Office", player),
-        HasAny('Death', 'Deluge', 'Fire', 'Thunder', 'Tilte')
+        True_()
     )
 
     world.set_rule(
@@ -219,12 +219,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Dartmoor Castle Hidden Red Potion", player),
-        HasAny('Death', 'Deluge', 'Fire', 'Thunder', 'Tilte')
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Fraternal Castle Shop Hidden Ointment", player),
-        HasAny('Death', 'Deluge', 'Fire', 'Thunder', 'Tilte')
+        True_()
     )
 
     world.set_rule(

@@ -780,88 +780,12 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "block",
-                    "statements": [
+                    "type": "helper",
+                    "name": "location_item_name",
+                    "args": [
                       {
-                        "type": "assign",
-                        "name": "location",
-                        "value": {
-                          "type": "function_call",
-                          "function": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "name",
-                                "name": "state"
-                              },
-                              "attr": "multiworld"
-                            },
-                            "attr": "get_location"
-                          },
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "Villa: Storeroom statue"
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        "type": "conditional",
-                        "test": {
-                          "type": "compare",
-                          "left": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "constant",
-                              "value": "Villa: Storeroom statue"
-                            },
-                            "attr": "item"
-                          },
-                          "op": "is",
-                          "right": {
-                            "type": "constant",
-                            "value": null
-                          }
-                        },
-                        "if_true": {
-                          "type": "constant",
-                          "value": null
-                        },
-                        "if_false": null
-                      },
-                      {
-                        "type": "return",
-                        "value": {
-                          "type": "list",
-                          "value": [
-                            {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "constant",
-                                  "value": "Villa: Storeroom statue"
-                                },
-                                "attr": "item"
-                              },
-                              "attr": "name"
-                            },
-                            {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "constant",
-                                  "value": "Villa: Storeroom statue"
-                                },
-                                "attr": "item"
-                              },
-                              "attr": "player"
-                            }
-                          ]
-                        }
+                        "type": "constant",
+                        "value": "Villa: Storeroom statue"
                       }
                     ]
                   },
@@ -886,88 +810,12 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "block",
-                        "statements": [
+                        "type": "helper",
+                        "name": "location_item_name",
+                        "args": [
                           {
-                            "type": "assign",
-                            "name": "location",
-                            "value": {
-                              "type": "function_call",
-                              "function": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "name",
-                                    "name": "state"
-                                  },
-                                  "attr": "multiworld"
-                                },
-                                "attr": "get_location"
-                              },
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "Villa: Storeroom - Right"
-                                }
-                              ]
-                            }
-                          },
-                          {
-                            "type": "conditional",
-                            "test": {
-                              "type": "compare",
-                              "left": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "constant",
-                                  "value": "Villa: Storeroom - Right"
-                                },
-                                "attr": "item"
-                              },
-                              "op": "is",
-                              "right": {
-                                "type": "constant",
-                                "value": null
-                              }
-                            },
-                            "if_true": {
-                              "type": "constant",
-                              "value": null
-                            },
-                            "if_false": null
-                          },
-                          {
-                            "type": "return",
-                            "value": {
-                              "type": "list",
-                              "value": [
-                                {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "constant",
-                                      "value": "Villa: Storeroom - Right"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "attr": "name"
-                                },
-                                {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "constant",
-                                      "value": "Villa: Storeroom - Right"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "attr": "player"
-                                }
-                              ]
-                            }
+                            "type": "constant",
+                            "value": "Villa: Storeroom - Right"
                           }
                         ]
                       },
@@ -992,88 +840,12 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "block",
-                            "statements": [
+                            "type": "helper",
+                            "name": "location_item_name",
+                            "args": [
                               {
-                                "type": "assign",
-                                "name": "location",
-                                "value": {
-                                  "type": "function_call",
-                                  "function": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "state"
-                                      },
-                                      "attr": "multiworld"
-                                    },
-                                    "attr": "get_location"
-                                  },
-                                  "args": [
-                                    {
-                                      "type": "constant",
-                                      "value": "Villa: Storeroom - Left"
-                                    }
-                                  ]
-                                }
-                              },
-                              {
-                                "type": "conditional",
-                                "test": {
-                                  "type": "compare",
-                                  "left": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "constant",
-                                      "value": "Villa: Storeroom - Left"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "op": "is",
-                                  "right": {
-                                    "type": "constant",
-                                    "value": null
-                                  }
-                                },
-                                "if_true": {
-                                  "type": "constant",
-                                  "value": null
-                                },
-                                "if_false": null
-                              },
-                              {
-                                "type": "return",
-                                "value": {
-                                  "type": "list",
-                                  "value": [
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "constant",
-                                          "value": "Villa: Storeroom - Left"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "name"
-                                    },
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "constant",
-                                          "value": "Villa: Storeroom - Left"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "player"
-                                    }
-                                  ]
-                                }
+                                "type": "constant",
+                                "value": "Villa: Storeroom - Left"
                               }
                             ]
                           },
@@ -1112,88 +884,12 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "block",
-                    "statements": [
+                    "type": "helper",
+                    "name": "location_item_name",
+                    "args": [
                       {
-                        "type": "assign",
-                        "name": "location",
-                        "value": {
-                          "type": "function_call",
-                          "function": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "name",
-                                "name": "state"
-                              },
-                              "attr": "multiworld"
-                            },
-                            "attr": "get_location"
-                          },
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "Villa: Archives rear corner"
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        "type": "conditional",
-                        "test": {
-                          "type": "compare",
-                          "left": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "constant",
-                              "value": "Villa: Archives rear corner"
-                            },
-                            "attr": "item"
-                          },
-                          "op": "is",
-                          "right": {
-                            "type": "constant",
-                            "value": null
-                          }
-                        },
-                        "if_true": {
-                          "type": "constant",
-                          "value": null
-                        },
-                        "if_false": null
-                      },
-                      {
-                        "type": "return",
-                        "value": {
-                          "type": "list",
-                          "value": [
-                            {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "constant",
-                                  "value": "Villa: Archives rear corner"
-                                },
-                                "attr": "item"
-                              },
-                              "attr": "name"
-                            },
-                            {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "constant",
-                                  "value": "Villa: Archives rear corner"
-                                },
-                                "attr": "item"
-                              },
-                              "attr": "player"
-                            }
-                          ]
-                        }
+                        "type": "constant",
+                        "value": "Villa: Archives rear corner"
                       }
                     ]
                   },
@@ -1218,88 +914,12 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "block",
-                        "statements": [
+                        "type": "helper",
+                        "name": "location_item_name",
+                        "args": [
                           {
-                            "type": "assign",
-                            "name": "location",
-                            "value": {
-                              "type": "function_call",
-                              "function": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "name",
-                                    "name": "state"
-                                  },
-                                  "attr": "multiworld"
-                                },
-                                "attr": "get_location"
-                              },
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "Villa: Archives table"
-                                }
-                              ]
-                            }
-                          },
-                          {
-                            "type": "conditional",
-                            "test": {
-                              "type": "compare",
-                              "left": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "constant",
-                                  "value": "Villa: Archives table"
-                                },
-                                "attr": "item"
-                              },
-                              "op": "is",
-                              "right": {
-                                "type": "constant",
-                                "value": null
-                              }
-                            },
-                            "if_true": {
-                              "type": "constant",
-                              "value": null
-                            },
-                            "if_false": null
-                          },
-                          {
-                            "type": "return",
-                            "value": {
-                              "type": "list",
-                              "value": [
-                                {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "constant",
-                                      "value": "Villa: Archives table"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "attr": "name"
-                                },
-                                {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "constant",
-                                      "value": "Villa: Archives table"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "attr": "player"
-                                }
-                              ]
-                            }
+                            "type": "constant",
+                            "value": "Villa: Archives table"
                           }
                         ]
                       },
@@ -2760,88 +2380,12 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "block",
-                    "statements": [
+                    "type": "helper",
+                    "name": "location_item_name",
+                    "args": [
                       {
-                        "type": "assign",
-                        "name": "location",
-                        "value": {
-                          "type": "function_call",
-                          "function": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "name",
-                                "name": "state"
-                              },
-                              "attr": "multiworld"
-                            },
-                            "attr": "get_location"
-                          },
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "Castle Center: Torture chamber rafters"
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        "type": "conditional",
-                        "test": {
-                          "type": "compare",
-                          "left": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "constant",
-                              "value": "Castle Center: Torture chamber rafters"
-                            },
-                            "attr": "item"
-                          },
-                          "op": "is",
-                          "right": {
-                            "type": "constant",
-                            "value": null
-                          }
-                        },
-                        "if_true": {
-                          "type": "constant",
-                          "value": null
-                        },
-                        "if_false": null
-                      },
-                      {
-                        "type": "return",
-                        "value": {
-                          "type": "list",
-                          "value": [
-                            {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "constant",
-                                  "value": "Castle Center: Torture chamber rafters"
-                                },
-                                "attr": "item"
-                              },
-                              "attr": "name"
-                            },
-                            {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "constant",
-                                  "value": "Castle Center: Torture chamber rafters"
-                                },
-                                "attr": "item"
-                              },
-                              "attr": "player"
-                            }
-                          ]
-                        }
+                        "type": "constant",
+                        "value": "Castle Center: Torture chamber rafters"
                       }
                     ]
                   },
@@ -2866,88 +2410,12 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "block",
-                        "statements": [
+                        "type": "helper",
+                        "name": "location_item_name",
+                        "args": [
                           {
-                            "type": "assign",
-                            "name": "location",
-                            "value": {
-                              "type": "function_call",
-                              "function": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "name",
-                                    "name": "state"
-                                  },
-                                  "attr": "multiworld"
-                                },
-                                "attr": "get_location"
-                              },
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "Castle Center: Torture chamber instrument rack"
-                                }
-                              ]
-                            }
-                          },
-                          {
-                            "type": "conditional",
-                            "test": {
-                              "type": "compare",
-                              "left": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "constant",
-                                  "value": "Castle Center: Torture chamber instrument rack"
-                                },
-                                "attr": "item"
-                              },
-                              "op": "is",
-                              "right": {
-                                "type": "constant",
-                                "value": null
-                              }
-                            },
-                            "if_true": {
-                              "type": "constant",
-                              "value": null
-                            },
-                            "if_false": null
-                          },
-                          {
-                            "type": "return",
-                            "value": {
-                              "type": "list",
-                              "value": [
-                                {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "constant",
-                                      "value": "Castle Center: Torture chamber instrument rack"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "attr": "name"
-                                },
-                                {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "constant",
-                                      "value": "Castle Center: Torture chamber instrument rack"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "attr": "player"
-                                }
-                              ]
-                            }
+                            "type": "constant",
+                            "value": "Castle Center: Torture chamber instrument rack"
                           }
                         ]
                       },
@@ -2972,88 +2440,12 @@
                         {
                           "type": "compare",
                           "left": {
-                            "type": "block",
-                            "statements": [
+                            "type": "helper",
+                            "name": "location_item_name",
+                            "args": [
                               {
-                                "type": "assign",
-                                "name": "location",
-                                "value": {
-                                  "type": "function_call",
-                                  "function": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "name",
-                                        "name": "state"
-                                      },
-                                      "attr": "multiworld"
-                                    },
-                                    "attr": "get_location"
-                                  },
-                                  "args": [
-                                    {
-                                      "type": "constant",
-                                      "value": "Castle Center: Mandragora shelf - Right"
-                                    }
-                                  ]
-                                }
-                              },
-                              {
-                                "type": "conditional",
-                                "test": {
-                                  "type": "compare",
-                                  "left": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "constant",
-                                      "value": "Castle Center: Mandragora shelf - Right"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "op": "is",
-                                  "right": {
-                                    "type": "constant",
-                                    "value": null
-                                  }
-                                },
-                                "if_true": {
-                                  "type": "constant",
-                                  "value": null
-                                },
-                                "if_false": null
-                              },
-                              {
-                                "type": "return",
-                                "value": {
-                                  "type": "list",
-                                  "value": [
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "constant",
-                                          "value": "Castle Center: Mandragora shelf - Right"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "name"
-                                    },
-                                    {
-                                      "type": "attribute",
-                                      "object": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "constant",
-                                          "value": "Castle Center: Mandragora shelf - Right"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "attr": "player"
-                                    }
-                                  ]
-                                }
+                                "type": "constant",
+                                "value": "Castle Center: Mandragora shelf - Right"
                               }
                             ]
                           },
@@ -3078,88 +2470,12 @@
                             {
                               "type": "compare",
                               "left": {
-                                "type": "block",
-                                "statements": [
+                                "type": "helper",
+                                "name": "location_item_name",
+                                "args": [
                                   {
-                                    "type": "assign",
-                                    "name": "location",
-                                    "value": {
-                                      "type": "function_call",
-                                      "function": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "attribute",
-                                          "object": {
-                                            "type": "name",
-                                            "name": "state"
-                                          },
-                                          "attr": "multiworld"
-                                        },
-                                        "attr": "get_location"
-                                      },
-                                      "args": [
-                                        {
-                                          "type": "constant",
-                                          "value": "Castle Center: Mandragora shelf - Left"
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  {
-                                    "type": "conditional",
-                                    "test": {
-                                      "type": "compare",
-                                      "left": {
-                                        "type": "attribute",
-                                        "object": {
-                                          "type": "constant",
-                                          "value": "Castle Center: Mandragora shelf - Left"
-                                        },
-                                        "attr": "item"
-                                      },
-                                      "op": "is",
-                                      "right": {
-                                        "type": "constant",
-                                        "value": null
-                                      }
-                                    },
-                                    "if_true": {
-                                      "type": "constant",
-                                      "value": null
-                                    },
-                                    "if_false": null
-                                  },
-                                  {
-                                    "type": "return",
-                                    "value": {
-                                      "type": "list",
-                                      "value": [
-                                        {
-                                          "type": "attribute",
-                                          "object": {
-                                            "type": "attribute",
-                                            "object": {
-                                              "type": "constant",
-                                              "value": "Castle Center: Mandragora shelf - Left"
-                                            },
-                                            "attr": "item"
-                                          },
-                                          "attr": "name"
-                                        },
-                                        {
-                                          "type": "attribute",
-                                          "object": {
-                                            "type": "attribute",
-                                            "object": {
-                                              "type": "constant",
-                                              "value": "Castle Center: Mandragora shelf - Left"
-                                            },
-                                            "attr": "item"
-                                          },
-                                          "attr": "player"
-                                        }
-                                      ]
-                                    }
+                                    "type": "constant",
+                                    "value": "Castle Center: Mandragora shelf - Left"
                                   }
                                 ]
                               },
@@ -3224,10 +2540,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Magical Nitro",
-                    "Mandragora"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Magical Nitro"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Mandragora"
+                    }
                   ]
                 }
               ]
@@ -4326,88 +3648,12 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "block",
-                    "statements": [
+                    "type": "helper",
+                    "name": "location_item_name",
+                    "args": [
                       {
-                        "type": "assign",
-                        "name": "location",
-                        "value": {
-                          "type": "function_call",
-                          "function": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "name",
-                                "name": "state"
-                              },
-                              "attr": "multiworld"
-                            },
-                            "attr": "get_location"
-                          },
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "Tower of Science: Pick-a-door hallway locked middle room"
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        "type": "conditional",
-                        "test": {
-                          "type": "compare",
-                          "left": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "constant",
-                              "value": "Tower of Science: Pick-a-door hallway locked middle room"
-                            },
-                            "attr": "item"
-                          },
-                          "op": "is",
-                          "right": {
-                            "type": "constant",
-                            "value": null
-                          }
-                        },
-                        "if_true": {
-                          "type": "constant",
-                          "value": null
-                        },
-                        "if_false": null
-                      },
-                      {
-                        "type": "return",
-                        "value": {
-                          "type": "list",
-                          "value": [
-                            {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "constant",
-                                  "value": "Tower of Science: Pick-a-door hallway locked middle room"
-                                },
-                                "attr": "item"
-                              },
-                              "attr": "name"
-                            },
-                            {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "constant",
-                                  "value": "Tower of Science: Pick-a-door hallway locked middle room"
-                                },
-                                "attr": "item"
-                              },
-                              "attr": "player"
-                            }
-                          ]
-                        }
+                        "type": "constant",
+                        "value": "Tower of Science: Pick-a-door hallway locked middle room"
                       }
                     ]
                   },
@@ -4531,88 +3777,12 @@
                 {
                   "type": "compare",
                   "left": {
-                    "type": "block",
-                    "statements": [
+                    "type": "helper",
+                    "name": "location_item_name",
+                    "args": [
                       {
-                        "type": "assign",
-                        "name": "location",
-                        "value": {
-                          "type": "function_call",
-                          "function": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "attribute",
-                              "object": {
-                                "type": "name",
-                                "name": "state"
-                              },
-                              "attr": "multiworld"
-                            },
-                            "attr": "get_location"
-                          },
-                          "args": [
-                            {
-                              "type": "constant",
-                              "value": "Tower of Science: Locked Key3 room - Left"
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        "type": "conditional",
-                        "test": {
-                          "type": "compare",
-                          "left": {
-                            "type": "attribute",
-                            "object": {
-                              "type": "constant",
-                              "value": "Tower of Science: Locked Key3 room - Left"
-                            },
-                            "attr": "item"
-                          },
-                          "op": "is",
-                          "right": {
-                            "type": "constant",
-                            "value": null
-                          }
-                        },
-                        "if_true": {
-                          "type": "constant",
-                          "value": null
-                        },
-                        "if_false": null
-                      },
-                      {
-                        "type": "return",
-                        "value": {
-                          "type": "list",
-                          "value": [
-                            {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "constant",
-                                  "value": "Tower of Science: Locked Key3 room - Left"
-                                },
-                                "attr": "item"
-                              },
-                              "attr": "name"
-                            },
-                            {
-                              "type": "attribute",
-                              "object": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "constant",
-                                  "value": "Tower of Science: Locked Key3 room - Left"
-                                },
-                                "attr": "item"
-                              },
-                              "attr": "player"
-                            }
-                          ]
-                        }
+                        "type": "constant",
+                        "value": "Tower of Science: Locked Key3 room - Left"
                       }
                     ]
                   },
@@ -4637,88 +3807,12 @@
                     {
                       "type": "compare",
                       "left": {
-                        "type": "block",
-                        "statements": [
+                        "type": "helper",
+                        "name": "location_item_name",
+                        "args": [
                           {
-                            "type": "assign",
-                            "name": "location",
-                            "value": {
-                              "type": "function_call",
-                              "function": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "name",
-                                    "name": "state"
-                                  },
-                                  "attr": "multiworld"
-                                },
-                                "attr": "get_location"
-                              },
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": "Tower of Science: Locked Key3 room - Right"
-                                }
-                              ]
-                            }
-                          },
-                          {
-                            "type": "conditional",
-                            "test": {
-                              "type": "compare",
-                              "left": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "constant",
-                                  "value": "Tower of Science: Locked Key3 room - Right"
-                                },
-                                "attr": "item"
-                              },
-                              "op": "is",
-                              "right": {
-                                "type": "constant",
-                                "value": null
-                              }
-                            },
-                            "if_true": {
-                              "type": "constant",
-                              "value": null
-                            },
-                            "if_false": null
-                          },
-                          {
-                            "type": "return",
-                            "value": {
-                              "type": "list",
-                              "value": [
-                                {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "constant",
-                                      "value": "Tower of Science: Locked Key3 room - Right"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "attr": "name"
-                                },
-                                {
-                                  "type": "attribute",
-                                  "object": {
-                                    "type": "attribute",
-                                    "object": {
-                                      "type": "constant",
-                                      "value": "Tower of Science: Locked Key3 room - Right"
-                                    },
-                                    "attr": "item"
-                                  },
-                                  "attr": "player"
-                                }
-                              ]
-                            }
+                            "type": "constant",
+                            "value": "Tower of Science: Locked Key3 room - Right"
                           }
                         ]
                       },
@@ -5196,11 +4290,48 @@
                   }
                 },
                 {
-                  "type": "constant",
-                  "value": "Crystal"
+                  "type": "assign",
+                  "name": "drac_object_name",
+                  "value": {
+                    "type": "conditional",
+                    "test": {
+                      "type": "constant",
+                      "value": true
+                    },
+                    "if_true": {
+                      "type": "constant",
+                      "value": "Crystal"
+                    },
+                    "if_false": {
+                      "type": "conditional",
+                      "test": {
+                        "type": "constant",
+                        "value": false
+                      },
+                      "if_true": {
+                        "type": "constant",
+                        "value": "Trophy"
+                      },
+                      "if_false": {
+                        "type": "conditional",
+                        "test": {
+                          "type": "constant",
+                          "value": false
+                        },
+                        "if_true": {
+                          "type": "constant",
+                          "value": "Special2"
+                        },
+                        "if_false": {
+                          "type": "name",
+                          "name": "drac_object_name"
+                        }
+                      }
+                    }
+                  }
                 },
                 {
-                  "type": "conditional",
+                  "type": "if_statement",
                   "test": {
                     "type": "compare",
                     "left": {
@@ -5213,18 +4344,22 @@
                       "value": null
                     }
                   },
-                  "if_true": {
-                    "type": "item_check",
-                    "item": {
-                      "type": "name",
-                      "name": "drac_object_name"
-                    },
-                    "count": {
-                      "type": "constant",
-                      "value": 1
+                  "body": [
+                    {
+                      "type": "return",
+                      "value": {
+                        "type": "item_check",
+                        "item": {
+                          "type": "name",
+                          "name": "drac_object_name"
+                        },
+                        "count": {
+                          "type": "constant",
+                          "value": 1
+                        }
+                      }
                     }
-                  },
-                  "if_false": null
+                  ]
                 },
                 {
                   "type": "return",
@@ -5902,5 +5037,103 @@
       "world_description": "Castlevania for the Nintendo 64 is the first 3D game in the Castlevania franchise. As either whip-wielding Belmont\ndescendant Reinhardt Schneider or powerful sorceress Carrie Fernandez, brave many terrifying traps and foes as you\nmake your way to Dracula's chamber and stop his rule of terror!"
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "location_item_name": {
+        "params": [
+          "location"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "assign",
+              "name": "location",
+              "value": {
+                "type": "function_call",
+                "function": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "attribute",
+                    "object": {
+                      "type": "name",
+                      "name": "state"
+                    },
+                    "attr": "multiworld"
+                  },
+                  "attr": "get_location"
+                },
+                "args": [
+                  {
+                    "type": "name",
+                    "name": "location"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "if_statement",
+              "test": {
+                "type": "compare",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "name",
+                    "name": "location"
+                  },
+                  "attr": "item"
+                },
+                "op": "is",
+                "right": {
+                  "type": "constant",
+                  "value": null
+                }
+              },
+              "body": [
+                {
+                  "type": "return",
+                  "value": {
+                    "type": "constant",
+                    "value": null
+                  }
+                }
+              ]
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "list",
+                "value": [
+                  {
+                    "type": "attribute",
+                    "object": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "item"
+                    },
+                    "attr": "name"
+                  },
+                  {
+                    "type": "attribute",
+                    "object": {
+                      "type": "attribute",
+                      "object": {
+                        "type": "name",
+                        "name": "location"
+                      },
+                      "attr": "item"
+                    },
+                    "attr": "player"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
 }

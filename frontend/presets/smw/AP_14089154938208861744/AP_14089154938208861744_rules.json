@@ -4788,8 +4788,12 @@
                   "type": "item_check",
                   "item": "Boss Token",
                   "count": {
-                    "type": "constant",
-                    "value": 7
+                    "type": "attribute",
+                    "object": {
+                      "type": "setting_value",
+                      "setting": "bosses_required"
+                    },
+                    "attr": "value"
                   }
                 },
                 {
@@ -4842,8 +4846,12 @@
               "type": "item_check",
               "item": "Boss Token",
               "count": {
-                "type": "constant",
-                "value": 7
+                "type": "attribute",
+                "object": {
+                  "type": "setting_value",
+                  "setting": "bosses_required"
+                },
+                "attr": "value"
               }
             }
           }

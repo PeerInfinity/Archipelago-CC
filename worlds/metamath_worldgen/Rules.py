@@ -7,7 +7,7 @@ The world class must inherit from RuleWorldMixin to use these rules.
 
 from typing import TYPE_CHECKING
 
-from rule_builder import True_, False_, Has
+from rule_builder import True_, False_, HasAll
 
 if TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -24,70 +24,70 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("From Statement 1 to Statement 3", player),
-        (Has("Statement 1")) & (Has("Statement 2"))
+        HasAll('Statement 1', 'Statement 2')
     )
 
     world.set_rule(
         multiworld.get_entrance("From Statement 2 to Statement 3", player),
-        (Has("Statement 1")) & (Has("Statement 2"))
+        HasAll('Statement 1', 'Statement 2')
     )
 
     world.set_rule(
         multiworld.get_entrance("From Statement 3 to Statement 8", player),
-        (Has("Statement 3")) & (Has("Statement 6")) & (Has("Statement 7"))
+        HasAll('Statement 3', 'Statement 6', 'Statement 7')
     )
 
     world.set_rule(
         multiworld.get_entrance("From Statement 4 to Statement 9", player),
-        Has("Statement 4")
+        HasAll('Statement 4')
     )
 
     world.set_rule(
         multiworld.get_entrance("From Statement 5 to Statement 7", player),
-        Has("Statement 5")
+        HasAll('Statement 5')
     )
 
     world.set_rule(
         multiworld.get_entrance("From Statement 6 to Statement 8", player),
-        (Has("Statement 3")) & (Has("Statement 6")) & (Has("Statement 7"))
+        HasAll('Statement 3', 'Statement 6', 'Statement 7')
     )
 
     world.set_rule(
         multiworld.get_entrance("From Statement 7 to Statement 8", player),
-        (Has("Statement 3")) & (Has("Statement 6")) & (Has("Statement 7"))
+        HasAll('Statement 3', 'Statement 6', 'Statement 7')
     )
 
     world.set_rule(
         multiworld.get_entrance("From Statement 8 to Statement 10", player),
-        (Has("Statement 8")) & (Has("Statement 9"))
+        HasAll('Statement 8', 'Statement 9')
     )
 
     world.set_rule(
         multiworld.get_entrance("From Statement 9 to Statement 10", player),
-        (Has("Statement 8")) & (Has("Statement 9"))
+        HasAll('Statement 8', 'Statement 9')
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Prove Statement 3", player),
-        (Has("Statement 1")) & (Has("Statement 2"))
+        HasAll('Statement 1', 'Statement 2')
     )
 
     world.set_rule(
         multiworld.get_location("Prove Statement 7", player),
-        Has("Statement 5")
+        HasAll('Statement 5')
     )
 
     world.set_rule(
         multiworld.get_location("Prove Statement 8", player),
-        (Has("Statement 3")) & (Has("Statement 6")) & (Has("Statement 7"))
+        HasAll('Statement 3', 'Statement 6', 'Statement 7')
     )
 
     world.set_rule(
         multiworld.get_location("Prove Statement 9", player),
-        Has("Statement 4")
+        HasAll('Statement 4')
     )
 
     world.set_rule(
         multiworld.get_location("Prove Statement 10", player),
-        (Has("Statement 8")) & (Has("Statement 9"))
+        HasAll('Statement 8', 'Statement 9')
     )

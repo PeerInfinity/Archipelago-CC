@@ -7,7 +7,7 @@ The world class must inherit from RuleWorldMixin to use these rules.
 
 from typing import TYPE_CHECKING
 
-from rule_builder import True_, False_, CanReachEntrance, Has
+from rule_builder import True_, False_, Has
 
 if TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -54,7 +54,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("New Home Exit", player),
-        ((Has("Left Home Key")) & (Has("Right Home Key"))) | (Has("Key Piece", 5))
+        ((Has("Left Home Key")) & (Has("Right Home Key"))) | (Has("Key Piece"))
     )
     # Location rules
     world.set_rule(
@@ -229,7 +229,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mettaton Plot", player),
-        CanReachEntrance("Core Exit")
+        True_()
     )
 
     world.set_rule(

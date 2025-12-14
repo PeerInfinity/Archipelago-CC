@@ -1610,8 +1610,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_all_items",
+                  "type": "state_method",
+                  "method": "has_all",
                   "args": [
                     {
                       "type": "constant",
@@ -1724,8 +1724,8 @@
               "type": "or",
               "conditions": [
                 {
-                  "type": "helper",
-                  "name": "has_all_items",
+                  "type": "state_method",
+                  "method": "has_all",
                   "args": [
                     {
                       "type": "constant",
@@ -1835,14 +1835,14 @@
             "name": "DDD: Collect the Caps...",
             "id": 3626061,
             "access_rule": {
-              "type": "helper",
-              "name": "has_all_items",
+              "type": "state_method",
+              "method": "has_all",
               "args": [
                 {
                   "type": "constant",
                   "value": [
-                    "Vanish Cap",
-                    "Metal Cap"
+                    "Metal Cap",
+                    "Vanish Cap"
                   ]
                 }
               ]

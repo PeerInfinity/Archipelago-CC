@@ -521,10 +521,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Beanstalk",
-                    "Dashed Stairs"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Beanstalk"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Dashed Stairs"
+                    }
                   ]
                 }
               ]
@@ -545,10 +551,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Beanstalk",
-                    "Dashed Stairs"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Beanstalk"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Dashed Stairs"
+                    }
                   ]
                 }
               ]
@@ -569,11 +581,20 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Beanstalk",
-                    "Dashed Stairs",
-                    "Tulip"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Beanstalk"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Dashed Stairs"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Tulip"
+                    }
                   ]
                 }
               ]
@@ -615,10 +636,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Helicopter Morph",
-                    "Large Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Helicopter Morph"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -639,10 +666,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Helicopter Morph",
-                    "Large Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Helicopter Morph"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -821,10 +854,16 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Key",
-                        "Spring Ball"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Key"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Spring Ball"
+                        }
                       ]
                     }
                   ]
@@ -1002,12 +1041,24 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "! Switch",
-                    "Flashing Eggs",
-                    "Large Spring Ball",
-                    "Mole Tank Morph"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "! Switch"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Flashing Eggs"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Mole Tank Morph"
+                    }
                   ]
                 }
               ]
@@ -1096,10 +1147,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Beanstalk",
-                    "Large Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Beanstalk"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -1126,12 +1183,24 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Beanstalk",
-                    "Chomp Rock",
-                    "Flashing Eggs",
-                    "Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Beanstalk"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Chomp Rock"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Flashing Eggs"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -1178,11 +1247,20 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "constant",
-                          "value": [
-                            "Beanstalk",
-                            "Chomp Rock",
-                            "Spring Ball"
+                          "type": "set",
+                          "elements": [
+                            {
+                              "type": "constant",
+                              "value": "Beanstalk"
+                            },
+                            {
+                              "type": "constant",
+                              "value": "Chomp Rock"
+                            },
+                            {
+                              "type": "constant",
+                              "value": "Spring Ball"
+                            }
                           ]
                         }
                       ]
@@ -1300,10 +1378,16 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "constant",
-                          "value": [
-                            "Arrow Wheel",
-                            "Key"
+                          "type": "set",
+                          "elements": [
+                            {
+                              "type": "constant",
+                              "value": "Arrow Wheel"
+                            },
+                            {
+                              "type": "constant",
+                              "value": "Key"
+                            }
                           ]
                         }
                       ]
@@ -1376,11 +1460,20 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Large Spring Ball",
-                    "Poochy",
-                    "Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Poochy"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -1401,10 +1494,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Large Spring Ball",
-                    "Super Star"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Super Star"
+                    }
                   ]
                 }
               ]
@@ -1471,13 +1570,28 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Beanstalk",
-                    "Egg Launcher",
-                    "Large Spring Ball",
-                    "Mole Tank Morph",
-                    "Super Star"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Beanstalk"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Egg Launcher"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Mole Tank Morph"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Super Star"
+                    }
                   ]
                 }
               ]
@@ -1498,13 +1612,28 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Beanstalk",
-                    "Egg Launcher",
-                    "Large Spring Ball",
-                    "Spring Ball",
-                    "Super Star"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Beanstalk"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Egg Launcher"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Spring Ball"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Super Star"
+                    }
                   ]
                 }
               ]
@@ -1542,12 +1671,24 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Beanstalk",
-                        "Egg Launcher",
-                        "Large Spring Ball",
-                        "Super Star"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Beanstalk"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Egg Launcher"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Large Spring Ball"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Super Star"
+                        }
                       ]
                     }
                   ]
@@ -1570,12 +1711,24 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Beanstalk",
-                    "Egg Launcher",
-                    "Large Spring Ball",
-                    "Super Star"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Beanstalk"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Egg Launcher"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Super Star"
+                    }
                   ]
                 }
               ]
@@ -1617,10 +1770,16 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Large Spring Ball",
-                    "Super Star"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Super Star"
+                    }
                   ]
                 }
               ]
@@ -1656,10 +1815,16 @@
               "method": "has_any",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Large Spring Ball",
-                    "Super Star"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Super Star"
+                    }
                   ]
                 }
               ]
@@ -1696,11 +1861,20 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "! Switch",
-                    "Dashed Stairs",
-                    "Key"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "! Switch"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Dashed Stairs"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Key"
+                    }
                   ]
                 }
               ]
@@ -1721,11 +1895,20 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "! Switch",
-                    "Dashed Stairs",
-                    "Key"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "! Switch"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Dashed Stairs"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Key"
+                    }
                   ]
                 }
               ]
@@ -1754,11 +1937,20 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "! Switch",
-                        "Dashed Stairs",
-                        "Key"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "! Switch"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Dashed Stairs"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Key"
+                        }
                       ]
                     }
                   ]
@@ -1840,11 +2032,20 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Chomp Rock",
-                    "Key",
-                    "Train Morph"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Chomp Rock"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Key"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Train Morph"
+                    }
                   ]
                 }
               ]
@@ -1916,10 +2117,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Egg Launcher",
-                    "Large Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Egg Launcher"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -2013,10 +2220,16 @@
                       "method": "has_any",
                       "args": [
                         {
-                          "type": "constant",
-                          "value": [
-                            "Dashed Platform",
-                            "Giant Eggs"
+                          "type": "set",
+                          "elements": [
+                            {
+                              "type": "constant",
+                              "value": "Dashed Platform"
+                            },
+                            {
+                              "type": "constant",
+                              "value": "Giant Eggs"
+                            }
                           ]
                         }
                       ]
@@ -2062,10 +2275,16 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "! Switch",
-                        "Large Spring Ball"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "! Switch"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Large Spring Ball"
+                        }
                       ]
                     }
                   ]
@@ -2113,10 +2332,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Car Morph",
-                    "Large Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Car Morph"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -2172,10 +2397,16 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Arrow Wheel",
-                        "Key"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Arrow Wheel"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Key"
+                        }
                       ]
                     }
                   ]
@@ -2209,11 +2440,20 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Arrow Wheel",
-                        "Key",
-                        "Train Morph"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Arrow Wheel"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Key"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Train Morph"
+                        }
                       ]
                     }
                   ]
@@ -2252,10 +2492,16 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Arrow Wheel",
-                        "Key"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Arrow Wheel"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Key"
+                        }
                       ]
                     }
                   ]
@@ -2397,10 +2643,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dashed Stairs",
-                    "Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Dashed Stairs"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -2421,10 +2673,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dashed Stairs",
-                    "Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Dashed Stairs"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -2470,10 +2728,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dashed Stairs",
-                    "Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Dashed Stairs"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -2500,10 +2764,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Helicopter Morph",
-                    "Submarine Morph"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Helicopter Morph"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Submarine Morph"
+                    }
                   ]
                 }
               ]
@@ -2524,10 +2794,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Helicopter Morph",
-                    "Submarine Morph"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Helicopter Morph"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Submarine Morph"
+                    }
                   ]
                 }
               ]
@@ -2556,10 +2832,16 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Helicopter Morph",
-                        "Submarine Morph"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Helicopter Morph"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Submarine Morph"
+                        }
                       ]
                     }
                   ]
@@ -2582,10 +2864,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Helicopter Morph",
-                    "Submarine Morph"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Helicopter Morph"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Submarine Morph"
+                    }
                   ]
                 }
               ]
@@ -2850,12 +3138,24 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Beanstalk",
-                    "Chomp Rock",
-                    "Large Spring Ball",
-                    "Mole Tank Morph"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Beanstalk"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Chomp Rock"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Mole Tank Morph"
+                    }
                   ]
                 }
               ]
@@ -2876,13 +3176,28 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "! Switch",
-                    "Beanstalk",
-                    "Chomp Rock",
-                    "Large Spring Ball",
-                    "Mole Tank Morph"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "! Switch"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Beanstalk"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Chomp Rock"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Mole Tank Morph"
+                    }
                   ]
                 }
               ]
@@ -2911,14 +3226,32 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Beanstalk",
-                        "Chomp Rock",
-                        "Dashed Stairs",
-                        "Large Spring Ball",
-                        "Mole Tank Morph",
-                        "Tulip"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Beanstalk"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Chomp Rock"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Dashed Stairs"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Large Spring Ball"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Mole Tank Morph"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Tulip"
+                        }
                       ]
                     }
                   ]
@@ -2941,11 +3274,20 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Chomp Rock",
-                    "Key",
-                    "Large Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Chomp Rock"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Key"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -2972,12 +3314,24 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "! Switch",
-                    "Beanstalk",
-                    "Large Spring Ball",
-                    "Submarine Morph"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "! Switch"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Beanstalk"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Submarine Morph"
+                    }
                   ]
                 }
               ]
@@ -2998,10 +3352,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Beanstalk",
-                    "Large Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Beanstalk"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -3281,11 +3641,20 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "! Switch",
-                    "Egg Launcher",
-                    "Large Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "! Switch"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Egg Launcher"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -3306,10 +3675,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Egg Launcher",
-                    "Large Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Egg Launcher"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -3330,10 +3705,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Large Spring Ball",
-                    "Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -3375,11 +3756,20 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "! Switch",
-                    "Helicopter Morph",
-                    "Large Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "! Switch"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Helicopter Morph"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -3400,10 +3790,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "! Switch",
-                    "Large Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "! Switch"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -3510,13 +3906,28 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Arrow Wheel",
-                        "Bucket",
-                        "Dashed Stairs",
-                        "Key",
-                        "Vanishing Arrow Wheel"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Arrow Wheel"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Bucket"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Dashed Stairs"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Key"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Vanishing Arrow Wheel"
+                        }
                       ]
                     }
                   ]
@@ -3560,12 +3971,24 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Arrow Wheel",
-                        "Bucket",
-                        "Dashed Stairs",
-                        "Vanishing Arrow Wheel"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Arrow Wheel"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Bucket"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Dashed Stairs"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Vanishing Arrow Wheel"
+                        }
                       ]
                     }
                   ]
@@ -3671,10 +4094,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Chomp Rock",
-                    "Large Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Chomp Rock"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -3695,12 +4124,24 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "! Switch",
-                    "Chomp Rock",
-                    "Dashed Platform",
-                    "Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "! Switch"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Chomp Rock"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Dashed Platform"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -3721,12 +4162,24 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "! Switch",
-                    "Chomp Rock",
-                    "Dashed Platform",
-                    "Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "! Switch"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Chomp Rock"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Dashed Platform"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -3785,10 +4238,16 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Large Spring Ball",
-                        "Spring Ball"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Large Spring Ball"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Spring Ball"
+                        }
                       ]
                     }
                   ]
@@ -3828,10 +4287,16 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Large Spring Ball",
-                        "Spring Ball"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Large Spring Ball"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Spring Ball"
+                        }
                       ]
                     }
                   ]
@@ -4050,11 +4515,20 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dashed Stairs",
-                    "Key",
-                    "Vanishing Arrow Wheel"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Dashed Stairs"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Key"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Vanishing Arrow Wheel"
+                    }
                   ]
                 }
               ]
@@ -4075,11 +4549,20 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dashed Stairs",
-                    "Key",
-                    "Vanishing Arrow Wheel"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Dashed Stairs"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Key"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Vanishing Arrow Wheel"
+                    }
                   ]
                 }
               ]
@@ -4108,10 +4591,16 @@
                   "method": "has_any",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Dashed Stairs",
-                        "Vanishing Arrow Wheel"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Dashed Stairs"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Vanishing Arrow Wheel"
+                        }
                       ]
                     }
                   ]
@@ -4178,10 +4667,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dashed Stairs",
-                    "Helicopter Morph"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Dashed Stairs"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Helicopter Morph"
+                    }
                   ]
                 }
               ]
@@ -4375,13 +4870,28 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Bucket",
-                        "Dashed Platform",
-                        "Skis",
-                        "Spring Ball",
-                        "Super Star"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Bucket"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Dashed Platform"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Skis"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Spring Ball"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Super Star"
+                        }
                       ]
                     }
                   ]
@@ -4421,11 +4931,20 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Dashed Platform",
-                        "Skis",
-                        "Spring Ball"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Dashed Platform"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Skis"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Spring Ball"
+                        }
                       ]
                     }
                   ]
@@ -4492,11 +5011,20 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dashed Platform",
-                    "Skis",
-                    "Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Dashed Platform"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Skis"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -4533,11 +5061,20 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dashed Platform",
-                    "Dashed Stairs",
-                    "Platform Ghost"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Dashed Platform"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Dashed Stairs"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Platform Ghost"
+                    }
                   ]
                 }
               ]
@@ -4558,11 +5095,20 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dashed Platform",
-                    "Dashed Stairs",
-                    "Platform Ghost"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Dashed Platform"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Dashed Stairs"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Platform Ghost"
+                    }
                   ]
                 }
               ]
@@ -4612,10 +5158,16 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "constant",
-                          "value": [
-                            "Dashed Stairs",
-                            "Platform Ghost"
+                          "type": "set",
+                          "elements": [
+                            {
+                              "type": "constant",
+                              "value": "Dashed Stairs"
+                            },
+                            {
+                              "type": "constant",
+                              "value": "Platform Ghost"
+                            }
                           ]
                         }
                       ]
@@ -4684,10 +5236,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "! Switch",
-                    "Helicopter Morph"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "! Switch"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Helicopter Morph"
+                    }
                   ]
                 }
               ]
@@ -4708,10 +5266,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "! Switch",
-                    "Helicopter Morph"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "! Switch"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Helicopter Morph"
+                    }
                   ]
                 }
               ]
@@ -4748,10 +5312,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "! Switch",
-                    "Helicopter Morph"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "! Switch"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Helicopter Morph"
+                    }
                   ]
                 }
               ]
@@ -4959,10 +5529,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Arrow Wheel",
-                    "Train Morph"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Arrow Wheel"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Train Morph"
+                    }
                   ]
                 }
               ]
@@ -4983,10 +5559,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Arrow Wheel",
-                    "Train Morph"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Arrow Wheel"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Train Morph"
+                    }
                   ]
                 }
               ]
@@ -5076,10 +5658,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dashed Platform",
-                    "Large Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Dashed Platform"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -5100,10 +5688,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dashed Platform",
-                    "Large Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Dashed Platform"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -5149,10 +5743,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Dashed Platform",
-                    "Large Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Dashed Platform"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -5353,12 +5953,24 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Egg Plant",
-                        "Key",
-                        "Large Spring Ball",
-                        "Spring Ball"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Egg Plant"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Key"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Large Spring Ball"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Spring Ball"
+                        }
                       ]
                     }
                   ]
@@ -5402,12 +6014,24 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Egg Plant",
-                        "Key",
-                        "Large Spring Ball",
-                        "Spring Ball"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Egg Plant"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Key"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Large Spring Ball"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Spring Ball"
+                        }
                       ]
                     }
                   ]
@@ -5438,12 +6062,24 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Egg Plant",
-                        "Key",
-                        "Large Spring Ball",
-                        "Spring Ball"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Egg Plant"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Key"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Large Spring Ball"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Spring Ball"
+                        }
                       ]
                     }
                   ]
@@ -5650,11 +6286,20 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Chomp Rock",
-                    "Key",
-                    "Large Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Chomp Rock"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Key"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -5675,11 +6320,20 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Chomp Rock",
-                    "Key",
-                    "Large Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Chomp Rock"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Key"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -5711,11 +6365,20 @@
                       "method": "has_all",
                       "args": [
                         {
-                          "type": "constant",
-                          "value": [
-                            "Chomp Rock",
-                            "Key",
-                            "Large Spring Ball"
+                          "type": "set",
+                          "elements": [
+                            {
+                              "type": "constant",
+                              "value": "Chomp Rock"
+                            },
+                            {
+                              "type": "constant",
+                              "value": "Key"
+                            },
+                            {
+                              "type": "constant",
+                              "value": "Large Spring Ball"
+                            }
                           ]
                         }
                       ]
@@ -5727,11 +6390,20 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Chomp Rock",
-                        "Key",
-                        "Tulip"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Chomp Rock"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Key"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Tulip"
+                        }
                       ]
                     }
                   ]
@@ -5754,12 +6426,24 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Chomp Rock",
-                    "Dashed Platform",
-                    "Key",
-                    "Large Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Chomp Rock"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Dashed Platform"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Key"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -5885,10 +6569,16 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Egg Plant",
-                        "Helicopter Morph"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Egg Plant"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Helicopter Morph"
+                        }
                       ]
                     }
                   ]
@@ -5919,10 +6609,16 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Egg Plant",
-                        "Helicopter Morph"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Egg Plant"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Helicopter Morph"
+                        }
                       ]
                     }
                   ]
@@ -5953,10 +6649,16 @@
                   "method": "has_all",
                   "args": [
                     {
-                      "type": "constant",
-                      "value": [
-                        "Egg Plant",
-                        "Helicopter Morph"
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Egg Plant"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Helicopter Morph"
+                        }
                       ]
                     }
                   ]
@@ -6976,7 +7678,7 @@
       "CastleOpenCondition": 5,
       "game_logic": "Easy",
       "midring_start": true,
-      "clouds_always_visible": true,
+      "clouds_always_visible": false,
       "consumable_logic": true,
       "bowser_door": 0,
       "luigi_pieces": 25,
@@ -7214,10 +7916,16 @@
           "method": "has_all",
           "args": [
             {
-              "type": "constant",
-              "value": [
-                "Key",
-                "Spring Ball"
+              "type": "set",
+              "elements": [
+                {
+                  "type": "constant",
+                  "value": "Key"
+                },
+                {
+                  "type": "constant",
+                  "value": "Spring Ball"
+                }
               ]
             }
           ]
@@ -7245,10 +7953,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Key",
-                  "Spring Ball"
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Spring Ball"
+                  }
                 ]
               }
             ]
@@ -7258,10 +7972,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Key",
-                  "Spring Ball"
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Spring Ball"
+                  }
                 ]
               }
             ]
@@ -7424,10 +8144,16 @@
           "method": "has_all",
           "args": [
             {
-              "type": "constant",
-              "value": [
-                "Arrow Wheel",
-                "Key"
+              "type": "set",
+              "elements": [
+                {
+                  "type": "constant",
+                  "value": "Arrow Wheel"
+                },
+                {
+                  "type": "constant",
+                  "value": "Key"
+                }
               ]
             }
           ]
@@ -7455,10 +8181,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Arrow Wheel",
-                  "Key"
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Arrow Wheel"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  }
                 ]
               }
             ]
@@ -7468,10 +8200,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Arrow Wheel",
-                  "Key"
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Arrow Wheel"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  }
                 ]
               }
             ]
@@ -7584,11 +8322,20 @@
           "method": "has_all",
           "args": [
             {
-              "type": "constant",
-              "value": [
-                "! Switch",
-                "Dashed Stairs",
-                "Key"
+              "type": "set",
+              "elements": [
+                {
+                  "type": "constant",
+                  "value": "! Switch"
+                },
+                {
+                  "type": "constant",
+                  "value": "Dashed Stairs"
+                },
+                {
+                  "type": "constant",
+                  "value": "Key"
+                }
               ]
             }
           ]
@@ -7616,10 +8363,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "! Switch",
-                  "Dashed Stairs"
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "! Switch"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Dashed Stairs"
+                  }
                 ]
               }
             ]
@@ -7653,10 +8406,16 @@
           "method": "has_all",
           "args": [
             {
-              "type": "constant",
-              "value": [
-                "Key",
-                "Large Spring Ball"
+              "type": "set",
+              "elements": [
+                {
+                  "type": "constant",
+                  "value": "Key"
+                },
+                {
+                  "type": "constant",
+                  "value": "Large Spring Ball"
+                }
               ]
             }
           ]
@@ -7684,10 +8443,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Key",
-                  "Large Spring Ball"
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Large Spring Ball"
+                  }
                 ]
               }
             ]
@@ -7697,10 +8462,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Key",
-                  "Large Spring Ball"
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Large Spring Ball"
+                  }
                 ]
               }
             ]
@@ -7866,10 +8637,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Arrow Wheel",
-                    "Key"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Arrow Wheel"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Key"
+                    }
                   ]
                 }
               ]
@@ -7907,10 +8684,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Arrow Wheel",
-                  "Key"
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Arrow Wheel"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  }
                 ]
               }
             ]
@@ -7920,10 +8703,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Arrow Wheel",
-                  "Key"
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Arrow Wheel"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  }
                 ]
               }
             ]
@@ -8343,13 +9132,28 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Arrow Wheel",
-                    "Bucket",
-                    "Dashed Stairs",
-                    "Key",
-                    "Vanishing Arrow Wheel"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Arrow Wheel"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Bucket"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Dashed Stairs"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Key"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Vanishing Arrow Wheel"
+                    }
                   ]
                 }
               ]
@@ -8397,13 +9201,28 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Arrow Wheel",
-                  "Bucket",
-                  "Dashed Stairs",
-                  "Key",
-                  "Vanishing Arrow Wheel"
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Arrow Wheel"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Bucket"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Dashed Stairs"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Vanishing Arrow Wheel"
+                  }
                 ]
               }
             ]
@@ -8413,13 +9232,28 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Arrow Wheel",
-                  "Bucket",
-                  "Dashed Stairs",
-                  "Key",
-                  "Vanishing Arrow Wheel"
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Arrow Wheel"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Bucket"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Dashed Stairs"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Vanishing Arrow Wheel"
+                  }
                 ]
               }
             ]
@@ -8449,10 +9283,16 @@
           "method": "has_all",
           "args": [
             {
-              "type": "constant",
-              "value": [
-                "Key",
-                "Large Spring Ball"
+              "type": "set",
+              "elements": [
+                {
+                  "type": "constant",
+                  "value": "Key"
+                },
+                {
+                  "type": "constant",
+                  "value": "Large Spring Ball"
+                }
               ]
             }
           ]
@@ -8480,10 +9320,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Key",
-                  "Large Spring Ball"
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Large Spring Ball"
+                  }
                 ]
               }
             ]
@@ -8493,10 +9339,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Key",
-                  "Large Spring Ball"
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Large Spring Ball"
+                  }
                 ]
               }
             ]
@@ -8621,12 +9473,24 @@
           "method": "has_all",
           "args": [
             {
-              "type": "constant",
-              "value": [
-                "Dashed Stairs",
-                "Key",
-                "Large Spring Ball",
-                "Vanishing Arrow Wheel"
+              "type": "set",
+              "elements": [
+                {
+                  "type": "constant",
+                  "value": "Dashed Stairs"
+                },
+                {
+                  "type": "constant",
+                  "value": "Key"
+                },
+                {
+                  "type": "constant",
+                  "value": "Large Spring Ball"
+                },
+                {
+                  "type": "constant",
+                  "value": "Vanishing Arrow Wheel"
+                }
               ]
             }
           ]
@@ -8654,12 +9518,24 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Dashed Stairs",
-                  "Key",
-                  "Large Spring Ball",
-                  "Vanishing Arrow Wheel"
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Dashed Stairs"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Large Spring Ball"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Vanishing Arrow Wheel"
+                  }
                 ]
               }
             ]
@@ -8669,10 +9545,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Key",
-                  "Large Spring Ball"
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Key"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Large Spring Ball"
+                  }
                 ]
               }
             ]
@@ -8857,11 +9739,20 @@
           "method": "has_all",
           "args": [
             {
-              "type": "constant",
-              "value": [
-                "Dashed Platform",
-                "Dashed Stairs",
-                "Platform Ghost"
+              "type": "set",
+              "elements": [
+                {
+                  "type": "constant",
+                  "value": "Dashed Platform"
+                },
+                {
+                  "type": "constant",
+                  "value": "Dashed Stairs"
+                },
+                {
+                  "type": "constant",
+                  "value": "Platform Ghost"
+                }
               ]
             }
           ]
@@ -8889,11 +9780,20 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Dashed Platform",
-                  "Dashed Stairs",
-                  "Platform Ghost"
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Dashed Platform"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Dashed Stairs"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Platform Ghost"
+                  }
                 ]
               }
             ]
@@ -8903,10 +9803,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Dashed Stairs",
-                  "Platform Ghost"
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Dashed Stairs"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Platform Ghost"
+                  }
                 ]
               }
             ]
@@ -9019,10 +9925,16 @@
           "method": "has_all",
           "args": [
             {
-              "type": "constant",
-              "value": [
-                "Arrow Wheel",
-                "Large Spring Ball"
+              "type": "set",
+              "elements": [
+                {
+                  "type": "constant",
+                  "value": "Arrow Wheel"
+                },
+                {
+                  "type": "constant",
+                  "value": "Large Spring Ball"
+                }
               ]
             }
           ]
@@ -9050,10 +9962,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Arrow Wheel",
-                  "Large Spring Ball"
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Arrow Wheel"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Large Spring Ball"
+                  }
                 ]
               }
             ]
@@ -9063,10 +9981,16 @@
             "method": "has_all",
             "args": [
               {
-                "type": "constant",
-                "value": [
-                  "Arrow Wheel",
-                  "Large Spring Ball"
+                "type": "set",
+                "elements": [
+                  {
+                    "type": "constant",
+                    "value": "Arrow Wheel"
+                  },
+                  {
+                    "type": "constant",
+                    "value": "Large Spring Ball"
+                  }
                 ]
               }
             ]
@@ -9182,12 +10106,24 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Egg Plant",
-                    "Key",
-                    "Large Spring Ball",
-                    "Spring Ball"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Egg Plant"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Key"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Large Spring Ball"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Spring Ball"
+                    }
                   ]
                 }
               ]
@@ -9238,11 +10174,20 @@
                 "method": "has_all",
                 "args": [
                   {
-                    "type": "constant",
-                    "value": [
-                      "Egg Plant",
-                      "Key",
-                      "Large Spring Ball"
+                    "type": "set",
+                    "elements": [
+                      {
+                        "type": "constant",
+                        "value": "Egg Plant"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Key"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Large Spring Ball"
+                      }
                     ]
                   }
                 ]
@@ -9275,10 +10220,16 @@
                 "method": "has_all",
                 "args": [
                   {
-                    "type": "constant",
-                    "value": [
-                      "Egg Plant",
-                      "Key"
+                    "type": "set",
+                    "elements": [
+                      {
+                        "type": "constant",
+                        "value": "Egg Plant"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Key"
+                      }
                     ]
                   }
                 ]
@@ -9331,11 +10282,20 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "Egg Plant",
-                    "Giant Eggs",
-                    "Helicopter Morph"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "Egg Plant"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Giant Eggs"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Helicopter Morph"
+                    }
                   ]
                 }
               ]
@@ -9373,11 +10333,20 @@
                 "method": "has_all",
                 "args": [
                   {
-                    "type": "constant",
-                    "value": [
-                      "Egg Plant",
-                      "Giant Eggs",
-                      "Helicopter Morph"
+                    "type": "set",
+                    "elements": [
+                      {
+                        "type": "constant",
+                        "value": "Egg Plant"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Giant Eggs"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Helicopter Morph"
+                      }
                     ]
                   }
                 ]
@@ -9397,10 +10366,16 @@
                 "method": "has_all",
                 "args": [
                   {
-                    "type": "constant",
-                    "value": [
-                      "Giant Eggs",
-                      "Helicopter Morph"
+                    "type": "set",
+                    "elements": [
+                      {
+                        "type": "constant",
+                        "value": "Giant Eggs"
+                      },
+                      {
+                        "type": "constant",
+                        "value": "Helicopter Morph"
+                      }
                     ]
                   }
                 ]
@@ -9752,10 +10727,16 @@
               "method": "has_all",
               "args": [
                 {
-                  "type": "constant",
-                  "value": [
-                    "! Switch",
-                    "Egg Plant"
+                  "type": "set",
+                  "elements": [
+                    {
+                      "type": "constant",
+                      "value": "! Switch"
+                    },
+                    {
+                      "type": "constant",
+                      "value": "Egg Plant"
+                    }
                   ]
                 }
               ]

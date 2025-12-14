@@ -79,37 +79,37 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Movement Pack", player),
-        Has(" coins", 4)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Animation Pack", player),
-        Has(" coins", 5)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Audio Pack", player),
-        Has(" coins", 5)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Pause Menu Pack", player),
-        Has(" coins", 5)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Time is Money Pack", player),
-        Has(" coins", 20)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Psychological Warfare Pack", player),
-        Has(" coins", 50)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Armor for your Horse Pack", player),
-        Has(" coins", 250)
+        True_()
     )
 
     world.set_rule(
@@ -119,12 +119,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Double Jump Pack", player),
-        Has(" coins", 100)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Map Pack", player),
-        Has(" coins", 140)
+        True_()
     )
 
     world.set_rule(
@@ -134,12 +134,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pet Pack", player),
-        Has(" coins", 5)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Top Hat Pack", player),
-        Has(" coins", 5)
+        True_()
     )
 
     world.set_rule(
@@ -154,27 +154,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Sexy Outfits Pack", player),
-        Has(" coins", 5)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Gun Pack", player),
-        Has(" coins", 75)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Night Map Pack", player),
-        Has(" coins", 75)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("The Zombie Pack", player),
-        Has(" coins", 5)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Finish the Fight Pack", player),
-        Has(" coins", 5)
+        True_()
     )
 
     world.set_rule(

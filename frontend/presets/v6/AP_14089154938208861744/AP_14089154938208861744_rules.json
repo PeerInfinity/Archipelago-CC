@@ -20,77 +20,19 @@
             "name": "Menu -> Laboratory",
             "connected_region": "Laboratory",
             "access_rule": {
-              "type": "block",
-              "statements": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "for_range",
-                  "var": "i",
-                  "count": {
-                    "type": "name",
-                    "name": "start"
-                  },
-                  "body": [
-                    {
-                      "type": "conditional",
-                      "test": {
-                        "type": "not",
-                        "condition": {
-                          "type": "item_check",
-                          "item": {
-                            "type": "binary_op",
-                            "left": {
-                              "type": "constant",
-                              "value": "Trinket "
-                            },
-                            "op": "+",
-                            "right": {
-                              "type": "function_call",
-                              "function": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "helper",
-                                  "name": "str",
-                                  "args": [
-                                    {
-                                      "type": "binary_op",
-                                      "left": {
-                                        "type": "constant",
-                                        "value": 1
-                                      },
-                                      "op": "+",
-                                      "right": {
-                                        "type": "constant",
-                                        "value": 1
-                                      }
-                                    }
-                                  ]
-                                },
-                                "attr": "zfill"
-                              },
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": 2
-                                }
-                              ]
-                            }
-                          }
-                        }
-                      },
-                      "if_true": {
-                        "type": "constant",
-                        "value": false
-                      },
-                      "if_false": null
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Trinket 01"
                 },
                 {
-                  "type": "return",
-                  "value": {
-                    "type": "constant",
-                    "value": true
-                  }
+                  "type": "item_check",
+                  "item": "Trinket 02"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Trinket 03"
                 }
               ]
             }
@@ -99,77 +41,19 @@
             "name": "Menu -> The Tower",
             "connected_region": "The Tower",
             "access_rule": {
-              "type": "block",
-              "statements": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "for_range",
-                  "var": "i",
-                  "count": {
-                    "type": "name",
-                    "name": "start"
-                  },
-                  "body": [
-                    {
-                      "type": "conditional",
-                      "test": {
-                        "type": "not",
-                        "condition": {
-                          "type": "item_check",
-                          "item": {
-                            "type": "binary_op",
-                            "left": {
-                              "type": "constant",
-                              "value": "Trinket "
-                            },
-                            "op": "+",
-                            "right": {
-                              "type": "function_call",
-                              "function": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "helper",
-                                  "name": "str",
-                                  "args": [
-                                    {
-                                      "type": "binary_op",
-                                      "left": {
-                                        "type": "constant",
-                                        "value": 2
-                                      },
-                                      "op": "+",
-                                      "right": {
-                                        "type": "constant",
-                                        "value": 1
-                                      }
-                                    }
-                                  ]
-                                },
-                                "attr": "zfill"
-                              },
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": 2
-                                }
-                              ]
-                            }
-                          }
-                        }
-                      },
-                      "if_true": {
-                        "type": "constant",
-                        "value": false
-                      },
-                      "if_false": null
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Trinket 04"
                 },
                 {
-                  "type": "return",
-                  "value": {
-                    "type": "constant",
-                    "value": true
-                  }
+                  "type": "item_check",
+                  "item": "Trinket 05"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Trinket 06"
                 }
               ]
             }
@@ -178,77 +62,19 @@
             "name": "Menu -> Space Station 2",
             "connected_region": "Space Station 2",
             "access_rule": {
-              "type": "block",
-              "statements": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "for_range",
-                  "var": "i",
-                  "count": {
-                    "type": "name",
-                    "name": "start"
-                  },
-                  "body": [
-                    {
-                      "type": "conditional",
-                      "test": {
-                        "type": "not",
-                        "condition": {
-                          "type": "item_check",
-                          "item": {
-                            "type": "binary_op",
-                            "left": {
-                              "type": "constant",
-                              "value": "Trinket "
-                            },
-                            "op": "+",
-                            "right": {
-                              "type": "function_call",
-                              "function": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "helper",
-                                  "name": "str",
-                                  "args": [
-                                    {
-                                      "type": "binary_op",
-                                      "left": {
-                                        "type": "constant",
-                                        "value": 3
-                                      },
-                                      "op": "+",
-                                      "right": {
-                                        "type": "constant",
-                                        "value": 1
-                                      }
-                                    }
-                                  ]
-                                },
-                                "attr": "zfill"
-                              },
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": 2
-                                }
-                              ]
-                            }
-                          }
-                        }
-                      },
-                      "if_true": {
-                        "type": "constant",
-                        "value": false
-                      },
-                      "if_false": null
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Trinket 07"
                 },
                 {
-                  "type": "return",
-                  "value": {
-                    "type": "constant",
-                    "value": true
-                  }
+                  "type": "item_check",
+                  "item": "Trinket 08"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Trinket 09"
                 }
               ]
             }
@@ -257,77 +83,19 @@
             "name": "Menu -> Warp Zone",
             "connected_region": "Warp Zone",
             "access_rule": {
-              "type": "block",
-              "statements": [
+              "type": "and",
+              "conditions": [
                 {
-                  "type": "for_range",
-                  "var": "i",
-                  "count": {
-                    "type": "name",
-                    "name": "start"
-                  },
-                  "body": [
-                    {
-                      "type": "conditional",
-                      "test": {
-                        "type": "not",
-                        "condition": {
-                          "type": "item_check",
-                          "item": {
-                            "type": "binary_op",
-                            "left": {
-                              "type": "constant",
-                              "value": "Trinket "
-                            },
-                            "op": "+",
-                            "right": {
-                              "type": "function_call",
-                              "function": {
-                                "type": "attribute",
-                                "object": {
-                                  "type": "helper",
-                                  "name": "str",
-                                  "args": [
-                                    {
-                                      "type": "binary_op",
-                                      "left": {
-                                        "type": "constant",
-                                        "value": 4
-                                      },
-                                      "op": "+",
-                                      "right": {
-                                        "type": "constant",
-                                        "value": 1
-                                      }
-                                    }
-                                  ]
-                                },
-                                "attr": "zfill"
-                              },
-                              "args": [
-                                {
-                                  "type": "constant",
-                                  "value": 2
-                                }
-                              ]
-                            }
-                          }
-                        }
-                      },
-                      "if_true": {
-                        "type": "constant",
-                        "value": false
-                      },
-                      "if_false": null
-                    }
-                  ]
+                  "type": "item_check",
+                  "item": "Trinket 10"
                 },
                 {
-                  "type": "return",
-                  "value": {
-                    "type": "constant",
-                    "value": true
-                  }
+                  "type": "item_check",
+                  "item": "Trinket 11"
+                },
+                {
+                  "type": "item_check",
+                  "item": "Trinket 12"
                 }
               ]
             }
@@ -1135,5 +903,93 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "_has_trinket_range": {
+        "params": [
+          "start",
+          "end"
+        ],
+        "body": {
+          "type": "block",
+          "statements": [
+            {
+              "type": "for_range",
+              "count": {
+                "type": "name",
+                "name": "start"
+              },
+              "body": [
+                {
+                  "type": "if_statement",
+                  "test": {
+                    "type": "not",
+                    "condition": {
+                      "type": "item_check",
+                      "item": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "constant",
+                          "value": "Trinket "
+                        },
+                        "op": "+",
+                        "right": {
+                          "type": "function_call",
+                          "function": {
+                            "type": "attribute",
+                            "object": {
+                              "type": "helper",
+                              "name": "str",
+                              "args": [
+                                {
+                                  "type": "binary_op",
+                                  "left": {
+                                    "type": "name",
+                                    "name": "i"
+                                  },
+                                  "op": "+",
+                                  "right": {
+                                    "type": "constant",
+                                    "value": 1
+                                  }
+                                }
+                              ]
+                            },
+                            "attr": "zfill"
+                          },
+                          "args": [
+                            {
+                              "type": "constant",
+                              "value": 2
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "return",
+                      "value": {
+                        "type": "constant",
+                        "value": false
+                      }
+                    }
+                  ]
+                }
+              ],
+              "var": "i"
+            },
+            {
+              "type": "return",
+              "value": {
+                "type": "constant",
+                "value": true
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
 }

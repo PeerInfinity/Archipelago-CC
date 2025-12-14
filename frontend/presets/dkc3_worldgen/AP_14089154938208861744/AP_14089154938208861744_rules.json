@@ -33,25 +33,36 @@
             "name": "Overworld 2",
             "connected_region": "Overworld 2",
             "access_rule": {
-              "type": "item_check",
-              "item": "Progressive Boat Upgrade"
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Progressive Boat Upgrade",
+                "count": 1
+              }
             }
           },
           {
             "name": "Overworld 4",
             "connected_region": "Overworld 4",
             "access_rule": {
-              "type": "and",
-              "conditions": [
+              "rule": "And",
+              "options": [],
+              "children": [
                 {
-                  "type": "item_check",
-                  "item": "DK Coin",
-                  "count": 30
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Progressive Boat Upgrade",
+                    "count": 3
+                  }
                 },
                 {
-                  "type": "item_check",
-                  "item": "Progressive Boat Upgrade",
-                  "count": 3
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "DK Coin",
+                    "count": 1
+                  }
                 }
               ]
             }
@@ -98,9 +109,12 @@
             "name": "Overworld 3",
             "connected_region": "Overworld 3",
             "access_rule": {
-              "type": "item_check",
-              "item": "Progressive Boat Upgrade",
-              "count": 3
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Progressive Boat Upgrade",
+                "count": 3
+              }
             }
           },
           {
@@ -355,8 +369,9 @@
             "name": "Arich's Hoard Region",
             "connected_region": "Arich's Hoard Region",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -487,8 +502,9 @@
             "name": "Sky-High Secret Region",
             "connected_region": "Sky-High Secret Region",
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             }
           }
         ],
@@ -695,54 +711,72 @@
             "name": "Stampede Sprint",
             "connected_region": "Stampede Sprint",
             "access_rule": {
-              "type": "item_check",
-              "item": "Bonus Coin",
-              "count": 15
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Bonus Coin",
+                "count": 1
+              }
             }
           },
           {
             "name": "Criss Kross Cliffs",
             "connected_region": "Criss Kross Cliffs",
             "access_rule": {
-              "type": "item_check",
-              "item": "Bonus Coin",
-              "count": 30
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Bonus Coin",
+                "count": 1
+              }
             }
           },
           {
             "name": "Tyrant Twin Tussle",
             "connected_region": "Tyrant Twin Tussle",
             "access_rule": {
-              "type": "item_check",
-              "item": "Bonus Coin",
-              "count": 45
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Bonus Coin",
+                "count": 1
+              }
             }
           },
           {
             "name": "Swoopy Salvo",
             "connected_region": "Swoopy Salvo",
             "access_rule": {
-              "type": "item_check",
-              "item": "Bonus Coin",
-              "count": 60
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Bonus Coin",
+                "count": 1
+              }
             }
           },
           {
             "name": "Rocket Rush",
             "connected_region": "Rocket Rush",
             "access_rule": {
-              "type": "item_check",
-              "item": "Bonus Coin",
-              "count": 75
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Bonus Coin",
+                "count": 1
+              }
             }
           },
           {
             "name": "Kastle KAOS Region",
             "connected_region": "Kastle KAOS Region",
             "access_rule": {
-              "type": "item_check",
-              "item": "Krematoa Cog",
-              "count": 5
+              "rule": "Has",
+              "options": [],
+              "args": {
+                "item_name": "Krematoa Cog",
+                "count": 5
+              }
             }
           }
         ],
@@ -3966,6 +4000,190 @@
       "Progressive Boat Upgrade": 3
     }
   },
+  "canonical_placements": {
+    "1": {
+      "Lakeside Limbo - Flag": "Bear Coin",
+      "Lakeside Limbo - Bonus 1": "Bear Coin",
+      "Lakeside Limbo - Bonus 2": "DK Coin",
+      "Lakeside Limbo - DK Coin": "DK Coin",
+      "Doorstop Dash - Flag": "DK Coin",
+      "Doorstop Dash - Bonus 1": "1-Up Balloon",
+      "Doorstop Dash - Bonus 2": "Bonus Coin",
+      "Doorstop Dash - DK Coin": "Bonus Coin",
+      "Tidal Trouble - Flag": "Bonus Coin",
+      "Tidal Trouble - Bonus 1": "DK Coin",
+      "Tidal Trouble - Bonus 2": "Progressive Boat Upgrade",
+      "Tidal Trouble - DK Coin": "Bonus Coin",
+      "Skidda's Row - Flag": "Bonus Coin",
+      "Skidda's Row - Bonus 1": "DK Coin",
+      "Skidda's Row - Bonus 2": "Bonus Coin",
+      "Skidda's Row - DK Coin": "Bonus Coin",
+      "Murky Mill - Flag": "Bonus Coin",
+      "Murky Mill - Bonus 1": "1-Up Balloon",
+      "Murky Mill - Bonus 2": "Bonus Coin",
+      "Murky Mill - DK Coin": "1-Up Balloon",
+      "Barrel Shield Bust-Up - Flag": "Bonus Coin",
+      "Barrel Shield Bust-Up - Bonus 1": "Bear Coin",
+      "Barrel Shield Bust-Up - Bonus 2": "Bear Coin",
+      "Barrel Shield Bust-Up - DK Coin": "DK Coin",
+      "Riverside Race - Flag": "1-Up Balloon",
+      "Riverside Race - Bonus 1": "Bear Coin",
+      "Riverside Race - Bonus 2": "DK Coin",
+      "Riverside Race - DK Coin": "Bonus Coin",
+      "Squeals On Wheels - Flag": "Progressive Boat Upgrade",
+      "Squeals On Wheels - Bonus 1": "Bonus Coin",
+      "Squeals On Wheels - Bonus 2": "Bonus Coin",
+      "Squeals On Wheels - DK Coin": "Progressive Boat Upgrade",
+      "Springin' Spiders - Flag": "Bonus Coin",
+      "Springin' Spiders - Bonus 1": "DK Coin",
+      "Springin' Spiders - Bonus 2": "Bonus Coin",
+      "Springin' Spiders - DK Coin": "1-Up Balloon",
+      "Bobbing Barrel Brawl - Flag": "Bonus Coin",
+      "Bobbing Barrel Brawl - Bonus 1": "1-Up Balloon",
+      "Bobbing Barrel Brawl - Bonus 2": "Bonus Coin",
+      "Bobbing Barrel Brawl - DK Coin": "DK Coin",
+      "Bazza's Blockade - Flag": "Krematoa Cog",
+      "Bazza's Blockade - Bonus 1": "1-Up Balloon",
+      "Bazza's Blockade - Bonus 2": "DK Coin",
+      "Bazza's Blockade - DK Coin": "Bonus Coin",
+      "Rocket Barrel Ride - Flag": "1-Up Balloon",
+      "Rocket Barrel Ride - Bonus 1": "Bonus Coin",
+      "Rocket Barrel Ride - Bonus 2": "1-Up Balloon",
+      "Rocket Barrel Ride - DK Coin": "1-Up Balloon",
+      "Kreeping Klasps - Flag": "Bonus Coin",
+      "Kreeping Klasps - Bonus 1": "Bonus Coin",
+      "Kreeping Klasps - Bonus 2": "DK Coin",
+      "Kreeping Klasps - DK Coin": "Bonus Coin",
+      "Tracker Barrel Trek - Flag": "Bear Coin",
+      "Tracker Barrel Trek - Bonus 1": "Bear Coin",
+      "Tracker Barrel Trek - Bonus 2": "Bonus Coin",
+      "Tracker Barrel Trek - DK Coin": "Bonus Coin",
+      "Fish Food Frenzy - Flag": "Krematoa Cog",
+      "Fish Food Frenzy - Bonus 1": "Bonus Coin",
+      "Fish Food Frenzy - Bonus 2": "Bonus Coin",
+      "Fish Food Frenzy - DK Coin": "Bonus Coin",
+      "Fire-Ball Frenzy - Flag": "Bear Coin",
+      "Fire-Ball Frenzy - Bonus 1": "Bear Coin",
+      "Fire-Ball Frenzy - Bonus 2": "Bonus Coin",
+      "Fire-Ball Frenzy - DK Coin": "Bonus Coin",
+      "Demolition Drain-Pipe - Flag": "1-Up Balloon",
+      "Demolition Drain-Pipe - Bonus 1": "Bonus Coin",
+      "Demolition Drain-Pipe - Bonus 2": "1-Up Balloon",
+      "Demolition Drain-Pipe - DK Coin": "Bonus Coin",
+      "Ripsaw Rage - Flag": "Bonus Coin",
+      "Ripsaw Rage - Bonus 1": "Bonus Coin",
+      "Ripsaw Rage - Bonus 2": "Bonus Coin",
+      "Ripsaw Rage - DK Coin": "Bear Coin",
+      "Blazing Bazukas - Flag": "Bonus Coin",
+      "Blazing Bazukas - Bonus 1": "DK Coin",
+      "Blazing Bazukas - Bonus 2": "Krematoa Cog",
+      "Blazing Bazukas - DK Coin": "DK Coin",
+      "Low-G Labyrinth - Flag": "DK Coin",
+      "Low-G Labyrinth - Bonus 1": "Bonus Coin",
+      "Low-G Labyrinth - Bonus 2": "Bear Coin",
+      "Low-G Labyrinth - DK Coin": "Bonus Coin",
+      "Krevice Kreepers - Flag": "Bonus Coin",
+      "Krevice Kreepers - Bonus 1": "Bonus Coin",
+      "Krevice Kreepers - Bonus 2": "DK Coin",
+      "Krevice Kreepers - DK Coin": "1-Up Balloon",
+      "Tearaway Toboggan - Flag": "1-Up Balloon",
+      "Tearaway Toboggan - Bonus 1": "Bonus Coin",
+      "Tearaway Toboggan - Bonus 2": "DK Coin",
+      "Tearaway Toboggan - DK Coin": "Bonus Coin",
+      "Barrel Drop Bounce - Flag": "Bonus Coin",
+      "Barrel Drop Bounce - Bonus 1": "Bear Coin",
+      "Barrel Drop Bounce - Bonus 2": "DK Coin",
+      "Barrel Drop Bounce - DK Coin": "DK Coin",
+      "Krack-Shot Kroc - Flag": "Bonus Coin",
+      "Krack-Shot Kroc - Bonus 1": "Bear Coin",
+      "Krack-Shot Kroc - Bonus 2": "DK Coin",
+      "Krack-Shot Kroc - DK Coin": "DK Coin",
+      "Lemguin Lunge - Flag": "DK Coin",
+      "Lemguin Lunge - Bonus 1": "1-Up Balloon",
+      "Lemguin Lunge - Bonus 2": "1-Up Balloon",
+      "Lemguin Lunge - DK Coin": "Bonus Coin",
+      "Buzzer Barrage - Flag": "Bonus Coin",
+      "Buzzer Barrage - Bonus 1": "Bonus Coin",
+      "Buzzer Barrage - Bonus 2": "Bonus Coin",
+      "Buzzer Barrage - DK Coin": "Bonus Coin",
+      "Kong-Fused Cliffs - Flag": "Bonus Coin",
+      "Kong-Fused Cliffs - Bonus 1": "Bonus Coin",
+      "Kong-Fused Cliffs - Bonus 2": "Bonus Coin",
+      "Kong-Fused Cliffs - DK Coin": "1-Up Balloon",
+      "Floodlit Fish - Flag": "1-Up Balloon",
+      "Floodlit Fish - Bonus 1": "Krematoa Cog",
+      "Floodlit Fish - Bonus 2": "Bonus Coin",
+      "Floodlit Fish - DK Coin": "1-Up Balloon",
+      "Pothole Panic - Flag": "Bonus Coin",
+      "Pothole Panic - Bonus 1": "Bonus Coin",
+      "Pothole Panic - Bonus 2": "Bonus Coin",
+      "Pothole Panic - DK Coin": "Bonus Coin",
+      "Ropey Rumpus - Flag": "Bonus Coin",
+      "Ropey Rumpus - Bonus 1": "1-Up Balloon",
+      "Ropey Rumpus - Bonus 2": "DK Coin",
+      "Ropey Rumpus - DK Coin": "1-Up Balloon",
+      "Konveyor Rope Klash - Flag": "1-Up Balloon",
+      "Konveyor Rope Klash - Bonus 1": "Bonus Coin",
+      "Konveyor Rope Klash - Bonus 2": "Bonus Coin",
+      "Konveyor Rope Klash - DK Coin": "Bonus Coin",
+      "Creepy Caverns - Flag": "Bonus Coin",
+      "Creepy Caverns - Bonus 1": "Bonus Coin",
+      "Creepy Caverns - Bonus 2": "Bonus Coin",
+      "Creepy Caverns - DK Coin": "DK Coin",
+      "Lightning Lookout - Flag": "Bonus Coin",
+      "Lightning Lookout - Bonus 1": "Bonus Coin",
+      "Lightning Lookout - Bonus 2": "Bonus Coin",
+      "Lightning Lookout - DK Coin": "1-Up Balloon",
+      "Koindozer Klamber - Flag": "Bonus Coin",
+      "Koindozer Klamber - Bonus 1": "DK Coin",
+      "Koindozer Klamber - Bonus 2": "DK Coin",
+      "Koindozer Klamber - DK Coin": "Bonus Coin",
+      "Poisonous Pipeline - Flag": "Bonus Coin",
+      "Poisonous Pipeline - Bonus 1": "DK Coin",
+      "Poisonous Pipeline - Bonus 2": "Bonus Coin",
+      "Poisonous Pipeline - DK Coin": "1-Up Balloon",
+      "Stampede Sprint - Flag": "Bonus Coin",
+      "Stampede Sprint - Bonus 1": "1-Up Balloon",
+      "Stampede Sprint - Bonus 2": "Bear Coin",
+      "Stampede Sprint - Bonus 3": "Bonus Coin",
+      "Stampede Sprint - DK Coin": "DK Coin",
+      "Criss Kross Cliffs - Flag": "Bonus Coin",
+      "Criss Kross Cliffs - Bonus 1": "Bonus Coin",
+      "Criss Kross Cliffs - Bonus 2": "DK Coin",
+      "Criss Kross Cliffs - DK Coin": "Bonus Coin",
+      "Tyrant Twin Tussle - Flag": "1-Up Balloon",
+      "Tyrant Twin Tussle - Bonus 1": "DK Coin",
+      "Tyrant Twin Tussle - Bonus 2": "Bonus Coin",
+      "Tyrant Twin Tussle - Bonus 3": "Bonus Coin",
+      "Tyrant Twin Tussle - DK Coin": "Bear Coin",
+      "Swoopy Salvo - Flag": "Bonus Coin",
+      "Swoopy Salvo - Bonus 1": "Bonus Coin",
+      "Swoopy Salvo - Bonus 2": "DK Coin",
+      "Swoopy Salvo - Bonus 3": "Bonus Coin",
+      "Swoopy Salvo - DK Coin": "Bonus Coin",
+      "Rocket Rush - Flag": "Krematoa Cog",
+      "Rocket Rush - DK Coin": "Bear Coin",
+      "Belcha's Barn": "Bonus Coin",
+      "Arich's Ambush": "DK Coin",
+      "Squirt's Showdown": "DK Coin",
+      "KAOS Karnage": "DK Coin",
+      "Bleak's House": "DK Coin",
+      "Barbos's Barrier": "DK Coin",
+      "Kastle KAOS": "Donkey Kong",
+      "Knautilus": "DK Coin",
+      "Belcha's Burrow": "Bonus Coin",
+      "Kong Cave": "Bonus Coin",
+      "Undercover Cove": "DK Coin",
+      "K's Cache": "Bear Coin",
+      "Hill-Top Hoard": "DK Coin",
+      "Bounty Beach": "Bear Coin",
+      "Smuggler's Cove": "1-Up Balloon",
+      "Arich's Hoard": "DK Coin",
+      "Bounty Bay": "Bonus Coin",
+      "Glacial Grotto": "DK Coin",
+      "Sewer Stockpile": "DK Coin"
+    }
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -3976,7 +4194,21 @@
     "1": {
       "game": "Donkey Kong Country 3 WorldGen",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": false,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      }
     }
   },
   "game_info": {
@@ -3984,6 +4216,77 @@
       "name": "Donkey Kong Country 3 WorldGen",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "jungle",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up the Donkey Kong Country 3 randomizer connected to an Archipelago Multiworld.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "PoryGone"
+          ]
+        }
+      ],
+      "world_description": "Donkey Kong Country 3 is an action platforming game.\nPlay as Dixie Kong and her baby cousin Kiddy as they try to solve the\nmystery of why Donkey Kong and Diddy disappeared while on vacation.",
+      "slot_data": {
+        "active_levels": [
+          "Lakeside Limbo",
+          "Doorstop Dash",
+          "Tidal Trouble",
+          "Skidda's Row",
+          "Murky Mill",
+          "Barrel Shield Bust-Up",
+          "Riverside Race",
+          "Squeals On Wheels",
+          "Springin' Spiders",
+          "Bobbing Barrel Brawl",
+          "Bazza's Blockade",
+          "Rocket Barrel Ride",
+          "Kreeping Klasps",
+          "Tracker Barrel Trek",
+          "Fish Food Frenzy",
+          "Fire-Ball Frenzy",
+          "Demolition Drain-Pipe",
+          "Ripsaw Rage",
+          "Blazing Bazukas",
+          "Low-G Labyrinth",
+          "Krevice Kreepers",
+          "Tearaway Toboggan",
+          "Barrel Drop Bounce",
+          "Krack-Shot Kroc",
+          "Lemguin Lunge",
+          "Buzzer Barrage",
+          "Kong-Fused Cliffs",
+          "Floodlit Fish",
+          "Pothole Panic",
+          "Ropey Rumpus",
+          "Konveyor Rope Klash",
+          "Creepy Caverns",
+          "Lightning Lookout",
+          "Koindozer Klamber",
+          "Poisonous Pipeline",
+          "Stampede Sprint",
+          "Criss Kross Cliffs",
+          "Tyrant Twin Tussle",
+          "Swoopy Salvo"
+        ],
+        "goal": 0,
+        "krematoa_bonus_coin_cost": 15,
+        "percentage_of_extra_bonus_coins": 100,
+        "number_of_banana_birds": 15,
+        "percentage_of_banana_birds": 100,
+        "dk_coins_for_gyrocopter": 30,
+        "kongsanity": 0,
+        "level_shuffle": 0,
+        "difficulty": 0,
+        "autosave": 1,
+        "merry": 0,
+        "music_shuffle": 0,
+        "kong_palette_swap": 0,
+        "starting_life_count": 5
       }
     }
   },

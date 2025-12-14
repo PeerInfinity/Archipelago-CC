@@ -149,17 +149,17 @@ def set_rules(world: "World") -> None:
     # Location rules
     world.set_rule(
         multiworld.get_location("Tree Zone 2 - Normal Exit", player),
-        (True_()) | (Has("Tree Zone 2 Midway Bell"))
+        (HasAny('Pipe Traversal', 'Pipe Traversal - Right')) | (Has("Tree Zone 2 Midway Bell"))
     )
 
     world.set_rule(
         multiworld.get_location("Tree Zone 2 - Secret Exit", player),
-        (True_()) & (Has("Carrot"))
+        (HasAny('Pipe Traversal', 'Pipe Traversal - Right')) & (Has("Carrot"))
     )
 
     world.set_rule(
         multiworld.get_location("Tree Zone 2 - Midway Bell", player),
-        (True_()) | (Has("Tree Zone 2 Midway Bell"))
+        (HasAny('Pipe Traversal', 'Pipe Traversal - Right')) | (Has("Tree Zone 2 Midway Bell"))
     )
 
     world.set_rule(
@@ -169,17 +169,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Tree Zone 4 - Normal Exit", player),
-        (True_()) & (True_())
+        (((HasAny('Pipe Traversal', 'Pipe Traversal - Right')) & (HasAny('Pipe Traversal', 'Pipe Traversal - Up'))) | (Has("Tree Zone 4 Midway Bell"))) & (HasAny('Pipe Traversal', 'Pipe Traversal - Down'))
     )
 
     world.set_rule(
         multiworld.get_location("Tree Zone 4 - Midway Bell", player),
-        ((True_()) & (True_())) | (Has("Tree Zone 4 Midway Bell"))
+        ((HasAny('Pipe Traversal', 'Pipe Traversal - Right')) & (HasAny('Pipe Traversal', 'Pipe Traversal - Up'))) | (Has("Tree Zone 4 Midway Bell"))
     )
 
     world.set_rule(
         multiworld.get_location("Tree Zone 5 - Boss", player),
-        (True_()) & ((True_()) | (Has("Carrot")))
+        ((HasAny('Pipe Traversal', 'Pipe Traversal - Up')) | (Has("Carrot"))) & (HasAny('Pipe Traversal', 'Pipe Traversal - Right'))
     )
 
     world.set_rule(
@@ -209,62 +209,62 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Macro Zone 1 - Normal Exit", player),
-        (True_()) | (Has("Macro Zone 1 Midway Bell"))
+        (HasAny('Pipe Traversal', 'Pipe Traversal - Down')) | (Has("Macro Zone 1 Midway Bell"))
     )
 
     world.set_rule(
         multiworld.get_location("Macro Zone 1 - Secret Exit", player),
-        (True_()) & (True_()) & (Has("Fire Flower"))
+        ((HasAny('Pipe Traversal', 'Pipe Traversal - Down')) | (Has("Macro Zone 1 Midway Bell"))) & (HasAny('Pipe Traversal', 'Pipe Traversal - Up')) & (Has("Fire Flower"))
     )
 
     world.set_rule(
         multiworld.get_location("Macro Zone 1 - Midway Bell", player),
-        (True_()) | (Has("Macro Zone 1 Midway Bell"))
+        (HasAny('Pipe Traversal', 'Pipe Traversal - Down')) | (Has("Macro Zone 1 Midway Bell"))
     )
 
     world.set_rule(
         multiworld.get_location("Macro Zone 2 - Normal Exit", player),
-        (True_()) & (True_()) & ((True_()) | (Has("Macro Zone 2 Midway Bell"))) & (Has("Water Physics"))
+        (True_()) & ((HasAny('Pipe Traversal', 'Pipe Traversal - Down')) | (Has("Macro Zone 2 Midway Bell"))) & (HasAny('Pipe Traversal', 'Pipe Traversal - Up')) & (Has("Water Physics"))
     )
 
     world.set_rule(
         multiworld.get_location("Macro Zone 2 - Midway Bell", player),
-        ((True_()) & (Has("Water Physics"))) | (Has("Macro Zone 2 Midway Bell"))
+        ((HasAny('Pipe Traversal', 'Pipe Traversal - Down')) & (Has("Water Physics"))) | (Has("Macro Zone 2 Midway Bell"))
     )
 
     world.set_rule(
         multiworld.get_location("Macro Zone 3 - Normal Exit", player),
-        ((True_()) & (True_())) | (Has("Macro Zone 3 Midway Bell"))
+        ((HasAny('Pipe Traversal', 'Pipe Traversal - Down')) & (HasAny('Pipe Traversal', 'Pipe Traversal - Up'))) | (Has("Macro Zone 3 Midway Bell"))
     )
 
     world.set_rule(
         multiworld.get_location("Macro Zone 3 - Midway Bell", player),
-        ((True_()) & (True_())) | (Has("Macro Zone 3 Midway Bell"))
+        ((HasAny('Pipe Traversal', 'Pipe Traversal - Down')) & (HasAny('Pipe Traversal', 'Pipe Traversal - Up'))) | (Has("Macro Zone 3 Midway Bell"))
     )
 
     world.set_rule(
         multiworld.get_location("Macro Zone 4 - Boss", player),
-        True_()
+        HasAny('Pipe Traversal', 'Pipe Traversal - Right')
     )
 
     world.set_rule(
         multiworld.get_location("Pumpkin Zone 1 - Normal Exit", player),
-        True_()
+        ((True_()) & (HasAny('Pipe Traversal', 'Pipe Traversal - Down'))) | (Has("Pumpkin Zone 1 Midway Bell"))
     )
 
     world.set_rule(
         multiworld.get_location("Pumpkin Zone 1 - Midway Bell", player),
-        ((True_()) & (True_())) | (Has("Pumpkin Zone 1 Midway Bell"))
+        ((True_()) & (HasAny('Pipe Traversal', 'Pipe Traversal - Down'))) | (Has("Pumpkin Zone 1 Midway Bell"))
     )
 
     world.set_rule(
         multiworld.get_location("Pumpkin Zone 2 - Normal Exit", player),
-        (True_()) & (True_()) & (True_()) & (True_()) & (Has("Water Physics"))
+        (True_()) & (HasAny('Pipe Traversal', 'Pipe Traversal - Down')) & (HasAny('Pipe Traversal', 'Pipe Traversal - Right')) & (HasAny('Pipe Traversal', 'Pipe Traversal - Up')) & (Has("Water Physics"))
     )
 
     world.set_rule(
         multiworld.get_location("Pumpkin Zone 2 - Secret Exit", player),
-        (True_()) & (HasAny('Fire Flower', 'Mushroom'))
+        ((True_()) & (HasAny('Pipe Traversal', 'Pipe Traversal - Down')) & (HasAny('Pipe Traversal', 'Pipe Traversal - Right')) & (HasAny('Pipe Traversal', 'Pipe Traversal - Up')) & (Has("Water Physics"))) & (HasAny('Fire Flower', 'Mushroom'))
     )
 
     world.set_rule(
@@ -274,22 +274,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Pumpkin Zone 4 - Boss", player),
-        True_()
+        HasAny('Pipe Traversal', 'Pipe Traversal - Right')
     )
 
     world.set_rule(
         multiworld.get_location("Mario Zone 1 - Normal Exit", player),
-        (True_()) & ((True_()) | (HasAny('Carrot', 'Fire Flower', 'Mario Zone 1 Midway Bell', 'Mushroom')))
+        ((True_()) | (HasAny('Carrot', 'Fire Flower', 'Mario Zone 1 Midway Bell', 'Mushroom'))) & (HasAny('Pipe Traversal', 'Pipe Traversal - Right'))
     )
 
     world.set_rule(
         multiworld.get_location("Mario Zone 1 - Midway Bell", player),
-        ((True_()) & (HasAny('Carrot', 'Fire Flower', 'Mushroom'))) | (Has("Mario Zone 1 Midway Bell"))
+        ((HasAny('Carrot', 'Fire Flower', 'Mushroom')) & (HasAny('Pipe Traversal', 'Pipe Traversal - Right'))) | (Has("Mario Zone 1 Midway Bell"))
     )
 
     world.set_rule(
         multiworld.get_location("Mario Zone 4 - Boss", player),
-        True_()
+        HasAny('Pipe Traversal', 'Pipe Traversal - Right')
     )
 
     world.set_rule(
@@ -299,12 +299,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Turtle Zone 2 - Normal Exit", player),
-        (True_()) & (True_()) & (True_()) & (True_()) & (True_()) & (Has("Water Physics"))
+        (True_()) & (HasAny('Pipe Traversal', 'Pipe Traversal - Down')) & (HasAny('Pipe Traversal', 'Pipe Traversal - Left')) & (HasAny('Pipe Traversal', 'Pipe Traversal - Right')) & (HasAny('Pipe Traversal', 'Pipe Traversal - Up')) & (Has("Water Physics"))
     )
 
     world.set_rule(
         multiworld.get_location("Turtle Zone 2 - Secret Exit", player),
-        (True_()) & (True_()) & (Has("Water Physics"))
+        (True_()) & (HasAny('Pipe Traversal', 'Pipe Traversal - Up')) & (Has("Water Physics"))
     )
 
     world.set_rule(
@@ -314,7 +314,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Turtle Zone 3 - Boss", player),
-        True_()
+        HasAny('Pipe Traversal', 'Pipe Traversal - Right')
     )
 
     world.set_rule(
@@ -324,5 +324,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mario's Castle - Wario", player),
-        ((True_()) & (True_())) | (Has("Mario's Castle Midway Bell"))
+        ((HasAny('Pipe Traversal', 'Pipe Traversal - Left')) & (HasAny('Pipe Traversal', 'Pipe Traversal - Right'))) | (Has("Mario's Castle Midway Bell"))
     )

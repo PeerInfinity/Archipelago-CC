@@ -7,7 +7,7 @@ The world class must inherit from RuleWorldMixin to use these rules.
 
 from typing import TYPE_CHECKING
 
-from rule_builder import True_, False_, CanReachRegion, Has
+from rule_builder import True_, False_
 
 if TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -24,45 +24,45 @@ def set_rules(world: "World") -> None:
     # Entrance rules
     world.set_rule(
         multiworld.get_entrance("Homelanda -> Oaklaville", player),
-        Has("Homelanda stamp")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Oaklaville -> Stanhamn", player),
-        Has("Oaklaville stamp", 8)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Stanhamn -> Logcity", player),
-        Has("Stanhamn stamp", 8)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Logcity -> Kiiruberg", player),
-        Has("Logcity stamp", 8)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Kiiruberg -> Mountain Top", player),
-        Has("Kiiruberg stamp", 8)
+        True_()
     )
     # Location rules
     world.set_rule(
         multiworld.get_location("Quest - Experience TOEM", player),
-        CanReachRegion("Mountain Top")
-    )
-
-    world.set_rule(
-        multiworld.get_location("Quest - Monster spotting", player),
-        CanReachRegion("Kiiruberg")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest - Ghost helper!", player),
-        CanReachRegion("Logcity")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_location("Quest - Monster spotting", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_location("Quest - Ancient paintings", player),
-        CanReachRegion("Mountain Top")
+        True_()
     )

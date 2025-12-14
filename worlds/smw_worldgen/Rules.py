@@ -264,12 +264,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Front Door -> Bowser - Region", player),
-        (Has("Boss Token", 7)) & (Has("Climb")) & (Has("Progressive Powerup")) & (Has("Run")) & (Has("Swim"))
+        (Has("Boss Token")) & (Has("Climb")) & (Has("Progressive Powerup")) & (Has("Run")) & (Has("Swim"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Back Door -> Bowser - Region", player),
-        Has("Boss Token", 7)
+        Has("Boss Token")
     )
 
     world.set_rule(

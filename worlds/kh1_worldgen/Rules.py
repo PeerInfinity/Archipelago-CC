@@ -7,7 +7,7 @@ The world class must inherit from RuleWorldMixin to use these rules.
 
 from typing import TYPE_CHECKING
 
-from rule_builder import True_, False_, Has, HasAll, HasAny, HasGroup, True_
+from rule_builder import True_, False_, False_, Has, HasAll, HasAllCounts, HasAny, HasGroup, True_
 
 if TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -79,7 +79,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Traverse Town 1st District Blue Trinity Balcony Chest", player),
-        ((True_()) & (Has("Progressive Glide"))) | ((Has("Blue Trinity")) & (Has("Progressive Glide")))
+        ((False_()) & (Has("Progressive Glide"))) | ((Has("Blue Trinity")) & (Has("Progressive Glide")))
     )
 
     world.set_rule(
@@ -169,42 +169,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Traverse Town Item Workshop Left Chest", player),
-        ((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))
+        ((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Item Workshop Postcard", player),
-        ((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))
+        ((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Item Workshop Right Chest", player),
-        ((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))
+        ((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Kairi Secret Waterway Oathkeeper Event", player),
-        ((True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))) & (True_()) & (Has("Hollow Bastion"))
+        ((True_()) & (HasAll())) & (True_()) & (Has("Hollow Bastion"))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Magician's Study Blue Trinity", player),
-        HasAll('Blue Trinity', 'Progressive Fire')
+        HasAll()
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Magician's Study Obtained All Arts Items", player),
-        ((True_()) & (HasAll('Aero Arts', 'Blizzard Arts', 'Cure Arts', 'Fire Arts', 'Gravity Arts', 'Stop Arts', 'Thunder Arts')) & (True_())) & (HasAll('Fire Arts', 'Blizzard Arts', 'Thunder Arts', 'Cure Arts', 'Gravity Arts', 'Stop Arts', 'Aero Arts'))
+        ((True_()) & (HasAll()) & (HasAllCounts({'Progressive Aero': 1, 'Progressive Blizzard': 1, 'Progressive Cure': 1, 'Progressive Fire': 1, 'Progressive Gravity': 1, 'Progressive Stop': 1, 'Progressive Thunder': 1}))) & (HasAll('Fire Arts', 'Blizzard Arts', 'Thunder Arts', 'Cure Arts', 'Gravity Arts', 'Stop Arts', 'Aero Arts'))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Magician's Study Obtained All LV1 Magic", player),
-        True_()
+        HasAllCounts({'Progressive Aero': 1, 'Progressive Blizzard': 1, 'Progressive Cure': 1, 'Progressive Fire': 1, 'Progressive Gravity': 1, 'Progressive Stop': 1, 'Progressive Thunder': 1})
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Magician's Study Obtained All LV3 Magic", player),
-        True_()
+        HasAllCounts({'Progressive Aero': 3, 'Progressive Blizzard': 3, 'Progressive Cure': 3, 'Progressive Fire': 3, 'Progressive Gravity': 3, 'Progressive Stop': 3, 'Progressive Thunder': 3})
     )
 
     world.set_rule(
@@ -259,12 +259,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Traverse Town Mystical House Glide Chest", player),
-        (((True_()) & ((((Has("Air Combo Plus", 2)) | (Has("High Jump"))) & (Has("Combo Master"))) | (Has("Mermaid Kick")))) | ((True_()) & (((((Has("Air Combo Plus", 2)) & (Has("High Jump"))) | (Has("High Jump", 2))) & (Has("Combo Master"))) | (Has("High Jump", 3)))) | (Has("Progressive Glide"))) & (Has("Progressive Fire"))
+        (((False_()) & (((((Has("Air Combo Plus", 2)) & (Has("High Jump"))) | (Has("High Jump", 2))) & (Has("Combo Master"))) | (Has("High Jump", 3)))) | ((False_()) & ((((Has("Air Combo Plus", 2)) | (Has("High Jump"))) & (Has("Combo Master"))) | (Has("Mermaid Kick")))) | (Has("Progressive Glide"))) & (Has("Progressive Fire"))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Mystical House Yellow Trinity Chest", player),
-        (((True_()) & (Has("High Jump", 2))) | ((True_()) & (Has("High Jump"))) | (Has("Yellow Trinity"))) & (Has("Progressive Fire"))
+        (((False_()) & (Has("High Jump"))) | ((True_()) & (Has("High Jump", 2))) | (Has("Yellow Trinity"))) & (Has("Progressive Fire"))
     )
 
     world.set_rule(
@@ -329,7 +329,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Traverse Town Secret Waterway Navi Gummi Event", player),
-        ((True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))) & (True_()) & (Has("Hollow Bastion"))
+        ((True_()) & (HasAll())) & (True_()) & (Has("Hollow Bastion"))
     )
 
     world.set_rule(
@@ -339,177 +339,177 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth 15 Items", player),
-        (True_()) & (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity")))
+        (True_()) & (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity")))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 01", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 02", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 03", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 04", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 05", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 06", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 07", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 08", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 09", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 10", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 11", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 12", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 13", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 14", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 15", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 16", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 17", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 18", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 19", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 20", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 21", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 22", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 23", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 24", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 25", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 26", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 27", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 28", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 29", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 30", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 31", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 32", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Traverse Town Synth Item 33", player),
-        (((True_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
+        (((False_()) & (Has("High Jump", 2))) | (Has("Green Trinity"))) & (Has("Mythril", 16)) & (Has("Orichalcum", 17))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Bizarre Room Examine Flower Pot", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
@@ -519,27 +519,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Wonderland Bizarre Room Lamp Chest", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Bizarre Room Navi-G Piece Event", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Bizarre Room Read Book", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Defeat Trickmaster Blizzard Event", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Defeat Trickmaster Ifrit's Horn Event", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
@@ -549,62 +549,62 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Wonderland Lotus Forest Blue Trinity by Moving Boulder", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (Has("Blue Trinity"))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (Has("Blue Trinity"))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Lotus Forest Corner Chest", player),
-        ((True_()) & (HasAny('High Jump', 'Progressive Glide'))) | (True_()) | (HasAll('High Jump', 'Progressive Glide'))
+        ((True_()) & (HasAny())) | (False_()) | (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Lotus Forest Glide Chest", player),
-        (((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (True_()) & (((HasGroup("Magic")) & (Has("Dumbo"))) | (Has("High Jump")))) | ((True_()) & (True_())) | (Has("Progressive Glide"))
+        (((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (False_()) & (((HasGroup("Magic")) & (Has("Dumbo"))) | (Has("High Jump")))) | ((False_()) & (HasAllCounts({'Air Combo Plus': 2, 'Combo Master': 1, 'High Jump': 3}))) | (Has("Progressive Glide"))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Lotus Forest Red Flower Raise Lily Pads", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Lotus Forest Through the Painting Thunder Plant Chest", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (Has("Progressive Thunder"))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (Has("Progressive Thunder"))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Lotus Forest Through the Painting White Trinity Chest", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (Has("White Trinity"))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (Has("White Trinity"))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Lotus Forest Thunder Plant Chest", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (Has("Progressive Thunder"))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (Has("Progressive Thunder"))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Lotus Forest Yellow Elixir Flower Through Painting", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Queen's Castle Hedge Left Red Chest", player),
-        ((True_()) & (Has("Progressive Glide"))) | ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) | (Has("High Jump"))
+        ((True_()) & (Has("Progressive Glide"))) | ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) | (Has("High Jump"))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Queen's Castle Hedge Right Blue Chest", player),
-        ((True_()) & (Has("Progressive Glide"))) | ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) | (Has("High Jump"))
+        ((True_()) & (Has("Progressive Glide"))) | ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) | (Has("High Jump"))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Queen's Castle Hedge Right Red Chest", player),
-        ((True_()) & (Has("Progressive Glide"))) | ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) | (Has("High Jump"))
+        ((True_()) & (Has("Progressive Glide"))) | ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) | (Has("High Jump"))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Rabbit Hole Defeat Heartless 3 Chest", player),
-        ((True_()) & (True_())) | (True_()) | (True_())
+        ((False_()) & (True_())) | (False_()) | (True_())
     )
 
     world.set_rule(
@@ -614,52 +614,52 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Wonderland Tea Party Garden Above Lotus Forest Entrance 1st Chest", player),
-        (((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (True_()) & (Has("High Jump", 2))) | (((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (True_()) & (((HasGroup("Magic")) & (Has("Dumbo"))) | (Has("High Jump")))) | ((True_()) & (True_())) | (Has("Progressive Glide"))
+        (((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (False_()) & (((HasGroup("Magic")) & (Has("Dumbo"))) | (Has("High Jump")))) | (((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (True_()) & (Has("High Jump", 2))) | ((False_()) & (HasAllCounts({'Air Combo Plus': 2, 'Combo Master': 1, 'High Jump': 3}))) | (Has("Progressive Glide"))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Tea Party Garden Above Lotus Forest Entrance 2nd Chest", player),
-        (((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (True_()) & (Has("High Jump", 2))) | (((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (True_()) & (((HasGroup("Magic")) & (Has("Dumbo"))) | (Has("High Jump")))) | ((True_()) & (True_())) | (Has("Progressive Glide"))
+        (((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (False_()) & (((HasGroup("Magic")) & (Has("Dumbo"))) | (Has("High Jump")))) | (((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (True_()) & (Has("High Jump", 2))) | ((False_()) & (HasAllCounts({'Air Combo Plus': 2, 'Combo Master': 1, 'High Jump': 3}))) | (Has("Progressive Glide"))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Tea Party Garden Across From Bizarre Room Entrance Chest", player),
-        (((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (True_()) & (Has("High Jump", 3))) | ((True_()) & (True_())) | ((True_()) & ((((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (Has("High Jump", 2))) | (((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (HasAll('Combo Master', 'High Jump'))))) | (Has("Progressive Glide"))
+        (((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (True_()) & (Has("High Jump", 3))) | ((False_()) & ((((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (Has("High Jump", 2))) | (((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (HasAll())))) | ((False_()) & (HasAllCounts({'Air Combo Plus': 2, 'Combo Master': 1, 'High Jump': 3}))) | (Has("Progressive Glide"))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Tea Party Garden Bear and Clock Puzzle Chest", player),
-        ((True_()) & (True_())) | ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) | (Has("Progressive Glide"))
+        ((False_()) & (HasAllCounts({'Air Combo Plus': 2, 'Combo Master': 1, 'High Jump': 3}))) | ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) | (Has("Progressive Glide"))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Tea Party Garden Left Cushioned Chair", player),
-        ((True_()) & (True_())) | ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) | (Has("Progressive Glide"))
+        ((False_()) & (HasAllCounts({'Air Combo Plus': 2, 'Combo Master': 1, 'High Jump': 3}))) | ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) | (Has("Progressive Glide"))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Tea Party Garden Left Gray Chair", player),
-        ((True_()) & (True_())) | ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) | (Has("Progressive Glide"))
+        ((False_()) & (HasAllCounts({'Air Combo Plus': 2, 'Combo Master': 1, 'High Jump': 3}))) | ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) | (Has("Progressive Glide"))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Tea Party Garden Left Pink Chair", player),
-        ((True_()) & (True_())) | ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) | (Has("Progressive Glide"))
+        ((False_()) & (HasAllCounts({'Air Combo Plus': 2, 'Combo Master': 1, 'High Jump': 3}))) | ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) | (Has("Progressive Glide"))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Tea Party Garden Right Brown Chair", player),
-        ((True_()) & (True_())) | ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) | (Has("Progressive Glide"))
+        ((False_()) & (HasAllCounts({'Air Combo Plus': 2, 'Combo Master': 1, 'High Jump': 3}))) | ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) | (Has("Progressive Glide"))
     )
 
     world.set_rule(
         multiworld.get_location("Wonderland Tea Party Garden Right Yellow Chair", player),
-        ((True_()) & (True_())) | ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) | (Has("Progressive Glide"))
+        ((False_()) & (HasAllCounts({'Air Combo Plus': 2, 'Combo Master': 1, 'High Jump': 3}))) | ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Wonderland", 2))) | (Has("Footprints"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) | (Has("Progressive Glide"))
     )
 
     world.set_rule(
         multiworld.get_location("Olympus Coliseum Cloud Sonic Blade Event", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Olympus Coliseum", 2))) | (Has("Entry Pass"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Olympus Coliseum", 2))) | (Has("Entry Pass"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
@@ -679,7 +679,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Olympus Coliseum Coliseum Gates Hero's License Event", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Olympus Coliseum", 2))) | (Has("Entry Pass"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Olympus Coliseum", 2))) | (Has("Entry Pass"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
@@ -699,12 +699,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Olympus Coliseum Defeat Cerberus Inferno Band Event", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Olympus Coliseum", 2))) | (Has("Entry Pass"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Olympus Coliseum", 2))) | (Has("Entry Pass"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
         multiworld.get_location("Deep Jungle Bamboo Thicket Save Gorillas", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
@@ -729,22 +729,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Deep Jungle Camp Save Gorillas", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
         multiworld.get_location("Deep Jungle Cavern of Hearts Navi-G Piece Event", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
         multiworld.get_location("Deep Jungle Cavern of Hearts White Trinity Chest", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (Has("White Trinity"))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (Has("White Trinity"))
     )
 
     world.set_rule(
         multiworld.get_location("Deep Jungle Cliff Save Gorillas", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
@@ -754,32 +754,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Deep Jungle Climbing Trees Save Gorillas", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
         multiworld.get_location("Deep Jungle Defeat Clayton Cure Event", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
         multiworld.get_location("Deep Jungle Defeat Sabor White Fang Event", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
         multiworld.get_location("Deep Jungle Hippo's Lagoon Right Chest", player),
-        ((True_()) & ((Has("High Jump")) | (Has("Progressive Glide")))) | (True_()) | (HasAll('High Jump', 'Progressive Glide'))
+        ((True_()) & ((Has("High Jump")) | (Has("Progressive Glide")))) | (False_()) | (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Deep Jungle Seal Keyhole Jungle King Event", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
         multiworld.get_location("Deep Jungle Seal Keyhole Red Trinity Event", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
@@ -789,37 +789,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Deep Jungle Tree House Rooftop Chest", player),
-        (True_()) | (Has("High Jump"))
+        (False_()) | (Has("High Jump"))
     )
 
     world.set_rule(
         multiworld.get_location("Deep Jungle Tree House Save Gorillas", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
         multiworld.get_location("Deep Jungle Tree House Suspended Boat Chest", player),
-        (True_()) | (Has("Progressive Glide"))
+        (False_()) | (Has("Progressive Glide"))
     )
 
     world.set_rule(
         multiworld.get_location("Deep Jungle Waterfall Cavern High Middle Chest", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
         multiworld.get_location("Deep Jungle Waterfall Cavern High Wall Chest", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
         multiworld.get_location("Deep Jungle Waterfall Cavern Low Chest", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
         multiworld.get_location("Deep Jungle Waterfall Cavern Middle Chest", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Deep Jungle", 2))) | (Has("Slides"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
@@ -829,17 +829,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Agrabah Cave of Wonders Bottomless Hall Pillar Chest", player),
-        ((True_()) & (Has("High Jump"))) | (True_()) | (Has("Progressive Glide"))
+        ((True_()) & (Has("High Jump"))) | (False_()) | (Has("Progressive Glide"))
     )
 
     world.set_rule(
         multiworld.get_location("Agrabah Cave of Wonders Dark Chamber Near Save Chest", player),
-        (True_()) | (HasAny('High Jump', 'Progressive Glide'))
+        (True_()) | (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Agrabah Cave of Wonders Entrance Tall Tower Chest", player),
-        ((True_()) & (Has("High Jump", 2))) | ((True_()) & (((HasGroup("Magic")) & (Has("Dumbo"))) | (Has("Combo Master")) | (Has("High Jump")))) | (True_()) | (Has("Progressive Glide"))
+        ((False_()) & (((HasGroup("Magic")) & (Has("Dumbo"))) | (Has("Combo Master")) | (Has("High Jump")))) | ((True_()) & (Has("High Jump", 2))) | (False_()) | (Has("Progressive Glide"))
     )
 
     world.set_rule(
@@ -849,12 +849,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Agrabah Cave of Wonders Hidden Room Left Chest", player),
-        ((True_()) & (Has("High Jump"))) | ((True_()) & (Has("Progressive Glide"))) | (Has("Yellow Trinity"))
+        ((False_()) & (Has("Progressive Glide"))) | ((True_()) & (Has("High Jump"))) | (Has("Yellow Trinity"))
     )
 
     world.set_rule(
         multiworld.get_location("Agrabah Cave of Wonders Hidden Room Right Chest", player),
-        ((True_()) & (Has("High Jump"))) | ((True_()) & (Has("Progressive Glide"))) | (Has("Yellow Trinity"))
+        ((False_()) & (Has("Progressive Glide"))) | ((True_()) & (Has("High Jump"))) | (Has("Yellow Trinity"))
     )
 
     world.set_rule(
@@ -869,17 +869,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Agrabah Main Street High Above Palace Gates Entrance Chest", player),
-        (((HasGroup("Magic")) & (Has("Dumbo"))) & (True_())) | ((True_()) & (Has("Progressive Glide"))) | (Has("High Jump"))
+        (((HasGroup("Magic")) & (Has("Dumbo"))) & (False_())) | ((True_()) & (Has("Progressive Glide"))) | (Has("High Jump"))
     )
 
     world.set_rule(
         multiworld.get_location("Agrabah Palace Gates High Close to Palace Chest", player),
-        ((True_()) & (Has("High Jump", 3))) | ((True_()) & (Has("Combo Master"))) | ((True_()) & ((HasAll('Combo Master', 'High Jump')) | (Has("High Jump", 2)) | (Has("Progressive Glide")))) | (HasAll('High Jump', 'Progressive Glide'))
+        ((False_()) & (Has("Combo Master"))) | ((False_()) & ((HasAll()) | (Has("High Jump", 2)) | (Has("Progressive Glide")))) | ((True_()) & (Has("High Jump", 3))) | (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Agrabah Palace Gates High Opposite Palace Chest", player),
-        ((True_()) & (Has("Progressive Glide"))) | (True_()) | (Has("High Jump"))
+        ((False_()) & (Has("Progressive Glide"))) | (False_()) | (Has("High Jump"))
     )
 
     world.set_rule(
@@ -889,7 +889,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Monstro Chamber 2 Platform Chest", player),
-        (True_()) | (HasAny('High Jump', 'Progressive Glide'))
+        (True_()) | (HasAny())
     )
 
     world.set_rule(
@@ -904,7 +904,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Monstro Chamber 5 Atop Barrel Chest", player),
-        (True_()) | (Has("High Jump"))
+        (False_()) | (Has("High Jump"))
     )
 
     world.set_rule(
@@ -914,22 +914,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Monstro Chamber 5 Platform Chest", player),
-        (True_()) | (Has("High Jump"))
+        (False_()) | (Has("High Jump"))
     )
 
     world.set_rule(
         multiworld.get_location("Monstro Chamber 6 Other Platform Chest", player),
-        ((True_()) & ((Has("Combo Master")) | (Has("High Jump")) | (Has("Progressive Glide")))) | (True_()) | (HasAll('High Jump', 'Progressive Glide'))
+        ((False_()) & ((Has("Combo Master")) | (Has("High Jump")) | (Has("Progressive Glide")))) | (False_()) | (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Monstro Chamber 6 Platform Near Chamber 5 Entrance Chest", player),
-        (True_()) | (Has("High Jump"))
+        (False_()) | (Has("High Jump"))
     )
 
     world.set_rule(
         multiworld.get_location("Monstro Chamber 6 Raised Area Near Chamber 1 Entrance Chest", player),
-        ((True_()) & ((Has("Combo Master")) | (Has("High Jump")) | (Has("Progressive Glide")))) | (True_()) | (HasAll('High Jump', 'Progressive Glide'))
+        ((False_()) & ((Has("Combo Master")) | (Has("High Jump")) | (Has("Progressive Glide")))) | (False_()) | (HasAll())
     )
 
     world.set_rule(
@@ -964,7 +964,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Monstro Mouth Near Ship Chest", player),
-        (True_()) | (True_()) | (HasAny('High Jump', 'Progressive Glide'))
+        (True_()) | (True_()) | (HasAny())
     )
 
     world.set_rule(
@@ -974,112 +974,112 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Halloween Town Boneyard Tombstone Puzzle Chest", player),
-        (((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
+        (((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Bridge Left of Gate Chest", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((True_()) | (Has("High Jump")) | (Has("Progressive Glide")))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((False_()) | (Has("High Jump")) | (Has("Progressive Glide")))
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Bridge Right of Gate Chest", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((True_()) & (Has("High Jump", 2))) | ((True_()) & (Has("High Jump"))) | (True_()) | (Has("High Jump", 3)) | (Has("Progressive Glide")))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((False_()) & (Has("High Jump"))) | ((True_()) & (Has("High Jump", 2))) | (False_()) | (Has("High Jump", 3)) | (Has("Progressive Glide")))
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Bridge Under Bridge", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw"))))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw"))))
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Cemetery Behind Grave Chest", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((True_()) & (Has("High Jump", 3))) | ((True_()) & (HasAny('High Jump', 'Progressive Glide'))) | (((True_()) & (Has("High Jump", 2))) | (HasAll('High Jump', 'Progressive Glide'))) | (Has("Progressive Fire")))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((False_()) & (HasAny())) | ((True_()) & (Has("High Jump", 3))) | (((False_()) & (Has("High Jump", 2))) | (HasAll())) | (Has("Progressive Fire")))
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Cemetery Between Graves Chest", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((True_()) & (Has("High Jump", 3))) | ((True_()) & (HasAny('High Jump', 'Progressive Glide'))) | (((True_()) & (Has("High Jump", 2))) | (HasAll('High Jump', 'Progressive Glide'))) | (Has("Progressive Fire")))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((False_()) & (HasAny())) | ((True_()) & (Has("High Jump", 3))) | (((False_()) & (Has("High Jump", 2))) | (HasAll())) | (Has("Progressive Fire")))
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Cemetery By Cat Shape Chest", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((True_()) & (Has("High Jump", 3))) | ((True_()) & (HasAny('High Jump', 'Progressive Glide'))) | (((True_()) & (Has("High Jump", 2))) | (HasAll('High Jump', 'Progressive Glide'))) | (Has("Progressive Fire")))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((False_()) & (HasAny())) | ((True_()) & (Has("High Jump", 3))) | (((False_()) & (Has("High Jump", 2))) | (HasAll())) | (Has("Progressive Fire")))
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Cemetery By Striped Grave Chest", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((True_()) & (Has("High Jump", 3))) | ((True_()) & (HasAny('High Jump', 'Progressive Glide'))) | (((True_()) & (Has("High Jump", 2))) | (HasAll('High Jump', 'Progressive Glide'))) | (Has("Progressive Fire")))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((False_()) & (HasAny())) | ((True_()) & (Has("High Jump", 3))) | (((False_()) & (Has("High Jump", 2))) | (HasAll())) | (Has("Progressive Fire")))
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Defeat Oogie Boogie Ansem's Report 7", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((True_()) & (Has("High Jump", 3))) | ((True_()) & (HasAny('High Jump', 'Progressive Glide'))) | (((True_()) & (Has("High Jump", 2))) | (HasAll('High Jump', 'Progressive Glide'))) | (Has("Progressive Fire")))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((False_()) & (HasAny())) | ((True_()) & (Has("High Jump", 3))) | (((False_()) & (Has("High Jump", 2))) | (HasAll())) | (Has("Progressive Fire")))
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Defeat Oogie Boogie Holy Circlet Event", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((True_()) & (Has("High Jump", 3))) | ((True_()) & (HasAny('High Jump', 'Progressive Glide'))) | (((True_()) & (Has("High Jump", 2))) | (HasAll('High Jump', 'Progressive Glide'))) | (Has("Progressive Fire")))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((False_()) & (HasAny())) | ((True_()) & (Has("High Jump", 3))) | (((False_()) & (Has("High Jump", 2))) | (HasAll())) | (Has("Progressive Fire")))
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Defeat Oogie's Manor Gravity Event", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((True_()) & (Has("High Jump", 3))) | ((True_()) & (HasAny('High Jump', 'Progressive Glide'))) | (((True_()) & (Has("High Jump", 2))) | (HasAll('High Jump', 'Progressive Glide'))) | (Has("Progressive Fire")))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((False_()) & (HasAny())) | ((True_()) & (Has("High Jump", 3))) | (((False_()) & (Has("High Jump", 2))) | (HasAll())) | (Has("Progressive Fire")))
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Guillotine Square High Tower Chest", player),
-        (((HasGroup("Magic")) & (Has("Dumbo"))) & (True_())) | ((True_()) & ((Has("High Jump")) | (Has("Progressive Glide")))) | (HasAll('High Jump', 'Progressive Glide'))
+        (((HasGroup("Magic")) & (Has("Dumbo"))) & (False_())) | ((True_()) & ((Has("High Jump")) | (Has("Progressive Glide")))) | (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Guillotine Square Pumpkin Structure Left Chest", player),
-        ((((HasGroup("Magic")) & (Has("Dumbo"))) & (True_())) | ((True_()) & (Has("Progressive Glide"))) | (Has("High Jump"))) & (((True_()) & (Has("High Jump", 2))) | ((True_()) & (Has("Combo Master"))) | (Has("Progressive Glide")))
+        ((((HasGroup("Magic")) & (Has("Dumbo"))) & (False_())) | ((True_()) & (Has("Progressive Glide"))) | (Has("High Jump"))) & (((False_()) & (Has("Combo Master"))) | ((True_()) & (Has("High Jump", 2))) | (Has("Progressive Glide")))
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Guillotine Square Pumpkin Structure Right Chest", player),
-        ((((HasGroup("Magic")) & (Has("Dumbo"))) & (True_())) | ((True_()) & (Has("Progressive Glide"))) | (Has("High Jump"))) & (((True_()) & (Has("High Jump", 2))) | ((True_()) & (Has("Combo Master"))) | (Has("Progressive Glide")))
+        ((((HasGroup("Magic")) & (Has("Dumbo"))) & (False_())) | ((True_()) & (Has("Progressive Glide"))) | (Has("High Jump"))) & (((False_()) & (Has("Combo Master"))) | ((True_()) & (Has("High Jump", 2))) | (Has("Progressive Glide")))
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Moonlight Hill White Trinity Chest", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (Has("White Trinity"))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (Has("White Trinity"))
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Oogie's Manor Entrance Steps Chest", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw"))))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw"))))
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Oogie's Manor Grounds Red Trinity Chest", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (Has("Red Trinity"))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (Has("Red Trinity"))
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Oogie's Manor Hollow Chest", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((True_()) & (Has("High Jump", 3))) | ((True_()) & (HasAny('High Jump', 'Progressive Glide'))) | (((True_()) & (Has("High Jump", 2))) | (HasAll('High Jump', 'Progressive Glide'))) | (Has("Progressive Fire")))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((False_()) & (HasAny())) | ((True_()) & (Has("High Jump", 3))) | (((False_()) & (Has("High Jump", 2))) | (HasAll())) | (Has("Progressive Fire")))
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Oogie's Manor Inside Entrance Chest", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw"))))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw"))))
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Oogie's Manor Lower Iron Cage Chest", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((True_()) & (Has("High Jump", 3))) | ((True_()) & (HasAny('High Jump', 'Progressive Glide'))) | (((True_()) & (Has("High Jump", 2))) | (HasAll('High Jump', 'Progressive Glide'))) | (Has("Progressive Fire"))) & ((True_()) | (True_()) | (Has("Progressive Glide")))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((False_()) & (HasAny())) | ((True_()) & (Has("High Jump", 3))) | (((False_()) & (Has("High Jump", 2))) | (HasAll())) | (Has("Progressive Fire"))) & ((True_()) | (True_()) | (Has("Progressive Glide")))
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Oogie's Manor Upper Iron Cage Chest", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((True_()) & (Has("High Jump", 3))) | ((True_()) & (HasAny('High Jump', 'Progressive Glide'))) | (((True_()) & (Has("High Jump", 2))) | (HasAll('High Jump', 'Progressive Glide'))) | (Has("Progressive Fire"))) & ((True_()) | (True_()) | (HasAll('High Jump', 'Progressive Glide')))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((False_()) & (HasAny())) | ((True_()) & (Has("High Jump", 3))) | (((False_()) & (Has("High Jump", 2))) | (HasAll())) | (Has("Progressive Fire"))) & ((True_()) | (True_()) | (HasAll()))
     )
 
     world.set_rule(
         multiworld.get_location("Halloween Town Seal Keyhole Pumpkinhead Event", player),
-        ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((True_()) & (Has("High Jump", 3))) | ((True_()) & (HasAny('High Jump', 'Progressive Glide'))) | (((True_()) & (Has("High Jump", 2))) | (HasAll('High Jump', 'Progressive Glide'))) | (Has("Progressive Fire")))
+        ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Forget-Me-Not"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Halloween Town", 2))) | (Has("Jack-In-The-Box"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw")))) & (((False_()) & (HasAny())) | ((True_()) & (Has("High Jump", 3))) | (((False_()) & (Has("High Jump", 2))) | (HasAll())) | (Has("Progressive Fire")))
     )
 
     world.set_rule(
@@ -1214,7 +1214,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Neverland Pirate Ship Deck White Trinity Chest", player),
-        HasAll('Green Trinity', 'White Trinity')
+        HasAll()
     )
 
     world.set_rule(
@@ -1239,47 +1239,47 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Base Level Platform Near Entrance Chest", player),
-        (True_()) | (HasAny('High Jump', 'Progressive Glide'))
+        (True_()) | (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Castle Gates Freestanding Pillar Chest", player),
-        ((True_()) & (Has("High Jump", 3))) | ((True_()) & (HasAll('High Jump', 'Progressive Glide'))) | ((True_()) & (((HasGroup("Magic")) & (Has("Dumbo"))) | (Has("High Jump", 2)))) | ((True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion')))
+        ((False_()) & (((HasGroup("Magic")) & (Has("Dumbo"))) | (Has("High Jump", 2)))) | ((False_()) & (HasAll())) | ((True_()) & (Has("High Jump", 3))) | ((True_()) & (HasAll()))
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Castle Gates Gravity Chest", player),
-        (((True_()) & (Has("High Jump", 3)) & (Has("Progressive Glide"))) | ((True_()) & (HasAll('High Jump', 'Progressive Glide'))) | ((True_()) & (((HasGroup("Magic")) & (Has("Dumbo"))) | (Has("High Jump", 2))) & (Has("Progressive Glide"))) | ((True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion')))) & (Has("Progressive Gravity"))
+        (((False_()) & (((HasGroup("Magic")) & (Has("Dumbo"))) | (Has("High Jump", 2))) & (Has("Progressive Glide"))) | ((False_()) & (HasAll())) | ((True_()) & (Has("High Jump", 3)) & (Has("Progressive Glide"))) | ((True_()) & (HasAll()))) & (Has("Progressive Gravity"))
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Castle Gates High Pillar Chest", player),
-        ((True_()) & (Has("High Jump", 3))) | ((True_()) & (HasAll('High Jump', 'Progressive Glide'))) | ((True_()) & (((HasGroup("Magic")) & (Has("Dumbo"))) | (Has("High Jump", 2)))) | ((True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion')))
+        ((False_()) & (((HasGroup("Magic")) & (Has("Dumbo"))) | (Has("High Jump", 2)))) | ((False_()) & (HasAll())) | ((True_()) & (Has("High Jump", 3))) | ((True_()) & (HasAll()))
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Defeat Behemoth Omega Arts Event", player),
-        (True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Defeat Dragon Maleficent Fireglow Event", player),
-        (True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Defeat Maleficent Ansem's Report 5", player),
-        (True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Defeat Maleficent Donald Cheer Event", player),
-        (True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Defeat Riku II Ragnarok Event", player),
-        (True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
@@ -1289,97 +1289,97 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Entrance Hall Emblem Piece (Chest)", player),
-        ((True_()) & (Has("High Jump", 3))) | ((True_()) & (Has("High Jump", 2))) | ((True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))) | ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Hollow Bastion", 2))) | (Has("Theon Vol. 6"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw"))))
+        ((False_()) & (Has("High Jump", 2))) | ((True_()) & (Has("High Jump", 3))) | ((True_()) & (HasAll())) | ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Hollow Bastion", 2))) | (Has("Theon Vol. 6"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw"))))
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Entrance Hall Emblem Piece (Flame)", player),
-        (((True_()) & (Has("High Jump", 3))) | ((True_()) & (Has("High Jump", 2))) | ((True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))) | ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Hollow Bastion", 2))) | (Has("Theon Vol. 6"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw"))))) & (((True_()) & (Has("High Jump"))) | (True_()) | (Has("Progressive Glide")) | (Has("Progressive Thunder"))) & (Has("Progressive Fire"))
+        (((False_()) & (Has("High Jump", 2))) | ((True_()) & (Has("High Jump", 3))) | ((True_()) & (HasAll())) | ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Hollow Bastion", 2))) | (Has("Theon Vol. 6"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw"))))) & (((True_()) & (Has("High Jump"))) | (False_()) | (Has("Progressive Glide")) | (Has("Progressive Thunder"))) & (Has("Progressive Fire"))
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Entrance Hall Emblem Piece (Fountain)", player),
-        ((True_()) & (Has("High Jump", 3))) | ((True_()) & (Has("High Jump", 2))) | ((True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))) | ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Hollow Bastion", 2))) | (Has("Theon Vol. 6"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw"))))
+        ((False_()) & (Has("High Jump", 2))) | ((True_()) & (Has("High Jump", 3))) | ((True_()) & (HasAll())) | ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Hollow Bastion", 2))) | (Has("Theon Vol. 6"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw"))))
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Entrance Hall Emblem Piece (Statue)", player),
-        (((True_()) & (Has("High Jump", 3))) | ((True_()) & (Has("High Jump", 2))) | ((True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))) | ((((True_()) & (True_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Hollow Bastion", 2))) | (Has("Theon Vol. 6"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw"))))) & (Has("Red Trinity"))
+        (((False_()) & (Has("High Jump", 2))) | ((True_()) & (Has("High Jump", 3))) | ((True_()) & (HasAll())) | ((((True_()) & (False_()) & (Has("Forget-Me-Not"))) | ((True_()) & (Has("Hollow Bastion", 2))) | (Has("Theon Vol. 6"))) & ((True_()) | (True_()) | (True_()) | (Has("Crabclaw"))))) & (Has("Red Trinity"))
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Entrance Hall Left of Emblem Door Chest", player),
-        (((True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))) & ((HasGroup("Magic")) & (Has("Dumbo"))) & (True_())) | (Has("High Jump"))
+        (((HasGroup("Magic")) & (Has("Dumbo"))) & ((True_()) & (HasAll())) & (False_())) | (Has("High Jump"))
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Grand Hall Left of Gate Chest", player),
-        (True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Grand Hall Oblivion Chest", player),
-        (True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Grand Hall Steps Right Side Chest", player),
-        (True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Great Crest After Battle Platform Chest", player),
-        (True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Great Crest Blue Trinity", player),
-        ((True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))) & (Has("Blue Trinity"))
+        ((True_()) & (HasAll())) & (Has("Blue Trinity"))
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Great Crest Lower Chest", player),
-        (True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion High Tower 1st Gravity Chest", player),
-        ((True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))) & (Has("Progressive Gravity"))
+        ((True_()) & (HasAll())) & (Has("Progressive Gravity"))
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion High Tower 2nd Gravity Chest", player),
-        ((True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))) & (Has("Progressive Gravity"))
+        ((True_()) & (HasAll())) & (Has("Progressive Gravity"))
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion High Tower Above Sliding Blocks Chest", player),
-        (True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Library Speak to Aerith Cure", player),
-        (True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Library Speak to Belle Divine Rose", player),
-        (True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Lift Stop from Waterway Examine Node", player),
-        ((True_()) & (Has("High Jump", 3)) & (Has("Progressive Glide"))) | ((True_()) & (HasAll('High Jump', 'Progressive Glide'))) | ((True_()) & (((HasGroup("Magic")) & (Has("Dumbo"))) | (Has("High Jump", 2))) & (Has("Progressive Glide"))) | ((True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion')))
+        ((False_()) & (((HasGroup("Magic")) & (Has("Dumbo"))) | (Has("High Jump", 2))) & (Has("Progressive Glide"))) | ((False_()) & (HasAll())) | ((True_()) & (Has("High Jump", 3)) & (Has("Progressive Glide"))) | ((True_()) & (HasAll()))
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Lift Stop Heartless Sigil Door Gravity Chest", player),
-        (((True_()) & (Has("High Jump", 3)) & (Has("Progressive Glide"))) | ((True_()) & (HasAll('High Jump', 'Progressive Glide'))) | ((True_()) & (((HasGroup("Magic")) & (Has("Dumbo"))) | (Has("High Jump", 2))) & (Has("Progressive Glide"))) | ((True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion')))) & (Has("Progressive Gravity"))
+        (((False_()) & (((HasGroup("Magic")) & (Has("Dumbo"))) | (Has("High Jump", 2))) & (Has("Progressive Glide"))) | ((False_()) & (HasAll())) | ((True_()) & (Has("High Jump", 3)) & (Has("Progressive Glide"))) | ((True_()) & (HasAll()))) & (Has("Progressive Gravity"))
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Lift Stop Library Node After High Tower Switch Gravity Chest", player),
-        ((True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))) & (Has("Progressive Gravity"))
+        ((True_()) & (HasAll())) & (Has("Progressive Gravity"))
     )
 
     world.set_rule(
@@ -1394,7 +1394,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Lift Stop Under High Tower Sliding Blocks Chest", player),
-        ((True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))) & ((True_()) | (Has("Progressive Glide"))) & (Has("Progressive Gravity"))
+        ((True_()) & (HasAll())) & ((True_()) | (Has("Progressive Glide"))) & (Has("Progressive Gravity"))
     )
 
     world.set_rule(
@@ -1409,12 +1409,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Rising Falls High Platform Chest", player),
-        (((True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))) & (Has("Progressive Blizzard"))) | ((True_()) & (Has("High Jump", 3))) | ((True_()) & ((Has("Combo Master")) | (Has("High Jump")))) | (True_()) | (Has("Progressive Glide"))
+        (((True_()) & (HasAll())) & (Has("Progressive Blizzard"))) | ((False_()) & ((Has("Combo Master")) | (Has("High Jump")))) | ((True_()) & (Has("High Jump", 3))) | (False_()) | (Has("Progressive Glide"))
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Rising Falls Under Water 2nd Chest", player),
-        (True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
@@ -1424,27 +1424,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Speak to Princesses Fire Event", player),
-        (True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Speak with Aerith Ansem's Report 10", player),
-        (True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Speak with Aerith Ansem's Report 2", player),
-        (True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Speak with Aerith Ansem's Report 4", player),
-        (True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
         multiworld.get_location("Hollow Bastion Speak with Aerith Ansem's Report 6", player),
-        (True_()) & (HasAll('Emblem Piece (Chest)', 'Emblem Piece (Flame)', 'Emblem Piece (Fountain)', 'Emblem Piece (Statue)', 'Hollow Bastion'))
+        (True_()) & (HasAll())
     )
 
     world.set_rule(
@@ -1454,32 +1454,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("End of the World Giant Crevasse 1st Chest", player),
-        (True_()) | (Has("High Jump")) | (Has("Progressive Glide"))
+        (False_()) | (Has("High Jump")) | (Has("Progressive Glide"))
     )
 
     world.set_rule(
         multiworld.get_location("End of the World Giant Crevasse 2nd Chest", player),
-        (True_()) | (HasAny('High Jump', 'Progressive Glide'))
+        (True_()) | (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("End of the World Giant Crevasse 3rd Chest", player),
-        (True_()) | (HasAny('High Jump', 'Progressive Glide'))
+        (True_()) | (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("End of the World Giant Crevasse 4th Chest", player),
-        ((True_()) & ((HasAll('Combo Master', 'High Jump')) | (Has("High Jump", 2)))) | (Has("Progressive Glide"))
+        ((False_()) & ((HasAll()) | (Has("High Jump", 2)))) | (Has("Progressive Glide"))
     )
 
     world.set_rule(
         multiworld.get_location("End of the World Giant Crevasse 5th Chest", player),
-        (True_()) | (Has("Progressive Glide"))
+        (False_()) | (Has("Progressive Glide"))
     )
 
     world.set_rule(
         multiworld.get_location("End of the World World Terminus Agrabah Chest", player),
-        (((HasGroup("Magic")) & (Has("Dumbo"))) & (True_()) & (Has("Progressive Glide"))) | (Has("High Jump"))
+        (((HasGroup("Magic")) & (Has("Dumbo"))) & (False_()) & (Has("Progressive Glide"))) | (Has("High Jump"))
     )
 
     world.set_rule(
@@ -1979,5 +1979,5 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Final Ansem", player),
-        (True_()) & (True_()) & (((True_()) & (((True_()) & (Has("Lucky Emblem", 7))) | (Has("End of the World")))) | ((Has("Destiny Islands")) & (Has("Raft Materials", 10))))
+        (True_()) & (True_()) & (((Has("Destiny Islands")) & (Has("Raft Materials", 10))) | ((((True_()) & (Has("Lucky Emblem", 7))) | (Has("End of the World"))) & (Has("Lucky Emblem", 10))))
     )

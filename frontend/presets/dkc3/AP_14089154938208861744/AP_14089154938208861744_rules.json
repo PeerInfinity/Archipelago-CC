@@ -51,8 +51,12 @@
                   "type": "item_check",
                   "item": "DK Coin",
                   "count": {
-                    "type": "constant",
-                    "value": 30
+                    "type": "attribute",
+                    "object": {
+                      "type": "setting_value",
+                      "setting": "dk_coins_for_gyrocopter"
+                    },
+                    "attr": "value"
                   }
                 },
                 {
@@ -731,8 +735,28 @@
               "type": "item_check",
               "item": "Bonus Coin",
               "count": {
-                "type": "constant",
-                "value": 15
+                "type": "binary_op",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "setting_value",
+                    "setting": "krematoa_bonus_coin_cost"
+                  },
+                  "attr": "value"
+                },
+                "op": "*",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "constant",
+                    "value": 0
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                }
               }
             }
           },
@@ -743,8 +767,28 @@
               "type": "item_check",
               "item": "Bonus Coin",
               "count": {
-                "type": "constant",
-                "value": 30
+                "type": "binary_op",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "setting_value",
+                    "setting": "krematoa_bonus_coin_cost"
+                  },
+                  "attr": "value"
+                },
+                "op": "*",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "constant",
+                    "value": 1
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                }
               }
             }
           },
@@ -755,8 +799,28 @@
               "type": "item_check",
               "item": "Bonus Coin",
               "count": {
-                "type": "constant",
-                "value": 45
+                "type": "binary_op",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "setting_value",
+                    "setting": "krematoa_bonus_coin_cost"
+                  },
+                  "attr": "value"
+                },
+                "op": "*",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "constant",
+                    "value": 2
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                }
               }
             }
           },
@@ -767,8 +831,28 @@
               "type": "item_check",
               "item": "Bonus Coin",
               "count": {
-                "type": "constant",
-                "value": 60
+                "type": "binary_op",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "setting_value",
+                    "setting": "krematoa_bonus_coin_cost"
+                  },
+                  "attr": "value"
+                },
+                "op": "*",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "constant",
+                    "value": 3
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                }
               }
             }
           },
@@ -779,8 +863,28 @@
               "type": "item_check",
               "item": "Bonus Coin",
               "count": {
-                "type": "constant",
-                "value": 75
+                "type": "binary_op",
+                "left": {
+                  "type": "attribute",
+                  "object": {
+                    "type": "setting_value",
+                    "setting": "krematoa_bonus_coin_cost"
+                  },
+                  "attr": "value"
+                },
+                "op": "*",
+                "right": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "constant",
+                    "value": 4
+                  },
+                  "op": "+",
+                  "right": {
+                    "type": "constant",
+                    "value": 1
+                  }
+                }
               }
             }
           },

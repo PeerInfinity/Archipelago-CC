@@ -98,8 +98,9 @@
             "name": "Honey",
             "id": 48001,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Recycler",
@@ -113,8 +114,9 @@
             "name": "Flippers",
             "id": 48002,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Fuel tank",
@@ -143,8 +145,9 @@
             "name": "Battery",
             "id": 48004,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-anchor",
@@ -158,8 +161,9 @@
             "name": "Circuit board",
             "id": 48005,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 2 CopperOre",
@@ -173,8 +177,9 @@
             "name": "Bolt",
             "id": 48006,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-biofuel",
@@ -188,8 +193,9 @@
             "name": "Hinge",
             "id": 48007,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-crop-plot",
@@ -203,8 +209,9 @@
             "name": "Shear",
             "id": 48008,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 2 Raw_Beet",
@@ -218,8 +225,9 @@
             "name": "Net launcher",
             "id": 48009,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-battery",
@@ -233,8 +241,9 @@
             "name": "Drinking glass",
             "id": 48010,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hinge",
@@ -263,8 +272,9 @@
             "name": "Net canister",
             "id": 48012,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 2 Plastic",
@@ -278,8 +288,9 @@
             "name": "Binoculars",
             "id": 48013,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 1 TitaniumOre",
@@ -293,8 +304,9 @@
             "name": "Metal fishing rod",
             "id": 48014,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 5 Sand",
@@ -308,8 +320,9 @@
             "name": "Oxygen bottle",
             "id": 48015,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water pipe",
@@ -323,8 +336,9 @@
             "name": "Sprinkler",
             "id": 48016,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-engine",
@@ -338,8 +352,9 @@
             "name": "Empty bottle",
             "id": 48017,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-spear",
@@ -353,8 +368,9 @@
             "name": "Cookingpot",
             "id": 48018,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 5 Stone",
@@ -368,8 +384,9 @@
             "name": "Juicer",
             "id": 48019,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-biofuel",
@@ -383,8 +400,9 @@
             "name": "Stationary anchor",
             "id": 48020,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 3 TitaniumOre",
@@ -398,8 +416,9 @@
             "name": "Advanced grill",
             "id": 48021,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Antenna",
@@ -413,8 +432,9 @@
             "name": "Metal Spear",
             "id": 48022,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-headlight",
@@ -428,8 +448,9 @@
             "name": "Storage",
             "id": 48023,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 1 SeaVine",
@@ -473,8 +494,9 @@
             "name": "Hammock",
             "id": 48026,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Bucket",
@@ -488,8 +510,9 @@
             "name": "Metal axe",
             "id": 48027,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 1 CopperOre",
@@ -503,8 +526,9 @@
             "name": "Scrap hook",
             "id": 48028,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 4 CopperOre",
@@ -518,8 +542,9 @@
             "name": "Large crop plot",
             "id": 48029,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 2 TitaniumOre",
@@ -533,8 +558,9 @@
             "name": "Sweep net",
             "id": 48030,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 2 Scrap",
@@ -548,8 +574,9 @@
             "name": "Basic bow",
             "id": 48031,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Receiver",
@@ -578,8 +605,9 @@
             "name": "Metal arrow",
             "id": 48033,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-bottle",
@@ -593,8 +621,9 @@
             "name": "Shovel",
             "id": 48034,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 1 TitaniumOre",
@@ -608,8 +637,9 @@
             "name": "Advanced collection net",
             "id": 48035,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-battery",
@@ -653,8 +683,9 @@
             "name": "Paint brush",
             "id": 48038,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-metals",
@@ -668,8 +699,9 @@
             "name": "Advanced purifier",
             "id": 48039,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Beehive",
@@ -683,8 +715,9 @@
             "name": "Grass plot",
             "id": 48040,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Net canister",
@@ -788,8 +821,9 @@
             "name": "Backpack",
             "id": 48047,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-battery",
@@ -803,8 +837,9 @@
             "name": "Leather helmet",
             "id": 48048,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 1 Scrap",
@@ -818,8 +853,9 @@
             "name": "Leather body armor",
             "id": 48049,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 3 Raw_Beet",
@@ -833,8 +869,9 @@
             "name": "Leather greaves",
             "id": 48050,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 4 Clay",
@@ -848,8 +885,9 @@
             "name": "Beehive",
             "id": 48051,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Honey",
@@ -863,8 +901,9 @@
             "name": "Good healing salve",
             "id": 48052,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 3 CopperOre",
@@ -878,8 +917,9 @@
             "name": "Healing salve",
             "id": 48053,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 1 Plank",
@@ -899,8 +939,9 @@
             "name": "Tala (Radio Tower)",
             "id": 48054,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-anchor",
@@ -914,8 +955,9 @@
             "name": "Head light blueprint",
             "id": 48055,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-metals",
@@ -929,8 +971,9 @@
             "name": "Recycler blueprint",
             "id": 48056,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Metal fishing rod",
@@ -944,8 +987,9 @@
             "name": "Radio Tower Briefcase",
             "id": 48057,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sprinkler",
@@ -959,8 +1003,9 @@
             "name": "Radio Tower Frequency to Vasagatan",
             "id": 48058,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Vasagatan Frequency",
@@ -974,8 +1019,9 @@
             "name": "Radio Tower Notepad 1",
             "id": 48059,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 2 Sand",
@@ -989,8 +1035,9 @@
             "name": "Radio Tower Notepad 2",
             "id": 48060,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 2 Plank",
@@ -1004,8 +1051,9 @@
             "name": "Radio Tower Signalboard Trace",
             "id": 48061,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Hammock",
@@ -1025,8 +1073,9 @@
             "name": "Hannes Letter 1",
             "id": 48062,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Net launcher",
@@ -1040,8 +1089,9 @@
             "name": "Hannes Letter 2",
             "id": 48063,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 1 MetalOre",
@@ -1055,8 +1105,9 @@
             "name": "Hannes Letter 3",
             "id": 48064,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 2 Thatch",
@@ -1070,8 +1121,9 @@
             "name": "Olof Log 1",
             "id": 48065,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-bow",
@@ -1085,8 +1137,9 @@
             "name": "Olof Log 2",
             "id": 48066,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-storage",
@@ -1100,8 +1153,9 @@
             "name": "Olof Log 3",
             "id": 48067,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-hook",
@@ -1115,8 +1169,9 @@
             "name": "Vasagatan Recording 1",
             "id": 48068,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 2 MetalOre",
@@ -1130,8 +1185,9 @@
             "name": "Vasagatan Recording 2",
             "id": 48069,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-crop-plot",
@@ -1145,8 +1201,9 @@
             "name": "Vasagatan Recording 3",
             "id": 48070,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Juicer",
@@ -1160,8 +1217,9 @@
             "name": "Vasagatan Magazine Clipping",
             "id": 48071,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-salve",
@@ -1175,8 +1233,9 @@
             "name": "Vasagatan Frequency to Balboa",
             "id": 48072,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Balboa Island Frequency",
@@ -1190,8 +1249,9 @@
             "name": "Engine blueprint",
             "id": 48073,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 2 SeaVine",
@@ -1205,8 +1265,9 @@
             "name": "Steering Wheel blueprint",
             "id": 48074,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-crop-plot",
@@ -1226,8 +1287,9 @@
             "name": "Machete blueprint",
             "id": 48075,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 5 MetalOre",
@@ -1241,8 +1303,9 @@
             "name": "Balboa Island Correa twins picture",
             "id": 48076,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 5 Scrap",
@@ -1256,8 +1319,9 @@
             "name": "Balboa Island Schedule of engineers",
             "id": 48077,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water tank",
@@ -1271,8 +1335,9 @@
             "name": "Biofuel refiner blueprint",
             "id": 48078,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 1 Plank",
@@ -1286,8 +1351,9 @@
             "name": "Balboa Island Note from Henry",
             "id": 48079,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-salve",
@@ -1301,8 +1367,9 @@
             "name": "Balboa Island Correas diary 3",
             "id": 48080,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-storage",
@@ -1316,8 +1383,9 @@
             "name": "Fuel tank blueprint",
             "id": 48081,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 4 Raw_Potato",
@@ -1331,8 +1399,9 @@
             "name": "Balboa Island Correas diary 1",
             "id": 48082,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 2 Stone",
@@ -1346,8 +1415,9 @@
             "name": "Balboa Island Correas diary 2",
             "id": 48083,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Flippers",
@@ -1361,8 +1431,9 @@
             "name": "Fuel pipe blueprint",
             "id": 48084,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 4 Thatch",
@@ -1376,8 +1447,9 @@
             "name": "Balboa Island Bear map",
             "id": 48085,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Shovel",
@@ -1391,8 +1463,9 @@
             "name": "Johnny (Balboa Island)",
             "id": 48086,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-bottle",
@@ -1406,8 +1479,9 @@
             "name": "Balboa Island Doll murderer 4",
             "id": 48087,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Leather greaves",
@@ -1421,8 +1495,9 @@
             "name": "Balboa Island Doll murderer 1",
             "id": 48088,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 3 Scrap",
@@ -1436,8 +1511,9 @@
             "name": "Balboa Island Doll murderer 3",
             "id": 48089,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 2 MetalOre",
@@ -1451,8 +1527,9 @@
             "name": "Balboa Island Doll murderer 5",
             "id": 48090,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-battery",
@@ -1466,8 +1543,9 @@
             "name": "Balboa Island Doll murderer 2",
             "id": 48091,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cookingpot",
@@ -1481,8 +1559,9 @@
             "name": "Relay Station quest",
             "id": 48155,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Tangaroa Frequency",
@@ -1502,8 +1581,9 @@
             "name": "Caravan Island Detto journal 1",
             "id": 48092,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 5 ExplosiveGoo",
@@ -1517,8 +1597,9 @@
             "name": "Caravan Island Detto journal 2",
             "id": 48093,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-hook",
@@ -1532,8 +1613,9 @@
             "name": "Caravan Island Detto journal 3",
             "id": 48094,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 5 Stone",
@@ -1547,8 +1629,9 @@
             "name": "Caravan Island Detto journal 4",
             "id": 48095,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-zipline",
@@ -1562,8 +1645,9 @@
             "name": "Caravan Island Detto journal 5",
             "id": 48096,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 2 CopperOre",
@@ -1577,8 +1661,9 @@
             "name": "Caravan Island Detto journal 6",
             "id": 48097,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Leather body armor",
@@ -1592,8 +1677,9 @@
             "name": "Caravan Island Olaf speech",
             "id": 48098,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Fuel pipe",
@@ -1607,8 +1693,9 @@
             "name": "Caravan Island Raft town article",
             "id": 48099,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 5 SeaVine",
@@ -1622,8 +1709,9 @@
             "name": "Caravan Island Doctor's note",
             "id": 48100,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 3 Scrap",
@@ -1637,8 +1725,9 @@
             "name": "Firework blueprint",
             "id": 48101,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 2 TitaniumOre",
@@ -1652,8 +1741,9 @@
             "name": "Battery Charger quest",
             "id": 48102,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-bow",
@@ -1667,8 +1757,9 @@
             "name": "Zipline quest",
             "id": 48103,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-zipline",
@@ -1682,8 +1773,9 @@
             "name": "Caravan Island Frequency to Tangaroa",
             "id": 48104,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Varuna Point Frequency",
@@ -1697,8 +1789,9 @@
             "name": "Engine controls blueprint",
             "id": 48105,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-scarecrow",
@@ -1712,8 +1805,9 @@
             "name": "Metal detector blueprint",
             "id": 48106,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-backpack",
@@ -1733,8 +1827,9 @@
             "name": "Tangaroa Ruben 1",
             "id": 48107,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Birds nest",
@@ -1748,8 +1843,9 @@
             "name": "Tangaroa Ruben 2",
             "id": 48108,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 3 MetalOre",
@@ -1763,8 +1859,9 @@
             "name": "Tangaroa Ruben 3",
             "id": 48109,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-bow",
@@ -1778,8 +1875,9 @@
             "name": "Tangaroa Ruben 4",
             "id": 48110,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 4 Raw_Beet",
@@ -1793,8 +1891,9 @@
             "name": "Tangaroa Ruben 5",
             "id": 48111,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Oxygen bottle",
@@ -1808,8 +1907,9 @@
             "name": "Tangaroa Gardener Diary",
             "id": 48112,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 1 Stone",
@@ -1823,8 +1923,9 @@
             "name": "Tangaroa Riot Log",
             "id": 48113,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 2 Clay",
@@ -1838,8 +1939,9 @@
             "name": "Tangaroa Tulley Note",
             "id": 48114,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-purifier",
@@ -1853,8 +1955,9 @@
             "name": "Tangaroa Cipher",
             "id": 48115,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-grill",
@@ -1868,8 +1971,9 @@
             "name": "Tangaroa Frequency to Varuna Point",
             "id": 48116,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Caravan Island Frequency",
@@ -1883,8 +1987,9 @@
             "name": "Water pipe blueprint",
             "id": 48117,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-net",
@@ -1898,8 +2003,9 @@
             "name": "Electric purifier blueprint",
             "id": 48118,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 1 Plank",
@@ -1913,8 +2019,9 @@
             "name": "Water tank blueprint",
             "id": 48119,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 2 Plastic",
@@ -1928,8 +2035,9 @@
             "name": "Large Storage blueprint",
             "id": 48120,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 2 Thatch",
@@ -1943,8 +2051,9 @@
             "name": "Elaine (Tangaroa)",
             "id": 48121,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 4 Stone",
@@ -1964,8 +2073,9 @@
             "name": "Varuna Point Grabber diary 1",
             "id": 48122,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 1 Plastic",
@@ -1979,8 +2089,9 @@
             "name": "Varuna Point Grabber diary 2",
             "id": 48123,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 4 Thatch",
@@ -1994,8 +2105,9 @@
             "name": "Varuna Point Grabber diary 3",
             "id": 48124,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 1 TitaniumOre",
@@ -2009,8 +2121,9 @@
             "name": "Varuna Point Grabber diary 4",
             "id": 48125,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-containers",
@@ -2024,8 +2137,9 @@
             "name": "Varuna Point Grabber diary 5",
             "id": 48126,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-zipline",
@@ -2039,8 +2153,9 @@
             "name": "Varuna Point Grabber diary 6",
             "id": 48127,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-headlight",
@@ -2054,8 +2169,9 @@
             "name": "Varuna Point Frequency to Temperance",
             "id": 48128,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Temperance Frequency",
@@ -2069,8 +2185,9 @@
             "name": "Wind Turbine blueprint",
             "id": 48129,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 1 Clay",
@@ -2084,8 +2201,9 @@
             "name": "Advanced Battery blueprint",
             "id": 48130,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-axe",
@@ -2099,8 +2217,9 @@
             "name": "Advanced Headlight blueprint",
             "id": 48131,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Leather helmet",
@@ -2114,8 +2233,9 @@
             "name": "Electric Grill blueprint",
             "id": 48132,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 3 Clay",
@@ -2135,8 +2255,9 @@
             "name": "Temperance Bruno diary 1",
             "id": 48133,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 1 SeaVine",
@@ -2150,8 +2271,9 @@
             "name": "Temperance Bruno diary 2",
             "id": 48134,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-axe",
@@ -2165,8 +2287,9 @@
             "name": "Temperance Bruno diary 3",
             "id": 48135,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 4 Clay",
@@ -2180,8 +2303,9 @@
             "name": "Temperance Bruno diary 4",
             "id": 48136,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 2 CopperOre",
@@ -2195,8 +2319,9 @@
             "name": "Temperance Bruno diary 5",
             "id": 48137,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-spear",
@@ -2210,8 +2335,9 @@
             "name": "Temperance Sparrow note 1",
             "id": 48138,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-crop-plot",
@@ -2225,8 +2351,9 @@
             "name": "Temperance Sparrow note 2",
             "id": 48139,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-purifier",
@@ -2240,8 +2367,9 @@
             "name": "Temperance Frequency to Utopia",
             "id": 48140,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Utopia Frequency",
@@ -2255,8 +2383,9 @@
             "name": "Temperance Star sign 1",
             "id": 48141,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-containers",
@@ -2270,8 +2399,9 @@
             "name": "Temperance Star sign 2",
             "id": 48142,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Shear",
@@ -2285,8 +2415,9 @@
             "name": "Temperance Star sign 3",
             "id": 48143,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 5 TitaniumOre",
@@ -2300,8 +2431,9 @@
             "name": "Temperance Star sign 4",
             "id": 48144,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 2 Plank",
@@ -2315,8 +2447,9 @@
             "name": "Electric Smelter blueprint",
             "id": 48145,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-net",
@@ -2330,8 +2463,9 @@
             "name": "Advanced Biofuel Extractor blueprint",
             "id": 48146,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 2 Scrap",
@@ -2345,8 +2479,9 @@
             "name": "Advanced Stationary Anchor blueprint",
             "id": 48147,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Resource Pack: 3 Plastic",
@@ -2360,8 +2495,9 @@
             "name": "Shogo (Temperance)",
             "id": 48148,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-scarecrow",
@@ -2381,8 +2517,9 @@
             "name": "Electric Zipline blueprint",
             "id": 48149,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Binoculars",
@@ -2396,8 +2533,9 @@
             "name": "Advanced Backpack blueprint",
             "id": 48150,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sweep net",
@@ -2411,8 +2549,9 @@
             "name": "Titanium Tools blueprint",
             "id": 48151,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-backpack",
@@ -2426,8 +2565,9 @@
             "name": "Utopia Captives note",
             "id": 48152,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Grass plot",
@@ -2441,8 +2581,9 @@
             "name": "Utopia Detto map",
             "id": 48153,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "progressive-engine",
@@ -2456,8 +2597,9 @@
             "name": "Utopia Complete",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Victory",
@@ -6223,6 +6365,165 @@
       "progressive-zipline": 3
     }
   },
+  "canonical_placements": {
+    "1": {
+      "Honey": "Recycler",
+      "Flippers": "Fuel tank",
+      "Birds nest": "progressive-grill",
+      "Battery": "progressive-anchor",
+      "Circuit board": "Resource Pack: 2 CopperOre",
+      "Bolt": "progressive-biofuel",
+      "Hinge": "progressive-crop-plot",
+      "Shear": "Resource Pack: 2 Raw_Beet",
+      "Net launcher": "progressive-battery",
+      "Drinking glass": "Hinge",
+      "Clay bowl": "progressive-spear",
+      "Net canister": "Resource Pack: 2 Plastic",
+      "Binoculars": "Resource Pack: 1 TitaniumOre",
+      "Metal fishing rod": "Resource Pack: 5 Sand",
+      "Oxygen bottle": "Water pipe",
+      "Sprinkler": "progressive-engine",
+      "Empty bottle": "progressive-spear",
+      "Cookingpot": "Resource Pack: 5 Stone",
+      "Juicer": "progressive-biofuel",
+      "Stationary anchor": "Resource Pack: 3 TitaniumOre",
+      "Advanced grill": "Antenna",
+      "Metal Spear": "progressive-headlight",
+      "Storage": "Resource Pack: 1 SeaVine",
+      "Smelter": "Resource Pack: 3 Scrap",
+      "Paint mill": "Circuit board",
+      "Hammock": "Bucket",
+      "Metal axe": "Resource Pack: 1 CopperOre",
+      "Scrap hook": "Resource Pack: 4 CopperOre",
+      "Large crop plot": "Resource Pack: 2 TitaniumOre",
+      "Sweep net": "Resource Pack: 2 Scrap",
+      "Basic bow": "Receiver",
+      "Scarecrow": "Resource Pack: 3 Plank",
+      "Metal arrow": "progressive-bottle",
+      "Shovel": "Resource Pack: 1 TitaniumOre",
+      "Advanced collection net": "progressive-battery",
+      "Bucket": "progressive-crop-plot",
+      "Collection net": "Trashcan",
+      "Paint brush": "progressive-metals",
+      "Advanced purifier": "Beehive",
+      "Grass plot": "Net canister",
+      "Stone arrow": "Firework",
+      "Medium crop plot": "progressive-metals",
+      "Lantern": "progressive-bow",
+      "Small trophy board": "progressive-engine",
+      "Medium trophy board": "Bolt",
+      "Large trophy board": "Resource Pack: 5 CopperOre",
+      "Backpack": "progressive-battery",
+      "Leather helmet": "Resource Pack: 1 Scrap",
+      "Leather body armor": "Resource Pack: 3 Raw_Beet",
+      "Leather greaves": "Resource Pack: 4 Clay",
+      "Beehive": "Honey",
+      "Good healing salve": "Resource Pack: 3 CopperOre",
+      "Healing salve": "Resource Pack: 1 Plank",
+      "Tala (Radio Tower)": "progressive-anchor",
+      "Head light blueprint": "progressive-metals",
+      "Recycler blueprint": "Metal fishing rod",
+      "Radio Tower Briefcase": "Sprinkler",
+      "Radio Tower Frequency to Vasagatan": "Vasagatan Frequency",
+      "Radio Tower Notepad 1": "Resource Pack: 2 Sand",
+      "Radio Tower Notepad 2": "Resource Pack: 2 Plank",
+      "Radio Tower Signalboard Trace": "Hammock",
+      "Hannes Letter 1": "Net launcher",
+      "Hannes Letter 2": "Resource Pack: 1 MetalOre",
+      "Hannes Letter 3": "Resource Pack: 2 Thatch",
+      "Olof Log 1": "progressive-bow",
+      "Olof Log 2": "progressive-storage",
+      "Olof Log 3": "progressive-hook",
+      "Vasagatan Recording 1": "Resource Pack: 2 MetalOre",
+      "Vasagatan Recording 2": "progressive-crop-plot",
+      "Vasagatan Recording 3": "Juicer",
+      "Vasagatan Magazine Clipping": "progressive-salve",
+      "Vasagatan Frequency to Balboa": "Balboa Island Frequency",
+      "Engine blueprint": "Resource Pack: 2 SeaVine",
+      "Steering Wheel blueprint": "progressive-crop-plot",
+      "Machete blueprint": "Resource Pack: 5 MetalOre",
+      "Balboa Island Correa twins picture": "Resource Pack: 5 Scrap",
+      "Balboa Island Schedule of engineers": "Water tank",
+      "Biofuel refiner blueprint": "Resource Pack: 1 Plank",
+      "Balboa Island Note from Henry": "progressive-salve",
+      "Balboa Island Correas diary 3": "progressive-storage",
+      "Fuel tank blueprint": "Resource Pack: 4 Raw_Potato",
+      "Balboa Island Correas diary 1": "Resource Pack: 2 Stone",
+      "Balboa Island Correas diary 2": "Flippers",
+      "Fuel pipe blueprint": "Resource Pack: 4 Thatch",
+      "Balboa Island Bear map": "Shovel",
+      "Johnny (Balboa Island)": "progressive-bottle",
+      "Balboa Island Doll murderer 4": "Leather greaves",
+      "Balboa Island Doll murderer 1": "Resource Pack: 3 Scrap",
+      "Balboa Island Doll murderer 3": "Resource Pack: 2 MetalOre",
+      "Balboa Island Doll murderer 5": "progressive-battery",
+      "Balboa Island Doll murderer 2": "Cookingpot",
+      "Relay Station quest": "Tangaroa Frequency",
+      "Caravan Island Detto journal 1": "Resource Pack: 5 ExplosiveGoo",
+      "Caravan Island Detto journal 2": "progressive-hook",
+      "Caravan Island Detto journal 3": "Resource Pack: 5 Stone",
+      "Caravan Island Detto journal 4": "progressive-zipline",
+      "Caravan Island Detto journal 5": "Resource Pack: 2 CopperOre",
+      "Caravan Island Detto journal 6": "Leather body armor",
+      "Caravan Island Olaf speech": "Fuel pipe",
+      "Caravan Island Raft town article": "Resource Pack: 5 SeaVine",
+      "Caravan Island Doctor's note": "Resource Pack: 3 Scrap",
+      "Firework blueprint": "Resource Pack: 2 TitaniumOre",
+      "Battery Charger quest": "progressive-bow",
+      "Zipline quest": "progressive-zipline",
+      "Caravan Island Frequency to Tangaroa": "Varuna Point Frequency",
+      "Engine controls blueprint": "progressive-scarecrow",
+      "Metal detector blueprint": "progressive-backpack",
+      "Tangaroa Ruben 1": "Birds nest",
+      "Tangaroa Ruben 2": "Resource Pack: 3 MetalOre",
+      "Tangaroa Ruben 3": "progressive-bow",
+      "Tangaroa Ruben 4": "Resource Pack: 4 Raw_Beet",
+      "Tangaroa Ruben 5": "Oxygen bottle",
+      "Tangaroa Gardener Diary": "Resource Pack: 1 Stone",
+      "Tangaroa Riot Log": "Resource Pack: 2 Clay",
+      "Tangaroa Tulley Note": "progressive-purifier",
+      "Tangaroa Cipher": "progressive-grill",
+      "Tangaroa Frequency to Varuna Point": "Caravan Island Frequency",
+      "Water pipe blueprint": "progressive-net",
+      "Electric purifier blueprint": "Resource Pack: 1 Plank",
+      "Water tank blueprint": "Resource Pack: 2 Plastic",
+      "Large Storage blueprint": "Resource Pack: 2 Thatch",
+      "Elaine (Tangaroa)": "Resource Pack: 4 Stone",
+      "Varuna Point Grabber diary 1": "Resource Pack: 1 Plastic",
+      "Varuna Point Grabber diary 2": "Resource Pack: 4 Thatch",
+      "Varuna Point Grabber diary 3": "Resource Pack: 1 TitaniumOre",
+      "Varuna Point Grabber diary 4": "progressive-containers",
+      "Varuna Point Grabber diary 5": "progressive-zipline",
+      "Varuna Point Grabber diary 6": "progressive-headlight",
+      "Varuna Point Frequency to Temperance": "Temperance Frequency",
+      "Wind Turbine blueprint": "Resource Pack: 1 Clay",
+      "Advanced Battery blueprint": "progressive-axe",
+      "Advanced Headlight blueprint": "Leather helmet",
+      "Electric Grill blueprint": "Resource Pack: 3 Clay",
+      "Temperance Bruno diary 1": "Resource Pack: 1 SeaVine",
+      "Temperance Bruno diary 2": "progressive-axe",
+      "Temperance Bruno diary 3": "Resource Pack: 4 Clay",
+      "Temperance Bruno diary 4": "Resource Pack: 2 CopperOre",
+      "Temperance Bruno diary 5": "progressive-spear",
+      "Temperance Sparrow note 1": "progressive-crop-plot",
+      "Temperance Sparrow note 2": "progressive-purifier",
+      "Temperance Frequency to Utopia": "Utopia Frequency",
+      "Temperance Star sign 1": "progressive-containers",
+      "Temperance Star sign 2": "Shear",
+      "Temperance Star sign 3": "Resource Pack: 5 TitaniumOre",
+      "Temperance Star sign 4": "Resource Pack: 2 Plank",
+      "Electric Smelter blueprint": "progressive-net",
+      "Advanced Biofuel Extractor blueprint": "Resource Pack: 2 Scrap",
+      "Advanced Stationary Anchor blueprint": "Resource Pack: 3 Plastic",
+      "Shogo (Temperance)": "progressive-scarecrow",
+      "Electric Zipline blueprint": "Binoculars",
+      "Advanced Backpack blueprint": "Sweep net",
+      "Titanium Tools blueprint": "progressive-backpack",
+      "Utopia Captives note": "Grass plot",
+      "Utopia Detto map": "progressive-engine",
+      "Utopia Complete": "Victory"
+    }
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -6233,7 +6534,21 @@
     "1": {
       "game": "Raft WorldGen",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": false,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      }
     }
   },
   "game_info": {
@@ -6241,6 +6556,26 @@
       "name": "Raft WorldGen",
       "rule_format": {
         "version": "1.0"
+      },
+      "web_theme": "ocean",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to setting up Raft integration for Archipelago multiworld games.",
+          "language": "English",
+          "file_name": "setup_en.md",
+          "link": "setup/en",
+          "authors": [
+            "SunnyBat",
+            "Awareqwx"
+          ]
+        }
+      ],
+      "world_description": "Raft is a flooded world exploration game. You're stranded on a small raft in the middle of the\nocean, and you must survive on trash floating by you on the top of the water and around/on any\nislands that you come across.",
+      "slot_data": {
+        "IslandGenerationDistance": 8,
+        "ExpensiveResearch": false,
+        "DeathLink": false
       }
     }
   },

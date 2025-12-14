@@ -23,7 +23,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -47,7 +47,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -71,7 +71,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -95,7 +95,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -119,7 +119,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -143,7 +143,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -167,7 +167,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -191,7 +191,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -215,7 +215,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -239,7 +239,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -263,7 +263,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -287,7 +287,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -311,7 +311,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -335,7 +335,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -359,7 +359,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -383,7 +383,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -407,7 +407,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -431,7 +431,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -455,7 +455,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -479,7 +479,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -503,7 +503,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -527,7 +527,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -551,7 +551,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -575,7 +575,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -599,7 +599,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -623,7 +623,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -647,7 +647,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -671,7 +671,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -695,7 +695,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -719,7 +719,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -743,7 +743,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -767,7 +767,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -791,7 +791,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -815,7 +815,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -839,7 +839,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -863,7 +863,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -887,7 +887,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -911,7 +911,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -935,7 +935,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -959,7 +959,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -983,7 +983,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1007,7 +1007,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1031,7 +1031,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1055,7 +1055,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1079,7 +1079,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1103,7 +1103,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1127,7 +1127,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1151,7 +1151,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1175,7 +1175,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1199,7 +1199,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1223,7 +1223,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1247,7 +1247,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1271,7 +1271,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1295,7 +1295,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1319,7 +1319,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1343,7 +1343,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1367,7 +1367,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1391,7 +1391,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1415,7 +1415,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1439,7 +1439,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1463,7 +1463,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1487,7 +1487,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1511,7 +1511,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1535,7 +1535,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1559,7 +1559,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1583,7 +1583,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1607,7 +1607,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1631,7 +1631,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1655,7 +1655,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1679,7 +1679,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1703,7 +1703,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1727,7 +1727,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1751,7 +1751,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1775,7 +1775,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1799,7 +1799,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1823,7 +1823,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1847,7 +1847,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1871,7 +1871,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1895,7 +1895,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1919,7 +1919,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1943,7 +1943,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1967,7 +1967,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -1991,7 +1991,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2015,7 +2015,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2039,7 +2039,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2063,7 +2063,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2087,7 +2087,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2111,7 +2111,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2135,7 +2135,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2159,7 +2159,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2183,7 +2183,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2207,7 +2207,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2231,7 +2231,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2255,7 +2255,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2279,7 +2279,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2303,7 +2303,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2327,7 +2327,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2351,7 +2351,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2375,7 +2375,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2399,7 +2399,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2423,7 +2423,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2447,7 +2447,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2471,7 +2471,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2495,7 +2495,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2519,7 +2519,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2543,7 +2543,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2567,7 +2567,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2591,7 +2591,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2615,7 +2615,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2639,7 +2639,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2663,7 +2663,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2687,7 +2687,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2711,7 +2711,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2735,7 +2735,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2759,7 +2759,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2783,7 +2783,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2807,7 +2807,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2831,7 +2831,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2855,7 +2855,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2879,7 +2879,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2903,7 +2903,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2927,7 +2927,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2951,7 +2951,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2975,7 +2975,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -2999,7 +2999,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -3023,7 +3023,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -3047,7 +3047,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -3071,7 +3071,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -3095,7 +3095,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -3119,7 +3119,7 @@
               "type": "compare",
               "left": {
                 "type": "helper",
-                "name": "paint_percent_available",
+                "name": "calculate_paint_percent_available",
                 "args": []
               },
               "op": ">=",
@@ -3558,5 +3558,412 @@
       }
     }
   },
-  "helpers": {}
+  "helpers": {
+    "1": {
+      "calculate_paint_percent_available": {
+        "type": "block",
+        "statements": [
+          {
+            "type": "assign",
+            "name": "p",
+            "value": {
+              "type": "item_check",
+              "item": "Pick Color"
+            }
+          },
+          {
+            "type": "assign",
+            "name": "r",
+            "value": {
+              "type": "min",
+              "args": [
+                {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Progressive Color Depth (Red)"
+                    }
+                  ]
+                },
+                {
+                  "type": "constant",
+                  "value": 7
+                }
+              ]
+            }
+          },
+          {
+            "type": "assign",
+            "name": "g",
+            "value": {
+              "type": "min",
+              "args": [
+                {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Progressive Color Depth (Green)"
+                    }
+                  ]
+                },
+                {
+                  "type": "constant",
+                  "value": 7
+                }
+              ]
+            }
+          },
+          {
+            "type": "assign",
+            "name": "b",
+            "value": {
+              "type": "min",
+              "args": [
+                {
+                  "type": "state_method",
+                  "method": "count",
+                  "args": [
+                    {
+                      "type": "constant",
+                      "value": "Progressive Color Depth (Blue)"
+                    }
+                  ]
+                },
+                {
+                  "type": "constant",
+                  "value": 7
+                }
+              ]
+            }
+          },
+          {
+            "type": "if_statement",
+            "test": {
+              "type": "not",
+              "condition": {
+                "type": "name",
+                "name": "p"
+              }
+            },
+            "body": [
+              {
+                "type": "assign",
+                "name": "r",
+                "value": {
+                  "type": "min",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "r"
+                    },
+                    {
+                      "type": "constant",
+                      "value": 2
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "assign",
+                "name": "g",
+                "value": {
+                  "type": "min",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "g"
+                    },
+                    {
+                      "type": "constant",
+                      "value": 2
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "assign",
+                "name": "b",
+                "value": {
+                  "type": "min",
+                  "args": [
+                    {
+                      "type": "name",
+                      "name": "b"
+                    },
+                    {
+                      "type": "constant",
+                      "value": 2
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "type": "assign",
+            "name": "w",
+            "value": {
+              "type": "state_method",
+              "method": "count",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Progressive Canvas Width"
+                }
+              ]
+            }
+          },
+          {
+            "type": "assign",
+            "name": "h",
+            "value": {
+              "type": "state_method",
+              "method": "count",
+              "args": [
+                {
+                  "type": "constant",
+                  "value": "Progressive Canvas Height"
+                }
+              ]
+            }
+          },
+          {
+            "type": "return",
+            "value": {
+              "type": "binary_op",
+              "left": {
+                "type": "binary_op",
+                "left": {
+                  "type": "binary_op",
+                  "left": {
+                    "type": "binary_op",
+                    "left": {
+                      "type": "binary_op",
+                      "left": {
+                        "type": "constant",
+                        "value": 1
+                      },
+                      "op": "-",
+                      "right": {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "helper",
+                          "name": "sqrt",
+                          "args": [
+                            {
+                              "type": "binary_op",
+                              "left": {
+                                "type": "binary_op",
+                                "left": {
+                                  "type": "binary_op",
+                                  "left": {
+                                    "type": "binary_op",
+                                    "left": {
+                                      "type": "binary_op",
+                                      "left": {
+                                        "type": "binary_op",
+                                        "left": {
+                                          "type": "constant",
+                                          "value": 2
+                                        },
+                                        "op": "**",
+                                        "right": {
+                                          "type": "binary_op",
+                                          "left": {
+                                            "type": "constant",
+                                            "value": 7
+                                          },
+                                          "op": "-",
+                                          "right": {
+                                            "type": "name",
+                                            "name": "r"
+                                          }
+                                        }
+                                      },
+                                      "op": "-",
+                                      "right": {
+                                        "type": "constant",
+                                        "value": 1
+                                      }
+                                    },
+                                    "op": "**",
+                                    "right": {
+                                      "type": "constant",
+                                      "value": 2
+                                    }
+                                  },
+                                  "op": "+",
+                                  "right": {
+                                    "type": "binary_op",
+                                    "left": {
+                                      "type": "binary_op",
+                                      "left": {
+                                        "type": "binary_op",
+                                        "left": {
+                                          "type": "constant",
+                                          "value": 2
+                                        },
+                                        "op": "**",
+                                        "right": {
+                                          "type": "binary_op",
+                                          "left": {
+                                            "type": "constant",
+                                            "value": 7
+                                          },
+                                          "op": "-",
+                                          "right": {
+                                            "type": "name",
+                                            "name": "g"
+                                          }
+                                        }
+                                      },
+                                      "op": "-",
+                                      "right": {
+                                        "type": "constant",
+                                        "value": 1
+                                      }
+                                    },
+                                    "op": "**",
+                                    "right": {
+                                      "type": "constant",
+                                      "value": 2
+                                    }
+                                  }
+                                },
+                                "op": "+",
+                                "right": {
+                                  "type": "binary_op",
+                                  "left": {
+                                    "type": "binary_op",
+                                    "left": {
+                                      "type": "binary_op",
+                                      "left": {
+                                        "type": "constant",
+                                        "value": 2
+                                      },
+                                      "op": "**",
+                                      "right": {
+                                        "type": "binary_op",
+                                        "left": {
+                                          "type": "constant",
+                                          "value": 7
+                                        },
+                                        "op": "-",
+                                        "right": {
+                                          "type": "name",
+                                          "name": "b"
+                                        }
+                                      }
+                                    },
+                                    "op": "-",
+                                    "right": {
+                                      "type": "constant",
+                                      "value": 1
+                                    }
+                                  },
+                                  "op": "**",
+                                  "right": {
+                                    "type": "constant",
+                                    "value": 2
+                                  }
+                                }
+                              },
+                              "op": "*",
+                              "right": {
+                                "type": "constant",
+                                "value": 12
+                              }
+                            }
+                          ]
+                        },
+                        "op": "/",
+                        "right": {
+                          "type": "constant",
+                          "value": 765
+                        }
+                      }
+                    },
+                    "op": "*",
+                    "right": {
+                      "type": "min",
+                      "args": [
+                        {
+                          "type": "binary_op",
+                          "left": {
+                            "type": "constant",
+                            "value": 400
+                          },
+                          "op": "+",
+                          "right": {
+                            "type": "binary_op",
+                            "left": {
+                              "type": "name",
+                              "name": "w"
+                            },
+                            "op": "*",
+                            "right": {
+                              "type": "setting_value",
+                              "setting": "canvas_size_increment"
+                            }
+                          }
+                        },
+                        {
+                          "type": "constant",
+                          "value": 800
+                        }
+                      ]
+                    }
+                  },
+                  "op": "*",
+                  "right": {
+                    "type": "min",
+                    "args": [
+                      {
+                        "type": "binary_op",
+                        "left": {
+                          "type": "constant",
+                          "value": 300
+                        },
+                        "op": "+",
+                        "right": {
+                          "type": "binary_op",
+                          "left": {
+                            "type": "name",
+                            "name": "h"
+                          },
+                          "op": "*",
+                          "right": {
+                            "type": "setting_value",
+                            "setting": "canvas_size_increment"
+                          }
+                        }
+                      },
+                      {
+                        "type": "constant",
+                        "value": 600
+                      }
+                    ]
+                  }
+                },
+                "op": "*",
+                "right": {
+                  "type": "setting_value",
+                  "setting": "logic_percent"
+                }
+              },
+              "op": "/",
+              "right": {
+                "type": "constant",
+                "value": 480000
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
 }

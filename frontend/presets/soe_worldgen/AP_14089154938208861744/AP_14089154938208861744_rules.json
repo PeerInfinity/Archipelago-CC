@@ -929,8 +929,9 @@
             "name": "S. Jungle w/ weapon #2",
             "id": 64102,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nectar",
@@ -945,8 +946,9 @@
             "name": "S. Jungle w/ weapon #3",
             "id": 64103,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Clay",
@@ -961,8 +963,9 @@
             "name": "S. Jungle w/ weapon #5",
             "id": 64105,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Call bead",
@@ -976,8 +979,9 @@
             "name": "Strongheart's Hut #6",
             "id": 64106,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Wax",
@@ -992,8 +996,9 @@
             "name": "Strongheart's Hut #7",
             "id": 64107,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "5 Wax",
@@ -1007,8 +1012,9 @@
             "name": "Strongheart's Hut #8",
             "id": 64108,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Petal",
@@ -1023,8 +1029,9 @@
             "name": "Blimp's Hut #10",
             "id": 64110,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Slow Burn",
@@ -1038,8 +1045,9 @@
             "name": "Blimp's Hut #11",
             "id": 64111,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Honey",
@@ -1054,8 +1062,9 @@
             "name": "Blimp's Hut #12",
             "id": 64112,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Wax",
@@ -1070,8 +1079,9 @@
             "name": "N. Jungle #55",
             "id": 64155,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Petal",
@@ -1086,8 +1096,9 @@
             "name": "N. Jungle #56",
             "id": 64156,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Grease",
@@ -1102,8 +1113,9 @@
             "name": "Volcano Path #59",
             "id": 64159,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Honey",
@@ -1118,8 +1130,9 @@
             "name": "Volcano Path #60",
             "id": 64160,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Clay",
@@ -1134,8 +1147,9 @@
             "name": "Volcano Path #61",
             "id": 64161,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Clay",
@@ -1150,8 +1164,9 @@
             "name": "West of Swamp #62",
             "id": 64162,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Brimstone",
@@ -1166,8 +1181,9 @@
             "name": "West of Swamp #63",
             "id": 64163,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water",
@@ -1182,8 +1198,9 @@
             "name": "Swamp #64",
             "id": 64164,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive helmet",
@@ -1197,8 +1214,9 @@
             "name": "Swamp #65",
             "id": 64165,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Limestone",
@@ -1212,8 +1230,9 @@
             "name": "Swamp #66",
             "id": 64166,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Lightning Storm",
@@ -1227,8 +1246,9 @@
             "name": "Swamp #67",
             "id": 64167,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "8 Ash",
@@ -1243,8 +1263,9 @@
             "name": "Swamp #68",
             "id": 64168,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Regenerate",
@@ -1259,8 +1280,9 @@
             "name": "Swamp #69",
             "id": 64169,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mud Pepper",
@@ -1275,8 +1297,9 @@
             "name": "Swamp #70",
             "id": 64170,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Acorns",
@@ -1291,8 +1314,9 @@
             "name": "Volcano Shop #71",
             "id": 64171,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Honey",
@@ -1306,8 +1330,9 @@
             "name": "Volcano Shop #72",
             "id": 64172,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Ash",
@@ -1322,8 +1347,9 @@
             "name": "Arena Holding #95",
             "id": 64195,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Wax",
@@ -1338,8 +1364,9 @@
             "name": "Arena Holding #96",
             "id": 64196,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Gunpowder",
@@ -1354,8 +1381,9 @@
             "name": "Arena Holding #97",
             "id": 64197,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Amulet of Annihilation",
@@ -1370,8 +1398,9 @@
             "name": "Arena Holding #98",
             "id": 64198,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "100 Moniez",
@@ -1386,8 +1415,9 @@
             "name": "Arena Holding #99",
             "id": 64199,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Amulet of Annihilation",
@@ -1402,8 +1432,9 @@
             "name": "Arena Holding #100",
             "id": 64200,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Acorns",
@@ -1418,8 +1449,9 @@
             "name": "Arena Holding #101",
             "id": 64201,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Acorns",
@@ -1434,8 +1466,9 @@
             "name": "Arena Holding #102",
             "id": 64202,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Clay",
@@ -1450,8 +1483,9 @@
             "name": "Blimp's Cave #109",
             "id": 64209,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Clay",
@@ -1466,8 +1500,9 @@
             "name": "Blimp's Cave #110",
             "id": 64210,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Bone",
@@ -1482,8 +1517,9 @@
             "name": "Crustacia Interior #111",
             "id": 64211,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Brimstone",
@@ -1498,8 +1534,9 @@
             "name": "Crustacia Interior #112",
             "id": 64212,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Brimstone",
@@ -1514,8 +1551,9 @@
             "name": "Crustacia Interior #113",
             "id": 64213,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "30 Cryo Blast",
@@ -1529,8 +1567,9 @@
             "name": "Crustacia Interior #114",
             "id": 64214,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Clay",
@@ -1545,8 +1584,9 @@
             "name": "Crustacia Interior #115",
             "id": 64215,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Cure",
@@ -1561,8 +1601,9 @@
             "name": "Crustacia Interior #116",
             "id": 64216,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Ash",
@@ -1577,8 +1618,9 @@
             "name": "Volcano Path Cave #182",
             "id": 64282,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Nectar",
@@ -1593,8 +1635,9 @@
             "name": "Volcano Path Cave #183",
             "id": 64283,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roots",
@@ -1609,8 +1652,9 @@
             "name": "Ebon Sewers #190",
             "id": 64290,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Bone",
@@ -1625,8 +1669,9 @@
             "name": "Ebon Sewers #191",
             "id": 64291,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Aura",
@@ -1641,8 +1686,9 @@
             "name": "Ebon Sewers #192",
             "id": 64292,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "6 Vinegar",
@@ -1657,8 +1703,9 @@
             "name": "Ebon Sewers #193",
             "id": 64293,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Ethanol",
@@ -1673,8 +1720,9 @@
             "name": "Ebon Sewers #194",
             "id": 64294,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wax",
@@ -1689,8 +1737,9 @@
             "name": "Outside Ivor #199",
             "id": 64299,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Ethanol",
@@ -1705,8 +1754,9 @@
             "name": "Outside Ivor #200",
             "id": 64300,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Water",
@@ -1720,8 +1770,9 @@
             "name": "Outside Ivor #201",
             "id": 64301,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wax",
@@ -1736,8 +1787,9 @@
             "name": "Outside Ivor #202",
             "id": 64302,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roots",
@@ -1752,8 +1804,9 @@
             "name": "Ivor Houses #203",
             "id": 64303,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "6 Ash",
@@ -1767,8 +1820,9 @@
             "name": "Ivor Houses #204",
             "id": 64304,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nectar",
@@ -1783,8 +1837,9 @@
             "name": "Ivor Houses #205",
             "id": 64305,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Acorns",
@@ -1799,8 +1854,9 @@
             "name": "Ivor Houses #206",
             "id": 64306,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Oil",
@@ -1814,8 +1870,9 @@
             "name": "Ebon Houses #207",
             "id": 64307,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Clay",
@@ -1830,8 +1887,9 @@
             "name": "Ivor Houses #208",
             "id": 64308,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Amulet of Annihilation",
@@ -1846,8 +1904,9 @@
             "name": "Ebon Houses #209",
             "id": 64309,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water",
@@ -1862,8 +1921,9 @@
             "name": "Ivor Houses #210",
             "id": 64310,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water",
@@ -1878,8 +1938,9 @@
             "name": "Ebon Houses #211",
             "id": 64311,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "18 Moniez",
@@ -1894,8 +1955,9 @@
             "name": "Ivor Houses #212",
             "id": 64312,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Biscuit",
@@ -1910,8 +1972,9 @@
             "name": "Ebon Houses #213",
             "id": 64313,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Wax",
@@ -1926,8 +1989,9 @@
             "name": "Ivor Houses #214",
             "id": 64314,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Call bead",
@@ -1941,8 +2005,9 @@
             "name": "Ebon Houses #215",
             "id": 64315,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water",
@@ -1956,8 +2021,9 @@
             "name": "Ivor Houses #216",
             "id": 64316,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Ash",
@@ -1972,8 +2038,9 @@
             "name": "Ebon Houses #217",
             "id": 64317,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water",
@@ -1988,8 +2055,9 @@
             "name": "Ivor Houses #218",
             "id": 64318,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nectar",
@@ -2004,8 +2072,9 @@
             "name": "Ebon Houses #219",
             "id": 64319,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Feathers",
@@ -2019,8 +2088,9 @@
             "name": "Ivor Houses #220",
             "id": 64320,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Meteorite",
@@ -2035,8 +2105,9 @@
             "name": "Ebon Houses #221",
             "id": 64321,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mushroom",
@@ -2051,8 +2122,9 @@
             "name": "Ivor Houses #222",
             "id": 64322,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water",
@@ -2067,8 +2139,9 @@
             "name": "Ebon Houses #223",
             "id": 64323,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roots",
@@ -2083,8 +2156,9 @@
             "name": "Ivor Houses #224",
             "id": 64324,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mud Pepper",
@@ -2099,8 +2173,9 @@
             "name": "Ebon Houses #225",
             "id": 64325,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water",
@@ -2115,8 +2190,9 @@
             "name": "Ivor Houses #226",
             "id": 64326,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Biscuit",
@@ -2130,8 +2206,9 @@
             "name": "Ebon Houses #227",
             "id": 64327,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Double Drain",
@@ -2145,8 +2222,9 @@
             "name": "Ivor Houses #228",
             "id": 64328,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nectar",
@@ -2160,8 +2238,9 @@
             "name": "Ebon Houses #229",
             "id": 64329,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Water",
@@ -2176,8 +2255,9 @@
             "name": "Ivor Houses #230",
             "id": 64330,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "200 Moniez",
@@ -2192,8 +2272,9 @@
             "name": "Ebon Houses #231",
             "id": 64331,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Pixie Dust",
@@ -2208,8 +2289,9 @@
             "name": "Ivor Houses #232",
             "id": 64332,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Water",
@@ -2224,8 +2306,9 @@
             "name": "Ebon Houses #233",
             "id": 64333,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Limestone",
@@ -2240,8 +2323,9 @@
             "name": "Ivor Houses #234",
             "id": 64334,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roots",
@@ -2256,8 +2340,9 @@
             "name": "Ebon Houses #235",
             "id": 64335,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "500 Moniez",
@@ -2272,8 +2357,9 @@
             "name": "Ivor Houses #236",
             "id": 64336,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Brimstone",
@@ -2288,8 +2374,9 @@
             "name": "Ebon Houses #237",
             "id": 64337,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Call bead",
@@ -2303,8 +2390,9 @@
             "name": "Ivor Houses #238",
             "id": 64338,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Iron",
@@ -2319,8 +2407,9 @@
             "name": "Ebon Houses #239",
             "id": 64339,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Super Heal",
@@ -2335,8 +2424,9 @@
             "name": "Ivor Houses #240",
             "id": 64340,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Call bead",
@@ -2350,8 +2440,9 @@
             "name": "Ebon Houses #241",
             "id": 64341,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Oil",
@@ -2365,8 +2456,9 @@
             "name": "Ivor Houses #242",
             "id": 64342,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Brimstone",
@@ -2381,8 +2473,9 @@
             "name": "Ebon Houses #243",
             "id": 64343,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Dry Ice",
@@ -2397,8 +2490,9 @@
             "name": "Ivor Houses #244",
             "id": 64344,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Ash",
@@ -2413,8 +2507,9 @@
             "name": "Ebon Houses #245",
             "id": 64345,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Ethanol",
@@ -2429,8 +2524,9 @@
             "name": "Ivor Houses #246",
             "id": 64346,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Ethanol",
@@ -2444,8 +2540,9 @@
             "name": "Ebon Houses #247",
             "id": 64347,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water",
@@ -2459,8 +2556,9 @@
             "name": "Ebon Houses #248",
             "id": 64348,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Ethanol",
@@ -2475,8 +2573,9 @@
             "name": "Naris #249",
             "id": 64349,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Gladiator Sword",
@@ -2490,8 +2589,9 @@
             "name": "Naris #250",
             "id": 64350,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "100 Moniez",
@@ -2505,8 +2605,9 @@
             "name": "Tinker #251",
             "id": 64351,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Ash",
@@ -2521,8 +2622,9 @@
             "name": "Ebon Dining #252",
             "id": 64352,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Feather",
@@ -2537,8 +2639,9 @@
             "name": "Ivor Dining #253",
             "id": 64353,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Petal",
@@ -2553,8 +2656,9 @@
             "name": "Ivor Dining #254",
             "id": 64354,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Petal",
@@ -2569,8 +2673,9 @@
             "name": "Ivor Upper Floor #261",
             "id": 64361,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mud Pepper",
@@ -2585,8 +2690,9 @@
             "name": "Ivor Upper Floor #262",
             "id": 64362,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water",
@@ -2601,8 +2707,9 @@
             "name": "Ivor Sewers #263",
             "id": 64363,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water",
@@ -2617,8 +2724,9 @@
             "name": "Ivor Sewers #264",
             "id": 64364,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "6 Ash",
@@ -2633,8 +2741,9 @@
             "name": "Ivor Sewers #265",
             "id": 64365,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water",
@@ -2649,8 +2758,9 @@
             "name": "Ivor Sewers #266",
             "id": 64366,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "6 Water",
@@ -2665,8 +2775,9 @@
             "name": "Ivor Sewers #267",
             "id": 64367,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Call bead",
@@ -2680,8 +2791,9 @@
             "name": "Ivor Sewers #268",
             "id": 64368,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Acid Rain",
@@ -2696,8 +2808,9 @@
             "name": "Ivor Sewers #269",
             "id": 64369,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Diamond Eye",
@@ -2711,8 +2824,9 @@
             "name": "Ivor Sewers #270",
             "id": 64370,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nectar",
@@ -2727,8 +2841,9 @@
             "name": "Ebon Storage #271",
             "id": 64371,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Force Field",
@@ -2742,8 +2857,9 @@
             "name": "Ebon Storage #272",
             "id": 64372,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Escape",
@@ -2758,8 +2874,9 @@
             "name": "Ebon Storage #273",
             "id": 64373,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Bone",
@@ -2774,8 +2891,9 @@
             "name": "Coleoptera",
             "id": 64051,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wings",
@@ -2789,8 +2907,9 @@
             "name": "Mammoth Viper",
             "id": 64052,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "6 Water",
@@ -2804,8 +2923,9 @@
             "name": "Cave Raptors",
             "id": 64053,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Diamond Eye",
@@ -2819,8 +2939,9 @@
             "name": "Salabog",
             "id": 64054,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Revealer",
@@ -2834,8 +2955,9 @@
             "name": "Vigor",
             "id": 64055,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Bronze Spear",
@@ -2849,8 +2971,9 @@
             "name": "Bad Boys",
             "id": 64059,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "6 Ash",
@@ -2864,8 +2987,9 @@
             "name": "Timberdrake",
             "id": 64060,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Roots",
@@ -2879,8 +3003,9 @@
             "name": "Verminator",
             "id": 64061,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Drain",
@@ -2894,8 +3019,9 @@
             "name": "Footknight",
             "id": 64068,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Honey",
@@ -2909,8 +3035,9 @@
             "name": "Atlas",
             "id": 64001,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water",
@@ -2924,8 +3051,9 @@
             "name": "Corrosion",
             "id": 64004,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water",
@@ -2939,8 +3067,9 @@
             "name": "Crush",
             "id": 64005,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Water",
@@ -2954,8 +3083,9 @@
             "name": "Cure",
             "id": 64006,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Honey",
@@ -2969,8 +3099,9 @@
             "name": "Explosion",
             "id": 64012,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive gloves",
@@ -2984,8 +3115,9 @@
             "name": "Heal",
             "id": 64018,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wax",
@@ -2999,8 +3131,9 @@
             "name": "Lance",
             "id": 64019,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wax",
@@ -3014,8 +3147,9 @@
             "name": "Miracle Cure",
             "id": 64022,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water",
@@ -3029,8 +3163,9 @@
             "name": "One Up",
             "id": 64024,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Dry Ice",
@@ -3044,8 +3179,9 @@
             "name": "Regrowth",
             "id": 64026,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Oil",
@@ -3059,8 +3195,9 @@
             "name": "Revealer",
             "id": 64027,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Acorns",
@@ -3074,8 +3211,9 @@
             "name": "Revive",
             "id": 64028,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Call beads",
@@ -3089,8 +3227,9 @@
             "name": "Slow Burn",
             "id": 64029,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Clay",
@@ -3104,8 +3243,9 @@
             "name": "Sting",
             "id": 64031,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Herbal Essence",
@@ -3119,8 +3259,9 @@
             "name": "Super Heal",
             "id": 64033,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Call Up",
@@ -3134,8 +3275,9 @@
             "name": "Vanilla Gauge #57",
             "id": 64157,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Water",
@@ -3149,8 +3291,9 @@
             "name": "Volcano Path #58",
             "id": 64158,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wings",
@@ -3164,8 +3307,9 @@
             "name": "Volcano Room1 #73",
             "id": 64173,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water",
@@ -3179,8 +3323,9 @@
             "name": "Volcano Room1 #74",
             "id": 64174,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Explosion",
@@ -3194,8 +3339,9 @@
             "name": "Volcano Room1 #75",
             "id": 64175,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Herbal Essence",
@@ -3209,8 +3355,9 @@
             "name": "Volcano Room1 #76",
             "id": 64176,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Ethanol",
@@ -3224,8 +3371,9 @@
             "name": "Volcano Room1 #77",
             "id": 64177,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Water",
@@ -3239,8 +3387,9 @@
             "name": "Volcano Room1 #78",
             "id": 64178,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Petal",
@@ -3254,8 +3403,9 @@
             "name": "Volcano Room1 #79",
             "id": 64179,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Crusader Sword",
@@ -3269,8 +3419,9 @@
             "name": "Volcano Room1 #80",
             "id": 64180,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Biscuit",
@@ -3284,8 +3435,9 @@
             "name": "Volcano Room2 #81",
             "id": 64181,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Bronze Axe",
@@ -3299,8 +3451,9 @@
             "name": "Volcano Room2 #82",
             "id": 64182,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Atlas",
@@ -3314,8 +3467,9 @@
             "name": "Volcano Room2 #83",
             "id": 64183,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Biscuit",
@@ -3329,8 +3483,9 @@
             "name": "Volcano Room2 #84",
             "id": 64184,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Biscuit",
@@ -3344,8 +3499,9 @@
             "name": "Volcano Room2 #85",
             "id": 64185,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "30 Thunderballs",
@@ -3359,8 +3515,9 @@
             "name": "Volcano Room2 #86",
             "id": 64186,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water",
@@ -3374,8 +3531,9 @@
             "name": "Volcano Room2 #87",
             "id": 64187,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wax",
@@ -3389,8 +3547,9 @@
             "name": "Volcano Room2 #88",
             "id": 64188,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Ethanol",
@@ -3404,8 +3563,9 @@
             "name": "Pipe Maze #89",
             "id": 64189,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Defend",
@@ -3419,8 +3579,9 @@
             "name": "Pipe Maze #90",
             "id": 64190,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wax",
@@ -3434,8 +3595,9 @@
             "name": "Pipe Maze #91",
             "id": 64191,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Atom Smasher",
@@ -3449,8 +3611,9 @@
             "name": "Pipe Maze #92",
             "id": 64192,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "6 Water",
@@ -3464,8 +3627,9 @@
             "name": "Pipe Maze #93",
             "id": 64193,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Biscuit",
@@ -3479,8 +3643,9 @@
             "name": "Pipe Maze #94",
             "id": 64194,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Petal",
@@ -3494,8 +3659,9 @@
             "name": "W. Crustacia #103",
             "id": 64203,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive vest",
@@ -3509,8 +3675,9 @@
             "name": "W. Crustacia #104",
             "id": 64204,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive helmet",
@@ -3524,8 +3691,9 @@
             "name": "W. Crustacia #105",
             "id": 64205,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Petal",
@@ -3539,8 +3707,9 @@
             "name": "W. Crustacia #106",
             "id": 64206,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Fireball",
@@ -3554,8 +3723,9 @@
             "name": "E. Crustacia #107",
             "id": 64207,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Call bead",
@@ -3569,8 +3739,9 @@
             "name": "E. Crustacia #108",
             "id": 64208,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Laser Lance",
@@ -3584,8 +3755,9 @@
             "name": "Pyramid bottom #117",
             "id": 64217,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Ethanol",
@@ -3599,8 +3771,9 @@
             "name": "Pyramid bottom #118",
             "id": 64218,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Brimstone",
@@ -3614,8 +3787,9 @@
             "name": "Pyramid bottom #119",
             "id": 64219,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Limestone",
@@ -3629,8 +3803,9 @@
             "name": "Pyramid bottom #120",
             "id": 64220,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Clay",
@@ -3644,8 +3819,9 @@
             "name": "Pyramid bottom #121",
             "id": 64221,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Acorns",
@@ -3659,8 +3835,9 @@
             "name": "Pyramid bottom #122",
             "id": 64222,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Atlas Medallion",
@@ -3674,8 +3851,9 @@
             "name": "Pyramid bottom #123",
             "id": 64223,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive helmet",
@@ -3689,8 +3867,9 @@
             "name": "Pyramid bottom #124",
             "id": 64224,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Clay",
@@ -3704,8 +3883,9 @@
             "name": "Pyramid bottom #125",
             "id": 64225,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wheel",
@@ -3719,8 +3899,9 @@
             "name": "Pyramid bottom #126",
             "id": 64226,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Stop",
@@ -3734,8 +3915,9 @@
             "name": "Pyramid bottom #127",
             "id": 64227,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "5 Oil",
@@ -3749,8 +3931,9 @@
             "name": "Pyramid bottom #128",
             "id": 64228,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Petal",
@@ -3764,8 +3947,9 @@
             "name": "Pyramid bottom #129",
             "id": 64229,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Honey",
@@ -3779,8 +3963,9 @@
             "name": "Pyramid bottom #130",
             "id": 64230,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water",
@@ -3794,8 +3979,9 @@
             "name": "Pyramid bottom #131",
             "id": 64231,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Horn Spear",
@@ -3809,8 +3995,9 @@
             "name": "Pyramid bottom #132",
             "id": 64232,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nothing",
@@ -3824,8 +4011,9 @@
             "name": "Pyramid bottom #133",
             "id": 64233,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Lance",
@@ -3839,8 +4027,9 @@
             "name": "Pyramid bottom #134",
             "id": 64234,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Reflect",
@@ -3854,8 +4043,9 @@
             "name": "Pyramid top #135",
             "id": 64235,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Sting",
@@ -3869,8 +4059,9 @@
             "name": "Pyramid top #136",
             "id": 64236,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Pixie Dust",
@@ -3884,8 +4075,9 @@
             "name": "Pyramid top #137",
             "id": 64237,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Gauge",
@@ -3899,8 +4091,9 @@
             "name": "Pyramid top #138",
             "id": 64238,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Wax",
@@ -3914,8 +4107,9 @@
             "name": "Pyramid top #139",
             "id": 64239,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Ethanol",
@@ -3929,8 +4123,9 @@
             "name": "Pyramid top #140",
             "id": 64240,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "5 Iron",
@@ -3944,8 +4139,9 @@
             "name": "Pyramid top #141",
             "id": 64241,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Energize",
@@ -3959,8 +4155,9 @@
             "name": "Pyramid top #142",
             "id": 64242,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Barrier",
@@ -3974,8 +4171,9 @@
             "name": "Pyramid top #143",
             "id": 64243,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Wax",
@@ -3989,8 +4187,9 @@
             "name": "Pyramid top #144",
             "id": 64244,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Call bead",
@@ -4004,8 +4203,9 @@
             "name": "Pyramid top #145",
             "id": 64245,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Mushroom",
@@ -4019,8 +4219,9 @@
             "name": "Pyramid top #146",
             "id": 64246,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water",
@@ -4034,8 +4235,9 @@
             "name": "Pyramid top #147",
             "id": 64247,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Water",
@@ -4049,8 +4251,9 @@
             "name": "Pyramid top #148",
             "id": 64248,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Water",
@@ -4064,8 +4267,9 @@
             "name": "Pyramid top #149",
             "id": 64249,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Vinegar",
@@ -4079,8 +4283,9 @@
             "name": "Pyramid top #150",
             "id": 64250,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nectar",
@@ -4094,8 +4299,9 @@
             "name": "Pyramid top #151",
             "id": 64251,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Clay",
@@ -4109,8 +4315,9 @@
             "name": "Pyramid top #152",
             "id": 64252,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Crystal",
@@ -4124,8 +4331,9 @@
             "name": "Pyramid top #153",
             "id": 64253,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Meteorite",
@@ -4139,8 +4347,9 @@
             "name": "Pyramid top #154",
             "id": 64254,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Call bead",
@@ -4154,8 +4363,9 @@
             "name": "Pyramid top #155",
             "id": 64255,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "7 Roots",
@@ -4169,8 +4379,9 @@
             "name": "Pyramid top #156",
             "id": 64256,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10,000 Gold Coins",
@@ -4184,8 +4395,9 @@
             "name": "Pyramid top #157",
             "id": 64257,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Limestone",
@@ -4199,8 +4411,9 @@
             "name": "Tiny's hideout #158",
             "id": 64258,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Water",
@@ -4214,8 +4427,9 @@
             "name": "Tiny's hideout #159",
             "id": 64259,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Clay",
@@ -4229,8 +4443,9 @@
             "name": "Tiny's hideout #160",
             "id": 64260,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Wax",
@@ -4244,8 +4459,9 @@
             "name": "Tiny's hideout #161",
             "id": 64261,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Spider Claw",
@@ -4259,8 +4475,9 @@
             "name": "Tiny's hideout #162",
             "id": 64262,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Levitate",
@@ -4274,8 +4491,9 @@
             "name": "Tiny's hideout #163",
             "id": 64263,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Petal",
@@ -4289,8 +4507,9 @@
             "name": "Tiny's hideout #164",
             "id": 64264,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roots",
@@ -4304,8 +4523,9 @@
             "name": "Halls Main Room #165",
             "id": 64265,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Petal",
@@ -4319,8 +4539,9 @@
             "name": "Halls Main Room #166",
             "id": 64266,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Crystal",
@@ -4334,8 +4555,9 @@
             "name": "Halls SW #167",
             "id": 64267,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Honey",
@@ -4349,8 +4571,9 @@
             "name": "Halls SW #168",
             "id": 64268,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Call bead",
@@ -4364,8 +4587,9 @@
             "name": "Halls SW #169",
             "id": 64269,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "30 Particle Bombs",
@@ -4379,8 +4603,9 @@
             "name": "Halls NW #170",
             "id": 64270,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wings",
@@ -4394,8 +4619,9 @@
             "name": "Halls NW #171",
             "id": 64271,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wax",
@@ -4409,8 +4635,9 @@
             "name": "Halls NW #172",
             "id": 64272,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Clay",
@@ -4424,8 +4651,9 @@
             "name": "Halls NW #173",
             "id": 64273,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nectar",
@@ -4439,8 +4667,9 @@
             "name": "Halls NE #174",
             "id": 64274,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "15 Moniez",
@@ -4454,8 +4683,9 @@
             "name": "Halls NE #175",
             "id": 64275,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wings",
@@ -4469,8 +4699,9 @@
             "name": "Halls NE #176",
             "id": 64276,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wax",
@@ -4484,8 +4715,9 @@
             "name": "Halls NE #177",
             "id": 64277,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nectar",
@@ -4499,8 +4731,9 @@
             "name": "Halls Bridge #178",
             "id": 64278,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Crush",
@@ -4514,8 +4747,9 @@
             "name": "Oglin Cave #179",
             "id": 64279,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Heal",
@@ -4529,8 +4763,9 @@
             "name": "Drain Cave #180",
             "id": 64280,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Roots",
@@ -4544,8 +4779,9 @@
             "name": "Drain Cave #181",
             "id": 64281,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Roots",
@@ -4559,8 +4795,9 @@
             "name": "Gomi's Tower #195",
             "id": 64295,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wax",
@@ -4574,8 +4811,9 @@
             "name": "Gomi's Tower #196",
             "id": 64296,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Brimstone",
@@ -4589,8 +4827,9 @@
             "name": "Gomi's Tower #197",
             "id": 64297,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Iron",
@@ -4604,8 +4843,9 @@
             "name": "Gomi's Tower #198",
             "id": 64298,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Pixie Dust",
@@ -4619,8 +4859,9 @@
             "name": "Ivor East #255",
             "id": 64355,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive gloves",
@@ -4634,8 +4875,9 @@
             "name": "Ivor East #256",
             "id": 64356,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Vinegar",
@@ -4649,8 +4891,9 @@
             "name": "Ivor East #257",
             "id": 64357,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Vinegar",
@@ -4664,8 +4907,9 @@
             "name": "Ivor East #258",
             "id": 64358,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Call beads",
@@ -4679,8 +4923,9 @@
             "name": "Ivor East #259",
             "id": 64359,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water",
@@ -4694,8 +4939,9 @@
             "name": "Ivor East #260",
             "id": 64360,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Water",
@@ -4709,8 +4955,9 @@
             "name": "Prof. Lab #274",
             "id": 64374,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Oil",
@@ -4724,8 +4971,9 @@
             "name": "Greenhouse #275",
             "id": 64375,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "6 Water",
@@ -4739,8 +4987,9 @@
             "name": "Alarm room #276",
             "id": 64376,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "10 Crystal",
@@ -4754,8 +5003,9 @@
             "name": "Reactor room #277",
             "id": 64377,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Regrowth",
@@ -4769,8 +5019,9 @@
             "name": "Storage room #278",
             "id": 64378,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive vest",
@@ -4784,8 +5035,9 @@
             "name": "Storage room #279",
             "id": 64379,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive gloves",
@@ -4799,8 +5051,9 @@
             "name": "Storage room #280",
             "id": 64380,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Herbal Essence",
@@ -4814,8 +5067,9 @@
             "name": "Storage room #281",
             "id": 64381,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Diamond Eye",
@@ -4829,8 +5083,9 @@
             "name": "Storage room #282",
             "id": 64382,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Acorns",
@@ -4844,8 +5099,9 @@
             "name": "Storage room #283",
             "id": 64383,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Water",
@@ -4859,8 +5115,9 @@
             "name": "Storage room #284",
             "id": 64384,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Ethanol",
@@ -4874,8 +5131,9 @@
             "name": "Energy Core #285",
             "id": 64385,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "One Up",
@@ -4889,8 +5147,9 @@
             "name": "Megataur",
             "id": 64056,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Lance (Weapon)",
@@ -4905,8 +5164,9 @@
             "name": "Rimsala",
             "id": 64057,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Honey",
@@ -4920,8 +5180,9 @@
             "name": "Aquagoth",
             "id": 64058,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Water",
@@ -4935,8 +5196,9 @@
             "name": "Tiny",
             "id": 64062,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Energy Core",
@@ -4950,8 +5212,9 @@
             "name": "Mungola",
             "id": 64063,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Call bead",
@@ -4965,8 +5228,9 @@
             "name": "Sons of Sth.",
             "id": 64064,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Wings",
@@ -4980,8 +5244,9 @@
             "name": "Volcano Viper",
             "id": 64065,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Miracle Cure",
@@ -4995,8 +5260,9 @@
             "name": "Magmar",
             "id": 64066,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Biscuit",
@@ -5010,8 +5276,9 @@
             "name": "Mad Monk",
             "id": 64067,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Call bead",
@@ -5025,8 +5292,9 @@
             "name": "Barrier",
             "id": 64002,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Pixie Dust",
@@ -5040,8 +5308,9 @@
             "name": "Call Up",
             "id": 64003,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Crystal",
@@ -5055,8 +5324,9 @@
             "name": "Double Drain",
             "id": 64008,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Mud Pepper",
@@ -5070,8 +5340,9 @@
             "name": "Drain",
             "id": 64009,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Honey",
@@ -5085,8 +5356,9 @@
             "name": "Energize",
             "id": 64010,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Nectar",
@@ -5100,8 +5372,9 @@
             "name": "Escape",
             "id": 64011,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Corrosion",
@@ -5115,8 +5388,9 @@
             "name": "Fireball",
             "id": 64013,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Water",
@@ -5130,8 +5404,9 @@
             "name": "Fire Power",
             "id": 64014,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "3 Oil",
@@ -5145,8 +5420,9 @@
             "name": "Force Field",
             "id": 64016,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Iron",
@@ -5160,8 +5436,9 @@
             "name": "Levitate",
             "id": 64020,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Nitro",
@@ -5175,8 +5452,9 @@
             "name": "Lightning Storm",
             "id": 64021,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Call bead",
@@ -5190,8 +5468,9 @@
             "name": "Nitro",
             "id": 64023,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "2 Petal",
@@ -5205,8 +5484,9 @@
             "name": "Reflect",
             "id": 64025,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "4 Crystal",
@@ -5220,8 +5500,9 @@
             "name": "Speed",
             "id": 64030,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Progressive vest",
@@ -5235,8 +5516,9 @@
             "name": "Stop",
             "id": 64032,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Clay",
@@ -5250,8 +5532,9 @@
             "name": "Done",
             "id": null,
             "access_rule": {
-              "type": "constant",
-              "value": true
+              "rule": "True_",
+              "options": [],
+              "args": {}
             },
             "item": {
               "name": "Victory",
@@ -7501,6 +7784,350 @@
       "Wings": 5
     }
   },
+  "canonical_placements": {
+    "1": {
+      "S. Jungle #0": "Petal",
+      "S. Jungle #1": "3 Wax",
+      "S. Jungle #4": "Atlas Medallion",
+      "FE Village #9": "Biscuit",
+      "FE Village Hut #13": "Clay",
+      "FE Village Hut #14": "20 Moniez",
+      "FE Village Hut #15": "Honey",
+      "FE Village Hut #16": "Revive",
+      "FE Village Hut #17": "Wax",
+      "FE Village Hut #18": "5 Ash",
+      "FE Village Hut #19": "Ash",
+      "FE Village Hut #20": "Flash",
+      "FE Village Hut #21": "2 Limestone",
+      "FE Village Hut #22": "2 Call beads",
+      "FE Village Hut #23": "3 Mushroom",
+      "FE Village Hut #24": "Wax",
+      "FE Village Hut #25": "Ash",
+      "FE Village Hut #26": "3 Feathers",
+      "FE Village Hut #27": "4 Vinegar",
+      "FE Village Hut #28": "Knight Basher",
+      "FE Village Hut #29": "Nectar",
+      "FE Village Hut #30": "Biscuit",
+      "FE Village Hut #31": "30 Moniez",
+      "FE Village Hut #32": "Herbal Essence",
+      "FE Village Hut #33": "Petal",
+      "FE Village Hut #34": "Bazooka",
+      "Defend Area #35": "2 Wax",
+      "Defend Area #36": "2 Wax",
+      "Defend Area #37": "5 Ash",
+      "Quick Sand Field #38": "Ethanol",
+      "Quick Sand Field #39": "Clay",
+      "Quick Sand Field #40": "Water",
+      "Quick Sand Field #41": "2 Acorns",
+      "Quick Sand Field #42": "2 Limestone",
+      "Quick Sand Field #43": "Nectar",
+      "Quick Sand Field #44": "Clay",
+      "Bugmuck #45": "Water",
+      "Bugmuck #46": "Nectar",
+      "Bugmuck #47": "2 Dry Ice",
+      "Bugmuck #48": "Mushroom",
+      "Bugmuck #49": "5 Wax",
+      "Bugmuck #50": "Progressive vest",
+      "Bugmuck #51": "5 Ash",
+      "Bugmuck #52": "Water",
+      "Acid Rain Guy #53": "3 Acorns",
+      "Acid Rain Guy #54": "2 Roots",
+      "Jaguar Ring Cave #184": "Speed",
+      "Jaguar Ring Cave #185": "4 Ash",
+      "Jaguar Ring Cave #186": "Roots",
+      "HB Cave #187": "Roots",
+      "HB Cave #188": "Biscuit",
+      "HB Cave #189": "Hard Ball",
+      "Thraxx": "Amulet of Annihilation",
+      "Acid Rain": "4 Clay",
+      "Defend": "Oil",
+      "Flash": "Fire Power",
+      "Hard Ball": "Nothing",
+      "S. Jungle w/ weapon #2": "Nectar",
+      "S. Jungle w/ weapon #3": "3 Clay",
+      "S. Jungle w/ weapon #5": "Call bead",
+      "Strongheart's Hut #6": "2 Wax",
+      "Strongheart's Hut #7": "5 Wax",
+      "Strongheart's Hut #8": "Petal",
+      "Blimp's Hut #10": "Slow Burn",
+      "Blimp's Hut #11": "Honey",
+      "Blimp's Hut #12": "4 Wax",
+      "N. Jungle #55": "Petal",
+      "N. Jungle #56": "Grease",
+      "Volcano Path #59": "Honey",
+      "Volcano Path #60": "2 Clay",
+      "Volcano Path #61": "Clay",
+      "West of Swamp #62": "3 Brimstone",
+      "West of Swamp #63": "Water",
+      "Swamp #64": "Progressive helmet",
+      "Swamp #65": "3 Limestone",
+      "Swamp #66": "Lightning Storm",
+      "Swamp #67": "8 Ash",
+      "Swamp #68": "Regenerate",
+      "Swamp #69": "Mud Pepper",
+      "Swamp #70": "Acorns",
+      "Volcano Shop #71": "Honey",
+      "Volcano Shop #72": "2 Ash",
+      "Arena Holding #95": "2 Wax",
+      "Arena Holding #96": "2 Gunpowder",
+      "Arena Holding #97": "Amulet of Annihilation",
+      "Arena Holding #98": "100 Moniez",
+      "Arena Holding #99": "Amulet of Annihilation",
+      "Arena Holding #100": "Acorns",
+      "Arena Holding #101": "Acorns",
+      "Arena Holding #102": "Clay",
+      "Blimp's Cave #109": "Clay",
+      "Blimp's Cave #110": "2 Bone",
+      "Crustacia Interior #111": "2 Brimstone",
+      "Crustacia Interior #112": "4 Brimstone",
+      "Crustacia Interior #113": "30 Cryo Blast",
+      "Crustacia Interior #114": "Clay",
+      "Crustacia Interior #115": "Cure",
+      "Crustacia Interior #116": "3 Ash",
+      "Volcano Path Cave #182": "3 Nectar",
+      "Volcano Path Cave #183": "Roots",
+      "Ebon Sewers #190": "2 Bone",
+      "Ebon Sewers #191": "Aura",
+      "Ebon Sewers #192": "6 Vinegar",
+      "Ebon Sewers #193": "3 Ethanol",
+      "Ebon Sewers #194": "Wax",
+      "Outside Ivor #199": "2 Ethanol",
+      "Outside Ivor #200": "4 Water",
+      "Outside Ivor #201": "Wax",
+      "Outside Ivor #202": "Roots",
+      "Ivor Houses #203": "6 Ash",
+      "Ivor Houses #204": "Nectar",
+      "Ivor Houses #205": "2 Acorns",
+      "Ivor Houses #206": "Oil",
+      "Ebon Houses #207": "4 Clay",
+      "Ivor Houses #208": "Amulet of Annihilation",
+      "Ebon Houses #209": "Water",
+      "Ivor Houses #210": "Water",
+      "Ebon Houses #211": "18 Moniez",
+      "Ivor Houses #212": "Biscuit",
+      "Ebon Houses #213": "3 Wax",
+      "Ivor Houses #214": "Call bead",
+      "Ebon Houses #215": "Water",
+      "Ivor Houses #216": "3 Ash",
+      "Ebon Houses #217": "Water",
+      "Ivor Houses #218": "Nectar",
+      "Ebon Houses #219": "4 Feathers",
+      "Ivor Houses #220": "3 Meteorite",
+      "Ebon Houses #221": "Mushroom",
+      "Ivor Houses #222": "Water",
+      "Ebon Houses #223": "Roots",
+      "Ivor Houses #224": "Mud Pepper",
+      "Ebon Houses #225": "Water",
+      "Ivor Houses #226": "Biscuit",
+      "Ebon Houses #227": "Double Drain",
+      "Ivor Houses #228": "Nectar",
+      "Ebon Houses #229": "3 Water",
+      "Ivor Houses #230": "200 Moniez",
+      "Ebon Houses #231": "Pixie Dust",
+      "Ivor Houses #232": "4 Water",
+      "Ebon Houses #233": "2 Limestone",
+      "Ivor Houses #234": "Roots",
+      "Ebon Houses #235": "500 Moniez",
+      "Ivor Houses #236": "Brimstone",
+      "Ebon Houses #237": "Call bead",
+      "Ivor Houses #238": "4 Iron",
+      "Ebon Houses #239": "Super Heal",
+      "Ivor Houses #240": "Call bead",
+      "Ebon Houses #241": "Oil",
+      "Ivor Houses #242": "Brimstone",
+      "Ebon Houses #243": "3 Dry Ice",
+      "Ivor Houses #244": "4 Ash",
+      "Ebon Houses #245": "4 Ethanol",
+      "Ivor Houses #246": "3 Ethanol",
+      "Ebon Houses #247": "Water",
+      "Ebon Houses #248": "3 Ethanol",
+      "Naris #249": "Gladiator Sword",
+      "Naris #250": "100 Moniez",
+      "Tinker #251": "4 Ash",
+      "Ebon Dining #252": "Feather",
+      "Ivor Dining #253": "Petal",
+      "Ivor Dining #254": "Petal",
+      "Ivor Upper Floor #261": "Mud Pepper",
+      "Ivor Upper Floor #262": "Water",
+      "Ivor Sewers #263": "Water",
+      "Ivor Sewers #264": "6 Ash",
+      "Ivor Sewers #265": "Water",
+      "Ivor Sewers #266": "6 Water",
+      "Ivor Sewers #267": "Call bead",
+      "Ivor Sewers #268": "Acid Rain",
+      "Ivor Sewers #269": "Diamond Eye",
+      "Ivor Sewers #270": "Nectar",
+      "Ebon Storage #271": "Force Field",
+      "Ebon Storage #272": "Escape",
+      "Ebon Storage #273": "3 Bone",
+      "Coleoptera": "Wings",
+      "Mammoth Viper": "6 Water",
+      "Cave Raptors": "Diamond Eye",
+      "Salabog": "Revealer",
+      "Vigor": "Bronze Spear",
+      "Bad Boys": "6 Ash",
+      "Timberdrake": "2 Roots",
+      "Verminator": "Drain",
+      "Footknight": "3 Honey",
+      "Atlas": "Water",
+      "Corrosion": "Water",
+      "Crush": "2 Water",
+      "Cure": "Honey",
+      "Explosion": "Progressive gloves",
+      "Heal": "Wax",
+      "Lance": "Wax",
+      "Miracle Cure": "Water",
+      "One Up": "4 Dry Ice",
+      "Regrowth": "Oil",
+      "Revealer": "2 Acorns",
+      "Revive": "2 Call beads",
+      "Slow Burn": "Clay",
+      "Sting": "Herbal Essence",
+      "Super Heal": "Call Up",
+      "Vanilla Gauge #57": "3 Water",
+      "Volcano Path #58": "Wings",
+      "Volcano Room1 #73": "Water",
+      "Volcano Room1 #74": "Explosion",
+      "Volcano Room1 #75": "Herbal Essence",
+      "Volcano Room1 #76": "3 Ethanol",
+      "Volcano Room1 #77": "3 Water",
+      "Volcano Room1 #78": "Petal",
+      "Volcano Room1 #79": "Crusader Sword",
+      "Volcano Room1 #80": "Biscuit",
+      "Volcano Room2 #81": "Bronze Axe",
+      "Volcano Room2 #82": "Atlas",
+      "Volcano Room2 #83": "Biscuit",
+      "Volcano Room2 #84": "Biscuit",
+      "Volcano Room2 #85": "30 Thunderballs",
+      "Volcano Room2 #86": "Water",
+      "Volcano Room2 #87": "Wax",
+      "Volcano Room2 #88": "3 Ethanol",
+      "Pipe Maze #89": "Defend",
+      "Pipe Maze #90": "Wax",
+      "Pipe Maze #91": "Atom Smasher",
+      "Pipe Maze #92": "6 Water",
+      "Pipe Maze #93": "Biscuit",
+      "Pipe Maze #94": "Petal",
+      "W. Crustacia #103": "Progressive vest",
+      "W. Crustacia #104": "Progressive helmet",
+      "W. Crustacia #105": "Petal",
+      "W. Crustacia #106": "Fireball",
+      "E. Crustacia #107": "Call bead",
+      "E. Crustacia #108": "Laser Lance",
+      "Pyramid bottom #117": "4 Ethanol",
+      "Pyramid bottom #118": "4 Brimstone",
+      "Pyramid bottom #119": "3 Limestone",
+      "Pyramid bottom #120": "Clay",
+      "Pyramid bottom #121": "2 Acorns",
+      "Pyramid bottom #122": "Atlas Medallion",
+      "Pyramid bottom #123": "Progressive helmet",
+      "Pyramid bottom #124": "Clay",
+      "Pyramid bottom #125": "Wheel",
+      "Pyramid bottom #126": "Stop",
+      "Pyramid bottom #127": "5 Oil",
+      "Pyramid bottom #128": "Petal",
+      "Pyramid bottom #129": "Honey",
+      "Pyramid bottom #130": "Water",
+      "Pyramid bottom #131": "Horn Spear",
+      "Pyramid bottom #132": "Nothing",
+      "Pyramid bottom #133": "Lance",
+      "Pyramid bottom #134": "Reflect",
+      "Pyramid top #135": "Sting",
+      "Pyramid top #136": "Pixie Dust",
+      "Pyramid top #137": "Gauge",
+      "Pyramid top #138": "4 Wax",
+      "Pyramid top #139": "3 Ethanol",
+      "Pyramid top #140": "5 Iron",
+      "Pyramid top #141": "Energize",
+      "Pyramid top #142": "Barrier",
+      "Pyramid top #143": "4 Wax",
+      "Pyramid top #144": "Call bead",
+      "Pyramid top #145": "3 Mushroom",
+      "Pyramid top #146": "Water",
+      "Pyramid top #147": "4 Water",
+      "Pyramid top #148": "3 Water",
+      "Pyramid top #149": "2 Vinegar",
+      "Pyramid top #150": "Nectar",
+      "Pyramid top #151": "3 Clay",
+      "Pyramid top #152": "2 Crystal",
+      "Pyramid top #153": "2 Meteorite",
+      "Pyramid top #154": "Call bead",
+      "Pyramid top #155": "7 Roots",
+      "Pyramid top #156": "10,000 Gold Coins",
+      "Pyramid top #157": "Limestone",
+      "Tiny's hideout #158": "3 Water",
+      "Tiny's hideout #159": "Clay",
+      "Tiny's hideout #160": "4 Wax",
+      "Tiny's hideout #161": "Spider Claw",
+      "Tiny's hideout #162": "Levitate",
+      "Tiny's hideout #163": "Petal",
+      "Tiny's hideout #164": "Roots",
+      "Halls Main Room #165": "Petal",
+      "Halls Main Room #166": "Crystal",
+      "Halls SW #167": "Honey",
+      "Halls SW #168": "Call bead",
+      "Halls SW #169": "30 Particle Bombs",
+      "Halls NW #170": "Wings",
+      "Halls NW #171": "Wax",
+      "Halls NW #172": "Clay",
+      "Halls NW #173": "Nectar",
+      "Halls NE #174": "15 Moniez",
+      "Halls NE #175": "Wings",
+      "Halls NE #176": "Wax",
+      "Halls NE #177": "Nectar",
+      "Halls Bridge #178": "Crush",
+      "Oglin Cave #179": "Heal",
+      "Drain Cave #180": "2 Roots",
+      "Drain Cave #181": "Roots",
+      "Gomi's Tower #195": "Wax",
+      "Gomi's Tower #196": "3 Brimstone",
+      "Gomi's Tower #197": "2 Iron",
+      "Gomi's Tower #198": "Pixie Dust",
+      "Ivor East #255": "Progressive gloves",
+      "Ivor East #256": "3 Vinegar",
+      "Ivor East #257": "3 Vinegar",
+      "Ivor East #258": "3 Call beads",
+      "Ivor East #259": "Water",
+      "Ivor East #260": "2 Water",
+      "Prof. Lab #274": "Oil",
+      "Greenhouse #275": "6 Water",
+      "Alarm room #276": "10 Crystal",
+      "Reactor room #277": "Regrowth",
+      "Storage room #278": "Progressive vest",
+      "Storage room #279": "Progressive gloves",
+      "Storage room #280": "Herbal Essence",
+      "Storage room #281": "Diamond Eye",
+      "Storage room #282": "3 Acorns",
+      "Storage room #283": "4 Water",
+      "Storage room #284": "Ethanol",
+      "Energy Core #285": "One Up",
+      "Megataur": "Lance (Weapon)",
+      "Rimsala": "2 Honey",
+      "Aquagoth": "Water",
+      "Tiny": "Energy Core",
+      "Mungola": "Call bead",
+      "Sons of Sth.": "Wings",
+      "Volcano Viper": "Miracle Cure",
+      "Magmar": "Biscuit",
+      "Mad Monk": "Call bead",
+      "Barrier": "Pixie Dust",
+      "Call Up": "2 Crystal",
+      "Double Drain": "Mud Pepper",
+      "Drain": "Honey",
+      "Energize": "4 Nectar",
+      "Escape": "Corrosion",
+      "Fireball": "4 Water",
+      "Fire Power": "3 Oil",
+      "Force Field": "2 Iron",
+      "Levitate": "Nitro",
+      "Lightning Storm": "Call bead",
+      "Nitro": "2 Petal",
+      "Reflect": "4 Crystal",
+      "Speed": "Progressive vest",
+      "Stop": "Clay",
+      "Done": "Victory"
+    }
+  },
   "progression_mapping": {
     "1": {}
   },
@@ -7511,7 +8138,21 @@
     "1": {
       "game": "Secret of Evermore WorldGen",
       "assume_bidirectional_exits": false,
-      "use_resolved_items": false
+      "use_resolved_items": false,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": false,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": []
+      }
     }
   },
   "game_info": {
@@ -7519,7 +8160,21 @@
       "name": "Secret of Evermore WorldGen",
       "rule_format": {
         "version": "1.0"
-      }
+      },
+      "web_theme": "jungle",
+      "web_tutorials": [
+        {
+          "name": "Multiworld Setup Guide",
+          "description": "A guide to playing Secret of Evermore randomizer. This guide covers single-player, multiworld and related software.",
+          "language": "English",
+          "file_name": "multiworld_en.md",
+          "link": "multiworld/en",
+          "authors": [
+            "Black Sliver"
+          ]
+        }
+      ],
+      "world_description": "Secret of Evermore is a SNES action RPG. You learn alchemy spells, fight bosses and gather rocket parts to visit a\nspace station where the final boss must be defeated."
     }
   },
   "helpers": {}

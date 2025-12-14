@@ -130,7 +130,6 @@ Playthrough:
   Grass Land 5 - Enemy 4 (Sir Kibble): Cutter Ability
   Grass Land 5 - Enemy 6 (Sasuke): Parasol Ability
   Grass Land 5 - Enemy 8 (Tick): Needle Ability
-  Grass Land 5 - Mine: Heart Star
   Grass Land 5 - Stage Completion: Grass Land - Stage Completion
   Grass Land 6 - Animal 1: Rick Spawn
   Grass Land 6 - Animal 2: ChuChu Spawn
@@ -146,6 +145,7 @@ Playthrough:
 }
 2: {
   Grass Land 4 - Miniboss 1 (Boboo): Burning Ability
+  Grass Land 5 - Mine: Heart Star
   Level 1 Boss - Defeated: Level 1 Boss Defeated
   Level 1 Boss - Purified: Level 1 Boss Purified
 }
@@ -161,7 +161,6 @@ Playthrough:
   Ripple Field 2 - Animal 2: ChuChu Spawn
   Ripple Field 2 - Animal 3: Rick Spawn
   Ripple Field 2 - Animal 4: Coo Spawn
-  Ripple Field 2 - Bakasa: Heart Star
   Ripple Field 2 - Complete: Heart Star
   Ripple Field 2 - Enemy 1 (Togezo): Needle Ability
   Ripple Field 2 - Enemy 4 (Sasuke): Parasol Ability
@@ -187,7 +186,6 @@ Playthrough:
   Ripple Field 4 - Enemy 7 (Bobin): Spark Ability
   Ripple Field 4 - Miniboss 1 (Captain Stitch): Needle Ability
   Ripple Field 4 - Stage Completion: Ripple Field - Stage Completion
-  Ripple Field 4 - Toad & Little Toad: Heart Star
   Ripple Field 5 - Animal 1: Kine Spawn
   Ripple Field 5 - Animal 2: Pitch Spawn
   Ripple Field 5 - Enemy 10 (Rocky): Stone Ability
@@ -210,6 +208,7 @@ Playthrough:
   Level 2 Boss - Defeated: Level 2 Boss Defeated
   Level 2 Boss - Purified: Level 2 Boss Purified
   Ripple Field - Boss (Acro) Purified: Heart Star
+  Ripple Field 2 - Bakasa: Heart Star
 }
 5: {
   Level 3 Boss - Purified: Level 3 Boss Purified
@@ -293,6 +292,7 @@ Playthrough:
 }
 6: {
   Level 3 Boss - Defeated: Level 3 Boss Defeated
+  Ripple Field 4 - Toad & Little Toad: Heart Star
 }
 7: {
   Cloudy Park - Boss (Ado) Purified: Heart Star
@@ -307,7 +307,6 @@ Playthrough:
   Cloudy Park 1 - Enemy 5 (Togezo): Needle Ability
   Cloudy Park 1 - Enemy 6 (Galbo): Burning Ability
   Cloudy Park 1 - Enemy 7 (Sparky): Spark Ability
-  Cloudy Park 1 - Hibanamodoki: Pitch
   Cloudy Park 1 - Stage Completion: Cloudy Park - Stage Completion
   Cloudy Park 2 - Animal 1: Nago Spawn
   Cloudy Park 2 - Animal 2: Pitch Spawn
@@ -339,7 +338,6 @@ Playthrough:
   Cloudy Park 4 - Enemy 5 (Sparky): Spark Ability
   Cloudy Park 4 - Enemy 6 (Togezo): Needle Ability
   Cloudy Park 4 - Enemy 8 (KeKe): Clean Ability
-  Cloudy Park 4 - Mikarin & Kagami Mocchi: Heart Star
   Cloudy Park 4 - Miniboss 1 (Jumper Shoot): Parasol Ability
   Cloudy Park 4 - Stage Completion: Cloudy Park - Stage Completion
   Cloudy Park 5 - Animal 1: Rick Spawn
@@ -350,7 +348,6 @@ Playthrough:
   Cloudy Park 5 - Enemy 5 (Galbo): Burning Ability
   Cloudy Park 5 - Enemy 7 (KeKe): Clean Ability
   Cloudy Park 5 - Enemy 9 (Klinko): Parasol Ability
-  Cloudy Park 5 - Pick: Heart Star
   Cloudy Park 5 - Stage Completion: Cloudy Park - Stage Completion
   Cloudy Park 6 - Animal 1: Nago Spawn
   Cloudy Park 6 - Animal 2: Coo Spawn
@@ -367,6 +364,9 @@ Playthrough:
   Level 4 Boss - Purified: Level 4 Boss Purified
 }
 8: {
+  Cloudy Park 1 - Hibanamodoki: Pitch
+  Cloudy Park 4 - Mikarin & Kagami Mocchi: Heart Star
+  Cloudy Park 5 - Pick: Heart Star
   Level 4 Boss - Defeated: Level 4 Boss Defeated
 }
 9: {

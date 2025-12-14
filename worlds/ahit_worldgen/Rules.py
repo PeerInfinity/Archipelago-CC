@@ -7,7 +7,7 @@ The world class must inherit from RuleWorldMixin to use these rules.
 
 from typing import TYPE_CHECKING
 
-from rule_builder import True_, False_, False_, Has, True_
+from rule_builder import True_, False_, CanReachRegion, False_, Has, True_
 
 if TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -23,23 +23,28 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
+        multiworld.get_entrance("Telescope -> Mafia Town", player),
+        Has("Time Piece", 0)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Telescope -> Battle of the Birds", player),
-        True_()
+        Has("Time Piece", 17)
     )
 
     world.set_rule(
         multiworld.get_entrance("Telescope -> Subcon Forest", player),
-        True_()
+        Has("Time Piece", 12)
     )
 
     world.set_rule(
         multiworld.get_entrance("Telescope -> Alpine Skyline", player),
-        True_()
+        Has("Time Piece", 8)
     )
 
     world.set_rule(
         multiworld.get_entrance("Telescope -> Time's End", player),
-        True_()
+        (True_()) & (True_()) & (Has("Time Piece", 35))
     )
 
     world.set_rule(
@@ -89,12 +94,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 1", player),
-        True_()
+        (CanReachRegion("Picture Perfect")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 1", player),
-        True_()
+        (CanReachRegion("The Golden Vault")) & (True_())
     )
 
     world.set_rule(
@@ -104,12 +109,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 2", player),
-        True_()
+        (CanReachRegion("Picture Perfect")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 2", player),
-        True_()
+        (CanReachRegion("The Golden Vault")) & (True_())
     )
 
     world.set_rule(
@@ -119,12 +124,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 3", player),
-        True_()
+        (CanReachRegion("Picture Perfect")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 3", player),
-        True_()
+        (CanReachRegion("The Golden Vault")) & (True_())
     )
 
     world.set_rule(
@@ -134,27 +139,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 4", player),
-        True_()
+        (CanReachRegion("Picture Perfect")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 4", player),
-        True_()
+        (CanReachRegion("The Golden Vault")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 4", player),
-        (((((((True_()) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (True_())) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (True_())) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
+        (((((((Has("Hookshot Badge")) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (True_())) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (True_())) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 6", player),
-        True_()
+        (CanReachRegion("Picture Perfect")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 6", player),
-        True_()
+        (CanReachRegion("The Golden Vault")) & (True_())
     )
 
     world.set_rule(
@@ -164,12 +169,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 5", player),
-        True_()
+        (CanReachRegion("Picture Perfect")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 5", player),
-        True_()
+        (CanReachRegion("The Golden Vault")) & (True_())
     )
 
     world.set_rule(
@@ -179,12 +184,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Bazaar Portal - Entrance 7", player),
-        True_()
+        (CanReachRegion("Picture Perfect")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Sewers Portal - Entrance 7", player),
-        True_()
+        (CanReachRegion("The Golden Vault")) & (True_())
     )
 
     world.set_rule(
@@ -229,12 +234,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Owl Express Portal - Entrance 1", player),
-        (True_()) & (True_())
+        ((CanReachRegion("Mail Delivery Service")) & (True_())) & ((CanReachRegion("Train Rush")) & (True_()))
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 1", player),
-        (True_()) & (True_())
+        ((CanReachRegion("Heating Up Mafia Town")) & (True_())) & (CanReachRegion("Alpine Free Roam"))
     )
 
     world.set_rule(
@@ -244,22 +249,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 4: Connection 1", player),
-        ((True_()) & (True_())) & (True_())
+        ((True_()) & (Has("Hookshot Badge"))) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 5: Connection 1", player),
-        ((True_()) & (True_())) & (True_())
+        ((True_()) & (Has("Hookshot Badge"))) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - The Moon Portal - Entrance 2", player),
-        (True_()) & (True_())
+        ((CanReachRegion("Heating Up Mafia Town")) & (True_())) & (CanReachRegion("Alpine Free Roam"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 5", player),
-        (((((((True_()) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (True_())) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (True_())) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
+        (((((((Has("Hookshot Badge")) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (True_())) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (True_())) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
     )
 
     world.set_rule(
@@ -269,7 +274,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 2", player),
-        (((((((True_()) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (True_())) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (True_())) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
+        (((((((Has("Hookshot Badge")) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (True_())) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (True_())) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
     )
 
     world.set_rule(
@@ -304,12 +309,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Village Portal - Entrance 1", player),
-        True_()
+        (CanReachRegion("Down with the Mafia!")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 1", player),
-        True_()
+        (CanReachRegion("Dead Bird Studio Basement")) & (True_())
     )
 
     world.set_rule(
@@ -319,12 +324,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Village Portal - Entrance 2", player),
-        True_()
+        (CanReachRegion("Down with the Mafia!")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 2", player),
-        True_()
+        (CanReachRegion("Dead Bird Studio Basement")) & (True_())
     )
 
     world.set_rule(
@@ -334,22 +339,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Village Portal - Entrance 3", player),
-        True_()
+        (CanReachRegion("Down with the Mafia!")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 3", player),
-        True_()
+        (CanReachRegion("Dead Bird Studio Basement")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 2: Connection 1", player),
-        (True_()) & (True_()) & (True_())
+        (True_()) & (True_()) & (Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 3: Connection 1", player),
-        (True_()) & (True_()) & (True_())
+        (True_()) & (True_()) & (Has("Hookshot Badge"))
     )
 
     world.set_rule(
@@ -359,17 +364,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Village Portal - Entrance 4", player),
-        True_()
+        (CanReachRegion("Down with the Mafia!")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 4", player),
-        True_()
+        (CanReachRegion("Dead Bird Studio Basement")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 3", player),
-        (((((((True_()) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (True_())) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (True_())) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
+        (((((((Has("Hookshot Badge")) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (True_())) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (True_())) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
     )
 
     world.set_rule(
@@ -379,27 +384,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Village Portal - Entrance 5", player),
-        True_()
+        (CanReachRegion("Down with the Mafia!")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Pipe Portal - Entrance 5", player),
-        True_()
+        (CanReachRegion("Dead Bird Studio Basement")) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 4: Connection 2", player),
-        ((True_()) & (True_())) & (True_())
+        ((True_()) & (Has("Hookshot Badge"))) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Battle of the Birds - Act 5: Connection 2", player),
-        ((True_()) & (True_())) & (True_())
+        ((True_()) & (Has("Hookshot Badge"))) & (True_())
     )
 
     world.set_rule(
         multiworld.get_entrance("Subcon Forest - Finale: Connection 1", player),
-        (((((((True_()) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (True_())) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (True_())) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
+        (((((((Has("Hookshot Badge")) & (Has("Snatcher's Contract - The Subcon Well"))) & (Has("Snatcher's Contract - Toilet of Doom"))) & (True_())) & (Has("Snatcher's Contract - Queen Vanessa's Manor"))) & (True_())) & (Has("Snatcher's Contract - Mail Delivery Service"))) & (True_())
     )
 
     world.set_rule(
@@ -409,7 +414,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("AFR -> Alpine Skyline Area", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
@@ -419,7 +424,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Time Rift - Alpine Skyline Portal - Entrance 1", player),
-        ((True_()) & (True_())) & (True_())
+        ((True_()) & (Has("Hookshot Badge"))) & (True_())
     )
 
     world.set_rule(
@@ -429,22 +434,22 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("-> The Birdhouse", player),
-        (True_()) & (True_())
+        (True_()) & (Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_entrance("-> The Lava Cake", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
         multiworld.get_entrance("-> The Windmill", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
         multiworld.get_entrance("-> The Twilight Bell", player),
-        (True_()) & (True_())
+        (True_()) & (Has("Hookshot Badge"))
     )
 
     world.set_rule(
@@ -459,7 +464,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("SF Behind Boss Firewall -> SF Boss Arena", player),
-        (True_()) & (Has("TOD Access"))
+        (Has("Hookshot Badge")) & (Has("TOD Access"))
     )
     # Location rules
     world.set_rule(
@@ -499,47 +504,47 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act Completion (Train Rush)", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Window Platform", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Cardboard Conductor", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Above Conductor Sign", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Disco Room", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Tightrope", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Cameras", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
         multiworld.get_location("Dead Bird Studio Basement - Locked Room", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Dead Bird Studio Basement)", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
@@ -559,17 +564,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Subcon Well - On Pipe", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (The Subcon Well)", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Toilet of Doom)", player),
-        (True_()) & (True_()) & (True_())
+        (True_()) & (True_()) & (Has("Hookshot Badge"))
     )
 
     world.set_rule(
@@ -589,32 +594,32 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Goat Refinery", player),
-        ((True_()) & (True_()) & (Has("AFR Access"))) & (True_())
+        ((True_()) & (Has("AFR Access")) & (Has("Hookshot Badge"))) & (Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Bird Pass Fork", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Yellow Band Hills", player),
-        (True_()) & (True_())
+        (True_()) & (Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Ember Summit", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Goat Outpost Horn", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
         multiworld.get_location("Alpine Skyline - Windy Passage", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
@@ -624,7 +629,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act Completion (The Illness has Spread)", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
@@ -679,17 +684,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Above Boats", player),
-        (True_()) | (Has("HUMT Access"))
+        (Has("HUMT Access")) | (Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Clock Tower Chest", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
         multiworld.get_location("Mafia Town - Top of Lighthouse", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
@@ -709,7 +714,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Noose Treehouse", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
@@ -749,12 +754,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Subcon Forest - Tall Tree Hookshot Swing", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
         multiworld.get_location("Act Completion (Time Rift - Pipe)", player),
-        True_()
+        Has("Hookshot Badge")
     )
 
     world.set_rule(
@@ -764,10 +769,10 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Act Completion (The Finale)", player),
-        (True_()) & (True_())
+        (True_()) & (Has("Hookshot Badge"))
     )
 
     world.set_rule(
         multiworld.get_location("Time Piece Cluster", player),
-        (True_()) & (True_())
+        (True_()) & (Has("Hookshot Badge"))
     )

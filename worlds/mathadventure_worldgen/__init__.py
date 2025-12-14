@@ -192,6 +192,11 @@ class MathProof2p2e4WorldGenWorld(RuleWorldMixin, World):
         """Place items in their canonical locations when not randomized."""
         for location_name, item_name in self.canonical_placements.items():
             location = self.multiworld.get_location(location_name, self.player)
+
+            # Skip if already filled (e.g., by _place_locked_items or generate_basic)
+            if location.item is not None:
+                continue
+
             item = self.create_item(item_name)
             location.place_locked_item(item)
 

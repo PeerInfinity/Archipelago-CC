@@ -184,12 +184,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Evacuation (Terran): West Chrysalis", player),
-        ((False_()) & (HasAny('Banshee', 'Diamondback', 'Goliath', 'Viking'))) | (HasAny('Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper'))
+        ((False_()) & (HasAny())) | (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Evacuation (Terran): East Chrysalis", player),
-        ((False_()) & (HasAny('Banshee', 'Diamondback', 'Goliath', 'Viking'))) | (HasAny('Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper'))
+        ((False_()) & (HasAny())) | (HasAny())
     )
 
     world.set_rule(
@@ -419,52 +419,52 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): Victory", player),
-        (((True_()) & (HasAny('Hercules', 'Medivac'))) | (True_())) & (((True_()) & (HasAny('Hercules', 'Medivac'))) | (True_()))
+        (((True_()) & (HasAny())) | (True_())) & (((True_()) & (HasAny())) | (True_()))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): 2nd Data Core", player),
-        ((True_()) & (HasAny('Hercules', 'Medivac'))) | (True_())
+        ((True_()) & (HasAny())) | (True_())
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): South Rescue", player),
-        True_()
+        (False_()) | (HasAny('Hercules', 'Medivac', 'Raven', 'Viking'))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): Wall Rescue", player),
-        True_()
+        (False_()) | (HasAny('Hercules', 'Medivac', 'Raven', 'Viking'))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): Mid Rescue", player),
-        True_()
+        (False_()) | (HasAny('Hercules', 'Medivac', 'Raven', 'Viking'))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): Nydus Roof Rescue", player),
-        True_()
+        (False_()) | (HasAny('Hercules', 'Medivac', 'Raven', 'Viking'))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): Alive Inside Rescue", player),
-        True_()
+        (False_()) | (HasAny('Hercules', 'Medivac', 'Raven', 'Viking'))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): Brutalisk", player),
-        (((True_()) & (HasAny('Hercules', 'Medivac'))) | (True_())) & (((True_()) & (HasAny('Hercules', 'Medivac'))) | (True_()))
+        (((True_()) & (HasAny())) | (True_())) & (((True_()) & (HasAny())) | (True_()))
     )
 
     world.set_rule(
         multiworld.get_location("The Moebius Factor (Terran): 3rd Data Core", player),
-        (((True_()) & (HasAny('Hercules', 'Medivac'))) | (True_())) & (((True_()) & (HasAny('Hercules', 'Medivac'))) | (True_()))
+        (((True_()) & (HasAny())) | (True_())) & (((True_()) & (HasAny())) | (True_()))
     )
 
     world.set_rule(
         multiworld.get_location("Beat The Moebius Factor (Terran)", player),
-        (((True_()) & (HasAny('Hercules', 'Medivac'))) | (True_())) & (((True_()) & (HasAny('Hercules', 'Medivac'))) | (True_()))
+        (((True_()) & (HasAny())) | (True_())) & (((True_()) & (HasAny())) | (True_()))
     )
 
     world.set_rule(
@@ -649,27 +649,27 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("The Outlaws (Terran): Victory", player),
-        ((False_()) & (HasAny('Banshee', 'Diamondback', 'Goliath', 'Viking'))) | (HasAny('Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper'))
+        ((False_()) & (HasAny())) | (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("The Outlaws (Terran): Rebel Base", player),
-        ((False_()) & (HasAny('Banshee', 'Diamondback', 'Goliath', 'Viking'))) | (HasAny('Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper'))
+        ((False_()) & (HasAny())) | (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("The Outlaws (Terran): North Resource Pickups", player),
-        ((False_()) & (HasAny('Banshee', 'Diamondback', 'Goliath', 'Viking'))) | (HasAny('Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper'))
+        ((False_()) & (HasAny())) | (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("The Outlaws (Terran): Bunker", player),
-        ((False_()) & (HasAny('Banshee', 'Diamondback', 'Goliath', 'Viking'))) | (HasAny('Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper'))
+        ((False_()) & (HasAny())) | (HasAny())
     )
 
     world.set_rule(
         multiworld.get_location("Beat The Outlaws (Terran)", player),
-        ((False_()) & (HasAny('Banshee', 'Diamondback', 'Goliath', 'Viking'))) | (HasAny('Dominion Trooper', 'Firebat', 'Hellion', 'Marauder', 'Marine', 'Reaper'))
+        ((False_()) & (HasAny())) | (HasAny())
     )
 
     world.set_rule(
@@ -1059,37 +1059,37 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("Ghost of a Chance: Victory", player),
-        ((True_()) & (True_()) & ((True_()) | (True_())) & (HasAny('C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'))) | (True_()) | (True_()) | (True_())
+        ((True_()) & (True_()) & ((True_()) | (True_())) & (HasAny())) | (False_()) | (True_()) | (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Ghost of a Chance: Terrazine Tank", player),
-        ((True_()) & (True_()) & ((True_()) | (True_())) & (HasAny('C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'))) | (True_()) | (True_()) | (True_())
+        ((True_()) & (True_()) & ((True_()) | (True_())) & (HasAny())) | (False_()) | (True_()) | (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Ghost of a Chance: Jorium Stockpile", player),
-        ((True_()) & (True_()) & ((True_()) | (True_())) & (HasAny('C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'))) | (True_()) | (True_()) | (True_())
+        ((True_()) & (True_()) & ((True_()) | (True_())) & (HasAny())) | (False_()) | (True_()) | (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Ghost of a Chance: First Island Spectres", player),
-        ((True_()) & (True_()) & ((True_()) | (True_())) & (HasAny('C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'))) | (True_()) | (True_()) | (True_())
+        ((True_()) & (True_()) & ((True_()) | (True_())) & (HasAny())) | (False_()) | (True_()) | (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Ghost of a Chance: Second Island Spectres", player),
-        ((True_()) & (True_()) & ((True_()) | (True_())) & (HasAny('C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'))) | (True_()) | (True_()) | (True_())
+        ((True_()) & (True_()) & ((True_()) | (True_())) & (HasAny())) | (False_()) | (True_()) | (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Ghost of a Chance: Third Island Spectres", player),
-        ((True_()) & (True_()) & ((True_()) | (True_())) & (HasAny('C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'))) | (True_()) | (True_()) | (True_())
+        ((True_()) & (True_()) & ((True_()) | (True_())) & (HasAny())) | (False_()) | (True_()) | (True_())
     )
 
     world.set_rule(
         multiworld.get_location("Beat Ghost of a Chance", player),
-        ((True_()) & (True_()) & ((True_()) | (True_())) & (HasAny('C20A Canister Rifle (Nova Weapon)', 'Domination (Nova Ability)'))) | (True_()) | (True_()) | (True_())
+        ((True_()) & (True_()) & ((True_()) | (True_())) & (HasAny())) | (False_()) | (True_()) | (True_())
     )
 
     world.set_rule(

@@ -615,10 +615,8 @@ Act Completion (Time Rift - The Owl Express)
         Menu -> Save File -> Spaceship
    =>   Spaceship -> Telescope -> Mafia Town
    =>   Mafia Town -> Mafia Town - Act 1
-   =>   Welcome to Mafia Town -> Mafia Town - Act 2: Connection 1
-   =>   Dead Bird Studio Basement -> Mafia Town - Act 4: Connection 1
-   =>   The Big Parade -> Mafia Town - Act 6: Connection 1
-   =>   The Subcon Well -> Time Rift - Village Portal - Entrance 2
+   =>   Welcome to Mafia Town -> Mafia Town - Act 3: Connection 1
+   =>   Contractual Obligations -> Time Rift - Village Portal - Entrance 1
    =>   Time Rift - The Owl Express
 Act Completion (Time Rift - Village)
         Menu -> Save File -> Spaceship

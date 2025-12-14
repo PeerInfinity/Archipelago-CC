@@ -7,7 +7,7 @@ The world class must inherit from RuleWorldMixin to use these rules.
 
 from typing import TYPE_CHECKING
 
-from rule_builder import True_, False_, Has, HasAll, HasGroupUnique
+from rule_builder import True_, False_, Has, HasAll
 
 if TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -23,23 +23,28 @@ def set_rules(world: "World") -> None:
 
     # Entrance rules
     world.set_rule(
+        multiworld.get_entrance("Dungeon Entrance on Dragon Roost Island -> Dragon Roost Cavern", player),
+        True_()
+    )
+
+    world.set_rule(
         multiworld.get_entrance("Dungeon Entrance in Forest Haven Sector -> Forbidden Woods", player),
-        (True_()) & (True_()) & (((True_()) & (True_()) & (True_()) & (True_())) | (Has("Grappling Hook"))) & ((True_()) | (True_()))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance in Tower of the Gods Sector -> Tower of the Gods", player),
-        HasGroupUnique("Pearls", 3)
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance on Headstone Island -> Earth Temple", player),
-        Has("Power Bracelets")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Dungeon Entrance on Gale Isle -> Wind Temple", player),
-        HasAll('Iron Boots', 'Skull Hammer')
+        True_()
     )
 
     world.set_rule(
@@ -49,12 +54,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Forsaken Fortress -> Helmaroc King Boss Arena", player),
-        (True_()) & (((True_()) & (True_())) | (True_()) | (Has("Hookshot"))) & ((True_()) | (True_()) | (Has("Grappling Hook"))) & (Has("Skull Hammer"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Outset Island -> Savage Labyrinth", player),
-        (((True_()) & (True_())) | (Has("Hookshot"))) & (Has("Power Bracelets"))
+        True_()
     )
 
     world.set_rule(
@@ -74,7 +79,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Private Oasis -> Cabana Labyrinth", player),
-        HasAll('Cabana Deed', 'Delivery Bag', 'Grappling Hook')
+        True_()
     )
 
     world.set_rule(
@@ -84,37 +89,42 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Angular Isles -> Angular Isles Secret Cave", player),
-        (True_()) | (Has("Hookshot"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Boating Course -> Boating Course Secret Cave", player),
-        (True_()) | (Has("Hookshot"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Stone Watcher Island -> Stone Watcher Island Secret Cave", player),
-        Has("Power Bracelets")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Overlook Island -> Overlook Island Secret Cave", player),
-        Has("Hookshot")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Bird's Peak Rock -> Bird's Peak Rock Secret Cave", player),
-        Has("Bait Bag")
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Secret Cave Entrance on Pawprint Isle -> Pawprint Isle Chuchu Cave", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Pawprint Isle Side Isle -> Pawprint Isle Wizzrobe Cave", player),
-        Has("Hookshot")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Diamond Steppe Island -> Diamond Steppe Island Warp Maze Cave", player),
-        Has("Hookshot")
+        True_()
     )
 
     world.set_rule(
@@ -124,12 +134,17 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Rock Spire Isle -> Rock Spire Isle Secret Cave", player),
-        Has("Bombs")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Secret Cave Entrance on Shark Island -> Shark Island Secret Cave", player),
-        HasAll('Iron Boots', 'Skull Hammer')
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Secret Cave Entrance on Cliff Plateau Isles -> Cliff Plateau Isles Secret Cave", player),
+        True_()
     )
 
     world.set_rule(
@@ -144,12 +159,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Outset Island -> Outset Fairy Fountain", player),
-        (True_()) & (True_())
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Thorned Fairy Island -> Thorned Fairy Fountain", player),
-        Has("Skull Hammer")
+        True_()
     )
 
     world.set_rule(
@@ -159,67 +174,72 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Western Fairy Island -> Western Fairy Fountain", player),
-        Has("Skull Hammer")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Fairy Fountain Entrance on Southern Fairy Island -> Southern Fairy Fountain", player),
-        (True_()) | (Has("Bombs"))
+        True_()
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("Fairy Fountain Entrance on Northern Fairy Island -> Northern Fairy Fountain", player),
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Dragon Roost Cavern -> Gohma Boss Arena", player),
-        (True_()) & (Has("DRC Big Key"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Miniboss Entrance in Forbidden Woods -> Forbidden Woods Miniboss Arena", player),
-        (True_()) & (True_()) & (HasAll('FW Small Key', 'Grappling Hook'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Forbidden Woods -> Kalle Demos Boss Arena", player),
-        (True_()) & (True_()) & (True_()) & ((True_()) | (Has("Grappling Hook"))) & (Has("FW Big Key"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Miniboss Entrance in Tower of the Gods -> Tower of the Gods Miniboss Arena", player),
-        (True_()) & ((True_()) | (Has("Grappling Hook"))) & ((True_()) | (True_()))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Tower of the Gods -> Gohdan Boss Arena", player),
-        (True_()) & (True_()) & (Has("TotG Big Key"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Miniboss Entrance in Earth Temple -> Earth Temple Miniboss Arena", player),
-        (True_()) & (Has("ET Small Key", 3))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Earth Temple -> Jalhalla Boss Arena", player),
-        (True_()) & (Has("ET Big Key"))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Miniboss Entrance in Wind Temple -> Wind Temple Miniboss Arena", player),
-        (True_()) & (Has("WT Small Key", 2))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Boss Entrance in Wind Temple -> Molgera Boss Arena", player),
-        (True_()) & (True_()) & (True_()) & (HasAll('Hookshot', 'Iron Boots', 'WT Big Key'))
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Inner Entrance in Ice Ring Isle Secret Cave -> Ice Ring Isle Inner Cave", player),
-        Has("Iron Boots")
+        True_()
     )
 
     world.set_rule(
         multiworld.get_entrance("Inner Entrance in Cliff Plateau Isles Secret Cave -> Cliff Plateau Isles Inner Cave", player),
-        (True_()) & (True_())
+        True_()
     )
     # Location rules
     world.set_rule(

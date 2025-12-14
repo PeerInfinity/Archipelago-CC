@@ -7,7 +7,7 @@ The world class must inherit from RuleWorldMixin to use these rules.
 
 from typing import TYPE_CHECKING
 
-from rule_builder import True_, False_, Has
+from rule_builder import True_, False_, Has, HasAll
 
 if TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -159,12 +159,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("SSL: Free Flying for 8 Red Coins", player),
-        (True_()) | (Has("Wing Cap"))
+        (HasAll('Cannon Unlock SSL', 'Wing Cap')) | (Has("Wing Cap"))
     )
 
     world.set_rule(
         multiworld.get_location("SSL: Stand Tall on the Four Pillars", player),
-        (True_()) | (Has("Wing Cap"))
+        (HasAll('Cannon Unlock SSL', 'Wing Cap')) | (Has("Wing Cap"))
     )
 
     world.set_rule(
@@ -174,7 +174,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_location("DDD: Collect the Caps...", player),
-        True_()
+        HasAll('Metal Cap', 'Vanish Cap')
     )
 
     world.set_rule(
