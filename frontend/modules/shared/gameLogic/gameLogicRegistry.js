@@ -239,7 +239,7 @@ import { overcooked2StateModule } from './overcooked2/overcooked2Logic.js';
 import * as soeLogic from './soe/soeLogic.js';
 import * as smz3Logic from './smz3/smz3Logic.js';
 import * as sc2Logic from './sc2/sc2Logic.js';
-import * as subnauticaLogic from './subnautica/subnauticaLogic.js';
+// subnauticaLogic removed - helpers now exported to rules.json
 import { helperFunctions as smHelperFunctions, smStateModule } from './sm/smLogic.js';
 import * as stardewValleyLogic from './stardew_valley/stardewValleyLogic.js';
 import { stardewValleyStateModule } from './stardew_valley/stardewValleyLogic.js';
@@ -423,7 +423,7 @@ const GAME_REGISTRY = {
   },
   'Subnautica': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: subnauticaLogic.helperFunctions,
+    // Helper functions now exported to rules.json - no JavaScript needed
     worldClasses: ['SubnauticaWorld'],
     aliases: ['Subnautica']
   },
