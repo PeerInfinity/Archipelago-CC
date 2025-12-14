@@ -732,9 +732,17 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
 
     if chart_data:
         total_games = len(chart_data)
-        passed = sum(1 for d in chart_data if d['pass_fail'].lower() == 'passed')
+        first_pass_passed = sum(1 for d in chart_data if d['pass_fail'].lower() == 'passed')
         skipped = sum(1 for d in chart_data if 'skipped' in d['pass_fail'].lower() or 'prerequisites' in d['pass_fail'].lower())
-        failed = total_games - passed - skipped
+        first_pass_failed = total_games - first_pass_passed - skipped
+
+        # Calculate second pass failures (games that passed first pass but failed second pass)
+        second_pass_failed = sum(1 for d in chart_data
+                                  if d.get('second_pass') and not d.get('second_pass', {}).get('success', False))
+
+        # Adjust totals: second pass failures should count as failed, not passed
+        passed = first_pass_passed - second_pass_failed
+        failed = first_pass_failed + second_pass_failed
 
         # Get intermittent failures counts
         intermittent_games_count = 0
@@ -767,12 +775,21 @@ def generate_multiworld_markdown(chart_data: List[Dict[str, Any]],
         md_content += "\n"
 
         # Calculate generic exporter/logic statistics
+        # A game is fully passed if it passed first pass AND (no second pass OR passed second pass)
+        def is_fully_passed(d):
+            if d['pass_fail'].lower() != 'passed':
+                return False
+            second_pass = d.get('second_pass')
+            if second_pass and not second_pass.get('success', False):
+                return False
+            return True
+
         passed_with_generic_exporter = sum(1 for d in chart_data
-                                           if d['pass_fail'].lower() == 'passed' and not d.get('has_custom_exporter', False))
+                                           if is_fully_passed(d) and not d.get('has_custom_exporter', False))
         passed_with_generic_logic = sum(1 for d in chart_data
-                                        if d['pass_fail'].lower() == 'passed' and not d.get('has_custom_game_logic', False))
+                                        if is_fully_passed(d) and not d.get('has_custom_game_logic', False))
         passed_with_both_generic = sum(1 for d in chart_data
-                                       if d['pass_fail'].lower() == 'passed' and not d.get('has_custom_exporter', False) and not d.get('has_custom_game_logic', False))
+                                       if is_fully_passed(d) and not d.get('has_custom_exporter', False) and not d.get('has_custom_game_logic', False))
 
         md_content += "### Generic Exporter/Logic Statistics\n\n"
         md_content += f"- **Passing with Generic Exporter:** {passed_with_generic_exporter}/{passed} ({passed_with_generic_exporter/passed*100:.1f}% of passed)\n" if passed > 0 else f"- **Passing with Generic Exporter:** 0/0\n"

@@ -222,7 +222,7 @@ import { helperFunctions as kh2HelperFunctions } from './kh2/kh2Logic.js';
 // kdl3Logic removed - using generic helpers with JSON rule definitions
 // LADX now uses generic helpers - RUPEES is set in prog_items from sphere log
 import { helperFunctions as lingoHelperFunctions } from './lingo/lingoLogic.js';
-import * as marioland2Logic from './marioland2/marioland2Logic.js';
+// marioland2Logic removed - all helpers now exported to rules.json
 import * as pokemon_rbLogic from './pokemon_rb/pokemon_rbLogic.js';
 import { pokemon_rbStateModule } from './pokemon_rb/pokemon_rbLogic.js';
 import * as pokemon_emeraldLogic from './pokemon_emerald/pokemon_emeraldLogic.js';
@@ -239,11 +239,11 @@ import { overcooked2StateModule } from './overcooked2/overcooked2Logic.js';
 import * as soeLogic from './soe/soeLogic.js';
 import * as smz3Logic from './smz3/smz3Logic.js';
 import * as sc2Logic from './sc2/sc2Logic.js';
-import * as subnauticaLogic from './subnautica/subnauticaLogic.js';
+// subnauticaLogic removed - helpers now exported to rules.json
 import { helperFunctions as smHelperFunctions, smStateModule } from './sm/smLogic.js';
 import * as stardewValleyLogic from './stardew_valley/stardewValleyLogic.js';
 import { stardewValleyStateModule } from './stardew_valley/stardewValleyLogic.js';
-import * as terrariaLogic from './terraria/terrariaLogic.js';
+// terrariaLogic removed - helpers now exported to rules.json
 // timespinnerLogic removed - helpers now exported to rules.json
 import * as twwLogic from './tww/twwLogic.js';
 import * as wargrooveLogic from './wargroove/wargrooveLogic.js';
@@ -369,13 +369,7 @@ const GAME_REGISTRY = {
     worldClasses: ['PaintWorld'],
     aliases: ['Paint']
   },
-  'Raft': {
-    logicModule: genericLogic.genericStateModule,
-    // Helper functions now exported to rules.json - no JavaScript needed
-    // Uses use_resolved_items=true so inventory has resolved item names directly
-    worldClasses: ['RaftWorld'],
-    aliases: ['Raft']
-  },
+  // Raft removed - uses generic infrastructure with helpers exported to rules.json
   'Starcraft 2': {
     logicModule: genericLogic.genericStateModule,
     helperFunctions: sc2Logic.helperFunctions,
@@ -386,8 +380,7 @@ const GAME_REGISTRY = {
   },
   'Super Mario Land 2': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: marioland2Logic.helperFunctions,
-    stateMethods: marioland2Logic.stateMethods,
+    // All helpers now exported to rules.json - no JavaScript needed
     worldClasses: ['MarioLand2World'],
     aliases: ['Super Mario Land 2', 'SML2', 'marioland2']
   },
@@ -423,7 +416,7 @@ const GAME_REGISTRY = {
   },
   'Subnautica': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: subnauticaLogic.helperFunctions,
+    // Helper functions now exported to rules.json - no JavaScript needed
     worldClasses: ['SubnauticaWorld'],
     aliases: ['Subnautica']
   },
@@ -435,7 +428,7 @@ const GAME_REGISTRY = {
   },
   'Terraria': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: terrariaLogic.helperFunctions,
+    // Helper functions now exported to rules.json - no JavaScript needed
     worldClasses: ['TerrariaWorld'],
     aliases: ['Terraria']
   },
@@ -547,7 +540,8 @@ export function getGameLogic(gameName) {
 
   return {
     logicModule: config.logicModule,
-    helperFunctions: config.helperFunctions,
+    // Fallback to generic helpers if none specified - base helpers like has/count are always needed
+    helperFunctions: config.helperFunctions || GAME_REGISTRY['Generic'].helperFunctions,
     stateMethods: config.stateMethods,
     stateModule: config.logicModule, // Expose stateModule for hooks
     constants: config.constants,

@@ -1691,6 +1691,23 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           }
         }
 
+        // Special handling for Python array/list methods like .count()
+        // These are exported as function_call with attribute, e.g., arr.count(value)
+        if (
+          rule.function?.type === 'attribute' &&
+          rule.function.attr === 'count' &&
+          rule.function.object
+        ) {
+          const obj = evaluateRule(rule.function.object, context, depth + 1, localScope);
+          if (Array.isArray(obj)) {
+            const args = (rule.args || []).map(arg => evaluateRule(arg, context, depth + 1, localScope));
+            const searchValue = args[0];
+            // Python list.count(value) returns the number of occurrences
+            result = obj.filter(x => x === searchValue).length;
+            break;
+          }
+        }
+
         // Special handling for Python string methods (capitalize, upper, lower, strip, etc.)
         // These are exported as function_call with attribute, e.g., color.capitalize()
         if (
@@ -2808,9 +2825,35 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'min': {
-        // Return the minimum of evaluated arguments
+        // Return the minimum of evaluated arguments or iterable
+        // Supports both: min(a, b, c) via args, and min(iterable) via iterable
+        if (rule.iterable) {
+          // Iterable form: min(generator) or min(list)
+          const minIterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
+          if (minIterable === undefined) {
+            result = undefined;
+          } else if (Array.isArray(minIterable)) {
+            if (minIterable.length === 0) {
+              // Empty iterable - return undefined (Python would raise ValueError)
+              log('debug', '[evaluateRule] min called on empty iterable', { rule });
+              result = undefined;
+            } else if (minIterable.some((v) => v === undefined)) {
+              result = undefined;
+            } else {
+              result = Math.min(...minIterable);
+            }
+          } else if (typeof minIterable === 'number') {
+            // Single number - just return it
+            result = minIterable;
+          } else {
+            log('warn', '[evaluateRule] min iterable is not an array or number', { minIterable, rule });
+            result = undefined;
+          }
+          break;
+        }
+        // Explicit args form: min(a, b, c)
         if (!rule.args || rule.args.length === 0) {
-          log('warn', '[evaluateRule] min rule has no arguments', { rule });
+          log('warn', '[evaluateRule] min rule has no arguments or iterable', { rule });
           result = undefined;
           break;
         }
@@ -2826,9 +2869,35 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'max': {
-        // Return the maximum of evaluated arguments
+        // Return the maximum of evaluated arguments or iterable
+        // Supports both: max(a, b, c) via args, and max(iterable) via iterable
+        if (rule.iterable) {
+          // Iterable form: max(generator) or max(list)
+          const maxIterable = evaluateRule(rule.iterable, context, depth + 1, localScope);
+          if (maxIterable === undefined) {
+            result = undefined;
+          } else if (Array.isArray(maxIterable)) {
+            if (maxIterable.length === 0) {
+              // Empty iterable - return undefined (Python would raise ValueError)
+              log('debug', '[evaluateRule] max called on empty iterable', { rule });
+              result = undefined;
+            } else if (maxIterable.some((v) => v === undefined)) {
+              result = undefined;
+            } else {
+              result = Math.max(...maxIterable);
+            }
+          } else if (typeof maxIterable === 'number') {
+            // Single number - just return it
+            result = maxIterable;
+          } else {
+            log('warn', '[evaluateRule] max iterable is not an array or number', { maxIterable, rule });
+            result = undefined;
+          }
+          break;
+        }
+        // Explicit args form: max(a, b, c)
         if (!rule.args || rule.args.length === 0) {
-          log('warn', '[evaluateRule] max rule has no arguments', { rule });
+          log('warn', '[evaluateRule] max rule has no arguments or iterable', { rule });
           result = undefined;
           break;
         }
@@ -3123,10 +3192,18 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
           break;
         }
 
+        // Handle both arrays and objects (dictionaries)
+        // In Python, iterating over a dict yields its keys
         if (!Array.isArray(iterable)) {
-          log('warn', '[evaluateRule] sum_of iterator is not an array', { rule, iterable });
-          result = 0;
-          break;
+          if (iterable && typeof iterable === 'object') {
+            // Convert object keys to array for iteration (like Python's dict iteration)
+            iterable = Object.keys(iterable);
+            log('debug', '[evaluateRule] sum_of: converted object to keys array', { keys: iterable });
+          } else {
+            log('warn', '[evaluateRule] sum_of iterator is not an array or object', { rule, iterable });
+            result = 0;
+            break;
+          }
         }
 
         // If the iterable is empty, sum_of should return 0
@@ -3614,7 +3691,26 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'min': {
-        // Return the minimum of evaluated arguments (block scope version)
+        // Return the minimum of evaluated arguments or iterable (block scope version)
+        if (rule.iterable) {
+          const minIterableBlock = evaluateRule(rule.iterable, context, depth + 1, localScope);
+          if (minIterableBlock === undefined) {
+            result = undefined;
+          } else if (Array.isArray(minIterableBlock)) {
+            if (minIterableBlock.length === 0) {
+              result = undefined;
+            } else if (minIterableBlock.some((v) => v === undefined)) {
+              result = undefined;
+            } else {
+              result = Math.min(...minIterableBlock);
+            }
+          } else if (typeof minIterableBlock === 'number') {
+            result = minIterableBlock;
+          } else {
+            result = undefined;
+          }
+          break;
+        }
         if (!rule.args || rule.args.length === 0) {
           result = undefined;
           break;
@@ -3631,7 +3727,26 @@ export const evaluateRule = (rule, context, depth = 0, localScope = null) => {
       }
 
       case 'max': {
-        // Return the maximum of evaluated arguments (block scope version)
+        // Return the maximum of evaluated arguments or iterable (block scope version)
+        if (rule.iterable) {
+          const maxIterableBlock = evaluateRule(rule.iterable, context, depth + 1, localScope);
+          if (maxIterableBlock === undefined) {
+            result = undefined;
+          } else if (Array.isArray(maxIterableBlock)) {
+            if (maxIterableBlock.length === 0) {
+              result = undefined;
+            } else if (maxIterableBlock.some((v) => v === undefined)) {
+              result = undefined;
+            } else {
+              result = Math.max(...maxIterableBlock);
+            }
+          } else if (typeof maxIterableBlock === 'number') {
+            result = maxIterableBlock;
+          } else {
+            result = undefined;
+          }
+          break;
+        }
         if (!rule.args || rule.args.length === 0) {
           result = undefined;
           break;

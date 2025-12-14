@@ -1576,7 +1576,8 @@ def process_items(multiworld, player: int, itempool_counts: Dict[str, int]) -> D
             }
         else:
             # Ensure the ID from the world map is added if missing
-            if items_data[item_name].get('id') is None:
+            # BUT don't overwrite if the item is marked as an event (game handler intentionally set id=None)
+            if items_data[item_name].get('id') is None and not items_data[item_name].get('event'):
                 items_data[item_name]['id'] = item_id
         
         # Add groups from world.item_name_groups if they aren't already present
