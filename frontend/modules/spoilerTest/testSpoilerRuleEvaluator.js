@@ -32,20 +32,44 @@ export class TestSpoilerRuleEvaluator {
       this.log('warn', `${indent}[MAX DEPTH REACHED]`);
       return;
     }
-    
+
     if (!rule || typeof rule !== 'object') {
       this.log('warn', `${indent}[INVALID RULE]: ${JSON.stringify(rule)}`);
       return false;
     }
 
-    const ruleType = rule.type;
+    // Detect Rule Builder format: has 'rule' key but no 'type' key
+    // Rule Builder format: {"rule": "HasFromList", "options": [], "args": {...}}
+    // CC format: {"type": "item_check", "item": "Sword"}
+    const isRuleBuilderFormat = rule.rule && !rule.type;
+    const ruleType = isRuleBuilderFormat ? rule.rule : rule.type;
     let result;
     let evaluationError = null;
-    
+
     try {
       result = evaluateRule(rule, snapshotInterface);
       const resultSymbol = result === true ? '✓' : result === false ? '✗' : result === undefined ? '?' : result;
-      
+
+      // Handle Rule Builder format rules with special logging
+      if (isRuleBuilderFormat) {
+        this.log('info', `${indent}RULE_BUILDER ${rule.rule} (${resultSymbol}):`);
+        if (rule.args) {
+          this.log('info', `${indent}  args: ${JSON.stringify(rule.args)}`);
+        }
+        if (rule.children && rule.children.length > 0) {
+          this.log('info', `${indent}  children (${rule.children.length}):`);
+          for (let i = 0; i < rule.children.length; i++) {
+            const childResult = this.analyzeRuleTree(rule.children[i], snapshotInterface, indent + '    ', depth + 1);
+            this.log('info', `${indent}    Child ${i + 1}: ${childResult} ${childResult === true ? '✓' : childResult === false ? '✗' : '?'}`);
+          }
+        }
+        if (rule.child) {
+          this.log('info', `${indent}  child:`);
+          this.analyzeRuleTree(rule.child, snapshotInterface, indent + '    ', depth + 1);
+        }
+        return result;
+      }
+
       switch (ruleType) {
         case 'and':
           this.log('info', `${indent}AND (${resultSymbol}):`);
