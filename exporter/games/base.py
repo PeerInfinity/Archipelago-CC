@@ -881,6 +881,14 @@ class BaseGameExportHandler:
                     }
                     continue
 
+                # Check if this is a regular class (non-enum)
+                # Classes like SMBool can't be analyzed via source inspection since they
+                # don't have __code__ attributes. These classes are typically constructors
+                # that the frontend implements directly.
+                if isinstance(helper_func, type):
+                    logger.debug(f"Helper '{helper_name}' is a class - skipping analysis (frontend-implemented)")
+                    continue
+
                 # Note: We previously checked for "dynamic for loops" here and blocked export.
                 # Now that for_iter with tuple unpacking, map(), and dict methods are supported,
                 # we allow the analysis to proceed. If the analyzer can't handle a specific case,
