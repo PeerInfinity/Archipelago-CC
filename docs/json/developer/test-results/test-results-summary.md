@@ -1,6 +1,6 @@
 # Archipelago Template Test Results Summary
 
-**Generated:** 2025-12-13 23:07:24
+**Generated:** 2025-12-14 00:02:01
 
 [View WorldGen Template Results](./test-results-summary-worldgen.md)
 
@@ -43,14 +43,14 @@ Additional test results:
 Of the 70 templates passing all 4 tests:
 
 - **Passing with Generic Exporter:** 29/70 (41.4%)
-- **Passing with Generic Logic:** 58/70 (82.9%)
+- **Passing with Generic Logic:** 59/70 (84.3%)
 - **Passing with Both Generic:** 29/70 (41.4%)
 
 **Combined Custom Code Size:**
 
-- **Total Exporter Code:** 627.0KB
-- **Total Game Logic Code:** 701.6KB
-- **Combined Total:** 1328.5KB
+- **Total Exporter Code:** 627.1KB
+- **Total Game Logic Code:** 696.7KB
+- **Combined Total:** 1323.8KB
 
 ## Test Results
 
@@ -111,7 +111,7 @@ Of the 70 templates passing all 4 tests:
 | Stardew Valley | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | 20.7KB | 10.7KB | 8038.4KB |
 | Subnautica | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 2.4KB | 14.7KB | 154.4KB |
 | Super Mario 64 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | 14.6KB | ✅ | 96.4KB |
-| Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ❓ N/A | ❓ N/A | 13.9KB | 4.9KB | 724.4KB |
+| Super Mario Land 2 | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ❓ N/A | ❓ N/A | 14.0KB | ✅ | 926.5KB |
 | Super Mario World | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ✅ | ✅ | ✅ | ✅ | 182.2KB |
 | Super Metroid | ❌ Failed | ❌ Failed | ❌ Failed | ✅ Passed | ✅ | ✅ | 72.0KB | 114.6KB | 513.7KB |
 | TOEM original | ✅ Passed | ✅ Passed | ✅ Passed | ✅ Passed | ⚫ | ✅ | ✅ | ✅ | 107.1KB |
@@ -138,7 +138,7 @@ Of the 70 templates passing all 4 tests:
 | 2 | Celeste (Open World) | 1098.8KB |
 | 3 | Starcraft 2 | 1063.2KB |
 | 4 | Dark Souls III | 1037.9KB |
-| 5 | Super Mario Land 2 | 724.4KB |
+| 5 | Super Mario Land 2 | 926.5KB |
 | 6 | Lingo | 720.6KB |
 | 7 | The Legend of Zelda | 713.9KB |
 | 8 | Kingdom Hearts | 702.7KB |

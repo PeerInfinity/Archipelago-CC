@@ -6,7 +6,7 @@
 
 [View WorldGen Template Results](./test-results-multiclient-worldgen.md)
 
-**Generated:** 2025-12-13 23:07:24
+**Generated:** 2025-12-14 00:02:01
 
 ## Summary
 
@@ -81,7 +81,7 @@
 | Stardew Valley | ✅ Passed | 0 | ✅ | 500/500 | 491/491 | 9/9 | ✅ | 500/500 | 20.7KB | 10.7KB |
 | Subnautica | ✅ Passed | 0 | ✅ | 135/135 | 131/131 | 4/4 | ✅ | 135/135 | 2.4KB | 14.7KB |
 | Super Mario 64 | ✅ Passed | 0 | ✅ | 149/149 | 149/149 | 0/0 | ✅ | 149/149 | 14.6KB | ✅ |
-| Super Mario Land 2 | ✅ Passed | 0 | ✅ | 60/60 | 59/59 | 7/7 | ✅ | 60/60 | 13.9KB | 4.9KB |
+| Super Mario Land 2 | ✅ Passed | 0 | ✅ | 60/60 | 59/59 | 7/7 | ✅ | 60/60 | 14.0KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | ✅ | 108/108 | 108/108 | 0/0 | ✅ | 108/108 | ✅ | ✅ |
 | Super Metroid | ❌ Failed | 1 | ✅ | 109/109 | 101/101 | 9/9 | ✅ | 109/109 | 72.0KB | 114.6KB |
 | TOEM original | ✅ Passed | 0 | ✅ | 157/157 | 156/156 | 1/1 | ✅ | 157/157 | ✅ | ✅ |

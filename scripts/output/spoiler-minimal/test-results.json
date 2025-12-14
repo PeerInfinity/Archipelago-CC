@@ -3,7 +3,7 @@
     "combination_note": "Results combined from parallel seed tests",
     "combined_from": 10,
     "created": "2025-12-13T21:50:02.896956",
-    "last_updated": "2025-12-13T23:39:15.440954",
+    "last_updated": "2025-12-14T00:02:01.304181",
     "script_version": "1.0.0"
   },
   "results": {
@@ -3263,22 +3263,22 @@
       "generation": {
         "error_count": 0,
         "error_type": null,
-        "processing_time_seconds": 8.25,
+        "processing_time_seconds": 8.81,
         "return_code": 0,
         "success": true,
         "warning_count": 0
       },
       "rules_file": {
         "path": "frontend/presets/marioland2/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-        "size_bytes": 891896,
-        "size_mb": 0.85
+        "size_bytes": 948753,
+        "size_mb": 0.9
       },
       "seed": "1",
       "seed_id": "AP_14089154938208861744",
       "spoiler_test": {
         "error_count": 0,
         "pass_fail": "passed",
-        "processing_time_seconds": 11.92,
+        "processing_time_seconds": 11.03,
         "return_code": 0,
         "sphere_reached": 10.1,
         "success": true,
@@ -3286,16 +3286,16 @@
         "warning_count": 0
       },
       "template_filename": "Super Mario Land 2.yaml",
-      "timestamp": "2025-12-13T23:38:54.852003",
+      "timestamp": "2025-12-14T00:01:39.848364",
       "world_info": {
         "exporter_path": "exporter/games/marioland2.py",
-        "exporter_size": 14735,
-        "game_logic_path": "frontend/modules/shared/gameLogic/marioland2/marioland2Logic.js",
-        "game_logic_size": 5037,
+        "exporter_size": 14360,
+        "game_logic_path": null,
+        "game_logic_size": 0,
         "game_name_from_filename": "marioland2",
         "game_name_from_yaml": "Super Mario Land 2",
         "has_custom_exporter": true,
-        "has_custom_game_logic": true,
+        "has_custom_game_logic": false,
         "world_directory": "marioland2"
       }
     },

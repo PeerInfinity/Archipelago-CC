@@ -6,11 +6,11 @@
 
 [View WorldGen Template Results](./test-results-spoilers-minimal-worldgen.md)
 
-**Generated:** 2025-12-13 23:07:24
+**Generated:** 2025-12-14 00:02:01
 
 **Source Data Created:** 2025-12-13T21:50:02.896956
 
-**Source Data Last Updated:** 2025-12-13T23:07:23.918200
+**Source Data Last Updated:** 2025-12-14T00:02:00.108901
 
 ## Summary
 
@@ -23,7 +23,7 @@
 ### Generic Exporter/Logic Statistics
 
 - **Passing with Generic Exporter:** 29/71 (40.8% of passed)
-- **Passing with Generic Logic:** 59/71 (83.1% of passed)
+- **Passing with Generic Logic:** 60/71 (84.5% of passed)
 - **Passing with Both Generic:** 29/71 (40.8% of passed)
 
 ## Test Results
@@ -85,7 +85,7 @@
 | Stardew Valley | ✅ Passed | 0 | 44.1 | 44.1 | 🟢 Complete | 20.7KB | 10.7KB |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.4KB | 14.7KB |
 | Super Mario 64 | ✅ Passed | 0 | 5.4 | 5.4 | 🟢 Complete | 14.6KB | ✅ |
-| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 13.9KB | 4.9KB |
+| Super Mario Land 2 | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | 14.0KB | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
 | Super Metroid | ❌ Failed | 1 | 8.3 | 8.3 | 🟡 100.0% | 72.0KB | 114.6KB |
 | TOEM original | ✅ Passed | 0 | 3.24 | 3.24 | 🟢 Complete | ✅ | ✅ |
