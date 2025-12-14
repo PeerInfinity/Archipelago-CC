@@ -45,6 +45,10 @@ class SC2GameExportHandler(GenericGameExportHandler):
     # NOTE: defense_rating helpers now work with game_info export for rating dictionaries
     # power_rating helpers call soa_power_rating which has complex iteration with break statements
     HELPERS_TO_EXPORT_BLACKLIST = {
+        # weapon_armor_upgrade_count - references item_groups module which isn't available in frontend
+        'weapon_armor_upgrade_count',
+        # is_item_placement - state check method, not applicable in frontend
+        'is_item_placement',
         # competent_comp helpers - complex conditional logic, but could work if dependencies are met
         'terran_competent_comp', 'protoss_competent_comp', 'zerg_competent_comp',
         # defense_rating helpers - now exported with game_info support
