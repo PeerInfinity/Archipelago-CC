@@ -246,7 +246,7 @@ import { stardewValleyStateModule } from './stardew_valley/stardewValleyLogic.js
 // terrariaLogic removed - helpers now exported to rules.json
 // timespinnerLogic removed - helpers now exported to rules.json
 import * as twwLogic from './tww/twwLogic.js';
-import * as wargrooveLogic from './wargroove/wargrooveLogic.js';
+// wargrooveLogic removed - state methods now expanded inline in rules.json export
 // yoshisisland helpers have been exported to rules.json - no JavaScript needed
 import * as yugioh06Logic from './yugioh06/yugioh06Logic.js';
 // osrs helpers have been exported to rules.json - no JavaScript needed
@@ -447,8 +447,7 @@ const GAME_REGISTRY = {
   },
   'Wargroove': {
     logicModule: genericLogic.genericStateModule,
-    helperFunctions: wargrooveLogic.helperFunctions,
-    stateMethods: wargrooveLogic.stateMethods,
+    // State methods now expanded inline during rules.json export - no JavaScript needed
     worldClasses: ['WargrooveWorld'],
     aliases: ['Wargroove', 'wargroove']
   },
