@@ -369,14 +369,7 @@ const GAME_REGISTRY = {
     worldClasses: ['PaintWorld'],
     aliases: ['Paint']
   },
-  'Raft': {
-    logicModule: genericLogic.genericStateModule,
-    // Game-specific helpers now exported to rules.json - no JavaScript needed
-    // Uses use_resolved_items=true so inventory has resolved item names directly
-    // Base helpers (has, count) come from generic fallback in getGameLogic()
-    worldClasses: ['RaftWorld'],
-    aliases: ['Raft']
-  },
+  // Raft removed - uses generic infrastructure with helpers exported to rules.json
   'Starcraft 2': {
     logicModule: genericLogic.genericStateModule,
     helperFunctions: sc2Logic.helperFunctions,
