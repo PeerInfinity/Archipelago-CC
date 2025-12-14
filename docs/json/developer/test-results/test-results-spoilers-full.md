@@ -4,9 +4,7 @@
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
-[View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
-
-**Generated:** 2025-12-14 08:22:34
+**Generated:** 2025-12-14 20:44:45
 
 **Source Data Created:** 2025-12-14T08:04:03.621576
 
@@ -31,7 +29,7 @@
 | Game Name | Test Result | Gen Errors | Sphere Reached | Max Spheres | Progress | Exporter | GameLogic |
 |-----------|-------------|------------|----------------|-------------|----------|----------|----------|
 | A Hat in Time | ✅ Passed seeds 1-10 | 0 | 5.21 | 5.21 | 🟢 Complete | 12.2KB | ✅ |
-| A Link to the Past | ❌ Failed seed 9 | 0 | 22.1 | 23.1 | 🟡 95.7% | 43.0KB | ✅ |
+| A Link to the Past | ❌ Failed seed 9 | 0 | 22.1 | 23.1 | 🟡 95.7% | 39.1KB | ✅ |
 | A Short Hike | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | APQuest | ✅ Passed seeds 1-10 | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Adventure | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
@@ -81,7 +79,7 @@
 | Secret of Evermore | ✅ Passed seeds 1-10 | 0 | 5.19 | 5.19 | 🟢 Complete | 13.7KB | 6.9KB |
 | Shivers | ✅ Passed seeds 1-10 | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed seeds 1-10 | 0 | 7.18 | 7.18 | 🟢 Complete | ✅ | ✅ |
-| Starcraft 2 | ❌ Failed seed 8 | 0 | 17.3 | 19.14 | 🟡 90.4% | 23.9KB | 86.3KB |
+| Starcraft 2 | ❌ Failed seed 8 | 0 | 17.3 | 19.14 | 🟡 90.4% | 24.1KB | 86.3KB |
 | Stardew Valley | ✅ Passed seeds 1-10 | 0 | 44.2 | 44.2 | 🟢 Complete | 20.7KB | 10.7KB |
 | Subnautica | ✅ Passed seeds 1-10 | 0 | 6.1 | 6.1 | 🟢 Complete | 6.0KB | ✅ |
 | Super Mario 64 | ✅ Passed seeds 1-10 | 0 | 5.5 | 5.5 | 🟢 Complete | 14.6KB | ✅ |
