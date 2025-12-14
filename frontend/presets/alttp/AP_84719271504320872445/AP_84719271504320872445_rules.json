@@ -3748,7 +3748,7 @@
                             "value": {
                               "type": "constant",
                               "value": {
-                                "1": "<worlds.alttp.ALTTPWorld object at 0x7f5546ec3380>"
+                                "1": "<worlds.alttp.ALTTPWorld object at 0x7ede04fd5d50>"
                               }
                             },
                             "index": {
@@ -6006,7 +6006,7 @@
                           "value": {
                             "type": "constant",
                             "value": {
-                              "1": "<worlds.alttp.ALTTPWorld object at 0x7f5546ec3380>"
+                              "1": "<worlds.alttp.ALTTPWorld object at 0x7ede04fd5d50>"
                             }
                           },
                           "index": {
@@ -19617,7 +19617,7 @@
       "enemy_health": "default",
       "enemy_damage": "default",
       "bombless_start": false,
-      "glitches_required": "none",
+      "glitches_required": "no_glitches",
       "pot_shuffle": "off",
       "dungeon_counters": "on",
       "glitch_boots": "on",

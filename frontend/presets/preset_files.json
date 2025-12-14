@@ -69,6 +69,118 @@
           "AP_84719271504320872445_rules.json",
           "AP_84719271504320872445_sphere_log.jsonl"
         ]
+      },
+      "AP_05594871498841892311": {
+        "seed": 4,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Link to the Past"
+          }
+        ],
+        "files": [
+          "AP_05594871498841892311.archipelago",
+          "AP_05594871498841892311_Spoiler.txt",
+          "AP_05594871498841892311_rules.json",
+          "AP_05594871498841892311_sphere_log.jsonl"
+        ]
+      },
+      "AP_96945849220684217413": {
+        "seed": 5,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Link to the Past"
+          }
+        ],
+        "files": [
+          "AP_96945849220684217413.archipelago",
+          "AP_96945849220684217413_Spoiler.txt",
+          "AP_96945849220684217413_rules.json",
+          "AP_96945849220684217413_sphere_log.jsonl"
+        ]
+      },
+      "AP_48205312626925217390": {
+        "seed": 9,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Link to the Past"
+          }
+        ],
+        "files": [
+          "AP_48205312626925217390.archipelago",
+          "AP_48205312626925217390_Spoiler.txt",
+          "AP_48205312626925217390_rules.json",
+          "AP_48205312626925217390_sphere_log.jsonl"
+        ]
+      },
+      "AP_00679259829289197625": {
+        "seed": 6,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Link to the Past"
+          }
+        ],
+        "files": [
+          "AP_00679259829289197625.archipelago",
+          "AP_00679259829289197625_Spoiler.txt",
+          "AP_00679259829289197625_rules.json",
+          "AP_00679259829289197625_sphere_log.jsonl"
+        ]
+      },
+      "AP_35931773795037525048": {
+        "seed": 7,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Link to the Past"
+          }
+        ],
+        "files": [
+          "AP_35931773795037525048.archipelago",
+          "AP_35931773795037525048_Spoiler.txt",
+          "AP_35931773795037525048_rules.json",
+          "AP_35931773795037525048_sphere_log.jsonl"
+        ]
+      },
+      "AP_20777137877808592492": {
+        "seed": 8,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Link to the Past"
+          }
+        ],
+        "files": [
+          "AP_20777137877808592492.archipelago",
+          "AP_20777137877808592492_Spoiler.txt",
+          "AP_20777137877808592492_rules.json",
+          "AP_20777137877808592492_sphere_log.jsonl"
+        ]
+      },
+      "AP_55941320597534372051": {
+        "seed": 10,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "A Link to the Past"
+          }
+        ],
+        "files": [
+          "AP_55941320597534372051.archipelago",
+          "AP_55941320597534372051_Spoiler.txt",
+          "AP_55941320597534372051_rules.json",
+          "AP_55941320597534372051_sphere_log.jsonl"
+        ]
       }
     },
     "test_result": {
