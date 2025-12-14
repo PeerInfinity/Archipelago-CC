@@ -4406,7 +4406,8 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
     // HasAll: all items required (AND of Has checks)
     case 'HasAll': {
-      const items = args.item_names || children.map(c => c.args?.item_name).filter(Boolean);
+      // Support both "items" (from Resolved._get_args_dict) and "item_names" (from Rule.to_dict)
+      const items = args.items || args.item_names || children.map(c => c.args?.item_name).filter(Boolean);
       if (!items || items.length === 0) {
         return true; // Empty AND is true
       }
@@ -4420,7 +4421,8 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
     // HasAny: any item required (OR of Has checks)
     case 'HasAny': {
-      const items = args.item_names || children.map(c => c.args?.item_name).filter(Boolean);
+      // Support both "items" (from Resolved._get_args_dict) and "item_names" (from Rule.to_dict)
+      const items = args.items || args.item_names || children.map(c => c.args?.item_name).filter(Boolean);
       if (!items || items.length === 0) {
         return false; // Empty OR is false
       }

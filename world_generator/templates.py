@@ -7,8 +7,8 @@ for that file.
 
 import re
 from typing import Dict, List, Set
-from .extractors import ExtractedData, ItemData, LocationData, ExitData
-from .rule_codegen import RuleCodeGenerator, is_trivial_rule
+from .extractors import ExtractedData, ItemData, LocationData, ExitData, HelperData
+from .rule_codegen import RuleCodeGenerator, HelperCodeGenerator, is_trivial_rule
 
 
 def sanitize_class_name(name: str) -> str:
@@ -17,6 +17,59 @@ def sanitize_class_name(name: str) -> str:
     Removes all characters that are not alphanumeric (keeps letters and digits).
     """
     return re.sub(r'[^a-zA-Z0-9]', '', name)
+
+
+def _rule_uses_helpers(rule: dict) -> bool:
+    """Check if a rule uses any helper function calls."""
+    if not isinstance(rule, dict):
+        return False
+
+    rule_type = rule.get('type', '')
+    if rule_type == 'helper':
+        return True
+
+    # Recursively check all dict and list values
+    for value in rule.values():
+        if isinstance(value, dict):
+            if _rule_uses_helpers(value):
+                return True
+        elif isinstance(value, list):
+            for item in value:
+                if isinstance(item, dict) and _rule_uses_helpers(item):
+                    return True
+
+    return False
+
+
+def _rule_needs_lambda(rule: dict) -> bool:
+    """
+    Check if a rule needs to use lambda-based generation instead of Rule Builder.
+
+    Returns True if the rule contains:
+    - Helper function calls
+    - Not operations (Rule Builder doesn't have Not class)
+    - Complex expressions that Rule Builder doesn't support
+    """
+    if not isinstance(rule, dict):
+        return False
+
+    rule_type = rule.get('type', '')
+
+    # These types require lambda
+    if rule_type in ('helper', 'not', 'compare', 'conditional', 'block'):
+        return True
+
+    # Recursively check all dict and list values
+    for value in rule.values():
+        if isinstance(value, dict):
+            if _rule_needs_lambda(value):
+                return True
+        elif isinstance(value, list):
+            for item in value:
+                if isinstance(item, dict) and _rule_needs_lambda(item):
+                    return True
+
+    return False
 
 
 def generate_items_py(data: ExtractedData) -> str:
@@ -266,10 +319,44 @@ def _create_entrance(source: Region, target: Region, name: str) -> Entrance:
 
 
 def generate_rules_py(data: ExtractedData) -> str:
-    """Generate Rules.py file content using Rule Builder."""
+    """Generate Rules.py file content.
+
+    Uses a hybrid approach:
+    - Rule Builder for simple rules (item checks, and/or, etc.)
+    - Lambda expressions for complex rules (helpers, not, conditionals)
+    """
     game_name = data.metadata.game_name
 
-    generator = RuleCodeGenerator()
+    rule_builder_generator = RuleCodeGenerator()
+    helper_generator = HelperCodeGenerator(game_name)
+    helper_generator.set_known_helpers(set(data.helpers.keys()))
+
+    # Check if any rules need helpers or lambda
+    has_helpers = bool(data.helpers)
+    needs_lambda = False
+
+    for exit_data in data.exits.values():
+        if exit_data.access_rule and _rule_needs_lambda(exit_data.access_rule):
+            needs_lambda = True
+            break
+
+    if not needs_lambda:
+        for loc_data in data.locations.values():
+            if loc_data.access_rule and _rule_needs_lambda(loc_data.access_rule):
+                needs_lambda = True
+                break
+
+    # Generate helper functions
+    helper_functions = []
+    if has_helpers:
+        for helper_name, helper_data in data.helpers.items():
+            func_code = helper_generator.generate_helper_function(
+                helper_name,
+                helper_data.params,
+                helper_data.body,
+                helper_data.defaults
+            )
+            helper_functions.append(func_code)
 
     # Collect all rules
     entrance_rules = []
@@ -278,30 +365,55 @@ def generate_rules_py(data: ExtractedData) -> str:
     # Process entrance rules (preserve original order)
     for exit_name, exit_data in data.exits.items():
         if not is_trivial_rule(exit_data.access_rule):
-            rule_code = generator.generate(exit_data.access_rule)
             exit_escaped = exit_name.replace('\\', '\\\\').replace('"', '\\"')
-            entrance_rules.append(
-                f'    world.set_rule(\n'
-                f'        multiworld.get_entrance("{exit_escaped}", player),\n'
-                f'        {rule_code}\n'
-                f'    )'
-            )
+
+            if _rule_needs_lambda(exit_data.access_rule):
+                # Use lambda with helper code generator
+                rule_expr = helper_generator._generate_expression(exit_data.access_rule)
+                entrance_rules.append(
+                    f'    multiworld.get_entrance("{exit_escaped}", player).access_rule = \\\n'
+                    f'        lambda state: {rule_expr}'
+                )
+            else:
+                # Use Rule Builder
+                rule_code = rule_builder_generator.generate(exit_data.access_rule)
+                entrance_rules.append(
+                    f'    world.set_rule(\n'
+                    f'        multiworld.get_entrance("{exit_escaped}", player),\n'
+                    f'        {rule_code}\n'
+                    f'    )'
+                )
 
     # Process location rules (preserve original order)
     for loc_name, loc_data in data.locations.items():
         if not is_trivial_rule(loc_data.access_rule):
-            rule_code = generator.generate(loc_data.access_rule)
             loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
-            location_rules.append(
-                f'    world.set_rule(\n'
-                f'        multiworld.get_location("{loc_escaped}", player),\n'
-                f'        {rule_code}\n'
-                f'    )'
-            )
+
+            if _rule_needs_lambda(loc_data.access_rule):
+                # Use lambda with helper code generator
+                rule_expr = helper_generator._generate_expression(loc_data.access_rule)
+                location_rules.append(
+                    f'    multiworld.get_location("{loc_escaped}", player).access_rule = \\\n'
+                    f'        lambda state: {rule_expr}'
+                )
+            else:
+                # Use Rule Builder
+                rule_code = rule_builder_generator.generate(loc_data.access_rule)
+                location_rules.append(
+                    f'    world.set_rule(\n'
+                    f'        multiworld.get_location("{loc_escaped}", player),\n'
+                    f'        {rule_code}\n'
+                    f'    )'
+                )
 
     # Build imports
-    imports = generator.get_imports()
-    imports_str = ', '.join(imports)
+    rule_builder_imports = rule_builder_generator.get_imports()
+    rule_builder_imports_str = ', '.join(rule_builder_imports)
+
+    # Build helper section
+    helpers_section = ''
+    if helper_functions:
+        helpers_section = '\n\n# Helper functions\n' + '\n\n\n'.join(helper_functions) + '\n'
 
     # Build rule sections
     entrance_section = ''
@@ -316,26 +428,32 @@ def generate_rules_py(data: ExtractedData) -> str:
     if not rules_content.strip():
         rules_content = '    pass  # No non-trivial rules'
 
-    return f'''"""
-Access rules for {game_name}.
+    # Build import section
+    imports_section = ''
+    if rule_builder_imports:
+        imports_section = f'\nfrom rule_builder import {rule_builder_imports_str}\n'
 
-Auto-generated by world_generator using Rule Builder pattern.
-The world class must inherit from RuleWorldMixin to use these rules.
+    # Add CollectionState import if we have helpers or lambda rules
+    collection_state_import = ''
+    if has_helpers or needs_lambda:
+        collection_state_import = 'from BaseClasses import CollectionState\n'
+
+    return f'''"""
+Access rules for {game_name} WorldGen.
+
+Auto-generated by world_generator.
 """
 
 from typing import TYPE_CHECKING
 
-from rule_builder import {imports_str}
-
+{collection_state_import}{imports_section}
 if TYPE_CHECKING:
+    from BaseClasses import CollectionState
     from worlds.AutoWorld import World
-
+{helpers_section}
 
 def set_rules(world: "World") -> None:
-    """Set access rules for all locations and entrances.
-
-    Uses world.set_rule() from RuleWorldMixin to properly resolve Rule Builder rules.
-    """
+    """Set access rules for all locations and entrances."""
     player = world.player
     multiworld = world.multiworld
 {rules_content}
