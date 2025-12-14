@@ -1,7 +1,7 @@
 {
   "A Hat in Time": {
     "exporter_path": "exporter/games/ahit.py",
-    "exporter_size": 12470,
+    "exporter_size": 11644,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -217,7 +217,7 @@
   },
   "Celeste 64": {
     "exporter_path": "exporter/games/celeste64.py",
-    "exporter_size": 9722,
+    "exporter_size": 9207,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -307,7 +307,7 @@
   },
   "DLCQuest": {
     "exporter_path": "exporter/games/dlcquest.py",
-    "exporter_size": 10591,
+    "exporter_size": 9994,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -478,7 +478,7 @@
   },
   "Hollow Knight": {
     "exporter_path": "exporter/games/hk.py",
-    "exporter_size": 3303,
+    "exporter_size": 1228,
     "game_logic_path": "frontend/modules/shared/gameLogic/hk/hkLogic.js",
     "game_logic_size": 3398,
     "has_custom_exporter": true,
@@ -874,7 +874,7 @@
   },
   "Pokemon Emerald": {
     "exporter_path": "exporter/games/pokemon_emerald.py",
-    "exporter_size": 6417,
+    "exporter_size": 5443,
     "game_logic_path": "frontend/modules/shared/gameLogic/pokemon_emerald/pokemon_emeraldLogic.js",
     "game_logic_size": 8945,
     "has_custom_exporter": true,
@@ -1207,7 +1207,7 @@
   },
   "TUNIC": {
     "exporter_path": "exporter/games/tunic.py",
-    "exporter_size": 2590,
+    "exporter_size": 2106,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1261,7 +1261,7 @@
   },
   "The Messenger": {
     "exporter_path": "exporter/games/messenger.py",
-    "exporter_size": 12860,
+    "exporter_size": 12635,
     "game_logic_path": null,
     "game_logic_size": 0,
     "has_custom_exporter": true,
@@ -1450,7 +1450,7 @@
   },
   "Yu-Gi-Oh! 2006": {
     "exporter_path": "exporter/games/yugioh06.py",
-    "exporter_size": 1639,
+    "exporter_size": 1422,
     "game_logic_path": "frontend/modules/shared/gameLogic/yugioh06/yugioh06Logic.js",
     "game_logic_size": 21951,
     "has_custom_exporter": true,

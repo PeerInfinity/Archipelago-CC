@@ -1,10 +1,7 @@
 """Yu-Gi-Oh! 2006 game-specific export handler."""
 
-from typing import Dict, Any
 from .generic import GenericGameExportHandler
-import logging
 
-logger = logging.getLogger(__name__)
 
 class Yugioh06GameExportHandler(GenericGameExportHandler):
     """Export handler for Yu-Gi-Oh! 2006.
@@ -18,9 +15,10 @@ class Yugioh06GameExportHandler(GenericGameExportHandler):
     AUTO_EXPORT_DISCOVERED_HELPERS = False
     AUTO_PRESERVE_LARGE_HELPERS = False
 
-
-    # List of custom helper functions defined in worlds/yugioh06/rules.py and fusions.py
-    CUSTOM_HELPERS = {
+    # Custom helper functions defined in worlds/yugioh06/rules.py and fusions.py
+    # These helpers are implemented in JavaScript and should not be inlined.
+    # Using HELPERS_TO_PRESERVE instead of overriding should_preserve_as_helper()
+    HELPERS_TO_PRESERVE = {
         'yugioh06_difficulty',  # Wraps has_from_list with core_booster
         'only_light',
         'only_dark',
@@ -47,11 +45,3 @@ class Yugioh06GameExportHandler(GenericGameExportHandler):
         'back_row_removal',
         'count_has_materials',
     }
-
-    def should_preserve_as_helper(self, func_name: str) -> bool:
-        """
-        Preserve Yu-Gi-Oh! 2006 custom helper functions as helper calls.
-
-        These helpers are implemented in JavaScript and should not be inlined.
-        """
-        return func_name in self.CUSTOM_HELPERS

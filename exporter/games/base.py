@@ -72,8 +72,16 @@ class BaseGameExportHandler:
     # Helpers with more than this many nodes will be preserved as helper calls
     HELPER_INLINE_THRESHOLD: int = 0
 
-    def __init__(self):
-        """Initialize the handler with an empty set of discovered helpers."""
+    def __init__(self, world=None):
+        """Initialize the handler with an empty set of discovered helpers.
+
+        Args:
+            world: Optional world object for game-specific data access.
+                   Many game handlers need access to the world during rule
+                   expansion or other processing.
+        """
+        # Store world reference if provided
+        self.world = world
         # Set of helper names discovered during rule analysis
         # Populated automatically by register_helper_usage()
         self._discovered_helpers: Set[str] = set()
@@ -256,12 +264,35 @@ class BaseGameExportHandler:
             if expanded:
                 return self.expand_rule(expanded, _depth + 1)
 
-        if rule.get('type') in ['and', 'or']:
+        # Recursively expand children of compound rules
+        return self._recursively_expand_rule_children(rule, _depth)
+
+    def _recursively_expand_rule_children(self, rule: Dict[str, Any], _depth: int = 0) -> Dict[str, Any]:
+        """
+        Recursively expand children of compound rules (and, or, not, conditional).
+
+        This utility method can be called by game-specific expand_rule implementations
+        to handle standard recursion after doing game-specific transformations.
+
+        Args:
+            rule: The rule dictionary to process
+            _depth: Current recursion depth (for cycle detection)
+
+        Returns:
+            The rule with children recursively expanded
+        """
+        if not rule or not isinstance(rule, dict):
+            return rule
+
+        rule_type = rule.get('type')
+
+        if rule_type in ['and', 'or']:
             rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
 
-        if rule.get('type') == 'not':
+        elif rule_type == 'not':
             rule['condition'] = self.expand_rule(rule.get('condition'), _depth + 1)
-        if rule.get('type') == 'conditional':
+
+        elif rule_type == 'conditional':
             rule['test'] = self.expand_rule(rule.get('test'), _depth + 1)
             rule['if_true'] = self.expand_rule(rule.get('if_true'), _depth + 1)
             rule['if_false'] = self.expand_rule(rule.get('if_false'), _depth + 1)

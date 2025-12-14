@@ -20,8 +20,7 @@ class Celeste64GameExportHandler(BaseGameExportHandler):
 
     def __init__(self, world=None):
         """Initialize with world instance to access options."""
-        super().__init__()
-        self.world = world
+        super().__init__(world=world)
         self._logic_difficulty = None
         self._location_logic = {}
         self._region_logic = {}
@@ -218,19 +217,8 @@ class Celeste64GameExportHandler(BaseGameExportHandler):
                 if self.world:
                     return self._expand_goal_rule(self.world)
 
-        # Recursively process conditions
-        if rule_type in ['and', 'or']:
-            rule['conditions'] = [self.expand_rule(cond, _depth + 1) for cond in rule.get('conditions', [])]
-
-        if rule_type == 'not':
-            rule['condition'] = self.expand_rule(rule.get('condition'), _depth + 1)
-
-        if rule_type == 'conditional':
-            rule['test'] = self.expand_rule(rule.get('test'), _depth + 1)
-            rule['if_true'] = self.expand_rule(rule.get('if_true'), _depth + 1)
-            rule['if_false'] = self.expand_rule(rule.get('if_false'), _depth + 1)
-
-        return rule
+        # Let parent class handle recursive expansion
+        return super().expand_rule(rule, _depth)
 
     def handle_special_function_call(self, func_name: str, processed_args: list) -> dict:
         """
