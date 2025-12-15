@@ -779,18 +779,81 @@
             "name": "To Storeroom door",
             "connected_region": "Villa: storeroom",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": "Helper:location_item_name('Villa: Storeroom statue')",
+                    "op": "==",
+                    "right": "True"
+                  }
+                },
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": "Helper:location_item_name('Villa: Storeroom - Right')",
+                    "op": "==",
+                    "right": "True"
+                  }
+                },
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": "Helper:location_item_name('Villa: Storeroom - Left')",
+                    "op": "==",
+                    "right": "True"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Storeroom Key",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
             "name": "To Archives door",
             "connected_region": "Villa: archives",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": "Helper:location_item_name('Villa: Archives rear corner')",
+                    "op": "==",
+                    "right": "True"
+                  }
+                },
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": "Helper:location_item_name('Villa: Archives table')",
+                    "op": "==",
+                    "right": "True"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Archives Key",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
@@ -2237,9 +2300,54 @@
             "name": "Torture Chamber door",
             "connected_region": "Castle Center: torture chamber",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": "Helper:location_item_name('Castle Center: Torture chamber rafters')",
+                    "op": "==",
+                    "right": "True"
+                  }
+                },
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": "Helper:location_item_name('Castle Center: Torture chamber instrument rack')",
+                    "op": "==",
+                    "right": "True"
+                  }
+                },
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": "Helper:location_item_name('Castle Center: Mandragora shelf - Right')",
+                    "op": "==",
+                    "right": "True"
+                  }
+                },
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": "Helper:location_item_name('Castle Center: Mandragora shelf - Left')",
+                    "op": "==",
+                    "right": "True"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Chamber Key",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
@@ -3369,9 +3477,27 @@
             "name": "Science Door 1",
             "connected_region": "Tower of Science: locked key1 room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": "Helper:location_item_name('Tower of Science: Pick-a-door hallway locked middle room')",
+                    "op": "==",
+                    "right": "True"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Science Key1",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
@@ -3475,9 +3601,36 @@
             "name": "Science Door 3",
             "connected_region": "Tower of Science: locked key3 room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": "Helper:location_item_name('Tower of Science: Locked Key3 room - Left')",
+                    "op": "==",
+                    "right": "True"
+                  }
+                },
+                {
+                  "rule": "Compare",
+                  "options": [],
+                  "args": {
+                    "left": "Helper:location_item_name('Tower of Science: Locked Key3 room - Right')",
+                    "op": "==",
+                    "right": "True"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "options": [],
+                  "args": {
+                    "item_name": "Science Key3",
+                    "count": 1
+                  }
+                }
+              ]
             }
           },
           {
@@ -3939,9 +4092,8 @@
             "name": "Dracula's door",
             "connected_region": "Castle Keep: Dracula's chamber",
             "access_rule": {
-              "rule": "True_",
-              "options": [],
-              "args": {}
+              "type": "constant",
+              "value": true
             }
           }
         ],
@@ -4751,7 +4903,8 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
-      }
+      },
+      "world_directory": "cv64_worldgen"
     }
   },
   "game_info": {
