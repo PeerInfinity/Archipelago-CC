@@ -9,8 +9,7 @@ logger = logging.getLogger(__name__)
 class TLoZGameExportHandler(GenericGameExportHandler):
     """Export handler for The Legend of Zelda."""
 
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
     AUTO_PRESERVE_LARGE_HELPERS = False
 
 
@@ -97,7 +96,9 @@ class TLoZGameExportHandler(GenericGameExportHandler):
 
     def _resolve_f_string(self, f_string_rule: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """
-        Resolve an f_string rule to a constant string if all parts are constant.
+        Resolve an f_string rule to a constant rule node if all parts are constant.
+
+        Uses base class resolve_f_string and wraps result in a constant node.
 
         Example input:
         {
@@ -111,37 +112,11 @@ class TLoZGameExportHandler(GenericGameExportHandler):
         Should resolve to:
         {"type": "constant", "value": "Boss 1"}
         """
-        if f_string_rule.get('type') != 'f_string':
-            return None
-
-        parts = f_string_rule.get('parts', [])
-        if not parts:
-            return {'type': 'constant', 'value': ''}
-
-        # Try to resolve all parts to constant values
-        resolved_parts = []
-        for part in parts:
-            if part.get('type') == 'constant':
-                resolved_parts.append(str(part.get('value', '')))
-            elif part.get('type') == 'formatted_value':
-                # Extract the value from the formatted_value
-                value_rule = part.get('value', {})
-                if value_rule.get('type') == 'constant':
-                    resolved_parts.append(str(value_rule.get('value', '')))
-                else:
-                    # Can't resolve non-constant formatted values
-                    logger.debug(f"Cannot resolve f_string with non-constant formatted_value: {part}")
-                    return None
-            else:
-                # Unknown part type, can't resolve
-                logger.debug(f"Cannot resolve f_string with unknown part type: {part.get('type')}")
-                return None
-
-        # All parts are constant, join them into a single string
-        resolved_string = ''.join(resolved_parts)
-        logger.debug(f"Resolved f_string to constant: '{resolved_string}'")
-
-        return {
-            'type': 'constant',
-            'value': resolved_string
-        }
+        resolved_string = self.resolve_f_string(f_string_rule)
+        if resolved_string is not None:
+            logger.debug(f"Resolved f_string to constant: '{resolved_string}'")
+            return {
+                'type': 'constant',
+                'value': resolved_string
+            }
+        return None

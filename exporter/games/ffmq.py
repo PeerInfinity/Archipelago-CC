@@ -15,8 +15,7 @@ class FFMQGameExportHandler(GenericGameExportHandler):
     need to be resolved to actual item lists.
     """
 
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
     AUTO_PRESERVE_LARGE_HELPERS = False
 
     def __init__(self, world=None):

@@ -17,8 +17,7 @@ class LandstalkerGameExportHandler(GenericGameExportHandler):
     - Region visit tracking
     """
 
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
     AUTO_PRESERVE_LARGE_HELPERS = False
 
 

@@ -391,7 +391,131 @@ class BaseGameExportHandler:
                 for item in items
             ]
         }
-        
+
+    def resolve_f_string(self, f_string_rule: Dict[str, Any]) -> Optional[str]:
+        """
+        Resolve an f_string AST node to a simple string.
+
+        This is a utility method for game-specific handlers that need to resolve
+        f-strings in rules. Override _resolve_f_string_value for game-specific
+        value resolution (e.g., subscript lookups).
+
+        Args:
+            f_string_rule: The f_string rule node with 'parts' array
+
+        Returns:
+            The resolved string, or None if resolution fails
+        """
+        if f_string_rule.get('type') != 'f_string':
+            return None
+
+        parts = f_string_rule.get('parts', [])
+        if not parts:
+            return ''
+
+        result_parts = []
+        for part in parts:
+            if part.get('type') == 'constant':
+                result_parts.append(str(part.get('value', '')))
+            elif part.get('type') == 'formatted_value':
+                value_node = part.get('value', {})
+                resolved = self._resolve_f_string_value(value_node)
+                if resolved is None:
+                    logger.debug(f"Cannot resolve f_string formatted_value: {value_node}")
+                    return None
+                result_parts.append(str(resolved))
+            else:
+                logger.debug(f"Cannot resolve f_string part type: {part.get('type')}")
+                return None
+
+        return ''.join(result_parts)
+
+    def _resolve_f_string_value(self, value_node: Dict[str, Any]) -> Optional[Any]:
+        """
+        Resolve a single value node within an f-string.
+
+        Override this method in game-specific handlers to support additional
+        value types (like subscript lookups, attribute access, etc.).
+
+        Args:
+            value_node: The value node from a formatted_value part
+
+        Returns:
+            The resolved value, or None if resolution fails
+        """
+        node_type = value_node.get('type')
+
+        if node_type == 'constant':
+            return value_node.get('value', '')
+        elif node_type == 'binary_op':
+            return self._evaluate_binary_op(value_node)
+        elif node_type == 'name':
+            # Variable reference - can't resolve without context
+            logger.debug(f"Variable reference in f-string: {value_node.get('name')}")
+            return None
+
+        # Unknown type - subclasses can handle additional types
+        return None
+
+    def _evaluate_binary_op(self, node: Dict[str, Any]) -> Optional[Any]:
+        """
+        Evaluate a binary operation node.
+
+        Supports +, -, *, /, //, % operators on constant values.
+
+        Args:
+            node: The binary_op node
+
+        Returns:
+            The result of the operation, or None if evaluation fails
+        """
+        if node.get('type') != 'binary_op':
+            return None
+
+        left = node.get('left', {})
+        right = node.get('right', {})
+        op = node.get('op', '')
+
+        # Get values (recursively resolve if needed)
+        if left.get('type') == 'constant':
+            left_val = left.get('value')
+        elif left.get('type') == 'binary_op':
+            left_val = self._evaluate_binary_op(left)
+            if left_val is None:
+                return None
+        else:
+            return None
+
+        if right.get('type') == 'constant':
+            right_val = right.get('value')
+        elif right.get('type') == 'binary_op':
+            right_val = self._evaluate_binary_op(right)
+            if right_val is None:
+                return None
+        else:
+            return None
+
+        # Perform operation
+        try:
+            if op == '-':
+                return left_val - right_val
+            elif op == '+':
+                return left_val + right_val
+            elif op == '*':
+                return left_val * right_val
+            elif op == '/':
+                return left_val / right_val
+            elif op == '//':
+                return left_val // right_val
+            elif op == '%':
+                return left_val % right_val
+            else:
+                logger.debug(f"Unknown binary operator: {op}")
+                return None
+        except Exception as e:
+            logger.debug(f"Error evaluating binary op: {e}")
+            return None
+
     def get_item_data(self, world) -> Dict[str, Dict[str, Any]]:
         """
         Return game-specific item definitions beyond the base item_id_to_name.
@@ -1112,11 +1236,12 @@ class BaseGameExportHandler:
 
     def _resolve_items_collection(self, collection_node: Dict[str, Any]) -> Optional[List[str]]:
         """
-        Resolve a tuple/list of item attributes to a list of item name strings.
+        Resolve a tuple/list/set of item attributes to a list of item name strings.
 
-        Handles both:
-        - Tuple/list nodes with attribute elements (not yet resolved)
+        Handles:
         - Constant nodes with list/tuple values (already resolved by analyzer)
+        - Tuple/list/set nodes with attribute or constant elements
+        - Set nodes used in has_any/has_all patterns
 
         Args:
             collection_node: The collection node dictionary from the analyzer
@@ -1128,15 +1253,16 @@ class BaseGameExportHandler:
             return None
 
         items = []
+        node_type = collection_node.get('type')
 
         # Handle constant type with list/tuple value (already resolved by analyzer)
-        if collection_node.get('type') == 'constant':
+        if node_type == 'constant':
             value = collection_node.get('value')
             if isinstance(value, (list, tuple)):
                 return list(value)
 
-        # Handle tuple type
-        if collection_node.get('type') == 'tuple':
+        # Handle tuple, list, or set types
+        if node_type in ('tuple', 'list', 'set'):
             elements = collection_node.get('elements', [])
             for elem in elements:
                 if elem.get('type') == 'attribute':
@@ -1144,17 +1270,8 @@ class BaseGameExportHandler:
                     if item_name:
                         items.append(item_name)
                 elif elem.get('type') == 'constant':
-                    items.append(elem.get('value'))
-
-        # Handle list type
-        elif collection_node.get('type') == 'list':
-            elements = collection_node.get('elements', [])
-            for elem in elements:
-                if elem.get('type') == 'attribute':
-                    item_name = self._resolve_item_attribute(elem)
-                    if item_name:
-                        items.append(item_name)
-                elif elem.get('type') == 'constant':
-                    items.append(elem.get('value'))
+                    value = elem.get('value')
+                    if isinstance(value, str):
+                        items.append(value)
 
         return items if items else None

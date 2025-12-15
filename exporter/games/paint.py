@@ -25,7 +25,6 @@ class PaintGameExportHandler(GenericGameExportHandler):
     # - world.options.<setting> pattern (converted to setting_value)
     # - sqrt() function (handled as helper type)
     # - if_statement with multiple assignments in body
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
 
     # Blacklist paint_percent_available - it has caching logic with state mutation
     # (state.paint_percent_stale) that doesn't translate to the pure function model.

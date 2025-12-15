@@ -1,14 +1,16 @@
 """DLCQuest-specific export handler."""
 
 from typing import Dict, Any
-from .base import BaseGameExportHandler
+from .generic import GenericGameExportHandler
 from BaseClasses import ItemClassification
 import logging
 
 logger = logging.getLogger(__name__)
 
-class DLCQuestGameExportHandler(BaseGameExportHandler):
+class DLCQuestGameExportHandler(GenericGameExportHandler):
     """Handle DLCQuest-specific rule expansions and coin item export."""
+
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
     def __init__(self, world=None):
         super().__init__(world=world)

@@ -5,17 +5,16 @@ the need for JavaScript helper implementations.
 """
 
 from typing import Dict, Any, List, Optional
-from .base import BaseGameExportHandler
+from .generic import GenericGameExportHandler
 import logging
 
 logger = logging.getLogger(__name__)
 
 
-class Celeste64GameExportHandler(BaseGameExportHandler):
+class Celeste64GameExportHandler(GenericGameExportHandler):
     """Celeste 64 expander that inlines rules from logic mappings."""
 
-    # Enable automatic export of discovered helpers
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
     def __init__(self, world=None):
         """Initialize with world instance to access options."""

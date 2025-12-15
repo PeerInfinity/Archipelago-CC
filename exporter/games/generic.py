@@ -36,8 +36,15 @@ class GenericGameExportHandler(BaseGameExportHandler):
 
     This is the recommended base class for new game export handlers.
     Provides intelligent defaults for rule analysis, item discovery, and helper expansion.
+
+    By default, AUTO_EXPORT_DISCOVERED_HELPERS is enabled. Override with False
+    if your game has complex helpers that can't be automatically exported.
     """
-    
+
+    # Enable automatic helper export by default for GenericGameExportHandler
+    # Most games benefit from this. Override with False if needed.
+    AUTO_EXPORT_DISCOVERED_HELPERS = True
+
     def expand_helper(self, helper_name: str):
         return None  # Preserve helper nodes as-is
         

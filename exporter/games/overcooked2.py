@@ -7,8 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Overcooked2GameExportHandler(GenericGameExportHandler):
-    # Enable automatic export of discovered helpers
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
     def __init__(self):
         super().__init__()

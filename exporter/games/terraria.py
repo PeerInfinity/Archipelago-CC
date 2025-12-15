@@ -5,13 +5,16 @@ This exporter converts those conditions to the standard JSON rule format.
 """
 
 from typing import Dict, Any, List, Union, Tuple
-from .base import BaseGameExportHandler
+from .generic import GenericGameExportHandler
 from BaseClasses import ItemClassification
 import logging
 
 logger = logging.getLogger(__name__)
 
-class TerrariaGameExportHandler(BaseGameExportHandler):
+class TerrariaGameExportHandler(GenericGameExportHandler):
+    """Terraria export handler with custom rule system support."""
+
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
     # Export settings at top level so they can be resolved by 'name' type rules
     COMPUTED_SETTINGS = {
         'calamity': lambda w, m, p: bool(w.options.calamity.value) if hasattr(w.options, 'calamity') else False,

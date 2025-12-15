@@ -12,8 +12,7 @@ class LingoGameExportHandler(GenericGameExportHandler):
     """Export handler for Lingo that handles AccessRequirements string sorting, door variable resolution,
     and exporting door-related data structures for rule evaluation."""
 
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
     AUTO_PRESERVE_LARGE_HELPERS = False
 
     # Helper module paths - needed for auto-export to find helper functions
