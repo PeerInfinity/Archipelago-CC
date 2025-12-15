@@ -338,7 +338,7 @@ def generate_rules_py(data: ExtractedData) -> str:
     rule_builder_generator = RuleCodeGenerator(game_name)
     rule_builder_generator.set_helpers(set(data.helpers.keys()), helper_bodies)
 
-    helper_generator = HelperCodeGenerator(game_name)
+    helper_generator = HelperCodeGenerator(game_name, data.metadata.resolved_settings)
     helper_generator.set_known_helpers(set(data.helpers.keys()))
 
     # Check if any rules need helpers or lambda
