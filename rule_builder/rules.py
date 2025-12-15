@@ -93,6 +93,9 @@ class RuleWorldMixin(World):
 
     def get_cached_rule(self, resolved_rule: "Rule.Resolved") -> "Rule.Resolved":
         """Returns a cached instance of a resolved rule based on the hash"""
+        # Skip caching for rules that have caching disabled (e.g., HelperCall with unhashable body_data)
+        if not resolved_rule.caching_enabled:
+            return resolved_rule
         rule_hash = hash(resolved_rule)
         if rule_hash in self.rules_by_hash:
             return self.rules_by_hash[rule_hash]

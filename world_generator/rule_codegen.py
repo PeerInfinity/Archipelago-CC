@@ -1259,5 +1259,9 @@ class HelperCodeGenerator:
                 return value.get('value', default)
             if value.get('type') == 'value':
                 return value.get('value', default)
+            if value.get('type') == 'set':
+                # Extract all elements from the set
+                elements = value.get('elements', [])
+                return [self._extract_constant(elem, None) for elem in elements if self._extract_constant(elem, None) is not None]
             return default
         return value if value is not None else default
