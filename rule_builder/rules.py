@@ -459,13 +459,24 @@ class OptionFilter(Generic[T]):
         return f"{self.option.__name__} {op} {self.value}"
 
 
+def _make_hashable(value: Any) -> Any:
+    """Recursively convert unhashable types to hashable equivalents for hashing."""
+    if isinstance(value, dict):
+        return tuple(sorted((_make_hashable(k), _make_hashable(v)) for k, v in value.items()))
+    if isinstance(value, list):
+        return tuple(_make_hashable(v) for v in value)
+    if isinstance(value, set):
+        return frozenset(_make_hashable(v) for v in value)
+    return value
+
+
 def _create_hash_fn(resolved_rule_cls: "CustomRuleRegister") -> Callable[..., int]:
     def hash_impl(self: "Rule.Resolved") -> int:
         return hash(
             (
                 self.__class__.__module__,
                 self.rule_name,
-                *[getattr(self, f.name) for f in dataclasses.fields(self)],
+                *[_make_hashable(getattr(self, f.name)) for f in dataclasses.fields(self)],
             )
         )
 
