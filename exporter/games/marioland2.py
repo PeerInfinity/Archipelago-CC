@@ -14,8 +14,7 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
     auto-scroll checks, level progression, and zone-specific logic.
     """
 
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
     AUTO_PRESERVE_LARGE_HELPERS = False
 
     # All helpers are now exported to rules.json - no JavaScript implementations needed.

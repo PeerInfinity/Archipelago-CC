@@ -22,7 +22,6 @@ class SMGameExportHandler(GenericGameExportHandler):
     # 2. Helper calls are created in expand_rule post-processing, not during analysis
     # 3. The VARIA logic system (SMBool with difficulty) requires JS implementations
     # The JavaScript helpers in smLogic.js remain necessary for rule evaluation.
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
 
 

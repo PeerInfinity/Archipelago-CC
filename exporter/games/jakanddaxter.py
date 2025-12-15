@@ -7,9 +7,18 @@ import logging
 logger = logging.getLogger(__name__)
 
 class JakAndDaxterGameExportHandler(GenericGameExportHandler):
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
     AUTO_PRESERVE_LARGE_HELPERS = False
+
+    # Enable processing of resolved_items from sphere log
+    # This allows "Reachable Orbs" (computed by Python during generation)
+    # to be tracked in the frontend without needing JavaScript helpers
+    USE_RESOLVED_ITEMS = True
+
+    # Add items from sphere log BEFORE comparing accessible locations
+    # This is required because "Reachable Orbs" needs to be in prog_items
+    # before evaluating rules (it's not obtained from checking locations)
+    ADD_SPHERE_ITEMS_UPFRONT = True
 
     # Note: can_reach_orbs_level and can_reach_orbs_global are converted to item_check rules
     # for "Reachable Orbs" items, tracked via use_resolved_items from sphere log
@@ -22,24 +31,6 @@ class JakAndDaxterGameExportHandler(GenericGameExportHandler):
         # The item_table is a dict mapping item_id -> item_name
         from worlds.jakanddaxter.items import item_table
         self.item_id_to_name = dict(item_table)
-
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """
-        Return settings data including use_resolved_items for Reachable Orbs tracking.
-        """
-        settings = super().get_settings_data(world, multiworld, player)
-
-        # Enable processing of resolved_items from sphere log
-        # This allows "Reachable Orbs" (computed by Python during generation)
-        # to be tracked in the frontend without needing JavaScript helpers
-        settings['use_resolved_items'] = True
-
-        # Add items from sphere log BEFORE comparing accessible locations
-        # This is required because "Reachable Orbs" needs to be in prog_items
-        # before evaluating rules (it's not obtained from checking locations)
-        settings['add_sphere_items_upfront'] = True
-
-        return settings
 
     def get_game_info(self, world) -> Dict[str, Any]:
         """

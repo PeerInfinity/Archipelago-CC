@@ -7,8 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class WitnessGameExportHandler(GenericGameExportHandler):
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
     # Mapping of laser activation locations to the regions containing their panels
     LASER_ACTIVATION_TO_REGION = {

@@ -14,7 +14,7 @@ class AquariaGameExportHandler(GenericGameExportHandler):
     item scanning. Only overrides region handling for Aquaria-specific needs.
     """
 
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
     def postprocess_regions(self, multiworld, player):
         """

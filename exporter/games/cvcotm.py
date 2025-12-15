@@ -9,8 +9,7 @@ logger = logging.getLogger(__name__)
 class CvCotMGameExportHandler(GenericGameExportHandler):
     """Expander for Castlevania - Circle of the Moon specific functions."""
 
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
     def __init__(self):
         super().__init__()

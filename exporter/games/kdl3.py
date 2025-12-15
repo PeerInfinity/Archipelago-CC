@@ -1,17 +1,16 @@
 """Kirby's Dream Land 3 game-specific export handler."""
 
 from typing import Dict, Any, List, Optional
-from .base import BaseGameExportHandler
+from .generic import GenericGameExportHandler
 import logging
 import importlib
 
 logger = logging.getLogger(__name__)
 
-class KDL3GameExportHandler(BaseGameExportHandler):
+class KDL3GameExportHandler(GenericGameExportHandler):
     """Handle KDL3-specific rule expansions and f-string conversions."""
 
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
     AUTO_PRESERVE_LARGE_HELPERS = False
 
     # Module path for helper functions
@@ -163,47 +162,33 @@ class KDL3GameExportHandler(BaseGameExportHandler):
         return rule
     
     def _convert_f_string(self, f_string_rule: Dict[str, Any]) -> Any:
-        """Convert an f_string AST node to a simple concatenated string."""
-        if f_string_rule.get('type') != 'f_string':
-            return f_string_rule
-            
-        parts = f_string_rule.get('parts', [])
-        result_parts = []
-        
-        for part in parts:
-            if part.get('type') == 'constant':
-                # Regular string literal part
-                result_parts.append(part.get('value', ''))
-            elif part.get('type') == 'formatted_value':
-                # Expression inside f-string
-                value_node = part.get('value', {})
-                if value_node.get('type') == 'constant':
-                    result_parts.append(str(value_node.get('value', '')))
-                elif value_node.get('type') == 'name':
-                    # This is a variable reference - for now just use the name
-                    # In a more complete implementation, we'd resolve the variable
-                    logger.warning(f"Variable reference in f-string: {value_node.get('name')}")
-                    result_parts.append(f"{{{value_node.get('name')}}}")
-                elif value_node.get('type') == 'binary_op':
-                    # Handle binary operations like "3 - 1"
-                    result = self._evaluate_binary_op(value_node)
-                    result_parts.append(str(result))
-                elif value_node.get('type') == 'subscript':
-                    # Handle subscript expressions like location_name.level_names_inverse[level]
-                    result = self._evaluate_subscript(value_node)
-                    if result is not None:
-                        result_parts.append(str(result))
-                    else:
-                        logger.warning(f"Could not evaluate subscript in f-string: {value_node}")
-                        result_parts.append(str(value_node))
-                else:
-                    # Other expression types - convert to string representation
-                    logger.warning(f"Complex expression in f-string: {value_node}")
-                    result_parts.append(str(value_node))
-                    
-        # Join all parts into a single string
-        return ''.join(result_parts)
-    
+        """Convert an f_string AST node to a simple concatenated string.
+
+        Uses base class resolve_f_string with game-specific subscript handling.
+        """
+        result = self.resolve_f_string(f_string_rule)
+        if result is not None:
+            return result
+        # Fallback: return original rule if we can't resolve
+        return f_string_rule
+
+    def _resolve_f_string_value(self, value_node: Dict[str, Any]) -> Optional[Any]:
+        """
+        Override to handle KDL3-specific subscript expressions.
+
+        Handles level_names_inverse[level] lookups in addition to base class support.
+        """
+        # First try base class resolution
+        result = super()._resolve_f_string_value(value_node)
+        if result is not None:
+            return result
+
+        # Handle subscript expressions like location_name.level_names_inverse[level]
+        if value_node.get('type') == 'subscript':
+            return self._evaluate_subscript(value_node)
+
+        return None
+
     def _evaluate_subscript(self, node: Dict[str, Any]) -> Any:
         """
         Evaluate a subscript expression node.
@@ -244,36 +229,6 @@ class KDL3GameExportHandler(BaseGameExportHandler):
         else:
             logger.debug(f"Non-attribute value in subscript: {value_node}")
             return None
-
-    def _evaluate_binary_op(self, node: Dict[str, Any]) -> Any:
-        """Evaluate a binary operation node."""
-        if node.get('type') != 'binary_op':
-            return node
-
-        left = node.get('left', {})
-        right = node.get('right', {})
-        op = node.get('op', '')
-
-        # Get values
-        left_val = left.get('value') if left.get('type') == 'constant' else left
-        right_val = right.get('value') if right.get('type') == 'constant' else right
-
-        # Perform operation
-        if op == '-':
-            return left_val - right_val
-        elif op == '+':
-            return left_val + right_val
-        elif op == '*':
-            return left_val * right_val
-        elif op == '/':
-            return left_val / right_val
-        elif op == '//':
-            return left_val // right_val
-        elif op == '%':
-            return left_val % right_val
-        else:
-            logger.warning(f"Unknown binary operator: {op}")
-            return f"{left_val} {op} {right_val}"
     
     def post_process_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Post-process the exported data to resolve f-strings in rules."""

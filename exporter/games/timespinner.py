@@ -11,8 +11,7 @@ class TimespinnerGameExportHandler(GenericGameExportHandler):
     All helpers are automatically exported and evaluated by the frontend.
     """
 
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
     # Module containing helper functions
     HELPER_MODULES = ['worlds.timespinner.LogicExtensions']
