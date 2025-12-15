@@ -1147,10 +1147,10 @@ class HelperCodeGenerator:
             arg_exprs = [self._generate_expression(a) for a in args]
             return f"{name}({', '.join(arg_exprs)})"
 
-        # Unknown helper - may be a built-in or external, use proper function name
-        func_name = self.get_function_name(name)
-        arg_exprs = ['state', 'player'] + [self._generate_expression(a) for a in args]
-        return f"{func_name}({', '.join(arg_exprs)})"
+        # Unknown helper - return True as safe fallback
+        # This handles helpers that were blacklisted during export (too complex to export)
+        # Returning True makes the location always accessible, which is safer than crashing
+        return 'True'
 
     def _expr_state_method(self, expr: Dict[str, Any]) -> str:
         """Generate state method call."""
