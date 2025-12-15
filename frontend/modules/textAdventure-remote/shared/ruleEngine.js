@@ -4437,7 +4437,8 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
     // HasAllCounts: all items with specific counts
     case 'HasAllCounts': {
-      const itemCounts = args.item_counts || {};
+      // Support both Rule Builder format (items) and legacy format (item_counts)
+      const itemCounts = args.items || args.item_counts || {};
       for (const [item, count] of Object.entries(itemCounts)) {
         const result = evaluateRule({ type: 'item_check', item, count }, context, depth + 1, localScope);
         if (result === false) return false;
@@ -4448,7 +4449,8 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
     // HasAnyCount: any item with specific count
     case 'HasAnyCount': {
-      const itemCounts = args.item_counts || {};
+      // Support both Rule Builder format (items) and legacy format (item_counts)
+      const itemCounts = args.items || args.item_counts || {};
       let hasUndefined = false;
       for (const [item, count] of Object.entries(itemCounts)) {
         const result = evaluateRule({ type: 'item_check', item, count }, context, depth + 1, localScope);
@@ -4460,7 +4462,8 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
     // HasFromList: N items from a list
     case 'HasFromList': {
-      const items = args.item_names || [];
+      // Support both Rule Builder format (items) and legacy format (item_names)
+      const items = args.items || args.item_names || [];
       const count = args.count ?? 1;
       let found = 0;
       let hasUndefined = false;
@@ -4480,7 +4483,8 @@ function evaluateRuleBuilderRule(rule, context, depth, localScope) {
 
     // HasFromListUnique: N unique items from a list
     case 'HasFromListUnique': {
-      const items = args.item_names || [];
+      // Support both Rule Builder format (items) and legacy format (item_names)
+      const items = args.items || args.item_names || [];
       const count = args.count ?? 1;
       let found = 0;
       let hasUndefined = false;
