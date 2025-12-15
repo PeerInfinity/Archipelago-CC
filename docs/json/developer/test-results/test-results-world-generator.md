@@ -1,6 +1,6 @@
 # World Generator Test Results
 
-**Generated:** 2025-12-14 23:37:27 UTC
+**Generated:** 2025-12-15 06:27:39 UTC
 **Seed:** 1
 **Mode:** Both (Canonical and Random)
 
@@ -44,9 +44,9 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 | Failed Original Generations | 0 |
 | Successful Test World Generations | 73 |
 | Failed Test World Generations | 0 |
-| Successful Test Seed Generations | 27 |
-| Failed Test Seed Generations | 46 |
-| Cross-Validation Passed | 18 |
+| Successful Test Seed Generations | 35 |
+| Failed Test Seed Generations | 38 |
+| Cross-Validation Passed | 26 |
 | Cross-Validation Failed | 9 |
 
 ## Canonical Detailed Results
@@ -64,20 +64,20 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 | Castlevania - Circle of the Moon | ✅ | ✅ | ✅ | ❌ | - | - |
 | Castlevania 64 | ✅ | ✅ | ✅ | ❌ | - | - |
 | Celeste (Open World) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Celeste 64 | ✅ | ✅ | ✅ | ❌ | - | - |
+| Celeste 64 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | ChecksFinder | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | ChocolateChipCookies | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Choo-Choo Charles | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Civilization VI | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| Civilization VI | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | DLCQuest | ✅ | ✅ | ✅ | ❌ | - | - |
-| DOOM 1993 | ✅ | ✅ | ✅ | ❌ | - | - |
-| DOOM II | ✅ | ✅ | ✅ | ❌ | - | - |
+| DOOM 1993 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| DOOM II | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Dark Souls III | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Donkey Kong Country 3 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Factorio | ✅ | ✅ | ✅ | ❌ | - | - |
 | Faxanadu | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Final Fantasy Mystic Quest | ✅ | ✅ | ✅ | ❌ | - | - |
-| Heretic | ✅ | ✅ | ✅ | ❌ | - | - |
+| Heretic | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Hylics 2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Inscryption | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Kingdom Hearts | ✅ | ✅ | ✅ | ❌ | - | - |
@@ -90,16 +90,16 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 | Mario & Luigi Superstar Saga | ✅ | ✅ | ✅ | ❌ | - | - |
 | MathProof2p2e4 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Mega Man 2 | ✅ | ✅ | ✅ | ❌ | - | - |
-| MegaMan Battle Network 3 | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| MegaMan Battle Network 3 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Meritous | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Metamath | ✅ | ✅ | ✅ | ❌ | - | - |
+| Metamath | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Muse Dash | ✅ | ✅ | ✅ | ❌ | - | - |
 | Noita | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Old School Runescape | ✅ | ✅ | ✅ | ❌ | - | - |
 | Overcooked! 2 | ✅ | ✅ | ✅ | ❌ | - | - |
 | Paint | ✅ | ✅ | ✅ | ❌ | - | - |
 | Raft | ✅ | ✅ | ✅ | ❌ | - | - |
-| Risk of Rain 2 | ✅ | ✅ | ✅ | ❌ | - | - |
+| Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Saving Princess | ✅ | ✅ | ✅ | ❌ | - | - |
 | Secret of Evermore | ✅ | ✅ | ✅ | ❌ | - | - |
 | Shivers | ✅ | ✅ | ✅ | ❌ | - | - |
@@ -119,13 +119,13 @@ Tests run with `--canonical-seed1` (items placed in original locations).
 | The Wind Waker | ✅ | ✅ | ✅ | ❌ | - | - |
 | The Witness | ✅ | ✅ | ✅ | ❌ | - | - |
 | Timespinner | ✅ | ✅ | ✅ | ❌ | - | - |
-| Undertale | ✅ | ✅ | ✅ | ❌ | - | - |
+| Undertale | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | VVVVVV | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Wargroove | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | WebDevJourney | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Yacht Dice | ✅ | ✅ | ✅ | ❌ | - | - |
 | Yoshi's Island | ✅ | ✅ | ✅ | ❌ | - | - |
-| shapez | ✅ | ❌ | ✅ | ❌ | - | - |
+| shapez | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 
 ---
 
@@ -142,10 +142,10 @@ Tests run with standard randomized item placement.
 | Failed Original Generations | 0 |
 | Successful Test World Generations | 73 |
 | Failed Test World Generations | 0 |
-| Successful Test Seed Generations | 33 |
-| Failed Test Seed Generations | 40 |
-| Cross-Validation Passed | 8 |
-| Cross-Validation Failed | 25 |
+| Successful Test Seed Generations | 35 |
+| Failed Test Seed Generations | 38 |
+| Cross-Validation Passed | 11 |
+| Cross-Validation Failed | 24 |
 
 ## Random Detailed Results
 
@@ -162,11 +162,11 @@ Tests run with standard randomized item placement.
 | Castlevania - Circle of the Moon | ✅ | ✅ | ✅ | ❌ | - | - |
 | Castlevania 64 | ✅ | ✅ | ✅ | ❌ | - | - |
 | Celeste (Open World) | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
-| Celeste 64 | ✅ | ✅ | ✅ | ❌ | - | - |
+| Celeste 64 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | ChecksFinder | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | ChocolateChipCookies | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Choo-Choo Charles | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Civilization VI | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
+| Civilization VI | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | DLCQuest | ✅ | ✅ | ✅ | ❌ | - | - |
 | DOOM 1993 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | DOOM II | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
@@ -190,14 +190,14 @@ Tests run with standard randomized item placement.
 | Mega Man 2 | ✅ | ✅ | ✅ | ❌ | - | - |
 | MegaMan Battle Network 3 | ✅ | ✅ | ✅ | ✅ | ❌ | Error |
 | Meritous | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
-| Metamath | ✅ | ✅ | ✅ | ❌ | - | - |
+| Metamath | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Muse Dash | ✅ | ✅ | ✅ | ❌ | - | - |
 | Noita | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Old School Runescape | ✅ | ✅ | ✅ | ❌ | - | - |
 | Overcooked! 2 | ✅ | ✅ | ✅ | ❌ | - | - |
 | Paint | ✅ | ✅ | ✅ | ❌ | - | - |
 | Raft | ✅ | ✅ | ✅ | ❌ | - | - |
-| Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Risk of Rain 2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Saving Princess | ✅ | ✅ | ✅ | ❌ | - | - |
 | Secret of Evermore | ✅ | ✅ | ✅ | ❌ | - | - |
 | Shivers | ✅ | ✅ | ✅ | ❌ | - | - |
@@ -217,10 +217,10 @@ Tests run with standard randomized item placement.
 | The Wind Waker | ✅ | ✅ | ✅ | ❌ | - | - |
 | The Witness | ✅ | ✅ | ✅ | ❌ | - | - |
 | Timespinner | ✅ | ✅ | ✅ | ❌ | - | - |
-| Undertale | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
+| Undertale | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | VVVVVV | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Wargroove | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | WebDevJourney | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
 | Yacht Dice | ✅ | ✅ | ✅ | ❌ | - | - |
 | Yoshi's Island | ✅ | ✅ | ✅ | ❌ | - | - |
-| shapez | ✅ | ❌ | ✅ | ✅ | ✅ | Error |
+| shapez | ✅ | ✅ | ✅ | ✅ | ✅ | Error |
