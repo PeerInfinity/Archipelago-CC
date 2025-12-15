@@ -50,8 +50,24 @@ The `/explain <location>` command in the tracker (`worlds/tracker/TrackerClient.
 
 1. **Explain support** for all common CC format rule types
 2. **Hybrid approach**: Rule Builder classes for boolean types, generic wrapper for complex types
-3. **Helper evaluation** when possible, with fallback to displaying helper names
+3. **Helper evaluation** using generated Python functions, with explain support via embedded body data
 4. **Minimal complexity**: Start with explain-only, defer full evaluation to future work
+5. **Self-contained rules**: All data needed for evaluation/explain must be captured at generation time
+
+## Design Constraints
+
+### No Runtime Dependency on rules.json
+
+**Important**: After world generation completes, we cannot assume access to the original `rules.json` file. All data needed for rule evaluation and explanation must be:
+
+1. **Embedded in Rule Builder objects** at parse/generation time
+2. **Generated as Python code** in the world's `Rules.py` file
+3. **Stored on the world object** if needed for runtime access
+
+This means:
+- Helper function bodies must be either converted to Python code OR embedded in the rule structure
+- Setting values must be resolved at instantiation time
+- No lazy loading of rule definitions from external files
 
 ## Architecture
 
@@ -91,6 +107,7 @@ Add native Rule Builder classes for rule types that:
 | `SettingValue` | `setting_value` | 306 | Used in conditionals/comparisons |
 | `Conditional` | `conditional` | 459 | Ternary logic |
 | `Not` | `not` | ~100 | Simple boolean negation |
+| `HelperCall` | `helper` | 3,000+ | Calls generated Python helper functions |
 
 ### Generic CCRule Wrapper
 
@@ -402,62 +419,150 @@ def parse_cc_rule(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) ->
         return CCRule(rule_data=data)
 ```
 
-### Phase 4: Helper Function Support
+### Phase 4: Helper Function Support via HelperCall
 
-#### 4.1 Explain Helpers
+The world generator already converts helper definitions from `rules.json` into Python functions in `Rules.py`. We leverage this by creating a `HelperCall` Rule Builder class that:
 
-For helpers, show the helper name and attempt to explain the body if available:
+1. **References the generated Python function** for evaluation
+2. **Stores the original CC format body** for explain support
+3. **Captures all data at generation time** (no runtime dependency on rules.json)
+
+#### 4.1 HelperCall Rule Builder Class
 
 ```python
-def _explain_helper(rule: dict, state: CollectionState | None, player: int) -> list[JSONMessagePart]:
-    helper_name = rule.get('name', 'unknown')
-    args = rule.get('args', [])
+@dataclasses.dataclass()
+class HelperCall(Rule[TWorld], game="Archipelago"):
+    """Calls a helper function with explain support.
 
-    messages = [
-        {"type": "text", "text": "Helper: "},
-        {"type": "color", "color": "magenta", "text": helper_name},
-    ]
+    This class bridges generated Python helper functions with the Rule Builder
+    explain system. The world generator creates both the Python function AND
+    this Rule Builder wrapper.
+    """
+    helper_func: Callable[[CollectionState, int, ...], bool]  # The generated Python function
+    helper_name: str                                           # Name for display
+    args: tuple[Any, ...] = ()                                 # Arguments to pass
+    body_data: dict | None = None                              # Original CC format for explain
 
-    if args:
-        messages.append({"type": "text", "text": "("})
-        for i, arg in enumerate(args):
-            if i > 0:
-                messages.append({"type": "text", "text": ", "})
-            messages.extend(explain_cc_rule(arg, state, player))
-        messages.append({"type": "text", "text": ")"})
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        return self.Resolved(
+            self.helper_func,
+            self.helper_name,
+            self.args,
+            self.body_data,
+            player=world.player,
+            caching_enabled=False,  # Helpers may have complex dependencies
+        )
 
-    return messages
+    class Resolved(Rule.Resolved):
+        helper_func: Callable
+        helper_name: str
+        args: tuple[Any, ...]
+        body_data: dict | None
+        skip_cache: ClassVar[bool] = True
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            # Call the actual generated Python helper function
+            return self.helper_func(state, self.player, *self.args)
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            if self.body_data:
+                # Explain using the embedded CC format body
+                from rule_builder.cc_explain import explain_cc_rule
+                return explain_cc_rule(self.body_data, state, self.player)
+
+            # Fallback: just show helper name and args
+            messages = [
+                {"type": "text", "text": "Helper: "},
+                {"type": "color", "color": "magenta", "text": self.helper_name},
+            ]
+            if self.args:
+                args_str = ", ".join(repr(a) for a in self.args)
+                messages.append({"type": "text", "text": f"({args_str})"})
+            return messages
 ```
 
-#### 4.2 Evaluate Helper Bodies (Future Enhancement)
+#### 4.2 World Generator Updates for HelperCall
 
-When helper definitions are available in rules.json, attempt to evaluate them:
+Update `world_generator/templates.py` to emit `HelperCall` rules instead of lambdas:
+
+**Current approach (lambdas, no explain support):**
+```python
+# Generated Rules.py
+def _gamename_can_swim(state: CollectionState, player: int) -> bool:
+    return state.has("Flippers", player)
+
+def set_rules(world):
+    # Lambda - no explain support
+    multiworld.get_location("Underwater Chest", player).access_rule = \
+        lambda state: _gamename_can_swim(state, player)
+```
+
+**New approach (HelperCall with explain support):**
+```python
+# Generated Rules.py
+from rule_builder import HelperCall
+
+def _gamename_can_swim(state: CollectionState, player: int) -> bool:
+    return state.has("Flippers", player)
+
+# Helper body data for explain support (embedded at generation time)
+_HELPER_BODIES = {
+    "can_swim": {"type": "item_check", "item": "Flippers"},
+}
+
+def set_rules(world):
+    # HelperCall - full explain support
+    world.set_rule(
+        multiworld.get_location("Underwater Chest", player),
+        HelperCall(
+            helper_func=_gamename_can_swim,
+            helper_name="can_swim",
+            args=(),
+            body_data=_HELPER_BODIES.get("can_swim"),
+        )
+    )
+```
+
+#### 4.3 Handling Helper Arguments
+
+For helpers with parameters, the world generator embeds argument values:
 
 ```python
-def try_evaluate_helper(
-    helper_name: str,
-    args: list,
-    state: CollectionState,
-    player: int,
-    world: RuleWorldMixin
-) -> bool | None:
-    """Try to evaluate a helper function body."""
-    # Get helper definition from world's rules data
-    helper_def = get_helper_definition(world, helper_name)
-    if helper_def is None:
-        return None
+# Helper with parameter
+def _gamename_has_keys(state: CollectionState, player: int, count: int) -> bool:
+    return state.has("Key", player, count)
 
-    # Create local scope with parameters
-    params = helper_def.get('params', [])
-    body = helper_def.get('body', helper_def)
+# Rule using helper with argument
+world.set_rule(
+    location,
+    HelperCall(
+        helper_func=_gamename_has_keys,
+        helper_name="has_keys",
+        args=(3,),  # count=3 embedded at generation time
+        body_data={"type": "item_check", "item": "Key", "count": 3},
+    )
+)
+```
 
-    local_scope = {}
-    for i, param in enumerate(params):
-        if i < len(args):
-            local_scope[param] = try_evaluate_cc_rule(args[i], state, player)
+#### 4.4 Fallback for Complex Helpers
 
-    # Try to evaluate the body
-    return try_evaluate_cc_rule(body, state, player, local_scope)
+Some helpers have complex bodies (loops, conditionals, local variables) that can't be easily explained from CC format. For these, `explain_json()` falls back to displaying the helper name:
+
+```python
+# Complex helper - body_data may be None or a complex block
+world.set_rule(
+    location,
+    HelperCall(
+        helper_func=_gamename_calculate_power,
+        helper_name="calculate_power",
+        args=(needed_power,),
+        body_data=None,  # Too complex to explain from CC format
+    )
+)
+# explain_json() will show: "Helper: calculate_power(5.0)"
 ```
 
 ### Phase 5: CC Rule Explain Function
@@ -556,7 +661,7 @@ Currently, CCRule bypasses the Rule Builder caching system (`skip_cache = True`)
 
 ### World Generator Updates
 
-Update the world generator to directly emit the new Rule Builder classes where possible:
+The world generator should be updated to emit Rule Builder classes with explain support. This is partially covered in Phase 4 (HelperCall), but could be extended to other rule types:
 
 ```python
 # In rule_codegen.py
@@ -567,6 +672,19 @@ def _convert_compare(self, rule: Dict[str, Any]) -> str:
     right = self._convert_rule(rule['right'])
     self.required_imports.add('Compare')
     return f'Compare({left}, "{op}", {right})'
+
+def _convert_helper(self, rule: Dict[str, Any]) -> str:
+    # Generate HelperCall with embedded body data
+    name = rule.get('name', '')
+    args = rule.get('args', [])
+    body = self._get_helper_body(name)  # From rules.json at generation time
+
+    self.required_imports.add('HelperCall')
+    func_name = f"_{self.game_name_lower}_{name}"
+    args_str = ', '.join(self._convert_rule(a) for a in args)
+    body_str = repr(body) if body else 'None'
+
+    return f'HelperCall({func_name}, "{name}", ({args_str}), {body_str})'
 ```
 
 ## Files to Create/Modify
@@ -574,17 +692,22 @@ def _convert_compare(self, rule: Dict[str, Any]) -> str:
 | File | Action | Description |
 |------|--------|-------------|
 | `rule_builder/cc_explain.py` | Create | CC format explain functions |
-| `rule_builder/cc_evaluate.py` | Create | CC format evaluation (partial) |
-| `rule_builder/rules.py` | Modify | Add CCRule, Compare, CountItem, etc. |
+| `rule_builder/cc_evaluate.py` | Create | CC format evaluation (partial, future) |
+| `rule_builder/rules.py` | Modify | Add CCRule, Compare, CountItem, HelperCall, etc. |
 | `rule_builder/cc_format.py` | Modify | Update parser to use new classes |
+| `world_generator/templates.py` | Modify | Generate HelperCall rules instead of lambdas |
+| `world_generator/rule_codegen.py` | Modify | Add HelperCall code generation |
 
 ## Summary
 
 This plan adds explain support for 22,000+ rule instances across generated worlds by:
 
-1. Adding 6 new Rule Builder classes for common boolean patterns
-2. Creating a generic CCRule wrapper for complex rule types
-3. Implementing recursive CC format explain functions
-4. Updating cc_format.py to use the new infrastructure
+1. Adding 7 new Rule Builder classes for common patterns (including `HelperCall`)
+2. Creating a generic `CCRule` wrapper for complex rule types
+3. Implementing recursive CC format explain functions in `cc_explain.py`
+4. Updating `cc_format.py` to use the new infrastructure
+5. Updating the world generator to emit `HelperCall` rules with embedded body data
+
+**Key design principle**: All data needed for explain/evaluation is captured at generation time. No runtime dependency on `rules.json`.
 
 The implementation prioritizes **explain functionality** over full evaluation, with clear paths for future enhancement.
