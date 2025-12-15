@@ -1,6 +1,6 @@
 # Processing Times Chart
 
-**Generated:** 2025-12-15 17:50:35
+**Generated:** 2025-12-15 22:31:13
 
 [← Back to Test Results Summary](./test-results-summary.md)
 
@@ -10,17 +10,17 @@ This chart shows processing times for each test phase. Times are in seconds. For
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
-| Total | 373.5s | 917.0s | 1987.3s | 1554.8s |
-| Average | 5.1s | 12.6s | 27.2s | 21.3s |
+| Total | 380.1s | 919.6s | 1987.3s | 1554.8s |
+| Average | 5.1s | 12.4s | 27.2s | 21.3s |
 | Max | 28.6s | 79.8s | 300.1s | 124.5s |
-| Min | 3.0s | 5.5s | 5.5s | 12.4s |
+| Min | 3.0s | 2.7s | 5.5s | 12.4s |
 
 ## Slowest and Fastest Games
 
 | Metric | Gen Time | Minimal Test | Full Test | Multiclient |
 |--------|----------|--------------|-----------|-------------|
 | Slowest | Subnautica (28.6s) | Stardew Valley (79.8s) | Dark Souls III (300.1s) | Dark Souls III (124.5s) |
-| Fastest | Meritous (3.0s) | Meritous (5.5s) | Metamath (5.5s) | Mega Man 2 (12.4s) |
+| Fastest | Meritous (3.0s) | Factorio WorldGen (2.7s) | Metamath (5.5s) | Mega Man 2 (12.4s) |
 
 ## Individual Game Processing Times
 
@@ -48,6 +48,7 @@ This chart shows processing times for each test phase. Times are in seconds. For
 | Dark Souls III | 5.5s | 25.8s | 300.1s | 124.5s |
 | Donkey Kong Country 3 | 3.3s | 13.7s | 17.9s | 15.8s |
 | Factorio | 4.0s | 9.7s | 18.9s | 15.8s |
+| Factorio WorldGen | 6.6s | 2.7s | - | - |
 | Faxanadu | 3.6s | 6.7s | 11.7s | 13.5s |
 | Final Fantasy Mystic Quest | 4.5s | 11.3s | 30.7s | 20.4s |
 | Heretic | 3.7s | 14.8s | 50.8s | 24.4s |
