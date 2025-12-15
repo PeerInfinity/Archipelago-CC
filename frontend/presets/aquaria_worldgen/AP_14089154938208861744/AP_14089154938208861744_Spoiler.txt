@@ -265,45 +265,55 @@ Playthrough:
 
 }
 1: {
-  Abyss right area, Transturtle: Li and Li Song
-  Beating Blaster Peg Prime: Blaster Peg Prime beated
-  Beating Crabbius Maximus: Crabbius Maximus beated
+  Song Cave, bulb in the path to the singing statues: Bind Song
+  Song Cave, bulb in the top right part: Energy Form
+  Verse Cave left area, bulb in the right part: Spirit Form
+  Verse Cave right area, bulb in the path right of the skeleton room: Hot Soup
+}
+2: {
   Beating Drunian God: Drunian God beated
   Beating Fallen God: Fallen God beated
-  Beating King Jellyfish God Prime: King Jellyfish God Prime beated
-  Beating Lumerean God: Lumerean God beated
-  Beating Mantis Shrimp Prime: Mantis Shrimp Prime beated
-  Beating Mergog: Mergog beated
   Beating Mithalan God: Mithalan God beated
-  Beating Mithalan priests: Mithalan priests beated
   Beating Nautilus Prime: Nautilus Prime beated
-  Beating Octopus Prime: Octopus Prime beated
-  Beating the Golem: The Golem beated
   Energy Temple bottom entrance, Krotite Armor: Transturtle Veil top left
   Energy Temple first area, beating the Energy Statue: Sun Form
-  Final Boss area, bulb in the boss third form room: Hot Soup
-  First Secret: First Secret obtained
   Home Waters, bulb under the rock in the left path from the Verse Cave: Nature Form
   Kelp Forest boss area, beating Drunian God: Dual Form
   Kelp Forest top left area, bulb in the top left clearing: Transturtle Arnassi Ruins
   Mithalas Cathedral, urn behind the flesh vein: Transturtle Simon Says
+  Mithalas City, second urn in one of the homes: Baby Dumbo
+  Open Waters top right area, bulb in the big clearing to the top exit: Hot Soup
+  Second Secret: Second Secret obtained
+  Sun Crystal: Has Sun Crystal
+  The Veil top right area, Golden Starfish: Transturtle Veil top right
+}
+3: {
+  Abyss right area, Transturtle: Li and Li Song
+  Beating Blaster Peg Prime: Blaster Peg Prime beated
+  Beating Lumerean God: Lumerean God beated
+  Beating Mantis Shrimp Prime: Mantis Shrimp Prime beated
+  First Secret: First Secret obtained
+  Song Cave, Anemone Seed: Fish Form
+  Sun Temple, bulb in the top right part: Transturtle Abyss right
+  Third Secret: Third Secret obtained
+}
+4: {
+  Beating King Jellyfish God Prime: King Jellyfish God Prime beated
+  Sunken City left area, crate before the bedroom: Transturtle Open Waters top right
+  The Veil top left area, bulb inside the fish pass: Beast Form
+}
+5: {
+  Beating Crabbius Maximus: Crabbius Maximus beated
+  Beating Mergog: Mergog beated
+  Beating Mithalan priests: Mithalan priests beated
+  Beating Octopus Prime: Octopus Prime beated
+  Beating the Golem: The Golem beated
   Mithalas City Castle, beating the Priests: Hot Soup x 2
   Mithalas City, Mithalas Pot: Arnassi Armor
   Mithalas City, first bulb at the end of the top path: Transturtle Kelp Forest bottom left
-  Mithalas City, second urn in one of the homes: Baby Dumbo
-  Objective complete: Victory
-  Open Waters top right area, bulb in the big clearing to the top exit: Hot Soup
-  Second Secret: Second Secret obtained
-  Song Cave, Anemone Seed: Fish Form
-  Song Cave, bulb in the path to the singing statues: Bind Song
-  Song Cave, bulb in the top right part: Energy Form
-  Sun Crystal: Has Sun Crystal
-  Sun Temple, bulb in the top right part: Transturtle Abyss right
   Sunken City cleared: Body Tongue cleared
-  Sunken City left area, crate before the bedroom: Transturtle Open Waters top right
-  The Veil top left area, bulb inside the fish pass: Beast Form
-  The Veil top right area, Golden Starfish: Transturtle Veil top right
-  Third Secret: Third Secret obtained
-  Verse Cave left area, bulb in the right part: Spirit Form
-  Verse Cave right area, bulb in the path right of the skeleton room: Hot Soup
+}
+6: {
+  Final Boss area, bulb in the boss third form room: Hot Soup
+  Objective complete: Victory
 }

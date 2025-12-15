@@ -73,9 +73,16 @@
             "name": "Verse Cave right area, Big Seed",
             "id": 698175,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             },
             "item": {
               "name": "Cold Borscht",
@@ -157,9 +164,16 @@
             "name": "Verse Cave left area, bulb under the rock at the end of the path",
             "id": 698023,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             },
             "item": {
               "name": "Crab Cake",
@@ -202,27 +216,77 @@
             "name": "Home Waters to Home Waters, behind rock",
             "connected_region": "Home Waters, behind rock",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             }
           },
           {
             "name": "Home Waters to Home Waters, turtle room",
             "connected_region": "Home Waters, turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             }
           },
           {
             "name": "Home Waters to Open Waters top left area",
             "connected_region": "Open Waters top left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_bind_song",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Bind Song"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_energy_attack_item",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_dual_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_energy_form",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -306,9 +370,16 @@
             "name": "Home Waters, bulb under the rock in the left path from the Verse Cave",
             "id": 698065,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             },
             "item": {
               "name": "Nature Form",
@@ -327,9 +398,27 @@
             "name": "Home Waters, Nautilus nest to Home Waters, behind rock",
             "connected_region": "Home Waters, behind rock",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_energy_attack_item",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_dual_form",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "_has_energy_form",
+                      "args": []
+                    }
+                  ]
+                }
+              }
             }
           }
         ],
@@ -509,9 +598,27 @@
             "name": "Naija's Home, bulb after the energy door",
             "id": 698119,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_energy_attack_item",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_dual_form",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "_has_energy_form",
+                      "args": []
+                    }
+                  ]
+                }
+              }
             },
             "item": {
               "name": "Hearty Soup",
@@ -525,9 +632,16 @@
             "name": "Naija's Home, bulb under the rock at the right of the main path",
             "id": 698120,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             },
             "item": {
               "name": "Swamp Cake",
@@ -616,9 +730,16 @@
             "name": "Song Cave, bulb under the rock in the path to the singing statues",
             "id": 698074,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             },
             "item": {
               "name": "Spicy Roll",
@@ -632,9 +753,16 @@
             "name": "Song Cave, bulb under the rock close to the song door",
             "id": 698075,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             },
             "item": {
               "name": "Baby Nautilus",
@@ -648,9 +776,16 @@
             "name": "Song Cave, Verse Egg",
             "id": 698160,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             },
             "item": {
               "name": "Jelly Plant",
@@ -679,9 +814,16 @@
             "name": "Song Cave, Anemone Seed",
             "id": 698162,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_nature_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Nature Form"
+                }
+              }
             },
             "item": {
               "name": "Fish Form",
@@ -708,27 +850,48 @@
             "name": "Energy Temple first area to Energy Temple second area",
             "connected_region": "Energy Temple second area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_energy_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Energy Form"
+                }
+              }
             }
           },
           {
             "name": "Energy Temple first area to Energy Temple Idol room",
             "connected_region": "Energy Temple Idol room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_fish_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Fish Form"
+                }
+              }
             }
           },
           {
             "name": "Energy Temple first area to Energy Temple after boss path",
             "connected_region": "Energy Temple after boss path",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_beast_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Beast Form"
+                }
+              }
             }
           }
         ],
@@ -752,9 +915,16 @@
             "name": "Energy Temple first area, bulb in the bottom room blocked by a rock",
             "id": 698027,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             },
             "item": {
               "name": "Special Bulb",
@@ -773,9 +943,16 @@
             "name": "Energy Temple second area to Energy Temple first area",
             "connected_region": "Energy Temple first area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_energy_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Energy Form"
+                }
+              }
             }
           },
           {
@@ -792,9 +969,16 @@
             "name": "Energy Temple second area, bulb under the rock",
             "id": 698028,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             },
             "item": {
               "name": "Rotten Meat x 2",
@@ -821,9 +1005,45 @@
             "name": "Energy Temple third area to Energy Temple fallen God room",
             "connected_region": "Energy Temple fallen God room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_bind_song",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Bind Song"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_energy_attack_item",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_dual_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_energy_form",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -852,18 +1072,72 @@
             "name": "Energy Temple fallen God room to Energy Temple Idol room",
             "connected_region": "Energy Temple Idol room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_energy_attack_item",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_dual_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_energy_form",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_fish_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Fish Form"
+                    }
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Energy Temple fallen God room to Energy Temple after boss path",
             "connected_region": "Energy Temple after boss path",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_energy_attack_item",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_dual_form",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "_has_energy_form",
+                      "args": []
+                    }
+                  ]
+                }
+              }
             }
           }
         ],
@@ -943,9 +1217,45 @@
             "name": "Energy Temple bottom entrance to Home Waters, behind rock",
             "connected_region": "Home Waters, behind rock",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_bind_song",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Bind Song"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_energy_attack_item",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_dual_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_energy_form",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -1008,9 +1318,16 @@
             "name": "Open Waters top left area, bulb under the rock in the right path",
             "id": 698001,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             },
             "item": {
               "name": "Ice Cream",
@@ -1024,9 +1341,16 @@
             "name": "Open Waters top left area, bulb under the rock in the left path",
             "id": 698002,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             },
             "item": {
               "name": "Golden Gear",
@@ -1068,18 +1392,98 @@
             "name": "Open Waters top right area to Open Waters top right area, turtle room",
             "connected_region": "Open Waters top right area, turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_beast_form_or_arnassi_armor",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_beast_form",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Arnassi Armor"
+                    }
+                  ]
+                }
+              }
             }
           },
           {
             "name": "Open Waters top right area to Open Waters top right area, Mithalas entrance",
             "connected_region": "Open Waters top right area, Mithalas entrance",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_bind_song",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Bind Song"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_damaging_item",
+                    "args": [
+                      [
+                        "Energy Form",
+                        "Beast Form",
+                        "Li and Li Song",
+                        "Baby Nautilus",
+                        "Baby Piranha",
+                        "Baby Blaster"
+                      ]
+                    ],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Baby Blaster"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Baby Nautilus"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Baby Piranha"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Beast Form"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Energy Form"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Li and Li Song"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Nature Form"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
             }
           },
           {
@@ -1110,9 +1514,26 @@
             "name": "Open Waters top right area to The Veil bottom right area",
             "connected_region": "The Veil bottom right area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_beast_form_or_arnassi_armor",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_beast_form",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Arnassi Armor"
+                    }
+                  ]
+                }
+              }
             }
           }
         ],
@@ -1121,9 +1542,16 @@
             "name": "Open Waters top right area, bulb in the small path before Mithalas",
             "id": 698004,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             },
             "item": {
               "name": "Seed Bag",
@@ -1367,9 +1795,26 @@
             "name": "Open Waters bottom left area to Abyss left area",
             "connected_region": "Abyss left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_light",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_sun_form",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Dumbo"
+                    }
+                  ]
+                }
+              }
             }
           }
         ],
@@ -1393,9 +1838,16 @@
             "name": "Open Waters bottom left area, bulb inside the lowest fish pass",
             "id": 698010,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_fish_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Fish Form"
+                }
+              }
             },
             "item": {
               "name": "Healing Poultice x 2",
@@ -1430,18 +1882,42 @@
             "name": "Open Waters bottom right area to Abyss right area",
             "connected_region": "Abyss right area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_light",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_sun_form",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Dumbo"
+                    }
+                  ]
+                }
+              }
             }
           },
           {
             "name": "Open Waters bottom right area to Arnassi Ruins",
             "connected_region": "Arnassi Ruins",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_beast_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Beast Form"
+                }
+              }
             }
           }
         ],
@@ -1462,9 +1938,16 @@
             "name": "Open Waters skeleton path to Open Waters skeleton path spirit crystal",
             "connected_region": "Open Waters skeleton path spirit crystal",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_spirit_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Spirit Form"
+                }
+              }
             }
           }
         ],
@@ -1508,9 +1991,16 @@
             "name": "Open Waters skeleton path spirit crystal to Open Waters skeleton path",
             "connected_region": "Open Waters skeleton path",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_spirit_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Spirit Form"
+                }
+              }
             }
           }
         ],
@@ -1602,9 +2092,26 @@
             "name": "Arnassi Ruins, Song Plant Spore",
             "id": 698179,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_beast_form_or_arnassi_armor",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_beast_form",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Arnassi Armor"
+                    }
+                  ]
+                }
+              }
             },
             "item": {
               "name": "Poison Loaf",
@@ -1618,9 +2125,45 @@
             "name": "Arnassi Ruins, Arnassi Armor",
             "id": 698191,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_beast_and_soup_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_beast_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_hot_soup",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_fish_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Fish Form"
+                    }
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Special Bulb",
@@ -1647,18 +2190,89 @@
             "name": "Arnassi Ruins cave to Arnassi Ruins cave, transturtle area",
             "connected_region": "Arnassi Ruins cave, transturtle area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_fish_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Fish Form"
+                }
+              }
             }
           },
           {
             "name": "Arnassi Ruins cave to Arnassi Ruins, Crabbius Maximus lair",
             "connected_region": "Arnassi Ruins, Crabbius Maximus lair",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_beast_form_or_arnassi_armor",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_beast_form",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Arnassi Armor"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "options": [],
+                  "children": [
+                    {
+                      "rule": "HelperCall",
+                      "options": [],
+                      "args": {
+                        "helper_name": "_has_energy_attack_item",
+                        "args": [],
+                        "body_data": {
+                          "type": "or",
+                          "conditions": [
+                            {
+                              "type": "helper",
+                              "name": "_has_dual_form",
+                              "args": []
+                            },
+                            {
+                              "type": "helper",
+                              "name": "_has_energy_form",
+                              "args": []
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "rule": "HelperCall",
+                      "options": [],
+                      "args": {
+                        "helper_name": "_has_nature_form",
+                        "args": [],
+                        "body_data": {
+                          "type": "item_check",
+                          "item": "Nature Form"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -1687,9 +2301,16 @@
             "name": "Arnassi Ruins cave, transturtle area to Arnassi Ruins cave",
             "connected_region": "Arnassi Ruins cave",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_fish_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Fish Form"
+                }
+              }
             }
           },
           {
@@ -2000,27 +2621,87 @@
             "name": "Mithalas City to Mithalas City urns",
             "connected_region": "Mithalas City urns",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_damaging_item",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Baby Blaster"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Nautilus"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Piranha"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Beast Form"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Li and Li Song"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Nature Form"
+                    }
+                  ]
+                }
+              }
             }
           },
           {
             "name": "Mithalas City to Mithalas City top path",
             "connected_region": "Mithalas City top path",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_beast_form_or_arnassi_armor",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_beast_form",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Arnassi Armor"
+                    }
+                  ]
+                }
+              }
             }
           },
           {
             "name": "Mithalas City to Mithalas City fish pass",
             "connected_region": "Mithalas City fish pass",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_fish_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Fish Form"
+                }
+              }
             }
           },
           {
@@ -2200,9 +2881,45 @@
             "name": "Mithalas City top path to Mithalas castle, plant tube entrance",
             "connected_region": "Mithalas castle, plant tube entrance",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_energy_attack_item",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_dual_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_energy_form",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_nature_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Nature Form"
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -2271,9 +2988,45 @@
             "name": "Mithalas City, urn in the Castle flower tube entrance",
             "id": 698128,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_damaging_item",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Baby Blaster"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Nautilus"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Piranha"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Beast Form"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Li and Li Song"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Nature Form"
+                    }
+                  ]
+                }
+              }
             },
             "item": {
               "name": "Baby Piranha",
@@ -2292,9 +3045,16 @@
             "name": "Mithalas City fish pass to Mithalas City",
             "connected_region": "Mithalas City",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_fish_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Fish Form"
+                }
+              }
             }
           }
         ],
@@ -2318,9 +3078,45 @@
             "name": "Mithalas City, urn inside a home fish pass",
             "id": 698129,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_damaging_item",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Baby Blaster"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Nautilus"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Piranha"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Beast Form"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Li and Li Song"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Nature Form"
+                    }
+                  ]
+                }
+              }
             },
             "item": {
               "name": "Red Bulb x 2",
@@ -2347,45 +3143,109 @@
             "name": "Mithalas castle to Mithalas castle urns",
             "connected_region": "Mithalas castle urns",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_damaging_item",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Baby Blaster"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Nautilus"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Piranha"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Beast Form"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Li and Li Song"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Nature Form"
+                    }
+                  ]
+                }
+              }
             }
           },
           {
             "name": "Mithalas castle to Mithalas castle spirit crystal",
             "connected_region": "Mithalas castle spirit crystal",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_spirit_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Spirit Form"
+                }
+              }
             }
           },
           {
             "name": "Mithalas castle to Mithalas Cathedral, before Mithalan God",
             "connected_region": "Mithalas Cathedral, before Mithalan God",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_beast_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Beast Form"
+                }
+              }
             }
           },
           {
             "name": "Mithalas castle to Mithalas Cathedral underground",
             "connected_region": "Mithalas Cathedral underground",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_beast_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Beast Form"
+                }
+              }
             }
           },
           {
             "name": "Mithalas castle to Mithalas Cathedral start",
             "connected_region": "Mithalas Cathedral start",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             }
           }
         ],
@@ -2429,27 +3289,48 @@
             "name": "Mithalas castle, plant tube entrance to Mithalas City top path",
             "connected_region": "Mithalas City top path",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_nature_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Nature Form"
+                }
+              }
             }
           },
           {
             "name": "Mithalas castle, plant tube entrance to Mithalas castle spirit crystal",
             "connected_region": "Mithalas castle spirit crystal",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_spirit_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Spirit Form"
+                }
+              }
             }
           },
           {
             "name": "Mithalas castle, plant tube entrance to Mithalas castle",
             "connected_region": "Mithalas castle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_spirit_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Spirit Form"
+                }
+              }
             }
           }
         ],
@@ -2493,9 +3374,16 @@
             "name": "Mithalas castle spirit crystal to Mithalas castle",
             "connected_region": "Mithalas castle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_spirit_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Spirit Form"
+                }
+              }
             }
           }
         ],
@@ -2524,18 +3412,72 @@
             "name": "Mithalas Cathedral start to Mithalas Cathedral start urns",
             "connected_region": "Mithalas Cathedral start urns",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_damaging_item",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "item_check",
+                      "item": "Baby Blaster"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Nautilus"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Piranha"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Beast Form"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Li and Li Song"
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Nature Form"
+                    }
+                  ]
+                }
+              }
             }
           },
           {
             "name": "Mithalas Cathedral start to Mithalas Cathedral end",
             "connected_region": "Mithalas Cathedral end",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_energy_attack_item",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_dual_form",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "_has_energy_form",
+                      "args": []
+                    }
+                  ]
+                }
+              }
             }
           }
         ],
@@ -2559,9 +3501,16 @@
             "name": "Mithalas Cathedral, Mithalan Dress",
             "id": 698189,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_beast_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Beast Form"
+                }
+              }
             },
             "item": {
               "name": "Ice Cream",
@@ -2736,18 +3685,54 @@
             "name": "Mithalas Cathedral end to Mithalas Cathedral start",
             "connected_region": "Mithalas Cathedral start",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_energy_attack_item",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_dual_form",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "_has_energy_form",
+                      "args": []
+                    }
+                  ]
+                }
+              }
             }
           },
           {
             "name": "Mithalas Cathedral end to Mithalas Cathedral underground",
             "connected_region": "Mithalas Cathedral underground",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_energy_attack_item",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_dual_form",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "_has_energy_form",
+                      "args": []
+                    }
+                  ]
+                }
+              }
             }
           }
         ],
@@ -2791,18 +3776,79 @@
             "name": "Mithalas Cathedral underground to Mithalas castle",
             "connected_region": "Mithalas castle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_beast_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Beast Form"
+                }
+              }
             }
           },
           {
             "name": "Mithalas Cathedral underground to Mithalas Cathedral end",
             "connected_region": "Mithalas Cathedral end",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_beast_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Beast Form"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_damaging_item",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "item_check",
+                          "item": "Baby Blaster"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Baby Nautilus"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Baby Piranha"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Beast Form"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Energy Form"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Li and Li Song"
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Nature Form"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
             }
           },
           {
@@ -2914,9 +3960,16 @@
             "name": "Mithalas Cathedral, after Mithalan God to Mithalas castle",
             "connected_region": "Mithalas castle",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_beast_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Beast Form"
+                }
+              }
             }
           },
           {
@@ -2968,18 +4021,61 @@
             "name": "Mithalas Cathedral, before Mithalan God to Mithalas Cathedral underground",
             "connected_region": "Mithalas Cathedral underground",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_beast_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Beast Form"
+                }
+              }
             }
           },
           {
             "name": "Mithalas Cathedral, before Mithalan God to Mithalas Cathedral, after Mithalan God",
             "connected_region": "Mithalas Cathedral, after Mithalan God",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_bind_song",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Bind Song"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_energy_attack_item",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_dual_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_energy_form",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -3000,9 +4096,69 @@
             "name": "Kelp Forest top left area to Kelp Forest top left area fish pass",
             "connected_region": "Kelp Forest top left area fish pass",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_bind_song",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Bind Song"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_energy_attack_item",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_dual_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_energy_form",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_fish_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Fish Form"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_nature_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Nature Form"
+                    }
+                  }
+                }
+              ]
             }
           },
           {
@@ -3072,9 +4228,16 @@
             "name": "Kelp Forest top left area, Jelly Egg",
             "id": 698185,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_beast_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Beast Form"
+                }
+              }
             },
             "item": {
               "name": "Sea Cake",
@@ -3093,9 +4256,16 @@
             "name": "Kelp Forest top left area fish pass to Kelp Forest top left area",
             "connected_region": "Kelp Forest top left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_fish_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Fish Form"
+                }
+              }
             }
           }
         ],
@@ -3155,9 +4325,16 @@
             "name": "Kelp Forest top right area to Kelp Forest top right area fish pass",
             "connected_region": "Kelp Forest top right area fish pass",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_fish_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Fish Form"
+                }
+              }
             }
           },
           {
@@ -3174,9 +4351,16 @@
             "name": "Kelp Forest top right area, bulb under the rock in the right path",
             "id": 698048,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             },
             "item": {
               "name": "Mithalas Doll",
@@ -3250,9 +4434,26 @@
             "name": "Kelp Forest top right area, Black Pearl",
             "id": 698167,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_light",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_sun_form",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Dumbo"
+                    }
+                  ]
+                }
+              }
             },
             "item": {
               "name": "Girl Costume",
@@ -3271,9 +4472,16 @@
             "name": "Kelp Forest top right area fish pass to Kelp Forest top right area",
             "connected_region": "Kelp Forest top right area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_fish_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Fish Form"
+                }
+              }
             }
           },
           {
@@ -3318,9 +4526,45 @@
             "name": "Kelp Forest bottom left area to Kelp Forest bottom left area, spirit crystals",
             "connected_region": "Kelp Forest bottom left area, spirit crystals",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_energy_attack_item",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_dual_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_energy_form",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_fish_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Fish Form"
+                    }
+                  }
+                }
+              ]
             }
           },
           {
@@ -3343,9 +4587,16 @@
             "name": "Kelp Forest bottom left area to Kelp Forest Drunian God room entrance",
             "connected_region": "Kelp Forest Drunian God room entrance",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_nature_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Nature Form"
+                }
+              }
             }
           },
           {
@@ -3495,9 +4746,16 @@
             "name": "Kelp Forest bottom left area, Walker Baby",
             "id": 698186,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_spirit_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Spirit Form"
+                }
+              }
             },
             "item": {
               "name": "Eel Oil x 2",
@@ -3550,9 +4808,26 @@
             "name": "Kelp Forest bottom right area, Odd Container",
             "id": 698168,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_light",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_sun_form",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Dumbo"
+                    }
+                  ]
+                }
+              }
             },
             "item": {
               "name": "Tasty Cake",
@@ -3616,9 +4891,16 @@
             "name": "Kelp Forest Drunian God room entrance to Kelp Forest bottom left area",
             "connected_region": "Kelp Forest bottom left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_nature_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Nature Form"
+                }
+              }
             }
           },
           {
@@ -3633,9 +4915,27 @@
             "name": "Kelp Forest Drunian God room entrance to Kelp Forest Drunian God room",
             "connected_region": "Kelp Forest Drunian God room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_energy_attack_item",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_dual_form",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "_has_energy_form",
+                      "args": []
+                    }
+                  ]
+                }
+              }
             }
           }
         ],
@@ -3672,9 +4972,16 @@
             "name": "Sprite cave to Sprite cave after the plant tube",
             "connected_region": "Sprite cave after the plant tube",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_nature_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Nature Form"
+                }
+              }
             }
           }
         ],
@@ -3703,9 +5010,16 @@
             "name": "Sprite cave after the plant tube to Sprite cave",
             "connected_region": "Sprite cave",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_nature_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Nature Form"
+                }
+              }
             }
           }
         ],
@@ -3757,9 +5071,45 @@
             "name": "Mermog cave to Mermog cave boss",
             "connected_region": "Mermog cave boss",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_beast_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Beast Form"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_energy_attack_item",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_dual_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_energy_form",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -3788,9 +5138,45 @@
             "name": "Mermog cave boss to Mermog cave",
             "connected_region": "Mermog cave",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_beast_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Beast Form"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_energy_attack_item",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_dual_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_energy_form",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -3872,9 +5258,16 @@
             "name": "The Veil top left area to The Veil top left area fish pass",
             "connected_region": "The Veil top left area fish pass",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_fish_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Fish Form"
+                }
+              }
             }
           },
           {
@@ -4010,9 +5403,34 @@
             "name": "The Veil top left area, bulb under the rock in the top right path",
             "id": 698078,
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_bind_song",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Bind Song"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_bind_song",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Bind Song"
+                    }
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Plant Leaf x 3",
@@ -4026,9 +5444,16 @@
             "name": "The Veil top left area, bulb hidden behind the blocking rock",
             "id": 698076,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             },
             "item": {
               "name": "Spicy Roll",
@@ -4062,9 +5487,16 @@
             "name": "The Veil top left area fish pass to The Veil top left area",
             "connected_region": "The Veil top left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_fish_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Fish Form"
+                }
+              }
             }
           }
         ],
@@ -4101,9 +5533,16 @@
             "name": "The Veil top right area, left of temple to The Veil top right area, fish pass left of temple",
             "connected_region": "The Veil top right area, fish pass left of temple",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_fish_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Fish Form"
+                }
+              }
             }
           },
           {
@@ -4208,9 +5647,27 @@
             "name": "The Veil top right area, bulb at the top of the waterfall",
             "id": 698080,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_beast_and_soup_form",
+                "args": [],
+                "body_data": {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_beast_form",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "_has_hot_soup",
+                      "args": []
+                    }
+                  ]
+                }
+              }
             },
             "item": {
               "name": "Healing Poultice",
@@ -4244,18 +5701,73 @@
             "name": "The Veil top right area, fish pass left of temple to The Veil top right area, left of temple",
             "connected_region": "The Veil top right area, left of temple",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_fish_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Fish Form"
+                }
+              }
             }
           },
           {
             "name": "The Veil top right area, fish pass left of temple to Octopus Cave top entrance",
             "connected_region": "Octopus Cave top entrance",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_beast_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Beast Form"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_energy_attack_item",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_dual_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_energy_form",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_sun_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Sun Form"
+                    }
+                  }
+                }
+              ]
             }
           },
           {
@@ -4294,9 +5806,26 @@
             "name": "The Veil top right area, bulb in the middle of the wall jump cliff",
             "id": 698079,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_beast_form_or_arnassi_armor",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_beast_form",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Arnassi Armor"
+                    }
+                  ]
+                }
+              }
             },
             "item": {
               "name": "Swamp Cake",
@@ -4346,18 +5875,50 @@
             "name": "The Veil bottom left area to The Veil bottom left area, in the sunken ship",
             "connected_region": "The Veil bottom left area, in the sunken ship",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_bind_song",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Bind Song"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_fish_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Fish Form"
+                    }
+                  }
+                }
+              ]
             }
           },
           {
             "name": "The Veil bottom left area to The Veil bottom spirit crystal area",
             "connected_region": "The Veil bottom spirit crystal area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_spirit_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Spirit Form"
+                }
+              }
             }
           }
         ],
@@ -4386,18 +5947,32 @@
             "name": "The Veil bottom spirit crystal area to The Veil bottom left area",
             "connected_region": "The Veil bottom left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_spirit_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Spirit Form"
+                }
+              }
             }
           },
           {
             "name": "The Veil bottom spirit crystal area to The Veil bottom right area",
             "connected_region": "The Veil bottom right area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_spirit_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Spirit Form"
+                }
+              }
             }
           }
         ],
@@ -4426,9 +6001,34 @@
             "name": "The Veil bottom left area, in the sunken ship to The Veil bottom left area",
             "connected_region": "The Veil bottom left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_bind_song",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Bind Song"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_fish_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Fish Form"
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -4465,9 +6065,16 @@
             "name": "The Veil bottom right area to The Veil bottom spirit crystal area",
             "connected_region": "The Veil bottom spirit crystal area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_spirit_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Spirit Form"
+                }
+              }
             }
           },
           {
@@ -4597,9 +6204,16 @@
             "name": "Turtle cave, Turtle Egg",
             "id": 698184,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             },
             "item": {
               "name": "Turtle Soup",
@@ -4643,9 +6257,31 @@
             "name": "Turtle cave, Urchin Costume",
             "id": 698193,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_hot_soup",
+                "args": [],
+                "body_data": {
+                  "type": "state_method",
+                  "method": "has_any",
+                  "args": [
+                    {
+                      "type": "set",
+                      "elements": [
+                        {
+                          "type": "constant",
+                          "value": "Hot Soup"
+                        },
+                        {
+                          "type": "constant",
+                          "value": "Hot Soup x 2"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
             },
             "item": {
               "name": "Arcane Poultice",
@@ -4762,9 +6398,26 @@
             "name": "Sun Temple left area entrance to Sun Temple right area",
             "connected_region": "Sun Temple right area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_light",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_sun_form",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Dumbo"
+                    }
+                  ]
+                }
+              }
             }
           },
           {
@@ -4779,9 +6432,54 @@
             "name": "Sun Temple left area entrance to Sun Temple left area",
             "connected_region": "Sun Temple left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_light",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_sun_form",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Baby Dumbo"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_sun_crystal",
+                    "args": [],
+                    "body_data": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_bind_song",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Has Sun Crystal"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -4802,9 +6500,44 @@
             "name": "Sun Temple right area to Sun Temple left area entrance",
             "connected_region": "Sun Temple left area entrance",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_bind_song",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Bind Song"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_light",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_sun_form",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Baby Dumbo"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -4893,18 +6626,81 @@
             "name": "Sun Temple before boss area to Sun Temple left area",
             "connected_region": "Sun Temple left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_light",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_sun_form",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Baby Dumbo"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_sun_crystal",
+                    "args": [],
+                    "body_data": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_bind_song",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Has Sun Crystal"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Sun Temple before boss area to Sun Temple boss area",
             "connected_region": "Sun Temple boss area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_energy_attack_item",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_dual_form",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "_has_energy_form",
+                      "args": []
+                    }
+                  ]
+                }
+              }
             }
           }
         ],
@@ -4943,9 +6739,43 @@
             "name": "Sun Temple boss path, first cliff bulb",
             "id": 698019,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_beast_and_soup_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_beast_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_hot_soup",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Lumerean God beated",
+                      "Sun God beated"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Berry Ice Cream",
@@ -4959,9 +6789,43 @@
             "name": "Sun Temple boss path, second cliff bulb",
             "id": 698020,
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_beast_and_soup_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_beast_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_hot_soup",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "rule": "HasAny",
+                  "options": [],
+                  "args": {
+                    "items": [
+                      "Lumerean God beated",
+                      "Sun God beated"
+                    ]
+                  }
+                }
+              ]
             },
             "item": {
               "name": "Leaf Poultice",
@@ -4980,9 +6844,27 @@
             "name": "Sun Temple boss area to Sun Temple before boss area",
             "connected_region": "Sun Temple before boss area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_energy_attack_item",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_dual_form",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "_has_energy_form",
+                      "args": []
+                    }
+                  ]
+                }
+              }
             }
           },
           {
@@ -5042,18 +6924,78 @@
             "name": "Abyss left area to Abyss left bottom area",
             "connected_region": "Abyss left bottom area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_nature_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Nature Form"
+                }
+              }
             }
           },
           {
             "name": "Abyss left area to Abyss left area, King jellyfish cave",
             "connected_region": "Abyss left area, King jellyfish cave",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "And",
+                  "options": [],
+                  "children": [
+                    {
+                      "rule": "HelperCall",
+                      "options": [],
+                      "args": {
+                        "helper_name": "_has_beast_form",
+                        "args": [],
+                        "body_data": {
+                          "type": "item_check",
+                          "item": "Beast Form"
+                        }
+                      }
+                    },
+                    {
+                      "rule": "HelperCall",
+                      "options": [],
+                      "args": {
+                        "helper_name": "_has_energy_form",
+                        "args": [],
+                        "body_data": {
+                          "type": "item_check",
+                          "item": "Energy Form"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_dual_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_li",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Dual Form"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
             }
           },
           {
@@ -5135,27 +7077,48 @@
             "name": "Abyss left bottom area to Abyss left area",
             "connected_region": "Abyss left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_nature_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Nature Form"
+                }
+              }
             }
           },
           {
             "name": "Abyss left bottom area to Sunken City right area",
             "connected_region": "Sunken City right area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_li",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Li and Li Song"
+                }
+              }
             }
           },
           {
             "name": "Abyss left bottom area to The Body center area",
             "connected_region": "The Body center area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_tongue_cleared",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Body Tongue cleared"
+                }
+              }
             }
           }
         ],
@@ -5164,9 +7127,16 @@
             "name": "Abyss left area, bulb in the bottom fish pass",
             "id": 698026,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_fish_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Fish Form"
+                }
+              }
             },
             "item": {
               "name": "Special Cake",
@@ -5201,9 +7171,34 @@
             "name": "Abyss right area to Abyss right area, outside the whale",
             "connected_region": "Abyss right area, outside the whale",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_spirit_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Spirit Form"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_sun_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Sun Form"
+                    }
+                  }
+                }
+              ]
             }
           },
           {
@@ -5218,18 +7213,85 @@
             "name": "Abyss right area to First Secret area",
             "connected_region": "First Secret area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_bind_song",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Bind Song"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_energy_attack_item",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_dual_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_energy_form",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_spirit_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Spirit Form"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_sun_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Sun Form"
+                    }
+                  }
+                }
+              ]
             }
           },
           {
             "name": "Abyss right area to Ice Cavern",
             "connected_region": "Ice Cavern",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_spirit_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Spirit Form"
+                }
+              }
             }
           }
         ],
@@ -5238,9 +7300,16 @@
             "name": "Abyss right area, bulb in the middle path",
             "id": 698110,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             },
             "item": {
               "name": "Red Bulb x 2",
@@ -5289,9 +7358,34 @@
             "name": "Abyss right area, outside the whale to Abyss right area",
             "connected_region": "Abyss right area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_spirit_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Spirit Form"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_sun_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Sun Form"
+                    }
+                  }
+                }
+              ]
             }
           },
           {
@@ -5308,9 +7402,16 @@
             "name": "Abyss right area, bulb behind the rock in the whale room",
             "id": 698109,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             },
             "item": {
               "name": "Mutant Costume",
@@ -5329,9 +7430,26 @@
             "name": "Abyss right area, transturtle to Abyss right area",
             "connected_region": "Abyss right area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_light",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_sun_form",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Dumbo"
+                    }
+                  ]
+                }
+              }
             }
           },
           {
@@ -5456,9 +7574,16 @@
             "name": "Ice Cavern to Abyss right area",
             "connected_region": "Abyss right area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_spirit_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Spirit Form"
+                }
+              }
             }
           },
           {
@@ -5563,9 +7688,34 @@
             "name": "Bubble Cave to Bubble Cave boss area",
             "connected_region": "Bubble Cave boss area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_bind_song",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Bind Song"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_nature_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Nature Form"
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -5752,27 +7902,112 @@
             "name": "Sunken City left area to Sunken City left area, bedroom",
             "connected_region": "Sunken City left area, bedroom",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_spirit_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Spirit Form"
+                }
+              }
             }
           },
           {
             "name": "Sunken City left area to Sunken City left area",
             "connected_region": "Sunken City left area crates",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_energy_attack_item",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_dual_form",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "_has_energy_form",
+                      "args": []
+                    }
+                  ]
+                }
+              }
             }
           },
           {
             "name": "Sunken City left area to Sunken City boss area",
             "connected_region": "Sunken City boss area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_beast_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Beast Form"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_bind_song",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Bind Song"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_energy_attack_item",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_dual_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_energy_form",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_sun_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Sun Form"
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -5785,9 +8020,16 @@
             "name": "Sunken City right area to Abyss left bottom area",
             "connected_region": "Abyss left bottom area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_li",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Li and Li Song"
+                }
+              }
             }
           },
           {
@@ -5802,9 +8044,27 @@
             "name": "Sunken City right area to Sunken City right area crates",
             "connected_region": "Sunken City right area crates",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_energy_attack_item",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_dual_form",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "_has_energy_form",
+                      "args": []
+                    }
+                  ]
+                }
+              }
             }
           }
         ],
@@ -5817,9 +8077,69 @@
             "name": "Sunken City boss area to Sunken City left area",
             "connected_region": "Sunken City left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_beast_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Beast Form"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_bind_song",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Bind Song"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_energy_attack_item",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_dual_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_energy_form",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_sun_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Sun Form"
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -5878,9 +8198,16 @@
             "name": "Sunken City left area, bedroom to Sunken City left area",
             "connected_region": "Sunken City left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_spirit_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Spirit Form"
+                }
+              }
             }
           }
         ],
@@ -5909,18 +8236,42 @@
             "name": "The Body center area to Abyss left bottom area",
             "connected_region": "Abyss left bottom area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_light",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_sun_form",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Baby Dumbo"
+                    }
+                  ]
+                }
+              }
             }
           },
           {
             "name": "The Body center area to The Body left area",
             "connected_region": "The Body left area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_energy_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Energy Form"
+                }
+              }
             }
           },
           {
@@ -5935,18 +8286,42 @@
             "name": "The Body center area to The Body right area, bottom path",
             "connected_region": "The Body right area, bottom path",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_energy_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Energy Form"
+                }
+              }
             }
           },
           {
             "name": "The Body center area to The Body bottom area",
             "connected_region": "The Body bottom area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_dual_form",
+                "args": [],
+                "body_data": {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_li",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Dual Form"
+                    }
+                  ]
+                }
+              }
             }
           }
         ],
@@ -5955,9 +8330,16 @@
             "name": "The Body center area, breaking Li's cage",
             "id": 698201,
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_tongue_cleared",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Body Tongue cleared"
+                }
+              }
             },
             "item": {
               "name": "Spider Roll",
@@ -6156,18 +8538,52 @@
             "name": "The Body bottom area to The Body center area",
             "connected_region": "The Body center area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_dual_form",
+                "args": [],
+                "body_data": {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_li",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Dual Form"
+                    }
+                  ]
+                }
+              }
             }
           },
           {
             "name": "The Body bottom area to The Body, before final boss",
             "connected_region": "The Body, before final boss",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_dual_form",
+                "args": [],
+                "body_data": {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_li",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Dual Form"
+                    }
+                  ]
+                }
+              }
             }
           }
         ],
@@ -6226,27 +8642,110 @@
             "name": "The Body, before final boss to The Body bottom area",
             "connected_region": "The Body bottom area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_dual_form",
+                "args": [],
+                "body_data": {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_li",
+                      "args": []
+                    },
+                    {
+                      "type": "item_check",
+                      "item": "Dual Form"
+                    }
+                  ]
+                }
+              }
             }
           },
           {
             "name": "The Body, before final boss to The Body, final boss area turtle room",
             "connected_region": "The Body, final boss area turtle room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_nature_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Nature Form"
+                }
+              }
             }
           },
           {
             "name": "The Body, before final boss to The Body, final boss",
             "connected_region": "The Body, final boss",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_bind_song",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Bind Song"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_dual_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_li",
+                          "args": []
+                        },
+                        {
+                          "type": "item_check",
+                          "item": "Dual Form"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_energy_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Energy Form"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_sun_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Sun Form"
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -6259,9 +8758,16 @@
             "name": "The Body, final boss area turtle room to The Body, before final boss",
             "connected_region": "The Body, before final boss",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_nature_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Nature Form"
+                }
+              }
             }
           },
           {
@@ -6482,9 +8988,69 @@
             "name": "First Secret area to Abyss right area",
             "connected_region": "Abyss right area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_bind_song",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Bind Song"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_energy_attack_item",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_dual_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_energy_form",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_spirit_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Spirit Form"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_sun_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Sun Form"
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -6513,18 +9079,61 @@
             "name": "Energy Temple Idol room to Energy Temple first area",
             "connected_region": "Energy Temple first area",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_fish_form",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Fish Form"
+                }
+              }
             }
           },
           {
             "name": "Energy Temple Idol room to Energy Temple fallen God room",
             "connected_region": "Energy Temple fallen God room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_energy_attack_item",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_dual_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_energy_form",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_fish_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Fish Form"
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -6561,18 +9170,84 @@
             "name": "Energy Temple after boss path to Energy Temple fallen God room",
             "connected_region": "Energy Temple fallen God room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_energy_attack_item",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_dual_form",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "_has_energy_form",
+                      "args": []
+                    }
+                  ]
+                }
+              }
             }
           },
           {
             "name": "Energy Temple after boss path to Energy Temple blaster room",
             "connected_region": "Energy Temple blaster room",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_bind_song",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Bind Song"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_energy_attack_item",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_dual_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_energy_form",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_nature_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Nature Form"
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -6593,9 +9268,49 @@
             "name": "Frozen Veil to Bubble Cave",
             "connected_region": "Bubble Cave",
             "access_rule": {
-              "rule": "True_",
+              "rule": "Or",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_beast_form",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Beast Form"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_hot_soup",
+                    "args": [],
+                    "body_data": {
+                      "type": "state_method",
+                      "method": "has_any",
+                      "args": [
+                        {
+                          "type": "set",
+                          "elements": [
+                            {
+                              "type": "constant",
+                              "value": "Hot Soup"
+                            },
+                            {
+                              "type": "constant",
+                              "value": "Hot Soup x 2"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -6696,18 +9411,43 @@
             "name": "Home Waters, behind rock to Home Waters",
             "connected_region": "Home Waters",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_bind_song",
+                "args": [],
+                "body_data": {
+                  "type": "item_check",
+                  "item": "Bind Song"
+                }
+              }
             }
           },
           {
             "name": "Home Waters, behind rock to Home Waters, Nautilus nest",
             "connected_region": "Home Waters, Nautilus nest",
             "access_rule": {
-              "rule": "True_",
+              "rule": "HelperCall",
               "options": [],
-              "args": {}
+              "args": {
+                "helper_name": "_has_energy_attack_item",
+                "args": [],
+                "body_data": {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "helper",
+                      "name": "_has_dual_form",
+                      "args": []
+                    },
+                    {
+                      "type": "helper",
+                      "name": "_has_energy_form",
+                      "args": []
+                    }
+                  ]
+                }
+              }
             }
           },
           {
@@ -6722,9 +9462,45 @@
             "name": "Home Waters, behind rock to Energy Temple bottom entrance",
             "connected_region": "Energy Temple bottom entrance",
             "access_rule": {
-              "rule": "True_",
+              "rule": "And",
               "options": [],
-              "args": {}
+              "children": [
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_bind_song",
+                    "args": [],
+                    "body_data": {
+                      "type": "item_check",
+                      "item": "Bind Song"
+                    }
+                  }
+                },
+                {
+                  "rule": "HelperCall",
+                  "options": [],
+                  "args": {
+                    "helper_name": "_has_energy_attack_item",
+                    "args": [],
+                    "body_data": {
+                      "type": "or",
+                      "conditions": [
+                        {
+                          "type": "helper",
+                          "name": "_has_dual_form",
+                          "args": []
+                        },
+                        {
+                          "type": "helper",
+                          "name": "_has_energy_form",
+                          "args": []
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
             }
           }
         ],
@@ -9126,7 +11902,8 @@
         "start_hints": [],
         "start_inventory": {},
         "start_location_hints": []
-      }
+      },
+      "world_directory": "aquaria_worldgen"
     }
   },
   "game_info": {

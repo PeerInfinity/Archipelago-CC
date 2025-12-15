@@ -89,6 +89,47 @@ class RegionData:
     hint_text: Optional[str] = None  # Display name if different from name
 
 
+def _param_is_used_in_body(param_name: str, body: Any) -> bool:
+    """
+    Check if a parameter name is referenced anywhere in a rule body.
+
+    Since helper bodies can be fully expanded (with params like 'damaging_items'
+    becoming direct item checks), we need to detect unused params and exclude
+    them from the function signature to avoid "missing required argument" errors.
+
+    Args:
+        param_name: The parameter name to search for
+        body: The rule body (dict, list, or primitive)
+
+    Returns:
+        True if the param_name appears to be referenced in the body
+    """
+    if body is None:
+        return False
+
+    if isinstance(body, dict):
+        # Check for explicit param reference (type: param_ref, variable, etc.)
+        if body.get('type') in ('param_ref', 'variable', 'param'):
+            if body.get('name') == param_name or body.get('param') == param_name:
+                return True
+        # Check if param name appears as a value
+        for key, value in body.items():
+            if key == param_name:
+                return True
+            if isinstance(value, str) and param_name in value:
+                return True
+            if _param_is_used_in_body(param_name, value):
+                return True
+    elif isinstance(body, list):
+        for item in body:
+            if _param_is_used_in_body(param_name, item):
+                return True
+    elif isinstance(body, str) and param_name in body:
+        return True
+
+    return False
+
+
 @dataclass
 class HelperData:
     """Extracted helper function data."""
@@ -524,11 +565,23 @@ def extract_helpers(json_data: Dict[str, Any]) -> Dict[str, HelperData]:
 
         if 'params' in helper_def or 'body' in helper_def:
             # Parameterized helper with explicit params/body structure
+            raw_params = helper_def.get('params', [])
+            body = helper_def.get('body', helper_def)
+            defaults = helper_def.get('defaults', {})
+
+            # Filter out params that are not actually used in the body
+            # This handles cases where the body was expanded and no longer
+            # references the original parameter (e.g., _has_damaging_item)
+            used_params = [p for p in raw_params if _param_is_used_in_body(p, body)]
+
+            # Also filter defaults to only include used params
+            used_defaults = {k: v for k, v in defaults.items() if k in used_params}
+
             helpers[helper_name] = HelperData(
                 name=helper_name,
-                params=helper_def.get('params', []),
-                body=helper_def.get('body', helper_def),
-                defaults=helper_def.get('defaults', {})
+                params=used_params,
+                body=body,
+                defaults=used_defaults
             )
         else:
             # Simple helper - the entire helper_def is the body
