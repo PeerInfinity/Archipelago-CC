@@ -421,11 +421,11 @@ def parse_cc_rule(data: Mapping[str, Any], world_cls: type["RuleWorldMixin"]) ->
 
 ### Phase 4: Helper Function Support via HelperCall
 
-The world generator already converts helper definitions from `rules.json` into Python functions in `Rules.py`. We leverage this by creating a `HelperCall` Rule Builder class that:
+The world generator already converts helper definitions from `rules.json` into Python functions in `Rules.py`. We leverage this with a tiered approach:
 
-1. **References the generated Python function** for evaluation
-2. **Stores the original CC format body** for explain support
-3. **Captures all data at generation time** (no runtime dependency on rules.json)
+1. **Simple helpers**: Convert the body to a Rule Builder rule at generation time (best: full evaluation + explain)
+2. **Complex helpers**: Use generated Python function for evaluation, CC format body for explain
+3. **Fallback**: Just display the helper name
 
 #### 4.1 HelperCall Rule Builder Class
 
@@ -434,46 +434,67 @@ The world generator already converts helper definitions from `rules.json` into P
 class HelperCall(Rule[TWorld], game="Archipelago"):
     """Calls a helper function with explain support.
 
-    This class bridges generated Python helper functions with the Rule Builder
-    explain system. The world generator creates both the Python function AND
-    this Rule Builder wrapper.
+    This class supports three tiers of helper integration:
+    1. body_rule set: Full Rule Builder evaluation and explain (best)
+    2. helper_func + body_data set: Python evaluation, CC format explain
+    3. helper_func only: Python evaluation, helper name display
     """
-    helper_func: Callable[[CollectionState, int, ...], bool]  # The generated Python function
-    helper_name: str                                           # Name for display
-    args: tuple[Any, ...] = ()                                 # Arguments to pass
-    body_data: dict | None = None                              # Original CC format for explain
+    helper_func: Callable[[CollectionState, int, ...], bool] | None = None  # Fallback Python function
+    helper_name: str = ""                                                    # Name for display
+    args: tuple[Any, ...] = ()                                               # Arguments to pass
+    body_rule: Rule[TWorld] | None = None                                    # Rule Builder rule (if convertible)
+    body_data: dict | None = None                                            # CC format for explain fallback
 
     @override
     def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        # Instantiate the body_rule if present
+        resolved_body_rule = None
+        if self.body_rule is not None:
+            resolved_body_rule = self.body_rule._instantiate(world)
+
         return self.Resolved(
             self.helper_func,
             self.helper_name,
             self.args,
+            resolved_body_rule,
             self.body_data,
             player=world.player,
             caching_enabled=False,  # Helpers may have complex dependencies
         )
 
     class Resolved(Rule.Resolved):
-        helper_func: Callable
+        helper_func: Callable | None
         helper_name: str
         args: tuple[Any, ...]
+        body_rule: Rule.Resolved | None
         body_data: dict | None
         skip_cache: ClassVar[bool] = True
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
-            # Call the actual generated Python helper function
-            return self.helper_func(state, self.player, *self.args)
+            # Tier 1: Use Rule Builder evaluation (preferred)
+            if self.body_rule is not None:
+                return self.body_rule(state)
+
+            # Tier 2/3: Fall back to Python function
+            if self.helper_func is not None:
+                return self.helper_func(state, self.player, *self.args)
+
+            # No evaluation available
+            return True
 
         @override
         def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
-            if self.body_data:
-                # Explain using the embedded CC format body
+            # Tier 1: Use Rule Builder explain (best - shows actual state)
+            if self.body_rule is not None:
+                return self.body_rule.explain_json(state)
+
+            # Tier 2: Use CC format explain
+            if self.body_data is not None:
                 from rule_builder.cc_explain import explain_cc_rule
                 return explain_cc_rule(self.body_data, state, self.player)
 
-            # Fallback: just show helper name and args
+            # Tier 3: Fallback - just show helper name and args
             messages = [
                 {"type": "text", "text": "Helper: "},
                 {"type": "color", "color": "magenta", "text": self.helper_name},
@@ -484,86 +505,153 @@ class HelperCall(Rule[TWorld], game="Archipelago"):
             return messages
 ```
 
-#### 4.2 World Generator Updates for HelperCall
+#### 4.2 Helper Body Conversion Strategy
 
-Update `world_generator/templates.py` to emit `HelperCall` rules instead of lambdas:
+The world generator attempts to convert helper bodies to Rule Builder rules at generation time:
 
-**Current approach (lambdas, no explain support):**
 ```python
-# Generated Rules.py
-def _gamename_can_swim(state: CollectionState, player: int) -> bool:
-    return state.has("Flippers", player)
+def _try_convert_helper_body_to_rule(body: dict, helper_params: list[str], args: list) -> Rule | None:
+    """
+    Try to convert a helper body to a Rule Builder rule.
 
-def set_rules(world):
-    # Lambda - no explain support
-    multiworld.get_location("Underwater Chest", player).access_rule = \
-        lambda state: _gamename_can_swim(state, player)
+    Returns None if the body contains unsupported constructs (loops, variables, etc.)
+    """
+    # Create parameter substitution map
+    param_values = dict(zip(helper_params, args))
+
+    # Check if body uses only supported rule types
+    if _is_rule_builder_convertible(body):
+        return _convert_cc_to_rule_builder(body, param_values)
+
+    return None
+
+def _is_rule_builder_convertible(rule: dict) -> bool:
+    """Check if a CC format rule can be converted to Rule Builder."""
+    convertible_types = {
+        'constant', 'item_check', 'count_check', 'group_check',
+        'and', 'or', 'not', 'can_reach', 'location_check',
+        'can_reach_entrance', 'compare', 'conditional',
+    }
+    rule_type = rule.get('type', '')
+
+    if rule_type not in convertible_types:
+        return False
+
+    # Recursively check nested rules
+    for key in ['conditions', 'condition', 'left', 'right', 'test', 'if_true', 'if_false']:
+        if key in rule:
+            nested = rule[key]
+            if isinstance(nested, list):
+                if not all(_is_rule_builder_convertible(r) for r in nested):
+                    return False
+            elif isinstance(nested, dict) and 'type' in nested:
+                if not _is_rule_builder_convertible(nested):
+                    return False
+
+    return True
 ```
 
-**New approach (HelperCall with explain support):**
+#### 4.3 World Generator Output Examples
+
+**Tier 1: Simple helper (fully convertible to Rule Builder):**
 ```python
-# Generated Rules.py
-from rule_builder import HelperCall
-
-def _gamename_can_swim(state: CollectionState, player: int) -> bool:
-    return state.has("Flippers", player)
-
-# Helper body data for explain support (embedded at generation time)
-_HELPER_BODIES = {
-    "can_swim": {"type": "item_check", "item": "Flippers"},
-}
+# Generated Rules.py - helper body converted to Rule Builder
+from rule_builder import Has, HelperCall
 
 def set_rules(world):
-    # HelperCall - full explain support
+    # Simple helper: can_swim = Has("Flippers")
+    # Full Rule Builder evaluation AND explain
     world.set_rule(
         multiworld.get_location("Underwater Chest", player),
         HelperCall(
-            helper_func=_gamename_can_swim,
             helper_name="can_swim",
-            args=(),
-            body_data=_HELPER_BODIES.get("can_swim"),
+            body_rule=Has("Flippers"),  # Converted at generation time
         )
     )
 ```
 
-#### 4.3 Handling Helper Arguments
-
-For helpers with parameters, the world generator embeds argument values:
-
+**Tier 2: Parameterized helper (convertible with argument substitution):**
 ```python
-# Helper with parameter
-def _gamename_has_keys(state: CollectionState, player: int, count: int) -> bool:
-    return state.has("Key", player, count)
+# Generated Rules.py
+from rule_builder import Has, HelperCall
 
-# Rule using helper with argument
-world.set_rule(
-    location,
-    HelperCall(
-        helper_func=_gamename_has_keys,
-        helper_name="has_keys",
-        args=(3,),  # count=3 embedded at generation time
-        body_data={"type": "item_check", "item": "Key", "count": 3},
+def set_rules(world):
+    # Parameterized helper: has_keys(count) = Has("Key", count)
+    # Arguments substituted at generation time
+    world.set_rule(
+        location,
+        HelperCall(
+            helper_name="has_keys",
+            body_rule=Has("Key", 3),  # count=3 substituted
+        )
     )
-)
 ```
 
-#### 4.4 Fallback for Complex Helpers
-
-Some helpers have complex bodies (loops, conditionals, local variables) that can't be easily explained from CC format. For these, `explain_json()` falls back to displaying the helper name:
-
+**Tier 3: Complex helper (Python function + CC format explain):**
 ```python
-# Complex helper - body_data may be None or a complex block
-world.set_rule(
-    location,
-    HelperCall(
-        helper_func=_gamename_calculate_power,
-        helper_name="calculate_power",
-        args=(needed_power,),
-        body_data=None,  # Too complex to explain from CC format
+# Generated Rules.py
+from rule_builder import HelperCall
+
+def _gamename_calculate_power(state: CollectionState, player: int, needed: float) -> bool:
+    power = 1.0
+    for _ in range(state.count("Power Crystal", player)):
+        power *= 2
+    return power >= needed
+
+def set_rules(world):
+    # Complex helper with loops - can't convert to Rule Builder
+    # Uses Python function for evaluation, CC format for explain
+    world.set_rule(
+        location,
+        HelperCall(
+            helper_func=_gamename_calculate_power,
+            helper_name="calculate_power",
+            args=(5.0,),
+            body_data={"type": "block", "statements": [...]},  # For explain
+        )
     )
-)
-# explain_json() will show: "Helper: calculate_power(5.0)"
 ```
+
+**Tier 4: Complex helper (Python function only):**
+```python
+# Generated Rules.py
+from rule_builder import HelperCall
+
+def _gamename_complex_check(state: CollectionState, player: int) -> bool:
+    # Very complex logic that can't be explained from CC format
+    ...
+
+def set_rules(world):
+    # Complex helper - Python evaluation, name-only explain
+    world.set_rule(
+        location,
+        HelperCall(
+            helper_func=_gamename_complex_check,
+            helper_name="complex_check",
+        )
+    )
+    # explain_json() will show: "Helper: complex_check"
+```
+
+#### 4.4 Benefits of Tiered Approach
+
+| Tier | Evaluation | Explain | When Used |
+|------|------------|---------|-----------|
+| 1 | Rule Builder | Rule Builder (with state) | Simple helpers (item_check, and, or, etc.) |
+| 2 | Rule Builder | Rule Builder (with state) | Parameterized simple helpers |
+| 3 | Python function | CC format | Complex helpers (loops, variables) |
+| 4 | Python function | Helper name only | Very complex / opaque helpers |
+
+**Advantages of Tier 1/2 (Rule Builder):**
+- Explain shows actual evaluation state (e.g., "Has Flippers: ✓" vs "Has Flippers: ✗")
+- Potential for caching integration in the future
+- Consistent with non-helper rules
+
+**When to fall back to Tier 3/4:**
+- Helper body contains loops (`for_range`, `for_iter`, `while`)
+- Helper body contains variable assignments
+- Helper body contains unsupported CC format types
+- Helper body references external data structures
 
 ### Phase 5: CC Rule Explain Function
 
