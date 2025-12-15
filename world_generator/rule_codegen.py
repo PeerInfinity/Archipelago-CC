@@ -1180,6 +1180,11 @@ class HelperCodeGenerator:
         func_code = self._generate_expression(func)
         arg_exprs = [self._generate_expression(a) for a in args]
 
+        # Special handling for state.multiworld.get_location - needs player argument
+        # The exported helper body may be missing the player argument
+        if func_code == 'state.multiworld.get_location' and len(arg_exprs) == 1:
+            arg_exprs.append('player')
+
         return f"{func_code}({', '.join(arg_exprs)})"
 
     def _expr_method_call(self, expr: Dict[str, Any]) -> str:
