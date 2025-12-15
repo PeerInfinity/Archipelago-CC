@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 class KDL3GameExportHandler(BaseGameExportHandler):
     """Handle KDL3-specific rule expansions and f-string conversions."""
 
-    GAME_NAME = "Kirby's Dream Land 3"
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False

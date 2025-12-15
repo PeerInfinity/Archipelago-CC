@@ -7,7 +7,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 class JakAndDaxterGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'Jak and Daxter: The Precursor Legacy'
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False

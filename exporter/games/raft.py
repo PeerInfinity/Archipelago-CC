@@ -9,8 +9,6 @@ import os
 logger = logging.getLogger(__name__)
 
 class RaftGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'Raft'
-
     # Enable automatic export of discovered helpers
     AUTO_EXPORT_DISCOVERED_HELPERS = True
 

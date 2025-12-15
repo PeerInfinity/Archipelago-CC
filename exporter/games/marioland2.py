@@ -13,7 +13,6 @@ class MarioLand2GameExportHandler(GenericGameExportHandler):
     Super Mario Land 2 uses custom helper functions for pipe traversal,
     auto-scroll checks, level progression, and zone-specific logic.
     """
-    GAME_NAME = 'Super Mario Land 2'
 
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True

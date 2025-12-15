@@ -7,7 +7,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 class MessengerGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'The Messenger'
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False

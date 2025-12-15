@@ -17,7 +17,6 @@ class LandstalkerGameExportHandler(GenericGameExportHandler):
     - Region visit tracking
     """
 
-    GAME_NAME = 'Landstalker - The Treasures of King Nole'
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False
@@ -25,7 +24,6 @@ class LandstalkerGameExportHandler(GenericGameExportHandler):
 
     def __init__(self):
         super().__init__()
-        logger.info(f"Initialized {self.__class__.__name__} for {self.GAME_NAME}")
         # Stack to track required_regions for nested rule processing
         self._regions_stack = []
 

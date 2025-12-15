@@ -14,8 +14,6 @@ class InscryptionGameExportHandler(GenericGameExportHandler):
     they cannot be automatically exported. Instead, we expand the inferred pseudo-items
     (like Camera_And_Meat, All_Epitaph_Pieces) to their actual item checks.
     """
-    GAME_NAME = 'Inscryption'
-
     # Disable automatic helper export (class methods can't be auto-exported)
     AUTO_EXPORT_DISCOVERED_HELPERS = False
 

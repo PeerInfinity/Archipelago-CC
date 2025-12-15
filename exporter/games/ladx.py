@@ -8,17 +8,9 @@ import re
 logger = logging.getLogger(__name__)
 
 class LADXGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'Links Awakening DX'
     """Export handler for Links Awakening DX."""
 
-    # Enable automatic helper export (even though LADX uses LADXR conditions, not helper functions)
     AUTO_EXPORT_DISCOVERED_HELPERS = True
-
-    def expand_helper(self, helper_name: str):
-        """Expand game-specific helper functions for LADX."""
-        # Start with generic expansion
-        # Will add game-specific helpers as we discover them during testing
-        return super().expand_helper(helper_name)
 
     def handle_complex_exit_rule(self, exit_name: str, access_rule_method):
         """

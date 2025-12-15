@@ -19,7 +19,6 @@ class WargrooveGameExportHandler(GenericGameExportHandler):
     - _wargroove_has_region(player, region) -> can_reach
     - _wargroove_has_item_and_region(player, item, region) -> and(item_check, can_reach)
     """
-    GAME_NAME = 'Wargroove'
 
     def __init__(self, world=None):
         """Initialize handler."""

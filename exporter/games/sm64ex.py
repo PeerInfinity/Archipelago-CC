@@ -14,8 +14,6 @@ import os
 logger = logging.getLogger(__name__)
 
 class SM64EXGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'Super Mario 64'
-
     # Movement abilities - affected by enable_move_rando
     MOVEMENT_TOKENS = {
         "TJ": "Triple Jump",

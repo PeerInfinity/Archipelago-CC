@@ -7,8 +7,6 @@ from .generic import GenericGameExportHandler
 class YachtDiceGameExportHandler(GenericGameExportHandler):
     """Yacht Dice specific rule expander."""
 
-    GAME_NAME = 'Yacht Dice'
-
     # Enable automatic export of discovered helpers
     AUTO_EXPORT_DISCOVERED_HELPERS = True
 

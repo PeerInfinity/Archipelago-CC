@@ -11,8 +11,6 @@ class TimespinnerGameExportHandler(GenericGameExportHandler):
     All helpers are automatically exported and evaluated by the frontend.
     """
 
-    GAME_NAME = 'Timespinner'
-
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
 

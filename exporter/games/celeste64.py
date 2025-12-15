@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 
 class Celeste64GameExportHandler(BaseGameExportHandler):
     """Celeste 64 expander that inlines rules from logic mappings."""
-    GAME_NAME = 'Celeste 64'
 
     # Enable automatic export of discovered helpers
     AUTO_EXPORT_DISCOVERED_HELPERS = True

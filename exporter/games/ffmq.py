@@ -14,7 +14,6 @@ class FFMQGameExportHandler(GenericGameExportHandler):
     Rules reference these via patterns like `item_groups["Claw" + "s"]` which
     need to be resolved to actual item lists.
     """
-    GAME_NAME = 'Final Fantasy Mystic Quest'
 
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True

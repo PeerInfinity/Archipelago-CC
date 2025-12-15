@@ -69,8 +69,6 @@ def _patch_oot_rule_parser():
 _patch_oot_rule_parser()
 
 class OOTGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'Ocarina of Time'
-
     def __init__(self):
         super().__init__()
         self.rule_string_map = {}  # Maps rule_target_name -> rule_string

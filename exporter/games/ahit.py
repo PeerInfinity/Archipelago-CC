@@ -23,8 +23,6 @@ logger = logging.getLogger(__name__)
 class AHitGameExportHandler(BaseGameExportHandler):
     """A Hat in Time export handler with automatic helper export."""
 
-    GAME_NAME = 'A Hat in Time'
-
     # Module containing helper functions for definition export
     HELPER_MODULES = ['worlds.ahit.Rules']
 

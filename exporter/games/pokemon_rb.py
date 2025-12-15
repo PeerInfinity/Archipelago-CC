@@ -8,7 +8,6 @@ logger = logging.getLogger(__name__)
 
 
 class PokemonRBGameExportHandler(BaseGameExportHandler):
-    GAME_NAME = 'Pokemon Red and Blue'
     """Pokemon Red/Blue specific export handler."""
 
     def __init__(self, world=None):

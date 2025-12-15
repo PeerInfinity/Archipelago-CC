@@ -8,7 +8,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 class KH2GameExportHandler(BaseGameExportHandler):
-    GAME_NAME = 'Kingdom Hearts 2'
     """KH2-specific expander that handles Kingdom Hearts 2 rules."""
 
     # Enable automatic export of discovered helpers

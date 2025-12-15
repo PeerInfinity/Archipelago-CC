@@ -8,7 +8,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 class DLCQuestGameExportHandler(BaseGameExportHandler):
-    GAME_NAME = 'DLCQuest'
     """Handle DLCQuest-specific rule expansions and coin item export."""
 
     def __init__(self, world=None):

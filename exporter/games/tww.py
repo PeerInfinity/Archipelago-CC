@@ -7,7 +7,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 class TWWGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'The Wind Waker'
     # Enable automatic helper export to export discovered helpers
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = True

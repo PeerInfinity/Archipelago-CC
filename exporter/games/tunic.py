@@ -12,7 +12,7 @@ class TUNICGameExportHandler(GenericGameExportHandler):
 
     Exports ability_unlocks for runtime resolution and redirects Shop N regions to Shop.
     """
-    GAME_NAME = 'TUNIC'
+
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = False

@@ -12,7 +12,6 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
     Inherits from GenericGameExportHandler for default behavior.
     Override methods here only when custom behavior is needed.
     """
-    GAME_NAME = "Yoshi's Island"
 
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True

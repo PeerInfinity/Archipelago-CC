@@ -10,8 +10,7 @@ import logging
 logger = logging.getLogger(__name__) # Add logger if needed later
 
 
-class ALttPGameExportHandler(BaseGameExportHandler): # Ensure correct inheritance
-    GAME_NAME = 'A Link to the Past'
+class ALttPGameExportHandler(BaseGameExportHandler):
     # Enable automatic helper export
     AUTO_EXPORT_DISCOVERED_HELPERS = True
     AUTO_PRESERVE_LARGE_HELPERS = True  # Closure functions are cached during analysis and exported

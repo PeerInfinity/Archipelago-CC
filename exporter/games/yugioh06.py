@@ -10,7 +10,6 @@ class Yugioh06GameExportHandler(GenericGameExportHandler):
     rule analysis and helper function detection.
     """
 
-    GAME_NAME = 'Yu-Gi-Oh! 2006'
     # Disable automatic helper export (use old behavior)
     AUTO_EXPORT_DISCOVERED_HELPERS = False
     AUTO_PRESERVE_LARGE_HELPERS = False

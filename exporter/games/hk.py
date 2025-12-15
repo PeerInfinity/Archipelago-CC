@@ -14,8 +14,6 @@ class HKExportHandler(GenericGameExportHandler):
     unique region structure.
     """
 
-    GAME_NAME = 'Hollow Knight'
-
     def postprocess_regions(self, multiworld, player: int):
         """
         Log warning about Hollow Knight's unique region structure.

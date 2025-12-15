@@ -16,7 +16,7 @@ class SMGameExportHandler(GenericGameExportHandler):
     This exporter transforms the Python-specific patterns into JavaScript-friendly
     helper calls that the frontend can execute.
     """
-    GAME_NAME = 'Super Metroid'
+
     # Note: AUTO_EXPORT_DISCOVERED_HELPERS has limited effect for SM because:
     # 1. Helpers are methods on SMBoolManager class, not standalone functions
     # 2. Helper calls are created in expand_rule post-processing, not during analysis

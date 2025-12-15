@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 
 
 class PokemonEmeraldGameExportHandler(GenericGameExportHandler):
-    GAME_NAME = 'Pokemon Emerald'
     # Disable automatic helper export (use old behavior)
     AUTO_EXPORT_DISCOVERED_HELPERS = False
     AUTO_PRESERVE_LARGE_HELPERS = False
