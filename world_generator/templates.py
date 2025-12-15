@@ -46,17 +46,18 @@ def _rule_needs_lambda(rule: dict) -> bool:
     Check if a rule needs to use lambda-based generation instead of Rule Builder.
 
     Returns True if the rule contains:
-    - Helper function calls
-    - Not operations (Rule Builder doesn't have Not class)
-    - Complex expressions that Rule Builder doesn't support
+    - Block statements (loops, assignments, etc.)
+
+    Note: Most rule types including helpers, not, compare, and conditional
+    can now be handled by RuleCodeGenerator with the new Rule Builder classes.
     """
     if not isinstance(rule, dict):
         return False
 
     rule_type = rule.get('type', '')
 
-    # These types require lambda
-    if rule_type in ('helper', 'not', 'compare', 'conditional', 'block'):
+    # Only block statements require lambda (for loops, assignments, etc.)
+    if rule_type == 'block':
         return True
 
     # Recursively check all dict and list values
@@ -322,12 +323,21 @@ def generate_rules_py(data: ExtractedData) -> str:
     """Generate Rules.py file content.
 
     Uses a hybrid approach:
-    - Rule Builder for simple rules (item checks, and/or, etc.)
-    - Lambda expressions for complex rules (helpers, not, conditionals)
+    - Rule Builder for most rules (item checks, and/or, helpers, etc.)
+    - Lambda expressions only for complex rules with blocks (loops, assignments)
     """
     game_name = data.metadata.game_name
 
-    rule_builder_generator = RuleCodeGenerator()
+    # Build helper bodies dict for explain support
+    helper_bodies = {
+        name: helper_data.body
+        for name, helper_data in data.helpers.items()
+        if helper_data.body
+    }
+
+    rule_builder_generator = RuleCodeGenerator(game_name)
+    rule_builder_generator.set_helpers(set(data.helpers.keys()), helper_bodies)
+
     helper_generator = HelperCodeGenerator(game_name)
     helper_generator.set_known_helpers(set(data.helpers.keys()))
 
