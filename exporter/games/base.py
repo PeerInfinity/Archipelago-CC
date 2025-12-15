@@ -57,6 +57,17 @@ class BaseGameExportHandler:
     # Example: {'my_helper': {'param1': 'slot_data_key1', 'param2': 'setting_key2'}}
     HELPER_PARAM_MAPPINGS: Dict[str, Dict[str, str]] = {}
 
+    # Settings class attributes that control export behavior
+    # These are applied in get_settings_data and can be overridden in subclasses
+
+    # When True, eventProcessor uses resolved_items from sphere log instead of base_items
+    # Use for games with complex event items or computed tracking items
+    USE_RESOLVED_ITEMS: bool = False
+
+    # When True, add all items from sphere log before comparing accessible locations
+    # Required for games that need items in prog_items before evaluating rules
+    ADD_SPHERE_ITEMS_UPFRONT: bool = False
+
     # Set of helper function names that should be preserved as helper calls
     # during rule analysis (not inlined/expanded by generic pattern matching)
     # This is used by should_preserve_as_helper() - games can set this instead
@@ -603,11 +614,15 @@ class BaseGameExportHandler:
         # Add assume_bidirectional_exits setting with default false
         settings_dict['assume_bidirectional_exits'] = False
 
-        # Add use_resolved_items setting with default false
+        # Add use_resolved_items setting from class attribute
         # When false (default), eventProcessor uses only base_items from sphere log
         # When true, eventProcessor uses resolved_items (e.g., for games with complex event items)
-        # Games that need resolved_items should override get_settings_data and set this to True
-        settings_dict['use_resolved_items'] = False
+        settings_dict['use_resolved_items'] = self.USE_RESOLVED_ITEMS
+
+        # Add add_sphere_items_upfront setting from class attribute
+        # When true, adds items at the start of each sphere before accessibility checks
+        if self.ADD_SPHERE_ITEMS_UPFRONT:
+            settings_dict['add_sphere_items_upfront'] = True
 
         # Export all game-specific options from the world
         # This allows the world generator to recreate fill_slot_data behavior
