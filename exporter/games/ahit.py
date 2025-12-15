@@ -14,24 +14,20 @@ evaluating the exported helper definitions directly.
 """
 
 from typing import Dict, Any, Set, Optional
-from .base import BaseGameExportHandler
+from .generic import GenericGameExportHandler
 import logging
 
 logger = logging.getLogger(__name__)
 
 
-class AHitGameExportHandler(BaseGameExportHandler):
+class AHitGameExportHandler(GenericGameExportHandler):
     """A Hat in Time export handler with automatic helper export."""
 
     # Module containing helper functions for definition export
     HELPER_MODULES = ['worlds.ahit.Rules']
 
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
     AUTO_PRESERVE_LARGE_HELPERS = False
-
-    # No helpers blacklisted - can_clear_required_act is now resolved at export time
-    HELPERS_TO_EXPORT_BLACKLIST: Set[str] = set()
 
     # Preserve these helpers as helper calls (don't inline their bodies)
     # This is necessary for complex helpers that reference runtime objects

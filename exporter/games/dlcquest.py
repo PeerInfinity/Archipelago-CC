@@ -1,31 +1,29 @@
 """DLCQuest-specific export handler."""
 
 from typing import Dict, Any
-from .base import BaseGameExportHandler
+from .generic import GenericGameExportHandler
 from BaseClasses import ItemClassification
 import logging
 
 logger = logging.getLogger(__name__)
 
-class DLCQuestGameExportHandler(BaseGameExportHandler):
+class DLCQuestGameExportHandler(GenericGameExportHandler):
     """Handle DLCQuest-specific rule expansions and coin item export."""
+
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
+
+    # DLCQuest uses coin-based access rules that check state.prog_items accumulators.
+    # The standard location checking flow doesn't properly update inventory during
+    # spoiler tests, so we use add_sphere_items_upfront mode which adds items
+    # at the start of each sphere before accessibility checks.
+    ADD_SPHERE_ITEMS_UPFRONT = True
+
+    # Use resolved_items which includes accumulated coin counts
+    USE_RESOLVED_ITEMS = True
 
     def __init__(self, world=None):
         super().__init__(world=world)
         self.coin_items = {}  # Track coin items we find
-
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Export DLCQuest settings with add_sphere_items_upfront enabled.
-
-        DLCQuest uses coin-based access rules that check state.prog_items accumulators.
-        The standard location checking flow doesn't properly update inventory during
-        spoiler tests, so we use add_sphere_items_upfront mode which adds items
-        at the start of each sphere before accessibility checks.
-        """
-        settings = super().get_settings_data(world, multiworld, player)
-        settings['add_sphere_items_upfront'] = True
-        settings['use_resolved_items'] = True  # Use resolved_items which includes accumulated coin counts
-        return settings
 
     def get_game_info(self, world):
         """Export DLCQuest game info including accumulator rules."""

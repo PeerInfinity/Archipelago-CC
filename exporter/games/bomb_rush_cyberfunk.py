@@ -7,9 +7,7 @@ from .generic import GenericGameExportHandler
 class BombRushCyberfunkGameExportHandler(GenericGameExportHandler):
     """Export handler for Bomb Rush Cyberfunk."""
 
-    # Enable automatic export of discovered helpers
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
-
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
     # Helpers too complex for automatic export (contain loops, use globals(), etc.)
     HELPERS_TO_EXPORT_BLACKLIST: Set[str] = {
         # Main graffiti spot counting - uses build_access_cache and sums from spot functions

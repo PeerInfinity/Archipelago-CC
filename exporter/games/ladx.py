@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 class LADXGameExportHandler(GenericGameExportHandler):
     """Export handler for Links Awakening DX."""
 
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
 
     def handle_complex_exit_rule(self, exit_name: str, access_rule_method):
         """

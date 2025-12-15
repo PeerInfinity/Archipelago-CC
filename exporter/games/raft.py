@@ -9,8 +9,7 @@ import os
 logger = logging.getLogger(__name__)
 
 class RaftGameExportHandler(GenericGameExportHandler):
-    # Enable automatic export of discovered helpers
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
     # Module paths for helper functions
     HELPER_MODULES = ['worlds.raft.Rules']

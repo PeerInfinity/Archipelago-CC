@@ -15,8 +15,7 @@ class MM2GameExportHandler(GenericGameExportHandler):
     Injects module-level variables needed for helper function analysis.
     """
 
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
 
     # No helpers blacklisted - can_defeat_enough_rbms is now supported with
     # tuple unpacking in for loops and map() function support

@@ -16,8 +16,7 @@ class DarkSouls3GameExportHandler(GenericGameExportHandler):
     that the frontend rule engine understands.
     """
 
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
     AUTO_PRESERVE_LARGE_HELPERS = False
 
     def postprocess_rule(self, rule: Dict[str, Any]) -> Dict[str, Any]:

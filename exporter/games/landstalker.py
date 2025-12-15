@@ -17,9 +17,11 @@ class LandstalkerGameExportHandler(GenericGameExportHandler):
     - Region visit tracking
     """
 
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
     AUTO_PRESERVE_LARGE_HELPERS = False
+
+    # Use resolved_items from sphere log for event item handling
+    USE_RESOLVED_ITEMS = True
 
 
     def __init__(self):
@@ -377,8 +379,3 @@ class LandstalkerGameExportHandler(GenericGameExportHandler):
 
         return None
 
-    def get_settings_data(self, world, multiworld, player) -> Dict[str, Any]:
-        """Extracts Landstalker-specific game settings for export."""
-        settings_dict = super().get_settings_data(world, multiworld, player)
-        settings_dict['use_resolved_items'] = True
-        return settings_dict

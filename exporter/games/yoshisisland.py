@@ -13,8 +13,7 @@ class YoshisIslandGameExportHandler(GenericGameExportHandler):
     Override methods here only when custom behavior is needed.
     """
 
-    # Enable automatic helper export
-    AUTO_EXPORT_DISCOVERED_HELPERS = True
+    # AUTO_EXPORT_DISCOVERED_HELPERS is True by default in GenericGameExportHandler
     AUTO_PRESERVE_LARGE_HELPERS = True
 
     # Specify the modules containing helper class methods
